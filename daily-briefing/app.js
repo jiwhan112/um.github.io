@@ -14,7 +14,7 @@ const persist=()=>{try{localStorage.setItem(storageKey,JSON.stringify(stored));}
 function safeUrl(url){const s=String(url||"").trim();return /^https?:\/\/[^\s<>"\x27]+$/i.test(s)?s:"";}
 function plain(s){return String(s??"").replace(/(?:cite|url|memcite).*?/gu,"").replace(/!\[[^\]]*\]\([^)]+\)/g,"").replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,"$1").replace(/\*\*([\s\S]*?)\*\*/g,"$1").replace(/\x60([^\x60]+)\x60/g,"$1").replace(/<\/?[^>]+>/g,"").replace(/[ \t]+/g," ").replace(/\s*\n\s*/g," ").trim();}
 function clip(s,n=600){let x=plain(s);if(x.length<=n)return x;let z=x.slice(0,n),i=Math.max(z.lastIndexOf("다. "),z.lastIndexOf(". "),z.lastIndexOf("요. "));return (i>n*.5?z.slice(0,i+1):z.trimEnd())+"…";}
-function sentence(s,n=2){return (plain(s).match(/[^.!?。]+(?:[.!?。]+|$)/g)||[]).slice(0,n).join(" ").trim();}
+function sentence(s,n=2){return plain(s).split(/(?<=[.!?。])\s+/u).slice(0,n).join(" ").trim();}
 const dict=[
 ["Agent","에이전트: AI가 도구를 실행하고 결과를 확인하며 여러 단계를 스스로 진행하는 프로그램."],
 ["MCP","MCP: AI가 외부 앱·엔진 기능을 표준 방식으로 호출하게 하는 연결 규격."],
@@ -75,12 +75,12 @@ function itemOf(d,x,i,sections){
  const url=safeUrl(x.url)||s.links[0]?.url||"",links=[];
  if(url)links.push({url,label:x.source||s.links[0]?.label||"원문"});
  for(const link of s.links)if(links.length<3&&!links.some(k=>k.url===link.url))links.push(link);
- return {id:ident(d.date,i),date:d.date,category:x.category||"game-dev",title:plain(x.title||s.title||"제목 없음"),source:plain(x.source||s.links[0]?.label||"기술 뉴스"),published:plain(x.published||""),lead:clip(lead,780),technical:clip(technical,540),developer:clip(developer,570),summary:clip(summary,345),glossary:terms(String(x.title||"")+" "+lead+" "+technical),links};
+ return {id:ident(d.date,i),date:d.date,category:x.category||"game-dev",title:plain(x.title||s.title||"제목 없음"),source:plain(x.source||s.links[0]?.label||"출처 미기록"),published:plain(x.published||""),lead:clip(lead,780),technical:clip(technical,540),developer:clip(developer,570),summary:clip(summary,345),glossary:terms(String(x.title||"")+" "+lead+" "+technical),links};
 }
 const tag=x=>'<span class="tag tag-'+esc(x.category)+'">'+esc(emoji[x.category]||"•")+" "+esc(cats[x.category]||"기술 뉴스")+"</span>";
 function explanation(x){
  if(tab==="short"){
-  let parts=(x.summary.match(/[^.!?。]+(?:[.!?。]+|$)/g)||[x.summary]).filter(Boolean).slice(0,4);
+  let parts=x.summary.split(/(?<=[.!?。])\s+/u).filter(Boolean).slice(0,4);
   return '<div class="reader-pane"><div class="reader-kicker">QUICK RECAP</div><h4>핵심만 빠르게</h4><ul class="digest">'+parts.map(p=>"<li>"+esc(p.trim())+"</li>").join("")+'</ul><p class="hint">더 알아보려면 쉽게 설명 탭을 선택하세요.</p></div>';
  }
  return '<div class="reader-pane"><div class="reader-kicker">STEP 01 · 무슨 소식인가요?</div><h4>먼저, 쉽게 이해하기</h4><p>'+esc(x.lead)+'</p>'+
@@ -90,7 +90,7 @@ function explanation(x){
 }
 function renderCard(x){
  const open=openId===x.id,saved=stored.saved.includes(x.id),read=stored.read.includes(x.id),domId=x.id.replace(":","-");
- let sources=x.links.length?'<div class="source-links"><span class="source-label">원문 / 참고 자료</span>'+x.links.map(s=>'<a target="_blank" rel="noopener noreferrer" href="'+esc(s.url)+'">↗ '+esc(s.label)+"</a>").join("")+"</div>":"";
+ let searchUrl="https://www.google.com/search?q="+encodeURIComponent(x.title);let sources=x.links.length?'<div class="source-links"><span class="source-label">원문 / 참고 자료</span>'+x.links.map(s=>'<a target="_blank" rel="noopener noreferrer" href="'+esc(s.url)+'">↗ '+esc(s.label)+"</a>").join("")+"</div>":'<div class="source-links"><span class="source-label">직접 출처 링크가 남아 있지 않은 과거 기사입니다.</span><a target="_blank" rel="noopener noreferrer" href="'+esc(searchUrl)+'">🔎 관련 자료 검색</a></div>';
  return '<article class="news-card '+(open?"expanded ":"")+(read?"is-read":"")+'" id="story-'+esc(domId)+'" data-category="'+esc(x.category)+'">'+
  '<div class="card-top"><div class="card-stamps">'+tag(x)+'<span class="meta">'+esc(x.date)+'</span>'+(read?'<span class="read-check">✓ 읽음</span>':"")+'</div>'+
  '<button type="button" class="card-title" data-open="'+esc(x.id)+'" aria-expanded="'+String(open)+'" aria-controls="content-'+esc(domId)+'">'+esc(x.title)+'<span class="chevron" aria-hidden="true">'+(open?"⌃":"⌄")+'</span></button>'+
@@ -101,7 +101,7 @@ function renderCard(x){
  '<div class="reader-content">'+explanation(x)+"</div>"+sources+"</div>":"")+
  '<div class="card-actions"><button type="button" data-action="saved" data-id="'+esc(x.id)+'" aria-pressed="'+saved+'" class="'+(saved?"selected-action":"")+'">'+(saved?"★ 북마크됨":"☆ 북마크")+'</button>'+
  '<button type="button" data-action="read" data-id="'+esc(x.id)+'" aria-pressed="'+read+'" class="'+(read?"selected-action":"")+'">'+(read?"✓ 읽음 완료":"◯ 읽음 표시")+'</button>'+
- (x.links[0]?'<a class="action-source" target="_blank" rel="noopener noreferrer" href="'+esc(x.links[0].url)+'">원문 ↗</a>':"")+"</div></article>";
+ (x.links[0]?'<a class="action-source" target="_blank" rel="noopener noreferrer" href="'+esc(x.links[0].url)+'">원문 ↗</a>':'<a class="action-source" target="_blank" rel="noopener noreferrer" href="'+esc(searchUrl)+'">관련 자료 검색 ↗</a>')+"</div></article>";
 }
 function render(){
  let daily=view==="daily";$("#modeDaily").classList.toggle("active",daily);$("#modeAll").classList.toggle("active",!daily);
