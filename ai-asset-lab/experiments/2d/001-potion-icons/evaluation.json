@@ -1,0 +1,163 @@
+{
+  "experiment_id": "EXP-2D-001",
+  "date": "2026-10-08",
+  "spec_version": "1.0",
+  "status": "PARTIAL",
+  "generation_tool": "ChatGPT image generation (actual underlying model version unknown)",
+  "generation_attempts": 2,
+  "individual_generation_attempts": 0,
+  "composite_generation_attempts": 2,
+  "first_attempt": {
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "result": "one strip with all four potions",
+    "sha256_original": "6a722a6da013f0a18cbbe318780e272fd112dbd794b307a44e70869c4f096f11",
+    "published_binary": false
+  },
+  "second_attempt": {
+    "size": [
+      1422,
+      1106
+    ],
+    "mode": "RGB",
+    "result": "2x2 grid with opaque checkerboard pixels",
+    "sha256_original": "38723acf389b362a118e423bdd897e88f02841fb41478507de45080b009577d6",
+    "published_binary": false
+  },
+  "checked_final_RGBA_PNGs": [
+    {
+      "id": "P01",
+      "name": "health",
+      "dimensions": [
+        128,
+        128
+      ],
+      "margins": [
+        24,
+        12,
+        25,
+        12
+      ],
+      "sha256_original": "80ef33875c69116c5f0c79a7492b5c1af834731eac269e8a71a4c27d4c0475c9",
+      "published_binary": false
+    },
+    {
+      "id": "P02",
+      "name": "mana",
+      "dimensions": [
+        128,
+        128
+      ],
+      "margins": [
+        24,
+        12,
+        25,
+        12
+      ],
+      "sha256_original": "70e0805d66efd37093dd4c771b2e825fcb87f35f7ed664c4e2e9bb1bf56e8955",
+      "published_binary": false
+    },
+    {
+      "id": "P03",
+      "name": "antidote",
+      "dimensions": [
+        128,
+        128
+      ],
+      "margins": [
+        24,
+        12,
+        25,
+        12
+      ],
+      "sha256_original": "6315b203059d09def9ec2c3aefe6ddee142b6f6f484332b05cc22e0d97f82460",
+      "published_binary": false
+    },
+    {
+      "id": "P04",
+      "name": "arcane",
+      "dimensions": [
+        128,
+        128
+      ],
+      "margins": [
+        24,
+        12,
+        25,
+        12
+      ],
+      "sha256_original": "949aaccb0bbcd4b1f2754b1733a58b48aa34181e8e635a016d852f46724aca85",
+      "published_binary": false
+    }
+  ],
+  "published_pngs": [
+    {
+      "id": "P01",
+      "file": "final/potion-health-128-web.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "mode": "P",
+      "palette_colors_requested": 64,
+      "alpha": "indexed palette transparency (tRNS)",
+      "size_bytes": 3453,
+      "sha256": "1217b87db3ad2b4073e735f7f9dbef5ddee70f317b13fc98d4ade337a250ffc1"
+    },
+    {
+      "id": "P02",
+      "file": "final/potion-mana-128-web.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "mode": "P",
+      "palette_colors_requested": 64,
+      "alpha": "indexed palette transparency (tRNS)",
+      "size_bytes": 3614,
+      "sha256": "0e179ec9763285c1ffd2a2065aa67cba52b0883b68fdf66c54f725b5292dc294"
+    },
+    {
+      "id": "P03",
+      "file": "final/potion-antidote-128-web.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "mode": "P",
+      "palette_colors_requested": 64,
+      "alpha": "indexed palette transparency (tRNS)",
+      "size_bytes": 3570,
+      "sha256": "1e85f3ead9586346dc42ba88d17055a09838922e855d8b6212ff301e3abf3987"
+    },
+    {
+      "id": "P04",
+      "file": "final/potion-arcane-128-web.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "mode": "P",
+      "palette_colors_requested": 64,
+      "alpha": "indexed palette transparency (tRNS)",
+      "size_bytes": 3543,
+      "sha256": "59c57fe48a1ab1359c48245ef1da4ff5eb244237ad25cf54d823d6ba1424ceb8"
+    }
+  ],
+  "evaluation": {
+    "original_dimensions_and_rgba": "PASS",
+    "original_transparency": "PASS",
+    "original_padding_8px": "PASS",
+    "individual_style_consistency": "NOT TESTED",
+    "style_score_8_of_10": "NOT SCORED",
+    "human_readability": "NOT TESTED",
+    "engine_import": "NOT TESTED",
+    "generation_latency": "NOT MEASURED",
+    "total_cost": "NOT MEASURED",
+    "commercial_rights": "REVIEW REQUIRED",
+    "overall": "PARTIAL"
+  }
+}

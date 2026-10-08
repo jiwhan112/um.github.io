@@ -1,0 +1,35 @@
+{
+  "format": "EXP-2D-001 web asset manifest",
+  "purpose": "Low-bandwidth PNG previews of game icons, visually derived from original checked RGBA PNGs",
+  "note": "Web PNG files are palette-indexed transparent PNG derivatives, not the exact validated RGBA originals; use evaluation.json for SHA-256 of originals.",
+  "assets": [
+    {
+      "file": "final/potion-health-128-web.png",
+      "size_bytes": 3453,
+      "sha256": "1217b87db3ad2b4073e735f7f9dbef5ddee70f317b13fc98d4ade337a250ffc1",
+      "git_blob_sha": "c8d86dcd0dd15388e363250c6842c2e8a11f884f",
+      "original_RGBA_sha256": "80ef33875c69116c5f0c79a7492b5c1af834731eac269e8a71a4c27d4c0475c9"
+    },
+    {
+      "file": "final/potion-mana-128-web.png",
+      "size_bytes": 3614,
+      "sha256": "0e179ec9763285c1ffd2a2065aa67cba52b0883b68fdf66c54f725b5292dc294",
+      "git_blob_sha": "ede91d24347e33c161237426dfed96268f3878f8",
+      "original_RGBA_sha256": "70e0805d66efd37093dd4c771b2e825fcb87f35f7ed664c4e2e9bb1bf56e8955"
+    },
+    {
+      "file": "final/potion-antidote-128-web.png",
+      "size_bytes": 3570,
+      "sha256": "1e85f3ead9586346dc42ba88d17055a09838922e855d8b6212ff301e3abf3987",
+      "git_blob_sha": "3d32df30595cca6d514e2dd16ac0d49b8299df27",
+      "original_RGBA_sha256": "6315b203059d09def9ec2c3aefe6ddee142b6f6f484332b05cc22e0d97f82460"
+    },
+    {
+      "file": "final/potion-arcane-128-web.png",
+      "size_bytes": 3543,
+      "sha256": "59c57fe48a1ab1359c48245ef1da4ff5eb244237ad25cf54d823d6ba1424ceb8",
+      "git_blob_sha": "62bd613bfdcd874771ed6cf57f7cb5ecc25ed54a",
+      "original_RGBA_sha256": "949aaccb0bbcd4b1f2754b1733a58b48aa34181e8e635a016d852f46724aca85"
+    }
+  ]
+}
