@@ -1,0 +1,365 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<meta name="description" content="게임 오픈소스 분석 EP.02. SDL3의 PumpEvents, PollEvent, 이벤트 큐, 입력 상태 API를 실제 소스 코드에서 추적합니다.">
+<title>EP.02 · SDL3 이벤트 시스템 깊이 읽기 | 게임 오픈소스 분석</title>
+<link rel="stylesheet" href="../../learning-lab.css">
+<style>
+.analysis-hero{background:linear-gradient(135deg,rgba(48,95,151,.23),transparent 70%);padding:22px;border:1px solid #3b5879;border-radius:18px}
+.anchor-nav{display:flex;gap:9px;flex-wrap:wrap;padding:0;list-style:none;margin:24px 0}
+.anchor-nav a{display:inline-block;text-decoration:none;border:1px solid #406080;background:#172a46;border-radius:999px;padding:5px 12px;font-size:13px}
+.kicker{color:#96c5ff;font-size:12px;letter-spacing:.08em;font-weight:850}
+.big-number{font-size:32px;font-weight:850;line-height:1.25;color:#e5f0ff}
+.concept-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.concept-grid article{border:1px solid #385570;background:#172b47;border-radius:14px;padding:18px}
+.concept-grid strong{display:block;color:#f1f6ff;margin-bottom:6px}
+.concept-grid p{font-size:14px;color:#c5d7e9;margin:0;line-height:1.7}
+.small-badge{font-size:11px;color:#b0d3ff;background:#223d5b;padding:4px 8px;border-radius:7px}
+.sourcebox{border:1px solid #4c6885;border-radius:14px;padding:18px;background:#13253c;margin:18px 0}
+.sourcebox strong{color:#d4e9ff}
+.sourcebox a{overflow-wrap:anywhere}
+.path{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#a4c5ee;overflow-wrap:anywhere}
+.source-list{list-style:none;padding:0;margin:0}
+.source-list li{padding:14px 0;border-bottom:1px solid #344966;margin:0}
+.source-list li:last-child{border-bottom:0}
+.source-list p{font-size:14px;margin:5px 0 0}
+.flow-scroll{overflow:auto;max-width:100%;border:1px solid #416082;background:#0d2038;border-radius:16px;padding:12px}
+.flow-scroll svg{display:block;min-width:780px;width:100%;height:auto;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}
+.flow-scroll text{paint-order:stroke;stroke-width:0}
+.flow-scroll .flow-title{font-size:15px;font-weight:800;fill:#e9f5ff}
+.flow-scroll .flow-sub{font-size:12px;fill:#bed1e9}
+.flow-scroll .flow-arrow{stroke:#93c5ff;stroke-width:2.5;fill:none}
+.flow-scroll .flow-dash{stroke:#eccd88;stroke-dasharray:8 6;stroke-width:2.5;fill:none}
+.figure-note{color:#b6cbdf;font-size:13px;line-height:1.6;margin-top:10px}
+.timeline{border-left:3px solid #648ec4;margin:24px 0 22px 9px;padding-left:25px}
+.timeline>div{position:relative;margin-bottom:20px}
+.timeline>div::before{position:absolute;content:"";width:13px;height:13px;border-radius:50%;border:3px solid #192944;background:#91c8ff;left:-34px;top:7px}
+.timeline p{font-size:14px;margin:3px 0}
+.timeline code{font-size:13px;color:#b9e0ff}
+.versus{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.versus>article{padding:18px;border:1px solid #456380;background:#152d4b;border-radius:15px}
+.versus>article h3{margin:0 0 10px}
+.input-sim{border:1px solid #4b6886;background:#112944;border-radius:17px;padding:20px}
+.input-sim .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.input-sim .controls button{min-width:115px}
+.sim-results{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sim-results>div{background:#0a1b2d;border:1px solid #395779;border-radius:10px;padding:14px;min-height:120px}
+.sim-results strong{display:block;color:#a8d2ff;margin-bottom:8px}
+.sim-results code{white-space:pre-wrap;word-break:break-word;color:#cfe8dc}
+.sim-log{margin:0;padding-left:20px;font-size:13px}
+.sim-log li{margin:3px 0}
+.check{padding:12px 16px;border-left:4px solid #89c9ae;background:#163c3a;border-radius:0 10px 10px 0;margin:18px 0}
+.faq summary{font-size:15px}
+.faq p{margin-bottom:2px}
+.article-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:28px}
+@media(max-width:700px){.concept-grid,.versus,.sim-results{grid-template-columns:1fr}.analysis-hero{padding:18px}.flow-scroll svg{min-width:720px}.anchor-nav a{font-size:12px}.big-number{font-size:25px}}
+</style>
+</head>
+<body>
+<main>
+<nav aria-label="사이트 이동"><a href="../../">← 허브 홈</a><a href="../">오픈소스 분석 아카이브</a><a href="../../thinking-lab/">사고력 훈련</a></nav>
+<header class="hero analysis-hero">
+<span class="eyebrow">GAME OPEN SOURCE · EP.02 · 2026-10-09</span>
+<h1>SDL3 이벤트 시스템: 키 입력 하나는 게임에 어떻게 도착할까?</h1>
+<p class="lead">윈도·입력·오디오의 플랫폼 차이를 숨기는 SDL에서, 이벤트는 실제로 어디에 저장되고 누가 꺼내는가? <strong>공식 C/C++ 소스 파일의 함수 호출과 자료구조를 따라가는</strong> 분석입니다.</p>
+<div class="progress"><span>주제 · 입력 / 운영체제 추상화</span><span>코드 기준 · SDL main @ c314de7</span><span>난이도 · 초급 → 중급</span><span>예제 · SDL3 / C++11</span></div>
+<p class="note">분석 기준: 2026-10-09, 공식 저장소 main의 <a href="https://github.com/libsdl-org/SDL/commit/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6" target="_blank" rel="noopener noreferrer">커밋 c314de7</a>. 문서 내 성능 수치는 벤치마크가 아니며 실제 실행·빌드 테스트는 수행하지 않았습니다.</p>
+</header>
+<ul class="anchor-nav" aria-label="이 문서의 목차">
+<li><a href="#takeaways">핵심 정리</a></li><li><a href="#flow">입력 흐름 그림</a></li>
+<li><a href="#trace">실제 코드 추적</a></li><li><a href="#queue">자료구조</a></li><li><a href="#event-state">이벤트 vs 상태</a></li>
+<li><a href="#sample">실전 API 예제</a></li><li><a href="#tradeoffs">설계 트레이드오프</a></li><li><a href="#read-code">코드 읽기</a></li>
+</ul>
+
+<section id="takeaways">
+<h2>1. 1분 요약 — 꼭 기억할 4가지</h2>
+<div class="concept-grid">
+<article><span class="kicker">PLATFORM LAYER</span><strong>운영체제별 코드는 SDL 안에 있다</strong><p>Windows와 X11 등은 입력을 수집하는 방식이 다릅니다. SDL은 비디오 백엔드의 <code>PumpEvents</code> 함수 포인터를 통해 차이를 감춥니다.</p></article>
+<article><span class="kicker">EVENT DELIVERY</span><strong>입력은 큐에 넣고 나중에 꺼낸다</strong><p>발생한 입력을 <code>SDL_Event</code>로 표현하고 <code>SDL_PushEvent</code>를 거쳐 큐에 넣습니다. 게임 루프는 <code>SDL_PollEvent</code>로 소비합니다.</p></article>
+<article><span class="kicker">DATA STRUCTURE</span><strong>큐는 단순한 고정 배열이 아니다</strong><p>현재 소스는 이중 연결 리스트와 제거 노드 재사용 목록을 사용합니다. 큐 접근은 뮤텍스로 보호합니다.</p></article>
+<article><span class="kicker">INPUT SEMANTICS</span><strong>이벤트와 키 상태는 답하는 질문이 다르다</strong><p><em>방금 눌렀나?</em>는 이벤트, <em>지금 누르고 있나?</em>는 키 상태 조회가 어울립니다. 빠른 누름과 떼기는 상태만으로 놓칠 수 있습니다.</p></article>
+</div>
+<div class="callout"><strong>분석의 관점</strong><p>SDL은 씬 그래프·물리·애니메이션·게임플레이 로직을 모두 제공하는 완성형 게임 엔진이 아닙니다. 여러 플랫폼의 창, 입력, 오디오, 그래픽스 연결 등을 제공하는 기반 라이브러리입니다. 이 회차에서는 입력·이벤트의 내부 구조에 집중합니다.</p></div>
+</section>
+
+<section id="flow">
+<h2>2. 입력 한 번이 지나가는 길</h2>
+<p>키보드의 스페이스 키가 눌렸다는 상황을 생각해 봅니다. 특정 플랫폼의 구현은 서로 다르지만, 이번에 분석한 소스에서는 백엔드가 수집한 정보를 공통 키보드 처리 경로에 전달하고, 게임은 SDL 이벤트를 소비합니다.</p>
+<figure class="figure" style="padding:0;border:0;background:transparent">
+<div class="flow-scroll" role="group" aria-label="이벤트 처리 다이어그램. 좌우로 스크롤하여 전체 그림을 볼 수 있습니다">
+<svg viewBox="0 0 1040 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="flow-title flow-desc">
+<title id="flow-title">SDL3 입력 이벤트의 내부 전달 경로</title>
+<desc id="flow-desc">운영체제 메시지가 SDL 비디오 백엔드의 PumpEvents, SDL_SendKeyboardKeyInternal, SDL_PushEvent, SDL_EventQ, SDL_PollEvent 순으로 전달됩니다. 키보드 처리에서는 keystate도 갱신되며 SDL_GetKeyboardState로 조회합니다.</desc>
+<defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#93c5ff"/></marker><marker id="arrow-dash" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#eccd88"/></marker></defs>
+<rect x="20" y="45" rx="15" width="180" height="92" fill="#254b72" stroke="#6ca4dc"/>
+<text x="110" y="78" text-anchor="middle" class="flow-title">운영체제 이벤트</text><text x="110" y="102" text-anchor="middle" class="flow-sub">Win32 · X11 등</text>
+<rect x="230" y="45" rx="15" width="183" height="92" fill="#254b72" stroke="#6ca4dc"/>
+<text x="321" y="77" text-anchor="middle" class="flow-title">비디오 백엔드</text><text x="321" y="101" text-anchor="middle" class="flow-sub">_this-&gt;PumpEvents</text>
+<rect x="443" y="45" rx="15" width="185" height="92" fill="#31577a" stroke="#76baff"/>
+<text x="535" y="77" text-anchor="middle" class="flow-title">키보드 처리</text><text x="535" y="101" text-anchor="middle" class="flow-sub">SDL_SendKeyboardKey</text>
+<rect x="658" y="45" rx="15" width="160" height="92" fill="#295f68" stroke="#7ad0cb"/>
+<text x="738" y="77" text-anchor="middle" class="flow-title">이벤트 추가</text><text x="738" y="101" text-anchor="middle" class="flow-sub">SDL_PushEvent</text>
+<rect x="848" y="45" rx="15" width="171" height="92" fill="#295f68" stroke="#7ad0cb"/>
+<text x="933" y="77" text-anchor="middle" class="flow-title">이벤트 큐</text><text x="933" y="101" text-anchor="middle" class="flow-sub">SDL_EventQ</text>
+<path d="M200 91 H228 M413 91 H441 M628 91 H656 M818 91 H846" class="flow-arrow" marker-end="url(#arrow)"/>
+<rect x="848" y="219" rx="15" width="171" height="92" fill="#47517a" stroke="#b3b9ff"/><text x="933" y="254" text-anchor="middle" class="flow-title">게임 루프</text><text x="933" y="278" text-anchor="middle" class="flow-sub">SDL_PollEvent</text>
+<path d="M933 137 V216" class="flow-arrow" marker-end="url(#arrow)"/>
+<rect x="445" y="222" rx="15" width="185" height="89" fill="#78643e" stroke="#e7bc70"/>
+<text x="537" y="254" text-anchor="middle" class="flow-title">현재 키 상태 배열</text><text x="537" y="279" text-anchor="middle" class="flow-sub">keystate[scancode]</text>
+<rect x="445" y="345" rx="15" width="185" height="73" fill="#78643e" stroke="#e7bc70"/>
+<text x="537" y="373" text-anchor="middle" class="flow-title">키 상태 조회</text><text x="537" y="395" text-anchor="middle" class="flow-sub">SDL_GetKeyboardState</text>
+<path d="M536 137 V220" class="flow-dash" marker-end="url(#arrow-dash)"/>
+<path d="M536 311 V343" class="flow-dash" marker-end="url(#arrow-dash)"/>
+<path d="M630 381 H775 V265 H846" class="flow-dash" marker-end="url(#arrow-dash)"/>
+<text x="651" y="187" class="flow-sub" fill="#ffde9a">이벤트 경로</text>
+<text x="550" y="332" class="flow-sub">상태 경로</text>
+<text x="43" y="373" class="flow-sub">실선: 큐 이벤트 전달</text><text x="43" y="396" class="flow-sub">점선: 현재 상태 조회</text>
+</svg></div>
+<figcaption class="figure-note"><strong>실제 확인한 함수명으로 만든 학습용 개념도.</strong> 화살표는 여러 플랫폼에 공통적인 논리적 관계를 요약한 것으로, 운영체제별 모든 함수 호출을 빠짐없이 표현한 실행 추적 그래프는 아닙니다. 작은 화면에서는 그림을 좌우로 스크롤할 수 있습니다.</figcaption>
+</figure>
+<div class="step-row">
+<div class="step"><span class="num">수집</span><b>SDL_PumpEvents</b><p>OS·디바이스의 새로운 상태를 읽어들입니다. Windows와 X11은 별도 구현을 가집니다.</p></div>
+<div class="step"><span class="num">저장</span><b>SDL_PushEvent</b><p>이벤트 필터·감시자를 거쳐 큐에 복사합니다. 필터에 의해 제외될 수 있습니다.</p></div>
+<div class="step"><span class="num">소비</span><b>SDL_PollEvent</b><p>큐에서 다음 이벤트를 꺼내 게임 루프에 전달합니다. 이벤트가 없으면 false를 반환합니다.</p></div>
+</div>
+</section>
+
+<section id="trace">
+<h2>3. 실제 소스 코드 추적: 키 입력에서 PollEvent까지</h2>
+<p>여기부터는 <strong>SDL 공식 저장소의 특정 커밋에서 실제로 확인한 구현</strong>입니다. 각 단계 오른쪽의 링크를 누르면 해당 소스 라인으로 이동합니다.</p>
+<div class="timeline">
+<div><strong>① 인터페이스: 가상 함수 포인터</strong><p><code>SDL_VideoDevice::PumpEvents</code>는 플랫폼별 이벤트 수집 함수의 진입점을 저장합니다. 공통 코드가 OS 종류를 매번 분기하지 않아도 됩니다.</p><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/video/SDL_sysvideo.h#L353-L366">SDL_sysvideo.h 361행 ↗</a></p></div>
+<div><strong>② 플랫폼 구현: Windows / X11</strong><p>Windows 백엔드에는 <code>WIN_PumpEvents</code>, X11 백엔드에는 <code>X11_PumpEvents</code>가 있습니다. 서로 다른 OS 이벤트 루프를 같은 인터페이스로 연결합니다.</p><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/video/windows/SDL_windowsevents.c#L2608-L2650">Windows 구현 ↗</a> · <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/video/x11/SDL_x11events.c#L2372-L2405">X11 구현 ↗</a></p></div>
+<div><strong>③ 공통 이벤트 수집</strong><p><code>SDL_PumpEventsInternal</code>이 비디오 디바이스의 <code>PumpEvents</code> 함수를 호출하고 입력 관련 유지보수를 수행합니다. <code>SDL_PumpEvents</code>는 이를 공개 API로 노출합니다.</p><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1526-L1575">SDL_events.c 1526–1575행 ↗</a></p></div>
+<div><strong>④ 키보드 상태 갱신 + 이벤트 생성</strong><p><code>SDL_SendKeyboardKeyInternal</code>에서 <code>keystate[scancode]</code>를 바꾸고, 활성화된 이벤트 유형이라면 <code>SDL_EVENT_KEY_DOWN/UP</code>을 만들어 <code>SDL_PushEvent</code>로 보냅니다.</p><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_keyboard.c#L528-L570">상태 갱신 ↗</a> · <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_keyboard.c#L638-L652">이벤트 생성 ↗</a></p></div>
+<div><strong>⑤ 필터와 이벤트 큐 등록</strong><p><code>SDL_PushEvent</code>는 타임스탬프를 채우고 감시자/필터를 거친 뒤 <code>SDL_PeepEvents(..., SDL_ADDEVENT, ...)</code>로 큐에 추가합니다. 필터에서 거부하거나 큐가 가득 차면 실패할 수 있습니다.</p><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1826-L1851">SDL_PushEvent 구현 ↗</a> · <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1071-L1125">큐 추가 구현 ↗</a></p></div>
+<div><strong>⑥ 게임 루프에서 이벤트 꺼내기</strong><p><code>SDL_PollEvent(event)</code>는 <code>SDL_WaitEventTimeoutNS(event, 0)</code>를 호출합니다. 내부에서 <code>SDL_PeepEventsInternal</code>이 큐를 조회하고, 가져온 노드를 큐에서 제거합니다.</p><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1577-L1582">PollEvent 내부 ↗</a> · <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1709-L1765">비대기 조회 경로 ↗</a> · <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1177-L1245">GETEVENT 분기 ↗</a></p></div>
+</div>
+<div class="check"><strong>중요한 구분</strong><p>이벤트 생성 전에 키 상태가 갱신됩니다. 따라서 <code>SDL_SetEventFilter</code>가 특정 키 이벤트를 큐에서 제외하더라도, 이미 갱신된 키보드 상태는 그대로 유지됩니다. 필터와 키 상태는 독립적으로 생각해야 합니다.</p></div>
+</section>
+
+<section id="queue">
+<h2>4. 내부 자료구조 — SDL_EventQ는 어떻게 구성되어 있을까?</h2>
+<p>“큐”라는 말만 보고 고정 길이 배열이나 단일 <code>std::queue</code>를 떠올리기 쉽습니다. 하지만 이번 소스의 <code>SDL_EventQ</code>는 <code>head</code>, <code>tail</code>, <code>free</code> 포인터를 가진 <strong>이중 연결 리스트</strong>를 사용합니다. 각 노드는 <code>SDL_Event</code>와 이전/다음 노드 포인터, 이벤트 소유의 임시 메모리 연결 정보를 갖습니다.</p>
+<div class="sourcebox">
+<div class="kicker">소스 확인</div><strong>SDL_EventEntry와 SDL_EventQ</strong><p class="path">src/events/SDL_events.c:144–161</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L144-L161">이중 연결 리스트 구조 확인 ↗</a></p>
+<div class="step-row" style="margin:12px 0 0">
+<div class="step"><span class="num">HEAD</span><b>가장 오래 대기한 노드</b><p><code>SDL_PollEvent</code>는 타입 조건에 맞는 이벤트를 여기부터 탐색합니다.</p></div>
+<div class="step"><span class="num">TAIL</span><b>새 이벤트를 붙이는 곳</b><p>노드의 앞뒤 포인터를 연결해 순서를 유지합니다.</p></div>
+<div class="step"><span class="num">FREE</span><b>제거한 노드 보관함</b><p>다음 이벤트 추가 시 할당 대신 재사용할 수 있습니다.</p></div>
+</div>
+</div>
+<figure class="figure">
+<div class="step-row" aria-label="이벤트 큐와 재사용 목록을 보여주는 텍스트 구조 다이어그램">
+<div class="step"><span class="num">대기 중 ①</span><b>KEY_DOWN</b><p>head → next</p></div>
+<div class="step"><span class="num">대기 중 ②</span><b>MOUSE_MOVE</b><p>prev ↔ next</p></div>
+<div class="step"><span class="num">대기 중 ③</span><b>WINDOW_RESIZED</b><p>prev ← tail</p></div>
+</div>
+<div class="card" style="margin:13px 0 0;text-align:center;background:#1b354b"><strong>SDL_CutEvent()</strong> → 노드를 대기 목록에서 분리 → <strong>free 목록으로 이동</strong> → 새 이벤트에 재사용 가능</div>
+<figcaption>학습용 큐 예시. 이벤트 이름과 노드 순서는 임의로 정한 예시이며 실제 실행에서 관측한 로그가 아닙니다.</figcaption>
+</figure>
+<div class="grid two">
+<article class="card"><h3>삽입: SDL_AddEvent</h3><p><code>free</code> 노드가 있으면 재사용하고, 없으면 새 노드를 할당합니다. 이벤트를 복사한 후 <code>tail</code>에 연결합니다. 삽입 자체는 꼬리 포인터가 있어 통상 O(1)이지만, 할당이나 감시자 호출 비용은 별도입니다.</p><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1071-L1125">삽입과 재사용 ↗</a></p></article>
+<article class="card"><h3>제거: SDL_CutEvent</h3><p><code>prev/next</code> 포인터를 고쳐 대기 목록에서 제거하고 노드를 <code>free</code>에 연결합니다. <strong>제거 대상 노드를 이미 알고 있을 때</strong> 포인터 수정은 O(1)입니다. 노드를 찾는 비용은 별개입니다.</p><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1127-L1156">노드 분리 ↗</a></p></article>
+</div>
+<p>이벤트 유형을 조건으로 골라 꺼내는 <code>SDL_PeepEventsInternal</code>은 <code>head</code>부터 순회하므로 큐 길이가 Q라면 최악에는 O(Q)개 노드를 확인할 수 있습니다. 큐 접근은 뮤텍스로 보호됩니다. 단, 이것은 <strong>소스 구조를 바탕으로 한 복잡도 해석</strong>이지 실측 처리량이 아닙니다.</p>
+<div class="callout"><strong>흥미로운 구현 세부</strong><p>해당 커밋의 <code>SDL_MAX_QUEUED_EVENTS</code>는 <strong>65,535</strong>로 정의되어 무제한 큐 증가를 막습니다. 이 값은 현재 조사한 내부 구현 상수이며, 모든 버전에서 불변인 공개 API 계약은 아닙니다. 앱이 이벤트를 충분히 소비하지 않으면 <code>SDL_PushEvent</code>가 실패할 수 있습니다. <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L53-L66">상수 정의 ↗</a></p></div>
+<h3>한 프레임에 PollEvent를 여러 번 호출하면 OS도 매번 읽을까?</h3>
+<p>코드를 보면 단순하지 않습니다. <code>SDL_PollEvent</code>는 타임아웃 0으로 처리하고, 내부에서는 <code>SDL_EVENT_POLL_SENTINEL</code>이라는 특별한 이벤트를 활용해 한 번의 폴링 순환 경계를 표현합니다. 매번 무조건 같은 비용으로 플랫폼 이벤트를 다시 수집한다고 단정할 수 없습니다. 이 로직은 내부 최적화 구현이므로 앱은 공개 API 의미에 의존해야 합니다.</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1558-L1569">sentinel 추가 ↗</a> · <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1709-L1755">sentinel 처리 ↗</a></p>
+</section>
+
+<section id="event-state">
+<h2>5. 게임 입력 처리의 핵심: 발생한 사건 vs 현재 상태</h2>
+<div class="versus">
+<article><h3>📨 이벤트(Event)</h3><p><strong>질문:</strong> 무슨 일이 발생했나?</p><p><code>SDL_EVENT_KEY_DOWN</code>, <code>SDL_EVENT_KEY_UP</code>은 눌림·떼어짐의 전이를 나타냅니다. 입력 발생 순간에 반응하는 동작, 예를 들어 단발성 메뉴 선택에 적합합니다.</p><span class="tag">이벤트 시퀀스</span><span class="tag">반복 여부 확인</span></article>
+<article><h3>🎛️ 상태(State)</h3><p><strong>질문:</strong> 지금 무엇이 눌려 있나?</p><p><code>SDL_GetKeyboardState()</code>는 SDL 내부의 스캔코드별 <code>bool</code> 배열을 가리키는 포인터를 반환합니다. 누르고 있는 동안 지속되는 이동 같은 처리를 판단할 때 유용합니다.</p><span class="tag">현재 값</span><span class="tag">SDL_Scancode</span></article>
+</div>
+<p>키를 매우 빠르게 눌렀다가 다음 게임 루프에서 상태를 읽기 전에 떼었다면 상태 배열은 이미 <code>false</code>일 수 있습니다. 반면 큐에 남아 있는 <code>KEY_DOWN/KEY_UP</code> 이벤트는 각각 확인할 수 있습니다. <strong>단, 이벤트도 필터링·큐 가득 참·소비 지연 등에 영향을 받으므로 모든 물리 입력이 반드시 보존된다고 가정해서는 안 됩니다.</strong></p>
+<h3>직접 눌러 보는 입력 흐름 미니 실험</h3>
+<p class="note">아래는 SDL 실행 결과가 아니라 <strong>차이점을 설명하기 위해 만든 브라우저 JavaScript 시뮬레이터</strong>입니다. 버튼을 눌러도 실제 키보드 장치를 읽거나 SDL3를 실행하지 않습니다.</p>
+<div class="input-sim">
+<div class="controls"><button class="button" id="sim-down" type="button">① 키 누르기</button><button class="button" id="sim-up" type="button">② 키 떼기</button><button class="button" id="sim-poll" type="button">③ 다음 이벤트 소비</button><button class="button" id="sim-reset" type="button">초기화</button></div>
+<div class="sim-results" aria-live="polite">
+<div><strong>현재 키 상태</strong><span id="sim-held" class="big-number">UP (false)</span><p class="note">시뮬레이션의 상태 배열에 해당</p></div>
+<div><strong>아직 소비하지 않은 이벤트</strong><code id="sim-queue">(비어 있음)</code><p class="note">시뮬레이션의 이벤트 큐에 해당</p></div>
+</div><div style="margin-top:15px"><strong>소비한 이벤트</strong><ol class="sim-log" id="sim-log"><li>아직 없음</li></ol></div>
+</div>
+<div class="check"><strong>직접 확인할 순서</strong><p>“키 누르기 → 키 떼기”를 먼저 실행한 뒤 <strong>다음 이벤트 소비</strong>를 두 번 누릅니다. 키 상태는 이미 false인데 이벤트 큐에는 KEY_DOWN과 KEY_UP이 순서대로 남아 있음을 확인할 수 있습니다.</p></div>
+<p>공식 문서는 <code>SDL_GetKeyboardState</code>의 결과를 갱신하려면 <code>SDL_PumpEvents</code>가 필요하고, 매우 짧은 누름·떼어짐은 상태 조회에서 보이지 않을 수 있음을 명시합니다. <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_keyboard.c#L935-L943">상태 배열의 실제 반환 ↗</a> · <a href="https://wiki.libsdl.org/SDL3/SDL_GetKeyboardState" target="_blank" rel="noopener noreferrer">공식 API 문서 ↗</a></p>
+</section>
+
+<section id="sample">
+<h2>6. C++11 + SDL3 최소 사용 예제</h2>
+<p>이 예제는 렌더러를 만들지 않고 창과 입력만 처리합니다. <strong>SPACE 최초 누름</strong>은 이벤트로 구분하고, <strong>LEFT 현재 눌림 상태의 변화</strong>는 키보드 상태 조회로 구분합니다. 반복 KEY_DOWN을 걸러내는 방식도 확인할 수 있습니다.</p>
+<pre><code>#include &lt;SDL3/SDL.h&gt;
+#include &lt;SDL3/SDL_main.h&gt;
+
+int main(int argc, char* argv[]) {
+    (void)argc;
+    (void)argv;
+
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
+        SDL_Log("SDL_Init failed: %s", SDL_GetError());
+        return 1;
+    }
+
+    SDL_Window* window = SDL_CreateWindow(
+        "SDL3 Event Study", 640, 360, SDL_WINDOW_RESIZABLE);
+    if (!window) {
+        SDL_Log("Window failed: %s", SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
+    bool running = true;
+    bool previousLeft = false;
+    while (running) {
+        SDL_Event event;
+        while (SDL_PollEvent(&amp;event)) {
+            if (event.type == SDL_EVENT_QUIT) {
+                running = false;
+            } else if (event.type == SDL_EVENT_KEY_DOWN
+                    &amp;&amp; !event.key.repeat
+                    &amp;&amp; event.key.scancode == SDL_SCANCODE_SPACE) {
+                SDL_Log("SPACE pressed once");
+            }
+        }
+
+        const bool* keys = SDL_GetKeyboardState(nullptr);
+        const bool left = keys[SDL_SCANCODE_LEFT];
+        if (left != previousLeft) {
+            SDL_Log("LEFT is %s", left ? "held" : "released");
+            previousLeft = left;
+        }
+
+        SDL_Delay(16); // 예제용 단순 대기. 정밀 프레임 제한이 아님.
+    }
+
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
+}</code></pre>
+<details><summary>빌드 구성 예시 (CMake)</summary>
+<pre><code>cmake_minimum_required(VERSION 3.16)
+project(SDL3EventStudy LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(SDL3 REQUIRED CONFIG)
+add_executable(sdl3_event main.cpp)
+target_link_libraries(sdl3_event PRIVATE SDL3::SDL3)</code></pre>
+<p class="note">SDL3 개발 라이브러리와 CMake 패키지 구성 파일이 설치되어 있어야 합니다. 환경에 따라 실행 파일 옆에 SDL3 동적 라이브러리가 필요할 수 있습니다. 예제의 빌드·실행은 이 문서 작성 과정에서 수행하지 않았습니다.</p>
+</details>
+<div class="grid two">
+<article class="card"><h3>왜 스캔코드를 썼을까?</h3><p><code>SDL_Scancode</code>는 물리 키 위치 기준이고, <code>SDL_Keycode</code>는 키보드 레이아웃에서 해석된 키 의미에 가깝습니다. 어떤 키를 기준으로 입력을 설계할지에 따라 선택이 달라집니다.</p></article>
+<article class="card"><h3>왜 !event.key.repeat일까?</h3><p>누른 상태에서 OS/키보드 반복에 따라 KEY_DOWN이 다시 발생할 수 있습니다. “누를 때 딱 한 번”의 동작을 위해서는 반복 여부를 구분하는 것이 안전합니다.</p></article>
+</div>
+</section>
+
+<section id="tradeoffs">
+<h2>7. 이 설계의 장점, 한계, 주의사항</h2>
+<div class="scroll-table"><table>
+<thead><tr><th>설계 선택</th><th>장점</th><th>비용 / 주의점</th></tr></thead>
+<tbody>
+<tr><td><strong>플랫폼 함수 포인터</strong></td><td>게임 루프가 Windows·X11 등 구현 차이와 분리됩니다.</td><td>플랫폼 특유의 제약까지 사라지지는 않습니다.</td></tr>
+<tr><td><strong>이벤트 큐</strong></td><td>이벤트 생산과 소비 시점을 분리할 수 있습니다.</td><td>처리가 늦으면 큐에 쌓이고, 상한에 도달하면 추가 실패 가능성이 있습니다.</td></tr>
+<tr><td><strong>이중 연결 리스트 + free 목록</strong></td><td>노드 제거와 재사용에 유리합니다.</td><td>포인터·노드 관리와 필터 대상 탐색 비용이 있습니다.</td></tr>
+<tr><td><strong>뮤텍스 보호</strong></td><td>여러 스레드의 이벤트 추가·읽기 경로를 조정합니다.</td><td>동시 접근이 많으면 잠금 경합이 발생할 수 있습니다. 경합 정도는 환경별로 측정해야 합니다.</td></tr>
+<tr><td><strong>이벤트 필터 / 감시자</strong></td><td>큐에 들어가기 전 이벤트 검사와 관찰이 가능합니다.</td><td>콜백은 다른 스레드에서 실행될 수 있으므로 공유 데이터 보호와 빠른 콜백이 중요합니다.</td></tr>
+<tr><td><strong>상태 조회</strong></td><td>프레임 내 “현재 눌림” 여부를 빠르게 확인할 수 있습니다.</td><td>짧은 입력의 전이를 모두 보존하지 않습니다.</td></tr>
+</tbody></table></div>
+<details class="faq"><summary>스레드 안전성을 어디까지 믿을 수 있나?</summary><p><code>SDL_PushEvent</code>는 스레드 안전한 API이지만 <code>SDL_PollEvent</code>와 <code>SDL_PumpEvents</code>는 메인 스레드에서 호출해야 합니다. 이벤트 필터/감시자는 호출 스레드가 고정되지 않을 수 있으므로 공유 자료를 다룰 때 동기화가 필요합니다. <a href="https://wiki.libsdl.org/SDL3/SDL_PollEvent" target="_blank" rel="noopener noreferrer">PollEvent 공식 문서 ↗</a> · <a href="https://wiki.libsdl.org/SDL3/SDL_PushEvent" target="_blank" rel="noopener noreferrer">PushEvent 공식 문서 ↗</a></p></details>
+<details class="faq"><summary>애플리케이션 전용 이벤트를 만들 수 있나?</summary><p><code>SDL_RegisterEvents()</code>로 다른 코드와 충돌하지 않는 사용자 이벤트 타입을 확보할 수 있습니다. <code>SDL_PushEvent</code>는 <code>SDL_Event</code> 구조체를 큐에 복사하지만, 사용자 데이터 포인터가 가리키는 객체까지 깊은 복사하는 것은 아니므로 수명 관리에 주의해야 합니다.</p></details>
+<details class="faq"><summary>SDL_PeepEvents와 SDL_PushEvent는 같은가?</summary><p>둘 다 이벤트를 추가할 수 있지만, <code>SDL_PushEvent</code>는 이벤트 필터 및 감시자를 통과하며 <code>SDL_PeepEvents(... SDL_ADDEVENT ...)</code>는 이 과정을 건너뜁니다. 따라서 완전히 같은 의미의 호출이라고 생각하면 안 됩니다.</p></details>
+<details class="faq"><summary>창 크기 조정 중 항상 프레임이 멈추지 않나?</summary><p>플랫폼 특성상 Windows 등에서 창을 드래그하거나 크기 조정하는 동안 <code>SDL_PollEvent</code> 호출이 생각보다 오래 지연될 수 있다는 주의가 공식 API에 명시되어 있습니다. “무조건 즉시 반환”의 성능 보장으로 오해해서는 안 됩니다.</p></details>
+<div class="callout"><strong>성능 분석의 한계</strong><p>이 문서는 큐의 연결 방식과 함수 호출을 근거로 한 구조 분석입니다. 메모리 할당 횟수, CPU 사용률, 이벤트 지연, 멀티스레드 처리량은 측정하지 않았습니다. O(1)/O(Q) 표기는 특정 연산에 대한 알고리즘적 해석이며 시스템 전체의 성능 보장은 아닙니다.</p></div>
+</section>
+
+<section id="read-code">
+<h2>8. 코드를 읽을 때 추천하는 순서</h2>
+<ol class="source-list">
+<li><span class="small-badge">01</span> <strong>공개 API 계약부터 읽기</strong><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/include/SDL3/SDL_events.h#L1346-L1498">include/SDL3/SDL_events.h ↗</a> — Poll/Push의 반환값과 스레드 규칙을 먼저 확인합니다.</p></li>
+<li><span class="small-badge">02</span> <strong>SDL_PollEvent의 실제 호출 경로 따라가기</strong><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1579-L1582">src/events/SDL_events.c ↗</a> → <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1709-L1765">SDL_WaitEventTimeoutNS ↗</a> → <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1177-L1245">SDL_PeepEventsInternal ↗</a>.</p></li>
+<li><span class="small-badge">03</span> <strong>SDL_EventQ 자료구조와 노드 관리 확인</strong><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L144-L161">큐 선언 ↗</a> → <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_events.c#L1071-L1156">삽입/제거 ↗</a>.</p></li>
+<li><span class="small-badge">04</span> <strong>키보드 내부 상태가 바뀌는 지점 찾기</strong><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_keyboard.c#L528-L652">SDL_keyboard.c ↗</a>에서 <code>keystate</code> 갱신과 <code>SDL_PushEvent</code>를 구분합니다.</p></li>
+<li><span class="small-badge">05</span> <strong>플랫폼 차이 확인하기</strong><p><a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/video/windows/SDL_windowsevents.c#L2608-L2650">WIN_PumpEvents ↗</a>와 <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/video/x11/SDL_x11events.c#L2372-L2405">X11_PumpEvents ↗</a>의 형태를 비교합니다.</p></li>
+</ol>
+</section>
+
+<section id="questions">
+<h2>9. 스스로 설명해 보는 핵심 질문</h2>
+<details class="faq"><summary>Q1. 키를 빠르게 누르고 떼면 SDL_GetKeyboardState만으로 두 동작을 모두 알 수 있을까?</summary><p>일반적으로 그렇지 않습니다. 상태 배열은 현재 값만 나타내며, 누름과 떼어짐이 다음 확인 전에 모두 끝나면 false만 보일 수 있습니다. 이벤트를 통해 각각의 전이를 처리해야 합니다.</p></details>
+<details class="faq"><summary>Q2. SDL_EventQ가 이중 연결 리스트를 선택해 얻는 이점은?</summary><p>필터와 같은 로직에서 탐색 도중 임의 노드를 제거해야 할 때 <code>prev/next</code>가 있으므로 제거 대상 노드를 알고 있다면 연결만 수정하면 됩니다. 또한 tail로 삽입과 free 노드 재사용을 지원합니다.</p></details>
+<details class="faq"><summary>Q3. 왜 SDL_PushEvent 성공 반환값을 확인해야 할까?</summary><p>이벤트가 필터에 의해 거절되거나 큐가 가득 차거나 내부 오류가 나면 false가 될 수 있기 때문입니다. 사용자 이벤트를 이용한 작업 신호 전달이라면 특히 실패를 고려해야 합니다.</p></details>
+<details class="faq"><summary>Q4. 이벤트 필터가 SDL_EVENT_KEY_DOWN을 제거하면 키 상태도 false가 되나?</summary><p>그렇지 않습니다. 확인한 키보드 처리 코드에서 상태가 먼저 갱신되고, 그 뒤 큐로 보낼지 판단합니다. 필터는 전달을 제어하지 실제 키 상태 갱신을 되돌리는 것이 아닙니다.</p></details>
+</section>
+
+<section id="sources">
+<h2>10. 공식 자료와 검증 범위</h2>
+<div class="card"><h3>원본 및 버전</h3><p>공식 저장소: <a href="https://github.com/libsdl-org/SDL" target="_blank" rel="noopener noreferrer">libsdl-org/SDL</a><br>분석 기준 SHA: <code>c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6</code><br>조사일: <strong>2026-10-09</strong><br>라이선스: <a href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/LICENSE.txt" target="_blank" rel="noopener noreferrer">zlib License</a></p>
+<p class="note">연결 리스트, 잠금, 노드 재사용, 최대 이벤트 수, 함수 호출 경로는 고정 커밋의 구현을 확인했습니다. 설계 목적 및 복잡도는 이 구조에서 도출한 해석이며 작성자의 문장으로 설명했습니다. SVG와 시뮬레이터는 학습 목적으로 독자 제작했습니다.</p></div>
+<div class="grid two">
+<div class="card"><h3>이벤트 API</h3><p><a href="https://wiki.libsdl.org/SDL3/SDL_PollEvent" target="_blank" rel="noopener noreferrer">SDL_PollEvent</a> · <a href="https://wiki.libsdl.org/SDL3/SDL_PumpEvents" target="_blank" rel="noopener noreferrer">SDL_PumpEvents</a> · <a href="https://wiki.libsdl.org/SDL3/SDL_PushEvent" target="_blank" rel="noopener noreferrer">SDL_PushEvent</a></p></div>
+<div class="card"><h3>입력 상태</h3><p><a href="https://wiki.libsdl.org/SDL3/SDL_GetKeyboardState" target="_blank" rel="noopener noreferrer">SDL_GetKeyboardState</a> · <a target="_blank" rel="noopener noreferrer" href="https://github.com/libsdl-org/SDL/blob/c314de7ce9a48c4b3a2ead40ddb53153c02c1ec6/src/events/SDL_keyboard.c#L528-L652">SDL_keyboard.c 구현 ↗</a></p></div>
+</div>
+<p class="note">SDL의 API와 내부 구현은 변경될 수 있습니다. 이 문서의 소스 링크는 분석 커밋으로 고정했으며, 최신 API 동작 확인에는 공식 위키를 기준으로 삼아야 합니다.</p>
+</section>
+
+<div class="article-footer"><a class="button" href="../" style="text-decoration:none">← 오픈소스 분석 목록</a><a class="button" href="../ep-01-jolt-physics/" style="text-decoration:none">EP.01 · Jolt Physics 다시 보기 →</a></div>
+<footer>GAME OPEN SOURCE LAB · EP.02 · SDL3 Input &amp; Event System · 일반 게임 프로그래밍 기술 분석</footer>
+</main>
+<script>
+(function () {
+  let held = false;
+  let queue = [];
+  let consumed = [];
+  const down = document.getElementById("sim-down");
+  const up = document.getElementById("sim-up");
+  const poll = document.getElementById("sim-poll");
+  const reset = document.getElementById("sim-reset");
+  const state = document.getElementById("sim-held");
+  const entries = document.getElementById("sim-queue");
+  const history = document.getElementById("sim-log");
+  const render = () => {
+    state.textContent = held ? "DOWN (true)" : "UP (false)";
+    entries.textContent = queue.length ? queue.join("  →  ") : "(비어 있음)";
+    history.replaceChildren();
+    if (!consumed.length) {
+      const li = document.createElement("li");
+      li.textContent = "아직 없음";
+      history.appendChild(li);
+    } else {
+      for (const eventName of consumed.slice(-8)) {
+        const li = document.createElement("li");
+        li.textContent = eventName;
+        history.appendChild(li);
+      }
+    }
+  };
+  down.addEventListener("click", () => {
+    if (!held) { held = true; queue.push("KEY_DOWN"); }
+    render();
+  });
+  up.addEventListener("click", () => {
+    if (held) { held = false; queue.push("KEY_UP"); }
+    render();
+  });
+  poll.addEventListener("click", () => {
+    if (queue.length) { consumed.push(queue.shift()); }
+    render();
+  });
+  reset.addEventListener("click", () => { held = false; queue = []; consumed = []; render(); });
+  render();
+})();
+</script>
+</body>
+</html>

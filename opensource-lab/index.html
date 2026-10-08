@@ -1,32 +1,44 @@
 ---
 layout: null
 ---
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>게임 오픈소스 분석 01: Jolt Physics | Jiwhan Hub</title><link rel="stylesheet" href="../learning-lab.css"></head><body><main>
-<nav><a href="../">← 허브 홈</a><a href="../thinking-lab/">사고력 훈련</a><a href="../ai-asset-lab/">AI 게임 리소스 실험실</a></nav>
-<header class="hero"><span class="eyebrow">GAME OPEN SOURCE · EP.01 · 2026-10-08</span><h1>Jolt Physics: 게임 물리 엔진은 어떻게 충돌을 처리할까?</h1><p class="lead">실제 게임 제작에 쓰이는 유명 오픈소스의 설계 의도, 핵심 자료구조, 처리 흐름을 살펴봅니다. 특정 개발 환경이나 개인 프로젝트 적용법은 다루지 않습니다.</p><div class="progress"><span>분야: 물리 시뮬레이션</span><span>언어: C++</span><span>소스: <a href="https://github.com/jrouwe/JoltPhysics" target="_blank" rel="noopener noreferrer">jrouwe/JoltPhysics ↗</a></span></div></header>
-<section><h2>왜 Jolt Physics를 살펴볼까?</h2><p>Jolt Physics는 게임·VR 용도로 설계된 오픈소스 강체 물리 및 충돌 감지 라이브러리입니다. 멀티코어에서 물리 데이터를 처리하면서 동시에 충돌 질의, 객체 추가·제거 등 여러 작업을 다루도록 설계했습니다. Godot 4.4부터 3D 물리 엔진 옵션으로 통합된 사례도 있습니다.</p>
-<div class="grid"><article class="card"><h3>📦 강체(Rigid body)</h3><p>상자, 공, 바닥 등 위치·속도·질량을 가진 물리 객체를 모델링합니다.</p></article><article class="card"><h3>🔍 충돌 감지</h3><p>서로 만날 가능성이 있는 객체를 찾고 실제 접촉 여부를 정교하게 판별합니다.</p></article><article class="card"><h3>⚙️ 제약과 응답</h3><p>접촉 지점과 관절 제약을 이용해 물리적으로 일관된 움직임을 계산합니다.</p></article></div></section>
-<section><h2>그림으로 이해하는 충돌 처리</h2><figure class="figure"><div class="step-row">
-<div class="step"><span class="num">01 · BROADPHASE</span><b>후보부터 줄인다</b><p>장면의 수많은 물체를 전부 서로 비교하지 않고, 공간 정보로 충돌 가능 쌍을 추립니다.</p></div>
-<div class="step"><span class="num">02 · NARROWPHASE</span><b>정말 부딪혔는지 판별한다</b><p>후보 쌍의 실제 형상 관계를 검사해 접촉과 충돌 정보를 계산합니다.</p></div>
-<div class="step"><span class="num">03 · SOLVING</span><b>움직임을 바로잡는다</b><p>충돌과 관절 제약을 반영하여 속도와 위치가 일관되도록 시뮬레이션합니다.</p></div>
-</div><figcaption>물리 엔진의 대표적인 개념적 처리 단계입니다. 실제 Jolt 내부 호출 순서를 그대로 나타내는 순서도는 아닙니다.</figcaption></figure>
-<div class="callout"><strong>핵심 관찰</strong><p>성능은 “충돌 계산이 빠르다” 하나로 끝나지 않습니다. 쓸모없는 검사 대상을 최대한 줄이고, 데이터 접근과 병렬 실행을 잘 관리하는 구조가 중요합니다.</p></div></section>
-<section><h2>소스 코드를 읽을 때 확인할 구조</h2><div class="grid two">
-<article class="card"><h3>PhysicsSystem</h3><p>시뮬레이션의 주요 시스템 객체. 물리 세계를 구성하고 업데이트하는 큰 흐름을 관찰합니다.</p></article>
-<article class="card"><h3>BodyInterface</h3><p>강체 생성·추가·제거 등 외부에서 물리 객체를 다루는 인터페이스를 살펴봅니다.</p></article>
-<article class="card"><h3>ObjectLayer</h3><p>어떤 종류의 물체끼리 충돌 대상으로 삼을지 분류하는 방법을 연구합니다.</p></article>
-<article class="card"><h3>BroadPhaseLayer</h3><p>거친 공간 검색 단계에 사용할 객체 그룹을 구분하는 방식을 살펴봅니다.</p></article></div>
-<p class="note">구조의 이름과 역할을 소개하는 입문 해설입니다. 특정 릴리스·커밋에서 함수 구현을 계측하거나 성능을 실측한 분석은 아닙니다.</p></section>
-<section><h2>기술적으로 생각해 볼 질문</h2><details><summary>Q1. N개의 물체가 있을 때 모든 쌍을 검사하면 얼마나 비쌀까?</summary><p>모든 서로 다른 쌍을 검사하면 N(N−1)/2번의 비교가 필요하므로 O(N²)입니다. 공간 분할을 활용하는 Broadphase는 실제로 검사할 후보 수를 줄이려는 단계입니다. 다만 최악의 경우가 항상 개선되는 것은 아닙니다.</p></details>
-<details><summary>Q2. 모든 물체가 서로 충돌해야 할까?</summary><p>예를 들어 센서, 정적 지형, 서로 충돌하지 않는 장식용 객체 등을 구별할 수 있습니다. 레이어 기반 충돌 필터링은 불필요한 충돌 쌍을 줄이고 게임 규칙을 명확하게 표현합니다.</p></details>
-<details><summary>Q3. 병렬 처리에서 특별히 어려운 점은 무엇일까?</summary><p>충돌 질의·객체 변경·시뮬레이션 갱신이 겹칠 수 있으므로 일관된 데이터 뷰와 작업 동기화가 필요합니다. Jolt의 설계 문서와 예제를 통해 이런 조건을 살펴볼 수 있습니다.</p></details></section>
-<section><h2>다음 분석 후보</h2><div class="grid two">
-<div class="card"><h3>Godot Engine</h3><p>게임 엔진의 Scene Tree·리소스 시스템과 에디터 아키텍처</p><a href="https://github.com/godotengine/godot" target="_blank" rel="noopener noreferrer">원본 코드 ↗</a></div>
-<div class="card"><h3>SDL</h3><p>입력·윈도·오디오·플랫폼 추상화 계층의 설계</p><a href="https://github.com/libsdl-org/SDL" target="_blank" rel="noopener noreferrer">원본 코드 ↗</a></div>
-<div class="card"><h3>EnTT</h3><p>ECS의 Registry·Entity·Component 저장 구조</p><a href="https://github.com/skypjack/entt" target="_blank" rel="noopener noreferrer">원본 코드 ↗</a></div>
-<div class="card"><h3>Recast Navigation</h3><p>네비게이션 메시 생성과 경로 탐색 파이프라인</p><a href="https://github.com/recastnavigation/recastnavigation" target="_blank" rel="noopener noreferrer">원본 코드 ↗</a></div></div>
-<p class="note">앞으로도 특정 사용자의 경험·도구·프로젝트를 기준으로 “여기에 적용해 보라”는 제안은 넣지 않습니다. 일반 게임 프로그래머를 위한 중립적인 기술 분석만 제공합니다.</p></section>
-<section><h2>읽을 자료</h2><ul><li><a href="https://github.com/jrouwe/JoltPhysics" target="_blank" rel="noopener noreferrer">Jolt Physics 공식 저장소 및 README</a></li><li><a href="https://github.com/jrouwe/JoltPhysics/tree/master/HelloWorld" target="_blank" rel="noopener noreferrer">Jolt HelloWorld 예제</a></li><li><a href="https://github.com/godot-jolt/godot-jolt" target="_blank" rel="noopener noreferrer">Godot Jolt 통합 프로젝트</a></li></ul></section>
-<footer>JIWHAN HUB · 게임 오픈소스 분석 · 범용 게임 개발 기술을 기준으로 작성</footer>
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220"><meta name="description" content="게임 개발에 쓰이는 유명 오픈소스의 실제 구조·소스 구현을 한국어로 분석하는 아카이브.">
+<title>게임 오픈소스 분석 · 회차별 아카이브 | Jiwhan Hub</title>
+<link rel="stylesheet" href="../learning-lab.css">
+<style>
+.list-card{display:block;text-decoration:none;color:inherit;transition:transform .17s,border-color .17s}
+.list-card:hover,.list-card:focus-visible{transform:translateY(-3px);border-color:#98c9ff;outline:none}
+.list-card .eyebrow{background:#263e60}
+.list-card h3{font-size:clamp(19px,3vw,24px);margin:12px 0 8px}
+.list-card p{color:#c9d9eb}
+.list-card .enter{font-weight:800;color:#a5d0ff;margin-top:14px}
+.latest{background:linear-gradient(135deg,#1b3455,#142339 68%);border-color:#557aa1}
+.lab-meta{display:flex;gap:9px;flex-wrap:wrap}
+.lab-meta span{display:inline-block;border:1px solid #3c5676;background:#182c49;border-radius:12px;padding:5px 10px;font-size:12px;color:#bad0e8}
+.archive-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.archive-grid .card{margin:0}
+.readme p{font-size:14px}
+@media(max-width:680px){.archive-grid{grid-template-columns:1fr}}
+</style></head><body><main>
+<nav aria-label="서비스 이동"><a href="../">← 허브 홈</a><a href="../thinking-lab/">사고력 훈련</a><a href="../ai-asset-lab/">AI 게임 리소스 실험실</a></nav>
+<header class="hero"><span class="eyebrow">GAME OPEN SOURCE · ARCHIVE</span><h1>게임 오픈소스 분석</h1><p class="lead">게임 업계에서 널리 쓰이는 공개 프로젝트를 하나씩 선정하고, <strong>실제 코드 구현과 설계 이유</strong>를 해설합니다. 개인 프로젝트나 특정 그래픽 API에 맞춘 활용 제안 대신 일반 게임 개발 기술을 분석합니다.</p>
+<div class="lab-meta"><span>화·금 05:30 (KST)</span><span>공식 소스 코드 검증</span><span>회차별 고정 주소</span><span>누적 학습 아카이브</span></div></header>
+<section><h2>✨ 최신 분석</h2><a href="./ep-02-sdl3-event-system/" class="card list-card latest" aria-label="EP.02 SDL3의 이벤트 시스템 읽기">
+<span class="eyebrow">EP.02 · 2026-10-09 · 입력·플랫폼</span>
+<h3>SDL3 — 운영체제 입력이 게임 이벤트로 바뀌는 과정</h3>
+<p>SDL_PumpEvents에서 키보드 처리, 잠금으로 보호되는 이벤트 큐, SDL_PollEvent까지 실제 소스 호출 관계를 따라갑니다. 이벤트와 현재 입력 상태의 차이를 손으로 확인하는 시뮬레이터도 포함합니다.</p>
+<span class="tag">SDL3</span><span class="tag">Event Queue</span><span class="tag">Input</span><span class="tag">C++11</span>
+<div class="enter">최신 회차 읽기 →</div>
+</a></section>
+<section><h2>📚 날짜별 · 회차별 아카이브</h2>
+<div class="archive-grid">
+<a href="./ep-02-sdl3-event-system/" class="card list-card"><span class="eyebrow">02 · 2026-10-09</span><h3>SDL3 이벤트 시스템</h3><p>플랫폼 추상화 · 이벤트 수집/소비 · 이중 연결 리스트 큐 · 키 상태와 이벤트 구분</p><span class="tag">입력·플랫폼</span><div class="enter">EP.02 열기 →</div></a>
+<a href="./ep-01-jolt-physics/" class="card list-card"><span class="eyebrow">01 · 2026-10-08</span><h3>Jolt Physics 강체 물리</h3><p>Broadphase → Narrowphase → Solver · PhysicsSystem과 물리 객체 관리</p><span class="tag">물리</span><div class="enter">EP.01 열기 →</div></a>
+</div></section>
+<section class="readme"><h2>📐 분석 기준</h2><div class="grid two">
+<div class="card"><h3>코드를 근거로 분석</h3><p>공식 GitHub 저장소와 문서를 확인하고, 실재하는 파일·함수와 분석 시점의 소스 버전을 기록합니다. 구현 사실과 개념 설명/추론을 구분합니다.</p></div>
+<div class="card"><h3>원리부터 트레이드오프까지</h3><p>쉬운 설명 → 도식 → 실제 코드 → 자료구조와 설계 이유 → 비용·제약 → 핵심 질문으로 이어집니다. 시각 자료와 코드 설명을 같은 흐름에 배치합니다.</p></div>
+</div><p class="note">회차는 발행할 때마다 별도 경로로 저장하고 아카이브에 추가합니다. 과거 회차의 URL과 본문은 보존합니다.</p></section>
+<footer>JIWHAN HUB · 게임 오픈소스 분석 아카이브 · GitHub Pages</footer>
 </main></body></html>
