@@ -11,7 +11,7 @@ try { let v=JSON.parse(localStorage.getItem(storageKey)||"{}"); for(const k of [
 let days=[],articles=[],selectedDate="",view="daily",category="all",openId=null,tab="easy",limit=25,failed=0;
 const ident=(day,index)=>day+":"+index;
 const persist=()=>{try{localStorage.setItem(storageKey,JSON.stringify(stored));}catch(e){}};
-function safeUrl(url){try{const u=new URL(url);return /^https?:$/.test(u.protocol)?u.href:"";}catch(e){return "";}}
+function safeUrl(url){const s=String(url||"").trim();return /^https?:\/\/[^\s<>"\x27]+$/i.test(s)?s:"";}
 function plain(s){return String(s??"").replace(/(?:cite|url|memcite).*?/gu,"").replace(/!\[[^\]]*\]\([^)]+\)/g,"").replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,"$1").replace(/\*\*([\s\S]*?)\*\*/g,"$1").replace(/\x60([^\x60]+)\x60/g,"$1").replace(/<\/?[^>]+>/g,"").replace(/[ \t]+/g," ").replace(/\s*\n\s*/g," ").trim();}
 function clip(s,n=600){let x=plain(s);if(x.length<=n)return x;let z=x.slice(0,n),i=Math.max(z.lastIndexOf("다. "),z.lastIndexOf(". "),z.lastIndexOf("요. "));return (i>n*.5?z.slice(0,i+1):z.trimEnd())+"…";}
 function sentence(s,n=2){return (plain(s).match(/[^.!?。]+(?:[.!?。]+|$)/g)||[]).slice(0,n).join(" ").trim();}
