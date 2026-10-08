@@ -1,55 +1,32 @@
 ---
 layout: null
 ---
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>EnTT로 이해하는 ECS와 Handle 시스템 | Jiwhan Hub</title><style>:root{color-scheme:dark;font-family:system-ui,-apple-system,'Noto Sans KR',sans-serif;background:#0b1220;color:#e8edf8}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 70% -10%,#263a5e,#0b1220 55%);line-height:1.8}main{max-width:900px;margin:auto;padding:28px 20px 90px}a{color:#a8caff}nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:42px}h1{font-size:clamp(30px,6vw,47px);line-height:1.3;margin:12px 0}h2{font-size:24px;margin:42px 0 14px}p,li{color:#d1dbee}.lead{font-size:18px;color:#afc5e3}.pill{display:inline-block;background:#233954;color:#b9d5ff;border-radius:100px;padding:4px 12px;font-size:12px;font-weight:700}.card,details{border:1px solid #334660;background:#14233b;border-radius:18px;padding:22px;margin:16px 0}details summary{cursor:pointer;font-weight:750;color:#c4d8ff}pre{overflow:auto;background:#091526;padding:18px;border-radius:12px;line-height:1.6;font-size:13px;color:#c8eddd}code{font-family:ui-monospace,Consolas,monospace}ul,ol{padding-left:25px}strong{color:#fff}footer{color:#91a9c5;font-size:13px;margin-top:45px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid .card{margin:0}@media(max-width:620px){.grid{grid-template-columns:1fr}.card,details{padding:17px}}
-/* 2026-10 visual-first learning prototype */
-.visual-intro{margin-top:24px}.visual-intro h2{margin-top:30px}.visual-intro .mini{font-size:14px;color:#a4bcd7}
-.visual-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
-.visual-cards article{background:#182944;border:1px solid #38506e;border-radius:14px;padding:15px}
-.visual-cards b{display:block;font-size:17px;color:#f1f6ff;margin-bottom:7px}
-.visual-cards p{margin:0;font-size:14px;line-height:1.6;color:#cad8eb}
-.study-figure{margin:24px 0;border:1px solid #405570;border-radius:17px;overflow:hidden;background:white}
-.study-figure img{width:100%;height:auto;display:block}
-.study-figure figcaption{color:#c5d5eb;background:#172a44;padding:11px 15px;font-size:13px}
-.image-link{display:inline-flex;align-items:center;gap:5px;background:#29486e;border-radius:20px;padding:7px 15px;text-decoration:none;font-weight:750;font-size:13px}
-.learn-path{counter-reset:stage;padding-left:0;list-style:none}
-.learn-path>li{counter-increment:stage;margin:12px 0;padding:15px 18px 15px 56px;border:1px solid #3a5070;background:#14243c;border-radius:14px;position:relative}
-.learn-path>li:before{content:counter(stage);position:absolute;left:15px;top:17px;display:grid;place-items:center;border-radius:50%;width:29px;height:29px;background:#3769ac;color:white;font-weight:800}
-.learn-path strong{color:#f3f7fe} .takeaway{padding:18px 20px;border-left:4px solid #7fb7ff;background:#193252;border-radius:0 12px 12px 0;margin:18px 0}
-.takeaway p{margin:6px 0 0}.deep-dive{margin:30px 0}.deep-dive>summary{font-size:17px}
-.deep-dive h2{margin-top:32px}.preview-note{font-size:13px;color:#a8bdd9}
-@media(max-width:700px){.visual-cards{grid-template-columns:1fr}.learn-path>li{padding-right:12px}.study-figure img{width:100%}}
-</style></head><body><main><nav><a href="../">← 허브 홈</a><a href="../daily-briefing/">데일리 브리핑</a><a href="../language-study/">언어 학습</a></nav><span class="pill">GitHub 오픈소스 분석 · 시범 콘텐츠 01 · 2026-10-08</span><h1>EnTT로 이해하는 ECS와 Handle 시스템</h1><p class="lead">C++ 게임 엔진의 객체 식별과 구성 요소 관리를 실제 오픈소스 설계에서 살펴봅니다.</p>
-<section class="visual-intro" aria-label="그림으로 먼저 배우기">
-<h2>먼저 이 세 가지를 기억해</h2>
-<div class="visual-cards">
-<article><b>🪪 Entity = 번호표</b><p>게임 캐릭터 그 자체라기보다, 캐릭터를 구분하는 ID라고 생각해.</p></article>
-<article><b>📦 Component = 정보</b><p>위치(Position), 속도(Velocity), 체력(Health) 같은 데이터를 붙여줘.</p></article>
-<article><b>⚙️ System = 일하는 사람</b><p>위치와 속도를 가진 대상을 찾아 실제로 이동시켜.</p></article>
-</div>
-<figure class="study-figure"><img src="./assets/entt-ecs-guide.png" alt="ECS의 Entity·Component·System 관계, Registry 역할, Handle과 포인터 비교, DX9 엔진 단계적 적용 순서가 번호별로 그려진 인포그래픽" width="1055" height="1491" loading="eager"><figcaption>학습 그림 ① ECS 구성 → ② Registry → ③ Handle → ④ DX9 적용 순서로 읽으면 돼.</figcaption></figure>
-<a class="image-link" href="./assets/entt-ecs-guide.png" target="_blank" rel="noopener">🔎 이미지 원본 크게 보기 ↗</a>
-<h2>그림을 따라가며 이해해 보자</h2>
-<ol class="learn-path">
-<li><strong>게임 속 플레이어를 생각해.</strong> Player는 하나의 Entity ID고, Position과 Velocity 정보가 연결돼 있어. 포지션과 속도 자체가 Player 클래스의 상속 계층일 필요는 없어.</li>
-<li><strong>Registry는 관리 창고야.</strong> Entity를 만들고 없애며, 각 Entity에 연결된 컴포넌트를 저장해. 이동 시스템은 두 컴포넌트가 있는 대상을 조회해 갱신할 수 있어.</li>
-<li><strong>Handle은 '주소'가 아니라 '찾아갈 번호'야.</strong> 엔티티가 사라졌을 때 Registry에 유효성을 물어볼 수 있어. 단, 번호만 쓰면 자동으로 안전해지는 건 아니고 재사용·수명 검증이 필요해.</li>
-<li><strong>실무에선 조금씩 전환해.</strong> DX9 엔진 전체를 ECS로 바꾸기 전에, 위치나 속도처럼 간단한 데이터부터 분리하는 게 현실적이야.</li>
-</ol>
-<div class="takeaway"><strong>한 줄 요약</strong><p>“객체가 모든 데이터를 직접 들고 있기보다, ID에 필요한 데이터를 붙이고 시스템이 처리한다.”</p></div>
-<p class="preview-note">※ 이해를 돕는 개념도야. EnTT를 이용하는 모든 프로젝트가 동일한 구조인 것은 아니며, 아래 C++ 예제를 함께 확인해 줘.</p>
-</section><details class="deep-dive"><summary>📘 자세한 기술 설명·코드·실습 펼치기</summary><section class="card"><strong>분석 대상</strong><p><a href="https://github.com/skypjack/entt" target="_blank" rel="noopener">skypjack/entt</a> · C++ 기반 ECS 및 유틸리티 라이브러리. 이 샘플은 공개 API 개념에 대한 입문용 해설이며 특정 커밋의 코드를 직접 검증한 상세 리뷰는 아닙니다.</p><span class="pill">C++ · ECS · Registry · Entity</span></section><h2>1. 해결하려는 문제</h2><p>전통적인 상속 기반 게임 오브젝트는 데이터와 동작이 깊이 결합되기 쉽습니다. ECS는 엔티티를 식별자, 컴포넌트를 데이터, 시스템을 처리 로직으로 나누어 이를 완화합니다.</p><div class="grid"><div class="card"><strong>기존 방식</strong><p>GameObject → Character → Monster 같은 상속 구조. 기능 추가가 클래스 의존성을 키우기 쉽습니다.</p></div><div class="card"><strong>ECS 방식</strong><p>Entity ID + Position/Velocity/Health 등 필요한 데이터 조합. 시스템이 관련 데이터만 순회합니다.</p></div></div><h2>2. 핵심 사용 예제</h2><pre><code>#include &lt;entt/entt.hpp&gt;
-struct Position { float x, y; };
-struct Velocity { float x, y; };
-int main() {
-    entt::registry registry;
-    const auto entity = registry.create();
-    registry.emplace&lt;Position&gt;(entity, 0.f, 0.f);
-    registry.emplace&lt;Velocity&gt;(entity, 2.f, 1.f);
-    auto view = registry.view&lt;Position, Velocity&gt;();
-    for (auto e : view) {
-        auto &amp;p = view.get&lt;Position&gt;(e);
-        const auto &amp;v = view.get&lt;Velocity&gt;(e);
-        p.x += v.x; p.y += v.y;
-    }
-}</code></pre><h2>3. Handle과 포인터의 차이</h2><p>엔티티 ID는 오브젝트 메모리 주소가 아닙니다. 생명주기와 컴포넌트 소유권을 Registry가 관리하므로, 엔티티가 파괴될 때 포인터의 댕글링 위험을 줄이는 설계가 가능합니다. 단, 오래 저장한 ID가 여전히 유효한지는 항상 확인해야 합니다.</p><h2>4. DX9 레거시 엔진에 적용한다면</h2><ol><li>우선 렌더 오브젝트 포인터와 게임 플레이 객체 식별을 분리합니다.</li><li>Position과 Renderable 같은 데이터부터 명시적인 저장소로 옮깁니다.</li><li>Handle 유효성 검사와 객체 파괴 시점 테스트를 추가합니다.</li><li>기존 코드 전체를 한 번에 ECS로 교체하지는 않습니다.</li></ol><details><summary>실습 과제 보기</summary><p>몬스터 100개를 생성하고 Position과 Velocity를 갱신하세요. 삭제한 엔티티에 접근하는 상황을 만들어 유효성 검사를 추가해 보세요.</p></details><details><summary>더 깊게 볼 질문</summary><p>엔티티 식별자를 포인터로 관리할 때와 generation/version이 있는 핸들로 관리할 때, 객체 재사용 문제가 어떻게 달라지는가?</p></details><p><strong>공식 자료:</strong> <a href="https://github.com/skypjack/entt/wiki" target="_blank" rel="noopener">EnTT Wiki</a> · <a href="https://github.com/skypjack/entt" target="_blank" rel="noopener">GitHub 저장소</a></p></details><footer>JIWHAN HUB · 검토용 샘플 — 예약 발행 미등록</footer></main></body></html>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>게임 오픈소스 분석 01: Jolt Physics | Jiwhan Hub</title><link rel="stylesheet" href="../learning-lab.css"></head><body><main>
+<nav><a href="../">← 허브 홈</a><a href="../thinking-lab/">사고력 훈련</a><a href="../ai-asset-lab/">AI 게임 리소스 실험실</a></nav>
+<header class="hero"><span class="eyebrow">GAME OPEN SOURCE · EP.01 · 2026-10-08</span><h1>Jolt Physics: 게임 물리 엔진은 어떻게 충돌을 처리할까?</h1><p class="lead">실제 게임 제작에 쓰이는 유명 오픈소스의 설계 의도, 핵심 자료구조, 처리 흐름을 살펴봅니다. 특정 개발 환경이나 개인 프로젝트 적용법은 다루지 않습니다.</p><div class="progress"><span>분야: 물리 시뮬레이션</span><span>언어: C++</span><span>소스: <a href="https://github.com/jrouwe/JoltPhysics" target="_blank" rel="noopener noreferrer">jrouwe/JoltPhysics ↗</a></span></div></header>
+<section><h2>왜 Jolt Physics를 살펴볼까?</h2><p>Jolt Physics는 게임·VR 용도로 설계된 오픈소스 강체 물리 및 충돌 감지 라이브러리입니다. 멀티코어에서 물리 데이터를 처리하면서 동시에 충돌 질의, 객체 추가·제거 등 여러 작업을 다루도록 설계했습니다. Godot 4.4부터 3D 물리 엔진 옵션으로 통합된 사례도 있습니다.</p>
+<div class="grid"><article class="card"><h3>📦 강체(Rigid body)</h3><p>상자, 공, 바닥 등 위치·속도·질량을 가진 물리 객체를 모델링합니다.</p></article><article class="card"><h3>🔍 충돌 감지</h3><p>서로 만날 가능성이 있는 객체를 찾고 실제 접촉 여부를 정교하게 판별합니다.</p></article><article class="card"><h3>⚙️ 제약과 응답</h3><p>접촉 지점과 관절 제약을 이용해 물리적으로 일관된 움직임을 계산합니다.</p></article></div></section>
+<section><h2>그림으로 이해하는 충돌 처리</h2><figure class="figure"><div class="step-row">
+<div class="step"><span class="num">01 · BROADPHASE</span><b>후보부터 줄인다</b><p>장면의 수많은 물체를 전부 서로 비교하지 않고, 공간 정보로 충돌 가능 쌍을 추립니다.</p></div>
+<div class="step"><span class="num">02 · NARROWPHASE</span><b>정말 부딪혔는지 판별한다</b><p>후보 쌍의 실제 형상 관계를 검사해 접촉과 충돌 정보를 계산합니다.</p></div>
+<div class="step"><span class="num">03 · SOLVING</span><b>움직임을 바로잡는다</b><p>충돌과 관절 제약을 반영하여 속도와 위치가 일관되도록 시뮬레이션합니다.</p></div>
+</div><figcaption>물리 엔진의 대표적인 개념적 처리 단계입니다. 실제 Jolt 내부 호출 순서를 그대로 나타내는 순서도는 아닙니다.</figcaption></figure>
+<div class="callout"><strong>핵심 관찰</strong><p>성능은 “충돌 계산이 빠르다” 하나로 끝나지 않습니다. 쓸모없는 검사 대상을 최대한 줄이고, 데이터 접근과 병렬 실행을 잘 관리하는 구조가 중요합니다.</p></div></section>
+<section><h2>소스 코드를 읽을 때 확인할 구조</h2><div class="grid two">
+<article class="card"><h3>PhysicsSystem</h3><p>시뮬레이션의 주요 시스템 객체. 물리 세계를 구성하고 업데이트하는 큰 흐름을 관찰합니다.</p></article>
+<article class="card"><h3>BodyInterface</h3><p>강체 생성·추가·제거 등 외부에서 물리 객체를 다루는 인터페이스를 살펴봅니다.</p></article>
+<article class="card"><h3>ObjectLayer</h3><p>어떤 종류의 물체끼리 충돌 대상으로 삼을지 분류하는 방법을 연구합니다.</p></article>
+<article class="card"><h3>BroadPhaseLayer</h3><p>거친 공간 검색 단계에 사용할 객체 그룹을 구분하는 방식을 살펴봅니다.</p></article></div>
+<p class="note">구조의 이름과 역할을 소개하는 입문 해설입니다. 특정 릴리스·커밋에서 함수 구현을 계측하거나 성능을 실측한 분석은 아닙니다.</p></section>
+<section><h2>기술적으로 생각해 볼 질문</h2><details><summary>Q1. N개의 물체가 있을 때 모든 쌍을 검사하면 얼마나 비쌀까?</summary><p>모든 서로 다른 쌍을 검사하면 N(N−1)/2번의 비교가 필요하므로 O(N²)입니다. 공간 분할을 활용하는 Broadphase는 실제로 검사할 후보 수를 줄이려는 단계입니다. 다만 최악의 경우가 항상 개선되는 것은 아닙니다.</p></details>
+<details><summary>Q2. 모든 물체가 서로 충돌해야 할까?</summary><p>예를 들어 센서, 정적 지형, 서로 충돌하지 않는 장식용 객체 등을 구별할 수 있습니다. 레이어 기반 충돌 필터링은 불필요한 충돌 쌍을 줄이고 게임 규칙을 명확하게 표현합니다.</p></details>
+<details><summary>Q3. 병렬 처리에서 특별히 어려운 점은 무엇일까?</summary><p>충돌 질의·객체 변경·시뮬레이션 갱신이 겹칠 수 있으므로 일관된 데이터 뷰와 작업 동기화가 필요합니다. Jolt의 설계 문서와 예제를 통해 이런 조건을 살펴볼 수 있습니다.</p></details></section>
+<section><h2>다음 분석 후보</h2><div class="grid two">
+<div class="card"><h3>Godot Engine</h3><p>게임 엔진의 Scene Tree·리소스 시스템과 에디터 아키텍처</p><a href="https://github.com/godotengine/godot" target="_blank" rel="noopener noreferrer">원본 코드 ↗</a></div>
+<div class="card"><h3>SDL</h3><p>입력·윈도·오디오·플랫폼 추상화 계층의 설계</p><a href="https://github.com/libsdl-org/SDL" target="_blank" rel="noopener noreferrer">원본 코드 ↗</a></div>
+<div class="card"><h3>EnTT</h3><p>ECS의 Registry·Entity·Component 저장 구조</p><a href="https://github.com/skypjack/entt" target="_blank" rel="noopener noreferrer">원본 코드 ↗</a></div>
+<div class="card"><h3>Recast Navigation</h3><p>네비게이션 메시 생성과 경로 탐색 파이프라인</p><a href="https://github.com/recastnavigation/recastnavigation" target="_blank" rel="noopener noreferrer">원본 코드 ↗</a></div></div>
+<p class="note">앞으로도 특정 사용자의 경험·도구·프로젝트를 기준으로 “여기에 적용해 보라”는 제안은 넣지 않습니다. 일반 게임 프로그래머를 위한 중립적인 기술 분석만 제공합니다.</p></section>
+<section><h2>읽을 자료</h2><ul><li><a href="https://github.com/jrouwe/JoltPhysics" target="_blank" rel="noopener noreferrer">Jolt Physics 공식 저장소 및 README</a></li><li><a href="https://github.com/jrouwe/JoltPhysics/tree/master/HelloWorld" target="_blank" rel="noopener noreferrer">Jolt HelloWorld 예제</a></li><li><a href="https://github.com/godot-jolt/godot-jolt" target="_blank" rel="noopener noreferrer">Godot Jolt 통합 프로젝트</a></li></ul></section>
+<footer>JIWHAN HUB · 게임 오픈소스 분석 · 범용 게임 개발 기술을 기준으로 작성</footer>
+</main></body></html>

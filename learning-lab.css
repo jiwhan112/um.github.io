@@ -1,0 +1,24 @@
+
+:root{color-scheme:dark;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;background:#0b1220;color:#ecf2fa;--bg:#0b1220;--panel:#142239;--line:#34465f;--muted:#b6c7dd;--accent:#9fc6ff}
+*{box-sizing:border-box}body{margin:0;line-height:1.75;background:radial-gradient(circle at 80% 0%,#203959 0,#0b1220 45%)}a{color:#a6ceff}main{max-width:1000px;margin:auto;padding:24px 20px 90px}
+nav{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px;font-size:14px}nav a{text-decoration:none;color:#bdcff0}nav a:hover{text-decoration:underline}
+h1{font-size:clamp(32px,5.3vw,51px);line-height:1.23;margin:12px 0 15px;letter-spacing:-.03em}h2{font-size:clamp(22px,3.5vw,29px);line-height:1.38;margin:42px 0 16px}h3{font-size:18px;margin:0 0 8px}p{margin:0 0 15px}p,li{color:#d6e0ed}.lead{font-size:clamp(16px,2.1vw,19px);color:#b5c9e5;max-width:800px}
+.eyebrow{display:inline-block;font-size:12px;letter-spacing:.055em;background:#24415d;border:1px solid #456480;color:#d5e8ff;padding:5px 12px;border-radius:30px;font-weight:700}
+.hero{padding:0 0 26px;border-bottom:1px solid #314963}.muted,.note{font-size:13px;color:#a5bcd6}.note{margin-top:12px}.card,details,.diagram,.panel{background:#142339;border:1px solid var(--line);border-radius:17px;padding:21px;margin:14px 0}
+.card p:last-child,.panel p:last-child{margin-bottom:0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid .card{margin:0}
+.tag{display:inline-block;border-radius:999px;border:1px solid #496589;background:#223d5a;color:#d1e4ff;padding:3px 10px;font-size:12px;font-weight:650;margin:0 5px 7px 0}
+details>summary{cursor:pointer;color:#d0e3ff;font-weight:750}details[open]>summary{margin-bottom:16px}
+pre{white-space:pre;overflow:auto;background:#081323;border:1px solid #2c4160;border-radius:12px;padding:18px;font-size:13px;line-height:1.7;color:#c9f3dd}
+code{font-family:ui-monospace,"Cascadia Code",Consolas,monospace}li{margin:8px 0}ul,ol{padding-left:23px}
+.step-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}.step{border-radius:14px;padding:16px;background:#1d3150;border:1px solid #476287;position:relative}.step .num{display:block;font-size:12px;color:#91bef4;font-weight:800;margin-bottom:8px}.step b{display:block;color:white;margin-bottom:7px}.step p{font-size:14px;line-height:1.55;margin:0}
+.callout{border-left:4px solid #8cc0ff;background:#1b3352;padding:17px 20px;border-radius:0 12px 12px 0;margin:22px 0}
+.figure{margin:19px 0;background:#101f34;border:1px solid #426083;padding:22px;border-radius:17px}.figure figcaption{font-size:13px;color:#b9cbdf;margin-top:18px}
+.visual-label{text-align:center;font-size:13px;color:#c1d7f3;margin-top:10px}
+.button{appearance:none;cursor:pointer;background:#315789;border:1px solid #739dd2;color:#fff;padding:10px 17px;border-radius:10px;font-size:14px;font-weight:750}
+.button:hover{background:#42699d}.tabs{display:flex;flex-wrap:wrap;gap:9px}.tabs .button[aria-selected=true]{background:#89baf8;color:#0e223e}
+.experiment[hidden]{display:none}.checklist{list-style:none;padding:0}.checklist li{padding:12px 15px;border:1px solid #355270;border-radius:10px}
+.sheet{background:#0d1c2f;border:1px solid #385776;border-radius:15px;padding:20px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid #354761;padding:10px;text-align:left;vertical-align:top}th{color:#cce0fb}td{color:#d0def0}.scroll-table{overflow:auto}
+.hero-icon{font-size:39px;line-height:1.1;margin:0 0 12px}.progress{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.progress span{font-size:12px;border:1px solid #526480;background:#203453;border-radius:12px;padding:6px 10px}
+textarea{width:100%;background:#081425;border:1px solid #436285;color:#eaf2ff;border-radius:12px;padding:15px;font:14px/1.6 ui-monospace,Consolas,monospace;min-height:170px}
+footer{border-top:1px solid #30445e;padding-top:24px;margin-top:56px;color:#9bb0cb;font-size:13px}
+@media(max-width:680px){.grid,.grid.two,.step-row{grid-template-columns:1fr}.card,details,.diagram,.panel,.figure{padding:17px}.hero{padding-bottom:12px}nav{margin-bottom:25px}h2{margin-top:30px}th,td{padding:8px}}

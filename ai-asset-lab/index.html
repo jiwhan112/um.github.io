@@ -1,0 +1,41 @@
+---
+layout: null
+---
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>AI 게임 리소스 실험실 | Jiwhan Hub</title><link rel="stylesheet" href="../learning-lab.css"></head><body><main>
+<nav><a href="../">← 허브 홈</a><a href="../opensource-lab/">오픈소스 분석</a><a href="../thinking-lab/">사고력 훈련</a></nav>
+<header class="hero"><span class="eyebrow">AI GAME ASSET LAB · 수동 운영 · 준비 단계</span><h1>AI 게임 리소스 실험실</h1><p class="lead">AI로 게임에 들어갈 2D 이미지, 3D 모델, 음성·효과음을 만들 수 있을까? 모델 소개보다 <strong>결과물의 게임 적용 가능성</strong>을 기준으로 직접 검증하는 공간입니다.</p>
+<div class="progress"><span>🧭 다음 실험은 사용자가 결정</span><span>📅 자동화·예약 발행 없음</span><span>🧪 실험 결과 아직 미측정</span></div></header>
+<section><h2>연구할 리소스 3가지</h2><div class="grid">
+<article class="card"><div class="hero-icon" aria-hidden="true">🎨</div><h3>2D 리소스</h3><p>캐릭터, UI 아이콘, 아이템, 타일맵, 스프라이트 시트. 일관된 스타일·투명 배경·애니메이션 분할을 검사합니다.</p><span class="tag">PNG / WebP</span><span class="tag">Sprite sheet</span></article>
+<article class="card"><div class="hero-icon" aria-hidden="true">🧊</div><h3>3D 리소스</h3><p>프롭, 배경, 캐릭터 모델. 메시 구조·토폴로지·UV·텍스처·리깅·엔진 임포트까지 검증합니다.</p><span class="tag">glTF / GLB</span><span class="tag">FBX</span></article>
+<article class="card"><div class="hero-icon" aria-hidden="true">🎙️</div><h3>음성·사운드</h3><p>NPC 대사, 내레이션, 감정 표현, 효과음. 발음·자연스러움·길이·노이즈·라이선스를 검사합니다.</p><span class="tag">WAV / OGG</span><span class="tag">TTS / SFX</span></article>
+</div></section>
+<section><h2>제작 → 검증 → 기록: 공통 실험 방법</h2>
+<figure class="figure"><div class="step-row">
+<div class="step"><span class="num">STEP 01</span><b>목표 리소스 정의</b><p>어떤 게임 자산이 필요한가? 최종 파일 포맷·해상도·언어·엔진 제약을 명시합니다.</p></div>
+<div class="step"><span class="num">STEP 02</span><b>AI 생성 + 후처리</b><p>도구·모델 버전·프롬프트·생성 시간·수동 수정 작업을 빠짐없이 기록합니다.</p></div>
+<div class="step"><span class="num">STEP 03</span><b>엔진 적용 검사</b><p>가져오기 성공 여부, 시각·청각 품질, 제작 시간, 비용, 재현성을 검증합니다.</p></div>
+</div><figcaption>위 그림은 예정된 실험 절차입니다. 아직 실제 모델·이미지·오디오 결과물을 생성하거나 품질을 측정한 것은 아닙니다.</figcaption></figure>
+<div class="callout"><strong>운영 원칙</strong><p>사용자가 주제를 정할 때만 새 실험을 진행합니다. 자동으로 다음 강의를 발행하거나 결과를 성공한 것처럼 기록하지 않습니다.</p></div>
+</section>
+<section><h2>어떤 실험을 살펴볼까?</h2><div class="tabs" role="tablist" aria-label="리소스 분야 선택">
+<button class="button" role="tab" id="tab-2d" aria-selected="true" aria-controls="panel-2d" data-tab="2d">🎨 2D 이미지</button>
+<button class="button" role="tab" id="tab-3d" aria-selected="false" aria-controls="panel-3d" data-tab="3d">🧊 3D 모델</button>
+<button class="button" role="tab" id="tab-audio" aria-selected="false" aria-controls="panel-audio" data-tab="audio">🎙️ 음성·효과음</button>
+</div>
+<article id="panel-2d" class="experiment card" role="tabpanel" aria-labelledby="tab-2d"><h3>첫 실험 후보 · 판타지 게임 포션 아이콘 제작</h3><p><strong>목표:</strong> 같은 화풍으로 4종의 아이템 아이콘을 생성하고 128×128 PNG로 정리합니다.</p><ul><li>이미지 간 선 두께·광원·색채가 일관적인지</li><li>알파 채널과 실루엣이 깨끗한지, 작은 UI 크기에서도 구분되는지</li><li>후처리 시간과 제작물 이용 조건이 적합한지</li></ul>
+<div class="sheet"><strong>프롬프트 실험 초안</strong><p>“판타지 RPG 아이템 UI용 붉은 포션 병 하나, 정면 3/4 시점, 굵고 균일한 외곽선, 읽기 쉬운 실루엣, 장식 최소화, 정사각형 구도, 글자·배경 소품 없음”</p><p class="note">생성 모델이 투명 PNG·픽셀 정렬 등을 자동으로 보장하지는 않습니다. 별도 검수합니다.</p></div></article>
+<article id="panel-3d" class="experiment card" role="tabpanel" aria-labelledby="tab-3d" hidden><h3>첫 실험 후보 · 저폴리 게임용 보물상자</h3><p><strong>목표:</strong> AI 기반 모델 생성 또는 이미지→3D 파이프라인으로 보물상자 메시를 제작하고 엔진에 가져옵니다.</p><ul><li>삼각형 수·비정상 노멀·겹침/뒤집힌 면 확인</li><li>UV 펼침, 텍스처 아티팩트, 머티리얼 의존성 확인</li><li>피벗·스케일·충돌체·LOD·GLB 내보내기 가능성 검증</li></ul><div class="sheet"><strong>평가 시나리오</strong><p>동일한 콘셉트 아트에서 ① AI 직접 생성 ② AI 생성 후 Blender 보정 ③ 수작업 모델링을 비교합니다. 실제 결과가 준비되기 전에는 점수를 매기지 않습니다.</p></div></article>
+<article id="panel-audio" class="experiment card" role="tabpanel" aria-labelledby="tab-audio" hidden><h3>첫 실험 후보 · NPC 한국어 대사와 UI 효과음</h3><p><strong>목표:</strong> 같은 대사를 서로 다른 감정으로 발화하고, 짧은 메뉴 선택 효과음을 만들어 사용성을 비교합니다.</p><ul><li>문장 억양·외래어 발음·감정 일관성·말 사이 침묵</li><li>샘플레이트, 피크, 음량 균형, 루프/컷 경계 잡음</li><li>합성 음성의 사용 범위, 권리, 화자 동의 확인</li></ul><div class="sheet"><strong>테스트용 대사</strong><p>“어서 오세요. 오늘은 어떤 장비를 찾으시나요?” — 중립 / 반가움 / 경계 세 버전을 비교하는 계획입니다.</p><p class="note">동의받지 않은 실제 인물의 목소리 복제는 연구 대상으로 삼지 않습니다.</p></div></article>
+</section>
+<section><h2>실험 기록표</h2><div class="scroll-table"><table><thead><tr><th>평가 항목</th><th>기록할 내용</th><th>현재 상태</th></tr></thead><tbody>
+<tr><td>생성 품질</td><td>게임에서 요구하는 시각·청각 품질을 충족하는가?</td><td>미측정</td></tr>
+<tr><td>기술 호환성</td><td>포맷, 크기, 엔진 임포트, 수정 가능 여부</td><td>미측정</td></tr>
+<tr><td>재현성</td><td>동일 조건에서 비슷한 결과가 반복되는가?</td><td>미측정</td></tr>
+<tr><td>작업 효율</td><td>생성·후처리 총 시간과 비용은 얼마인가?</td><td>미측정</td></tr>
+<tr><td>권리·운영 위험</td><td>라이선스·출처·음성 동의·제3자 권리 확인</td><td>미확인</td></tr>
+</tbody></table></div><p class="note">각 실험이 시작되면 사용 도구·버전·입출력 파일과 실패 사례를 별도 회차 페이지로 남깁니다.</p></section>
+<footer>JIWHAN HUB · AI 게임 리소스 실험실 · 사용자 지시로만 다음 실험 진행</footer>
+</main><script>
+(function(){const buttons=[...document.querySelectorAll('[data-tab]')];buttons.forEach(button=>button.addEventListener('click',()=>{const selected=button.dataset.tab;buttons.forEach(b=>{const active=b===button;b.setAttribute('aria-selected',String(active));document.getElementById('panel-'+b.dataset.tab).hidden=!active;});}));})();
+</script></body></html>
