@@ -1,7 +1,48 @@
 ---
 layout: null
 ---
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>사고력 훈련 01 — 이진 탐색의 함정 | Jiwhan Hub</title><style>:root{color-scheme:dark;font-family:system-ui,-apple-system,'Noto Sans KR',sans-serif;background:#0b1220;color:#e8edf8}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 70% -10%,#263a5e,#0b1220 55%);line-height:1.8}main{max-width:900px;margin:auto;padding:28px 20px 90px}a{color:#a8caff}nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:42px}h1{font-size:clamp(30px,6vw,47px);line-height:1.3;margin:12px 0}h2{font-size:24px;margin:42px 0 14px}p,li{color:#d1dbee}.lead{font-size:18px;color:#afc5e3}.pill{display:inline-block;background:#233954;color:#b9d5ff;border-radius:100px;padding:4px 12px;font-size:12px;font-weight:700}.card,details{border:1px solid #334660;background:#14233b;border-radius:18px;padding:22px;margin:16px 0}details summary{cursor:pointer;font-weight:750;color:#c4d8ff}pre{overflow:auto;background:#091526;padding:18px;border-radius:12px;line-height:1.6;font-size:13px;color:#c8eddd}code{font-family:ui-monospace,Consolas,monospace}ul,ol{padding-left:25px}strong{color:#fff}footer{color:#91a9c5;font-size:13px;margin-top:45px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid .card{margin:0}@media(max-width:620px){.grid{grid-template-columns:1fr}.card,details{padding:17px}}</style></head><body><main><nav><a href="../">← 허브 홈</a><a href="../daily-briefing/">데일리 브리핑</a><a href="../language-study/">언어 학습</a></nav><span class="pill">알고리즘 · 추리 문제 · 시범 콘텐츠 01 · 2026-10-08</span><h1>사고력 훈련 01 — 이진 탐색의 함정</h1><p class="lead">힌트는 단계별로 열고, 자신의 풀이를 먼저 생각한 뒤 해설을 확인하세요.</p><section class="card"><span class="pill">난이도 중하 · 권장 15분 · O(log n)</span><h2>문제: 첫 번째 오류 위치</h2><p>정렬된 버전 목록 <code>1...n</code> 중 어느 순간부터 모든 버전이 오류 상태로 바뀝니다. 즉, 정상 정상 정상 오류 오류 ... 순서입니다. 버전 <code>k</code>가 오류인지 확인하는 <code>isBad(k)</code> 함수만 호출할 수 있습니다.</p><p><strong>목표:</strong> 최초로 오류가 발생한 버전을 가장 적은 호출 횟수로 찾아내세요.</p><p><strong>예시:</strong> n=10, 최초 오류=7이라면 7을 반환합니다. 최소 하나의 오류 버전이 존재합니다.</p></section><details><summary>힌트 1 · 선형 탐색보다 빠른 방법</summary><p>정상/오류가 한 번만 전환된다는 단조성을 활용하세요. 중간 버전을 검사하면 답의 존재 범위를 절반으로 줄일 수 있습니다.</p></details><details><summary>힌트 2 · 경계 조건</summary><p><code>lo</code>와 <code>hi</code>를 모두 후보로 포함시키고 <code>lo &lt; hi</code> 동안 반복합니다. 오류라면 중간 지점도 답일 수 있습니다.</p></details><details><summary>정답 및 C++ 해설</summary><pre><code>int FirstBad(int n) {
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>사고력 훈련 01 — 이진 탐색의 함정 | Jiwhan Hub</title><style>:root{color-scheme:dark;font-family:system-ui,-apple-system,'Noto Sans KR',sans-serif;background:#0b1220;color:#e8edf8}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 70% -10%,#263a5e,#0b1220 55%);line-height:1.8}main{max-width:900px;margin:auto;padding:28px 20px 90px}a{color:#a8caff}nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:42px}h1{font-size:clamp(30px,6vw,47px);line-height:1.3;margin:12px 0}h2{font-size:24px;margin:42px 0 14px}p,li{color:#d1dbee}.lead{font-size:18px;color:#afc5e3}.pill{display:inline-block;background:#233954;color:#b9d5ff;border-radius:100px;padding:4px 12px;font-size:12px;font-weight:700}.card,details{border:1px solid #334660;background:#14233b;border-radius:18px;padding:22px;margin:16px 0}details summary{cursor:pointer;font-weight:750;color:#c4d8ff}pre{overflow:auto;background:#091526;padding:18px;border-radius:12px;line-height:1.6;font-size:13px;color:#c8eddd}code{font-family:ui-monospace,Consolas,monospace}ul,ol{padding-left:25px}strong{color:#fff}footer{color:#91a9c5;font-size:13px;margin-top:45px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid .card{margin:0}@media(max-width:620px){.grid{grid-template-columns:1fr}.card,details{padding:17px}}
+/* 2026-10 visual-first learning prototype */
+.visual-intro{margin-top:24px}.visual-intro h2{margin-top:30px}.visual-intro .mini{font-size:14px;color:#a4bcd7}
+.visual-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.visual-cards article{background:#182944;border:1px solid #38506e;border-radius:14px;padding:15px}
+.visual-cards b{display:block;font-size:17px;color:#f1f6ff;margin-bottom:7px}
+.visual-cards p{margin:0;font-size:14px;line-height:1.6;color:#cad8eb}
+.study-figure{margin:24px 0;border:1px solid #405570;border-radius:17px;overflow:hidden;background:white}
+.study-figure img{width:100%;height:auto;display:block}
+.study-figure figcaption{color:#c5d5eb;background:#172a44;padding:11px 15px;font-size:13px}
+.image-link{display:inline-flex;align-items:center;gap:5px;background:#29486e;border-radius:20px;padding:7px 15px;text-decoration:none;font-weight:750;font-size:13px}
+.learn-path{counter-reset:stage;padding-left:0;list-style:none}
+.learn-path>li{counter-increment:stage;margin:12px 0;padding:15px 18px 15px 56px;border:1px solid #3a5070;background:#14243c;border-radius:14px;position:relative}
+.learn-path>li:before{content:counter(stage);position:absolute;left:15px;top:17px;display:grid;place-items:center;border-radius:50%;width:29px;height:29px;background:#3769ac;color:white;font-weight:800}
+.learn-path strong{color:#f3f7fe} .takeaway{padding:18px 20px;border-left:4px solid #7fb7ff;background:#193252;border-radius:0 12px 12px 0;margin:18px 0}
+.takeaway p{margin:6px 0 0}.deep-dive{margin:30px 0}.deep-dive>summary{font-size:17px}
+.deep-dive h2{margin-top:32px}.preview-note{font-size:13px;color:#a8bdd9}
+@media(max-width:700px){.visual-cards{grid-template-columns:1fr}.learn-path>li{padding-right:12px}.study-figure img{width:100%}}
+</style></head><body><main><nav><a href="../">← 허브 홈</a><a href="../daily-briefing/">데일리 브리핑</a><a href="../language-study/">언어 학습</a></nav><span class="pill">알고리즘 · 추리 문제 · 시범 콘텐츠 01 · 2026-10-08</span><h1>사고력 훈련 01 — 이진 탐색의 함정</h1><p class="lead">힌트는 단계별로 열고, 자신의 풀이를 먼저 생각한 뒤 해설을 확인하세요.</p>
+<section class="visual-intro" aria-label="문제 먼저 풀기">
+<h2>정답 보기 전에 1분만 생각해 봐</h2>
+<div class="card"><p><strong>상황:</strong> 소프트웨어 버전이 1~10까지 있어. 1~6은 정상이고 7~10은 오류야.</p><p><strong>질문:</strong> 1, 2, 3... 순서대로 하나씩 확인하지 않고, 최초 오류가 난 지점을 빨리 찾으려면 어디부터 확인해야 할까?</p><p class="mini">핵심은 정상 → 오류가 바뀌는 경계를 찾는 것이야.</p></div>
+<div class="visual-cards">
+<article><b>① 중간을 본다</b><p>10개 중 가운데 버전 5를 검사해. 정상이면 1~5는 볼 필요가 없어.</p></article>
+<article><b>② 절반을 버린다</b><p>남은 6~10에서 다시 가운데를 확인해. 오류라면 그 버전까지 왼쪽 후보에 남겨.</p></article>
+<article><b>③ 한 개까지 좁힌다</b><p>후보가 하나 남을 때까지 반복. 그래서 O(log n)에 찾을 수 있어.</p></article>
+</div>
+<details><summary>🎨 그림으로 풀이 보기 (정답 포함)</summary>
+<p class="preview-note">그림에는 예시의 첫 오류 번호와 코드가 모두 표시돼 있어. 먼저 스스로 생각해 본 뒤 열어봐.</p>
+<figure class="study-figure"><div class="infographic-crop"><img src="./assets/binary-search-guide.png" alt="버전 1~10의 정상과 오류 경계, 이진 탐색에서 lo mid hi가 변하는 과정, 시간 복잡도와 C++ 의사코드를 보여주는 설명 이미지" width="1055" height="1491" loading="lazy"></div><figcaption>1~5번 섹션의 탐색 흐름을 먼저 확인해. 원본 아래쪽 보너스 문제는 본문 문제와 별개의 추가 그림이야.</figcaption></figure>
+<a class="image-link" href="./assets/binary-search-guide.png" target="_blank" rel="noopener">🔎 원본 그림 전체 보기 ↗</a>
+</details>
+<h2>이 두 규칙만 알면 풀려</h2>
+<ol class="learn-path">
+<li><strong>mid가 오류일 때:</strong> 최초 오류가 mid일 수도 있으므로 <code>hi = mid</code>로 남겨.</li>
+<li><strong>mid가 정상일 때:</strong> mid까지는 정상이므로 <code>lo = mid + 1</code>로 제외해.</li>
+<li><strong>lo와 hi가 같아질 때:</strong> 후보가 단 하나 남은 거야. 그 번호가 최초 오류 버전이야.</li>
+</ol>
+<div class="takeaway"><strong>한 줄 요약</strong><p>“매번 중간을 검사하고, 정답이 없는 절반을 버린다.”</p></div>
+<p class="preview-note">※ 그림의 마지막 예시에서 6~7로 좁혀진 뒤에도 버전 6을 확인하는 최종 단계가 필요해. 자세한 C++ 풀이에서 반복문의 경계 조건을 확인해 줘.</p>
+</section>
+<style>.infographic-crop{aspect-ratio:1055/1280;overflow:hidden}.infographic-crop img{display:block;width:100%;height:auto}</style><details class="deep-dive"><summary>📘 자세한 기술 설명·코드·실습 펼치기</summary><section class="card"><span class="pill">난이도 중하 · 권장 15분 · O(log n)</span><h2>문제: 첫 번째 오류 위치</h2><p>정렬된 버전 목록 <code>1...n</code> 중 어느 순간부터 모든 버전이 오류 상태로 바뀝니다. 즉, 정상 정상 정상 오류 오류 ... 순서입니다. 버전 <code>k</code>가 오류인지 확인하는 <code>isBad(k)</code> 함수만 호출할 수 있습니다.</p><p><strong>목표:</strong> 최초로 오류가 발생한 버전을 가장 적은 호출 횟수로 찾아내세요.</p><p><strong>예시:</strong> n=10, 최초 오류=7이라면 7을 반환합니다. 최소 하나의 오류 버전이 존재합니다.</p></section><details><summary>힌트 1 · 선형 탐색보다 빠른 방법</summary><p>정상/오류가 한 번만 전환된다는 단조성을 활용하세요. 중간 버전을 검사하면 답의 존재 범위를 절반으로 줄일 수 있습니다.</p></details><details><summary>힌트 2 · 경계 조건</summary><p><code>lo</code>와 <code>hi</code>를 모두 후보로 포함시키고 <code>lo &lt; hi</code> 동안 반복합니다. 오류라면 중간 지점도 답일 수 있습니다.</p></details><details><summary>정답 및 C++ 해설</summary><pre><code>int FirstBad(int n) {
     int lo = 1, hi = n;
     while (lo &lt; hi) {
         int mid = lo + (hi - lo) / 2;
@@ -9,4 +50,4 @@ layout: null
         else lo = mid + 1;
     }
     return lo;
-}</code></pre><p>불변식: 첫 오류는 항상 [lo, hi] 안에 있습니다. 오류이면 [lo, mid], 정상이면 [mid+1, hi]에만 존재합니다. 시간 복잡도 O(log n), 공간 복잡도 O(1)입니다. 위 코드는 <code>isBad</code>가 외부에 정의된 문제 인터페이스를 가정합니다.</p></details><h2>추리 확장 문제</h2><section class="card"><p>세 개의 상자 A, B, C 중 하나에만 보물이 있습니다. 상자에는 각각 다음 문장이 쓰여 있습니다.</p><p><strong>A:</strong> 보물은 B에 있다.<br><strong>B:</strong> 보물은 여기에 없다.<br><strong>C:</strong> 보물은 A에 없다.</p><p>세 문장 중 <strong>정확히 한 개만 참</strong>이라면 보물은 어디에 있을까요?</p></section><details><summary>추리 문제 정답 보기</summary><p><strong>A 상자</strong>입니다. A에 있으면 A 문장은 거짓, B는 참, C는 거짓으로 참이 정확히 하나입니다. B에 있으면 A와 C가 참(2개), C에 있으면 B와 C가 참(2개)이므로 불가능합니다.</p></details><h2>자기 점검</h2><ul><li>왜 <code>mid = (lo + hi) / 2</code>보다 차이 기반 계산을 권장할까요?</li><li>모든 버전이 정상일 수도 있다면 반환 규약은 어떻게 바꾸어야 할까요?</li><li>세 상자의 문장 중 '정확히 둘만 참' 조건이라면 어떻게 달라질까요?</li></ul><footer>JIWHAN HUB · 검토용 샘플 — 예약 발행 미등록</footer></main></body></html>
+}</code></pre><p>불변식: 첫 오류는 항상 [lo, hi] 안에 있습니다. 오류이면 [lo, mid], 정상이면 [mid+1, hi]에만 존재합니다. 시간 복잡도 O(log n), 공간 복잡도 O(1)입니다. 위 코드는 <code>isBad</code>가 외부에 정의된 문제 인터페이스를 가정합니다.</p></details><h2>추리 확장 문제</h2><section class="card"><p>세 개의 상자 A, B, C 중 하나에만 보물이 있습니다. 상자에는 각각 다음 문장이 쓰여 있습니다.</p><p><strong>A:</strong> 보물은 B에 있다.<br><strong>B:</strong> 보물은 여기에 없다.<br><strong>C:</strong> 보물은 A에 없다.</p><p>세 문장 중 <strong>정확히 한 개만 참</strong>이라면 보물은 어디에 있을까요?</p></section><details><summary>추리 문제 정답 보기</summary><p><strong>A 상자</strong>입니다. A에 있으면 A 문장은 거짓, B는 참, C는 거짓으로 참이 정확히 하나입니다. B에 있으면 A와 C가 참(2개), C에 있으면 B와 C가 참(2개)이므로 불가능합니다.</p></details><h2>자기 점검</h2><ul><li>왜 <code>mid = (lo + hi) / 2</code>보다 차이 기반 계산을 권장할까요?</li><li>모든 버전이 정상일 수도 있다면 반환 규약은 어떻게 바꾸어야 할까요?</li><li>세 상자의 문장 중 '정확히 둘만 참' 조건이라면 어떻게 달라질까요?</li></ul></details><footer>JIWHAN HUB · 검토용 샘플 — 예약 발행 미등록</footer></main></body></html>
