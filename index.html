@@ -1,4 +1,39 @@
 ---
-layout: home
-author_profile: true
+layout: null
 ---
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>JIWHAN HUB · 홈</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;background:#0b1220;color:#eaf0fa}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;line-height:1.6;background:radial-gradient(circle at 75% 0%,#233757 0%,#0b1220 48%)}
+main{max-width:1000px;margin:auto;padding:clamp(24px,5vw,64px) 20px}
+.eyebrow{font-size:13px;letter-spacing:.2em;color:#a8c6ff;font-weight:800}
+h1{font-size:clamp(36px,6vw,62px);line-height:1.15;margin:12px 0}
+.lead{color:#aebdd2;font-size:clamp(15px,2vw,19px);margin-bottom:40px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.card{display:block;text-decoration:none;color:inherit;background:#14223a;border:1px solid #354761;border-radius:22px;padding:28px;transition:transform .15s,border-color .15s}
+.card:hover,.card:focus-visible{border-color:#93b8ff;transform:translateY(-3px);outline:none}
+.icon{font-size:36px}h2{font-size:24px;margin:16px 0 7px}
+p{margin:0 0 18px;color:#b5c3d6}
+.tag{display:inline-block;font-size:12px;letter-spacing:.05em;color:#b6ceff;background:#223657;padding:5px 10px;border-radius:100px}
+.enter{display:block;font-weight:750;color:#a9c8ff;margin-top:25px}
+footer{margin-top:55px;color:#8fa0b8;font-size:13px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.card{padding:24px}}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">PERSONAL TECH & LEARNING HUB</div>
+<h1>JIWHAN HUB</h1>
+<p class="lead">매일 읽는 기술 브리핑과 외국어 학습을 한곳에서.</p>
+<section class="grid" aria-label="서비스 선택">
+<a class="card" href="./daily-briefing/"><span class="icon" aria-hidden="true">📰</span><h2>데일리 브리핑</h2><p>게임 개발 · 엔진 기술 · 게임 산업 · AI와 오픈소스 소식을 모아봅니다.</p><span class="tag">뉴스 · 기술 해설 · 아카이브</span><span class="enter">브리핑 보기 →</span></a>
+<a class="card" href="./language-study/"><span class="icon" aria-hidden="true">📚</span><h2>영어 · 일본어 학습</h2><p>일일 Lesson, 한국어 발음과 해석, TTS 및 간격 반복 복습을 진행합니다.</p><span class="tag">English · Japanese · Review</span><span class="enter">학습 시작 →</span></a>
+</section>
+<footer>GitHub Pages · Jiwhan Hub</footer>
+</main></body></html>
