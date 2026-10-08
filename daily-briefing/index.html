@@ -1,1 +1,88 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220"><title>Daily Briefing · Jiwhan Hub</title><link rel="stylesheet" href="style.css"></head><body><header class="top"><div class="wrap"><a class="logo" href="../">JIWHAN HUB</a><nav><a class="active" href="./">Daily Briefing</a><a href="../language-study/">Language Study</a></nav></div></header><main class="wrap"><section class="hero"><div class="eyebrow">DAILY INTELLIGENCE</div><h1>게임 · 엔진 · AI 브리핑</h1><p>핵심 변화와 기술적 의미를 매일 기록하는 개인 아카이브</p><div id="latest">브리핑을 불러오는 중...</div></section><section class="date-nav" aria-label="브리핑 날짜 선택"><button id="prevDate" type="button" aria-label="이전 날짜">← 이전</button><label for="briefDate">날짜 선택</label><select id="briefDate" aria-label="브리핑 날짜"></select><button id="nextDate" type="button" aria-label="다음 날짜">다음 →</button><button id="latestDate" type="button">최신 날짜</button></section><section class="toolbar"><label>카테고리 <select id="category"><option value="all">전체</option><option value="game-dev">게임 개발 / 엔진</option><option value="game-industry">게임 산업</option><option value="ai">AI / LLM / 에이전트</option><option value="opensource">오픈소스 / 자료</option></select></label><label>검색 <input id="search" type="search" placeholder="제목 · 키워드 · 내용"></label></section><div class="layout"><section><h2>브리핑 아카이브</h2><div id="entries" class="entries"></div></section><aside><h2>저장한 기사</h2><div id="saved" class="entries"></div><p class="sub">북마크와 읽음 표시는 현재 브라우저에 저장됩니다.</p></aside></div><footer>매일 자동 업데이트 · <a href="../language-study/">영어·일본어 학습</a></footer></main><script src="app.js" defer></script></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="게임·엔진·AI 최신 소식을 쉬운 설명과 간단 요약으로 읽는 개인 뉴스 아카이브">
+  <title>게임 · 엔진 · AI 브리핑 | Jiwhan Hub</title>
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="logo" href="../">JIWHAN <span>HUB</span></a>
+      <nav aria-label="사이트 메뉴">
+        <a class="active" href="./" aria-current="page">Daily Briefing</a>
+        <a href="../language-study/">Language Study</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow"><span class="live-dot"></span> DAILY INTELLIGENCE</div>
+      <h1>게임 · 엔진 · <span>AI 브리핑</span></h1>
+      <p>어려운 기술 소식도 이해하기 쉽게. 관심 있는 기사만 골라 읽는 개인 아카이브.</p>
+      <div id="latest" class="hero-meta" aria-live="polite">브리핑을 불러오는 중...</div>
+    </section>
+
+    <section class="controls" aria-label="기사 탐색">
+      <div class="mode-row">
+        <div class="segmented" role="group" aria-label="보기 방식">
+          <button id="modeDaily" type="button" class="active" aria-pressed="true">날짜별 보기</button>
+          <button id="modeAll" type="button" aria-pressed="false">전체 날짜 보기</button>
+        </div>
+        <div class="quick-count" id="totalCount"></div>
+      </div>
+
+      <div id="dateNav" class="date-nav" aria-label="브리핑 날짜 선택">
+        <button id="prevDate" type="button" class="square-btn" aria-label="이전 날짜">←</button>
+        <label for="briefDate">날짜</label>
+        <select id="briefDate" aria-label="브리핑 날짜"></select>
+        <button id="nextDate" type="button" class="square-btn" aria-label="다음 날짜">→</button>
+        <button id="latestDate" type="button" class="subtle-btn">최신 날짜</button>
+      </div>
+
+      <div class="filters">
+        <div class="filter-heading">카테고리</div>
+        <div class="category-row" id="categories" role="group" aria-label="카테고리">
+          <button type="button" class="chip active" data-category="all" aria-pressed="true">전체</button>
+          <button type="button" class="chip" data-category="game-dev" aria-pressed="false">🎮 게임 개발 · 엔진</button>
+          <button type="button" class="chip" data-category="game-industry" aria-pressed="false">🕹️ 게임 산업</button>
+          <button type="button" class="chip" data-category="ai" aria-pressed="false">🤖 AI · 에이전트</button>
+          <button type="button" class="chip" data-category="opensource" aria-pressed="false">🧩 오픈소스 · 자료</button>
+        </div>
+        <div class="search-row">
+          <label class="search-wrap" for="search">
+            <span aria-hidden="true">⌕</span>
+            <input id="search" type="search" autocomplete="off" placeholder="기사 제목, 기술, 키워드 검색">
+          </label>
+          <label class="switch-filter"><input id="bookmarksOnly" type="checkbox"><span>☆ 북마크만</span></label>
+          <label class="switch-filter"><input id="unreadOnly" type="checkbox"><span>◉ 안 읽은 기사</span></label>
+          <button type="button" id="resetFilters" class="subtle-btn">필터 초기화</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="results" aria-labelledby="resultsTitle">
+      <div class="section-title">
+        <div>
+          <div class="eyebrow section-eyebrow">YOUR READING LIST</div>
+          <h2 id="resultsTitle">오늘의 기사</h2>
+        </div>
+        <span id="resultCount" class="result-count"></span>
+      </div>
+      <div id="entries" class="entries" aria-live="polite">
+        <div class="empty">기사를 불러오고 있습니다...</div>
+      </div>
+      <div id="loadMoreWrap" class="load-more" hidden><button type="button" id="loadMore">기사 더 보기 ↓</button></div>
+    </section>
+    <footer>
+      <span>매일 업데이트하는 게임·AI 개인 아카이브</span>
+      <a href="../language-study/">영어·일본어 학습 ↗</a>
+      <small>읽음 및 북마크 상태는 현재 브라우저에 저장됩니다.</small>
+    </footer>
+  </main>
+  <script src="app.js?v=2" defer></script>
+</body>
+</html>
