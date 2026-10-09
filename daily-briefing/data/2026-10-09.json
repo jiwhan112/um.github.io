@@ -1,1 +1,112 @@
-{"date":"2026-10-09","title":"게임·AI 데일리 브리핑","intro":"","items":[]}
+{
+  "date": "2026-10-09",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "GPU 자원을 분할해 중요한 작업의 지연을 낮추는 CUDA Green Contexts, 40개 게임을 소개한 Triple-i 쇼케이스, Google Gemini의 장기 실행 Agent, Claude Dashboards·Motion, GitHub의 Draft PR 제한 개선을 통해 개발 실행 환경과 검증·협업의 변화를 살펴봅니다.",
+  "items": [
+    {
+      "category": "game-dev",
+      "title": "🎮 NVIDIA CUDA Green Contexts — GPU 자원을 분할해 중요한 작업의 지연 줄이기",
+      "source": "NVIDIA Technical Blog",
+      "published": "2026-10-06",
+      "url": "https://developer.nvidia.com/blog/control-how-your-gpu-shares-work-with-green-contexts",
+      "easy_explainer": "GPU는 수많은 계산을 동시에 처리하지만, 작업 두 개가 같은 하드웨어 자원을 쓰려고 하면 서로 방해할 수 있어. 예를 들어 긴 AI 추론 커널이 GPU 대부분을 차지한 상태에서는 아주 짧고 중요한 계산이 들어와도 대기할 수 있어. CUDA Stream에 높은 우선순위를 줘도 이미 실행 중인 모든 작업을 즉시 선점할 수는 없거든. NVIDIA의 Green Contexts는 GPU의 SM(Streaming Multiprocessor, 실제 GPU 연산 블록)과 작업 큐를 명시적으로 나눠서 작업마다 사용할 자원을 지정하는 기능이야. Blackwell GPU에서 148개 SM 중 8개를 짧은 작업에 할당하고 나머지를 큰 작업에 사용하는 식이지. NVIDIA가 발표한 특정 실험에서는 중요 커널의 지연 시간이 일반 실행 3.727ms, 높은 우선순위 Stream 0.140ms, Green Contexts 0.007ms로 줄었어. 다만 이 수치는 특정 GPU와 테스트에 해당하며 일반적인 게임 FPS가 똑같이 빨라진다는 뜻은 아니야. CUDA 12.4에서 Driver API로 시작했고 CUDA 13.1에서는 Runtime API로도 이용할 수 있어. 이런 기능은 GPU를 공유하는 작업들의 평균 처리량뿐 아니라 최악의 응답 시간까지 관리하려 할 때 중요해.",
+      "short_summary": "CUDA Green Contexts는 GPU의 SM과 작업 큐를 나눠 중요한 작업이 큰 연산 때문에 기다리는 시간을 줄이는 기술이야. NVIDIA의 특정 Blackwell 실험에서는 우선순위 Stream의 0.140ms가 0.007ms로 개선됐어. 게임 FPS 향상 보장이 아니라 GPU 자원 경합과 지연 시간 제어를 위한 기술이야.",
+      "technical_context": "실행 흐름은 cudaDeviceGetDevResource()로 GPU 자원을 조회하고, cudaDevResourceSplit()으로 SM을 분리한 다음 cudaGreenCtxCreate()로 실행 컨텍스트를 만들고 cudaExecutionCtxStreamCreate()로 해당 컨텍스트에 종속된 Stream을 생성하는 방식이다. 기존 Stream 우선순위는 이미 실행 중인 큰 커널에 의해 발생하는 지연을 완전히 제거하지 못할 수 있다. Green Context는 별도의 실행 자원을 예약하므로 특정 워크로드의 지연을 더 예측 가능하게 만들 수 있지만 다른 작업에 주어지는 SM 수는 감소한다. NVIDIA의 Blackwell 148 SM 환경에서 측정된 수치는 애플리케이션 전체의 일반화된 성능 수치가 아니다.",
+      "why_it_matters": "GPU 연산 자원과 큐가 공유되는 상황에서는 전체 처리량(throughput)과 중요한 작업의 지연 시간(latency)이 서로 다른 최적화 목표다. 실시간 처리에 필요한 응답 시간 보장을 위한 하드웨어 자원 분할이 가능해졌다는 점이 중요하다.",
+      "developer_view": "게임 엔진에서 AI 추론·에셋 처리·렌더링 관련 계산을 병행하면 작업 간 GPU 자원 경합을 별도로 살펴볼 필요가 있어. 특히 프레임 평균 시간이 괜찮아도 가끔 끊기는 경우에는 평균 FPS 이외에 P95/P99 지연과 큐 대기 시간을 확인하는 것이 좋아. 단, Green Contexts는 CUDA 전용이므로 DX9 Draw Call이나 DirectX Command Queue를 직접 나누는 기능으로 혼동하면 안 돼. 배우기 좋은 핵심은 '우선순위'와 '하드웨어 자원 할당'이 서로 다르다는 사실이야.",
+      "tags": [
+        "CUDA",
+        "GPU",
+        "Green Contexts",
+        "SM",
+        "Scheduling",
+        "Latency",
+        "Blackwell"
+      ]
+    },
+    {
+      "category": "game-industry",
+      "title": "🕹️ Triple-i Initiative 2026년 10월 쇼케이스 — 40개 게임과 체험판 공개",
+      "source": "Insider Gaming · Triple-i Initiative",
+      "published": "2026-10-08",
+      "url": "https://insider-gaming.com/triple-i-initiative-october-showcase-2026-everything-announced/",
+      "easy_explainer": "Triple-i Initiative는 독립 게임사들이 함께 신작을 소개하는 쇼케이스야. 10월 8일 약 45분 동안 40개 작품의 트레일러·새 정보·출시 일정이 집중적으로 발표됐어. Among Us Story: On Guard는 2027년 2월 17일 출시 예정이고, Hela: of Mice & Magic은 체험판과 함께 2026년 12월 1일 출시 일정을 공개했어. DAVE THE DIVER와 Subnautica 2의 협업 콘텐츠는 2027년 초 예정이라고 소개됐고, Brotato: Primal Dread나 Haunted Paws도 행사에 등장했어. 여기서 단순히 발표작의 수보다 눈여겨볼 부분은 마케팅과 제품 테스트를 한 시점에 연결한다는 전략이야. 예전에는 트레일러로 기대감을 만든 뒤 몇 달 후 게임을 플레이하는 경우가 많았지만, 체험판을 함께 공개하면 유저가 관심을 느낀 즉시 직접 조작해 볼 수 있어. 개발팀은 초기 이용자의 진행 중단 구간, 조작 적응, 성능 문제와 크래시를 빠르게 발견할 기회를 얻어. 다만 개별 작품의 체험판 공개 여부와 출시 일정은 각각 다르므로 발표 목록에서 구분해 봐야 해.",
+      "short_summary": "10월 8일 Triple-i Initiative 쇼케이스에서 약 45분 동안 40개 게임의 신작 정보가 공개됐어. Among Us Story: On Guard, Hela, 데이브 더 다이버 협업 콘텐츠 등이 주요 발표작이야. 트레일러와 체험판을 가까운 시점에 제공해 이용자의 관심을 실제 플레이와 피드백으로 연결하는 전략이 중요해.",
+      "technical_context": "신작 쇼케이스와 동시에 배포되는 데모는 게임 전체와 별도의 빌드 구성·콘텐츠 범위·저장 경로·QA 체크리스트를 갖는 배포 단위로 다루는 편이 좋다. 최초 실행, 그래픽 옵션, 입력 장치, 튜토리얼 완료, 초기 로딩, 크래시 수집, 위시리스트 또는 피드백 유입 같은 지표가 첫 플레이 경험을 판단하는 기준이 된다. 체험판과 본편 사이의 세이브 호환 여부도 미리 설계해야 할 수 있다.",
+      "why_it_matters": "독립 게임은 마케팅 예산이 제한적이므로 관심이 높아지는 순간 직접 플레이를 제공할 수 있는지가 유입 성과에 영향을 줄 수 있다. 개발팀은 이 시점의 사용자 데이터를 출시 전 품질 관리와 게임 설계 수정에 활용할 수 있다.",
+      "developer_view": "게임 클라이언트 입장에서는 데모 빌드도 별도의 정식 배포 대상으로 보고 빌드 자동화, 크래시 로깅, 튜토리얼 스모크 테스트, 설정 초기화·패드 입력 검증을 갖추는 편이 좋아. 트레일러에 보여준 게임 장면이 실제 데모에서도 안정적으로 재현되는지 확인하는 일도 중요해. 동시에 유저가 몰릴 때를 대비해 서버·스토어 페이지·다운로드 흐름의 용량과 오류도 미리 점검해야 해.",
+      "tags": [
+        "Triple-i Initiative",
+        "Indie Games",
+        "Game Industry",
+        "Demo",
+        "QA",
+        "Launch",
+        "DAVE THE DIVER"
+      ]
+    },
+    {
+      "category": "ai",
+      "title": "🤖 Google Gemini agent — 장기 실행·멀티모델·권한을 통합한 업무 에이전트",
+      "source": "Google Cloud Blog",
+      "published": "2026-10-08",
+      "url": "https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026/",
+      "easy_explainer": "Google이 Gemini at Work 2026에서 업무용 Gemini agent를 소개했어. 핵심은 질문에 텍스트로 답하는 챗봇보다 더 넓은 작업을 맡긴다는 거야. 예를 들어 '어제 배포 이후 크래시가 왜 늘었는지 조사해 줘'라고 요청하면 에이전트는 관련 문서·로그·업무 시스템을 조회하고, 변경 기록을 찾아보고, 필요한 도구를 호출한 뒤 결과를 정리하는 여러 단계를 수행할 수 있어. 이런 방식이 가능하려면 LLM 자체 말고도 실행할 도구 목록, 작업 계획, 이전 실행의 기억, 파일·네트워크 접근 권한, 실패했을 때 복구하는 구조가 필요해. Google은 작업에 맞는 모델 선택과 비용 제어, Google Workspace·외부 시스템 연계, 업무별 하위 에이전트, 별도 실행 환경 및 보안 정책을 통합하는 방향을 설명했어. 모델과 도구 실행 플랫폼을 분리하면 특정 작업에 무조건 가장 비싼 모델을 쓸 필요가 없고, 여러 에이전트가 서로 다른 역할을 담당하도록 만들 수 있어. 다만 발표된 여러 기능이 모두 누구에게나 즉시 제공된다는 뜻은 아니므로 실제 출시 범위와 권한은 기능별로 확인해야 해.",
+      "short_summary": "Google은 여러 업무 시스템에 연결해 목표를 수행하는 Gemini agent를 발표했어. 작업 계획·모델 선택·장기 기억·도구 실행·보안 정책을 하나의 플랫폼에서 관리하는 방향이야. 게임팀의 빌드 실패 조사나 크래시 분석 자동화에도 비슷한 구조를 응용할 수 있어.",
+      "technical_context": "사용자 요청은 Agent Orchestrator에서 작업 계획과 모델 라우팅으로 나뉘고, Skills와 Tools를 통해 외부 시스템을 조회한다. 장기 실행 에이전트는 상태와 기억을 지속할 저장 체계가 필요하며, 하위 에이전트는 역할과 권한을 분리해 운영하는 것이 바람직하다. Agent Sandbox와 Gateway는 파일·네트워크·외부 API 접근을 제한하고, 사용자/조직의 Identity와 Policy가 Tool 호출 허용 범위를 결정한다. 모델의 추론과 실제 실행 권한을 같은 계층으로 취급하지 않는 것이 핵심이다.",
+      "why_it_matters": "기업용 AI의 경쟁 범위가 단순 모델 품질을 넘어 개발환경·업무 시스템·모델 선택·비용·장기 기억·보안 정책의 통합으로 넓어지고 있다.",
+      "developer_view": "사내 엔진에서 크래시 로그, Git/Perforce 변경 이력, 빌드 결과, 이슈 트래커를 읽는 분석 Agent를 설계할 때 참고할 만한 접근이야. 먼저 읽기 전용 조사 도구를 제공하고, 코드 수정·Submit·배포 같은 동작에는 별도 승인과 감사 로그를 두는 것이 좋아. 핵심 설계는 LLM을 바꾸더라도 Tool API와 검증 방식은 유지하도록 계층을 분리하는 거야.",
+      "tags": [
+        "Gemini",
+        "Google Cloud",
+        "Agent",
+        "Tool Use",
+        "Orchestration",
+        "Memory",
+        "Security"
+      ]
+    },
+    {
+      "category": "ai",
+      "title": "📊 Anthropic Claude Dashboards·Motion — 데이터 검증 가능한 차트와 코드 기반 애니메이션",
+      "source": "Anthropic · Claude",
+      "published": "2026-10-08",
+      "url": "https://claude.com/fr/resources/articles/dashboards-and-motion",
+      "easy_explainer": "Anthropic이 Claude Dashboards와 Motion을 베타로 소개했어. Dashboards는 자연어로 '지난주 대비 이번 주 게임 크래시율이 높아졌어?'라고 질문하면 BigQuery·Snowflake·Databricks 같은 연결된 데이터에서 정보를 조회해 차트로 정리하는 기능이야. 중요한 것은 예쁜 그래프를 그리는 것보다 계산 근거를 확인할 수 있다는 점이야. 숫자를 누르면 어떤 쿼리로 계산했는지, 데이터가 언제 새로고침됐는지 볼 수 있도록 설계됐어. 예를 들어 크래시가 100건이라고 해도 사용자 1만 명 가운데 발생했는지, 세션 100만 회 가운데 발생했는지에 따라 비율과 의미가 달라지지. Motion은 텍스트와 도형, 차트를 활용해 애니메이션 설명 자료를 만드는 기능이야. 일반적인 영상 생성 모델과 달리 코드로 제어하는 애니메이션을 만들기 때문에 문구와 수치, 색상, 이동 순서를 수정하기에 유리해. Dashboards는 유료 플랜 베타, Motion은 Team·Enterprise 베타이며 모든 계정에 즉시 제공되는 것은 아니야. Docs·Slides·Design은 베타를 종료하고 무료 플랜을 포함한 모든 플랜에 제공된다고 발표했어.",
+      "short_summary": "Claude Dashboards는 데이터베이스를 연결해 자연어로 차트를 만들고 계산 쿼리와 갱신 시각도 확인하도록 해. Motion은 코드 기반으로 편집 가능한 애니메이션 설명 영상을 제작해. 게임팀에서는 성능·크래시 지표 분석과 엔진 교육 자료 제작에 참고할 수 있어.",
+      "technical_context": "Dashboards는 외부 데이터 플랫폼 또는 연결 앱의 쿼리 결과를 시각화하면서 원래 집계에 사용된 쿼리와 데이터 갱신 시각을 노출한다. Motion은 생성형 비디오처럼 픽셀을 직접 생성하기보다 텍스트, 기하 도형, 차트 등의 시각 요소와 시간에 따른 전환을 코드로 정의하고 MP4로 출력하는 유형이다. 수치가 포함된 대시보드는 SQL 필터·조인·분모·시간 범위를 검증해야 한다.",
+      "why_it_matters": "AI가 결과물을 생성하는 단계에서 결과물의 계산 근거를 열어보고 수정할 수 있는 생산성 도구로 발전하고 있다. 데이터 신뢰성 검증과 결과 편집성이 중요해지는 변화다.",
+      "developer_view": "게임 엔진 성능 데이터가 DB에 쌓여 있다면 프레임 시간, 1% low, GPU/CPU 병목, 메모리 피크, 로딩 시간, 크래시율 변화를 탐색하는 대시보드에 활용할 수 있어. 다만 AI가 작성한 쿼리의 그룹 기준과 분모를 반드시 검토해야 해. Motion은 렌더링 파이프라인, 스레드 구조, AI Agent 흐름 등을 시각적으로 설명하는 내부 기술 문서·교육 영상 제작에 활용할 수 있어.",
+      "tags": [
+        "Claude",
+        "Anthropic",
+        "Dashboards",
+        "Motion",
+        "Data Analytics",
+        "SQL",
+        "Visualization"
+      ]
+    },
+    {
+      "category": "opensource",
+      "title": "🛡️ GitHub — Draft PR도 생성 제한에 포함해 AI·자동화 대량 기여 관리",
+      "source": "GitHub Changelog",
+      "published": "2026-10-08",
+      "url": "https://github.blog/changelog/2026-10-08-draft-pull-requests-count-toward-pull-request-limits/",
+      "easy_explainer": "GitHub는 저장소 관리자가 사용자별 Pull Request 생성 수를 제한할 때 Draft PR도 개수에 포함하도록 설정할 수 있게 했어. PR은 코드 변경을 검토받기 위해 올리는 요청이고, Draft PR은 아직 검토 준비가 끝나지 않았다는 상태 표시야. 기존에는 일반 PR 개수 제한을 걸어도 Draft PR은 계산되지 않아 대량의 초안을 계속 열 수 있었어. 이번 업데이트는 이런 빈틈을 막고 불필요한 알림과 CI 실행을 줄이려는 변경이야. 여기서 중요한 건 모든 저장소에 일괄적인 PR 생성 한도가 생긴 것이 아니라 관리자가 Draft 포함 여부를 설정할 수 있다는 사실이야. AI 코딩 도구는 코드를 빠르게 변경하고 여러 브랜치에서 독립적으로 PR을 올릴 수 있지만, 리뷰어의 시간과 CI 서버 자원은 무한하지 않아. 따라서 코드 생성 속도가 늘수록 제출·검토 대기열의 관리가 중요한 엔지니어링 문제가 되는 거야. PR 수를 제한하는 정책은 협업 부담을 줄일 수 있지만 코드의 안전성을 보장하지는 않아. 빌드, 테스트, 정적 분석과 사람의 리뷰는 여전히 필요해.",
+      "short_summary": "GitHub가 PR 생성 제한을 계산할 때 Draft PR도 포함하는 옵션을 추가했어. 대량의 미완성 PR이 만들어지는 것을 줄여 리뷰·알림·CI 부담을 관리하는 데 도움이 돼. PR 개수 제한은 품질 검사와 다르므로 별도 테스트·승인이 필요해.",
+      "technical_context": "Repository 관리자에 의해 설정되는 Pull Request limit 정책이 Draft 상태의 요청에도 적용될 수 있도록 선택지가 확장됐다. 기존에는 Draft PR이 제한 계산에서 제외돼 설정을 우회할 여지가 있었다. 대량 생성된 PR은 각각 알림·검토·잠재적 CI run을 유발하므로 리뷰 대기열과 빌드 비용을 증가시킬 수 있다. 변경사항은 모든 저장소에 동일한 수치 제한을 자동 적용하는 것이 아니라 관리 가능한 옵션을 늘린 것이다.",
+      "why_it_matters": "AI Agent와 자동화가 제출하는 변경량이 늘어날수록 Source Control의 품질 관리뿐 아니라 PR 생성량, CI 비용, 리뷰 대기열 같은 운영 지표도 개발 생산성을 결정한다.",
+      "developer_view": "C++ 게임 엔진에서 Agent 여러 개가 동시에 코드 변경을 진행한다면 독립 Worktree/Branch, 빌드 캐시, 타깃 단위 테스트, Merge Queue를 함께 설계해야 해. 많은 PR을 생성하는 것보다 메모리 수명·렌더링 상태·동기화·세이브 호환 같은 회귀를 검증해 사람에게 검토 가능한 작은 변경으로 전달하는 편이 좋아. PR 개수 제어는 그 운영 흐름의 한 요소야.",
+      "tags": [
+        "GitHub",
+        "Pull Request",
+        "Draft PR",
+        "Open Source",
+        "CI",
+        "Code Review",
+        "Agent Workflow"
+      ]
+    }
+  ]
+}
