@@ -5,7 +5,7 @@ from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1] / "language-study" / "data"
+ROOT = Path(__file__).resolve().parents[2] / "language-study" / "data"
 CAT = ROOT / "catalog.json"
 PROG = ROOT / "progress.json"
 INTERVALS = (1, 3, 7, 14, 30)
