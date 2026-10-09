@@ -1,0 +1,39 @@
+name: Reconcile language lessons
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'language-study/data/english/*.json'
+      - 'language-study/data/japanese/*.json'
+      - 'language-study/scripts/reconcile.py'
+  workflow_dispatch:
+  schedule:
+    - cron: '10 0 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: language-study-reconcile
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Rebuild catalog and progress
+        run: python language-study/scripts/reconcile.py
+      - name: Commit changed indexes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add language-study/data/catalog.json language-study/data/progress.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore(language-study): reconcile lesson indexes'
+            git pull --rebase origin master
+            git push origin HEAD:master
+          fi
