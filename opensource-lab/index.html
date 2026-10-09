@@ -23,7 +23,7 @@ layout: null
 </style></head><body><main>
 <nav aria-label="서비스 이동"><a href="../">← 허브 홈</a><a href="../thinking-lab/">사고력 훈련</a><a href="../ai-asset-lab/">AI 게임 리소스 실험실</a></nav>
 <header class="hero"><span class="eyebrow">GAME OPEN SOURCE · ARCHIVE</span><h1>게임 오픈소스 분석</h1><p class="lead">게임 업계에서 널리 쓰이는 공개 프로젝트를 하나씩 선정하고, <strong>실제 코드 구현과 설계 이유</strong>를 해설합니다. 개인 프로젝트나 특정 그래픽 API에 맞춘 활용 제안 대신 일반 게임 개발 기술을 분석합니다.</p>
-<div class="lab-meta"><span>화·금 05:30 (KST)</span><span>공식 소스 코드 검증</span><span>회차별 고정 주소</span><span>누적 학습 아카이브</span></div></header>
+<div class="lab-meta"><span>화·금 05:30 (KST)</span><span>현재 2개 회차 · 2026-10-09 기준</span><span>공식 소스 코드 검증</span><span>회차별 고정 주소</span><span>누적 학습 아카이브</span></div></header>
 <section><h2>✨ 최신 분석</h2><a href="./ep-02-sdl3-event-system/" class="card list-card latest" aria-label="EP.02 SDL3의 이벤트 시스템 읽기">
 <span class="eyebrow">EP.02 · 2026-10-09 · 입력·플랫폼</span>
 <h3>SDL3 — 운영체제 입력이 게임 이벤트로 바뀌는 과정</h3>
@@ -31,6 +31,13 @@ layout: null
 <span class="tag">SDL3</span><span class="tag">Event Queue</span><span class="tag">Input</span><span class="tag">C++11</span>
 <div class="enter">최신 회차 읽기 →</div>
 </a></section>
+<section aria-label="최신 글 읽기 가이드"><h2>🧭 EP.02 학습 경로</h2>
+<div class="step-row">
+<div class="step"><span class="num">01 · 개념</span><b>이벤트 전달 흐름</b><p>OS에서 SDL_PumpEvents를 거쳐 게임 이벤트 큐까지 이어지는 경로를 그림으로 확인합니다.</p></div>
+<div class="step"><span class="num">02 · 내부 구현</span><b>실제 소스 추적</b><p>SDL_PushEvent, 이중 연결 리스트 큐, SDL_PollEvent를 함수와 자료구조 단위로 분석합니다.</p></div>
+<div class="step"><span class="num">03 · 체험</span><b>입력 시뮬레이터</b><p>키의 현재 상태와 이벤트 발생 기록이 왜 서로 다른 정보를 담는지 직접 확인합니다.</p></div>
+</div>
+<p class="note">위 항목은 <a href="./ep-02-sdl3-event-system/">EP.02 전체 학습 페이지</a>에 포함된 내용을 읽기 순서대로 안내합니다.</p></section>
 <section><h2>📚 날짜별 · 회차별 아카이브</h2>
 <div class="archive-grid">
 <a href="./ep-02-sdl3-event-system/" class="card list-card"><span class="eyebrow">02 · 2026-10-09</span><h3>SDL3 이벤트 시스템</h3><p>플랫폼 추상화 · 이벤트 수집/소비 · 이중 연결 리스트 큐 · 키 상태와 이벤트 구분</p><span class="tag">입력·플랫폼</span><div class="enter">EP.02 열기 →</div></a>
