@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Reconcile language-study indexes without re-writing lesson contents."""
 import json
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1] / "language-study" / "data"
@@ -28,7 +29,7 @@ def unique(items):
     return out
 
 catalog, progress = read(CAT), read(PROG)
-today = date.today().isoformat()
+today = datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()
 new_lessons = []
 for language in ("english", "japanese"):
     folder = ROOT / language
