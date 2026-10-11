@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-12",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "오늘은 GPU 셰이더 배포, Switch 2 게임의 네이티브 전환, 3D 장면에서 게임을 생성하는 AI, 희소 MoE 학습 규모, 이기종 NPU의 행렬 커널을 살펴본다.",
+  "items": [
+    {
+      "category": "game-dev",
+      "title": "🎮 Microsoft Advanced Shader Delivery — Gears of War: E-Day 셰이더 준비 시간 95% 감소",
+      "source": "Microsoft DirectX Developer Blog",
+      "published": "2026-10-01",
+      "url": "https://devblogs.microsoft.com/directx/advanced-shader-delivery-available-for-gears-of-war-e-day-and-coming-soon-across-windows-11/",
+      "easy_explainer": "게임을 처음 실행하면 수많은 셰이더를 컴파일하면서 로딩 시간이 길어지거나 화면이 끊길 수 있어. DirectX 12의 그래픽스 파이프라인은 여러 셰이더 코드와 렌더 상태를 묶어 PSO(Pipeline State Object)를 만드는데, GPU 드라이버가 이를 실제 하드웨어용 코드로 준비하는 작업이 필요해. Microsoft의 Advanced Shader Delivery는 게임을 설치한 후 사용자의 PC에서 매번 셰이더를 컴파일하는 대신, 게임 제작 단계에서 필요한 셰이더를 수집하고 GPU 환경에 맞는 컴파일 결과를 전달하는 기술이야. 이를 통해 《Gears of War: E-Day》에서 셰이더 준비 시간이 약 95% 감소했다는 회사 측 결과가 공개됐어. 다만 이 수치는 해당 게임의 측정 결과이며 모든 게임의 FPS가 95% 증가한다는 말은 아니야.",
+      "short_summary": "Microsoft는 게임 제작·배포 단계에서 셰이더 컴파일 결과를 미리 준비하는 Advanced Shader Delivery를 소개했어. 《Gears of War: E-Day》에서 셰이더 준비 시간이 약 95% 감소했다는 결과를 발표했어. PC 런타임에서 수행하는 셰이더 컴파일의 지연을 콘텐츠 배포 파이프라인으로 옮기는 개념이야.",
+      "technical_context": "SODB(Shader Object Database)는 셰이더 객체 관련 정보를 수집·보관하고 배포에 사용하는 형식이며, PSDB(Precompiled Shader Database)는 대상 GPU 드라이버가 활용할 사전 컴파일 셰이더 데이터를 담는다. 컴파일 대상의 드라이버·GPU 호환성 및 파이프라인 상태가 중요하다. 최초 출시·전개 시점에 지원되지 않는 환경은 기존 컴파일 경로를 사용할 수 있다.",
+      "why_it_matters": "셰이더 준비에 따른 첫 실행 지연과 런타임 끊김은 게임 만족도에 직접 영향을 주며, 렌더러 최적화와는 별개로 배포·캐시 파이프라인을 설계할 필요가 있어.",
+      "developer_view": "DX9 개발 경험과 비교하면 예전의 Effect·Shader 컴파일 문제를 DX12에서는 더 큰 PSO 캐시와 하드웨어별 바이너리 관리 문제로 생각해 볼 수 있어. Shader Variant 수와 PSO 생성 시점을 측정하고 GPU 드라이버 업데이트 시 재컴파일·폴백을 검증하는 접근이 유용해.",
+      "tags": [
+        "DirectX",
+        "PSO",
+        "Shader Stutter",
+        "SODB",
+        "PSDB"
+      ]
+    },
+    {
+      "category": "game-industry",
+      "title": "🕹️ KINGDOM HEARTS Collection [I~III] — Switch 2 네이티브 버전 출시",
+      "source": "Bandai Namco Entertainment",
+      "published": "2026-10-08",
+      "url": "https://www.bandainamcoent.asia/sea/news/kingdom-hearts-collection-i-iii-release-date",
+      "easy_explainer": "《KINGDOM HEARTS》 주요 작품을 묶은 컬렉션이 10월 8일 Nintendo Switch 2용으로 출시됐어. 주목할 점은 기존 Switch 1에서는 여러 작품이 클라우드 스트리밍 방식으로 서비스됐지만 Switch 2에서는 기기에서 직접 실행하는 네이티브 버전으로 제공된다는 점이야. 클라우드 게임에서는 원격 서버가 화면을 렌더링하고 비디오 스트림을 전송하기 때문에 네트워크 지연과 서버 비용이 발생해. 네이티브 포트는 반대로 게임 코드와 렌더링을 사용자 하드웨어에서 실행하므로 다운로드 크기, 메모리 예산, GPU 성능, 셰이더와 에셋 압축 문제가 중요해지지. 일부 기존 클라우드 버전 저장 데이터를 Switch 2 버전으로 이전하는 지원도 안내됐지만, 지원 범위는 공식 지침에 따라 확인해야 해.",
+      "short_summary": "Switch 1에서 클라우드 방식이었던 KINGDOM HEARTS 주요 게임들이 Switch 2 네이티브 버전으로 제공돼. 로컬 실행으로 바뀌면서 플랫폼 최적화와 저장 데이터 이전 문제가 중요해졌어. 클라우드 게임과 네이티브 포트는 성능 병목과 운영 비용의 위치가 달라.",
+      "technical_context": "클라우드 방식은 입력을 네트워크로 송신하고 서버 GPU가 렌더링한 영상을 디코딩해 표시하는 구조다. 네이티브 방식은 게임 클라이언트가 로컬 CPU/GPU에서 시뮬레이션과 렌더링을 실행한다. 이전 시에는 저장 파일 스키마와 기존 버전의 진행·해금 상태가 일치하는지 점검해야 한다.",
+      "why_it_matters": "구형 플랫폼에서 클라우드로 제공했던 게임을 신형 하드웨어에 직접 포팅하는 전환은 출시 전략뿐 아니라 데이터 이전과 QA의 범위를 바꾼다.",
+      "developer_view": "DX9 클라이언트라도 플랫폼별 렌더 백엔드와 게임 로직을 분리하는 이유를 이해하기 좋아. 입력 지연, 네트워크 품질, 렌더링 성능을 분리하여 측정하고 세이브 버전·마이그레이션 테스트를 미리 설계할 수 있어.",
+      "tags": [
+        "Nintendo Switch 2",
+        "Cloud Gaming",
+        "Native Port",
+        "Save Migration"
+      ]
+    },
+    {
+      "category": "ai",
+      "title": "🤖 Code2Games — Blender 장면에서 UE5 플레이 가능한 게임 만들기",
+      "source": "arXiv · Code2Games 연구진",
+      "published": "2026-10-04",
+      "url": "https://arxiv.org/abs/2610.05033",
+      "easy_explainer": "3D 장면에 캐릭터와 건물, 장애물이 배치돼 있다고 해서 자동으로 게임이 되는 것은 아니야. 게임을 만들려면 플레이어 입력·충돌·상호작용·승패 조건·UI처럼 장면의 의미를 코드로 연결해야 해. Code2Games 연구는 Blender 장면과 자연어 지시에서 이런 게임 로직을 생성해 Unreal Engine 5에서 실행하는 파이프라인을 제안했어. 여러 에이전트가 장면 객체를 분석하고 작업을 나눈 다음 실행 코드를 만들고, 실제 엔진으로 빌드·실행해 결과를 검증하는 접근이야. 특히 장면 객체마다 유지되는 식별자가 중요해. 에이전트가 '파란 문'을 열라고 했을 때 해당 메시 객체가 무엇인지 안정적으로 찾지 못하면 잘못된 오브젝트에 로직을 붙이기 쉬워. 연구는 GameCode4D라는 평가용 과제 10개를 소개했지만, 모든 장면에서 완성도 높은 게임이 자동으로 만들어진다는 보장은 아니야.",
+      "short_summary": "Code2Games는 Blender 장면과 텍스트 설명을 UE5의 실행 가능한 게임으로 변환하려는 연구야. 객체별 안정적 ID와 여러 에이전트의 코드 생성·실행 검증이 핵심이야. 자동 생성된 게임 로직을 실제 엔진에서 컴파일하고 테스트하는 단계가 중요해.",
+      "technical_context": "Scene Graph와 객체 식별자를 유지하면서 3D 장면 데이터를 Unreal Actor·Component, 트리거, 상호작용 로직에 매핑한다. Planner와 코드 생성 역할을 나누고, 컴파일·런타임 검사를 통과하지 못하는 결과는 수정 루프에 반환한다. 연구가 공개한 GameCode4D 평가는 10가지 과제를 기준으로 한다.",
+      "why_it_matters": "이미지나 에셋 생성만으로 완성되지 않던 게임 AI 제작 워크플로에서 구체적인 객체 참조·규칙 생성·자동 테스트가 핵심이 되고 있어.",
+      "developer_view": "C++ 게임 엔진에 Agent를 붙일 때는 Scene 객체의 GUID와 직렬화 가능한 Component 정보, 외부에서 호출할 수 있는 명령 API가 먼저 필요해. 생성한 코드는 별도 브랜치·프로세스에서 컴파일하고 크래시·스크린샷·게임 진행 테스트로 검증하는 것이 좋아.",
+      "tags": [
+        "Unreal Engine 5",
+        "Blender",
+        "Multi-Agent",
+        "Scene Graph",
+        "GameCode4D"
+      ]
+    },
+    {
+      "category": "ai",
+      "title": "🧠 Reflection AI Beam — 501B MoE 모델과 에이전트 강화학습 규모 공개",
+      "source": "Reflection AI 공식 기술 블로그",
+      "published": "2026-10-05",
+      "url": "https://reflection.ai/blog/introducing-beam",
+      "easy_explainer": "Reflection AI가 Beam이라는 대형 AI 모델의 구조와 학습 규모를 소개했어. 공개 설명에는 전체 매개변수 501B, 실제 한 토큰 계산에 활성화되는 매개변수 약 23B라는 수치가 등장해. 이 구조를 MoE(Mixture of Experts)라고 불러. 한 개의 아주 큰 신경망을 모든 입력에 동일하게 사용하는 대신, 여러 전문가 네트워크 가운데 현재 입력에 필요한 일부만 선택해 계산하는 원리야. 전체 용량을 크게 유지하면서 토큰당 연산량을 줄이려는 목적이지만, 메모리·통신·라우팅 비용은 따로 고려해야 해. 회사는 약 23.8조 토큰의 사전학습과 1억 회가 넘는 강화학습 롤아웃, 약 10,500개의 GB300 GPU를 4주 사용했다고 밝혔어. SWE-bench Verified 80.9, Terminal-Bench 2.1 80.1 성적도 자체 발표했지만 동일 조건의 독립 평가 결과와 구분해야 해. 또한 모델 가중치는 발표 당시 곧 공개하겠다고 했을 뿐 출시가 완료됐다는 뜻은 아니야.",
+      "short_summary": "Reflection AI는 총 501B·토큰당 활성 23B 구조의 MoE 모델 Beam을 소개했어. 약 23.8조 토큰 사전학습과 대규모 에이전트 강화학습을 발표했어. 벤치마크 수치는 회사 측 발표이며 가중치 공개는 당시 예정 단계였어.",
+      "technical_context": "MoE는 Router가 입력 토큰별 Expert를 선택해 일부 파라미터만 활성화하는 희소 실행 구조다. 전체 파라미터 수는 모델 저장·분산에 영향을 주지만 활성 파라미터 수는 계산 비용을 가늠하는 하나의 지표다. 에이전트 RL은 코딩·터미널 작업을 반복하고 성공 여부를 점수로 평가하는 롤아웃 데이터를 통해 정책을 개선한다.",
+      "why_it_matters": "모델 성능을 평가할 때 파라미터 총량·실제 활성량·학습 데이터·에이전트 실행 예산·독립 검증을 분리해 봐야 한다는 사례야.",
+      "developer_view": "게임 개발 Agent를 선택할 때 벤치마크 점수만 보지 말고 실제 C++ 프로젝트에서 컴파일 통과율·수정 재시도 횟수·토큰 비용·오답 수정률을 측정하는 테스트 묶음을 운영해 보는 편이 좋아.",
+      "tags": [
+        "MoE",
+        "LLM",
+        "Reflection AI",
+        "Beam",
+        "SWE-bench",
+        "RL"
+      ]
+    },
+    {
+      "category": "opensource",
+      "title": "🧩 DeepSeek DeepGEMM-Ascend — 행렬 커널을 Huawei Ascend NPU로 확장",
+      "source": "DeepSeek GitHub",
+      "published": "2026-09-30",
+      "url": "https://github.com/deepseek-ai/DeepGEMM-Ascend",
+      "easy_explainer": "대규모 AI 모델은 대부분 행렬 곱셈을 반복해. 연산 자체는 간단해 보여도 GPU나 NPU 메모리에서 데이터를 읽어오고 계산 유닛에 적절한 크기로 배치하는 일이 성능을 크게 좌우하지. GEMM(General Matrix Multiplication)은 이런 일반적인 행렬 곱셈 연산을 의미하고, 커널은 하드웨어에서 이를 실제로 실행하는 저수준 프로그램이야. DeepSeek는 기존 DeepGEMM 접근을 Huawei Ascend 950 계열 NPU에도 적용하는 공개 코드를 내놓았어. BF16, FP8, FP4처럼 정밀도가 다른 자료형을 다루고, MoE처럼 여러 전문가를 골라 계산하는 신경망에도 필요한 연산 경로를 지원하도록 구성했어. 프로젝트 설명에 나온 BF16 약 431 TFLOPS는 특정 Ascend 950DT의 제한된 GEMM 테스트에서 얻은 벤치마크 수치야. 이를 전체 LLM 추론 속도로 해석하면 안 돼. 소스는 MIT 라이선스로 공개됐으며 Ascend CANN 환경 등 하드웨어 의존성이 있어.",
+      "short_summary": "DeepSeek가 DeepGEMM 계열 행렬 연산을 Huawei Ascend NPU에서 실행하는 오픈소스 구현을 공개했어. BF16·FP8·FP4와 MoE 연산 지원이 핵심이야. 공개된 높은 TFLOPS 수치는 특정 연산 형상의 벤치마크이지 전체 AI 모델 성능이 아니야.",
+      "technical_context": "GEMM은 행렬 A×B의 곱셈을 타일 단위로 분할하여 NPU 메모리 계층과 연산 장치를 병렬로 사용한다. 혼합 정밀도 BF16·FP8·FP4를 지원하고 MoE 관련 Grouped GEMM 등에 적용 가능하다. 기존 NVIDIA 전용 커널을 단순 재컴파일하는 것과 달리 Ascend ISA·CANN 런타임에 맞는 메모리·벡터·행렬 실행 전략이 필요하다.",
+      "why_it_matters": "AI 인프라가 단일 GPU 제조사에 종속되지 않도록 하는 소프트웨어 최적화 경쟁을 보여 주고, 벤치마크 해석의 중요성을 강조하는 자료야.",
+      "developer_view": "게임 엔진의 Compute Shader를 최적화할 때도 마찬가지로 메모리 이동량·타일 크기·점유율과 실제 워크로드를 함께 측정해야 해. 특정 마이크로벤치마크 수치를 게임의 최종 FPS 개선으로 연결해서는 안 돼.",
+      "tags": [
+        "DeepSeek",
+        "DeepGEMM",
+        "Huawei Ascend",
+        "NPU",
+        "BF16",
+        "FP8",
+        "MoE"
+      ]
+    }
+  ]
+}
