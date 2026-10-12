@@ -30,7 +30,7 @@ footer{margin-top:55px;color:#8fa0b8;font-size:13px}
 .latest-release strong{display:block;color:#f1f7ff;font-size:18px}
 .latest-release .release-desc{display:block;color:#bed1e8;font-size:14px;margin-top:5px}
 .recent{margin:32px 0 36px}.recent h2{font-size:23px;margin:0 0 14px}
-.recent-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.recent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .recent-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:18px;border:1px solid #395576;background:#152943;border-radius:16px;text-decoration:none;color:inherit}
 .recent-card:hover,.recent-card:focus-visible{outline:2px solid #8dbdff;outline-offset:2px}
 .recent-type{font-size:12px;font-weight:800;color:#b0d0ff}
@@ -55,6 +55,7 @@ footer{margin-top:55px;color:#8fa0b8;font-size:13px}
 <a class="recent-card" href="./daily-briefing/"><span class="recent-type">📰 데일리 브리핑</span><strong id="recent-news">최근 자료 확인 중</strong><span class="recent-meta" id="news-date">날짜별 브리핑 보기 →</span></a>
 <a class="recent-card" href="./language-study/"><span class="recent-type">🇬🇧 영어 학습</span><strong id="recent-en">최근 Lesson 확인 중</strong><span class="recent-meta" id="en-date">영어 학습 시작 →</span></a>
 <a class="recent-card" href="./language-study/"><span class="recent-type">🇯🇵 일본어 학습</span><strong id="recent-jp">최근 Lesson 확인 중</strong><span class="recent-meta" id="jp-date">일본어 학습 시작 →</span></a>
+<a class="recent-card" id="recent-thinking-link" href="./thinking-lab/"><span class="recent-type">🧠 사고력 훈련</span><strong id="recent-thinking">최신 문제 확인 중</strong><span class="recent-meta" id="thinking-date">최신 문제 풀기 →</span></a>
 </div><p class="recent-note">각 학습 아카이브에 실제로 등록된 최신 기록을 자동 표시합니다. 새 자료가 없으면 마지막 발행분이 유지됩니다.</p></section>
 <section class="grid" aria-label="서비스 선택">
 <a class="card" href="./daily-briefing/"><span class="icon" aria-hidden="true">📰</span><h2>데일리 브리핑</h2><p>게임 개발 · 엔진 기술 · 게임 산업 · AI와 오픈소스 소식을 모아봅니다.</p><span class="tag">뉴스 · 기술 해설 · 아카이브</span><span class="enter">브리핑 보기 →</span></a>
@@ -83,6 +84,16 @@ const item=items.filter(x=>x&&Number.isInteger(x.id)&&validDate(x.date)).sort((a
 if(item){put('recent-'+key,'Lesson '+item.id+' · '+item.title);put(key+'-date',item.date+' · 학습 시작 →');}
 }
 }).catch(()=>{put('recent-en','영어 학습 바로가기');put('recent-jp','일본어 학습 바로가기');});
+getJSON('./thinking-lab/data/catalog.json').then(c=>{
+const items=Array.isArray(c&&c.episodes)?c.episodes:[];
+const parsed=x=>String(x.number||'').split('.').map(Number);
+const ep=items.filter(x=>x&&/^\d+\.\d+$/.test(String(x.number||''))&&/^ep-\d{2}-\d{2}-[a-z0-9-]+\/$/.test(x.path||'')).sort((a,b)=>{const x=parsed(a),y=parsed(b);return y[0]-x[0]||y[1]-x[1]})[0];
+if(!ep)return;
+const link=document.getElementById('recent-thinking-link');
+if(link)link.href='./thinking-lab/'+ep.path;
+put('recent-thinking',ep.number+' · '+ep.title);
+put('thinking-date',(ep.published_date||'최신 발행')+' · 문제 풀기 →');
+}).catch(()=>put('recent-thinking','사고력 훈련 바로가기'));
 getJSON('./opensource-lab/data/catalog.json').then(c=>{
 const rows=Array.isArray(c&&c.episodes)?c.episodes:[];
 const ep=rows.filter(x=>x&&Number.isInteger(x.number)&&/^ep-[a-z0-9-]+\/$/.test(x.path||'')).sort((a,b)=>b.number-a.number)[0];
