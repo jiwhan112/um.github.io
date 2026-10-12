@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-12",
+  "updated": "2026-10-13",
   "book": {
     "title": "Cracking the Coding Interview",
     "edition": 6,
@@ -8,18 +8,34 @@
   },
   "current": {
     "chapter": 1,
-    "number": "1.4",
-    "topic_en": "Palindrome Permutation",
-    "study_date": "2026-10-12",
-    "published_date": "2026-10-12"
+    "number": "1.5",
+    "topic_en": "One Away",
+    "study_date": "2026-10-13",
+    "published_date": "2026-10-13"
   },
   "next": {
     "chapter": 1,
-    "number": "1.5",
-    "topic_en": "One Away",
-    "study_date": "2026-10-13"
+    "number": "1.6",
+    "topic_en": "String Compression",
+    "study_date": "2026-10-14"
   },
   "episodes": [
+    {
+      "number": "1.5",
+      "chapter": 1,
+      "topic_en": "One Away",
+      "title": "게임 로비 명령어의 한 글자 오타",
+      "summary": "삽입·삭제·치환을 한 번 이내로 허용하는 ASCII 명령어 비교",
+      "category": "배열과 문자열",
+      "tags": [
+        "문자열",
+        "두 포인터",
+        "편집 거리"
+      ],
+      "study_date": "2026-10-13",
+      "published_date": "2026-10-13",
+      "path": "ep-01-05-one-away/"
+    },
     {
       "number": "1.4",
       "chapter": 1,
