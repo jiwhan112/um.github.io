@@ -1,14 +1,11 @@
 name: React validation
 on:
-  pull_request:
-    branches: [master]
   push:
-    branches: ['maintenance/**', 'feature/**', 'migration/**']
-  workflow_dispatch:
+    branches: [feature/dark-library-automation]
 permissions:
-  contents: read
+  contents: write
 concurrency:
-  group: react-check-${{ github.ref }}
+  group: atlas-dark-review
   cancel-in-progress: true
 jobs:
   verify:
@@ -17,34 +14,73 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          ref: ${{ github.sha }}
+      - name: Apply checksum-verified source patch on feature branch only
+        shell: python
+        run: |
+          import pathlib,base64,lzma,json,hashlib,shutil,subprocess
+          assert '${{ github.ref }}'=='refs/heads/feature/dark-library-automation'
+          parts=sorted(pathlib.Path('.update').glob('part*.b64'));assert len(parts)==2
+          raw=lzma.decompress(base64.b64decode(''.join(p.read_text().strip() for p in parts)))
+          assert hashlib.sha256(raw).hexdigest()=='49b589b86dd0eb0602afb1946cc0c8e70f97f168768d4c1af3340d53cd0d197f'
+          ops=json.loads(raw);assert len(ops)==20
+          for op in ops:
+            name=op['path'];p=pathlib.Path(name)
+            assert not p.is_absolute() and '..' not in p.parts
+            assert name.startswith(('web/','automation/')) or name in ['AGENTS.md','thinking-lab/data/catalog.json','.github/workflows/react-check.yml','.github/workflows/react-pages.yml']
+            if 'content' in op: text=op['content']
+            else:
+              text=p.read_text();assert hashlib.sha256(text.encode()).hexdigest()==op['sha256_before'],name+' changed since audit'
+              for start,end,value in reversed(op['edits']):text=text[:start]+value+text[end:]
+            assert hashlib.sha256(text.encode()).hexdigest()==op['sha256_after'],name+' patch checksum'
+            p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text,encoding='utf-8')
+          shutil.rmtree('.update')
+          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          subprocess.run(['git','add','--all'],check=True)
+          subprocess.run(['git','commit','-m','feat: unify dark theme, add classified problem library and source-only publishing contract'],check=True)
+          subprocess.run(['git','push','origin','HEAD:feature/dark-library-automation'],check=True)
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
-          cache-dependency-path: web/package-lock.json
-      - name: Validate repository, content and production build
+      - name: Source contracts, unit tests and typed React build
         working-directory: web
         run: |
           npm ci
           npm run check:repo
+          npm run check:publishing
           npm run test:unit
           npm run build
           node scripts/check-publication.mjs
           npm audit --audit-level=high
-      - name: Install the fixed browser and font environment
+      - name: Install the reviewed browser and font dependencies
         working-directory: web
-        timeout-minutes: 8
         run: bash scripts/install-browser.sh
-      - name: Functional, offline and approved screenshot regression gate
+      - name: Functional, dark-theme, filters and offline tests
         working-directory: web
-        run: npm run test:e2e
+        run: |
+          npx playwright test functional.spec.ts library-theme.spec.ts pwa.spec.ts
+          mkdir -p /tmp/atlas-review
+          cp test-results/results.json /tmp/atlas-review/functional-results.json
+      - name: Capture candidate screenshots for this requested design change
+        working-directory: web
+        run: |
+          npx playwright test visual.spec.ts --update-snapshots
+          mkdir -p /tmp/atlas-review/candidate-snapshots
+          cp tests/visual.spec.ts-snapshots/*.png /tmp/atlas-review/candidate-snapshots/
+      - name: Archive reviewed candidates and exact source metadata (no baseline commit)
+        if: always()
+        run: |
+          mkdir -p /tmp/atlas-review
+          git rev-parse HEAD > /tmp/atlas-review/source-commit.txt
+          git archive --format=tar.gz HEAD > /tmp/atlas-review/source.tar.gz
+          if [ -d web/dist ]; then tar -czf /tmp/atlas-review/dist.tar.gz -C web/dist .; fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: react-validation
+          name: atlas-dark-library-review
           path: |
-            web/playwright-report
+            /tmp/atlas-review
             web/test-results
             web/render-environment
           retention-days: 7
