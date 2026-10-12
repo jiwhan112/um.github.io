@@ -27,7 +27,7 @@ test('asset modal and report routes',async({page})=>{await page.goto('ai-asset-l
 test('search and mobile navigation',async({page,isMobile})=>{await page.goto('');await expect(page.locator('main h1')).toBeVisible();await page.keyboard.press('Control+k');await page.getByLabel('통합 검색').fill('Palindrome');await expect(page.locator('.search-results a').first()).toBeVisible();await page.locator('.search-results a').first().click();await expect(page).toHaveURL(/palindrome-permutation/);if(isMobile){await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();await page.getByRole('dialog').getByRole('link',{name:'언어 학습',exact:true}).click();await expect(page).toHaveURL(/language-study/);}});
 test('missing route is HTTP 404 with a helpful app screen',async({page})=>{const r=await page.goto('not-a-real-document/');expect(r?.status()).toBe(404);await expect(page.getByText('페이지를 찾을 수 없습니다.',{exact:true})).toBeVisible();});
 
-test('lesson list and sidebar reflect all checked sections across refresh',async({page})=>{
+test('lesson list and sidebar reflect all checked sections across refresh',async({page,isMobile})=>{
  await page.goto('language-study/japanese/9/');
  const steps=page.locator('.lesson-checks input[type="checkbox"]');
  const count=await steps.count();expect(count).toBeGreaterThanOrEqual(4);
@@ -36,7 +36,7 @@ test('lesson list and sidebar reflect all checked sections across refresh',async
  await page.goto('language-study/?language=japanese');
  const lesson=page.locator('.lesson-list a[href$="/japanese/9/"]');
  await expect(lesson.locator('.lesson-status')).toContainText('완료');
- await expect(page.locator('.chapter-nav a[href$="/japanese/9/"] .chapter-complete').first()).toBeVisible();
+ if(isMobile){await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();await expect(page.getByRole('dialog').locator('.chapter-nav a[href$="/japanese/9/"] .chapter-complete')).toBeVisible();await page.keyboard.press('Escape');}else await expect(page.locator('.sidebar .chapter-nav a[href$="/japanese/9/"] .chapter-complete')).toBeVisible();
  await page.reload();
  await expect(page.locator('.lesson-list a[href$="/japanese/9/"] .lesson-status')).toContainText('완료');
 });
