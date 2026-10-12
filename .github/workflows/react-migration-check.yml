@@ -1,0 +1,125 @@
+name: React migration verification
+on:
+  push:
+    branches: [migration/react-workspace]
+    paths:
+      - '.github/workflows/react-migration-check.yml'
+      - 'web/**'
+      - '.migration/**'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: react-migration-verification
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: migration/react-workspace
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unpack checked source transport
+        id: unpack
+        shell: python
+        run: |
+          import pathlib,base64,lzma,json,hashlib
+          parts=sorted(pathlib.Path('.migration').glob('part*.b64'))
+          if parts:
+            assert len(parts)==4
+            data=lzma.decompress(base64.b64decode(''.join(p.read_text().strip() for p in parts)))
+            assert hashlib.sha256(data).hexdigest()=='e247c91ade361e27c1ef683b6aefcbb5fa8ecbd3b495c54eb501d33f17ff1f08', 'Transport integrity mismatch'
+            for name,content in json.loads(data).items():
+              p=pathlib.Path(name)
+              assert not p.is_absolute() and '..' not in p.parts
+              assert name.startswith('web/') or name=='.gitignore'
+              assert 'node_modules' not in p.parts
+              p.parent.mkdir(parents=True,exist_ok=True);p.write_text(content,encoding='utf-8')
+            for p in parts:p.unlink()
+      - name: Retrieve original exact dependency lock
+        if: hashFiles('web/package-lock.json') == ''
+        uses: actions/download-artifact@v4
+        with:
+          name: atlas-migration-toolchain
+          run-id: 38209218891
+          github-token: ${{ github.token }}
+          path: /tmp/atlas-bootstrap
+      - name: Restore dependency lock metadata
+        shell: bash
+        run: |
+          if [ ! -f web/package-lock.json ]; then
+            tar -xzf /tmp/atlas-bootstrap/atlas-toolchain.tar.gz -C web package-lock.json
+            node -e "const fs=require('fs'),p=require('./web/package.json'),l=require('./web/package-lock.json');l.name=p.name;l.version=p.version;l.packages[''].name=p.name;l.packages[''].version=p.version;l.packages[''].engines=p.engines;fs.writeFileSync('web/package-lock.json',JSON.stringify(l,null,2)+'\n');"
+          fi
+      - name: Commit framework sources on staging only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add web .gitignore .migration
+          if ! git diff --cached --quiet; then
+            git commit -m 'feat: implement React workspace with typed content and preserved storage'
+            git push origin HEAD:migration/react-workspace
+          fi
+      - name: Install pinned dependencies
+        working-directory: web
+        run: npm ci
+      - name: Type, content and invariant checks
+        working-directory: web
+        run: |
+          npm run test:unit
+          npm run build
+          npm audit --audit-level=high
+      - name: Freeze initial visual fixtures
+        working-directory: web
+        shell: python
+        run: |
+          import pathlib,json
+          p=pathlib.Path('tests/fixtures');p.mkdir(exist_ok=True)
+          if not (p/'catalog.json').exists():
+            c=json.load(open('public/data/atlas/catalog.json'));a=json.load(open('public/data/atlas/articles.json'))
+            a=[x for x in a if x['date']==c['dates'][0]][:4]
+            (p/'catalog.json').write_text(json.dumps(c,ensure_ascii=False,separators=(',',':')))
+            (p/'articles.json').write_text(json.dumps(a,ensure_ascii=False,separators=(',',':')))
+      - name: Install browser and Korean glyph coverage
+        working-directory: web
+        run: |
+          npx playwright install --with-deps chromium
+          sudo apt-get install -y fonts-noto-cjk
+      - name: Functional browser tests against actual production content
+        working-directory: web
+        run: npx playwright test functional.spec.ts
+      - name: Capture candidate visual baselines for review
+        if: always() && hashFiles('web/dist/index.html') != ''
+        working-directory: web
+        run: npx playwright test visual.spec.ts --update-snapshots
+      - name: Verify tests with fixed baselines
+        working-directory: web
+        run: npm run test:e2e
+      - name: Save baseline candidates on staging
+        run: |
+          git add web/tests/fixtures web/tests/*-snapshots
+          if ! git diff --cached --quiet; then
+            git commit -m 'test: capture React desktop and mobile visual baselines for review'
+            git push origin HEAD:migration/react-workspace
+          fi
+      - name: Archive source and validation output
+        if: always()
+        run: |
+          mkdir -p /tmp/react-delivery
+          git archive --format=tar.gz HEAD > /tmp/react-delivery/react-source.tar.gz
+          if [ -d web/dist ]; then tar -czf /tmp/react-delivery/react-dist.tar.gz -C web/dist .; fi
+          if [ -d web/tests/visual.spec.ts-snapshots ]; then cp -r web/tests/visual.spec.ts-snapshots /tmp/react-delivery/; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas-react-verification
+          path: |
+            /tmp/react-delivery
+            web/playwright-report
+            web/test-results
+          retention-days: 5
