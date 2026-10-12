@@ -4,6 +4,7 @@ on:
     branches: [feature/dark-library-automation]
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: atlas-dark-review
   cancel-in-progress: true
@@ -15,38 +16,52 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-      - name: Apply checksum-verified source patch on feature branch only
+          fetch-depth: 0
+      - name: Retrieve the exact inspected screenshots
+        uses: actions/download-artifact@v4
+        with:
+          name: atlas-dark-library-review
+          run-id: 38222135738
+          github-token: ${{ github.token }}
+          path: /tmp/atlas-reviewed
+      - name: Import reviewed images without regenerating or loosening comparisons
         shell: python
         run: |
-          import pathlib,base64,lzma,json,hashlib,shutil,subprocess
-          assert '${{ github.ref }}'=='refs/heads/feature/dark-library-automation'
-          parts=sorted(pathlib.Path('.update').glob('part*.b64'))
-          if parts:
-            assert len(parts)==2
-            raw=lzma.decompress(base64.b64decode(''.join(p.read_text().strip() for p in parts)))
-            assert hashlib.sha256(raw).hexdigest()=='49b589b86dd0eb0602afb1946cc0c8e70f97f168768d4c1af3340d53cd0d197f'
-            ops=json.loads(raw);assert len(ops)==20
-            for op in ops:
-              name=op['path'];p=pathlib.Path(name)
-              assert not p.is_absolute() and '..' not in p.parts
-              if name.startswith('.github/'):continue
-              assert name.startswith(('web/','automation/')) or name in ['AGENTS.md','thinking-lab/data/catalog.json']
-              if 'content' in op:text=op['content']
-              else:
-                text=p.read_text();assert hashlib.sha256(text.encode()).hexdigest()==op['sha256_before'],name+' changed since audit'
-                for start,end,value in reversed(op['edits']):text=text[:start]+value+text[end:]
-              assert hashlib.sha256(text.encode()).hexdigest()==op['sha256_after'],name+' patch checksum'
-              p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text,encoding='utf-8')
-            shutil.rmtree('.update')
-            subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
-            subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
-            subprocess.run(['git','add','--all'],check=True)
-            subprocess.run(['git','commit','-m','feat: unify dark theme, add classified problem library and source-only publishing contract'],check=True)
+          import pathlib,hashlib,shutil,subprocess
+          root=pathlib.Path('/tmp/atlas-reviewed')
+          assert next(root.rglob('source-commit.txt')).read_text().strip()=='c11cb7204a2499e3ab61e0b1b866f29cb7c1ef5b'
+          assert not subprocess.check_output(['git','diff','c11cb7204a2499e3ab61e0b1b866f29cb7c1ef5b','HEAD','--','web/src','web/scripts/content.ts','web/tests/visual.spec.ts']).strip(), 'Unreviewed UI or fixture logic changes'
+          expected={
+            'briefing-desktop-linux.png':'b9ca48b75c9185cf7c9063a94415073c3e383318d13befdcd14199a781b1d606',
+            'briefing-mobile-linux.png':'6387eb2c6aa7c9b26298be3f38f05e1c652fae65e745f385f7da8ae52ff4d497',
+            'dashboard-desktop-linux.png':'ab91a53a9ba7be41ea65ace509d3bad7d4475037a5a58e8df67d5ea2fe05b6a3',
+            'dashboard-mobile-linux.png':'239edd61548e6fc03a85d2a643b6ed8894b0b37b48731b1a8e05d8efb477da3c',
+            'gallery-desktop-linux.png':'96e70b11dd3f0cfa289a9624d44a7234de19d8749d7d862bd67c7f9a1295391e',
+            'gallery-mobile-linux.png':'09a24891f55bef2a134e40212643b31c147004c01b58ac4a5f383846074d7231',
+            'language-desktop-linux.png':'c907f1be6cb578c1ef9d7d2da06e7e3dd75dd30fca4946c5d81f908e8d1e9963',
+            'language-mobile-linux.png':'ce60caab08f0edbcc7f10bfd6ab525fe4527c80854e9e975133a3e266bfdd561',
+            'library-desktop-linux.png':'30fe9d7e4324b0b26354869fc8615016c53dc73b23600a123162fc14ecf48c30',
+            'library-mobile-linux.png':'bb0bef9a3ef62322034fe0d887fcfc29ea1712865aa70ffaf923b0986b9b927c',
+            'problem-desktop-linux.png':'e8f23ba535745a2e553a4904cf1da1d8336b1eee07cca3c8c1cb042f5bc74449',
+            'problem-mobile-linux.png':'f1930fad04abe6e5aff2036e53d449d1fe59472b618e9047c2e9e1f99c69c70f',
+            'report-desktop-linux.png':'e46664343f93013fb4c5885fee4199b040decc66f8a776a05119f98ba3e3507d',
+            'report-mobile-linux.png':'2f8889af3fd1caf79bdaca52e496b6e43ea2ee856734495447e2932a54545817'
+          }
+          src=next(root.rglob('candidate-snapshots'));dst=pathlib.Path('web/tests/visual.spec.ts-snapshots')
+          assert {p.name for p in src.glob('*.png')}==set(expected)
+          for name,digest in expected.items():
+            assert hashlib.sha256((src/name).read_bytes()).hexdigest()==digest,name
+            shutil.copyfile(src/name,dst/name)
+          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          subprocess.run(['git','add','web/tests/visual.spec.ts-snapshots'],check=True)
+          if subprocess.run(['git','diff','--cached','--quiet']).returncode:
+            subprocess.run(['git','commit','-m','test: approve reviewed dark theme and classified library snapshots'],check=True)
             subprocess.run(['git','push','origin','HEAD:feature/dark-library-automation'],check=True)
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Source contracts, unit tests and typed React build
+      - name: Build exact reviewed React source and validate publishing contracts
         working-directory: web
         run: |
           npm ci
@@ -56,34 +71,18 @@ jobs:
           npm run build
           node scripts/check-publication.mjs
           npm audit --audit-level=high
-      - name: Install the reviewed browser and font dependencies
+      - name: Install the fixed browser and font environment
         working-directory: web
         run: bash scripts/install-browser.sh
-      - name: Functional, dark-theme, filters and offline tests
+      - name: Strict full regressions, never update snapshots
         working-directory: web
-        run: |
-          npx playwright test functional.spec.ts library-theme.spec.ts pwa.spec.ts
-          mkdir -p /tmp/atlas-review
-          cp test-results/results.json /tmp/atlas-review/functional-results.json
-      - name: Capture candidate screenshots for this requested design change
-        working-directory: web
-        run: |
-          npx playwright test visual.spec.ts --update-snapshots
-          mkdir -p /tmp/atlas-review/candidate-snapshots
-          cp tests/visual.spec.ts-snapshots/*.png /tmp/atlas-review/candidate-snapshots/
-      - name: Archive reviewed candidates and exact source metadata (no baseline commit)
-        if: always()
-        run: |
-          mkdir -p /tmp/atlas-review
-          git rev-parse HEAD > /tmp/atlas-review/source-commit.txt
-          git archive --format=tar.gz HEAD > /tmp/atlas-review/source.tar.gz
-          if [ -d web/dist ]; then tar -czf /tmp/atlas-review/dist.tar.gz -C web/dist .; fi
+        run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: atlas-dark-library-review
+          name: atlas-dark-approved-tests
           path: |
-            /tmp/atlas-review
             web/test-results
+            web/playwright-report
             web/render-environment
           retention-days: 7
