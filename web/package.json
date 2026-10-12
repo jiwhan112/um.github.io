@@ -10,7 +10,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "test:unit": "tsx --test tests/content.test.ts",
     "test:e2e": "playwright test",
-    "check": "npm run test:unit && npm run build && npm run test:e2e"
+    "check": "npm run check:repo && npm run test:unit && npm run build && node scripts/check-publication.mjs && npm run test:e2e",
+    "check:repo": "node scripts/check-repository.mjs"
   },
   "license": "ISC",
   "type": "module",

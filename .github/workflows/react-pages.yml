@@ -46,6 +46,7 @@ jobs:
       - name: Validate source content and types, then build React
         working-directory: web
         run: |
+          npm run check:repo
           npm run test:unit
           npm run build
           node scripts/check-publication.mjs

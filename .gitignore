@@ -1,6 +1,16 @@
+# Local dependencies and intermediate build output (published root files stay tracked).
 web/node_modules/
 web/dist/
 web/public/
+web/.cache/
+# Test output is disposable; web/tests/*-snapshots are reviewed source files.
 web/test-results/
 web/playwright-report/
-web/.cache/
+web/blob-report/
+web/coverage/
+web/live-check/
+web/render-environment/
+# Temporary transport and operating-system metadata.
+.migration/
+.DS_Store
+Thumbs.db
