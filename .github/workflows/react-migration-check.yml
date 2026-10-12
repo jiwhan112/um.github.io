@@ -2,7 +2,7 @@ name: React migration verification
 on:
   push:
     branches: [migration/react-workspace]
-    paths: ['web/**', '.migration/**', '.github/workflows/react-migration-check.yml']
+    paths: ['web/**', '.github/workflows/react-migration-check.yml', '.github/workflows/react-pages.yml']
 permissions:
   contents: write
   actions: read
@@ -12,27 +12,11 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: migration/react-workspace
-      - name: Apply the reviewed source-only link-base correction once
-        shell: python
-        run: |
-          import pathlib,json,subprocess
-          patch=pathlib.Path('.migration/link-base.json')
-          if patch.exists():
-            for edit in json.loads(patch.read_text()):
-              assert edit['path']=='web/scripts/content.ts'
-              p=pathlib.Path(edit['path']);s=p.read_text();assert s.count(edit['find'])==1
-              p.write_text(s.replace(edit['find'],edit['replace']),encoding='utf-8')
-            patch.unlink()
-            subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
-            subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
-            subprocess.run(['git','add','web/scripts/content.ts','.migration/link-base.json'],check=True)
-            subprocess.run(['git','commit','-m','fix: resolve Markdown resource links relative to their authoring files'],check=True)
-            subprocess.run(['git','push','origin','HEAD:migration/react-workspace'],check=True)
+          ref: ${{ github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -69,12 +53,10 @@ jobs:
             a=[x for x in a if x['date']==c['dates'][0]][:4]
             (p/'catalog.json').write_text(json.dumps(c,ensure_ascii=False,separators=(',',':')))
             (p/'articles.json').write_text(json.dumps(a,ensure_ascii=False,separators=(',',':')))
-      - name: Install Chromium and Korean glyph coverage
+      - name: Restore the reviewed Chromium and font environment
         working-directory: web
-        timeout-minutes: 4
-        run: |
-          npx playwright install chromium
-          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=25 -o Acquire::https::Timeout=25 install -y --no-install-recommends fonts-noto-cjk
+        timeout-minutes: 8
+        run: bash scripts/install-browser.sh
       - name: Strict functional, offline PWA and screenshot tests
         working-directory: web
         run: npm run test:e2e
@@ -87,7 +69,7 @@ jobs:
             git commit -m 'test: pin reviewed React desktop and mobile screenshots'
             git push origin HEAD:migration/react-workspace
           fi
-      - name: Archive verified source and distribution
+      - name: Archive tested source and distribution
         if: always()
         run: |
           mkdir -p /tmp/react-delivery
@@ -101,4 +83,5 @@ jobs:
             /tmp/react-delivery
             web/playwright-report
             web/test-results
+            web/render-environment
           retention-days: 5
