@@ -1,0 +1,70 @@
+---
+layout: null
+---
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1220">
+<title>사고력 훈련 1.3 URLify | ATLAS NOTE</title><meta name="description" content="코딩 인터뷰 완전 분석 6판 1.3 주제에서 착안한 독창적 C++11 알고리즘 훈련">
+<link rel="stylesheet" href="../../learning-lab.css"><style>.lesson-head{background:linear-gradient(120deg,#223e62,#14243d);border:1px solid #5d80a5;border-radius:18px;padding:24px}
+.links{display:flex;gap:9px;flex-wrap:wrap;margin:22px 0}.links a{padding:7px 13px;border:1px solid #54749a;border-radius:10px;text-decoration:none}
+.puzzle{background:#1a3351;border-color:#547aa6}.diagram{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:15px;background:#0a192b;border:1px solid #456384;border-radius:15px}
+.diagram span.tile{display:inline-grid;place-items:center;min-width:40px;height:48px;background:#284e79;border:1px solid #7faadd;border-radius:9px;font:800 18px ui-monospace,monospace;color:#fff;padding:0 7px}
+.diagram span.special{background:#663e72;border-color:#b080d0}.explainer{font-size:14px;color:#b9cee7;margin-top:10px}
+.problem-table{overflow:auto}.problem-table table{width:100%;border-collapse:collapse;font-size:14px}.problem-table td,.problem-table th{border-bottom:1px solid #355273;text-align:left;padding:10px;vertical-align:top}
+.tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}.tools small{color:#b7c9dd}
+@media(max-width:680px){.lesson-head{padding:17px}.diagram span.tile{height:40px;min-width:32px;font-size:15px;padding:0 4px}}</style><link rel="stylesheet" href="../atlas-lesson.css?v=1"></head><body><main>
+<nav><a href="../">← 사고력 훈련</a><a href="../../">ATLAS NOTE</a><a href="../ep-01-02-check-permutation/">이전 문제 1.2</a></nav>
+<header class="lesson-head"><span class="eyebrow">CTCI 6판 · CHAPTER 1 · 1.3 URLify</span><h1>URLify — 미니맵 위치 문자열의 공백 인코딩</h1><p class="lead">원본 문자열을 뒤에서부터 읽고 쓰면 어떻게 안전하게 긴 문자열로 확장할 수 있을까요?</p>
+<div class="progress"><span>학습 배정일 2026-10-11</span><span>실제 게시일 2026-10-12</span><span>C++11</span><span>힌트와 정답은 접어서 보기</span></div>
+<p class="note">도서의 장·문항 순서를 참고한 자체 제작 문제입니다. 학습 배정일은 10월 9일부터 하루 한 회차로 소급 배치한 날짜이며 실제 게시일과는 구분합니다.</p></header>
+<div class="links"><a href="#problem">문제</a><a href="#hints">힌트</a><a href="#write">직접 코딩</a><a href="#solution">해설</a><a href="#tests">검증</a></div>
+<section id="problem"><h2>1. 문제 이해하기</h2><div class="card puzzle"><h3>공백을 포함한 위치 이름을 주소에 사용할 문자열로 변환하기</h3><p>미니맵의 위치 이름에 포함된 공백(ASCII 0x20)을 각각 <code>%20</code>으로 바꾸는 함수를 작성합니다. 원래 이름은 버퍼 앞쪽에 있고, <code>used</code>가 원래 길이입니다. 뒤에는 이미 충분한 여유 공간이 확보되어 있습니다. <strong>추가 문자열 배열 없이 버퍼 안에서</strong> 변환해야 합니다.</p>
+<h3>입력 및 제한 조건</h3><p><code>std::string&amp; buffer</code>와 <code>std::size_t used</code>. 원본 <code>buffer[0..used)</code>는 ASCII 문자만 허용합니다. 필요한 결과 용량이 이미 <code>buffer.size()</code> 안에 있어야 하며, 공간 부족·잘못된 길이·비 ASCII 입력은 <code>false</code>를 반환하고 원본을 보존합니다. 성공 시 <code>true</code>를 반환하고 결과 길이로 <code>resize</code>합니다.</p><p><strong>예시:</strong> <code>"MAP ROOM    ", used=8 → "MAP%20ROOM"</code></p></div>
+<h2>2. 코딩 전에 답할 질문</h2><ol><li>공백 하나를 3글자로 바꿀 때 결과 길이는 얼마나 늘어날까요?</li><li>문자열의 앞에서부터 바꾸면 어떤 데이터가 덮일 수 있나요?</li><li>읽기 포인터와 쓰기 포인터를 어디에 두어야 할까요?</li></ol></section>
+<section id="hints"><h2>3. 힌트 및 그림</h2><p>자신의 풀이를 먼저 생각한 다음 필요한 힌트만 펼쳐 보세요.</p><details><summary>힌트 1: 공간 산정</summary><p>공백 수 k를 센 뒤 required = used + 2*k 를 먼저 계산하세요.</p></details><details><summary>힌트 2: 커서 방향</summary><p>원래 데이터의 뒤에서부터 읽으면 아직 읽지 않은 문자를 덮지 않을 수 있습니다.</p></details><details><summary>힌트 3: 쓰는 순서</summary><p>뒤에서 쓰므로 공백을 보면 0, 2, % 순서로 써야 최종적으로 %20이 됩니다.</p></details>
+<details><summary>🧩 그림으로 보는 핵심 원리 (풀이 스포일러 포함)</summary><p>공백 한 개를 %20으로 치환한 모습입니다. 강조된 세 칸은 새로 채워진 문자열입니다.</p>
+<figure><div class="diagram"><strong>변경 전:</strong> <span class="tile ">M</span><span class="tile ">A</span><span class="tile ">P</span><span class="tile special">␠</span><span class="tile ">R</span><span class="tile ">O</span><span class="tile ">O</span><span class="tile ">M</span></div><div class="explainer">↓ 공백 하나당 두 칸 추가, 오른쪽에서부터 채우기</div><div class="diagram"><strong>변경 후:</strong> <span class="tile ">M</span><span class="tile ">A</span><span class="tile ">P</span><span class="tile special">%</span><span class="tile special">2</span><span class="tile special">0</span><span class="tile ">R</span><span class="tile ">O</span><span class="tile ">O</span><span class="tile ">M</span></div>
+<figcaption class="explainer">자체 작성한 알고리즘 개념도이며, 실제 프로그램에서 캡처한 측정 결과는 아닙니다.</figcaption></figure></details></section>
+<section id="write"><h2>4. 직접 작성하기</h2><p>코드 입력란은 로컬 브라우저에만 저장됩니다. 서버나 GitHub로 자동 업로드되지 않습니다.</p>
+<textarea id="memo" spellcheck="false" rows="12" aria-label="C++11 풀이 작성" placeholder="bool EncodeSpacesInPlace(std::string&amp; buffer, std::size_t used) {
+    // 여기에서 구현하세요.
+}"></textarea>
+<div class="tools"><button class="button" id="save" type="button">내 풀이 저장</button><small id="save-msg" role="status">이 브라우저에만 저장</small></div></section>
+<section id="solution"><h2>5. 검증된 풀이</h2><details><summary>✅ C++11 코드 · 알고리즘 증명 · 복잡도 펼치기</summary>
+<h3>풀이 원리</h3><p>먼저 원래 구간의 공백 개수와 ASCII 제약을 확인합니다. <code>required = used + 2*spaces</code>로 필요한 결과 길이를 계산합니다. 읽기 위치는 <code>used</code>, 쓰기 위치는 <code>required</code>에서 시작해 둘 다 뒤에서부터 앞으로 이동합니다. 쓰기 영역이 읽지 않은 원본 문자보다 뒤에 있으므로 원본을 덮지 않습니다.</p><p>오류는 쓰기 시작 전에 모두 검사하므로 실패할 때 원본이 그대로 유지됩니다.</p>
+<pre><code>#include &lt;cstddef&gt;
+#include &lt;limits&gt;
+#include &lt;string&gt;
+
+bool EncodeSpacesInPlace(std::string&amp; buffer, std::size_t used) {
+    if (used &gt; buffer.size()) return false;
+    std::size_t spaces = 0;
+    for (std::size_t i = 0; i &lt; used; ++i) {
+        const unsigned char ch = static_cast&lt;unsigned char&gt;(buffer[i]);
+        if (ch &gt; 127) return false;
+        if (ch == ' ') ++spaces;
+    }
+    if (spaces &gt; (std::numeric_limits&lt;std::size_t&gt;::max() - used) / 2)
+        return false;
+    const std::size_t required = used + 2 * spaces;
+    if (required &gt; buffer.size()) return false;
+    std::size_t read = used, write = required;
+    while (read &gt; 0) {
+        const char ch = buffer[--read];
+        if (ch == ' ') {
+            buffer[--write] = '0';
+            buffer[--write] = '2';
+            buffer[--write] = '%';
+        } else {
+            buffer[--write] = ch;
+        }
+    }
+    buffer.resize(required);
+    return true;
+}</code></pre>
+<h3>복잡도</h3><p>시간 O(n), 추가 작업 공간 O(1)입니다. 결과를 위한 공간이 기존 입력 버퍼에 이미 확보돼 있다는 조건을 사용합니다.</p><h3>놓치기 쉬운 조건</h3><ul><li>used와 buffer.size()는 서로 다름</li><li>공백을 앞에서부터 확장하면 원본 데이터가 덮일 수 있음</li><li>ASCII 외의 UTF-8 문자는 이 문제에서 허용하지 않음</li><li>공간 부족은 쓰기 전에 검출하여 입력을 변경하지 않음</li></ul>
+<p class="note">위 코드는 C++11 컴파일 및 자체 경계 사례 테스트를 통과했습니다.</p></details></section>
+<section id="tests"><h2>6. 반례와 경계 조건</h2><details><summary>🧪 테스트 케이스 정답 보기</summary><div class="problem-table"><table><thead><tr><th>입력</th><th>예상 출력</th><th>근거</th></tr></thead><tbody><tr><td><code>&quot;MAP ROOM    &quot;, used=8</code></td><td>true, &quot;MAP%20ROOM&quot;</td><td>공백 하나</td></tr><tr><td><code>&quot;A B C    &quot;, used=5</code></td><td>true, &quot;A%20B%20C&quot;</td><td>공백 두 개</td></tr><tr><td><code>&quot;HELLO&quot;, used=5</code></td><td>true, &quot;HELLO&quot;</td><td>공백 없음</td></tr><tr><td><code>&quot;&quot;, used=0</code></td><td>true, &quot;&quot;</td><td>빈 입력</td></tr><tr><td><code>&quot;A B&quot;, used=3</code></td><td>false, 원본 유지</td><td>필요 공간 부족</td></tr><tr><td><code>used &gt; buffer.size()</code></td><td>false, 원본 유지</td><td>잘못된 유효 길이</td></tr><tr><td><code>비 ASCII 포함</code></td><td>false, 원본 유지</td><td>입력 계약 위반</td></tr></tbody></table></div></details>
+<div class="card"><h3>확장 문제</h3><p>원본 버퍼의 여유 공간이 전혀 없다면 어떻게 처리해야 할까요? 새 문자열을 만드는 버전과 성능·메모리 요구 사항을 비교해 보세요.</p></div>
+<h2>다음 · 1.4 Palindrome Permutation</h2><p>문자 등장 횟수가 가진 홀짝 성질로, 실제로 문자열을 재배열하지 않고 회문을 구성할 수 있는지 판정합니다.</p>
+<p class="note"><a href="https://www.crackingthecodinginterview.com/contents.html" target="_blank" rel="noopener noreferrer">책의 문제 목차</a> · 문제는 모두 자체 구성</p></section>
+<footer>ATLAS NOTE · 사고력 훈련 1.3 · 학습 배정일 2026-10-11 · <a href="../">전체 학습 보기</a></footer>
+</main><script>(function(){const key='thinking-ctci-1.3-draft',area=document.getElementById('memo'),status=document.getElementById('save-msg');try{area.value=localStorage.getItem(key)||'';}catch(err){status.textContent='로컬 저장소 사용 불가';}document.getElementById('save').addEventListener('click',function(){try{localStorage.setItem(key,area.value);status.textContent='저장 완료';}catch(err){status.textContent='저장 실패: 코드를 따로 복사해 두세요';}});})();</script></body></html>

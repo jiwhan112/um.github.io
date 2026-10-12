@@ -1,0 +1,214 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<meta name="description" content="코딩 인터뷰 완전 분석 6판 1.2 Check Permutation. 문자열의 순열 관계를 판단하는 독창적인 C++11 사고력 훈련.">
+<title>1.2 Check Permutation · 문자열 순열 관계 | 사고력 훈련</title>
+<link rel="stylesheet" href="../../learning-lab.css">
+<style>
+.jump{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
+.jump a{text-decoration:none;border:1px solid #426187;background:#203956;color:#d2e6fc;border-radius:10px;font-size:13px;padding:7px 12px}
+.jump a:hover,.jump a:focus-visible{outline:2px solid #a6ccfb;outline-offset:2px}
+.problem-card{background:linear-gradient(130deg,#1a3657,#14233b);border-color:#668bb7}
+.problem-card h3{font-size:21px}
+.puzzle-visual{display:grid;gap:12px;margin-top:16px}
+.token-line{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.token-line .label{min-width:80px;color:#c7deff;font-size:14px;font-weight:750}
+.token{display:inline-grid;place-items:center;border-radius:9px;border:1px solid #7799c6;background:#315681;color:white;min-width:44px;min-height:46px;font:800 20px ui-monospace,Consolas,monospace}
+.token.digit{background:#4b3977;border-color:#9176c9}
+.question-band{background:#1b385a;border:1px dashed #7097bf;color:#cce3fa;border-radius:12px;padding:12px 16px}
+.quick-points{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.quick-points>div{background:#1c314b;border:1px solid #486487;border-radius:13px;padding:17px}
+.quick-points strong{color:#f4f8ff}
+.quick-points p{font-size:14px;margin:8px 0 0}
+.q{background:#1c3956;border-left:4px solid #8ec5ff;border-radius:0 12px 12px 0;padding:15px 18px}
+.input-example{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:17px 0}
+.input-example .sheet{padding:16px}
+.input-example pre{margin:9px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:10px}
+.actions .muted{margin:0}
+.counts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.counts .count{background:#1c3452;border:1px solid #567aa1;border-radius:11px;padding:12px}
+.count strong{display:block;font-size:18px;color:#fff}
+.count span{display:block;color:#c4daf4;font-size:13px}
+.good{color:#b3f4d1;font-weight:800}.bad{color:#ffd4bc;font-weight:800}
+.formula{display:block;overflow-wrap:anywhere;background:#071627;border:1px solid #375478;border-radius:10px;padding:14px;font:650 13px/1.6 ui-monospace,Consolas,monospace;color:#d5efff}
+@media(max-width:690px){.quick-points,.input-example{grid-template-columns:1fr}.token{min-width:35px;min-height:38px;font-size:17px}.token-line .label{flex-basis:100%}.counts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style><link rel="stylesheet" href="../atlas-lesson.css?v=1"></head><body><main>
+<nav aria-label="페이지 이동"><a href="../">← 사고력 훈련 목록</a><a href="../../">ATLAS NOTE</a><a href="../ep-01-01-is-unique/">이전 문제 1.1</a></nav>
+<header class="hero"><p class="note">학습 배정일 2026-10-10 · 최초 게시일 2026-10-12. 매일 한 문제 체계로 소급 배정한 날짜입니다.</p><span class="eyebrow">THINKING LAB · CTCI 6판 · 1장 / 1.2 Check Permutation</span>
+<h1>1.2 문자열 순열 관계<br>순서를 바꾸면 같은 코드가 될까?</h1>
+<p class="lead">이번 목표는 두 문자열의 <strong>위치가 아닌 구성</strong>을 비교하는 일입니다. <strong>정답이 가려진 힌트 → 내 풀이 → 시각적 해설과 C++11 검증</strong> 순서로 학습하세요.</p>
+<div class="progress"><span>발행: 2026-10-12</span><span>1장 배열과 문자열</span><span>1.2 Check Permutation</span><span>기초 → 응용</span><span>C++11</span></div>
+</header>
+<div class="jump" aria-label="학습 목차"><a href="#challenge">문제</a><a href="#hints">힌트</a><a href="#solve">직접 코딩</a><a href="#visual">그림 해설</a><a href="#solution">정답</a><a href="#tests">테스트</a></div>
+
+<section><h2>🧩 핵심 개념부터 이해하기</h2>
+<div class="quick-points"><div><strong>문자열 일치</strong><p>같은 위치에 같은 문자가 있어야 합니다. <code>AB</code>와 <code>BA</code>는 다른 문자열입니다.</p></div>
+<div><strong>순열 관계</strong><p>문자의 배치는 달라도 됩니다. 그러나 각 문자가 <strong>등장하는 횟수</strong>는 같아야 합니다.</p></div></div>
+<figure class="figure"><strong>그림 ① · 서로 다른 순서의 배지 코드</strong>
+<div class="puzzle-visual" role="img" aria-label="코드 A에는 A A B 2 C, 코드 B에는 C 2 A B A가 왼쪽부터 놓여 있다. 이 둘이 같은 토큰 구성인지 묻는 그림.">
+<div class="token-line"><span class="label">코드 A</span><span class="token">A</span><span class="token">A</span><span class="token">B</span><span class="token digit">2</span><span class="token">C</span></div>
+<div class="question-band">↕ 순서를 무시하면 두 코드가 같을까?</div>
+<div class="token-line"><span class="label">코드 B</span><span class="token">C</span><span class="token digit">2</span><span class="token">A</span><span class="token">B</span><span class="token">A</span></div></div>
+<figcaption>문자 자체와 등장 횟수를 비교하는 사고가 필요합니다. 구체적인 자료구조와 정답 그림은 아래에서 접힌 상태로 제공합니다.</figcaption></figure>
+<p class="q"><strong>한 문장 질문:</strong> <code>AAB</code>와 <code>ABB</code>는 문자 종류가 똑같이 A, B인데도 같은 구성일까요? 결과뿐 아니라 이유를 먼저 적어 보세요.</p></section>
+
+<section id="challenge"><h2>🎯 자체 제작 문제 · 로비 배지 토큰 재배열 검사</h2>
+<article class="card problem-card"><h3>요구 사항</h3>
+<p>게임 로비의 배지 코드는 대문자 또는 숫자로 이루어진 문자열입니다. 두 코드에 포함된 <strong>각 문자의 종류와 개수가 완전히 같다면</strong> 순서가 달라도 같은 토큰 구성으로 판정합니다.</p>
+<p>두 문자열 <code>left</code>, <code>right</code>를 받아 같은 구성이면 <code>true</code>, 다르면 <code>false</code>를 반환하는 함수를 작성하세요. 입력 문자열 자체를 수정해서는 안 됩니다.</p>
+<div class="formula">bool HaveSameCodeTokens(const std::string&amp; left, const std::string&amp; right);</div>
+<h3 style="margin-top:20px">제약 조건 · 인코딩 · 반환값</h3>
+<ul><li><strong>길이:</strong> 각각 0~200,000 문자. 길이가 달라도 입력할 수 있습니다.</li>
+<li><strong>허용 문자:</strong> ASCII <code>A</code>~<code>Z</code>와 <code>0</code>~<code>9</code>만 허용합니다(총 36종). 대소문자를 자동 변환하지 않습니다.</li>
+<li><strong>인코딩:</strong> 이 문제는 ASCII 전용이므로 1문자 = 1바이트입니다. <code>std::string::size()</code>로 문자의 개수를 비교할 수 있습니다. UTF-8 다중 바이트 문자는 취급하지 않습니다.</li>
+<li><strong>중복:</strong> 한 문자가 여러 번 나오는 경우 그 횟수까지 정확히 같아야 합니다.</li>
+<li><strong>빈 문자열:</strong> 두 입력이 모두 빈 문자열이면 <code>true</code>입니다. 함수는 허용 문자가 아닌 값을 전달받으면 안전하게 <code>false</code>를 반환하도록 만드세요.</li></ul>
+<div class="input-example">
+<div class="sheet"><strong>예제 1</strong><pre><code>left  = "AAB2C"
+right = "C2ABA"
+결과  = true</code></pre></div>
+<div class="sheet"><strong>예제 2</strong><pre><code>left  = "AA12"
+right = "A112"
+결과  = false</code></pre></div>
+</div>
+<p class="muted">입출력은 C++ 함수 인자와 반환값 기준입니다. 콘솔의 공백 구분 입력 형식은 따로 정의하지 않아 빈 문자열도 정상적으로 검사할 수 있습니다.</p></article></section>
+
+<section id="hints"><h2>🧠 스스로 풀기 위한 질문과 단계별 힌트</h2>
+<ol><li>두 문자열의 길이가 다르면 순서를 바꾸는 것만으로 같아질 수 있을까요?</li>
+<li>두 문자열에 등장한 문자의 <strong>종류</strong>만 같으면 충분할까요? <code>AAA1</code>과 <code>A111</code>을 생각해 보세요.</li>
+<li>정렬한 두 문자열을 비교한다면 얼마나 걸릴까요? 문자가 36종이라는 조건을 이용하면 정렬을 피할 수 있을까요?</li></ol>
+<details><summary>힌트 1 · 바뀌지 않는 성질</summary><p>문자의 순서를 섞어도 문자열의 길이나 각 문자의 등장 횟수는 변하지 않습니다. 먼저 쉽게 확인할 조건부터 찾아보세요.</p></details>
+<details><summary>힌트 2 · 쉬운 방식부터</summary><p>두 문자열을 복사해서 각각 정렬하면 비교하기 쉬워집니다. 더 빠르게 하려면 무엇을 저장해야 할지 생각해 보세요.</p></details>
+<details><summary>힌트 3 · 고정된 36종</summary><p>숫자 10개와 알파벳 26개를 0~35번 칸에 대응시킬 수 있습니다. 한쪽에서 등장한 만큼 더하고, 다른 쪽에서 등장한 만큼 빼면 어떨까요?</p></details></section>
+
+<section id="solve"><h2>✍️ C++11 직접 풀이 작성</h2>
+<p>아래에 먼저 코드를 작성하세요. <strong>길이 검사 · 문자별 정보 표현 · 최종 판정</strong>이라는 세 단계가 있는지 점검해 보세요.</p>
+<textarea id="memo" aria-label="C++11 문자열 순열 관계 내 풀이" spellcheck="false" placeholder="#include <string>
+
+bool HaveSameCodeTokens(const std::string& left,
+                        const std::string& right) {
+    // 정답을 펼치기 전에 직접 작성해 보세요.
+}"></textarea>
+<div class="actions"><button class="button" id="save" type="button">내 풀이 브라우저에 저장</button><span id="save-status" class="muted" role="status" aria-live="polite">입력 내용은 GitHub로 전송되지 않습니다.</span></div>
+<p class="note">메모는 현재 브라우저의 localStorage에만 저장됩니다. 다른 기기와 동기화되지 않고 브라우저 데이터를 삭제하면 사라집니다. 코드는 이 페이지에서 실행하지 않습니다.</p></section>
+
+<section id="visual"><h2>🖼️ 원리 시각화 · 정답 보기 전에는 접힌 그림</h2>
+<details><summary>그림 ② · 토큰 수량 비교 다이어그램 펼치기</summary>
+<p>순서 대신 문자별 수량을 기록하면 "같은 구성"을 판단할 수 있습니다. 예제 1의 문자 수를 그림으로 나타냈습니다.</p>
+<div class="quick-points"><div><strong>코드 A · AAB2C</strong><div class="counts"><div class="count"><strong>A × 2</strong><span>대문자 A</span></div><div class="count"><strong>B × 1</strong><span>대문자 B</span></div><div class="count"><strong>C × 1</strong><span>대문자 C</span></div><div class="count"><strong>2 × 1</strong><span>숫자 2</span></div></div></div>
+<div><strong>코드 B · C2ABA</strong><div class="counts"><div class="count"><strong>A × 2</strong><span>대문자 A</span></div><div class="count"><strong>B × 1</strong><span>대문자 B</span></div><div class="count"><strong>C × 1</strong><span>대문자 C</span></div><div class="count"><strong>2 × 1</strong><span>숫자 2</span></div></div></div></div>
+<figure class="figure"><strong>그림 ③ · 같은 칸을 공유하는 카운터</strong>
+<div class="step-row"><div class="step"><span class="num">STEP 1</span><b>왼쪽 코드</b><p>해당 문자 칸에 +1을 기록합니다.</p></div><div class="step"><span class="num">STEP 2</span><b>오른쪽 코드</b><p>해당 문자 칸에 −1을 기록합니다.</p></div><div class="step"><span class="num">STEP 3</span><b>전체 칸 점검</b><p>모든 차이가 0이면 같은 구성입니다.</p></div></div>
+<figcaption>문자 36종에 대응하는 칸을 미리 두면 양쪽 코드의 문자별 출현 횟수 차이를 추적할 수 있습니다.</figcaption></figure>
+<div class="scroll-table"><table><thead><tr><th>문자</th><th>왼쪽 수량</th><th>오른쪽 수량</th><th>차이</th></tr></thead><tbody>
+<tr><td>A</td><td>2</td><td>2</td><td class="good">0</td></tr><tr><td>B</td><td>1</td><td>1</td><td class="good">0</td></tr><tr><td>C</td><td>1</td><td>1</td><td class="good">0</td></tr><tr><td>2</td><td>1</td><td>1</td><td class="good">0</td></tr><tr><td>나머지 32종</td><td>0</td><td>0</td><td class="good">0</td></tr>
+</tbody></table></div></details></section>
+
+<section id="solution"><h2>✅ 모범 풀이와 정확성 증명</h2><p>직접 작성한 풀이와 비교할 준비가 되었을 때 아래를 펼치세요.</p>
+<details><summary>정답 코드 · 설명 · 복잡도 펼치기</summary>
+<p><strong>아이디어:</strong> 문자별로 <code>왼쪽 등장 횟수 - 오른쪽 등장 횟수</code>를 누적합니다. 처음에는 모두 0이며, 끝까지 처리한 후 한 칸도 남지 않으면 같은 구성입니다.</p>
+<pre><code>#include &lt;array&gt;
+#include &lt;cstddef&gt;
+#include &lt;string&gt;
+
+// '0'~'9'는 0~9, 'A'~'Z'는 10~35에 대응.
+// 그 외의 값은 유효하지 않음을 뜻하는 -1.
+int TokenIndex(char c) {
+    if (c &gt;= '0' &amp;&amp; c &lt;= '9') {
+        return c - '0';
+    }
+    if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') {
+        return 10 + (c - 'A');
+    }
+    return -1;
+}
+
+bool HaveSameCodeTokens(const std::string&amp; left,
+                        const std::string&amp; right) {
+    if (left.size() != right.size()) {
+        return false;
+    }
+
+    std::array&lt;int, 36&gt; delta = {};
+
+    for (std::size_t i = 0; i &lt; left.size(); ++i) {
+        const int a = TokenIndex(left[i]);
+        const int b = TokenIndex(right[i]);
+        if (a &lt; 0 || b &lt; 0) {
+            return false;
+        }
+        ++delta[static_cast&lt;std::size_t&gt;(a)];
+        --delta[static_cast&lt;std::size_t&gt;(b)];
+    }
+
+    for (int value : delta) {
+        if (value != 0) {
+            return false;
+        }
+    }
+    return true;
+}</code></pre>
+<h3>왜 정확한가? · 반복문 불변식</h3>
+<ol><li>처음에는 모든 칸의 값이 0입니다.</li>
+<li>인덱스 <code>i</code>를 처리한 뒤 각 칸에는 <strong>left의 처음 i+1개에 나타난 문자 수 − right의 처음 i+1개에 나타난 문자 수</strong>가 저장됩니다.</li>
+<li>전체 순회 후 모든 칸이 0이면 36종 각각의 전체 등장 횟수가 같습니다. 반대로 하나라도 0이 아니라면 순서를 바꿔도 그 문자 수가 바뀌지 않으므로 같은 구성일 수 없습니다.</li></ol>
+<div class="callout"><strong>핵심 반례 · 중간에 차이가 있다고 바로 중단하면 안 됩니다.</strong><p><code>left="AB"</code>, <code>right="BA"</code>는 첫 번째 문자에서 수량 차이가 생겨도 끝나면 모두 0이 됩니다. 길이 검사와 유효하지 않은 문자의 검사만 먼저 종료해도 안전합니다.</p></div>
+<h3>시간 및 추가 공간 복잡도</h3>
+<div class="quick-points"><div><strong>시간 O(n + 36) = O(n)</strong><p>같은 길이의 두 문자열을 한 번씩 인덱스로 읽으며, 36개 칸을 한 번 검사합니다. n은 입력 문자열 하나의 길이입니다.</p></div><div><strong>추가 공간 O(36) = O(1)</strong><p>입력 문자열을 복사하지 않고 길이에 무관한 36개의 정수를 저장합니다.</p></div></div>
+<h3>경계 조건과 구현 안정성</h3>
+<ul><li><strong>빈 입력:</strong> 두 문자열이 비어 있으면 delta는 모두 0이고 true입니다. 한쪽만 비어 있으면 길이 검사에서 false입니다.</li>
+<li><strong>중복 문자:</strong> 방문 여부만 표시하지 않고 등장 횟수를 저장하므로 중복도 구분합니다.</li>
+<li><strong>잘못된 입력:</strong> <code>TokenIndex</code>가 -1을 반환하면 배열에 접근하기 전에 거부합니다. 공백·소문자·UTF-8의 비 ASCII 바이트는 허용되지 않습니다.</li>
+<li><strong>정수 범위:</strong> 최대 길이 200,000이라는 입력 계약에 따라 한 칸의 차이 절댓값도 200,000 이하로 32비트 int 범위에 들어갑니다.</li></ul>
+<h3>대안 알고리즘의 비용</h3><p>문자열 사본 둘을 정렬하고 비교하는 방법도 정확합니다. 일반적으로 정렬은 <strong>O(n log n) 시간</strong>을 쓰며, 원본을 유지하기 위한 사본에 <strong>O(n) 추가 공간</strong>이 듭니다. 이번 문제처럼 문자 집합이 36종으로 정해져 있으면 고정 카운트 방식이 더 간단합니다.</p>
+<p class="note">C++11 표준 모드에서 실제 컴파일했으며, 12개 고정 사례와 50,000개 난수 기반 비교, 길이 200,000 경계 테스트를 통과했습니다.</p>
+</details></section>
+
+<section id="tests"><h2>🧪 테스트와 반례</h2>
+<p>직접 반환값을 추론한 뒤 결과를 열어 보세요.</p>
+<details><summary>대표 사례 10개 · 예상 결과 확인</summary>
+<div class="scroll-table"><table><thead><tr><th>left</th><th>right</th><th>결과</th><th>검증 대상</th></tr></thead><tbody>
+<tr><td>AAB2C</td><td>C2ABA</td><td class="good">true</td><td>중복을 포함한 재배열</td></tr>
+<tr><td>AA12</td><td>A112</td><td class="bad">false</td><td>종류가 같아도 개수 다름</td></tr>
+<tr><td>AZ</td><td>ZA</td><td class="good">true</td><td>순서만 다름</td></tr>
+<tr><td>AB</td><td>AC</td><td class="bad">false</td><td>길이는 같지만 종류가 다름</td></tr>
+<tr><td>AA</td><td>BB</td><td class="bad">false</td><td>XOR만 비교하면 놓치는 반례</td></tr>
+<tr><td>""</td><td>""</td><td class="good">true</td><td>양쪽 모두 빈 문자열</td></tr>
+<tr><td>AB</td><td>AAB</td><td class="bad">false</td><td>길이가 다름</td></tr>
+<tr><td>1110</td><td>1011</td><td class="good">true</td><td>숫자 반복을 포함한 재배열</td></tr>
+<tr><td>A0</td><td>a0</td><td class="bad">false</td><td>소문자는 입력 범위 밖</td></tr>
+<tr><td>A␠</td><td>␠A</td><td class="bad">false</td><td>␠는 공백을 표시하며 허용 안 됨</td></tr>
+</tbody></table></div>
+<p class="note">경계 테스트: 길이 200,000인 <code>std::string(200000, 'A')</code> 두 개는 true이고, 한쪽 마지막 글자를 <code>'2'</code>로 바꾸면 false입니다.</p>
+</details>
+<div class="q"><strong>복습 질문:</strong> 현재 카운트 배열에서 한 칸이 0이 아니라는 사실은 어떤 반례를 증명하나요? "구성 요소의 보존"이라는 용어로 설명해 보세요.</div></section>
+
+<section><h2>🚀 한 단계 확장 문제</h2><article class="card"><h3>문자열에서 아이템 ID 목록으로</h3>
+<p>두 입력이 더 이상 <code>std::string</code>이 아니라 <code>std::vector&lt;std::string&gt;</code>으로 주어진 아이템 ID 목록이라고 가정합니다. 가능한 ID의 종류는 무한히 많지만 중복 ID가 존재할 수 있습니다. <strong>순서를 무시하고 같은 ID와 중복 횟수를 포함하는지</strong> 어떻게 검사할까요?</p>
+<p>고정 36칸 배열이 더는 적절하지 않은 이유를 설명하고, <code>std::sort</code>와 <code>std::unordered_map</code> 접근법의 시간·공간 복잡도를 비교하세요. 해시 맵의 평균 시간과 최악 시간을 구분해서 생각해 보세요.</p></article></section>
+
+<section><h2>📚 다음 회차 예고</h2><div class="step-row">
+<div class="step"><span class="num">이전 · 1.1</span><b>Is Unique</b><p>한 문자열의 중복 문자를 검사합니다. <a href="../ep-01-01-is-unique/">복습하기 →</a></p></div>
+<div class="step"><span class="num">현재 · 1.2</span><b>Check Permutation</b><p>두 문자열의 순열 관계를 검사합니다.</p></div>
+<div class="step"><span class="num">다음 · 1.3</span><b>URLify</b><p>공백과 문자열 변환을 다룹니다.</p></div></div>
+<p class="note">이 콘텐츠는 Gayle Laakmann McDowell의 《Cracking the Coding Interview》(제6판) 문제 번호와 학습 주제를 참고해 독립적으로 제작했습니다. <a href="https://www.crackingthecodinginterview.com/contents.html" target="_blank" rel="noopener noreferrer">공식 목차 ↗</a></p></section>
+<footer>ATLAS NOTE · 코딩 인터뷰 사고력 훈련 · Chapter 1 / 1.2 · 2026-10-12 · <a href="../">아카이브로 돌아가기</a></footer>
+</main>
+<script>
+(function(){
+'use strict';
+var field=document.getElementById('memo'),notice=document.getElementById('save-status'),key='thinking-ctci-1-2-draft';
+try{var memo=localStorage.getItem(key);if(memo!==null)field.value=memo;}
+catch(e){notice.textContent='브라우저 저장을 사용할 수 없습니다.';}
+document.getElementById('save').addEventListener('click',function(){
+try{localStorage.setItem(key,field.value);notice.textContent='이 브라우저에 저장했습니다.';}
+catch(e){notice.textContent='저장 실패: 코드를 따로 복사해 두세요.';}
+});
+})();
+</script>
+</body></html>

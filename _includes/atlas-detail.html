@@ -1,0 +1,5 @@
+{%- comment -%}Preserve the original document. Add the common detail layout at build time, without a nested iframe or extra fetch.{%- endcomment -%}
+{%- assign atlas_html = include.source | split: '<!doctype html>' | last -%}
+{%- capture atlas_head -%}<link rel="stylesheet" href="{{ include.prefix }}assets/atlas/detail.css?v=20261012d1"></head>{%- endcapture -%}
+{%- capture atlas_scripts -%}<script src="{{ include.prefix }}assets/atlas/detail.js?v=20261012d1"></script></body>{%- endcapture -%}
+<!doctype html>{{ atlas_html | replace: '<link rel="stylesheet" href="../atlas-lesson.css?v=1">', '' | replace: '</head>', atlas_head | replace: '</body>', atlas_scripts | replace: 'href="report.md"', 'href="report/"' | replace: 'href="prompts/prompts-v1.md"', 'href="prompts/prompts-v1/"' }}
