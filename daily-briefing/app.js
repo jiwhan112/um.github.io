@@ -114,7 +114,9 @@ function render(){
  $("#totalCount").textContent=articles.length+"개 기사 · "+days.length+"일 기록";$("#resultsTitle").textContent=daily?selectedDate+" 브리핑":"전체 기사 모아보기";
  $("#resultCount").textContent=filtered.length+"개 기사";
  let visible=daily?filtered:filtered.slice(0,limit);
- $("#entries").innerHTML=visible.length?visible.map(renderCard).join(""):'<div class="empty"><strong>조건에 맞는 기사가 없어요.</strong><p>날짜·카테고리·검색 조건을 바꿔 보세요.</p></div>';
+ if(visible.length&&!visible.some(x=>x.id===openId))openId=visible[0].id;
+ const compact=x=>'<button type="button" class="reader-list-item '+(x.id===openId?'current ':'')+(stored.read.includes(x.id)?'is-read':'')+'" data-open="'+esc(x.id)+'"><span class="reader-list-date">'+esc(x.date)+' · '+esc(x.category.replace('game-','게임 ').replace('ai','AI'))+'</span><strong>'+esc(x.title)+'</strong><small>'+esc(x.summary)+'</small></button>';
+ $("#entries").innerHTML=visible.length?'<div class="reader-list" aria-label="기사 목록">'+visible.map(compact).join('')+'</div><div class="reader-selected" aria-label="선택한 기사">'+renderCard(visible.find(x=>x.id===openId)||visible[0])+'</div>':'<div class="empty"><strong>조건에 맞는 기사가 없어요.</strong><p>날짜·카테고리·검색 조건을 바꿔 보세요.</p></div>';
  $("#loadMoreWrap").hidden=filtered.length<=visible.length;$("#loadMore").textContent="기사 더 보기 · "+(filtered.length-visible.length)+"개 남음 ↓";
  if(failed)$("#latest").textContent="최근 게시: "+(days[0]?.date||"-")+" · 일부 날짜 "+failed+"건 불러오기 실패";
 }
@@ -137,7 +139,7 @@ document.addEventListener("click",e=>{
  const action=e.target.closest("[data-action]");
  if(action){let type=action.dataset.action,id=action.dataset.id;if(!["saved","read"].includes(type))return;stored[type]=stored[type].includes(id)?stored[type].filter(x=>x!==id):[...stored[type],id];persist();render();return;}
  const opener=e.target.closest("[data-open]");
- if(opener){openId=openId===opener.dataset.open?null:opener.dataset.open;tab="easy";render();return;}
+ if(opener){openId=opener.dataset.open;tab="easy";render();return;}
  const tabs=e.target.closest("[data-tab]");
  if(tabs){tab=tabs.dataset.tab;render();return;}
  const chip=e.target.closest("button.chip[data-category]");if(chip){category=chip.dataset.category;limit=25;render();}
