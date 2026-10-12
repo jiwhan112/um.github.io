@@ -61,7 +61,7 @@ function blocks($:CheerioAPI,nodes:AnyNode[],route:string):Block[]{
  flush();return result;
 }
 const episodeSchema=z.object({path:z.string().regex(/^ep-[a-z0-9-]+\/$/),title:z.string(),number:z.union([z.string(),z.number()]),summary:z.string().optional(),topic_en:z.string().optional(),category:z.string().optional(),tags:z.array(z.string().trim().min(1).max(40)).min(1).max(8).optional(),date:z.string().optional(),study_date:z.string().optional(),published_date:z.string().optional()}).passthrough();
-const metaSchema=z.object({id:z.number().int().positive(),date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),title:z.string(),file:z.string().regex(/^data\/(english|japanese)\/\d+\.json$/)});
+const metaSchema=z.object({id:z.number().int().positive(),date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),title:z.string(),file:z.string().regex(/^data\/(english|japanese)\/\d+\.json$/),sections:z.array(z.string()).optional()});
 const newsDaySchema=z.object({date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),items:z.array(z.object({title:z.string(),category:z.string().optional(),summary:z.string().optional(),easy_explainer:z.string().optional(),details:z.string().optional(),short_summary:z.union([z.string(),z.array(z.string())]).optional(),technical_context:z.string().optional(),developer_view:z.string().optional(),why_it_matters:z.string().optional(),source:z.string().optional(),url:z.string().optional(),published:z.string().optional()}).passthrough()),original_markdown:z.string().optional()});
 
 function markdownSections(md:string){const re=/^##\s+(\d+)\.\s*(.+)$/gm,m=[...md.matchAll(re)];return m.map((x,i)=>md.slice(x.index!+x[0].length,i+1<m.length?m[i+1].index:md.length));}
@@ -131,7 +131,7 @@ export async function buildContent(){
  const languages={english:[] as z.infer<typeof metaSchema>[],japanese:[] as z.infer<typeof metaSchema>[]};
  const rawLanguage=await json('language-study/data/catalog.json');
  for(const lang of ['english','japanese'] as const){languages[lang]=z.array(metaSchema).parse(rawLanguage[lang]);const ids=new Set<number>();
-  for(const m of languages[lang]){if(ids.has(m.id))throw Error('Duplicate lesson: '+lang+'/'+m.id);ids.add(m.id);const d=lessonSchema.parse(await json('language-study/'+m.file));if(d.id!==m.id||d.date!==m.date)throw Error('Lesson/catalog mismatch: '+m.file);}
+  for(const m of languages[lang]){if(ids.has(m.id))throw Error('Duplicate lesson: '+lang+'/'+m.id);ids.add(m.id);const d=lessonSchema.parse(await json('language-study/'+m.file));if(d.id!==m.id||d.date!==m.date)throw Error('Lesson/catalog mismatch: '+m.file);m.sections=lang==='english'?['conversation','expressions','reading','vocabulary',...(d.reading_check.length?['check']:[])]:['grammar','examples','kana','words'];if(d.review_reuse.length)m.sections.push('review');}
   languages[lang].sort((a,b)=>a.id-b.id);
  }
  const docs:Document[]=[];

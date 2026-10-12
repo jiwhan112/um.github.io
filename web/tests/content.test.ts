@@ -4,6 +4,8 @@ import {readFile,readdir} from 'node:fs/promises';
 import {load} from 'cheerio';
 import {buildContent,compileBlocks,compileNews,safeLink} from '../scripts/content';
 import {parseStored,briefingState,objectBooleans} from '../src/lib/storage';
+import {lessonProgress,reviewId} from '../src/lib/language-progress';
+import {canSyncKey} from '../src/lib/cloud';
 import {filterDocuments,readLibraryFilter,matchesDocument} from '../src/lib/document-library';
 import type {Block} from '../src/lib/types';
 const catalog=await buildContent();
@@ -43,4 +45,19 @@ test('URL filter decoding tolerates duplicate tags and invalid sort',()=>{
 });
 test('new briefings accept either a summary string or an array of short sentences',()=>{
  const items=compileNews({date:'2026-10-12',items:[{title:'schema',short_summary:['첫째.','둘째.']}]});assert.deepEqual(items[0].short,['첫째.','둘째.']);
+});
+
+test('lesson completion derives from actual compiled sections and keeps historical check keys',()=>{
+ const meta=catalog.languages.japanese.at(-1)!;
+ assert.ok(meta.sections?.length);
+ const state=Object.fromEntries(meta.sections!.map(section=>[`japanese:${meta.id}:lang-${section}`,true]));
+ assert.equal(lessonProgress(state,'japanese',meta).done,true);
+ state[`japanese:${meta.id}:lang-${meta.sections![0]}`]=false;
+ assert.equal(lessonProgress(state,'japanese',meta).done,false);
+ assert.equal(lessonProgress({},'japanese',meta).count,0);
+});
+test('sync coverage is explicit and does not send auth, config or unrelated browser keys',()=>{
+ for(const k of ['jiwhan-briefing-v1','atlas-reading-v1','atlas-language-sections-v1','atlas-review-v1','thinking-ctci-1.4-draft','atlas-code-thinking--example'])assert.equal(canSyncKey(k),true,k);
+ for(const k of ['atlas-cloud-session-v1','atlas-cloud-settings-v1','atlas-cloud-pending-v1','other-app-password','language-study-sw-cache'])assert.equal(canSyncKey(k),false,k);
+ assert.equal(reviewId({language:'english',from_lesson:9,term:'hello',due_date:'2026-10-12'}),'english:9:hello:2026-10-12');
 });

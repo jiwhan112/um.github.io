@@ -26,3 +26,40 @@ test('language controls, preserved progress and browser TTS arguments',async({pa
 test('asset modal and report routes',async({page})=>{await page.goto('ai-asset-lab/');await page.getByRole('button',{name:'체력 포션 확대',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await expect(page.getByRole('dialog').locator('img')).toHaveJSProperty('naturalWidth',128);await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(0);await page.getByRole('button',{name:'3D 모델',exact:true}).click();await expect(page.getByText('이 분야의 결과물은 아직 없습니다.')).toBeVisible();});
 test('search and mobile navigation',async({page,isMobile})=>{await page.goto('');await expect(page.locator('main h1')).toBeVisible();await page.keyboard.press('Control+k');await page.getByLabel('통합 검색').fill('Palindrome');await expect(page.locator('.search-results a').first()).toBeVisible();await page.locator('.search-results a').first().click();await expect(page).toHaveURL(/palindrome-permutation/);if(isMobile){await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();await page.getByRole('dialog').getByRole('link',{name:'언어 학습',exact:true}).click();await expect(page).toHaveURL(/language-study/);}});
 test('missing route is HTTP 404 with a helpful app screen',async({page})=>{const r=await page.goto('not-a-real-document/');expect(r?.status()).toBe(404);await expect(page.getByText('페이지를 찾을 수 없습니다.',{exact:true})).toBeVisible();});
+
+test('lesson list and sidebar reflect all checked sections across refresh',async({page,isMobile})=>{
+ await page.goto('language-study/japanese/9/');
+ const steps=page.locator('.lesson-checks input[type="checkbox"]');
+ await expect(steps.first()).toBeVisible();
+ const count=await steps.count();expect(count).toBeGreaterThanOrEqual(4);
+ for(let i=0;i<count;i++)await steps.nth(i).check();
+ await expect(page.locator('.lesson-complete')).toContainText('학습 완료');
+ await page.goto('language-study/?language=japanese');
+ const lesson=page.locator('.lesson-list a[href$="/japanese/9/"]');
+ await expect(lesson.locator('.lesson-status')).toContainText('완료');
+ if(isMobile){await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();await expect(page.getByRole('dialog').locator('.chapter-nav a[href$="/japanese/9/"] .chapter-complete')).toBeVisible();await page.keyboard.press('Escape');}else await expect(page.locator('.sidebar .chapter-nav a[href$="/japanese/9/"] .chapter-complete')).toBeVisible();
+ await page.reload();
+ await expect(page.locator('.lesson-list a[href$="/japanese/9/"] .lesson-status')).toContainText('완료');
+});
+test('review center separates due, overdue and completed states',async({page})=>{
+ await page.goto('language-study/?view=review');
+ await expect(page.getByRole('heading',{name:'복습 센터'})).toBeVisible();
+ await expect(page.locator('.review-filters button')).toHaveCount(4);
+ await page.getByRole('button',{name:/밀린 복습/}).click();
+ await expect(page).toHaveURL(/review=overdue/);
+ await page.getByRole('button',{name:/전체 배정/}).click();
+ await expect(page.locator('.review-grid .panel').first()).toBeVisible();
+ await page.locator('.review-grid .panel').first().getByRole('button',{name:'복습 완료'}).click();
+ await page.getByRole('button',{name:/완료 [0-9]+/}).click();
+ await expect(page.locator('.review-grid .panel').first()).toBeVisible();
+});
+test('cloud settings keep original local keys and reject invalid configuration',async({page})=>{
+ await page.goto('');
+ await page.getByRole('button',{name:'기록 동기화'}).click();
+ const dialog=page.getByRole('dialog');
+ await expect(dialog).toContainText('학습자 번호 1');
+ await dialog.getByRole('button',{name:'연결 설정 저장'}).click();
+ await expect(dialog).toContainText('Supabase 프로젝트');
+ expect(await page.evaluate(()=>localStorage.getItem('atlas-reading-v1'))).toBeNull();
+ await expect(dialog.getByRole('button',{name:'로컬 백업'})).toBeVisible();
+});
