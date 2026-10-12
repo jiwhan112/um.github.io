@@ -1,0 +1,48 @@
+{
+  "name": "atlas-note",
+  "version": "2.0.0",
+  "description": "ATLAS NOTE React workspace",
+  "scripts": {
+    "dev": "tsx scripts/content.ts && vite --host 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "content": "tsx scripts/content.ts",
+    "build": "npm run typecheck && npm run content && vite build && tsx scripts/routes.ts",
+    "preview": "vite preview --host 0.0.0.0",
+    "test:unit": "tsx --test tests/content.test.ts",
+    "test:e2e": "playwright test",
+    "check": "npm run test:unit && npm run build && npm run test:e2e"
+  },
+  "license": "ISC",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@radix-ui/react-dialog": "1.3.0",
+    "@radix-ui/react-slot": "1.5.0",
+    "@radix-ui/react-tabs": "1.2.0",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "lucide-react": "1.55.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-router-dom": "7.18.4",
+    "tailwind-merge": "3.7.0",
+    "zod": "4.6.6"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@tailwindcss/vite": "4.3.3",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "5.2.0",
+    "cheerio": "1.2.0",
+    "marked": "18.1.0",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vite": "7.3.7"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

@@ -1,0 +1,31 @@
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Home, Newspaper, BookOpen, Braces, FlaskConical, Archive, Bookmark, Search, Menu, Sparkles, ArrowUpRight } from 'lucide-react';
+import { useData } from '@/lib/data';
+import { Button } from './ui/button';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
+import { cleanTitle, dateLabel } from '@/lib/utils';
+const navigation=[{to:'/',name:'홈',icon:Home},{to:'/daily-briefing/',name:'데일리 브리핑',icon:Newspaper},{to:'/language-study/',name:'언어 학습',icon:BookOpen},{to:'/thinking-lab/',name:'사고력 훈련',icon:Braces},{to:'/ai-asset-lab/',name:'AI 리소스 실험실',icon:FlaskConical},{to:'/opensource-lab/',name:'오픈소스 보관함',icon:Archive}];
+export function Sidebar({onNavigate}:{onNavigate?:()=>void}){
+ const {catalog}=useData(),{pathname}=useLocation();
+ const section=pathname.split('/')[1];const docs=catalog.documents.filter(d=>d.route.startsWith('/'+section+'/')&&d.kind!=='report');
+ const language=pathname.includes('/japanese/')?'japanese':'english';
+ return <><Link className="brand" to="/" onClick={onNavigate}><Sparkles/><span>ATLAS NOTE<small>LEARN · BUILD · EXPLORE</small></span></Link><div className="nav-label">WORKSPACE</div><nav aria-label="사이트 메뉴" className="site-nav">{navigation.map(({to,name,icon:Icon})=><NavLink key={to} to={to} end={to==='/'} onClick={onNavigate}><Icon size={17}/>{name}</NavLink>)}</nav><div className="nav-divider"/><nav className="site-nav" aria-label="개인 자료"><NavLink to="/bookmarks/" onClick={onNavigate}><Bookmark size={17}/>북마크</NavLink><NavLink to="/archive/" onClick={onNavigate}><Archive size={17}/>전체 아카이브</NavLink></nav>
+ {docs.length>0&&<><div className="nav-label">{section==='thinking-lab'?'PROBLEMS':'DOCUMENTS'}</div><nav className="chapter-nav" aria-label="회차 목록">{docs.map(d=><NavLink key={d.id} to={d.route} onClick={onNavigate}>{d.number&&<span className="chapter-number">{d.number}</span>}<span>{cleanTitle(d.title)}</span></NavLink>)}</nav></>}
+ {section==='language-study'&&<><div className="nav-label">LANGUAGE</div><div className="language-switch"><Link to="/language-study/?language=english" onClick={onNavigate}>English</Link><Link to="/language-study/?language=japanese" onClick={onNavigate}>日本語</Link></div><nav className="chapter-nav" aria-label="레슨 목록">{catalog.languages[language].map(m=><NavLink key={m.id} to={`/language-study/${language}/${m.id}/`} onClick={onNavigate}><span className="chapter-number">{m.id}</span><span>{m.title}</span></NavLink>)}</nav></>}
+ <div className="side-foot"><span className="avatar">A</span><span>나의 학습 공간<small>ATLAS NOTE · React</small></span></div></>;
+}
+export function SearchDialog({open,onOpenChange}:{open:boolean;onOpenChange:(value:boolean)=>void}){
+ const {catalog,articles}=useData(),[query,setQuery]=useState('');
+ const rows=useMemo(()=>[...catalog.documents.map(d=>({title:d.title,category:d.kind==='thinking'?'사고력':'문서',to:d.route})),...(['english','japanese'] as const).flatMap(lang=>catalog.languages[lang].map(m=>({title:m.title,category:lang==='english'?'영어':'일본어',to:`/language-study/${lang}/${m.id}/`}))),...articles.map(a=>({title:cleanTitle(a.title),category:'브리핑',to:'/daily-briefing/?article='+encodeURIComponent(a.id)+'&date='+a.date}))],[catalog,articles]);
+ const filtered=rows.filter(x=>!query||x.title.toLocaleLowerCase().includes(query.toLocaleLowerCase())).slice(0,24);
+ return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="search-dialog"><DialogTitle>학습 자료 검색</DialogTitle><DialogDescription>기사 제목, 레슨, 문제와 실험 기록을 검색합니다.</DialogDescription><label className="search-input"><Search size={17}/><input autoFocus value={query} onChange={e=>setQuery(e.target.value)} placeholder="검색어를 입력하세요" aria-label="통합 검색"/></label><div className="search-results">{filtered.map((row,i)=><Link to={row.to} key={i} onClick={()=>onOpenChange(false)}><span className="badge">{row.category}</span><span>{row.title}</span><ArrowUpRight size={15}/></Link>)}{!filtered.length&&<p>검색 결과가 없습니다.</p>}</div></DialogContent></Dialog>;
+}
+export function Shell({children}:{children:ReactNode}){
+ const location=useLocation(),[menu,setMenu]=useState(false),[search,setSearch]=useState(false);
+ const {catalog}=useData();const section=navigation.find(n=>n.to!=='/'&&location.pathname.startsWith(n.to));const isLight=/^\/(daily-briefing|language-study|ai-asset-lab)/.test(location.pathname);
+ useEffect(()=>{document.documentElement.dataset.theme=isLight?'light':'dark';document.title=(section?.name?section.name+' | ':'')+'ATLAS NOTE';},[isLight,section?.name]);
+ useEffect(()=>{const handler=(e:KeyboardEvent)=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();setSearch(s=>!s);}};window.addEventListener('keydown',handler);return()=>window.removeEventListener('keydown',handler);},[]);
+ useEffect(()=>{setMenu(false);window.scrollTo({top:0,behavior:'instant'});},[location.pathname]);
+ return <div className="app-shell" data-theme={isLight?'light':'dark'} data-framework="react"><a className="skip-link" href="#main-content">본문으로 바로가기</a><aside className="sidebar"><Sidebar/></aside><div className="app-frame"><header className="topbar"><div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="mobile-menu" aria-label="사이트 메뉴 열기" onClick={()=>setMenu(true)}><Menu/></Button><Link to="/" className="breadcrumb-home">워크스페이스</Link><span className="muted">/</span><span>{section?.name||'개요'}</span></div><div className="flex items-center gap-4"><Button variant="outline" size="sm" className="top-search" onClick={()=>setSearch(true)}><Search/><span>학습 자료 검색</span><kbd>⌘ K</kbd></Button><span className="revision" title="콘텐츠 버전">{dateLabel(catalog.dates[0]||'')}</span></div></header><main id="main-content">{children}</main></div><Dialog open={menu} onOpenChange={setMenu}><DialogContent className="mobile-drawer"><DialogTitle className="sr-only">사이트 메뉴</DialogTitle><DialogDescription className="sr-only">학습 페이지를 선택하세요.</DialogDescription><Sidebar onNavigate={()=>setMenu(false)}/></DialogContent></Dialog><SearchDialog open={search} onOpenChange={setSearch}/></div>;
+}
