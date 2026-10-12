@@ -1,0 +1,130 @@
+name: React Pages validation and publication
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'web/**'
+      - '.github/workflows/react-pages.yml'
+      - 'daily-briefing/data/**'
+      - 'language-study/data/**'
+      - 'thinking-lab/**'
+      - 'opensource-lab/**'
+      - 'ai-asset-lab/**'
+      - '_maintenance/**'
+      - 'AGENTS.md'
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Reconcile language lessons]
+    types: [completed]
+permissions:
+  contents: read
+concurrency:
+  group: atlas-react-publication
+  cancel-in-progress: false
+jobs:
+  build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      source: ${{ steps.source.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: false
+      - id: source
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install exact dependencies
+        working-directory: web
+        run: npm ci
+      - name: Validate source content and types, then build React
+        working-directory: web
+        run: |
+          npm run test:unit
+          npm run build
+          node scripts/check-publication.mjs
+          npm audit --audit-level=high
+      - name: Install browser and Korean fonts
+        working-directory: web
+        timeout-minutes: 4
+        run: |
+          npx playwright install chromium
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=25 -o Acquire::https::Timeout=25 install -y --no-install-recommends fonts-noto-cjk
+      - name: Regression gate (never update snapshots automatically)
+        working-directory: web
+        run: npm run test:e2e
+      - name: Package tested distribution
+        run: tar -czf /tmp/atlas-react-dist.tar.gz -C web/dist .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tested-react-distribution
+          path: /tmp/atlas-react-dist.tar.gz
+          retention-days: 5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: react-regression-report
+          path: |
+            web/playwright-report
+            web/test-results
+          retention-days: 7
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pages: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.build.outputs.source }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: tested-react-distribution
+          path: /tmp/atlas-react-tested
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Extract only the distribution from the successful build job
+        run: |
+          mkdir -p web/dist
+          tar -xzf /tmp/atlas-react-tested/atlas-react-dist.tar.gz -C web/dist
+      - name: Publish to the existing master-root Pages source
+        id: publish
+        working-directory: web
+        run: node scripts/publish.mjs
+      - name: Request Pages build explicitly (bot commits do not trigger push workflows)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method POST repos/${GITHUB_REPOSITORY}/pages/builds > /tmp/pages-request.json
+          cat /tmp/pages-request.json
+      - name: Install live-check browser
+        working-directory: web
+        timeout-minutes: 5
+        run: |
+          npm ci
+          npx playwright install chromium
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=25 -o Acquire::https::Timeout=25 install -y --no-install-recommends fonts-noto-cjk
+      - name: Verify the published React app on the real Pages URL
+        working-directory: web
+        env:
+          EXPECTED_SOURCE: ${{ needs.build.outputs.source }}
+        run: node scripts/live-smoke.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: react-live-verification
+          path: |
+            web/live-check
+            /tmp/pages-request.json
+          retention-days: 7
