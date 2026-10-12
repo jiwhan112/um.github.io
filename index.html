@@ -45,10 +45,10 @@ footer{margin-top:55px;color:#8fa0b8;font-size:13px}
 <div class="eyebrow">PERSONAL TECH & LEARNING HUB</div>
 <h1>JIWHAN HUB</h1>
 <p class="lead">데일리 브리핑 · 외국어 학습 · 개발자 실험실을 한곳에서.</p>
-<a id="latest-oss-banner" class="latest-release" href="./opensource-lab/ep-02-sdl3-event-system/" aria-label="최신 게임 오픈소스 분석 EP.02 SDL3 바로 읽기">
-<span class="release-label">🆕 최신 게시 · 2026-10-09 · 게임 오픈소스 분석 EP.02</span>
-<strong>SDL3 이벤트 시스템 — 키 입력 하나는 게임에 어떻게 도착할까? →</strong>
-<span class="release-desc">실제 SDL3 소스 추적, 이벤트 큐 구조, 이벤트와 키 상태 비교 및 입력 시뮬레이터</span>
+<a id="latest-thinking-banner" class="latest-release" href="./thinking-lab/ep-01-04-palindrome-permutation/" aria-label="사고력 훈련 1.4 오늘 문제 바로 읽기">
+<span class="release-label">🧠 매일 한 문제 · 2026-10-12 · 사고력 훈련 1.4</span>
+<strong>1.4 Palindrome Permutation — 오늘 문제 풀기 →</strong>
+<span class="release-desc">10/09부터 하루 한 문제 · 1.1~1.4 학습 자료 완성 · 단계별 힌트와 C++11 풀이</span>
 </a>
 <section class="recent" aria-labelledby="recent-title"><h2 id="recent-title">최근 발행된 학습</h2>
 <div class="recent-grid">
@@ -61,8 +61,8 @@ footer{margin-top:55px;color:#8fa0b8;font-size:13px}
 <a class="card" href="./daily-briefing/"><span class="icon" aria-hidden="true">📰</span><h2>데일리 브리핑</h2><p>게임 개발 · 엔진 기술 · 게임 산업 · AI와 오픈소스 소식을 모아봅니다.</p><span class="tag">뉴스 · 기술 해설 · 아카이브</span><span class="enter">브리핑 보기 →</span></a>
 <a class="card" href="./language-study/"><span class="icon" aria-hidden="true">📚</span><h2>영어 · 일본어 학습</h2><p>일일 Lesson, 한국어 발음과 해석, TTS 및 간격 반복 복습을 진행합니다.</p><span class="tag">English · Japanese · Review</span><span class="enter">학습 시작 →</span></a>
 
-<a class="card" href="./opensource-lab/"><span class="icon" aria-hidden="true">🧩</span><h2>게임 오픈소스 분석</h2><p>Jolt Physics와 SDL3 등 유명 프로젝트의 소스 코드와 설계 원리를 회차별로 분석합니다.</p><span class="tag">화·금 05:30 · 정기 발행</span><span class="enter">최신 분석 보기 →</span></a>
-<a class="card" href="./thinking-lab/"><span class="icon" aria-hidden="true">🧠</span><h2>사고력 훈련</h2><p>《코딩 인터뷰 완전 분석》 6판 순서로 배열·문자열부터 단계별 문제를 풉니다.</p><span class="tag">월·목 06:00 · 정기 발행</span><span class="enter">문제 풀어보기 →</span></a>
+<a class="card" href="./opensource-lab/"><span class="icon" aria-hidden="true">🧩</span><h2>게임 오픈소스 분석</h2><p>Jolt Physics와 SDL3 등 유명 프로젝트의 소스 코드와 설계 원리를 회차별로 분석합니다.</p><span class="tag">정기 발행 중단 · 이전 분석 보관</span><span class="enter">최신 분석 보기 →</span></a>
+<a class="card" href="./thinking-lab/"><span class="icon" aria-hidden="true">🧠</span><h2>사고력 훈련</h2><p>《코딩 인터뷰 완전 분석》 6판 순서로 배열·문자열부터 단계별 문제를 풉니다.</p><span class="tag">매일 06:00 · 10/09부터 하루 한 문제</span><span class="enter">문제 풀어보기 →</span></a>
 <a class="card" href="./ai-asset-lab/"><span class="icon" aria-hidden="true">🎨</span><h2>AI 게임 리소스 실험실</h2><p>2D 이미지·3D 모델·AI 음성·효과음을 실제 게임 리소스 기준으로 검증하는 수동 연구 공간입니다.</p><span class="tag">수동 진도 · 예약 작업 없음</span><span class="enter">연구 주제 보기 →</span></a>
 </section>
 <footer>GitHub Pages · Jiwhan Hub</footer>
@@ -94,16 +94,5 @@ if(link)link.href='./thinking-lab/'+ep.path;
 put('recent-thinking',ep.number+' · '+ep.title);
 put('thinking-date',(ep.published_date||'최신 발행')+' · 문제 풀기 →');
 }).catch(()=>put('recent-thinking','사고력 훈련 바로가기'));
-getJSON('./opensource-lab/data/catalog.json').then(c=>{
-const rows=Array.isArray(c&&c.episodes)?c.episodes:[];
-const ep=rows.filter(x=>x&&Number.isInteger(x.number)&&/^ep-[a-z0-9-]+\/$/.test(x.path||'')).sort((a,b)=>b.number-a.number)[0];
-const card=document.getElementById('latest-oss-banner');if(!ep||!card)return;
-card.href='./opensource-lab/'+ep.path;
-card.setAttribute('aria-label','오픈소스 분석 EP.'+ep.number+' 학습하기');
-putLatest(card,'.release-label','🆕 최신 게시 · '+ep.date+' · 게임 오픈소스 분석 EP.'+String(ep.number).padStart(2,'0'));
-putLatest(card,'strong',ep.title+' →');
-if(ep.number!==2)putLatest(card,'.release-desc',(ep.category||'게임 개발')+' · 실제 오픈소스 코드 및 설계 원리 분석');
-}).catch(()=>{});
-function putLatest(root,selector,value){const e=root.querySelector(selector);if(e)e.textContent=value;}
 })();
 </script></body></html>
