@@ -85,6 +85,7 @@ async function compileDocument(source:string,route:string,kind:Document['kind'],
  const structured=join(root,dirname(source),'content.json');
  if(await exists(structured)){const d=documentSchema.parse(JSON.parse(await readFile(structured,'utf8')));if(d.route!==route)throw Error('Document route mismatch: '+source);return d;}
  const raw=await readFile(join(root,source),'utf8'),isMarkdown=source.endsWith('.md');
+ const linkRoute=isMarkdown?'/'+dirname(source)+'/':route;
  const html=isMarkdown?marked.parse(raw.replace(/^---\n[\s\S]*?\n---\n/,''),{async:false}) as string:raw;
  const $=load(html),main=isMarkdown?$('body'):$('main');if(!main.length)throw Error('Missing main: '+source);
  let head=main.children('header').first();let headerTitle=head.find('h1').first().text()||main.children('h1').first().text()||meta.title;
@@ -104,7 +105,7 @@ async function compileDocument(source:string,route:string,kind:Document['kind'],
    if(n.find('textarea').length){if(!n.find('details').length)return;tab='solution';n.children('h2,p,.tools').remove();}
   }
   if(kind==='asset'){tab=['results','compare','process','evaluation','files'][sections.length]||'files';}
-  const bs=blocks($,element.children,route);if(bs.length)sections.push({id,title:heading,tab,blocks:bs});
+  const bs=blocks($,element.children,linkRoute);if(bs.length)sections.push({id,title:heading,tab,blocks:bs});
  };
  if(isMarkdown){let group=$('<section>');main.children().toArray().forEach(n=>{if(n.name==='h2'&&group.contents().length){add(group[0] as Element,sections.length);group=$('<section>');}group.append(n);});if(group.contents().length)add(group[0] as Element,sections.length);}
  else main.children().toArray().forEach((n,i)=>add(n,i));
