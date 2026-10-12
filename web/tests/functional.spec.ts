@@ -30,6 +30,7 @@ test('missing route is HTTP 404 with a helpful app screen',async({page})=>{const
 test('lesson list and sidebar reflect all checked sections across refresh',async({page,isMobile})=>{
  await page.goto('language-study/japanese/9/');
  const steps=page.locator('.lesson-checks input[type="checkbox"]');
+ await expect(steps.first()).toBeVisible();
  const count=await steps.count();expect(count).toBeGreaterThanOrEqual(4);
  for(let i=0;i<count;i++)await steps.nth(i).check();
  await expect(page.locator('.lesson-complete')).toContainText('학습 완료');
