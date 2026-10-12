@@ -85,6 +85,10 @@ export async function syncCloud():Promise<void>{
  running=(async()=>{
   announce('동기화 중');
   const token=await currentToken(c);
+  const ownerResponse=await fetch(c.url+'/rest/v1/atlas_profile?select=user_id&user_id=eq.1',{headers:headers(c,token),cache:'no-store'});
+  if(!ownerResponse.ok)throw Error('계정 확인 실패 ('+ownerResponse.status+'). Supabase 정책을 확인해 주세요.');
+  const owners=await ownerResponse.json() as {user_id:number}[];
+  if(owners.length!==1||owners[0].user_id!==1)throw Error('사용자 1번이 아직 이 GitHub 계정에 연결되지 않았습니다. Supabase 초기 설정을 확인해 주세요.');
   const response=await fetch(c.url+'/rest/v1/atlas_state?select=storage_key,value&user_id=eq.1',{headers:headers(c,token),cache:'no-store'});
   if(!response.ok)throw Error('클라우드 읽기 실패 ('+response.status+'). 사용자 1번의 권한과 테이블 구성을 확인해 주세요.');
   const records=await response.json() as Row[];
