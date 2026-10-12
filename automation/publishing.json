@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "repository": "jiwhan112/um.github.io",
+  "branch": "master",
+  "siteBase": "/um.github.io/",
+  "timezone": "Asia/Seoul",
+  "theme": "dark",
+  "jobs": [
+    {
+      "id": "thinking",
+      "automationId": "6ac74151e0548191b7be75d5033dd6a9",
+      "localTime": "06:00",
+      "cadence": "daily",
+      "allowedWritePatterns": [
+        "^thinking-lab/data/catalog\\.json$",
+        "^thinking-lab/ep-[a-z0-9-]+/content\\.json$"
+      ],
+      "limit": "one new episode per Korean date",
+      "requiredMetadata": [
+        "number",
+        "chapter",
+        "topic_en",
+        "title",
+        "summary",
+        "category",
+        "tags",
+        "study_date",
+        "published_date",
+        "path"
+      ]
+    },
+    {
+      "id": "briefing",
+      "automationId": "6aa8a6a26f588191b275db98f9c4ecbf",
+      "localTime": "08:00",
+      "cadence": "daily",
+      "allowedWritePatterns": [
+        "^daily-briefing/data/catalog\\.json$",
+        "^daily-briefing/data/\\d{4}-\\d{2}-\\d{2}\\.json$"
+      ],
+      "limit": "one daily bundle; five verified news items",
+      "archive": "Preserve existing Google Drive Markdown/PDF daily and Saturday weekly archive"
+    },
+    {
+      "id": "language",
+      "automationId": "6ac489bfc338819194bfaa599c41251a",
+      "localTime": "09:00",
+      "cadence": "daily",
+      "allowedWritePatterns": [
+        "^language-study/data/(english|japanese)/\\d+\\.json$"
+      ],
+      "limit": "one lesson per language per Korean date",
+      "indexes": "Only Reconcile language lessons updates catalog.json and progress.json"
+    }
+  ],
+  "manualSections": [
+    "ai-asset-lab",
+    "opensource-lab"
+  ],
+  "generatedPaths": [
+    "index.html",
+    "**/index.html",
+    "404.html",
+    "assets/react/**",
+    "data/atlas/**",
+    "language-study/sw.js",
+    "build-info.json",
+    "favicon.svg",
+    "robots.txt",
+    "sitemap.xml",
+    "_maintenance/react-generated-files.json"
+  ],
+  "verification": [
+    "Read AGENTS.md, automation/README.md, this policy and current schemas before publishing",
+    "Read latest source and today records; never duplicate, backfill or future-date without explicit user request",
+    "Only edit allowed authoring inputs; no React/CSS/workflow/generated-file edits in a scheduled content task",
+    "Commit complete source+catalog atomically with current parent SHA; no force push",
+    "Wait for React Pages validation and publication and its public-origin check; report committed, validated, published separately",
+    "Never weaken regression checks, overwrite approved snapshots or clear browser state to publish content"
+  ]
+}

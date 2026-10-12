@@ -60,9 +60,9 @@ function blocks($:CheerioAPI,nodes:AnyNode[],route:string):Block[]{
  }
  flush();return result;
 }
-const episodeSchema=z.object({path:z.string().regex(/^ep-[a-z0-9-]+\/$/),title:z.string(),number:z.union([z.string(),z.number()]),summary:z.string().optional(),topic_en:z.string().optional(),category:z.string().optional(),date:z.string().optional(),study_date:z.string().optional(),published_date:z.string().optional()}).passthrough();
+const episodeSchema=z.object({path:z.string().regex(/^ep-[a-z0-9-]+\/$/),title:z.string(),number:z.union([z.string(),z.number()]),summary:z.string().optional(),topic_en:z.string().optional(),category:z.string().optional(),tags:z.array(z.string().trim().min(1).max(40)).min(1).max(8).optional(),date:z.string().optional(),study_date:z.string().optional(),published_date:z.string().optional()}).passthrough();
 const metaSchema=z.object({id:z.number().int().positive(),date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),title:z.string(),file:z.string().regex(/^data\/(english|japanese)\/\d+\.json$/)});
-const newsDaySchema=z.object({date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),items:z.array(z.object({title:z.string(),category:z.string().optional(),summary:z.string().optional(),easy_explainer:z.string().optional(),details:z.string().optional(),short_summary:z.string().optional(),technical_context:z.string().optional(),developer_view:z.string().optional(),why_it_matters:z.string().optional(),source:z.string().optional(),url:z.string().optional(),published:z.string().optional()}).passthrough()),original_markdown:z.string().optional()});
+const newsDaySchema=z.object({date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),items:z.array(z.object({title:z.string(),category:z.string().optional(),summary:z.string().optional(),easy_explainer:z.string().optional(),details:z.string().optional(),short_summary:z.union([z.string(),z.array(z.string())]).optional(),technical_context:z.string().optional(),developer_view:z.string().optional(),why_it_matters:z.string().optional(),source:z.string().optional(),url:z.string().optional(),published:z.string().optional()}).passthrough()),original_markdown:z.string().optional()});
 
 function markdownSections(md:string){const re=/^##\s+(\d+)\.\s*(.+)$/gm,m=[...md.matchAll(re)];return m.map((x,i)=>md.slice(x.index!+x[0].length,i+1<m.length?m[i+1].index:md.length));}
 function flatten(bs:Block[]):string{ return bs.map(b=>b.type==='paragraph'||b.type==='heading'?b.content.map(x=>x.text).join(''):b.type==='code'?b.text:b.type==='details'?b.title+' '+flatten(b.blocks):'blocks'in b?flatten(b.blocks):b.type==='list'?b.items.map(flatten).join(' '):b.type==='diagram'?b.items.join(' '):'').join(' '); }
@@ -76,14 +76,21 @@ export function compileNews(raw:unknown):Article[]{
   const $=load(marked.parse(sections[i]||'',{async:false}) as string);
   $('a[href]').each((_,n)=>{const url=$(n).attr('href')||'';if(/^https?:\/\//.test(url)&&!links.some(l=>l.url===url))links.push({url,label:$(n).text()||'참고 자료'});});
   const easy=x.easy_explainer||x.details||p[0]||(x.summary&&!x.summary.includes('원문 보기')?x.summary:'상세 설명은 보관 원문에서 확인해 주세요.');
-  const summary=x.short_summary||(x.summary&&!x.summary.includes('원문 보기')?x.summary:easy.split(/(?<=[.!?。])\s+/).slice(0,2).join(' '));
+  const summary=(Array.isArray(x.short_summary)?x.short_summary.join(' '):x.short_summary)||(x.summary&&!x.summary.includes('원문 보기')?x.summary:easy.split(/(?<=[.!?。])\s+/).slice(0,2).join(' '));
   return articleSchema.parse({id:day.date+':'+i,date:day.date,title:x.title,category:x.category||'game-dev',source:x.source||links[0]?.label||'출처 미기록',published:x.published||'',summary,easy,short:summary.split(/(?<=[.!?。])\s+/).filter(Boolean),technical:x.technical_context||'',developer:x.developer_view||'',importance:x.why_it_matters||'',links,blocks:body});
  });
 }
-async function compileDocument(source:string,route:string,kind:Document['kind'],meta:{title:string;subtitle?:string;date?:string;number?:string;category?:string}):Promise<Document>{
+async function compileDocument(source:string,route:string,kind:Document['kind'],meta:{title:string;subtitle?:string;date?:string;number?:string;category?:string;tags?:string[];topic?:string}):Promise<Document>{
  // Authors may opt into a structured content.json document. No HTML lookup at runtime.
  const structured=join(root,dirname(source),'content.json');
- if(await exists(structured)){const d=documentSchema.parse(JSON.parse(await readFile(structured,'utf8')));if(d.route!==route)throw Error('Document route mismatch: '+source);return d;}
+ if(await exists(structured)){
+  const bytes=await readFile(structured,'utf8'),d=JSON.parse(bytes);
+  if(d.route && d.route!==route)throw Error('Document route mismatch: '+source);
+  return documentSchema.parse({...d,id:route.replace(/^\//,'').replace(/\/$/,'').replaceAll('/','--'),route,kind,
+   title:d.title||meta.title,subtitle:d.subtitle||meta.subtitle||'',date:meta.date||d.date||'',number:meta.number||d.number,
+   category:meta.category||d.category||'',topic:meta.topic||d.topic||'',tags:meta.tags||d.tags||[],
+   source:relative(root,structured).replaceAll('\\','/'),sourceHash:digest(bytes)});
+ }
  const raw=await readFile(join(root,source),'utf8'),isMarkdown=source.endsWith('.md');
  const linkRoute=isMarkdown?'/'+dirname(source)+'/':route;
  const html=isMarkdown?marked.parse(raw.replace(/^---\n[\s\S]*?\n---\n/,''),{async:false}) as string:raw;
@@ -111,7 +118,7 @@ async function compileDocument(source:string,route:string,kind:Document['kind'],
  else main.children().toArray().forEach((n,i)=>add(n,i));
  // Retain rights/scope notices rather than losing them when removing the old header.
  const note=head.find('.note').text();if(note&&sections[0])sections[0].blocks.unshift({type:'callout',blocks:[{type:'paragraph',content:[{text:note}]}]});
- return documentSchema.parse({id:route.replace(/^\//,'').replace(/\/$/,'').replaceAll('/','--'),route,kind,title:headerTitle,subtitle,date:meta.date||'',number:meta.number,tags:[meta.category,...head.find('.progress span,.eyebrow').toArray().map(n=>$(n).text())].filter(Boolean) as string[],memoKey,starter:memo.attr('placeholder')||'',sections,source,sourceHash:digest(raw)});
+ return documentSchema.parse({id:route.replace(/^\//,'').replace(/\/$/,'').replaceAll('/','--'),route,kind,title:headerTitle,subtitle,date:meta.date||'',number:meta.number,category:meta.category||'',topic:meta.topic||'',tags:[...new Set(meta.tags||[meta.category].filter(Boolean) as string[])],memoKey,starter:memo.attr('placeholder')||'',sections,source,sourceHash:digest(raw)});
 }
 async function walk(path:string):Promise<string[]>{const entries=await readdir(path,{withFileTypes:true});const chunks=await Promise.all(entries.map(x=>x.isDirectory()?walk(join(path,x.name)):Promise.resolve([join(path,x.name)])));return chunks.flat();}
 async function copyResources(){
@@ -129,7 +136,7 @@ export async function buildContent(){
  }
  const docs:Document[]=[];
  for(const kind of ['thinking','opensource'] as const){const prefix=kind+'-lab';const eps=z.array(episodeSchema).parse((await json(prefix+'/data/catalog.json')).episodes);
-  for(const e of eps){const dir=prefix+'/'+e.path;const source=await exists(join(root,dir+'_content.html'))?dir+'_content.html':dir+'index.html';docs.push(await compileDocument(source,'/'+dir,kind,{title:e.title,subtitle:e.summary,date:e.study_date||e.date||e.published_date,number:String(e.number),category:e.category}));}
+  for(const e of eps){if(kind==='thinking'&&(!e.tags?.length||!e.category))throw Error('Thinking episode requires category and 1–8 tags: '+e.path);const dir=prefix+'/'+e.path;const source=await exists(join(root,dir+'content.json'))?dir+'content.json':await exists(join(root,dir+'_content.html'))?dir+'_content.html':dir+'index.html';docs.push(await compileDocument(source,'/'+dir,kind,{title:e.title,subtitle:e.summary,date:e.study_date||e.date||e.published_date,number:String(e.number),category:e.category,tags:e.tags,topic:e.topic_en}));}
  }
  const assets:AssetMeta[]=[];
  for(const path of (await walk(join(root,'ai-asset-lab/experiments'))).filter(p=>p.endsWith('/evaluation.json'))){
@@ -143,7 +150,7 @@ export async function buildContent(){
  const daily=await json('daily-briefing/data/catalog.json');const rows=z.array(z.object({date:z.string(),file:z.string().regex(/^data\/[\d-]+\.json$/)})).parse(Array.isArray(daily)?daily:daily.entries);
  const articles=(await Promise.all(rows.map(async r=>compileNews(await json('daily-briefing/'+r.file))))).flat().sort((a,b)=>b.date.localeCompare(a.date));
  if(new Set(articles.map(a=>a.id)).size!==articles.length)throw Error('Duplicate article ID');
- const revision=digest(JSON.stringify([docs.map(d=>d.sourceHash),languages,articles])).slice(0,12);
+ const revision=digest(JSON.stringify([docs.map(d=>[d.sourceHash,d.title,d.subtitle,d.date,d.number,d.category,d.topic,d.tags]),languages,articles])).slice(0,12);
  const progress=await json('language-study/data/progress.json');
  const catalog:Catalog={version:2,revision,documents:docs.map(({sections,starter,...d})=>({...d,file:'data/atlas/docs/'+d.id+'.json',sections:sections.map(({blocks,...s})=>s)})),languages,assets,dates:[...new Set(articles.map(a=>a.date))],articleCount:articles.length,review:progress.review?.due||[]};
  for(const doc of docs)await write(join(out,'data/atlas/docs',doc.id+'.json'),doc);
