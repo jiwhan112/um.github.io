@@ -27,6 +27,7 @@ export function saveCloudSettings(config:Config){
  const parsed=new URL(url);
  if(parsed.protocol!=='https:'||!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(parsed.origin))throw Error('Supabase 프로젝트의 https://...supabase.co 주소가 필요합니다.');
  if(!config.key.trim())throw Error('공개용 anon/publishable key가 필요합니다.');
+ if(/^(sb_secret_|service_role)/i.test(config.key.trim()))throw Error('비공개 secret/service_role 키는 사용할 수 없습니다.');
  const old=cloudSettings();
  if(old.url!==url||old.key!==config.key.trim())localStorage.removeItem(sessionKey);
  save(settingsKey,{url,key:config.key.trim()});announce('로그인 필요');
@@ -48,7 +49,7 @@ function writePending(value:Record<string,number>){save(pendingKey,value);}
 export function localChanged(key:string){
  if(!canSyncKey(key))return;
  writePending({...pending(),[key]:Date.now()});
- if(session())void syncCloud();
+ if(session())void syncCloud().catch(()=>{});
 }
 export function signInCloud(){
  const c=cloudSettings();if(!validConfig(c))throw Error('먼저 Supabase 설정을 저장해 주세요.');
@@ -73,9 +74,9 @@ export function startCloud(){
  }
  if(!validConfig(c))announce('미연결');
  else if(!session())announce('로그인 필요');
- else void syncCloud();
- window.addEventListener('online',()=>{if(session())void syncCloud();});
- window.addEventListener('focus',()=>{if(session())void syncCloud();});
+ else void syncCloud().catch(()=>{});
+ window.addEventListener('online',()=>{if(session())void syncCloud().catch(()=>{});});
+ window.addEventListener('focus',()=>{if(session())void syncCloud().catch(()=>{});});
 }
 export async function syncCloud():Promise<void>{
  if(running){retry=true;return running;}
@@ -91,7 +92,7 @@ export async function syncCloud():Promise<void>{
   const changed=pending();
   for(const [key,value] of remote){
    if(changed[key])continue;
-   if(localStorage.getItem(key)!==value){localStorage.setItem(key,value);window.dispatchEvent(new Event(storageEvent));}
+   if(localStorage.getItem(key)!==value){const old=localStorage.getItem(key);if(old!==null){const previous=load<Record<string,string>>('atlas-cloud-conflicts-v1',{});save('atlas-cloud-conflicts-v1',{...previous,[key]:old});}localStorage.setItem(key,value);window.dispatchEvent(new Event(storageEvent));}
   }
   const localKeys=Object.keys(localStorage).filter(canSyncKey);
   for(const key of localKeys){
