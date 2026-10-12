@@ -6,7 +6,9 @@ on:
       - 'web/**'
       - '.github/workflows/react-pages.yml'
       - 'daily-briefing/data/**'
-      - 'language-study/data/**'
+      - 'language-study/data/catalog.json'
+      - 'language-study/data/progress.json'
+      - 'automation/**'
       - 'thinking-lab/**'
       - 'opensource-lab/**'
       - 'ai-asset-lab/**'
@@ -16,6 +18,7 @@ on:
   workflow_run:
     workflows: [Reconcile language lessons]
     types: [completed]
+    branches: [master]
 permissions:
   contents: read
 concurrency:
@@ -23,7 +26,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master')
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     outputs:
@@ -47,6 +50,7 @@ jobs:
         working-directory: web
         run: |
           npm run check:repo
+          npm run check:publishing
           npm run test:unit
           npm run build
           node scripts/check-publication.mjs

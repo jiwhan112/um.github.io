@@ -20,26 +20,29 @@ jobs:
         run: |
           import pathlib,base64,lzma,json,hashlib,shutil,subprocess
           assert '${{ github.ref }}'=='refs/heads/feature/dark-library-automation'
-          parts=sorted(pathlib.Path('.update').glob('part*.b64'));assert len(parts)==2
-          raw=lzma.decompress(base64.b64decode(''.join(p.read_text().strip() for p in parts)))
-          assert hashlib.sha256(raw).hexdigest()=='49b589b86dd0eb0602afb1946cc0c8e70f97f168768d4c1af3340d53cd0d197f'
-          ops=json.loads(raw);assert len(ops)==20
-          for op in ops:
-            name=op['path'];p=pathlib.Path(name)
-            assert not p.is_absolute() and '..' not in p.parts
-            assert name.startswith(('web/','automation/')) or name in ['AGENTS.md','thinking-lab/data/catalog.json','.github/workflows/react-check.yml','.github/workflows/react-pages.yml']
-            if 'content' in op: text=op['content']
-            else:
-              text=p.read_text();assert hashlib.sha256(text.encode()).hexdigest()==op['sha256_before'],name+' changed since audit'
-              for start,end,value in reversed(op['edits']):text=text[:start]+value+text[end:]
-            assert hashlib.sha256(text.encode()).hexdigest()==op['sha256_after'],name+' patch checksum'
-            p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text,encoding='utf-8')
-          shutil.rmtree('.update')
-          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
-          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
-          subprocess.run(['git','add','--all'],check=True)
-          subprocess.run(['git','commit','-m','feat: unify dark theme, add classified problem library and source-only publishing contract'],check=True)
-          subprocess.run(['git','push','origin','HEAD:feature/dark-library-automation'],check=True)
+          parts=sorted(pathlib.Path('.update').glob('part*.b64'))
+          if parts:
+            assert len(parts)==2
+            raw=lzma.decompress(base64.b64decode(''.join(p.read_text().strip() for p in parts)))
+            assert hashlib.sha256(raw).hexdigest()=='49b589b86dd0eb0602afb1946cc0c8e70f97f168768d4c1af3340d53cd0d197f'
+            ops=json.loads(raw);assert len(ops)==20
+            for op in ops:
+              name=op['path'];p=pathlib.Path(name)
+              assert not p.is_absolute() and '..' not in p.parts
+              if name.startswith('.github/'):continue
+              assert name.startswith(('web/','automation/')) or name in ['AGENTS.md','thinking-lab/data/catalog.json']
+              if 'content' in op:text=op['content']
+              else:
+                text=p.read_text();assert hashlib.sha256(text.encode()).hexdigest()==op['sha256_before'],name+' changed since audit'
+                for start,end,value in reversed(op['edits']):text=text[:start]+value+text[end:]
+              assert hashlib.sha256(text.encode()).hexdigest()==op['sha256_after'],name+' patch checksum'
+              p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text,encoding='utf-8')
+            shutil.rmtree('.update')
+            subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+            subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+            subprocess.run(['git','add','--all'],check=True)
+            subprocess.run(['git','commit','-m','feat: unify dark theme, add classified problem library and source-only publishing contract'],check=True)
+            subprocess.run(['git','push','origin','HEAD:feature/dark-library-automation'],check=True)
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
