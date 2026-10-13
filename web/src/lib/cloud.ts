@@ -1,10 +1,11 @@
 /** Optional owner-only cloud mirror. Local storage remains the offline source until a successful sync. */
+import { siteSupabase, parseCloudConfig, type CloudConfig } from '../config/supabase';
 const settingsKey = 'atlas-cloud-settings-v1';
 const sessionKey = 'atlas-cloud-session-v1';
 const pendingKey = 'atlas-cloud-pending-v1';
 const eventName = 'atlas-cloud-state';
 const storageEvent = 'atlas-storage';
-type Config = {url:string;key:string};
+type Config = CloudConfig;
 type Session = {access_token:string;refresh_token:string;expires_at:number};
 type Row = {storage_key:string;value:string};
 let state = '미연결';
@@ -21,17 +22,22 @@ function save(key:string,value:unknown){localStorage.setItem(key,JSON.stringify(
 function announce(value:string){state=value;window.dispatchEvent(new Event(eventName));}
 export function cloudStatus(){return state+(lastSynced?' · '+lastSynced:'');}
 export function cloudSubscribe(notify:()=>void){window.addEventListener(eventName,notify);return()=>window.removeEventListener(eventName,notify);}
-export function cloudSettings():Config {return load<Config>(settingsKey,{url:'',key:''});}
-export function saveCloudSettings(config:Config){
- const url=config.url.trim().replace(/\/+$/,'');
- const parsed=new URL(url);
- if(parsed.protocol!=='https:'||!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(parsed.origin))throw Error('Supabase 프로젝트의 https://...supabase.co 주소가 필요합니다.');
- if(!config.key.trim())throw Error('공개용 anon/publishable key가 필요합니다.');
- if(/^(sb_secret_|service_role)/i.test(config.key.trim()))throw Error('비공개 secret/service_role 키는 사용할 수 없습니다.');
- const old=cloudSettings();
- if(old.url!==url||old.key!==config.key.trim())localStorage.removeItem(sessionKey);
- save(settingsKey,{url,key:config.key.trim()});announce('로그인 필요');
+export function cloudSettings():Config {
+ const saved=parseCloudConfig(load<unknown>(settingsKey,null));
+ // Fresh devices need no setup. Refresh a same-project API key without clearing the user's session.
+ if(!saved||saved.url===siteSupabase.url)return {...siteSupabase};
+ // Never silently send another project's tokens or learning data to the site's default project.
+ return saved;
 }
+export function saveCloudSettings(config:Config){
+ const validated=parseCloudConfig(config);
+ if(!validated)throw Error('유효한 Supabase 프로젝트 주소와 공개용 publishable/anon key가 필요합니다. 비공개 키는 사용할 수 없습니다.');
+ if(running)throw Error('현재 동기화가 끝난 뒤 연결을 변경해 주세요.');
+ const old=cloudSettings();
+ if(old.url!==validated.url)localStorage.removeItem(sessionKey);
+ save(settingsKey,validated);lastSynced='';announce(session()?'동기화 대기':'로그인 필요');
+}
+export function useSiteCloudSettings(){saveCloudSettings({...siteSupabase});}
 function session(){return load<Session|null>(sessionKey,null);}
 function validConfig(c:Config){return Boolean(c.url&&c.key);}
 function headers(c:Config,token:string):HeadersInit{return {'apikey':c.key,'Authorization':'Bearer '+token,'Content-Type':'application/json'};}
@@ -52,7 +58,7 @@ export function localChanged(key:string){
  if(session())void syncCloud().catch(()=>{});
 }
 export function signInCloud(){
- const c=cloudSettings();if(!validConfig(c))throw Error('먼저 Supabase 설정을 저장해 주세요.');
+ const c=cloudSettings();if(!validConfig(c))throw Error('사이트 연결 설정을 확인해 주세요.');
  const callback=new URL(import.meta.env.BASE_URL,location.origin).href;
  const u=new URL(c.url+'/auth/v1/authorize');
  u.searchParams.set('provider','github');u.searchParams.set('redirect_to',callback);

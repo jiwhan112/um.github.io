@@ -53,13 +53,16 @@ test('review center separates due, overdue and completed states',async({page})=>
  await page.getByRole('button',{name:/완료 [0-9]+/}).click();
  await expect(page.locator('.review-grid .panel').first()).toBeVisible();
 });
-test('cloud settings keep original local keys and reject invalid configuration',async({page})=>{
+test('cloud defaults need only login and leave local records untouched',async({page})=>{
  await page.goto('');
  await page.getByRole('button',{name:'기록 동기화'}).click();
  const dialog=page.getByRole('dialog');
  await expect(dialog).toContainText('학습자 번호 1');
- await dialog.getByRole('button',{name:'연결 설정 저장'}).click();
- await expect(dialog).toContainText('Supabase 프로젝트');
+ await expect(dialog).toContainText('서버가 기본 설정되어 있습니다');
+ await expect(dialog.locator('input')).toHaveCount(0);
+ await expect(dialog.getByRole('button',{name:'GitHub 로그인',exact:true})).toBeVisible();
+ await dialog.getByRole('button',{name:'지금 동기화'}).click();
+ await expect(dialog.locator('.sync-status')).toContainText('로그인 필요');
  expect(await page.evaluate(()=>localStorage.getItem('atlas-reading-v1'))).toBeNull();
  await expect(dialog.getByRole('button',{name:'로컬 백업'})).toBeVisible();
 });
