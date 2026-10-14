@@ -82,13 +82,16 @@
     {
       "id": "game-design",
       "automationId": "6acf1deb981c819186542d9778e95021",
-      "status": "paused-until-first-publication-verified",
+      "status": "active",
       "targetEpisodes": 12,
       "allowedWritePatterns": [
         "^game-design/data/catalog\\.json$",
         "^game-design/ep-[a-z0-9-]+/content\\.json$"
       ],
-      "note": "After page setup, scheduled runs author only content and catalog; UI/workflows are separately reviewed."
+      "note": "After the verified React page setup, scheduled runs may author only game-design/data/catalog.json and game-design/ep-*/content.json. The feed ends after 12 published episodes; UI and workflow changes require separate user-directed review.",
+      "cadence": "hourly",
+      "localTime": "HH:30",
+      "timezone": "Asia/Seoul"
     }
   ]
 }
