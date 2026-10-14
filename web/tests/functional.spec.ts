@@ -66,3 +66,23 @@ test('cloud defaults need only login and leave local records untouched',async({p
  expect(await page.evaluate(()=>localStorage.getItem('atlas-reading-v1'))).toBeNull();
  await expect(dialog.getByRole('button',{name:'로컬 백업'})).toBeVisible();
 });
+
+
+test('game design diagrams are readable inline and zoomed at desktop/mobile sizes',async({page,isMobile})=>{
+ await page.goto('game-design/ep-01-stop-for-big-moments/?tab=implementation');
+ const figure=page.locator('.game-design-illustration').first();
+ await expect(figure).toBeVisible();
+ const trigger=figure.locator('button.image-zoom');
+ const img=figure.locator('img');
+ await expect(img).toBeVisible();
+ await expect.poll(()=>img.evaluate((node:HTMLImageElement)=>node.naturalWidth)).toBeGreaterThan(0);
+ const imageWidth=await img.evaluate((node:HTMLImageElement)=>node.getBoundingClientRect().width);
+ expect(imageWidth).toBeGreaterThan(isMobile?230:400);
+ await trigger.click();
+ const dialog=page.getByRole('dialog');
+ await expect(dialog).toBeVisible();
+ await expect(dialog.locator('img')).toBeVisible();
+ const dialogImageWidth=await dialog.locator('img').evaluate((node:HTMLImageElement)=>node.getBoundingClientRect().width);
+ expect(dialogImageWidth).toBeGreaterThan(isMobile?230:600);
+ await expect(dialog.getByRole('link',{name:'원본 이미지 저장'})).toBeVisible();
+});

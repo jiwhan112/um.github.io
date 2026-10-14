@@ -18,7 +18,8 @@ export function CodeBlock({code,language='cpp'}:{code:string;language?:string}){
 }
 export function AssetImage({src,alt,caption}:{src:string;alt:string;caption?:string}){
  const url=/^https?:\/\//.test(src)?src:asset(src);
- return <figure className="content-image"><Dialog><DialogTrigger asChild><button className="image-zoom" aria-label={`${alt} 확대`}><img src={url} alt={alt} loading="lazy"/><ZoomIn size={16}/></button></DialogTrigger><DialogContent className="image-dialog"><DialogTitle>{alt}</DialogTitle><DialogDescription>원본 파일을 화면 크기에 맞춰 확대합니다.</DialogDescription><img src={url} alt={alt}/><Button asChild variant="outline"><a href={url} download>PNG 저장</a></Button></DialogContent></Dialog>{caption&&<figcaption>{caption}</figcaption>}</figure>;
+ const gameDesignIllustration=src.startsWith('/game-design/');
+ return <figure className={gameDesignIllustration?'content-image game-design-illustration':'content-image'}><Dialog><DialogTrigger asChild><button type="button" className="image-zoom" aria-label={`${alt} 확대`}><img src={url} alt={alt} loading="lazy"/><ZoomIn size={16}/></button></DialogTrigger><DialogContent className={gameDesignIllustration?'image-dialog game-design-image-dialog':'image-dialog'}><DialogTitle>{alt}</DialogTitle><DialogDescription>원본 파일을 화면 크기에 맞춰 확대합니다.</DialogDescription><img src={url} alt={alt}/><Button asChild variant="outline"><a href={url} download>{gameDesignIllustration?'원본 이미지 저장':'PNG 저장'}</a></Button></DialogContent></Dialog>{caption&&<figcaption>{caption}</figcaption>}</figure>;
 }
 function RenderBlock({block:b}:{block:Block}){
  switch(b.type){
