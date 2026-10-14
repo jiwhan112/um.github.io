@@ -10,6 +10,12 @@ for(const j of policy.jobs){
  if(j.localTime!==expected[j.id])throw Error('Unreviewed schedule drift: '+j.id);
  for(const pattern of j.allowedWritePatterns){const re=new RegExp(pattern);for(const p of ['index.html','thinking-lab/index.html','web/src/styles.css','language-study/sw.js','data/atlas/catalog.json'])if(re.test(p))throw Error('Scheduled writer can modify generated/UI file: '+p);}
 }
+const feed=policy.contentFeeds?.find(f=>f.id==='game-design');
+if(!feed||feed.targetEpisodes!==12||feed.allowedWritePatterns?.length!==2)throw Error('Game design feed policy missing');
+for(const pattern of feed.allowedWritePatterns){const re=new RegExp(pattern);for(const p of ['index.html','game-design/index.html','web/src/App.tsx','data/atlas/catalog.json'])if(re.test(p))throw Error('Game design scheduled writer may modify UI/generated: '+p);}
+const gd=JSON.parse(read('game-design/data/catalog.json'));
+const videoIds=new Set();const paths=new Set();for(const e of gd.episodes){if(!e.video_id||!e.video_url||e.video_url!=='https://www.youtube.com/watch?v='+e.video_id||videoIds.has(e.video_id)||paths.has(e.path)||!e.category||!e.tags?.length||e.tags.length>8||!existsSync(resolve(root,'game-design/'+e.path+'content.json')))throw Error('Invalid game design episode: '+e.path);videoIds.add(e.video_id);paths.add(e.path);}
+if(gd.episodes.length>12)throw Error('Game design exceeds approved 12 episodes');
 const catalog=JSON.parse(read('thinking-lab/data/catalog.json'));
 for(const e of catalog.episodes){
  if(!e.category?.trim()||!Array.isArray(e.tags)||e.tags.length<1||e.tags.length>8)throw Error('Missing classification: '+e.path);
@@ -17,6 +23,6 @@ for(const e of catalog.episodes){
  const base='thinking-lab/'+e.path;if(!existsSync(resolve(root,base+'content.json'))&&!existsSync(resolve(root,base+'_content.html')))throw Error('Missing authoring input: '+e.path);
 }
 const publish=read('.github/workflows/react-pages.yml');
-if(!publish.includes('automation/**')||!publish.includes('Reconcile language lessons')||publish.includes("- 'language-study/data/**'"))throw Error('Publication triggers no longer match source ownership');
+if(!publish.includes('game-design/**')||!publish.includes('automation/**')||!publish.includes('Reconcile language lessons')||publish.includes("- 'language-study/data/**'"))throw Error('Publication triggers no longer match source ownership');
 const reconcile=read('.github/workflows/language-study-reconcile.yml');if(!reconcile.includes("cron: '10 0 * * *'"))throw Error('Reconcile fallback must match 09:10 KST');
 console.log('Publishing contract passed: 3 scheduled writers, dark theme, classified thinking catalog.');

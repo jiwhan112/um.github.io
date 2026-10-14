@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Home, Newspaper, BookOpen, Braces, FlaskConical, Archive, Bookmark, Search, Menu, Sparkles, ArrowUpRight, Cloud, Check } from 'lucide-react';
+import { Home, Newspaper, BookOpen, Braces, FlaskConical, Archive, Bookmark, Search, Menu, Sparkles, ArrowUpRight, Cloud, Check, Gamepad2 } from 'lucide-react';
 import { useData } from '@/lib/data';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
@@ -9,7 +9,7 @@ import { keys, useStored, objectBooleans } from '@/lib/storage';
 import { lessonProgress } from '@/lib/language-progress';
 import { startCloud } from '@/lib/cloud';
 import { SyncSettings } from './SyncSettings';
-const navigation=[{to:'/',name:'홈',icon:Home},{to:'/daily-briefing/',name:'데일리 브리핑',icon:Newspaper},{to:'/language-study/',name:'언어 학습',icon:BookOpen},{to:'/thinking-lab/',name:'사고력 훈련',icon:Braces},{to:'/ai-asset-lab/',name:'AI 리소스 실험실',icon:FlaskConical},{to:'/opensource-lab/',name:'오픈소스 보관함',icon:Archive}];
+const navigation=[{to:'/',name:'홈',icon:Home},{to:'/daily-briefing/',name:'데일리 브리핑',icon:Newspaper},{to:'/language-study/',name:'언어 학습',icon:BookOpen},{to:'/thinking-lab/',name:'사고력 훈련',icon:Braces},{to:'/game-design/',name:'게임 기획 연구실',icon:Gamepad2},{to:'/ai-asset-lab/',name:'AI 리소스 실험실',icon:FlaskConical},{to:'/opensource-lab/',name:'오픈소스 보관함',icon:Archive}];
 export function Sidebar({onNavigate}:{onNavigate?:()=>void}){
  const {catalog}=useData(),{pathname,search}=useLocation(),[langStored]=useStored<unknown>(keys.language,{}),[readStored]=useStored<unknown>(keys.reading,{}),read=objectBooleans(readStored);
  const section=pathname.split('/')[1];const docs=catalog.documents.filter(d=>d.route.startsWith('/'+section+'/')&&d.kind!=='report');

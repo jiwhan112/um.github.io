@@ -13,7 +13,7 @@ let running:Promise<void>|null = null;
 let retry = false;
 let started = false;
 let lastSynced = '';
-const supported = new Set(['jiwhan-briefing-v1','atlas-reading-v1','atlas-language-sections-v1','atlas-review-v1']);
+const supported = new Set(['jiwhan-briefing-v1','atlas-reading-v1','atlas-language-sections-v1','atlas-review-v1','atlas-game-design-bookmarks-v1']);
 export function canSyncKey(key:string):boolean {
  return supported.has(key)||/^thinking-ctci-[a-z0-9.-]+-draft$/.test(key)||/^atlas-code-[a-z0-9-]+$/.test(key);
 }

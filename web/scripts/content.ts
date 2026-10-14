@@ -60,7 +60,7 @@ function blocks($:CheerioAPI,nodes:AnyNode[],route:string):Block[]{
  }
  flush();return result;
 }
-const episodeSchema=z.object({path:z.string().regex(/^ep-[a-z0-9-]+\/$/),title:z.string(),number:z.union([z.string(),z.number()]),summary:z.string().optional(),topic_en:z.string().optional(),category:z.string().optional(),tags:z.array(z.string().trim().min(1).max(40)).min(1).max(8).optional(),date:z.string().optional(),study_date:z.string().optional(),published_date:z.string().optional()}).passthrough();
+const episodeSchema=z.object({path:z.string().regex(/^ep-[a-z0-9-]+\/$/),title:z.string(),number:z.union([z.string(),z.number()]),summary:z.string().optional(),topic_en:z.string().optional(),category:z.string().optional(),tags:z.array(z.string().trim().min(1).max(40)).min(1).max(8).optional(),date:z.string().optional(),study_date:z.string().optional(),published_date:z.string().optional(),video_id:z.string().regex(/^[A-Za-z0-9_-]{11}$/).optional(),video_url:z.string().url().optional()}).passthrough();
 const metaSchema=z.object({id:z.number().int().positive(),date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),title:z.string(),file:z.string().regex(/^data\/(english|japanese)\/\d+\.json$/),sections:z.array(z.string()).optional()});
 const newsDaySchema=z.object({date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),items:z.array(z.object({title:z.string(),category:z.string().optional(),summary:z.string().optional(),easy_explainer:z.string().optional(),details:z.string().optional(),short_summary:z.union([z.string(),z.array(z.string())]).optional(),technical_context:z.string().optional(),developer_view:z.string().optional(),why_it_matters:z.string().optional(),source:z.string().optional(),url:z.string().optional(),published:z.string().optional()}).passthrough()),original_markdown:z.string().optional()});
 
@@ -80,7 +80,7 @@ export function compileNews(raw:unknown):Article[]{
   return articleSchema.parse({id:day.date+':'+i,date:day.date,title:x.title,category:x.category||'game-dev',source:x.source||links[0]?.label||'출처 미기록',published:x.published||'',summary,easy,short:summary.split(/(?<=[.!?。])\s+/).filter(Boolean),technical:x.technical_context||'',developer:x.developer_view||'',importance:x.why_it_matters||'',links,blocks:body});
  });
 }
-async function compileDocument(source:string,route:string,kind:Document['kind'],meta:{title:string;subtitle?:string;date?:string;number?:string;category?:string;tags?:string[];topic?:string}):Promise<Document>{
+async function compileDocument(source:string,route:string,kind:Document['kind'],meta:{title:string;subtitle?:string;date?:string;number?:string;category?:string;tags?:string[];topic?:string;videoUrl?:string;videoId?:string}):Promise<Document>{
  // Authors may opt into a structured content.json document. No HTML lookup at runtime.
  const structured=join(root,dirname(source),'content.json');
  if(await exists(structured)){
@@ -88,7 +88,7 @@ async function compileDocument(source:string,route:string,kind:Document['kind'],
   if(d.route && d.route!==route)throw Error('Document route mismatch: '+source);
   return documentSchema.parse({...d,id:route.replace(/^\//,'').replace(/\/$/,'').replaceAll('/','--'),route,kind,
    title:d.title||meta.title,subtitle:d.subtitle||meta.subtitle||'',date:meta.date||d.date||'',number:meta.number||d.number,
-   category:meta.category||d.category||'',topic:meta.topic||d.topic||'',tags:meta.tags||d.tags||[],
+   category:meta.category||d.category||'',topic:meta.topic||d.topic||'',tags:meta.tags||d.tags||[],videoUrl:meta.videoUrl||d.videoUrl,videoId:meta.videoId||d.videoId,
    source:relative(root,structured).replaceAll('\\','/'),sourceHash:digest(bytes)});
  }
  const raw=await readFile(join(root,source),'utf8'),isMarkdown=source.endsWith('.md');
@@ -118,11 +118,11 @@ async function compileDocument(source:string,route:string,kind:Document['kind'],
  else main.children().toArray().forEach((n,i)=>add(n,i));
  // Retain rights/scope notices rather than losing them when removing the old header.
  const note=head.find('.note').text();if(note&&sections[0])sections[0].blocks.unshift({type:'callout',blocks:[{type:'paragraph',content:[{text:note}]}]});
- return documentSchema.parse({id:route.replace(/^\//,'').replace(/\/$/,'').replaceAll('/','--'),route,kind,title:headerTitle,subtitle,date:meta.date||'',number:meta.number,category:meta.category||'',topic:meta.topic||'',tags:[...new Set(meta.tags||[meta.category].filter(Boolean) as string[])],memoKey,starter:memo.attr('placeholder')||'',sections,source,sourceHash:digest(raw)});
+ return documentSchema.parse({id:route.replace(/^\//,'').replace(/\/$/,'').replaceAll('/','--'),route,kind,title:headerTitle,subtitle,date:meta.date||'',number:meta.number,category:meta.category||'',topic:meta.topic||'',videoUrl:meta.videoUrl,videoId:meta.videoId,tags:[...new Set(meta.tags||[meta.category].filter(Boolean) as string[])],memoKey,starter:memo.attr('placeholder')||'',sections,source,sourceHash:digest(raw)});
 }
 async function walk(path:string):Promise<string[]>{const entries=await readdir(path,{withFileTypes:true});const chunks=await Promise.all(entries.map(x=>x.isDirectory()?walk(join(path,x.name)):Promise.resolve([join(path,x.name)])));return chunks.flat();}
 async function copyResources(){
- for(const folder of ['daily-briefing/data','language-study/data','thinking-lab/data','opensource-lab/data','ai-asset-lab/experiments']){
+ for(const folder of ['daily-briefing/data','language-study/data','thinking-lab/data','opensource-lab/data','game-design/data','ai-asset-lab/experiments']){
   for(const file of await walk(join(root,folder))){if(!['.json','.png','.webp','.jpg','.jpeg','.svg','.wav','.ogg','.glb','.md'].includes(extname(file)))continue;const rel=relative(root,file);await mkdir(dirname(join(out,rel)),{recursive:true});await cp(file,join(out,rel));}
  }
 }
@@ -135,8 +135,8 @@ export async function buildContent(){
   languages[lang].sort((a,b)=>a.id-b.id);
  }
  const docs:Document[]=[];
- for(const kind of ['thinking','opensource'] as const){const prefix=kind+'-lab';const eps=z.array(episodeSchema).parse((await json(prefix+'/data/catalog.json')).episodes);
-  for(const e of eps){if(kind==='thinking'&&(!e.tags?.length||!e.category))throw Error('Thinking episode requires category and 1–8 tags: '+e.path);const dir=prefix+'/'+e.path;const source=await exists(join(root,dir+'content.json'))?dir+'content.json':await exists(join(root,dir+'_content.html'))?dir+'_content.html':dir+'index.html';docs.push(await compileDocument(source,'/'+dir,kind,{title:e.title,subtitle:e.summary,date:e.study_date||e.date||e.published_date,number:String(e.number),category:e.category,tags:e.tags,topic:e.topic_en}));}
+ for(const kind of ['thinking','opensource','game-design'] as const){const prefix=kind==='game-design'?'game-design':kind+'-lab';const eps=z.array(episodeSchema).parse((await json(prefix+'/data/catalog.json')).episodes);
+  for(const e of eps){if(kind==='thinking'&&(!e.tags?.length||!e.category))throw Error('Thinking episode requires category and 1–8 tags: '+e.path);if(kind==='game-design'&&(!e.video_id||e.video_url!=='https://www.youtube.com/watch?v='+e.video_id||!e.tags?.length||!e.category))throw Error('Game design episode requires verified video and classification: '+e.path);const dir=prefix+'/'+e.path;const source=await exists(join(root,dir+'content.json'))?dir+'content.json':await exists(join(root,dir+'_content.html'))?dir+'_content.html':dir+'index.html';docs.push(await compileDocument(source,'/'+dir,kind,{title:e.title,subtitle:e.summary,date:e.study_date||e.date||e.published_date,number:String(e.number),category:e.category,tags:e.tags,topic:e.topic_en,videoUrl:e.video_url,videoId:e.video_id}));}
  }
  const assets:AssetMeta[]=[];
  for(const path of (await walk(join(root,'ai-asset-lab/experiments'))).filter(p=>p.endsWith('/evaluation.json'))){
@@ -155,7 +155,7 @@ export async function buildContent(){
  const catalog:Catalog={version:2,revision,documents:docs.map(({sections,starter,...d})=>({...d,file:'data/atlas/docs/'+d.id+'.json',sections:sections.map(({blocks,...s})=>s)})),languages,assets,dates:[...new Set(articles.map(a=>a.date))],articleCount:articles.length,review:progress.review?.due||[]};
  for(const doc of docs)await write(join(out,'data/atlas/docs',doc.id+'.json'),doc);
  await write(join(out,'data/atlas/catalog.json'),catalog);await write(join(out,'data/atlas/articles.json'),articles);
- await write(join(out,'data/atlas/routes.json'),['/','/daily-briefing/','/language-study/','/thinking-lab/','/opensource-lab/','/ai-asset-lab/','/bookmarks/','/archive/',...docs.map(d=>d.route),...(['english','japanese'] as Language[]).flatMap(lang=>languages[lang].map(m=>'/language-study/'+lang+'/'+m.id+'/'))]);
+ await write(join(out,'data/atlas/routes.json'),['/','/daily-briefing/','/language-study/','/thinking-lab/','/game-design/','/opensource-lab/','/ai-asset-lab/','/bookmarks/','/archive/',...docs.map(d=>d.route),...(['english','japanese'] as Language[]).flatMap(lang=>languages[lang].map(m=>'/language-study/'+lang+'/'+m.id+'/'))]);
  await write(join(out,'favicon.svg'),'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#101319"/><path d="M16 4l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#b8a4ff"/></svg>');
  // Old workers at this exact scope update to a network-only retirement worker. Storage is not cleared.
  await write(join(out,'language-study/sw.js'),`self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('language-study-')).map(k=>caches.delete(k)));await self.clients.claim();await self.registration.unregister();})()));`);

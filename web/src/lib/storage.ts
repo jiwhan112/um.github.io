@@ -1,7 +1,7 @@
 import { localChanged } from './cloud';
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
 const eventName='atlas-storage';
-export const keys={briefing:'jiwhan-briefing-v1',reading:'atlas-reading-v1',language:'atlas-language-sections-v1',review:'atlas-review-v1'} as const;
+export const keys={briefing:'jiwhan-briefing-v1',reading:'atlas-reading-v1',language:'atlas-language-sections-v1',review:'atlas-review-v1',gameDesignBookmarks:'atlas-game-design-bookmarks-v1'} as const;
 function read(key:string){try{return localStorage.getItem(key);}catch{return null;}}
 function subscribe(notify:()=>void){window.addEventListener('storage',notify);window.addEventListener(eventName,notify);return()=>{window.removeEventListener('storage',notify);window.removeEventListener(eventName,notify);};}
 export function parseStored<T>(serialized:string|null,fallback:T):T {if(serialized===null)return fallback;try{return JSON.parse(serialized) as T;}catch{return fallback;}}

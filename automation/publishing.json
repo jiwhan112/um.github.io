@@ -77,5 +77,18 @@
     "Commit complete source+catalog atomically with current parent SHA; no force push",
     "Wait for React Pages validation and publication and its public-origin check; report committed, validated, published separately",
     "Never weaken regression checks, overwrite approved snapshots or clear browser state to publish content"
+  ],
+  "contentFeeds": [
+    {
+      "id": "game-design",
+      "automationId": "6acf1deb981c819186542d9778e95021",
+      "status": "paused-until-first-publication-verified",
+      "targetEpisodes": 12,
+      "allowedWritePatterns": [
+        "^game-design/data/catalog\\.json$",
+        "^game-design/ep-[a-z0-9-]+/content\\.json$"
+      ],
+      "note": "After page setup, scheduled runs author only content and catalog; UI/workflows are separately reviewed."
+    }
   ]
 }

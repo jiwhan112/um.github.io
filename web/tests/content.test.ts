@@ -57,7 +57,17 @@ test('lesson completion derives from actual compiled sections and keeps historic
  assert.equal(lessonProgress({},'japanese',meta).count,0);
 });
 test('sync coverage is explicit and does not send auth, config or unrelated browser keys',()=>{
- for(const k of ['jiwhan-briefing-v1','atlas-reading-v1','atlas-language-sections-v1','atlas-review-v1','thinking-ctci-1.4-draft','atlas-code-thinking--example'])assert.equal(canSyncKey(k),true,k);
+ for(const k of ['jiwhan-briefing-v1','atlas-reading-v1','atlas-language-sections-v1','atlas-review-v1','atlas-game-design-bookmarks-v1','thinking-ctci-1.4-draft','atlas-code-thinking--example'])assert.equal(canSyncKey(k),true,k);
  for(const k of ['atlas-cloud-session-v1','atlas-cloud-settings-v1','atlas-cloud-pending-v1','other-app-password','language-study-sw-cache'])assert.equal(canSyncKey(k),false,k);
  assert.equal(reviewId({language:'english',from_lesson:9,term:'hello',due_date:'2026-10-12'}),'english:9:hello:2026-10-12');
+});
+
+
+test('game design episodes are compiled with stable video IDs and source links',async()=>{
+ const source=JSON.parse(await readFile('../game-design/data/catalog.json','utf8'));
+ const docs=catalog.documents.filter(d=>d.kind==='game-design');
+ assert.equal(docs.length,source.episodes.length);
+ for(const e of source.episodes){const d=docs.find(d=>d.videoId===e.video_id);assert.ok(d,e.video_id);assert.equal(d.route,'/game-design/'+e.path);assert.equal(d.videoUrl,e.video_url);assert.ok(d.sections.some(s=>s.tab==='summary'));const output=JSON.parse(await readFile('public/'+d.file,'utf8'));assert.ok(output.sections.some((s:{tab:string})=>s.tab==='implementation'));}
+ const routes=JSON.parse(await readFile('public/data/atlas/routes.json','utf8'));
+ assert.ok(routes.includes('/game-design/'));assert.ok(routes.includes('/game-design/'+source.episodes[0].path));
 });
