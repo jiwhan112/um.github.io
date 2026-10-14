@@ -71,3 +71,12 @@ test('game design episodes are compiled with stable video IDs and source links',
  const routes=JSON.parse(await readFile('public/data/atlas/routes.json','utf8'));
  assert.ok(routes.includes('/game-design/'));assert.ok(routes.includes('/game-design/'+source.episodes[0].path));
 });
+
+test('game design illustrations are copied into the published resource tree',async()=>{
+ const first=catalog.documents.find(d=>d.kind==='game-design'&&d.number==='01')!;
+ const document=JSON.parse(await readFile('public/'+first.file,'utf8'));
+ function images(blocks:Block[]):string[]{return blocks.flatMap(b=>b.type==='image'?[b.src]:b.type==='list'?b.items.flatMap(images):'blocks'in b?images(b.blocks):[]);}
+ const pics=document.sections.flatMap((section:{blocks:Block[]})=>images(section.blocks));
+ assert.ok(pics.length>=2,'first lesson should include two concept diagrams');
+ for(const path of pics){assert.match(path,/^\/game-design\/ep-[a-z0-9-]+\/assets\/[a-z0-9-]+\.svg$/);const bytes=await readFile('public/'+path.slice(1),'utf8');assert.ok(bytes.includes('<svg'),path);}
+});

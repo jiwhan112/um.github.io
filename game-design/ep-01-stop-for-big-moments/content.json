@@ -37,6 +37,12 @@
           ]
         },
         {
+          "type": "image",
+          "src": "/game-design/ep-01-stop-for-big-moments/assets/hit-stop-timeline.svg",
+          "alt": "60FPS의 일반 피격과 3프레임 히트 스톱 적용 타이밍을 비교한 다이어그램",
+          "caption": "같은 공격이라도 적중 순간을 3프레임 유지하면 플레이어가 충격을 인식할 시간을 확보한다. 숫자는 이해를 위한 예시다."
+        },
+        {
           "type": "heading",
           "level": 3,
           "content": [
@@ -404,6 +410,12 @@
       "title": "C++ 게임 루프에 적용하기",
       "tab": "implementation",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/game-design/ep-01-stop-for-big-moments/assets/hit-stop-system.svg",
+          "alt": "히트 이벤트를 연출 정지, 판정 후 경직, 입력 및 오디오로 나누어 처리하는 게임 엔진 설계도",
+          "caption": "히트 스톱(연출 시간)과 히트 스턴(게임 규칙), 입력 버퍼 및 사운드를 분리해 구현한다. 실제 정지 범위는 게임 장르와 기획에 따라 달라진다."
+        },
         {
           "type": "paragraph",
           "content": [

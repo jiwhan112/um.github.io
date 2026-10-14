@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="480" viewBox="0 0 960 480" role="img" aria-label="히트 스톱을 적용하지 않은 공격과 적용한 공격의 타이밍 비교">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#141827"/><stop offset="1" stop-color="#202843"/></linearGradient><linearGradient id="accent"><stop stop-color="#5eead4"/><stop offset="1" stop-color="#8b7aff"/></linearGradient></defs>
+<rect width="960" height="480" rx="24" fill="url(#bg)"/>
+<text x="48" y="68" font-size="32" font-weight="700" fill="#f8fafc" font-family="sans-serif">타격 순간을 멈추면 무엇이 달라질까?</text>
+<text x="48" y="100" font-size="17" fill="#b8c4e0" font-family="sans-serif">60 FPS 기준: 1프레임 ≈ 16.7 ms · 수치는 예시</text>
+<g font-family="sans-serif"><text x="48" y="161" font-size="22" font-weight="700" fill="#f1f5f9">기본 타격</text>
+<text x="48" y="305" font-size="22" font-weight="700" fill="#f1f5f9">히트 스톱 적용</text></g>
+<g>
+<rect x="46" y="176" width="865" height="66" rx="10" fill="#0a0f1b" stroke="#42506b"/>
+<rect x="46" y="321" width="865" height="66" rx="10" fill="#0a0f1b" stroke="#42506b"/>
+<path d="M74 209H890" stroke="#495a76" stroke-width="3" stroke-dasharray="8 8"/>
+<path d="M74 353H890" stroke="#495a76" stroke-width="3" stroke-dasharray="8 8"/>
+<rect x="75" y="188" width="238" height="42" rx="8" fill="#2563eb"/>
+<rect x="318" y="188" width="142" height="42" rx="8" fill="#ea580c"/>
+<rect x="465" y="188" width="416" height="42" rx="8" fill="#1f8e85"/>
+<rect x="75" y="332" width="238" height="42" rx="8" fill="#2563eb"/>
+<rect x="318" y="332" width="222" height="42" rx="8" fill="#d97706"/>
+<rect x="545" y="332" width="336" height="42" rx="8" fill="#1f8e85"/>
+</g>
+<g fill="#ffffff" font-size="18" font-family="sans-serif" text-anchor="middle" font-weight="700">
+<text x="194" y="216">공격 동작</text><text x="389" y="216">적중</text><text x="672" y="216">후속 동작</text>
+<text x="194" y="360">공격 동작</text><text x="429" y="360">정지 3F</text><text x="714" y="360">후속 동작</text>
+</g>
+<g stroke="#fbbf24" stroke-width="2" fill="none"><path d="M318 136V403"/></g>
+<g font-family="sans-serif" fill="#fde68a" font-size="15"><text x="326" y="134">충돌 발생</text></g>
+<g font-family="sans-serif" font-size="16"><text x="74" y="432" fill="#aab8d2">시간 →</text><text x="728" y="432" fill="#99f6e4" font-weight="600">정지 구간이 충격을 강조</text></g>
+</svg>

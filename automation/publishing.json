@@ -86,12 +86,14 @@
       "targetEpisodes": 12,
       "allowedWritePatterns": [
         "^game-design/data/catalog\\.json$",
-        "^game-design/ep-[a-z0-9-]+/content\\.json$"
+        "^game-design/ep-[a-z0-9-]+/content\\.json$",
+        "^game-design/ep-[a-z0-9-]+/assets/[a-z0-9-]+\\.(svg|png|webp|jpg|jpeg)$"
       ],
-      "note": "After the verified React page setup, scheduled runs may author only game-design/data/catalog.json and game-design/ep-*/content.json. The feed ends after 12 published episodes; UI and workflow changes require separate user-directed review.",
+      "note": "Scheduled runs may author only content JSON, catalog JSON, and safe episode assets. UI/workflow/generated files remain immutable. Stop after 12 verified episodes.",
       "cadence": "hourly",
       "localTime": "HH:30",
-      "timezone": "Asia/Seoul"
+      "timezone": "Asia/Seoul",
+      "visualGuidelines": "Each episode: 1-3 original concept illustrations or diagrams where they clarify mechanics. Prefer purposeful labeled SVG for timelines/architecture/comparison; PNG/WebP when detailed artwork materially helps. Provide Korean alt and explanatory caption; link image blocks as /game-design/<episode>/assets/<filename>. Include visual sources if adapted; do not reuse copyrighted game screenshots without rights."
     }
   ]
 }

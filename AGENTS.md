@@ -18,3 +18,6 @@ React Pages validation and publication의 성공 및 공개 URL 검증을 확인
 
 ## 파일 정리
 `web/dist`, `web/public`, node_modules, 테스트 보고서, 임시 이식 파일은 추적하지 않습니다. 승인된 스냅샷, package-lock, 사용 중인 원본과 Pages 배포 파일은 보존합니다. `old/`·`backup/` 복제 폴더 대신 Git 이력을 사용합니다.
+
+## 게임 기획 이미지 발행
+게임 기획 예약 작업은 `game-design/data/catalog.json`, 회차 `content.json`, 회차별 `assets/` 아래 안전한 SVG/PNG/WebP/JPG만 작성합니다. 매 강의의 난점에 실제로 도움이 되는 설명 그림(시간 축·규칙 비교·시스템 관계)을 가능한 1~3개 직접 제작해 `image` 블록의 `src`에 `/game-design/ep-.../assets/...` 형식으로 등록하고, 한글 대체 텍스트와 캡션을 반드시 제공합니다. 외부 이미지/영상의 저작권을 준수하며 불확실한 스크린샷을 퍼오지 않습니다. UI 소스 및 자동 생성물은 예약 작업에서 수정하지 않습니다.

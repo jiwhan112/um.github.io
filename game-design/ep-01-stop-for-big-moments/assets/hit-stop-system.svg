@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-label="충돌 이벤트로부터 타격 연출과 게임 판정 시간, 입력 버퍼와 오디오를 분리하는 시스템 설계">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#111827"/><stop offset="1" stop-color="#1d2540"/></linearGradient></defs>
+<rect width="960" height="600" rx="24" fill="url(#bg)"/>
+<g font-family="sans-serif">
+<text x="48" y="69" font-size="30" font-weight="700" fill="#f8fafc">히트 이벤트를 한 타이머로 처리하면 안 되는 이유</text>
+<text x="48" y="103" font-size="17" fill="#bdc9df">전투의 규칙과 화면 피드백은 서로 다른 책임을 갖는다</text>
+<rect x="320" y="136" width="320" height="68" rx="14" fill="#4338ca" stroke="#c4b5fd" stroke-width="2"/>
+<text x="480" y="161" font-size="15" text-anchor="middle" fill="#ddd6fe">Collision / Damage Event</text>
+<text x="480" y="187" font-size="23" text-anchor="middle" font-weight="700" fill="#fff">공격 적중 확정</text>
+<path d="M480 204V238H239V268M480 238H721V268" fill="none" stroke="#94a3b8" stroke-width="3"/>
+<path d="M239 258l-7 -10h14zM721 258l-7 -10h14z" fill="#94a3b8"/>
+<rect x="56" y="269" width="370" height="134" rx="14" fill="#17364d" stroke="#2dd4bf" stroke-width="2"/>
+<text x="241" y="309" font-size="24" text-anchor="middle" font-weight="700" fill="#5eead4">Hit Stop · 연출 시간</text>
+<text x="241" y="343" font-size="19" text-anchor="middle" fill="#e2e8f0">애니메이션 잠깐 정지</text>
+<text x="241" y="372" font-size="17" text-anchor="middle" fill="#a6bed1">타격감 / 강조 / 시각 피드백</text>
+<rect x="534" y="269" width="370" height="134" rx="14" fill="#3c2b23" stroke="#fb923c" stroke-width="2"/>
+<text x="719" y="309" font-size="24" text-anchor="middle" font-weight="700" fill="#fdba74">Hit Stun · 게임 규칙</text>
+<text x="719" y="343" font-size="19" text-anchor="middle" fill="#e2e8f0">피격 후 행동 불능</text>
+<text x="719" y="372" font-size="17" text-anchor="middle" fill="#d4ad92">밸런스 / 경직 / 후속 입력</text>
+<path d="M240 403V451M720 403V451" stroke="#94a3b8" stroke-width="3" stroke-dasharray="5 6"/>
+<rect x="56" y="450" width="370" height="88" rx="14" fill="#1e293b" stroke="#5e7492"/>
+<rect x="534" y="450" width="370" height="88" rx="14" fill="#1e293b" stroke="#5e7492"/>
+<text x="241" y="486" font-size="21" text-anchor="middle" font-weight="700" fill="#f8fafc">카메라 / VFX</text>
+<text x="241" y="515" font-size="16" text-anchor="middle" fill="#b8c4d8">연출 정책에 따라 계속 진행 가능</text>
+<text x="720" y="486" font-size="21" text-anchor="middle" font-weight="700" fill="#f8fafc">입력 버퍼 / 오디오</text>
+<text x="720" y="515" font-size="16" text-anchor="middle" fill="#b8c4d8">정지 중에도 처리할지 별도 정책 설정</text>
+<text x="480" y="577" font-size="16" text-anchor="middle" fill="#9fb0ca">분리는 하나의 구현 예시이며, 실제 적용 범위는 게임 장르와 기획 의도에 맞춰 조정</text>
+</g></svg>

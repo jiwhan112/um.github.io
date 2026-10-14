@@ -125,6 +125,12 @@ async function copyResources(){
  for(const folder of ['daily-briefing/data','language-study/data','thinking-lab/data','opensource-lab/data','game-design/data','ai-asset-lab/experiments']){
   for(const file of await walk(join(root,folder))){if(!['.json','.png','.webp','.jpg','.jpeg','.svg','.wav','.ogg','.glb','.md'].includes(extname(file)))continue;const rel=relative(root,file);await mkdir(dirname(join(out,rel)),{recursive:true});await cp(file,join(out,rel));}
  }
+ // Illustration assets are authored per lesson; JSON files remain catalog/content inputs.
+ for(const file of await walk(join(root,'game-design'))){
+  const rel=relative(root,file).replaceAll('\\','/');
+  if(!/^game-design\/ep-[a-z0-9-]+\/assets\/[a-z0-9-]+\.(svg|png|webp|jpg|jpeg)$/.test(rel))continue;
+  await mkdir(dirname(join(out,rel)),{recursive:true});await cp(file,join(out,rel));
+ }
 }
 export async function buildContent(){
  await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});await copyResources();

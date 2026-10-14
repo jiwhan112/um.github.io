@@ -11,9 +11,26 @@ for(const j of policy.jobs){
  for(const pattern of j.allowedWritePatterns){const re=new RegExp(pattern);for(const p of ['index.html','thinking-lab/index.html','web/src/styles.css','language-study/sw.js','data/atlas/catalog.json'])if(re.test(p))throw Error('Scheduled writer can modify generated/UI file: '+p);}
 }
 const feed=policy.contentFeeds?.find(f=>f.id==='game-design');
-if(!feed||feed.targetEpisodes!==12||feed.allowedWritePatterns?.length!==2)throw Error('Game design feed policy missing');
+if(!feed||feed.targetEpisodes!==12||feed.allowedWritePatterns?.length!==3)throw Error('Game design feed policy missing');
 for(const pattern of feed.allowedWritePatterns){const re=new RegExp(pattern);for(const p of ['index.html','game-design/index.html','web/src/App.tsx','data/atlas/catalog.json'])if(re.test(p))throw Error('Game design scheduled writer may modify UI/generated: '+p);}
 const gd=JSON.parse(read('game-design/data/catalog.json'));
+function findImages(blocks){
+ return blocks.flatMap(b=>b.type==='image'?[b.src]:b.blocks?findImages(b.blocks):b.type==='list'?b.items.flatMap(findImages):[]);
+}
+const imagePaths=[];
+for(const entry of gd.episodes){
+ const doc=JSON.parse(read('game-design/'+entry.path+'content.json'));
+ const sources=doc.sections.flatMap(section=>findImages(section.blocks));
+ for(const src of sources){
+  if(!/^\/game-design\/ep-[a-z0-9-]+\/assets\/[a-z0-9-]+\.(svg|png|webp|jpg|jpeg)$/.test(src)||!src.startsWith('/game-design/'+entry.path+'assets/'))throw Error('Unsafe or cross-episode game design illustration: '+src);
+  if(!existsSync(resolve(root,src.slice(1))))throw Error('Missing game design illustration: '+src);
+  imagePaths.push(src);
+  if(src.endsWith('.svg')){
+    const svg=read(src.slice(1));if(/<script\b|<foreignObject\b|\son[a-z]+\s*=|(?:href|url)\s*=\s*["']?https?:|<image\b|<iframe\b|<!DOCTYPE|<!ENTITY/i.test(svg))throw Error('Unsafe SVG illustration: '+src);
+  }
+ }
+}
+
 const videoIds=new Set();const paths=new Set();for(const e of gd.episodes){if(!e.video_id||!e.video_url||e.video_url!=='https://www.youtube.com/watch?v='+e.video_id||videoIds.has(e.video_id)||paths.has(e.path)||!e.category||!e.tags?.length||e.tags.length>8||!existsSync(resolve(root,'game-design/'+e.path+'content.json')))throw Error('Invalid game design episode: '+e.path);videoIds.add(e.video_id);paths.add(e.path);}
 if(gd.episodes.length>12)throw Error('Game design exceeds approved 12 episodes');
 const catalog=JSON.parse(read('thinking-lab/data/catalog.json'));
