@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="600" viewBox="0 0 1080 600" role="img" aria-labelledby="title desc"><title id="title">리더 중심 카메라의 2인 협동</title><desc id="desc">커비 역할의 리더와 헬퍼를 한 화면에 배치하고 AI 조작과 2P 합류를 구분한 설명</desc><rect width="1080" height="600" fill="#101b33"/><style>text{font-family:"Noto Sans CJK KR","Apple SD Gothic Neo",sans-serif;fill:#eaf4ff} .sub{fill:#a9c2df;font-size:22px} .main{font-weight:700;font-size:34px}.label{font-size:26px;font-weight:650}.tiny{font-size:20px} .box{fill:#20365a;stroke:#5284ad;stroke-width:2} .accent{fill:#24baa7}</style>
+<text x="55" y="72" class="main">단일 카메라 협동: 리더와 헬퍼의 역할 분리</text>
+<text x="55" y="109" class="sub">기획 개념을 풀어 그린 창작 예시 · 게임 실제 장면 아님</text>
+<rect x="48" y="155" width="654" height="344" rx="22" fill="#182b4a" stroke="#ffcf70" stroke-width="5"/>
+<text x="68" y="188" class="tiny">공유 화면 (카메라 기준: P1)</text>
+<line x1="373" y1="215" x2="373" y2="465" stroke="#4b91b2" stroke-width="3" stroke-dasharray="10 12"/>
+<circle cx="373" cy="329" r="63" fill="#ffb9d2" stroke="#ffffff" stroke-width="3"/>
+<circle cx="355" cy="318" r="5" fill="#2a2945"/><circle cx="395" cy="318" r="5" fill="#2a2945"/>
+<text x="288" y="420" class="label">P1: 리더</text><text x="287" y="450" class="tiny">이동·진행 우선권</text>
+<rect x="550" y="259" width="78" height="93" rx="27" fill="#47d9bd" stroke="#ffffff" stroke-width="3"/>
+<text x="521" y="395" class="label">P2: 헬퍼</text><text x="514" y="427" class="tiny">협력·지원 행동</text>
+<path d="M 465 330 Q 499 281 539 306" stroke="#ffcf70" fill="none" stroke-width="4"/>
+<rect x="741" y="170" width="292" height="134" rx="16" class="box"/>
+<text x="762" y="211" class="label">혼자 플레이할 때</text><text x="762" y="249" class="sub">헬퍼 조작: AI</text>
+<rect x="741" y="328" width="292" height="160" rx="16" class="box"/>
+<text x="762" y="371" class="label">2P가 합류하면</text><text x="762" y="409" class="sub">헬퍼 조작: 사람</text><text x="762" y="447" class="tiny">카메라는 리더 중심</text>
+<path d="M 740 404 L 706 404" stroke="#24baa7" stroke-width="5"/>
+<text x="55" y="545" class="sub">핵심 트레이드오프: 카메라 안정성 ↔ 헬퍼의 이동 자유</text>
+</svg>

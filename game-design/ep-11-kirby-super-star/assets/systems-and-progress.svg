@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="600" viewBox="0 0 1080 600" role="img" aria-labelledby="title desc"><title id="title">협동 게임 상태와 시나리오 저장 모델</title><desc id="desc">1P/2P 입력, 헬퍼 AI, 카메라·전투, 모드 매니저와 세이브의 관계를 구분한 시스템 도식</desc><rect width="1080" height="600" fill="#101b33"/><style>text{font-family:"Noto Sans CJK KR","Apple SD Gothic Neo",sans-serif;fill:#eaf4ff} .sub{fill:#a9c2df;font-size:22px} .main{font-weight:700;font-size:34px}.label{font-size:26px;font-weight:650}.tiny{font-size:20px} .box{fill:#20365a;stroke:#5284ad;stroke-width:2} .accent{fill:#24baa7}</style>
+<text x="55" y="65" class="main">C++11 클라이언트 설계: 협동과 시나리오를 분리</text>
+<text x="55" y="103" class="sub">게임 실제 소스 구조가 아닌 역할 분리 실습 예시</text>
+<rect x="54" y="156" width="238" height="90" rx="14" class="box"/>
+<text x="78" y="194" class="label">입력 매퍼</text><text x="78" y="225" class="tiny">P1 / P2 독립</text>
+<rect x="361" y="156" width="331" height="90" rx="14" class="box"/>
+<text x="385" y="194" class="label">협동 게임 상태</text><text x="385" y="225" class="tiny">헬퍼: AI ↔ 사람</text>
+<rect x="766" y="156" width="257" height="90" rx="14" class="box"/>
+<text x="790" y="194" class="label">전투 · 카메라</text><text x="790" y="225" class="tiny">리더 중심 화면</text>
+<path d="M 294 201 L 357 201 M 696 201 L 762 201" stroke="#24baa7" stroke-width="5"/>
+<rect x="361" y="312" width="331" height="94" rx="14" class="box"/>
+<text x="385" y="349" class="label">모드 매니저</text><text x="385" y="381" class="tiny">Start → Play → Clear</text>
+<path d="M 528 248 L 528 307" stroke="#ffcf70" stroke-width="4"/>
+<rect x="56" y="449" width="458" height="93" rx="14" fill="#245764" stroke="#57a5ad" stroke-width="2"/>
+<text x="81" y="489" class="label">공통 프로필 / 설정</text><text x="81" y="520" class="tiny">입력 옵션 · 플레이어 상태</text>
+<rect x="565" y="449" width="458" height="93" rx="14" fill="#514769" stroke="#9586cd" stroke-width="2"/>
+<text x="591" y="489" class="label">시나리오별 고정 ID / 저장</text><text x="591" y="520" class="tiny">완료·해금·수집은 모드별로</text>
+<path d="M 520 409 L 520 438 L 284 438 L 284 446 M 520 438 L 794 438 L 794 446" fill="none" stroke="#8bbcff" stroke-width="3"/>
+</svg>

@@ -1,0 +1,1402 @@
+{
+  "title": "두 명이 함께, 짧고 다채롭게 — 《별의 커비 슈퍼 디럭스》의 두 기획 축",
+  "subtitle": "동시 협동 플레이와 옴니버스 구성을 요구에서 시스템으로 번역한 사례. 헬퍼·카메라·전투 참여·시나리오 구조를 C++11 게임 클라이언트 관점으로 분석한다.",
+  "original": {
+    "title": "Kirby Super Star [Game Concepts]",
+    "published_date": "2022-10-03",
+    "channel": "Masahiro Sakurai on Creating Games (official English)",
+    "video_id": "PkeETXCSn5M",
+    "video_url": "https://www.youtube.com/watch?v=PkeETXCSn5M",
+    "date_note": "일본의 2022-10-03 동시대 보도(GAME Watch)는 10월 3일 공개라고 명시한다. YouTube 검색 색인은 2022-10-02로 표시하고 TheTVDB는 10월 2일, Simkl은 10월 1일로 표기한다. 따라서 여기의 2022-10-03은 일본 현지 공개 보도 기준의 편성일이며, YouTube의 정확한 업로드 타임스탬프는 별도로 확인하지 못했다."
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 두 기획 축이 게임 전체를 바꾸는 방식",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "검증 구분: 공식 영상 소개는 '두 가지 큰 주제'를 예고한다. 영상 발행 당시 일본 보도는 이를 '2인 동시 플레이'와 '옴니버스'로 명시한다. 뒤의 C++ 시스템·표·수치·그림은 원본 게임의 내부 구현이나 영상 화면이 아니라 학습용으로 만든 설계 예시다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. '2명이 플레이한다'는 기능 한 줄이 아니다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 사람이 같은 2D 액션 화면에 들어오면 바로 문제가 생긴다. 한 명은 오른쪽으로 달리고 다른 한 명은 왼쪽에서 머무르면 카메라는 누구를 따라가야 할까? 두 명을 똑같이 취급하면 화면을 계속 넓히거나 둘의 이동을 강제로 묶어야 한다. 사쿠라이는 이 제약을 역할의 비대칭으로 풀었다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《별의 커비 슈퍼 디럭스》에서는 커비가 화면의 주인공이고, 복사 능력에서 파생된 '헬퍼'가 곁에서 지원한다. 플레이어 2가 헬퍼를 조작할 수 있으며 혼자 즐길 때는 컴퓨터가 헬퍼를 제어한다. 닌텐도의 사쿠라이 인터뷰에 따르면 카메라가 커비를 중심으로 움직이도록 구상했고, 서로 숙련도가 다른 사람도 함께 즐기게 하려는 의도가 있었다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-11-kirby-super-star/assets/co-op-camera.svg",
+          "alt": "플레이어 1의 커비가 카메라 중심에 있고 플레이어 2의 헬퍼는 화면 안에서 지원하며 화면 밖 이탈 시 복귀 규칙을 검토하는 가상의 2인 협동 설계도. 커비·헬퍼·단일 카메라의 역할, 장점과 손해가 한국어로 설명된다.",
+          "caption": "영상 장면이 아닌 독창적 예시. 동일 카메라에서 우선권을 정하지 않으면 두 플레이어의 이동과 가시성이 충돌한다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 헬퍼는 '2P용 분신'이 아니라 게임 규칙의 일부"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "그저 화면에 두 번째 캐릭터를 추가했다면 캐릭터 그래픽과 조작 매핑만 늘어난다. 그러나 헬퍼는 커비의 '적 능력 복사'라는 기존 규칙에서 나오므로, 왜 같은 화면에 등장하는지 플레이어가 자연스럽게 이해한다. 즉 기존 세계관·전투 시스템을 활용해 신규 기능의 학습 비용을 줄인다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "협동 플레이가 생기면 적의 체력이나 기술의 사용 범위도 재검토해야 한다. 닌텐도의 2017년 인터뷰에서는 적을 한 번에 모두 쓰러뜨리면 헬퍼가 활약할 틈이 없어, 약한 적이라도 여러 번 공격할 기회를 제공하고 복사 능력에 다양한 기술을 마련했다고 설명한다. 이 맥락에서 격투 게임 같은 다채로운 액션이 등장한다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "기획 결정"
+                  }
+                ],
+                [
+                  {
+                    "text": "그로 인한 질문"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 기획 방향과 교재의 해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "단일 화면 협동"
+                  }
+                ],
+                [
+                  {
+                    "text": "카메라는 누구의 위치를 따르는가?"
+                  }
+                ],
+                [
+                  {
+                    "text": "주인공 커비 중심으로 우선권 지정. 헬퍼의 이동 범위·복귀 방식은 별도로 설계한다."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "복사 능력에서 헬퍼 생성"
+                  }
+                ],
+                [
+                  {
+                    "text": "2P가 세계관 안에서 어떤 존재인가?"
+                  }
+                ],
+                [
+                  {
+                    "text": "기존 복사 능력을 활용해 조력자 역할을 부여한다."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2명이 적을 동시에 공격"
+                  }
+                ],
+                [
+                  {
+                    "text": "누군가가 할 일이 사라지지 않는가?"
+                  }
+                ],
+                [
+                  {
+                    "text": "적 내구도와 기술 다양성을 통해 협력할 여지를 만든다."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "경험 차이"
+                  }
+                ],
+                [
+                  {
+                    "text": "초보자가 숙련자와 함께할 수 있는가?"
+                  }
+                ],
+                [
+                  {
+                    "text": "주요 진행을 주인공에게 맡기고 지원 역할에도 기여 기회를 만든다."
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 또 하나의 기획 축, '끝을 볼 수 있는 작은 모험 여러 개'"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "1990년대에는 하나의 긴 게임을 오래 플레이하는 구성도 흔했다. 그러나 게임이 길다는 것만으로 만족이 늘지는 않는다. 사쿠라이는 여러 단편 시나리오를 각각 완결 가능한 단위로 나눠, 다른 종류의 규칙을 경험하면서도 자주 성취감을 맛보게 하는 옴니버스 방식을 택했다고 2017년 공식 인터뷰에서 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《슈퍼 디럭스》의 '봄바람을 타고', '다이나 블레이드', '동굴대작전', '메타 나이트의 역습', '은하수의 꿈'처럼 서로 다른 놀이 구조를 가진 모드가 이 원리의 사례다. 각 모드의 규칙과 목표를 분리하면서도 커비의 이동·기본 조작 같은 공통 기반은 다시 활용한다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-11-kirby-super-star/assets/omnibus-modules.svg",
+          "alt": "한 개의 거대한 장기 캠페인과 여러 개의 독립적 단편 모드를 비교한다. 오른쪽은 입문·탐색·시간 압박·수집 세션을 각각 시작과 완료가 있는 한국어 상자들로 표시한다.",
+          "caption": "개념 비교도. 숫자와 예시 세션은 자체 설정이며 원작의 스테이지 수나 실제 소요 시간을 의미하지 않는다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. '두 기획 축'과 2017년 '세 기둥'이 왜 다른가?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2022년 해당 영상에 대한 동시대 보도는 협동과 옴니버스라는 두 큰 축을 전한다. 반면 사쿠라이는 2017년 닌텐도 인터뷰에서 '2인 협동', '격투 게임 같은 다양한 액션', '옴니버스'를 세 기둥으로 설명했다. 두 자료가 모순이라고 단정할 필요는 없다. 영상에서 강조한 큰 목표와 인터뷰에서 분리해 설명한 액션 설계 요소의 추상화 수준이 다르기 때문이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "프로그래머에게 중요한 점은 '기능 목록'이 아니라 요구의 인과관계다. 2인 협동을 결정하자 카메라·헬퍼·공격 참여·적 내구도 문제가 연결되고, 짧은 완주를 결정하자 모드·세이브·완료 표시·콘텐츠 공유 구조가 달라진다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "생각해 보기: 기획서에 '2인 모드 추가'라고 한 줄 적힌 경우와 '동일 화면에서 실력 차가 나는 두 사람이 각자 기여하도록 만든다'고 정의한 경우, 구현에서 미리 검증할 항목이 얼마나 달라지는가?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "1분 요약 — 요구가 게임의 구조를 만든다",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "2022년 영상의 두 큰 기획 축은 '2인 동시 플레이'와 '짧은 경험을 묶는 옴니버스'다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "2인 협동의 카메라 충돌을 막기 위해 커비를 주인공, 헬퍼를 보조 캐릭터로 역할 분담했다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "헬퍼는 복사 능력에서 등장하므로 기존 게임 규칙과 자연스럽게 이어진다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "두 사람이 싸우는 재미를 위해 공격 종류와 적 내구도가 함께 변했다는 맥락을 이해한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "옴니버스는 플레이 시간을 무조건 늘리는 대신 짧은 완주와 플레이 유형의 다양성을 중시한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "공통 엔진·캐릭터 규칙은 재사용하면서 시나리오별 목표·규칙·진도는 분리해야 한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "2017년 공식 인터뷰의 '세 기둥' 중 다채로운 액션은 2인 협동을 실현하는 설계와 연관된다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "아래의 C++ 코드·수치·도식은 사쿠라이의 원본 구현이 아니라 학습자를 위한 별도 모델이다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기획 회고 질문: 협동을 '접속 플레이어 수'가 아니라 '서로의 기여'로 측정하고 있는가? 옴니버스를 '모드 수'가 아니라 '완주할 수 있는 서로 다른 경험'으로 측정하고 있는가?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — C++11 협동 구조와 모드 경계",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 먼저 시스템 계약과 설계 변수를 기록한다"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "시스템/변수"
+                  }
+                ],
+                [
+                  {
+                    "text": "권장 검토값 또는 규칙(교육용)"
+                  }
+                ],
+                [
+                  {
+                    "text": "트레이드오프"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "카메라 주체"
+                  }
+                ],
+                [
+                  {
+                    "text": "LeadPlayer 기준, 단일 Viewport"
+                  }
+                ],
+                [
+                  {
+                    "text": "진행 안정성 ↑ / 헬퍼 자유도 ↓"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "헬퍼 이탈 거리"
+                  }
+                ],
+                [
+                  {
+                    "text": "카메라 중심에서 8~12 유닛을 실험"
+                  }
+                ],
+                [
+                  {
+                    "text": "헬퍼 자유도 ↑ / 화면 이탈 위험 ↑"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "헬퍼 제어권"
+                  }
+                ],
+                [
+                  {
+                    "text": "AI ↔ Local P2를 명시적으로 전환"
+                  }
+                ],
+                [
+                  {
+                    "text": "즉시 참여성 ↑ / 동기화·입력 충돌 비용 ↑"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "동시 전투 참여"
+                  }
+                ],
+                [
+                  {
+                    "text": "적별 HP·넉백·히트 쿨다운 조정"
+                  }
+                ],
+                [
+                  {
+                    "text": "협력 기회 ↑ / 솔로 플레이 지루함 위험"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "시나리오 ID"
+                  }
+                ],
+                [
+                  {
+                    "text": "고정 문자열 ID와 독립 기록"
+                  }
+                ],
+                [
+                  {
+                    "text": "유연한 추가 ↑ / 데이터 검증 필요"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "모드 전환"
+                  }
+                ],
+                [
+                  {
+                    "text": "진행 저장 후 공통 게임월드 재설정"
+                  }
+                ],
+                [
+                  {
+                    "text": "재사용 ↑ / 상태 누수 위험"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "DX9 뷰"
+                  }
+                ],
+                [
+                  {
+                    "text": "LogicState 읽기 전용, Present 분리"
+                  }
+                ],
+                [
+                  {
+                    "text": "디버깅 용이 / 갱신 타이밍 설계 필요"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 역할과 데이터 흐름"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "InputMapper는 P1과 P2 입력을 독립 명령으로 바꾸고, CompanionSystem은 헬퍼가 AI 조작인지 사람 조작인지 관리한다. CameraRig는 커비의 위치를 기준으로 한다. Collision/Combat은 어떤 입력 장치가 공격했는지와 무관하게 각 객체의 명령을 처리한다. DX9 Renderer는 결과 스냅샷만 그리며 입력 소유권을 변경하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-11-kirby-super-star/assets/systems-and-progress.svg",
+          "alt": "입력 매퍼의 1P·2P 입력이 게임 규칙과 헬퍼 AI·제어권에 들어가고, 카메라·전투·렌더링으로 분리된다. 아래에는 모드별 독립 진도와 공통 프로필 데이터가 그려진 한국어 관계도.",
+          "caption": "실제 슈퍼패미컴 내부 구조가 아닌 C++11·DirectX9 학습을 위한 설계 분리 예시."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. C++11 최소 모델 — 헬퍼의 AI·2P 제어권과 카메라 경계"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 예시는 엔진에 의존하지 않는 데이터 계층만 모델링한다. 2P 입력이 없으면 헬퍼는 AI로 남고, 참가하면 조작권이 넘어간다. 화면 밖 멀어진 헬퍼를 안전한 영역으로 되돌리는 정책은 테스트하기 쉽도록 코드에서 명시한다. 수치는 실험용이다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include <cassert>\n#include <cmath>\n#include <string>\n#include <unordered_map>\n\nenum class Driver { None, AI, Player2 };\nstruct Vec2 { float x = 0.0f, y = 0.0f; };\nstruct Coop {\n    Vec2 kirby, helper;\n    bool helperActive = false;\n    Driver helperDriver = Driver::None;\n    float cameraX = 0.0f;\n    float maxDistance = 10.0f; // 예시 월드 유닛\n\n    bool Summon(bool hasCopyAbility) {\n        if (!hasCopyAbility || helperActive) return false;\n        helperActive = true;\n        helperDriver = Driver::AI;\n        helper = {kirby.x + 1.0f, kirby.y};\n        return true;\n    }\n    void JoinP2() {\n        if (helperActive) helperDriver = Driver::Player2;\n    }\n    void LeaveP2() {\n        if (helperActive) helperDriver = Driver::AI;\n    }\n    void Tick() {\n        cameraX = kirby.x; // 카메라 우선권은 주인공\n        if (!helperActive) return;\n        if (std::fabs(helper.x - cameraX) > maxDistance) {\n            const float side = helper.x > cameraX ? 1.0f : -1.0f;\n            helper.x = cameraX + side * (maxDistance * 0.5f);\n        }\n    }\n};\n\nstruct Progress {\n    // 시나리오마다 고정 ID 사용. 표시 순서와 저장 키를 결합하지 않는다.\n    std::unordered_map<std::string, bool> cleared;\n    void Complete(const std::string& scenarioId) { cleared[scenarioId] = true; }\n    bool IsClear(const std::string& id) const {\n        auto it = cleared.find(id);\n        return it != cleared.end() && it->second;\n    }\n};\n\nint main() {\n    Coop game;\n    assert(!game.Summon(false));\n    assert(game.Summon(true));\n    assert(game.helperDriver == Driver::AI);\n    game.JoinP2();\n    assert(game.helperDriver == Driver::Player2);\n    game.kirby.x = 20.0f;\n    game.helper.x = -100.0f;\n    game.Tick();\n    assert(game.cameraX == 20.0f);\n    assert(std::fabs(game.helper.x - game.cameraX) <= 10.0f);\n    game.LeaveP2();\n    assert(game.helperDriver == Driver::AI);\n    Progress save;\n    save.Complete(\"short-adventure\");\n    assert(save.IsClear(\"short-adventure\"));\n    assert(!save.IsClear(\"treasure-hunt\"));\n}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 코드는 아이디어와 불변 조건을 보여 주는 독립 예제로, 원작 구현을 재현하지 않는다. 실제 게임에서는 좌표 순간 이동 대신 가림 영역 탐지, 장애물 회피, 안전한 재등장 위치와 무적 프레임을 검증해야 한다. 이 문서의 C++ 예제는 별도의 컴파일·실기 실행을 검증했다고 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 2인 협동에서 반드시 결정할 예외"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "2P가 헬퍼 소환 이전에 버튼을 누르면 입력을 보류·안내할지 무시할지 결정한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "P2 참여와 이탈 중 AI↔P2 제어권이 정확히 한 곳에만 존재하도록 한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "헬퍼가 화면 밖·벽 안·낭떠러지 위에 재등장하지 않도록 안전 위치를 탐색한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "원래 시나리오의 보스 트리거·문 열림·리더 위치가 헬퍼 행동에 의해 우회되지 않게 한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "혼자 플레이할 때 협동용 적 내구도 때문에 피곤해지지 않는지 별도로 테스트한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "DX9 Reset/DeviceLost 시 렌더 자원만 복구하고 게임의 P2 상태·시나리오 기록은 유지한다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "5. 옴니버스에서는 모드 데이터를 독립된 계약으로"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ScenarioDefinition을 {id, 진입 조건, 월드 초기값, 목표, 저장 키, 종료 조건}처럼 분리한다. ScenarioManager는 Start/Running/Cleared/Exited 상태 전이를 책임지고, CorePlayer·Input·Render는 공통 재사용한다. 모드 선택 UI의 표시 순서와 세이브 파일의 ID를 연결하면 업데이트 때 기존 저장이 다른 모드를 가리킬 수 있으므로 금지한다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "관심사"
+                  }
+                ],
+                [
+                  {
+                    "text": "공유해도 되는 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "모드별로 독립할 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "컨트롤"
+                  }
+                ],
+                [
+                  {
+                    "text": "이동·점프·입력 명령"
+                  }
+                ],
+                [
+                  {
+                    "text": "전용 기술의 활성 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "월드·전투"
+                  }
+                ],
+                [
+                  {
+                    "text": "충돌·체력·공통 행동"
+                  }
+                ],
+                [
+                  {
+                    "text": "승리 조건·적 배치·시간 제한"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "진도"
+                  }
+                ],
+                [
+                  {
+                    "text": "프로필·설정"
+                  }
+                ],
+                [
+                  {
+                    "text": "해금·수집·클리어 기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "표현"
+                  }
+                ],
+                [
+                  {
+                    "text": "DX9 렌더 파이프라인"
+                  }
+                ],
+                [
+                  {
+                    "text": "스테이지별 UI와 배경"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "로드·복귀"
+                  }
+                ],
+                [
+                  {
+                    "text": "자원 매니저"
+                  }
+                ],
+                [
+                  {
+                    "text": "시작 체크포인트·종료 연출"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "예시 코드의 좌표·거리·ID는 기획 실습을 위한 임의값이다. '헬퍼 자동 재배치 거리 = 10' 같은 수치를 실제 《슈퍼 디럭스》 사양이나 사쿠라이의 발언으로 해석하면 안 된다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습 — 2인 협동 × 짧은 모드 세 가지",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 같은 캐릭터 컨트롤러 위에 3개의 짧은 목표를 올린다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++11·DX9 또는 엔진 독립 테스트 프로젝트에 가상 캐릭터 2개를 만들자. P1은 화면 중심을 이끄는 리더이고, P2는 AI로 대체 가능한 헬퍼다. 레벨 아트를 만들기 전에 움직이는 사각형과 충돌 캡슐만으로 협동성과 완주 루프를 검증한다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "미니 시나리오"
+                  }
+                ],
+                [
+                  {
+                    "text": "독립 목표"
+                  }
+                ],
+                [
+                  {
+                    "text": "검증 질문"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "입문 산책"
+                  }
+                ],
+                [
+                  {
+                    "text": "구간 끝에 도착"
+                  }
+                ],
+                [
+                  {
+                    "text": "혼자도 가능하며 P2가 이동을 방해하지 않는가?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "보물 수집"
+                  }
+                ],
+                [
+                  {
+                    "text": "세 개의 물체 회수"
+                  }
+                ],
+                [
+                  {
+                    "text": "헬퍼가 실제로 기여할 수 있는가?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "시간제 돌파"
+                  }
+                ],
+                [
+                  {
+                    "text": "제한 시간 내 문 열기"
+                  }
+                ],
+                [
+                  {
+                    "text": "협동이 단지 공격 횟수 증가에 그치지 않는가?"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 구현 순서"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "기본 이동·입력 계층과 카메라를 분리한다. P1만 있을 때 화면 중심이 안정적인지 확인한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "기존 능력에서 파생되는 헬퍼 소환·해제를 추가하고 P2 참가 전에는 AI로 조작한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "입력 장치 분리, P2 참가·이탈, 화면 이탈·복귀 정책을 구현한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "3개의 ScenarioDefinition을 데이터로 만들고 게임 클리어 시 모드별 진행률을 저장한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "두 플레이어가 함께 행동할 여지가 있도록 전투·수집 목표를 조정한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "혼자→중간 합류→다시 혼자 흐름을 테스트하고 P2가 없을 때도 진행이 막히지 않게 한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "모드별 시작→목표 도달→완료→모드 선택 복귀까지 기록하며 버그와 만족도를 구분한다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 관찰 가능한 이벤트를 설계한다"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "이벤트"
+                  }
+                ],
+                [
+                  {
+                    "text": "정의"
+                  }
+                ],
+                [
+                  {
+                    "text": "왜 측정하는가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "helper_spawned"
+                  }
+                ],
+                [
+                  {
+                    "text": "헬퍼 생성 시각 및 복사 능력 종류"
+                  }
+                ],
+                [
+                  {
+                    "text": "협동 진입이 자연스러운가?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "p2_joined / p2_left"
+                  }
+                ],
+                [
+                  {
+                    "text": "컨트롤러 제어권 변경"
+                  }
+                ],
+                [
+                  {
+                    "text": "중도 참여·복귀가 안정적인가?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "helper_out_of_view"
+                  }
+                ],
+                [
+                  {
+                    "text": "헬퍼가 안전 시야를 벗어난 횟수"
+                  }
+                ],
+                [
+                  {
+                    "text": "카메라 우선권 비용 측정"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "p2_meaningful_action"
+                  }
+                ],
+                [
+                  {
+                    "text": "P2가 적 처치·아이템 회수에 기여"
+                  }
+                ],
+                [
+                  {
+                    "text": "2P가 구경만 하는 구간을 찾음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "scenario_cleared"
+                  }
+                ],
+                [
+                  {
+                    "text": "시나리오별 독립 클리어"
+                  }
+                ],
+                [
+                  {
+                    "text": "짧은 성취 경험을 측정"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "mode_reselected"
+                  }
+                ],
+                [
+                  {
+                    "text": "완료 후 다음 모드 선택"
+                  }
+                ],
+                [
+                  {
+                    "text": "다양성이 실제 재참여로 이어지는가?"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 수용 기준(모두 실험용이며 원본 수치가 아니다)"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "P2가 접속하거나 빠져도 P1의 카메라와 진행 상태가 손상되지 않는다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "헬퍼가 이탈하면 제한된 횟수 안에 안전한 위치로 돌아오고 장애물에 갇히지 않는다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "어느 모드를 먼저 클리어해도 다른 모드의 진도가 변하지 않는다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "모드 종료 뒤 2P를 제거해도 기존 저장 기록과 해금 상태를 복원할 수 있다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "모든 모드는 혼자서도 완주 가능하며, P2가 활약한 구간을 로그에서 관찰할 수 있다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "연타 입력·동시 종료·장치 재연결·DX9 장치 손실에도 상태 전이가 중복되지 않는다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "검증 계획: A는 P2가 동일한 두 번째 주인공, B는 리더+헬퍼 역할 비대칭으로 구현한다. 목표 달성 시간만 비교하지 말고 두 플레이어의 기여 횟수·화면 밖 시간·주관적 소외감도 함께 기록한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본 출처·교차 검증·제작권리",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 공식 영상 — Kirby Super Star [Game Concepts]",
+              "kind": "link",
+              "href": "https://www.youtube.com/watch?v=PkeETXCSn5M"
+            },
+            {
+              "text": " — 영상 ID PkeETXCSn5M, 영어 공식 채널의 Game Concepts 편이다. 영상 설명에는 큰 기획 주제 둘을 되짚는다고 적혀 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 채널 영상 목록",
+              "kind": "link",
+              "href": "https://www.youtube.com/@sora_sakurai_en/videos"
+            },
+            {
+              "text": " — 정확한 원출처와 영상 카테고리 확인용."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "GAME Watch 동시대 보도 (2022-10-03)",
+              "kind": "link",
+              "href": "https://game.watch.impress.co.jp/docs/news/1444377.html"
+            },
+            {
+              "text": " — 영상의 두 큰 기획 축이 2인 플레이와 옴니버스라는 점, 미야모토의 요청과 헬퍼 시스템, 길게 끌지 않는 시나리오 구성을 확인했다. 일본 현지 10월 3일 공개라고 명시한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Nintendo UK 공식 개발자 인터뷰 (2017-10)",
+              "kind": "link",
+              "href": "https://www.nintendo.com/en-gb/News/2017/October/Nintendo-Classic-Mini-SNES-developer-interview-Volume-6-Kirby-Super-Star-1298937.html"
+            },
+            {
+              "text": " — 사쿠라이의 직접 인터뷰. 2인 협동·다채로운 액션·옴니버스의 세 기둥, 카메라/헬퍼/복사 능력/전투 참여, 짧은 완주 의도를 검증했다. 2022년 영상의 발언으로 그대로 전용하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Nintendo Everything 정리 (2022-10)",
+              "kind": "link",
+              "href": "https://nintendoeverything.com/sakurai-shares-development-details-on-kirby-super-star/"
+            },
+            {
+              "text": " — 헬퍼 설계와 서로 다른 길이의 단편 시나리오 구상에 대한 영상 교차 정리."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "TheTVDB 일본어 대응 회차",
+              "kind": "link",
+              "href": "https://www.thetvdb.com/series/masahiro-sakurai-on-creating-games/episodes/9378987"
+            },
+            {
+              "text": " — 2022-10-02 방영일과 8분 러닝타임을 표기. 일본의 10월 3일 기사와 날짜 차이가 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Simkl 영어 회차 20",
+              "kind": "link",
+              "href": "https://simkl.com/tv/1983527/masahiro-sakurai-on-creating-games/episode-20/"
+            },
+            {
+              "text": " — 2022-10-01 편성일을 표기한다. 국가·집계 기준에 따라 날짜 차이가 있으므로 공식 업로드 시각으로 단정하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "YouTube 검색 색인의 공식 영상 메타데이터",
+              "kind": "link",
+              "href": "https://www.youtube.com/watch?v=PkeETXCSn5M"
+            },
+            {
+              "text": " — 검색 색인은 2022-10-02 업로드 일자를 보인다. 일본 보도 날짜(2022-10-03)와 하루 차이가 있어, 카탈로그 기준일은 일본 현지의 발표 보도일을 선택했다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확인 범위와 한계: 공식 영상 제목·ID·설명, 2022년 영상 관련 동시대 보도, 닌텐도에 공개된 사쿠라이의 2017년 인터뷰를 대조했다. 이 환경에서 유튜브 원본을 직접 재생하거나 자막 전문을 확보하지는 못했으므로 초·분 단위 장면 순서, 영상 속 상세 대사, 실제 구현 수치를 추측하거나 인용하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "저작권·기여 구분: 본문·실습·C++11 예제·한국어 SVG 3개는 독창적으로 제작했다. 타인의 스크린샷/공식 문서를 복제하지 않았고, 강의의 검증된 소재와 교재가 제안한 시스템 설계를 구분했다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
