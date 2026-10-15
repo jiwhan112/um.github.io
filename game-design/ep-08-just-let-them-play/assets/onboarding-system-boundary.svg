@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 850" role="img" aria-label="한국어 게임 기획 학습 도식"><rect width="1440" height="850" fill="#0c1526"/>
+<text x="65" y="75" font-family="sans-serif" font-size="44" font-weight="bold" fill="#f4f8ff">게임 규칙과 첫 플레이 UX의 소유권 분리</text>
+<text x="65" y="117" font-family="sans-serif" font-size="24" fill="#bdcde5">C++11 로직 · DX9 렌더링 · 비차단 힌트 · 사용자 계측</text>
+<g font-family="sans-serif">
+<rect x="65" y="158" width="1310" height="115" rx="21" fill="#273959" stroke="#709ce1" stroke-width="2"/>
+<text x="92" y="211" font-size="32" font-weight="bold" fill="#f1f7ff">입력 수집</text>
+<text x="92" y="249" font-size="26" fill="#d9e5f8">키보드 · 패드 · 접근성 매핑 → 이동 / 공격 / 조사 명령</text>
+<path d="M720 276 V318" stroke="#a9cfff" stroke-width="7" stroke-linecap="round"/>
+<path d="M706 306 L720 322 L734 306" fill="none" stroke="#a9cfff" stroke-width="6"/>
+<rect x="65" y="332" width="1310" height="133" rx="21" fill="#20535a" stroke="#56c8b9" stroke-width="3"/>
+<text x="92" y="390" font-size="34" font-weight="bold" fill="#f1f7ff">게임 규칙과 도입 상태 머신 (진실의 원천)</text>
+<text x="92" y="431" font-size="26" fill="#d8f0f0">Loading → PlayableIntro → MainGame · 상태 변경 · 힌트 조건 1회 확정</text>
+<path d="M414 466 V513" stroke="#a9cfff" stroke-width="7" stroke-linecap="round"/>
+<path d="M400 499 L414 517 L428 499" fill="none" stroke="#a9cfff" stroke-width="6"/>
+<path d="M1010 466 V513" stroke="#a9cfff" stroke-width="7" stroke-linecap="round"/>
+<path d="M996 499 L1010 517 L1024 499" fill="none" stroke="#a9cfff" stroke-width="6"/>
+<rect x="65" y="534" width="630" height="174" rx="21" fill="#2b416c" stroke="#7da6e8" stroke-width="3"/>
+<rect x="745" y="534" width="630" height="174" rx="21" fill="#4c3b67" stroke="#ae8dce" stroke-width="3"/>
+<text x="92" y="586" font-size="31" font-weight="bold" fill="#f3f7ff">표시 이벤트 → DX9 UI</text>
+<text x="92" y="633" font-size="26" fill="#e1e9f7">타격 연출 · 힌트 · 출구 열림</text>
+<text x="92" y="673" font-size="25" fill="#e1e9f7">화면은 결과를 보여 줄 뿐</text>
+<text x="772" y="586" font-size="31" font-weight="bold" fill="#f3f7ff">계측 이벤트 → 분석</text>
+<text x="772" y="633" font-size="26" fill="#e1e9f7">첫 유효 조작 시각 · 첫 결과</text>
+<text x="772" y="673" font-size="25" fill="#e1e9f7">개인정보 최소 수집</text>
+<rect x="65" y="741" width="1310" height="79" rx="16" fill="#203147"/>
+<text x="92" y="793" font-size="27" fill="#f7e0a4">원칙: UI 닫힘 콜백이나 렌더 프레임이 게임 보상·전투 판정을 실행하지 않는다.</text>
+</g>
+</svg>
