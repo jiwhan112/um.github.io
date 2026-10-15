@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 735" role="img" aria-labelledby="title desc">
+<title id="title">입력에서 게임 판정과 DX9 피드백으로 가는 구조</title>
+<desc id="desc">하드웨어 입력, 장치별 필터, 의미 입력, 게임 규칙, 피드백 이벤트, DX9·오디오·진동의 단방향 구조를 보여준다.</desc>
+<rect width="1280" height="735" rx="24" fill="#101729"/>
+<text x="54" y="74" font-size="39" font-weight="700" fill="#f8fafc" font-family="sans-serif">C++11 + DirectX9: 조작감 계층을 분리하자</text>
+<text x="56" y="113" font-size="21" fill="#aebed8" font-family="sans-serif">화면을 그리는 함수가 공격 판정을 바꾸지 않게 설계</text>
+<rect x="65" y="170" width="232" height="177" rx="17" fill="#1f3652" stroke="#75b9fd" stroke-width="3"/>
+<text x="85" y="209" font-size="26" font-weight="700" fill="#b6dafe" font-family="sans-serif">① 입력 수집</text>
+<text x="87" y="260" font-size="22" fill="#f5f7fb" font-family="sans-serif">키보드·게임패드</text>
+<text x="87" y="298" font-size="21" fill="#d1dff0" font-family="sans-serif">원본 이벤트 / 축값</text>
+<rect x="362" y="170" width="232" height="177" rx="17" fill="#244c49" stroke="#65d6c0" stroke-width="3"/>
+<text x="382" y="209" font-size="26" font-weight="700" fill="#b6f7e6" font-family="sans-serif">② 입력 필터</text>
+<text x="384" y="260" font-size="22" fill="#f5f7fb" font-family="sans-serif">데드존·민감도</text>
+<text x="384" y="298" font-size="21" fill="#d1eae7" font-family="sans-serif">전이 버퍼 / 디바운스</text>
+<rect x="658" y="170" width="232" height="177" rx="17" fill="#3d3c57" stroke="#b7a6ff" stroke-width="3"/>
+<text x="679" y="209" font-size="26" font-weight="700" fill="#d8d2ff" font-family="sans-serif">③ 의미 입력</text>
+<text x="681" y="260" font-size="22" fill="#f5f7fb" font-family="sans-serif">Pressed / Held</text>
+<text x="681" y="298" font-size="22" fill="#f5f7fb" font-family="sans-serif">Released / MoveX</text>
+<rect x="954" y="170" width="257" height="177" rx="17" fill="#553a3d" stroke="#ffb6ab" stroke-width="3"/>
+<text x="977" y="209" font-size="26" font-weight="700" fill="#ffe0d7" font-family="sans-serif">④ 게임 규칙</text>
+<text x="978" y="260" font-size="22" fill="#f5f7fb" font-family="sans-serif">충전·공격·회복</text>
+<text x="978" y="298" font-size="21" fill="#fae2df" font-family="sans-serif">고정 틱 / 상태 변화</text>
+<g stroke="#d9e5f5" stroke-width="5" fill="none" stroke-linecap="round"><path d="M297 255 H349 M340 246 L349 255 L340 264"/><path d="M594 255 H645 M636 246 L645 255 L636 264"/><path d="M890 255 H941 M932 246 L941 255 L932 264"/></g>
+<path d="M1082 349 V412 H634 V455" fill="none" stroke="#ffbd77" stroke-width="5" stroke-linecap="round"/>
+<path d="M626 446 L634 455 L642 446" fill="none" stroke="#ffbd77" stroke-width="5"/>
+<rect x="421" y="460" width="424" height="83" rx="20" fill="#54462d" stroke="#ffd17d" stroke-width="3"/>
+<text x="453" y="494" font-size="29" font-weight="700" fill="#ffdf9b" font-family="sans-serif">⑤ 의미 있는 피드백 이벤트</text>
+<text x="455" y="525" font-size="21" fill="#ffebc7" font-family="sans-serif">접수 / 충전 준비 / 명중 / 취소</text>
+<path d="M634 543 V586 H247 V603 M634 586 V603 M634 586 H1020 V603" fill="none" stroke="#bcd5fb" stroke-width="4" stroke-linecap="round"/>
+<g stroke="#bcd5fb" fill="none" stroke-width="4"><path d="M238 594 L247 603 L256 594 M625 594 L634 603 L643 594 M1011 594 L1020 603 L1029 594"/></g>
+<g font-family="sans-serif" font-size="26" font-weight="700" text-anchor="middle">
+<rect x="83" y="611" width="327" height="70" rx="17" fill="#223d59" stroke="#7cc5ff" stroke-width="2"/>
+<text x="247" y="653" fill="#e4f4ff">DirectX9 화면·애니메이션</text>
+<rect x="482" y="611" width="304" height="70" rx="17" fill="#24493b" stroke="#7ee5ad" stroke-width="2"/>
+<text x="634" y="653" fill="#e6ffed">사운드 효과</text>
+<rect x="861" y="611" width="319" height="70" rx="17" fill="#493851" stroke="#d6b0ff" stroke-width="2"/>
+<text x="1020" y="653" fill="#fbebff">진동 / 접근성 옵션</text></g>
+<text x="66" y="717" font-size="19" fill="#a4b7d4" font-family="sans-serif">이벤트 단방향 전달 모델 · 에셋·게임 화면 재사용 없음</text>
+</svg>
