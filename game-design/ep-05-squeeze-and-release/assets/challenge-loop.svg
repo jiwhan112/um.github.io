@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="650" viewBox="0 0 1240 650" role="img" aria-labelledby="title desc">
+<title id="title">C++ 게임 규칙의 긴장 해소 상태 흐름과 DX9 연출 분리</title>
+<desc id="desc">도전 발견, 압박 중, 해결 확정, 보상 지급, 다음 도전의 상태 전이와 실패 시 재시도 및 중복 보상 방지, 렌더링 및 로그 소비자 분리 관계</desc>
+<rect width="1240" height="650" rx="20" fill="#0f1b2e"/>
+<text x="49" y="57" fill="#f6f9ff" font-size="33" font-family="sans-serif" font-weight="700">규칙 이벤트를 중심으로 ‘압박 → 해소’를 구현하기</text>
+<text x="51" y="88" fill="#9fb5ce" font-size="20" font-family="sans-serif">위쪽: Game / Rule 계층의 확정된 상태   ·   아래쪽: 이벤트를 받아 표현하는 구독자</text>
+<rect x="48" y="111" width="1144" height="270" rx="18" fill="#172b42" stroke="#355572" stroke-width="2"/>
+<text x="77" y="144" fill="#90bde5" font-size="20" font-weight="700" font-family="sans-serif">C++11 GAME LOGIC — 단일 권한</text>
+<g font-family="sans-serif" font-size="21" font-weight="700" text-anchor="middle">
+<rect x="78" y="200" width="184" height="88" rx="13" fill="#234661" stroke="#5a9ed0" stroke-width="2"/><text x="170" y="236" fill="#ecf4ff">도전 발견</text><text x="170" y="268" fill="#bcdaf0" font-size="17">ChallengeStart</text>
+<rect x="305" y="200" width="184" height="88" rx="13" fill="#4c3649" stroke="#e79eb2" stroke-width="2"/><text x="397" y="236" fill="#fff1f4">압박 상태</text><text x="397" y="268" fill="#fac6d2" font-size="17">Pressured</text>
+<rect x="532" y="200" width="184" height="88" rx="13" fill="#23505b" stroke="#74c7d2" stroke-width="2"/><text x="624" y="236" fill="#ecffff">해결 확정</text><text x="624" y="268" fill="#c3f1f3" font-size="17">ChallengeSolved</text>
+<rect x="759" y="200" width="184" height="88" rx="13" fill="#3d482d" stroke="#b6d57f" stroke-width="2"/><text x="851" y="236" fill="#f0ffe5">보상 지급</text><text x="851" y="268" fill="#dbf6b1" font-size="17">RewardGranted</text>
+<rect x="986" y="200" width="174" height="88" rx="13" fill="#234661" stroke="#5a9ed0" stroke-width="2"/><text x="1073" y="236" fill="#ecf4ff">다음 도전</text><text x="1073" y="268" fill="#bcdaf0" font-size="17">선택지 확대</text></g>
+<g stroke="#a9c9e8" stroke-width="3" fill="none">
+<path d="M262 244 H297"/><path d="M489 244 H524"/><path d="M716 244 H751"/><path d="M943 244 H978"/></g>
+<g fill="#a9c9e8"><path d="M298 244 l-12 -8 v16z"/><path d="M525 244 l-12 -8 v16z"/><path d="M752 244 l-12 -8 v16z"/><path d="M979 244 l-12 -8 v16z"/></g>
+<path d="M398 292 V332 H170 V292" stroke="#ffacba" stroke-width="3" fill="none" stroke-dasharray="9 8"/>
+<text x="255" y="356" fill="#ffc3cc" font-size="18" font-family="sans-serif" text-anchor="middle">실패 → 원인 안내 → 재시도</text>
+<text x="850" y="337" fill="#d9f2a8" font-size="18" font-family="sans-serif" text-anchor="middle">같은 ID는 1회만 지급</text>
+<path d="M622 382 V419" stroke="#88cadb" stroke-width="3" stroke-dasharray="7 7"/>
+<text x="643" y="408" fill="#accfe2" font-size="17" font-family="sans-serif">상태 변경 이벤트</text>
+<rect x="48" y="431" width="552" height="142" rx="18" fill="#1a3344" stroke="#5b99aa" stroke-width="2"/>
+<rect x="640" y="431" width="552" height="142" rx="18" fill="#252f46" stroke="#6e8ac1" stroke-width="2"/>
+<g font-family="sans-serif">
+<text x="78" y="469" fill="#a0e3f0" font-size="26" font-weight="700">DX9 표현 · 사운드</text>
+<text x="78" y="509" fill="#e0ebf8" font-size="21">문 열림 · 클리어 이펙트 · 효과음</text>
+<text x="78" y="544" fill="#b7cde0" font-size="19">규칙의 클리어를 ‘표시’만 한다</text>
+<text x="671" y="469" fill="#bfcffb" font-size="26" font-weight="700">진행 저장 · 로그</text>
+<text x="671" y="509" fill="#e0ebf8" font-size="21">보상 지급 기록 · 실패 원인 · 재도전</text>
+<text x="671" y="544" fill="#b7cde0" font-size="19">상태와 보상은 원자적으로 보존</text></g>
+<text x="52" y="616" fill="#a9bdce" font-size="19" font-family="sans-serif">개념 설계도 · 실제 게임 엔진 구현과 영상의 원본 다이어그램이 아니다</text>
+</svg>
