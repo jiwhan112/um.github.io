@@ -1,0 +1,1151 @@
+{
+  "title": "보상을 미리 보여 주고 목표를 계속 느끼게 하기 — 성장과 경제의 동기 설계",
+  "subtitle": "보상량 자체보다 목표를 기대하고 접근하는 과정을 설계하는 법. 검증된 《이스》·《파자나두》의 사례와 C++11·DirectX9 실습을 연결한다.",
+  "original": {
+    "title": "Keeping Rewards in Sight  [Planning & Game Design]",
+    "published_date": "2022-10-10",
+    "channel": "Masahiro Sakurai on Creating Games (official English)",
+    "video_id": "KePsEzN-IAM",
+    "video_url": "https://www.youtube.com/watch?v=KePsEzN-IAM",
+    "date_note": "YouTube 공식 영상 검색 메타데이터는 2022-10-10 공개로 표시되고, 같은 날짜 Noisy Pixel 보도도 이 영상을 신규 영상으로 소개한다. Simkl의 편성 정보에는 2022-10-09로 표기되어 하루 차이가 있다. 카탈로그에는 YouTube 기준인 2022-10-10을 기록한다. 정확한 업로드 시각·시간대 원인은 확인되지 않았다."
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 보상은 획득하기 전부터 시작된다",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "확인한 내용과 확장 해설을 구분한다. 공식 영상 소개는 효과적인 플레이어 보상을 주제로 명시한다. 2022-10-10 당시 기사에서는 《Ys I》 PC 엔진(TurboGrafx-16)판의 경험치, 《파자나두》의 얻기 어려운 돈과 장비 구매를 영상 사례로 확인한다. 아래의 가격·진행 막대·코드·도식은 실제 영상 화면이 아닌 교재의 가상 설계다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 같은 +10코인인데 왜 어떤 플레이어는 더 즐거울까?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가상 액션 RPG에서 적을 잡으면 +10코인을 준다고 가정하자. 화면에 코인 숫자만 뜨면 보상은 '조금 더 받았다'로 끝난다. 반면 플레이어가 상점에서 사고 싶은 강화 검이 100코인이고 현재 70코인을 모았다는 사실을 알고 있다면, 같은 +10코인은 '이제 20코인만 더 필요하다'는 진전으로 느껴진다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이것이 이 강의를 활용할 때 생각해 볼 핵심 기획 질문이다. 보상을 얼마나 자주 주는가와 그 보상이 다음 목표에 어떤 의미를 갖는가를 분리해야 한다. 목표의 매력, 내 현재 상태, 목표까지의 거리가 연결되어야 작은 행동도 의미를 얻는다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-12-keeping-rewards-in-sight/assets/reward-visibility.svg",
+          "alt": "한쪽은 적 처치 뒤 +10코인만 나타나고 다른 쪽은 강화 검 가격 100코인과 70에서 80으로 이동한 진행도, 남은 20코인이 보이는 비교 도식. 모든 수치는 가상 사례다.",
+          "caption": "직접 만든 비교도. UI에 항상 진행 막대를 배치해야 한다는 주장이 아니라 '보상 획득'과 '보상 목표 인식'이 다른 변수임을 보여 준다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 원본의 두 사례: 자주 성장하는 느낌과 어렵게 사는 만족"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2022년 10월 10일 동시대 보도 Noisy Pixel은 영상에서 《Ys I》의 PC 엔진판 경험치 시스템이 갖는 보상감과 《파자나두》에서 돈을 조금씩 벌어 강력한 장비를 사는 즐거움을 비교한다고 전한다. 이는 해당 게임이 영상에 등장한다는 교차자료이지, 게임의 모든 수치나 연출을 검증한 것은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "경험치를 자주 얻는 구조는 작은 전투를 성장과 연결하기 쉽다. 반대로 돈을 모으기 어려운 구조는 목표 장비를 얻었을 때의 성취감을 키울 수 있다. 여기서 중요한 것은 보상이 크거나 작다는 단일 기준이 아니라, 플레이어가 다음 성취를 얼마나 이해하고 기다리도록 설계하느냐다. 이 비교는 영상 사례를 바탕으로 한 교재의 기획 해석이다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "교차 검증한 사례"
+                  }
+                ],
+                [
+                  {
+                    "text": "교재에서 읽을 기획 원리"
+                  }
+                ],
+                [
+                  {
+                    "text": "조정 변수"
+                  }
+                ],
+                [
+                  {
+                    "text": "실패 가능성"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "《Ys I》 경험치 보상"
+                  }
+                ],
+                [
+                  {
+                    "text": "작은 전투가 누적 성장을 만든다"
+                  }
+                ],
+                [
+                  {
+                    "text": "경험치 획득 주기·레벨업까지 남은 양"
+                  }
+                ],
+                [
+                  {
+                    "text": "숫자만 증가하고 성장 체감이 없음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "《파자나두》 희소한 화폐·장비"
+                  }
+                ],
+                [
+                  {
+                    "text": "쉽지 않은 재화 수집이 구매의 성취를 키운다"
+                  }
+                ],
+                [
+                  {
+                    "text": "화폐 수급·장비 가격·구매 후 효용"
+                  }
+                ],
+                [
+                  {
+                    "text": "너무 먼 목표가 피로만 유발"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-12-keeping-rewards-in-sight/assets/two-reward-economies.svg",
+          "alt": "왼쪽은 《이스 I》의 경험치 증가가 작은 행동을 자주 성장으로 이어 주는 모형이고 오른쪽은 《파자나두》의 희소한 돈을 모아서 장비를 구매하는 큰 성취 모형이다. 실게임 수치나 스크린샷이 아닌 한국어 개념도.",
+          "caption": "사례의 보상 리듬을 독창적으로 단순화한 모형이다. 원작의 실제 레벨업 간격이나 장비 가격으로 해석하지 않는다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. '보상을 보이게 한다'는 모든 정보를 고정 표시하는 뜻이 아니다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "상점의 장비 미리보기, 퀘스트의 보상 안내, 레벨업 전의 진행률, 이벤트 완료 후 결과 메시지는 모두 다른 순간에 보상 기대를 만드는 방법이다. 탐험 화면을 게이지로 가득 채우면 길찾기와 전투 가독성이 나빠질 수 있다. 목표를 처음 알려 주는 순간, 행동으로 진행이 달라지는 순간, 목표를 달성한 순간을 분리해 표시 강도를 조절하자."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보상 목표가 지나치게 멀면 '얼마나 남았는지 알기 쉽다'는 장점이 막막함으로 바뀐다. 반대로 너무 쉽게 얻는 장비가 연속된다면 구매 순간의 희소성이 약해진다. 장비의 실제 성능 변화가 없다면 구매 직전까지의 기대를 충족시키지 못한다. 목표 가시성·획득 주기·실제 효용은 함께 시험해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 작은 성취를 큰 성취에 연결하는 사슬"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "교육용 예로 '전투 승리 → 소량 코인 → 남은 금액 감소 → 강화 검 구매 → 다른 전투 선택지 획득'을 생각해 보자. 작은 보상은 그 자체로 끝날 수도 있지만, 다음 목표를 향한 중간 결과로도 작동한다. 이 원리를 사용하면 기획자는 코인 드롭량만 늘리는 대신 목표의 위치와 정보 타이밍을 바꿔 재미를 비교할 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "스스로 질문: 플레이어가 10코인을 더 얻었을 때 3초 안에 '무엇에 가까워졌는지' 설명할 수 있는가? 설명하지 못한다면 보상의 절대량보다 목표와 결과의 연결을 먼저 점검하자."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "1분 요약 — 보상을 기대할 수 있게 설계한다",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "공식 강의는 플레이어에게 효과적으로 보상하는 기획 문제를 다룬다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "영상 사례로 확인되는 게임은 《Ys I》의 경험치와 《파자나두》의 희소한 돈·장비 구매다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "교재의 확장 해석: 보상 획득 이전에도 현재 상태와 다음 목표를 연결하면 진행 자체가 동기가 된다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "진행률은 목적이 아니라 수단이다. 고정 HUD, 보상 미리보기, 획득 직후 알림 중 문맥에 맞는 방식을 고른다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "지급 빈도와 희소성, 목표 달성에 필요한 시간, 구매 후 실제 게임 플레이 변화는 함께 밸런싱해야 한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "구현에서는 보상 지급과 구매의 상태 변경을 UI 표현으로부터 분리하고 검증된 잔액만 표시한다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 문장 점검: '플레이어가 방금 받은 보상 때문에 어떤 미래의 선택지에 가까워졌는가?'를 게임 화면과 규칙에서 설명할 수 있어야 한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — 보상 상태, 경제 밸런스, DX9 UI",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 조정 가능한 기획 변수를 먼저 정의한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 값은 모두 가상의 프로토타입 기준이다. 원작 두 게임의 데이터가 아니다. 가격이나 획득량을 바꿀 때 목표 도달 시간이 어떻게 달라지는지, HUD 정보량을 바꿀 때 읽기 쉬운지 동시에 테스트한다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "변수 / 가상 초깃값"
+                  }
+                ],
+                [
+                  {
+                    "text": "이득"
+                  }
+                ],
+                [
+                  {
+                    "text": "부작용과 관찰 방법"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "next_reward_cost = 100코인"
+                  }
+                ],
+                [
+                  {
+                    "text": "목표를 구체적으로 제시"
+                  }
+                ],
+                [
+                  {
+                    "text": "너무 크면 이탈; 구매까지 소요 시간 확인"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "coin_per_encounter ≈ 10"
+                  }
+                ],
+                [
+                  {
+                    "text": "행동과 누적 보상 연결"
+                  }
+                ],
+                [
+                  {
+                    "text": "과도하면 희소성 소멸; 세션별 총 획득량 기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "preview_timing = 상점 발견 시"
+                  }
+                ],
+                [
+                  {
+                    "text": "기대감을 미리 형성"
+                  }
+                ],
+                [
+                  {
+                    "text": "탐색의 놀라움 감소; 목표 회상 확인"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "progress_hint = 지급 직후 2초"
+                  }
+                ],
+                [
+                  {
+                    "text": "전투 중 시야를 아끼면서 진전 전달"
+                  }
+                ],
+                [
+                  {
+                    "text": "변화 놓칠 수 있음; 인지 여부 측정"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "power_delta = 공격 8→11"
+                  }
+                ],
+                [
+                  {
+                    "text": "구매의 의미를 전투로 연결"
+                  }
+                ],
+                [
+                  {
+                    "text": "밸런스 붕괴; 구매 전후 전투 시간 비교"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "claim_id = 사건별 고유 ID"
+                  }
+                ],
+                [
+                  {
+                    "text": "중복 보상 방지"
+                  }
+                ],
+                [
+                  {
+                    "text": "영속 이벤트 기록이 필요"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "confirmed_state = HUD 유일 소스"
+                  }
+                ],
+                [
+                  {
+                    "text": "UI와 실제 보유량 일치"
+                  }
+                ],
+                [
+                  {
+                    "text": "예측/확정 지연을 별도 표시해야 함"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 시스템 경계: 게임 규칙이 보상을 확정하고 UI는 읽기만"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전투·퀘스트가 RewardEvent(고유 사건 ID, 획득량, 지급 원인)를 만든다. RewardModel은 양수·중복 여부·정수 범위를 검사하고 재화를 갱신한다. UI용 ViewModel은 확정된 코인과 장비 가격으로 '현재/목표', 남은 코인, 구입 가능 상태를 계산한다. DirectX9는 결과를 그릴 뿐이고 그리기 함수 내부에서 재화를 변경하거나 상점 거래를 승인하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-12-keeping-rewards-in-sight/assets/reward-system-flow.svg",
+          "alt": "C++11 전투·퀘스트 이벤트가 보상 모델에서 ID 중복과 유효 금액을 검사받고 확정 잔액이 DX9 목표 UI로 전달된다. 별도로 영속 저장·서버 권위와 로그 테스트 경계가 한국어로 표시된 시스템 관계도.",
+          "caption": "실제 게임 소스가 아닌 교육용 아키텍처 도식. 온라인 게임의 서버 권위·DB 트랜잭션과 영속 저장은 별도의 구현이 필요하다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. C++11 최소 구현 — 멱등 지급, 남은 거리, 단발 구매"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 독립 예제는 100코인 검을 향해 진행한다. 지급 이벤트 ID가 같으면 두 번째 지급을 거절하고, 음수·오버플로·돈 부족·중복 구매를 거절한다. 100% 진행도를 넘지 않도록 표시 계산도 분리했다. 그래픽 의존성이 없어 모델 자체를 먼저 테스트할 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include <cassert>\n#include <climits>\n#include <string>\n#include <unordered_set>\n\nstruct RewardModel {\n    int coins;\n    bool ownsBlade;\n    std::unordered_set<std::string> appliedEvents;\n    RewardModel() : coins(0), ownsBlade(false) {}\n\n    bool Earn(const std::string& eventId, int amount) {\n        if (eventId.empty() || amount <= 0 ||\n            appliedEvents.count(eventId) != 0 || amount > INT_MAX - coins)\n            return false;\n        coins += amount;\n        appliedEvents.insert(eventId);\n        return true;\n    }\n    int Missing(int price) const {\n        return coins >= price ? 0 : price - coins;\n    }\n    int Percent(int price) const {\n        if (price <= 0) return 100;\n        const int capped = coins >= price ? price : coins;\n        return static_cast<int>(100LL * capped / price);\n    }\n    bool PurchaseBlade(int price) {\n        if (price <= 0 || ownsBlade || coins < price) return false;\n        coins -= price;\n        ownsBlade = true;\n        return true;\n    }\n};\n\nint main() {\n    RewardModel m;\n    assert(m.Missing(100) == 100 && m.Percent(100) == 0);\n    assert(m.Earn(\"enemy-001\", 35));\n    assert(!m.Earn(\"enemy-001\", 35)); // 재전송 보상 방지\n    assert(m.Missing(100) == 65 && m.Percent(100) == 35);\n    assert(!m.PurchaseBlade(100));\n    assert(m.Earn(\"quest-002\", 70));\n    assert(m.Percent(100) == 100 && m.Missing(100) == 0);\n    assert(m.PurchaseBlade(100) && m.coins == 5);\n    assert(!m.PurchaseBlade(100));\n    assert(!m.Earn(\"bad\", -1));\n}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 코드는 g++ -std=c++11 -Wall -Wextra -pedantic 환경에서 컴파일해 assert 실행을 확인했다. 단, appliedEvents는 메모리 전용이다. 게임을 재시작해도 정확히 한 번만 지급하려면 이벤트 ID 영속화, 저장 완료 시점, 중간 오류 시 롤백을 설계해야 한다. 온라인 게임에서는 서버를 권위자로 두고 재전송에 대한 멱등성을 서버에서 검증한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. UI에 게임 상태 변경을 넣으면 생기는 문제"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "피해야 할 구현"
+                  }
+                ],
+                [
+                  {
+                    "text": "위험"
+                  }
+                ],
+                [
+                  {
+                    "text": "추천 정책"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "DX9 DrawText에서 coins += 10"
+                  }
+                ],
+                [
+                  {
+                    "text": "렌더 호출 횟수만큼 지급"
+                  }
+                ],
+                [
+                  {
+                    "text": "상태 업데이트에서 1회 확정, 그리기는 읽기만"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "획득 효과음 종료 후 지급"
+                  }
+                ],
+                [
+                  {
+                    "text": "스킵·중단 시 지급 누락"
+                  }
+                ],
+                [
+                  {
+                    "text": "지급 확정 뒤 효과음·애니메이션 이벤트 재생"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "클라이언트 구매 버튼만으로 확정"
+                  }
+                ],
+                [
+                  {
+                    "text": "중복 클릭·패킷 재전송 악용"
+                  }
+                ],
+                [
+                  {
+                    "text": "고유 거래 ID와 권위 승인·원자 저장"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "배열 인덱스를 상품 식별자로 사용"
+                  }
+                ],
+                [
+                  {
+                    "text": "상점 정렬 변경 시 다른 상품 지급"
+                  }
+                ],
+                [
+                  {
+                    "text": "불변 offer_id, item_id를 데이터에 저장"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "UI 예상 잔액을 실제 값처럼 출력"
+                  }
+                ],
+                [
+                  {
+                    "text": "서버 거부 뒤 숫자 불일치"
+                  }
+                ],
+                [
+                  {
+                    "text": "pending과 confirmed를 분리"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "5. 기획 데이터와 로직을 나눠 반복 실험 가능하게"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "OfferCatalog를 {offer_id, item_id, price, unlock_condition, effect_preview} 같은 불변 식별자 중심으로 두고 경제 튜닝표는 콘텐츠 데이터에서 읽어 온다. 기획자는 가격, 경험치 획득량, UI 힌트 표시 시간 등을 소스 수정 없이 실험할 수 있다. 리워드 로그에는 이벤트 원인, ID, 승인 결과, 금액, 확정 잔액을 남겨 밸런스 문제와 중복 지급을 구분한다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "레이어 구분: C++11 RewardModel(규칙) → RewardViewModel(목표·진척도 계산) → DirectX9 View(텍스트·막대·이펙트). 규칙과 표시를 분리하면 UI 시안 A/B를 교체해도 경제는 동일하게 유지된다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습 — 보상 목표 표시 A/B 프로토타입",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 조건을 하나만 바꿔 비교하자"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사각형 캐릭터와 간단한 전투 버튼으로 5회의 짧은 조우를 플레이하는 프로토타입을 만들자. 상점의 강화 검 가격은 100코인이고, 적 배치·지급량·난도·플레이 시간은 실험군 A와 B에서 동일하다. 차이는 목표 정보를 얼마나 일찍, 어디에 보여 주는가뿐이다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "실험군"
+                  }
+                ],
+                [
+                  {
+                    "text": "화면 차이"
+                  }
+                ],
+                [
+                  {
+                    "text": "관찰할 행동"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A: 단독 보상"
+                  }
+                ],
+                [
+                  {
+                    "text": "적 처치 때 +10코인과 총 잔액만 보임; 상점에서만 가격 노출"
+                  }
+                ],
+                [
+                  {
+                    "text": "보상 직후 목표를 자발적으로 기억하는가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "B: 목표와 연결"
+                  }
+                ],
+                [
+                  {
+                    "text": "상점에서 강화 검을 미리 소개; 획득 때 현재/목표·남은 금액 2초 노출"
+                  }
+                ],
+                [
+                  {
+                    "text": "진척도와 구매 가능 시점을 정확히 이해하는가"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 구현 체크리스트"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "먼저 C++11 단위 모델을 만들고 99·100·105코인 경계 테스트를 통과시킨다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "전투마다 고유 사건 ID를 발급한다. 재호출을 시뮬레이션해 보상 중복이 발생하지 않는지 확인한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "UI는 같은 모델 스냅샷을 받아 A/B 두 표시 정책 중 하나를 렌더링하게 한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "전투마다 지급 시각·목표 안내 노출·상점 복귀·구매 승인/거절·종료 원인을 기록한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "초반에 다음 목표를 묻고 플레이 종료 후 남은 금액·사고 싶은 장비를 기억하는지 확인한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "자주 표시한 UI가 탐험·전투 시야를 가리지 않는지 가독성 인터뷰를 추가한다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 수용 기준과 사건 검증"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "테스트"
+                  }
+                ],
+                [
+                  {
+                    "text": "기대 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "왜 필요한가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Earn(id,35) 두 번"
+                  }
+                ],
+                [
+                  {
+                    "text": "한 번만 +35"
+                  }
+                ],
+                [
+                  {
+                    "text": "중복 보상 차단"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "잔액 99에서 가격 100 구매"
+                  }
+                ],
+                [
+                  {
+                    "text": "실패, 보유 상태 불변"
+                  }
+                ],
+                [
+                  {
+                    "text": "경계 처리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "잔액 100에서 구매"
+                  }
+                ],
+                [
+                  {
+                    "text": "정확히 100 차감, 소유권 1회 갱신"
+                  }
+                ],
+                [
+                  {
+                    "text": "재화와 보상 일관성"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "B의 목표 설명 정확도"
+                  }
+                ],
+                [
+                  {
+                    "text": "A보다 높아지는지 관찰; 우월함을 미리 단정하지 않음"
+                  }
+                ],
+                [
+                  {
+                    "text": "가시성 가설 검증"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "B의 화면 혼잡 피드백"
+                  }
+                ],
+                [
+                  {
+                    "text": "상승하면 표시 기간·위치 재설계"
+                  }
+                ],
+                [
+                  {
+                    "text": "정보량 부작용 파악"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "구매 직후 재시작"
+                  }
+                ],
+                [
+                  {
+                    "text": "영속 저장된 소유권·잔액 동일"
+                  }
+                ],
+                [
+                  {
+                    "text": "메모리 모델을 실제 게임으로 확장"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 확장: HUD 상시 표시 vs. 획득 순간 2초 표시"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "B에서 다시 두 조건을 나눠 시험하자. 전자는 목표를 항상 찾기 쉽고, 후자는 플레이 시야 확보에 유리할 수 있다. 한 가지 지표만 보고 승패를 선언하지 말고 목표 회상, 실제 구매까지 시간, UI가 위협 판독을 방해한 횟수, 플레이어의 주관적 만족을 묶어 판단하자."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "결과 보고서 질문 세 개: ① 플레이어가 목표를 알았는가? ② 자신의 행동으로 목표에 접근했다는 사실을 느꼈는가? ③ 장비를 얻고 나서 플레이 방식이 실제로 달라졌는가?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 교차자료 · 확인 한계",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 원본 — Keeping Rewards in Sight [Planning & Game Design]",
+              "kind": "link",
+              "href": "https://www.youtube.com/watch?v=KePsEzN-IAM"
+            },
+            {
+              "text": " — 공식 영어 채널 영상 ID KePsEzN-IAM. 검색 메타데이터의 게시일은 2022-10-10이다. 공식 영상 소개는 플레이어 보상의 효과적인 설계를 주제로 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 채널 영상 목록",
+              "kind": "link",
+              "href": "https://www.youtube.com/@sora_sakurai_en/videos"
+            },
+            {
+              "text": " — 원본 제작자·영어 채널과 주제 범주 확인."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Noisy Pixel (2022-10-10): Masahiro Sakurai Talks About Ys in Newest Video",
+              "kind": "link",
+              "href": "https://noisypixel.net/masahiro-sakurai-talks-about-ys-newest-video/"
+            },
+            {
+              "text": " — 동시대 영상 관련 기사. 《이스 I》 PC 엔진판의 경험치 보상과 《파자나두》의 희소 화폐·강력한 아이템 구매 사례를 교차 검증."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Simkl Season 2022 Episode 23",
+              "kind": "link",
+              "href": "https://simkl.com/tv/1983527/masahiro-sakurai-on-creating-games/season-2022/episode-23/"
+            },
+            {
+              "text": " — 공식 소개문과 회차를 대조. 2022-10-09 편성일을 기록해 YouTube 검색상의 2022-10-10과 하루 차이가 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한계: 유튜브 원본 직접 재생과 자막 전문 열람이 이 환경에서는 제한되었다. 따라서 사쿠라이의 정확한 발언이나 화면 순서, 게임 원작의 실제 경험치·드롭률·가격을 추측하지 않는다. 원본의 확인 가능한 소재와 교재가 만든 가상 수치·도식·C++11 구현·실습을 명확하게 분리했다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "저작권: SVG 3장은 직접 제작한 한국어 개념도이며 타인 게임 화면·로고·자막·스크립트를 복제하지 않았다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
