@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-16",
+  "updated": "2026-10-17",
   "book": {
     "title": "Cracking the Coding Interview",
     "edition": 6,
@@ -8,18 +8,35 @@
   },
   "current": {
     "chapter": 1,
-    "number": "1.8",
-    "topic_en": "Zero Matrix",
-    "study_date": "2026-10-16",
-    "published_date": "2026-10-16"
-  },
-  "next": {
-    "chapter": 1,
     "number": "1.9",
     "topic_en": "String Rotation",
-    "study_date": "2026-10-17"
+    "study_date": "2026-10-17",
+    "published_date": "2026-10-17"
+  },
+  "next": {
+    "chapter": 2,
+    "number": "2.1",
+    "topic_en": "Remove Dups",
+    "study_date": "2026-10-18"
   },
   "episodes": [
+    {
+      "number": "1.9",
+      "chapter": 1,
+      "topic_en": "String Rotation",
+      "title": "순환 이벤트 패턴의 시작점 찾기",
+      "summary": "시작 위치만 달라진 이벤트 문자열인지 가상 이어 붙이기와 KMP 검색으로 판별",
+      "category": "배열과 문자열",
+      "tags": [
+        "문자열",
+        "문자열 검색",
+        "KMP",
+        "순환 이동"
+      ],
+      "study_date": "2026-10-17",
+      "published_date": "2026-10-17",
+      "path": "ep-01-09-string-rotation/"
+    },
     {
       "number": "1.8",
       "chapter": 1,
