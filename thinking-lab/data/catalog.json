@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-13",
+  "updated": "2026-10-16",
   "book": {
     "title": "Cracking the Coding Interview",
     "edition": 6,
@@ -8,18 +8,68 @@
   },
   "current": {
     "chapter": 1,
-    "number": "1.5",
-    "topic_en": "One Away",
-    "study_date": "2026-10-13",
-    "published_date": "2026-10-13"
+    "number": "1.8",
+    "topic_en": "Zero Matrix",
+    "study_date": "2026-10-16",
+    "published_date": "2026-10-16"
   },
   "next": {
     "chapter": 1,
-    "number": "1.6",
-    "topic_en": "String Compression",
-    "study_date": "2026-10-14"
+    "number": "1.9",
+    "topic_en": "String Rotation",
+    "study_date": "2026-10-17"
   },
   "episodes": [
+    {
+      "number": "1.8",
+      "chapter": 1,
+      "topic_en": "Zero Matrix",
+      "title": "타일 맵 장애 표식의 행·열 초기화",
+      "summary": "처음부터 0인 칸을 기준으로 대응하는 행과 열을 O(1) 추가 공간에 초기화",
+      "category": "배열과 문자열",
+      "tags": [
+        "2차원 배열",
+        "행렬",
+        "제자리 수정",
+        "마커 배열"
+      ],
+      "study_date": "2026-10-16",
+      "published_date": "2026-10-16",
+      "path": "ep-01-08-zero-matrix/"
+    },
+    {
+      "number": "1.7",
+      "chapter": 1,
+      "topic_en": "Rotate Matrix",
+      "title": "미니맵 타일의 시계 방향 회전",
+      "summary": "정사각형 격자를 네 위치 순환 교환으로 제자리에서 90도 회전",
+      "category": "배열과 문자열",
+      "tags": [
+        "2차원 배열",
+        "행렬",
+        "인덱스 변환",
+        "제자리 수정"
+      ],
+      "study_date": "2026-10-15",
+      "published_date": "2026-10-16",
+      "path": "ep-01-07-rotate-matrix/"
+    },
+    {
+      "number": "1.6",
+      "chapter": 1,
+      "topic_en": "String Compression",
+      "title": "전투 이벤트 프레임의 연속 코드 압축",
+      "summary": "연속 문자 묶음을 런 길이 인코딩으로 표현하고 짧아질 때만 채택",
+      "category": "배열과 문자열",
+      "tags": [
+        "문자열",
+        "문자열 압축",
+        "런 길이 인코딩"
+      ],
+      "study_date": "2026-10-14",
+      "published_date": "2026-10-16",
+      "path": "ep-01-06-string-compression/"
+    },
     {
       "number": "1.5",
       "chapter": 1,

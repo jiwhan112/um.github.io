@@ -1,0 +1,950 @@
+{
+  "title": "1.6 String Compression — 전투 이벤트 프레임의 연속 코드 압축",
+  "subtitle": "연속 이벤트 코드만 묶어 표현하고 짧아지는 경우에만 채택하는 C++11 문자열 훈련",
+  "memoKey": "thinking-ctci-1.6-draft",
+  "starter": "#include <string>\n#include <stdexcept>\n\nstd::string CompressEventRuns(const std::string& events) {\n    // 여기에 직접 구현\n}",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제와 제약 조건",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《코딩 인터뷰 완전 분석》 제6판 1장 배열과 문자열의 1.6 String Compression을 학습 순서로 참고한 독창적인 문제입니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "전투 이벤트 프레임을 짧게 보관하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "리플레이 시스템은 프레임마다 대문자 이벤트 코드 하나를 기록합니다. 예컨대 같은 코드가 여러 프레임 이어질 수 있습니다. 입력 이벤트 스트림에서 서로 이웃한 동일 코드의 최대 연속 구간을 압축해 반환하는 함수를 구현하세요. 멀리 떨어진 동일 문자는 다른 구간입니다."
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "각 연속 구간은 이벤트 문자 1개와 양의 정수 반복 횟수를 10진수로 붙여 표현합니다. 길이 1 구간에도 숫자 1을 붙이고 구분 기호는 없습니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "전체 구간 표기를 연결한 후보가 원본보다 엄격히 짧을 때만 압축 문자열을 반환합니다. 길이가 같거나 더 길면 원본을 그대로 반환합니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "구간 순서와 문자 대소문자는 변경하지 않습니다. 입력을 직접 수정하지 않습니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "함수 시그니처와 입력/오류 전제"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "std::string CompressEventRuns(const std::string& events);"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "입력은 길이 0~200,000바이트의 std::string이며, 허용 문자는 7-bit ASCII 대문자 A~Z(0x41~0x5A)뿐입니다. 길이는 Unicode 코드포인트가 아닌 바이트 수로 셉니다. NUL, 공백, 소문자, 숫자, 비 ASCII/UTF-8 시퀀스나 길이 초과가 있으면 std::invalid_argument를 던집니다. 빈 입력은 빈 문자열을 반환합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출력은 새 std::string입니다. 호출자가 제공해야 할 여유 버퍼는 없습니다. 원본에는 숫자가 없으므로 압축된 결과의 숫자 부분을 구분할 수 있습니다. 메모리 할당 실패는 표준 예외 규약을 따릅니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "예시 · 함수 반환값"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "반환값"
+                  }
+                ],
+                [
+                  {
+                    "text": "의미"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "HHHHMMMMDDD"
+                  }
+                ],
+                [
+                  {
+                    "text": "H4M4D3"
+                  }
+                ],
+                [
+                  {
+                    "text": "연속 구간 세 개"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "AAAAB"
+                  }
+                ],
+                [
+                  {
+                    "text": "A4B1"
+                  }
+                ],
+                [
+                  {
+                    "text": "1회 구간도 숫자로 표기"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "AA"
+                  }
+                ],
+                [
+                  {
+                    "text": "AA"
+                  }
+                ],
+                [
+                  {
+                    "text": "A2와 길이가 같아 원본 선택"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "AABAA"
+                  }
+                ],
+                [
+                  {
+                    "text": "AABAA"
+                  }
+                ],
+                [
+                  {
+                    "text": "떨어진 A 구간을 합치지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "(빈 문자열)"
+                  }
+                ],
+                [
+                  {
+                    "text": "(빈 문자열)"
+                  }
+                ],
+                [
+                  {
+                    "text": "정상적인 빈 입력"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "코딩 전 생각할 질문"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "글자별 총 출현 횟수만 세어도 원래 이벤트 순서를 표현할 수 있을까요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "반복 횟수가 9에서 10으로 늘 때 필요한 결과 길이는 어떻게 변할까요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "실제 압축 문자열을 만들기 전에 길이상 이득을 확인할 수 있을까요?"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트와 개념도",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "직접 풀이를 먼저 써 보세요. 힌트와 시각화는 각 항목을 펼쳤을 때만 보입니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 1 · 묶음의 경계",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 문자가 바로 이웃할 때만 하나의 구간이 이어집니다. 한 구간이 끝난 지점부터 다음 구간을 세어 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2 · 두 자릿수 이상의 반복 횟수",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 묶음의 출력 길이는 문자 1바이트와 반복 횟수의 10진수 자릿수를 더한 값입니다. 반복 횟수를 무조건 한 자리로 가정하면 안 됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3 · 압축이 항상 좋은 것은 아니다",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 순회에서 압축 후보의 길이만 계산하고, 짧아지는 경우에만 두 번째 순회에서 실제 결과를 조립하는 방법을 생각해 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원리를 보는 그림 · 펼치면 힌트가 있습니다",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "문자열의 최대 연속 구간을 구분하는 개념도입니다."
+                }
+              ]
+            },
+            {
+              "type": "diagram",
+              "items": [
+                "입력 순서    H H H H | M M M M | D D D",
+                "연속 묶음    [H × 4] | [M × 4] | [D × 3]",
+                "묶음 표기    H4      | M4      | D3",
+                "후보 선택    전체 표기 길이가 원본보다 작은가?"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그림은 이해를 돕기 위해 자체 작성했으며 실제 게임 데이터나 측정 결과가 아닙니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "정답과 알고리즘 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정답 코드는 아래를 펼쳐야 볼 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "정답 C++11 코드 · 증명 · 복잡도 보기",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "설계 과정"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "입력 전체를 검사해 길이와 ASCII 문자 계약 위반을 먼저 거부합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "i에서 시작하여 같은 글자가 연속되는 첫 다음 위치 j를 찾고, 묶음 크기 j-i를 얻습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "모든 묶음의 예상 출력 길이(1 + 반복 횟수의 십진 자릿수)를 합산합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "후보가 짧아지지 않으면 원본을 그대로 반환합니다. 그렇지 않으면 필요한 용량을 reserve한 새 문자열에 동일한 묶음들을 순서대로 기록합니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "C++11 컴파일 가능한 풀이"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <cstddef>\n#include <stdexcept>\n#include <string>\n\nstd::string CompressEventRuns(const std::string& events) {\n    const std::size_t kMaxInputBytes = 200000;\n    if (events.size() > kMaxInputBytes) {\n        throw std::invalid_argument(\"input is too long\");\n    }\n    for (unsigned char byte : events) {\n        if (byte < 'A' || byte > 'Z') {\n            throw std::invalid_argument(\"input must contain ASCII A-Z only\");\n        }\n    }\n\n    std::size_t encodedLength = 0;\n    for (std::size_t i = 0; i < events.size();) {\n        std::size_t j = i + 1;\n        while (j < events.size() && events[j] == events[i]) ++j;\n        const std::size_t run = j - i;\n        std::size_t digits = 1;\n        for (std::size_t value = run; value >= 10; value /= 10) ++digits;\n        encodedLength += 1 + digits;\n        i = j;\n    }\n    if (encodedLength >= events.size()) return events;\n\n    std::string encoded;\n    encoded.reserve(encodedLength);\n    for (std::size_t i = 0; i < events.size();) {\n        std::size_t j = i + 1;\n        while (j < events.size() && events[j] == events[i]) ++j;\n        encoded.push_back(events[i]);\n        encoded += std::to_string(j - i);\n        i = j;\n    }\n    return encoded;\n}"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 올바른가?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "서로 인접한 같은 문자가 이어질 때까지만 j를 증가시키므로 입력이 빠짐없이 겹치지 않는 최대 연속 구간으로 유일하게 나뉩니다. 각 구간을 그 문자와 정확한 반복 횟수로 기록하므로 원래 순서와 각 구간의 길이가 보존됩니다. 첫 순회의 길이 계산은 각 구간별 실제 출력 바이트 수의 합과 같으므로 원본 유지 여부도 정확합니다. 길이가 짧을 때 두 번째 순회에서 같은 구간들을 기록하므로 정의에 맞는 압축 결과가 만들어집니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "시간과 공간 복잡도"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "입력 길이를 n이라 하면 유효성 검사와 두 번의 묶음 순회, 반복 횟수의 자릿수 계산은 모두 합쳐 O(n) 시간입니다. 결과 문자열 크기는 최악 O(n)이며 반환값까지 포함한 공간은 O(n)입니다. 반환 문자열을 제외한 카운터와 인덱스만 보면 추가 작업 공간 O(1)입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "경계와 실패 처리"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "빈 문자열은 그대로 빈 문자열을 반환합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "A 1개나 AA 2개처럼 압축한 길이가 줄지 않으면 원본을 유지합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "10회·100회·200,000회 반복은 십진수 자릿수가 달라지므로 이를 계산해야 합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "입력 계약 위반은 결과를 구성하기 전에 확인하고 std::invalid_argument를 발생시킵니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "최대 입력 길이가 200,000바이트이므로 계산하는 후보 길이는 최대 400,000바이트입니다. 일반적인 32/64비트 C++11 환경에서는 size_t 범위 안에 있습니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "테스트·반례",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "실제 컴파일 및 9,881개 테스트 결과 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2026-10-14 Linux g++ 14.2.0에서 -std=c++11 -O2 -Wall -Wextra -Werror -pedantic 옵션으로 컴파일했습니다. 명시적 케이스 28개, {A,B,C}의 길이 0~8 조합 9,841개, 잘못된 입력 8개, 긴 입력 스트레스 4개를 실행해 총 9,881개를 통과했습니다. 완전 탐색은 별도의 단일 순회 참조 구현과 비교했습니다."
+                }
+              ]
+            },
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "입력"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "결과"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검증 목적"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "\"\""
+                      }
+                    ],
+                    [
+                      {
+                        "text": "\"\""
+                      }
+                    ],
+                    [
+                      {
+                        "text": "빈 입력"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "AA"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "AA"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "압축 시 길이 같음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "AAA"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "A3"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "짧아지는 경계"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "AAAAB"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "A4B1"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "단일 구간도 숫자 1 포함"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "AABAA"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "AABAA"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "비연속 같은 문자"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "AABBBCC"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "A2B3C2"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "연속 구간 및 총 길이"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "AAAAAAAAAA"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "A10"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "반복 횟수 2자리"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "ABABAB"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "ABABAB"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "압축이 길어지는 경우"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "200,000개의 A"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "A200000"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "길이 상한과 6자리 숫자"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "200,000개 A/B 교대"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "원본 유지"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "긴 비압축 데이터"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "소문자 a, 숫자 0, 내장 NUL"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "std::invalid_argument"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "잘못된 바이트"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "200,001개의 A"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "std::invalid_argument"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "길이 상한 초과"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "테스트용 이벤트는 자체 생성한 가상 데이터이며 특정 게임에서 측정한 압축 성능을 주장하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장 문제와 다음 주제",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "확장 문제 · 입력이 스트림으로 도착한다면?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "매우 긴 이벤트 로그가 여러 청크로 나뉘어 도착하면 같은 이벤트 구간이 청크 경계에 걸칠 수 있습니다. 마지막 구간을 기억할 최소 상태와, 전체 압축 결과가 더 짧은지 판정하기 전 출력 버퍼를 어떻게 관리할지 설계해 보세요."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "스스로 검증할 질문"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "문자 출현 횟수와 연속 구간 길이를 혼동하지 않았나요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "한 글자 묶음이 여러 개여도 최종 길이 기준을 적용했나요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "원본에 숫자도 허용되면 압축 결과를 재해석하기 위해 어떤 추가 규칙이 필요할까요?"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "다음 회차 · 1.7 Rotate Matrix"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음에는 2차원 배열을 회전하는 문제로 넘어갑니다. 인덱스를 어떻게 변환해야 하는지 미리 고민해 보세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 콘텐츠는 Cracking the Coding Interview 제6판의 문제 번호와 주제만 참고했으며 원문 지문이나 공식 해설을 복제하지 않았습니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

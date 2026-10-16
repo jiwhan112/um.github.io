@@ -1,0 +1,796 @@
+{
+  "title": "1.8 Zero Matrix — 타일 맵 장애 표식의 행·열 초기화",
+  "subtitle": "2차원 배열의 원래 0을 기준으로 모든 대응 행·열을 제자리 수정하는 C++11 행렬 문제",
+  "memoKey": "thinking-ctci-1.8-draft",
+  "starter": "#include <vector>\n\nvoid ZeroMarkedRowsColumns(std::vector<std::vector<int>>& a) {\n    // 기존 0에 의해 영향을 받는 행과 열을 표시하세요.\n}",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제와 계약",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《코딩 인터뷰 완전 분석》 제6판 1장 배열과 문자열 · 1.8 Zero Matrix 유형을 참고한 자체 제작 알고리즘 문제입니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "타일 맵의 장애 표식을 처리하라"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "직사각형 타일 검사표에서 값 0은 장애 표식을 나타냅니다. 입력에 처음부터 0이 있던 위치를 기준으로, 그 칸이 속한 행 전체와 열 전체를 0으로 변경합니다. 같은 동작은 원래 0이었던 모든 셀에 동시에 적용되는 것으로 간주합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "조건: 입력 배열 자체를 바꾸어야 하며 M×N 크기의 별도 행렬을 만들어서는 안 됩니다. 새롭게 생긴 0이 추가로 연쇄 작동하지 않도록 정확한 결과를 계산하세요."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "입력/출력 계약"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "시그니처: void ZeroMarkedRowsColumns(std::vector<std::vector<int>>& a). 호출 시의 정수 값은 양수·음수·0 모두 가능합니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "행 개수 M은 0~200, 열 개수 N은 0~200입니다. 모든 행의 길이가 N으로 같아야 합니다. 0개 행이나 0개 열은 아무것도 바꾸지 않고 정상 반환합니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "행마다 길이가 다른 비정상 입력이나 크기 상한 위반은 std::invalid_argument를 발생시키며 검증에 실패할 경우 원본을 수정하지 않습니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "함수 반환값은 없고, 배열 a를 제자리에서 변경합니다. 정수의 덧셈·곱셈은 필요하지 않습니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "예시"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "원본"
+                  }
+                ],
+                [
+                  {
+                    "text": "처리 결과"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1 2 3 4"
+                  }
+                ],
+                [
+                  {
+                    "text": "1 0 3 4"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "5 0 7 8"
+                  }
+                ],
+                [
+                  {
+                    "text": "0 0 0 0"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "9 10 11 12"
+                  }
+                ],
+                [
+                  {
+                    "text": "9 0 11 12"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "스스로 생각하기"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "처리 도중 새로 0이 된 칸도 다시 장애 표식으로 처리하면 결과가 어떻게 달라질까요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "어떤 행과 열에 원래 0이 있었는지만 기억해도 충분할까요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "첫 번째 행과 열을 이미 존재하는 마커 저장 공간처럼 활용한다면 주의해야 할 원래 데이터는 무엇일까요?"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트와 도형",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정답의 핵심은 처음부터 있던 0의 정보와 처리 후 새로 써 넣은 0을 구별하는 것입니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 1 · 두 번 처리한다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 순회는 영향받는 행과 열을 기록하는 단계, 다음 순회는 실제로 0을 기록하는 단계로 분리해 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2 · 메모리를 조금만 쓴다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "행과 열의 마커를 별도 배열에 저장할 수도 있지만, 행렬의 첫 행과 첫 열에 마커를 남기는 방법을 생각해 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3 · 첫 행과 열의 원본 0",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 행 또는 첫 열을 마커로 사용하기 전에, 처음부터 그곳에 0이 있었는지를 불리언 변수 두 개에 미리 저장해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "그림 · 첫 행/열 마커 사용 (풀이 힌트)",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아래 표기는 실제 실행 로그가 아닌 간단한 3×3 예시입니다."
+                }
+              ]
+            },
+            {
+              "type": "diagram",
+              "items": [
+                "원본:           1  2  3",
+                "               4  0  6",
+                "               7  8  9",
+                "원래 (1,1)=0 → 첫 열 (1,0)과 첫 행 (0,1)에 마커 0",
+                "마커 기록:      1  0  3",
+                "               0  0  6",
+                "               7  8  9",
+                "최종 처리:      1  0  3",
+                "               0  0  0",
+                "               7  0  9"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "먼저 원래 첫 행·첫 열의 0 여부를 따로 저장한 뒤 내부 영역에 마커를 기록합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "접힌 풀이 및 정확성 증명",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정답을 확인하기 전에 첫 행과 열을 표시용 저장소로 써도 원래 0의 정보가 사라지지 않는지 점검해 보세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "정답 코드 · 처리 순서 · 복잡도",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "처리 단계를 분리하기"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "먼저 직사각형 조건과 크기를 검사해, 잘못된 입력에서는 원본을 그대로 유지합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "첫 행에 원래 0이 있었는지, 첫 열에 원래 0이 있었는지를 각각 bool 변수로 기억합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "첫 행/열을 제외한 영역에서 원본 0을 발견하면 a[r][0]과 a[0][c]에 0을 마커로 남깁니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "내부 셀을 다시 순회해 자신의 행 마커 또는 열 마커가 0인 경우 0으로 바꿉니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "마지막으로 원래 첫 행/열에 0이 있었을 때만 각각 전체를 0으로 만듭니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <cstddef>\n#include <stdexcept>\n#include <vector>\n\nvoid ZeroMarkedRowsColumns(std::vector<std::vector<int>>& a) {\n    const std::size_t rows = a.size();\n    if (rows > 200) throw std::invalid_argument(\"row limit exceeded\");\n    if (rows == 0) return;\n    const std::size_t cols = a[0].size();\n    if (cols > 200) throw std::invalid_argument(\"column limit exceeded\");\n    for (const auto& row : a) {\n        if (row.size() != cols)\n            throw std::invalid_argument(\"matrix must be rectangular\");\n    }\n    if (cols == 0) return;\n\n    bool zeroFirstRow = false, zeroFirstCol = false;\n    for (std::size_t c = 0; c < cols; ++c)\n        if (a[0][c] == 0) zeroFirstRow = true;\n    for (std::size_t r = 0; r < rows; ++r)\n        if (a[r][0] == 0) zeroFirstCol = true;\n\n    for (std::size_t r = 1; r < rows; ++r) {\n        for (std::size_t c = 1; c < cols; ++c) {\n            if (a[r][c] == 0) {\n                a[r][0] = 0;\n                a[0][c] = 0;\n            }\n        }\n    }\n    for (std::size_t r = 1; r < rows; ++r) {\n        for (std::size_t c = 1; c < cols; ++c) {\n            if (a[r][0] == 0 || a[0][c] == 0)\n                a[r][c] = 0;\n        }\n    }\n    if (zeroFirstRow)\n        for (std::size_t c = 0; c < cols; ++c) a[0][c] = 0;\n    if (zeroFirstCol)\n        for (std::size_t r = 0; r < rows; ++r) a[r][0] = 0;\n}"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "불변식과 정확성"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 행/열 이외의 원래 0은 마커 기록 순회에서 모두 관찰되며, 마커 쓰기는 첫 행/열에만 발생하므로 내부의 아직 검사하지 않은 셀을 건드리지 않습니다. 따라서 각 내부 셀은 원래 0이 있던 행이나 열에 속할 때에만 두 번째 순회에서 0으로 바뀝니다. 원래 첫 행/열 자체의 0 여부는 별도 변수에 보존되어 마지막에 처리됩니다. 새 0으로 인한 연쇄 전파는 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "복잡도"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간 O(M×N), 추가 공간 O(1)입니다. 행 수 M과 열 수 N에 비례해 요소를 몇 번 순회하지만 저장용 새 배열은 만들지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "경계 사례"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "M=0이면 바로 종료합니다. N=0인 경우에도 어떤 셀도 없으므로 종료합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "1×N, M×1에서 마커 영역과 실제 데이터가 같은 줄일 수 있지만 원래 0 여부 플래그를 먼저 계산하므로 안전합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "0이 없을 때는 데이터가 유지되고, 여러 0이 있어도 연쇄 전파는 일어나지 않습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "입력 행 길이가 불균일하면 쓰기를 시작하기 전에 예외로 중단합니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "테스트와 반례",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "실제 C++11 컴파일 및 11,562개 테스트 결과",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2026-10-16 Debian g++ 14.2.0에서 -std=c++11 -O2 -Wall -Wextra -Werror -pedantic로 컴파일했습니다. M,N=0~16 조합마다 난수 행렬 40개를 생성해 원본 0 위치만 참조하는 별도 결과 행렬 구현과 대조했고, 잘못된 직사각형 형상 및 최대 200×200 경계를 추가 검사했습니다. 총 11,562건 통과했습니다."
+                }
+              ]
+            },
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "케이스"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "기대 동작"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검증 목적"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 행렬 []"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "그대로"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "M=0"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "행 하나 [1,0,3]"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "[0,0,0]"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "첫 행의 원래 0"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "열 하나 [[1],[0],[3]]"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "[[0],[0],[0]]"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "첫 열의 원래 0"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "3×4 중앙 0"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "해당 행·열만 0"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "일반 상태"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0이 없는 행렬"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "원본 유지"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "표시 없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0이 여럿"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "원래 0에 해당하는 행·열의 합집합"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "연쇄 오류 방지"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "[[1,2],[3]]"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "std::invalid_argument"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "사전 형상 검증"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "200×200"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "정상 수행"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "최대 크기"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장과 다음 회차",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "확장 · 변경 좌표만 반환한다면?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 행렬을 즉시 0으로 쓰지 않고, 영향을 받는 좌표의 집합만 반환해 지연 처리한다면 시간과 공간 비용이 어떻게 달라질까요? 변경된 셀 수를 세려면 어디서 계산해야 할까요?"
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "추가 질문"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "행 마커와 열 마커를 별도 배열에 저장하면 구현이 얼마나 단순해지나요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "새 0을 즉시 순회하며 처리하면 왜 잘못된 행과 열까지 전파될까요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "이미 첫 행과 첫 열에 0이 동시에 있다면 어떤 순서가 안전할까요?"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "다음 문제 · 1.9 String Rotation"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한 문자열이 다른 문자열의 회전 결과인지 효율적으로 검사하는 문제로 이어집니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "도서의 문항 번호와 핵심 주제만 참고하며 지문·공식 해설은 복제하지 않습니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

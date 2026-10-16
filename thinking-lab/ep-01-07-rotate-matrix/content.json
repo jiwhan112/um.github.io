@@ -1,0 +1,753 @@
+{
+  "title": "1.7 Rotate Matrix — 미니맵 타일의 시계 방향 회전",
+  "subtitle": "정사각형 2차원 배열을 추가 행렬 없이 90도 회전하는 인덱스·제자리 수정 훈련",
+  "memoKey": "thinking-ctci-1.7-draft",
+  "starter": "#include <vector>\n\nvoid RotateSquareClockwise(std::vector<std::vector<int>>& a) {\n    // 각 타일의 이동을 직접 구현하세요.\n}",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제와 입력 계약",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《코딩 인터뷰 완전 분석》 제6판 1장 배열과 문자열 · 1.7 Rotate Matrix의 주제만 참고한 독립 문제입니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "미니맵 타일 회전"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "맵 편집기에서 정사각형 타일 격자를 시계 방향으로 90도 회전하려 합니다. 각 셀은 정수형 타일 ID를 나타냅니다. 기존 2차원 배열을 그 자리에서 변환하고, 별도의 N×N 결과 배열을 만들지 않는 함수를 작성하세요."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "함수와 정확한 제약"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "시그니처: void RotateSquareClockwise(std::vector<std::vector<int>>& a). 입력은 벡터의 행 개수를 N으로 하는 N×N 정사각 행렬입니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "N은 0~128이고, 행마다 원소 수가 정확히 N개여야 합니다. N=0은 아무것도 하지 않고 정상 반환합니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "행렬이 정사각형이 아니거나 N>128이면 std::invalid_argument를 던집니다. 검사 실패 시 원본은 보존해야 합니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "타일 ID는 모든 int 값이 가능하며 값을 계산하지 않고 위치만 바꿉니다. 반환값은 없고 매개변수 a를 직접 수정합니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "예시"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "원본 행"
+                  }
+                ],
+                [
+                  {
+                    "text": "90도 회전 후 행"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1 2 3"
+                  }
+                ],
+                [
+                  {
+                    "text": "7 4 1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "4 5 6"
+                  }
+                ],
+                [
+                  {
+                    "text": "8 5 2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "7 8 9"
+                  }
+                ],
+                [
+                  {
+                    "text": "9 6 3"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "먼저 생각할 질문"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "0×0, 1×1, 2×2 크기의 격자에서 회전시켜야 할 셀은 몇 개일까요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "격자 바깥 테두리를 한 바퀴 회전시켰을 때 내부 테두리는 서로 독립적일까요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "원본을 덮어쓰지 않으면서 4개 위치를 순환 교환하려면 임시 정수 변수는 몇 개면 충분할까요?"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "접힌 힌트·구조 다이어그램",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정답을 바로 보기보다 먼저 인덱스 이동을 종이에 표시하세요. 도형은 풀이 단서가 포함되어 있어 접어 두었습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 1 · 껍질(layer)로 나누기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "3×3은 바깥 테두리와 가운데 한 셀, 4×4는 두 겹의 테두리로 생각할 수 있습니다. 테두리마다 독립적으로 작업합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2 · 한 번에 네 위치",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시계 방향 90도는 위→오른쪽→아래→왼쪽→위의 네 위치가 한 묶음으로 순환하는 작업입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3 · 상대 거리",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 테두리의 시작 layer에서 col만큼 이동한 상대 거리(offset)를 사용하면 네 변의 같은 위치를 대응시킬 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "다이어그램 · 4방향 순환 이동 보기 (풀이 힌트)",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "N=3, 현재 layer=0인 테두리의 네 모서리를 예로 든 개념도입니다."
+                }
+              ]
+            },
+            {
+              "type": "diagram",
+              "items": [
+                "이전 위치:  (0,0)=1    (0,2)=3",
+                "               ↑         ↓",
+                "             (2,0)=7  ← (2,2)=9",
+                "시계 방향 결과: (0,0)←7, (0,2)←1, (2,2)←3, (2,0)←9",
+                "한 변수에 기존 상단 값을 보관하며 네 자리를 순환 교환"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이미지처럼 네 자리 이동을 같은 규칙으로 테두리 전체에 적용합니다. 직접 작성한 추상화이며 벤치마크 그림은 아닙니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "접힌 C++11 정답과 정확성 증명",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "구현 전에 직접 작성한 결과와 반례를 비교한 다음 정답을 펼치세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "정답 코드 · 알고리즘 설명 · 복잡도",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "독립적인 테두리를 순환 교환"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "처음에 모든 행의 길이와 최대 크기를 검증해 실패 시 원본을 바꾸지 않습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "첫 번째 테두리는 layer=0, 두 번째 테두리는 layer=1입니다. 전체 층 수는 N/2입니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "층의 상단 열 col마다 4개의 대칭 위치를 순환 교환합니다. 상단 값을 임시 변수 하나에 보관하면 덮어쓰기 손실이 없습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "각 4위치 묶음은 겹치지 않으며, 모든 테두리에서 작업하면 정확히 N×N개의 위치가 회전됩니다. 홀수 N의 중심은 그대로입니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <cstddef>\n#include <stdexcept>\n#include <vector>\n\nvoid RotateSquareClockwise(std::vector<std::vector<int>>& a) {\n    const std::size_t n = a.size();\n    if (n > 128) throw std::invalid_argument(\"dimension must be <= 128\");\n    for (const auto& row : a) {\n        if (row.size() != n)\n            throw std::invalid_argument(\"matrix must be square\");\n    }\n\n    for (std::size_t layer = 0; layer < n / 2; ++layer) {\n        const std::size_t last = n - 1 - layer;\n        for (std::size_t col = layer; col < last; ++col) {\n            const std::size_t offset = col - layer;\n            const int top = a[layer][col];\n\n            a[layer][col] = a[last - offset][layer];\n            a[last - offset][layer] = a[last][last - offset];\n            a[last][last - offset] = a[col][last];\n            a[col][last] = top;\n        }\n    }\n}"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "정확성 논증"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "고정된 층과 오프셋에서 원래 왼쪽 위치의 값은 상단으로, 아래쪽 값은 왼쪽으로, 오른쪽 값은 아래쪽으로, 임시 보관한 상단 값은 오른쪽으로 이동합니다. 이는 시계 방향의 순환과 일치합니다. 각 층의 오프셋은 서로 다른 네 위치 집합을 이루고, 여러 층도 겹치지 않습니다. 따라서 모든 요소가 정확히 회전한 위치로 이동합니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "복잡도"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간 O(N²): 층별 네 위치 묶음을 전체 요소 수에 비례하게 처리합니다. 보조 공간 O(1): 타일 ID 한 개와 인덱스 몇 개만 쓰며 별도의 회전 결과 행렬을 만들지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "주의할 경계 조건"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "N=0 또는 1인 경우 빈 반복으로 정상 처리합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "N이 홀수일 때 중앙 셀은 회전해도 같은 좌표입니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "직사각형처럼 정사각형이 아닌 입력은 사전 검증에서 예외를 던집니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "인덱스는 std::size_t로 계산하며 layer < N/2, col < last를 지켜 음수 방향으로 벗어나지 않습니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "반례 및 실행 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "실제 C++11 컴파일 및 회전 검증 결과",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2026-10-16의 Debian g++ 14.2.0에서 -std=c++11 -O2 -Wall -Wextra -Werror -pedantic로 컴파일했습니다. 난수 시드 20261016에 대해 N=0~16 각각 250개 행렬을 독립적인 새 행렬 회전 참조 구현과 비교했고, 정사각형 오류·128×128 경계 사례도 검사했습니다. 총 4,252건 통과했습니다."
+                }
+              ]
+            },
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "입력"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "예상"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "확인할 사항"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 0×0"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "그대로"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "빈 행렬 처리"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "1×1 [42]"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "[42]"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "중심 셀 유지"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "2×2 / 1 2 | 3 4"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "3 1 | 4 2"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "4방향 회전"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "3×3 / 1..9"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "7 4 1 | 8 5 2 | 9 6 3"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "홀수 크기"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "N=4 이상"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "참조 회전과 동일"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "두 층 이상"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "[[1,2],[3]]"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "std::invalid_argument"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "사전 형상 검사"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "128×128"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "정상 수행"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "입력 크기 경계"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장 연습 및 다음 회차",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "확장 · 직사각형 격자는?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "M×N 격자를 회전하면 출력 크기가 N×M이 됩니다. 기존 외부 벡터 크기를 유지해야 한다는 조건까지 붙이면 어떤 추가 공간·재배치가 필요한지 따져 보세요."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "복습 질문"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "왜 N²개의 값을 새 배열에 복사하는 방식이 더 간단할 수 있을까요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "90도 두 번 회전하면 어떤 변환이 되나요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "반시계 방향으로 바꾸려면 네 자리 순환 순서를 어떻게 변경해야 할까요?"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "다음 문제 · 1.8 Zero Matrix"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "행과 열에 공통적으로 0을 퍼뜨리는 행렬 문제입니다. 원본의 0과 새로 생긴 0을 구별하는 방법을 고민합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "도서의 문항 번호와 핵심 주제만 참고했으며 공식 지문·해설은 복제하지 않았습니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
