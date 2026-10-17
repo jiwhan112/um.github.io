@@ -1,25 +1,42 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-17",
+  "updated": "2026-10-18",
   "book": {
     "title": "Cracking the Coding Interview",
     "edition": 6,
     "author": "Gayle Laakmann McDowell"
   },
   "current": {
-    "chapter": 1,
-    "number": "1.9",
-    "topic_en": "String Rotation",
-    "study_date": "2026-10-17",
-    "published_date": "2026-10-17"
-  },
-  "next": {
     "chapter": 2,
     "number": "2.1",
     "topic_en": "Remove Dups",
-    "study_date": "2026-10-18"
+    "study_date": "2026-10-18",
+    "published_date": "2026-10-18"
+  },
+  "next": {
+    "chapter": 2,
+    "number": "2.2",
+    "topic_en": "Return Kth to Last",
+    "study_date": "2026-10-19"
   },
   "episodes": [
+    {
+      "number": "2.1",
+      "chapter": 2,
+      "topic_en": "Remove Dups",
+      "title": "보상 이벤트 연결 리스트의 중복 제거",
+      "summary": "단일 연결 리스트에서 최초 등장 노드와 순서를 보존하면서 해시 집합으로 중복 노드를 제거",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "중복 검사",
+        "해시 테이블",
+        "제자리 수정"
+      ],
+      "study_date": "2026-10-18",
+      "published_date": "2026-10-18",
+      "path": "ep-02-01-remove-dups/"
+    },
     {
       "number": "1.9",
       "chapter": 1,
