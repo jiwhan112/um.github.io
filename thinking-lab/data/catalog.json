@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-18",
+  "updated": "2026-10-19",
   "book": {
     "title": "Cracking the Coding Interview",
     "edition": 6,
@@ -8,18 +8,35 @@
   },
   "current": {
     "chapter": 2,
-    "number": "2.1",
-    "topic_en": "Remove Dups",
-    "study_date": "2026-10-18",
-    "published_date": "2026-10-18"
+    "number": "2.2",
+    "topic_en": "Return Kth to Last",
+    "study_date": "2026-10-19",
+    "published_date": "2026-10-19"
   },
   "next": {
     "chapter": 2,
-    "number": "2.2",
-    "topic_en": "Return Kth to Last",
-    "study_date": "2026-10-19"
+    "number": "2.3",
+    "topic_en": "Delete Middle Node",
+    "study_date": "2026-10-20"
   },
   "episodes": [
+    {
+      "number": "2.2",
+      "chapter": 2,
+      "topic_en": "Return Kth to Last",
+      "title": "전투 리플레이의 뒤에서 k번째 이벤트",
+      "summary": "길이 정보를 모르는 단일 연결 리스트에서 간격이 일정한 두 포인터로 뒤에서 k번째 원본 노드를 한 번의 순회에 찾기",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "두 포인터",
+        "단일 순회",
+        "포인터 간격"
+      ],
+      "study_date": "2026-10-19",
+      "published_date": "2026-10-19",
+      "path": "ep-02-02-return-kth-to-last/"
+    },
     {
       "number": "2.1",
       "chapter": 2,
