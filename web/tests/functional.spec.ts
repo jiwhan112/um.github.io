@@ -182,8 +182,8 @@ test('DX9 implementation chapters and corrected full C++ source are linked insid
 test('DX11 migrated chapter sitemap and raw diagrams are readable on the website',async({page})=>{
  await page.goto('knowledge/');
  const dx=page.locator('#knowledge-windows');
- await expect(dx.getByRole('link',{name:/DX11 02/})).toBeVisible();
- await dx.getByRole('link',{name:/DX11 02/}).click();
+ await expect(dx.getByRole('link',{name:/DX11 02 · Resource·View·Usage·Map/})).toBeVisible();
+ await dx.getByRole('link',{name:/DX11 02 · Resource·View·Usage·Map/}).click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-02\/$/);
  await expect(page.locator('main h1')).toContainText('DX11 02');
  await expect(page.locator('main .code-block').filter({hasText:'flowchart'}).first()).toBeVisible();
