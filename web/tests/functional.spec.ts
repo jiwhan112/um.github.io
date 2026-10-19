@@ -97,8 +97,15 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await expect(page.getByRole('heading',{name:'프로그래밍 지식 라이브러리'})).toBeVisible();
  await expect(page.locator('.knowledge-map-sidebar nav a')).toHaveCount(7);
  const tree=page.locator('.knowledge-tree');
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(3);
- const dx11=tree.getByRole('button',{name:/DirectX \/ Windows/});
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(1);
+ const cppTopics=page.locator('#knowledge-cpp .knowledge-topic-row strong');
+ await expect(cppTopics).toHaveText(['C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++']);
+ const windowsTopics=page.locator('#knowledge-windows .knowledge-topic-row strong');
+ await expect(windowsTopics).toHaveText(['WinAPI','게임 수학','DirectX 9','DirectX 11','DirectX 12']);
+ await expect(page.getByText('집필 시 설계').first()).toBeVisible();
+ await expect(page.getByText('신규 집필 예정').first()).toBeVisible();
+ await expect(page.locator('.knowledge-recent-list a')).toHaveCount(3);
+ const dx11=tree.getByRole('button',{name:/Windows·그래픽스 프로그래밍/});
  await expect(dx11).toHaveAttribute('aria-expanded','true');
  await expect(tree.getByRole('link',{name:/Frustum Culling/})).toBeVisible();
  await page.getByRole('button',{name:'모두 접기'}).click();
@@ -106,11 +113,12 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await dx11.click();
  await expect(tree.locator('.knowledge-document-link')).toHaveCount(1);
  await page.getByLabel('학습 목차 검색').fill('BeautifulSoup');
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(1);
- await expect(tree.getByRole('link',{name:/BeautifulSoup/})).toBeVisible();
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(0);
+ await expect(page.locator('.knowledge-recent-list a')).toHaveCount(1);
+ await expect(page.locator('.knowledge-recent-list a').first()).toContainText('BeautifulSoup');
  await page.getByRole('button',{name:'목차 검색 초기화'}).click();
  await page.getByRole('button',{name:'모두 펼치기'}).click();
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(3);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(1);
  if(isMobile){
   await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
   await expect(page.getByRole('dialog').getByRole('link',{name:'프로그래밍 학습',exact:true})).toBeVisible();
@@ -119,4 +127,5 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await tree.getByRole('link',{name:/Frustum Culling/}).click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-frustum\/$/);
  await expect(page.locator('main h1')).toContainText('Frustum Culling');
+ await expect(page).toHaveURL(/\/knowledge\/dx11-frustum\/$/);
 });
