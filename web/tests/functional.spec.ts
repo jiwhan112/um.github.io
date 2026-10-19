@@ -154,8 +154,8 @@ test('WinAPI and game math migrated lessons are usable through the sitemap',asyn
  await expect(page.locator('main .code-block').filter({hasText:'add_test('})).toBeVisible();
  await page.goto('knowledge/winapi-math-lab/');
  await expect(page.locator('main h1')).toContainText('공통 실습 전체 소스');
- await expect(page.locator('main .code-block').filter({hasText:'winapi_demo.cpp'})).toBeVisible();
+ await expect(page.locator('main .code-block').filter({hasText:'winapi_demo.cpp'}).first()).toBeVisible();
  await page.goto('knowledge/dx9-pipeline-lab/');
  await expect(page.locator('main h1')).toContainText('공통 실습 전체 소스');
- await expect(page.locator('main .code-block').filter({hasText:'pipeline_trace'})).toBeVisible();
+ await expect(page.locator('main .code-block').filter({hasText:'pipeline_trace'}).first()).toBeVisible();
 });
