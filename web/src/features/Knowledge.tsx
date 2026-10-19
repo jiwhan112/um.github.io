@@ -129,7 +129,7 @@ export default function Knowledge() {
         <section className="knowledge-recent" aria-label="기존 공개 프로토타입">
           <div className="section-heading"><h2><FolderOpen size={19}/> 공개 학습 교재 · 검색</h2><span className="muted text-xs">{archived.length} / {docs.length}개</span></div>
           <div className="knowledge-recent-list">{archived.map(d=><Link key={d.id} to={d.route}><span className="knowledge-recent-icon"><FileText size={17}/></span><span><small>{d.category}</small><strong>{d.title}</strong></span><ArrowRight size={16}/></Link>)}</div>
-          <p className="knowledge-catalog-note">WinAPI·게임 수학 기존 본문을 단계별로 이관하고 있습니다. DX11·LIS·BeautifulSoup 시범 교재의 URL도 유지됩니다. 공통 Windows GUI/MFC 소스와 일부 첨부는 별도 검증 전까지 미이관입니다.</p>
+          <p className="knowledge-catalog-note">WinAPI·게임 수학 기존 본문을 단계별로 이관하고 있습니다. DX11·LIS·BeautifulSoup 시범 교재의 URL도 유지됩니다. 공통 Win32 GUI 소스 텍스트는 복원했지만 Windows 실기기 실행과 원본 ZIP·첨부 바이너리는 아직 미검증입니다.</p>
         </section>
         <DocumentLibrary docs={docs} thinking={false}/>
       </div>
