@@ -1,0 +1,282 @@
+{
+  "id": "knowledge--dx11-sources-04",
+  "route": "/knowledge/dx11-sources-04/",
+  "kind": "knowledge",
+  "title": "DX11 04 · Texture/SRV/Sampler 전체 소스",
+  "subtitle": "CPU Texture/Pitch/View C++·HLSL 셰이더·CMake",
+  "date": "2026-10-19",
+  "number": "04",
+  "category": "DirectX 11",
+  "topic": "DirectX 11",
+  "tags": [
+    "DirectX 11",
+    "C++",
+    "전체 소스",
+    "CPU"
+  ],
+  "sections": [
+    {
+      "id": "start",
+      "title": "원본·실행 전제·검증 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Notion 원본 페이지의 네이티브 전체 코드 블록을 GitHub 파일로 독립 보존했습니다. 새 Linux CPU CTest 결과는 GitHub Actions에서 별도로 검증합니다. 포함된 Win32/D3D11 GUI와 HLSL은 Windows/GPU에서 실제 실행·컴파일되지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구성"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인 범위"
+                  }
+                ],
+                [
+                  {
+                    "text": "주의"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "CPU C++ 소스"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 코드 보존·GitHub CPU 교차 빌드 대상"
+                  }
+                ],
+                [
+                  {
+                    "text": "교육용 계약 모델, 실제 D3D11 장치가 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Windows·HLSL"
+                  }
+                ],
+                [
+                  {
+                    "text": "정적 소스 보존"
+                  }
+                ],
+                [
+                  {
+                    "text": "MSVC/Windows/GPU/FXC/DXC 미실행"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 소스 Notion 페이지",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f4081c89295c3aed7177611"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "코드 복구 이력과 파일 목록",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/DX11_SOURCE_LEDGER_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Linux CPU 테스트 통과가 실제 DirectX 실행을 증명하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. CPU 입력·수치 계약 검사와 실제 D3D11 API/드라이버/셰이더 실행은 별개입니다. 이 문서의 Windows/HLSL 소스는 실행하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원래 Notion ZIP·첨부 바이너리도 복구했나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Notion 네이티브 코드 전문은 복원했습니다. DX11 01 첨부는 서명 다운로드 URL만 확인했으며 원본 첨부 파일의 바이트 동일성은 검증하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "file-1",
+      "title": "CMakeLists.txt",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 파일 (원본 코드 텍스트) · "
+            },
+            {
+              "text": "GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-04/CMakeLists.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Notion 출처",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f4081c89295c3aed7177611"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cmake",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_texture_contract LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 study; 11 compatible\")\nadd_executable(dx11_texture_contract main.cpp)\nset_target_properties(dx11_texture_contract PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(dx11_texture_contract PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(dx11_texture_contract PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME texture_contract COMMAND dx11_texture_contract)\n"
+        }
+      ]
+    },
+    {
+      "id": "file-2",
+      "title": "main.cpp",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 파일 (원본 코드 텍스트) · "
+            },
+            {
+              "text": "GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-04/main.cpp"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Notion 출처",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f4081c89295c3aed7177611"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// DX11 shader-resource/texture contract - portable CPU model, NOT Direct3D or GPU execution.\n#include <algorithm>\n#include <cmath>\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nstruct RGBA {std::uint8_t r,g,b,a;};\nstruct TextureDesc {std::size_t width,height,mips;bool srv,rtv;TextureDesc(std::size_t w,std::size_t h,std::size_t m,bool s,bool r):width(w),height(h),mips(m),srv(s),rtv(r){}};\nbool Valid(const TextureDesc& d){return d.width>0&&d.height>0&&d.mips>0&&d.width<=16384&&d.height<=16384;}\nbool ByteSizeFits(std::size_t w,std::size_t h,std::size_t bpp){\n    if(!w||!h||!bpp||w>std::numeric_limits<std::size_t>::max()/bpp) return false;\n    return h<=std::numeric_limits<std::size_t>::max()/(w*bpp);\n}\nbool CopyPitched(const std::vector<std::uint8_t>& src,std::size_t w,std::size_t h,\n                 std::size_t srcPitch,std::size_t dstPitch,std::vector<std::uint8_t>& dst){\n    if(&src==&dst||!ByteSizeFits(w,h,4))return false;\n    const std::size_t row=w*4;\n    if(srcPitch<row||dstPitch<row||h>std::numeric_limits<std::size_t>::max()/srcPitch||\n       h>std::numeric_limits<std::size_t>::max()/dstPitch)return false;\n    // Strict buffer capacity model: rows include trailing padding, unlike D3D11 caller-owned mapped lifetimes.\n    if(src.size()<srcPitch*h||dst.size()<dstPitch*h)return false;\n    for(std::size_t y=0;y<h;++y)\n        std::copy(src.begin()+y*srcPitch,src.begin()+y*srcPitch+row,dst.begin()+y*dstPitch);\n    return true;\n}\nstd::size_t Clamped(std::int64_t c,std::size_t size){\n    if(c<0)return 0;\n    if(static_cast<std::uint64_t>(c)>=size)return size-1;\n    return static_cast<std::size_t>(c);\n}\nstd::size_t Wrapped(std::int64_t c,std::size_t size){\n    const std::int64_t n=static_cast<std::int64_t>(size);\n    return static_cast<std::size_t>(((c%n)+n)%n);\n}\nstruct Float4 {float r,g,b,a;};\nFloat4 Multiply(Float4 a,Float4 b){return {a.r*b.r,a.g*b.g,a.b*b.b,a.a*b.a};}\nRGBA Texel(const std::vector<RGBA>& px,std::size_t w,std::size_t h,\n           std::int64_t x,std::int64_t y,bool wrap){\n    if(w==0||h==0||w>static_cast<std::size_t>(std::numeric_limits<std::int64_t>::max())||\n       h>static_cast<std::size_t>(std::numeric_limits<std::int64_t>::max())||\n       !ByteSizeFits(w,h,sizeof(RGBA))||px.size()<w*h)throw std::invalid_argument(\"bad sample input\");\n    std::size_t ix=wrap?Wrapped(x,w):Clamped(x,w);\n    std::size_t iy=wrap?Wrapped(y,h):Clamped(y,h);\n    return px[iy*w+ix];\n}\n// Granularity: resource ID + specific mip slice, not all possible D3D11 overlapping view cases.\nstruct View {int resource;unsigned mip;bool shaderRead;};\nbool Overlaps(const View& a,const View& b){return a.resource==b.resource&&a.mip==b.mip;}\nbool Hazard(const View& a,const View& b){return Overlaps(a,b)&&a.shaderRead!=b.shaderRead;}\nstruct Matrix {float m[4][4];};\nstruct alignas(16) FrameCB {Matrix m; Float4 tint;};\nstatic_assert(sizeof(FrameCB)==80,\"constant buffer 80 bytes\");\nstatic_assert(sizeof(FrameCB)%16==0,\"constant buffer width multiple of 16\");\nint main(){\n    unsigned checks=0;const auto ck=[&](bool ok,const char* label){++checks;if(!ok)throw std::runtime_error(label);};\n    try{\n        ck(Valid({4,4,1,true,false}),\"basic SRV texture\");\n        ck(Valid({4,4,2,true,true}),\"multi mip SRV+RTV declaration\");\n        ck(!Valid({0,4,1,true,false}),\"zero width\");\n        ck(!Valid({4,0,1,true,false}),\"zero height\");\n        ck(!Valid({4,4,0,true,false}),\"zero mips\");\n        ck(!Valid({16385,4,1,true,false}),\"declared teaching cap\");\n        ck(ByteSizeFits(2,2,4),\"two by two rgba\");\n        ck(!ByteSizeFits(std::numeric_limits<std::size_t>::max(),2,4),\"width product overflow\");\n        ck(!ByteSizeFits(1,0,4),\"empty image\");\n        std::vector<std::uint8_t> src={1,2,3,4,5,6,7,8,0xee,0xee,0xee,0xee}; // pitch=4 row content, but third row only padding? \n        std::vector<std::uint8_t> compact={1,2,3,4,5,6,7,8};\n        std::vector<std::uint8_t> dst(16,0xcc);\n        ck(CopyPitched(compact,1,2,4,8,dst),\"copy narrow image into larger pitch\");\n        ck(dst[0]==1&&dst[3]==4&&dst[8]==5&&dst[11]==8,\"two rows positioned correctly\");\n        ck(dst[4]==0xcc&&dst[15]==0xcc,\"destination row padding untouched\");\n        ck(!CopyPitched(compact,1,2,3,8,dst),\"source pitch too small\");\n        ck(!CopyPitched(compact,1,2,4,3,dst),\"dest pitch too small\");\n        ck(!CopyPitched(compact,1,3,4,8,dst),\"source insufficient\");\n        ck(!CopyPitched(compact,1,2,4,8,compact),\"same buffer rejected\");\n        ck(!CopyPitched(compact,std::numeric_limits<std::size_t>::max(),2,4,8,dst),\"overflow rejected\");\n        ck(!CopyPitched(src,1,3,4,8,dst),\"dest insufficient for 3 rows\");\n        const std::vector<RGBA> tex={{255,0,0,255},{0,255,0,255},{0,0,255,255},{255,255,255,255}};\n        ck(Texel(tex,2,2,0,0,false).r==255,\"top-left red\");\n        ck(Texel(tex,2,2,1,0,false).g==255,\"top-right green\");\n        ck(Texel(tex,2,2,0,1,false).b==255,\"bottom-left blue\");\n        ck(Texel(tex,2,2,1,1,false).r==255,\"bottom-right white\");\n        ck(Texel(tex,2,2,-1,0,false).r==255,\"clamp negative x\");\n        ck(Texel(tex,2,2,3,0,false).g==255,\"clamp >max x\");\n        ck(Texel(tex,2,2,-1,0,true).g==255,\"wrap negative x\");\n        ck(Texel(tex,2,2,2,1,true).b==255,\"wrap x=width\");\n        bool threw=false;try{(void)Texel({},0,2,0,0,false);}catch(const std::invalid_argument&){threw=true;}\n        ck(threw,\"empty texel rejection\");\n        const Float4 color=Multiply({.5f,1,1,.25f},{1,.25f,.5f,.5f});\n        ck(std::abs(color.r-.5f)<1e-6f&&std::abs(color.g-.25f)<1e-6f,\"sample*vertex color\");\n        ck(std::abs(color.b-.5f)<1e-6f&&std::abs(color.a-.125f)<1e-6f,\"alpha multiplication\");\n        ck(Hazard({1,0,true},{1,0,false}),\"same mip read/write hazard\");\n        ck(!Hazard({1,0,true},{1,1,false}),\"different mips disjoint in this model\");\n        ck(!Hazard({1,0,true},{2,0,false}),\"different resources\");\n        ck(!Hazard({1,0,true},{1,0,true}),\"two reads no write hazard\");\n        ck(Overlaps({1,0,true},{1,0,false}),\"same subresource overlap\");\n        ck(sizeof(FrameCB)==80,\"CB payload size\");\n        ck(alignof(FrameCB)>=16,\"CB struct alignment\");\n        std::cout<<\"PASS \"<<checks<<\" texture/pitch/view checks (CPU model only)\\n\";\n    }catch(const std::exception& e){std::cerr<<\"FAIL \"<<checks<<\" \"<<e.what()<<'\\n';return 1;}\n}\n"
+        }
+      ]
+    },
+    {
+      "id": "file-3",
+      "title": "README.md",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 파일 (원본 코드 텍스트) · "
+            },
+            {
+              "text": "GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-04/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Notion 출처",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f4081c89295c3aed7177611"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "markdown",
+          "text": "# DX11 04 texture SRV/Sampler lesson\n\n`main.cpp` is a portable CPU-only model for row pitch, texture sampling with Clamp/Wrap, multiplied vertex color, and simple per-mip view overlap. It does **not** implement Direct3D 11 texture objects or GPU sampling. `texture.hlsl` uses VS input POSITION/TEXCOORD, row_major WVP b0, Texture2D t0 and SamplerState s0; HLSL not compiled on Linux.\n\n`cmake -S . -B build -DLAB_CXX_STANDARD=20 && cmake --build build && ctest --test-dir build -V`; change to 11 for compatibility. Windows texture rendering should verify SRV/sampler shader linkage and actual D3D11 API separately.\n"
+        }
+      ]
+    },
+    {
+      "id": "file-4",
+      "title": "texture.hlsl",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 파일 (원본 코드 텍스트) · "
+            },
+            {
+              "text": "GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-04/texture.hlsl"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Notion 출처",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f4081c89295c3aed7177611"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "hlsl",
+          "text": "// Shader Model 4.0: row-vector multiplication and explicit row_major payload.\ncbuffer Frame : register(b0) {\n    row_major float4x4 WorldViewProjection;\n    float4 Tint;\n};\nTexture2D Albedo : register(t0);\nSamplerState LinearSampler : register(s0);\nstruct VSIn {float3 position:POSITION;float2 uv:TEXCOORD0;};\nstruct VSOut {float4 position:SV_POSITION;float2 uv:TEXCOORD0;};\nVSOut VSMain(VSIn input){\n    VSOut result;\n    result.position=mul(float4(input.position,1.0f),WorldViewProjection);\n    result.uv=input.uv;\n    return result;\n}\nfloat4 PSMain(VSOut input):SV_Target {\n    return Albedo.Sample(LinearSampler,input.uv)*Tint;\n}\n"
+        }
+      ]
+    }
+  ]
+}

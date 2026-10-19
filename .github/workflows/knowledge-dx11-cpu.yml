@@ -1,0 +1,69 @@
+name: Knowledge DX11 CPU lab verification
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'knowledge/shared/dx11-*/**'
+      - '.github/workflows/knowledge-dx11-cpu.yml'
+  push:
+    branches: [master, 'feature/dx11-*']
+    paths:
+      - 'knowledge/shared/dx11-*/**'
+      - '.github/workflows/knowledge-dx11-cpu.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: dx11-cpu-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  linux-cpu:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: gcc20
+            compiler: g++
+            standard: 20
+            sanitizer_flags: ''
+          - id: gcc11
+            compiler: g++
+            standard: 11
+            sanitizer_flags: ''
+          - id: clangsan
+            compiler: clang++
+            standard: 20
+            sanitizer_flags: '-fsanitize=address,undefined -fno-omit-frame-pointer'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure, build, CTest each independent CPU project
+        shell: bash
+        env:
+          ASAN_OPTIONS: detect_leaks=1
+          UBSAN_OPTIONS: halt_on_error=1
+        run: |
+          set -euo pipefail
+          mkdir -p "knowledge/dx11-ci-logs/${{ matrix.id }}"
+          for lab in dx11-01 dx11-02 dx11-03 dx11-04 dx11-05-08; do
+            output="/tmp/atlas-${{ matrix.id }}-${lab}"
+            logdir="knowledge/dx11-ci-logs/${{ matrix.id }}"
+            echo "::group::${lab} ${{ matrix.id }}"
+            cmake -S "knowledge/shared/${lab}" -B "${output}" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" -DLAB_CXX_STANDARD="${{ matrix.standard }}" -DCMAKE_CXX_FLAGS="${{ matrix.sanitizer_flags }}" 2>&1 | tee "${logdir}/${lab}-configure.log"
+            cmake --build "${output}" --parallel 2 2>&1 | tee "${logdir}/${lab}-build.log"
+            ctest --test-dir "${output}" -V --output-on-failure 2>&1 | tee "${logdir}/${lab}-ctest.log"
+            if [ "${lab}" = dx11-05-08 ]; then
+              grep -F '100% tests passed, 0 tests failed out of 4' "${logdir}/${lab}-ctest.log"
+            else
+              grep -F '100% tests passed, 0 tests failed out of 1' "${logdir}/${lab}-ctest.log"
+            fi
+            echo "::endgroup::"
+          done
+      - name: Save raw stage outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dx11-cpu-${{ matrix.id }}
+          path: knowledge/dx11-ci-logs/${{ matrix.id }}/*.log
+          retention-days: 14
