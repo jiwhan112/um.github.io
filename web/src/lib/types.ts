@@ -22,7 +22,7 @@ export const blockSchema: z.ZodType<Block> = z.lazy(()=>z.union([
  z.object({type:z.literal('diagram'),items:z.array(z.string())})
 ]));
 export const documentSchema = z.object({
- id:z.string(),route:z.string(),kind:z.enum(['thinking','opensource','game-design','asset','report']),title:z.string(),subtitle:z.string(),date:z.string(),number:z.string().optional(),videoUrl:z.string().url().optional(),videoId:z.string().optional(),
+ id:z.string(),route:z.string(),kind:z.enum(['thinking','opensource','game-design','asset','report','knowledge','knowledge']),title:z.string(),subtitle:z.string(),date:z.string(),number:z.string().optional(),videoUrl:z.string().url().optional(),videoId:z.string().optional(),
  tags:z.array(z.string()),category:z.string().default(''),topic:z.string().default(''),memoKey:z.string().optional(),starter:z.string().optional(),
  sections:z.array(z.object({id:z.string(),title:z.string(),tab:z.string(),blocks:z.array(blockSchema)})),
  source:z.string(),sourceHash:z.string()

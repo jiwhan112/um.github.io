@@ -122,8 +122,8 @@ async function compileDocument(source:string,route:string,kind:Document['kind'],
 }
 async function walk(path:string):Promise<string[]>{const entries=await readdir(path,{withFileTypes:true});const chunks=await Promise.all(entries.map(x=>x.isDirectory()?walk(join(path,x.name)):Promise.resolve([join(path,x.name)])));return chunks.flat();}
 async function copyResources(){
- for(const folder of ['daily-briefing/data','language-study/data','thinking-lab/data','opensource-lab/data','game-design/data','ai-asset-lab/experiments']){
-  for(const file of await walk(join(root,folder))){if(!['.json','.png','.webp','.jpg','.jpeg','.svg','.wav','.ogg','.glb','.md'].includes(extname(file)))continue;const rel=relative(root,file);await mkdir(dirname(join(out,rel)),{recursive:true});await cp(file,join(out,rel));}
+ for(const folder of ['daily-briefing/data','language-study/data','thinking-lab/data','opensource-lab/data','game-design/data','ai-asset-lab/experiments','knowledge']){
+  for(const file of await walk(join(root,folder))){if(!['.json','.png','.webp','.jpg','.jpeg','.svg','.wav','.ogg','.glb','.md','.cpp','.hpp','.py','.txt'].includes(extname(file)))continue;const rel=relative(root,file);await mkdir(dirname(join(out,rel)),{recursive:true});await cp(file,join(out,rel));}
  }
  // Illustration assets are authored per lesson; JSON files remain catalog/content inputs.
  for(const file of await walk(join(root,'game-design'))){
@@ -144,6 +144,13 @@ export async function buildContent(){
  for(const kind of ['thinking','opensource','game-design'] as const){const prefix=kind==='game-design'?'game-design':kind+'-lab';const eps=z.array(episodeSchema).parse((await json(prefix+'/data/catalog.json')).episodes);
   for(const e of eps){if(kind==='thinking'&&(!e.tags?.length||!e.category))throw Error('Thinking episode requires category and 1–8 tags: '+e.path);if(kind==='game-design'&&(!e.video_id||e.video_url!=='https://www.youtube.com/watch?v='+e.video_id||!e.tags?.length||!e.category))throw Error('Game design episode requires verified video and classification: '+e.path);const dir=prefix+'/'+e.path;const source=await exists(join(root,dir+'content.json'))?dir+'content.json':await exists(join(root,dir+'_content.html'))?dir+'_content.html':dir+'index.html';docs.push(await compileDocument(source,'/'+dir,kind,{title:e.title,subtitle:e.summary,date:e.study_date||e.date||e.published_date,number:String(e.number),category:e.category,tags:e.tags,topic:e.topic_en,videoUrl:e.video_url,videoId:e.video_id}));}
  }
+
+ // Hand-curated Notion migration prototype: every document retains source Markdown and executable source files.
+ const knowledge=z.array(z.object({path:z.string().regex(/^[a-z0-9-]+$/),title:z.string(),subtitle:z.string(),date:z.string(),category:z.string(),tags:z.array(z.string()).min(1)})).parse(await json('knowledge/data/catalog.json'));
+ for(const entry of knowledge){
+  const dir='knowledge/'+entry.path+'/';
+  docs.push(await compileDocument(dir+'content.json','/'+dir,'knowledge',{title:entry.title,subtitle:entry.subtitle,date:entry.date,category:entry.category,tags:entry.tags,topic:entry.category}));
+ }
  const assets:AssetMeta[]=[];
  for(const path of (await walk(join(root,'ai-asset-lab/experiments'))).filter(p=>p.endsWith('/evaluation.json'))){
   const source=relative(root,path),dir=dirname(source)+'/',evaluation=await json(source),route='/'+dir;
@@ -161,7 +168,7 @@ export async function buildContent(){
  const catalog:Catalog={version:2,revision,documents:docs.map(({sections,starter,...d})=>({...d,file:'data/atlas/docs/'+d.id+'.json',sections:sections.map(({blocks,...s})=>s)})),languages,assets,dates:[...new Set(articles.map(a=>a.date))],articleCount:articles.length,review:progress.review?.due||[]};
  for(const doc of docs)await write(join(out,'data/atlas/docs',doc.id+'.json'),doc);
  await write(join(out,'data/atlas/catalog.json'),catalog);await write(join(out,'data/atlas/articles.json'),articles);
- await write(join(out,'data/atlas/routes.json'),['/','/daily-briefing/','/language-study/','/thinking-lab/','/game-design/','/opensource-lab/','/ai-asset-lab/','/bookmarks/','/archive/',...docs.map(d=>d.route),...(['english','japanese'] as Language[]).flatMap(lang=>languages[lang].map(m=>'/language-study/'+lang+'/'+m.id+'/'))]);
+ await write(join(out,'data/atlas/routes.json'),['/','/daily-briefing/','/language-study/','/thinking-lab/','/game-design/','/opensource-lab/','/ai-asset-lab/','/knowledge/','/bookmarks/','/archive/',...docs.map(d=>d.route),...(['english','japanese'] as Language[]).flatMap(lang=>languages[lang].map(m=>'/language-study/'+lang+'/'+m.id+'/'))]);
  await write(join(out,'favicon.svg'),'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#101319"/><path d="M16 4l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#b8a4ff"/></svg>');
  // Old workers at this exact scope update to a network-only retirement worker. Storage is not cleared.
  await write(join(out,'language-study/sw.js'),`self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('language-study-')).map(k=>caches.delete(k)));await self.clients.claim();await self.registration.unregister();})()));`);
