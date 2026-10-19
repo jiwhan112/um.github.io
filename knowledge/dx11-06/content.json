@@ -390,6 +390,58 @@
           ]
         }
       ]
+    },
+    {
+      "id": "github-full-source",
+      "title": "GitHub 전체 C++ 소스·HLSL·CMake",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Notion의 하위 소스 페이지를 실제로 읽고 C++·Windows·HLSL·CMake 파일 전문을 GitHub에 분리하여 복구했습니다. 과거 CTest stdout은 기록용으로 보존하고, 새 GitHub Linux CTest는 별도 CI로 재검증합니다. Windows/MSVC/D3D11/GPU 실행은 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 코드와 빌드 원본 열기",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-05-08/"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "GitHub 소스·검증 원장",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/DX11_SOURCE_LEDGER_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Notion 원시 테스트 로그와 새 GitHub 테스트 결과는 같은가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. Notion 과거 CTest 로그는 네이티브 기록을 보존한 것이고, GitHub에서 컴파일·실행한 결과는 별도 실행입니다. 결과가 같더라도 다른 환경에서의 신규 검증으로 구분합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
