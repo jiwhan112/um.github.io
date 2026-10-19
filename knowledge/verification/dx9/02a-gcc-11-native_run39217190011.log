@@ -1,0 +1,222 @@
+﻿2026-10-19T07:37:34.3511254Z Current runner version: '2.337.0'
+2026-10-19T07:37:34.3534793Z ##[group]Runner Image Provisioner
+2026-10-19T07:37:34.3535579Z Hosted Compute Agent
+2026-10-19T07:37:34.3536120Z Version: 20261012.601
+2026-10-19T07:37:34.3536864Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-19T07:37:34.3537529Z Build Date: 2026-10-12T17:48:21Z
+2026-10-19T07:37:34.3538167Z Worker ID: {eb1975af-0ac5-43a8-9201-94376842becb}
+2026-10-19T07:37:34.3538812Z Region: westus3
+2026-10-19T07:37:34.3539339Z Cloud: Azure
+2026-10-19T07:37:34.3539852Z ##[endgroup]
+2026-10-19T07:37:34.3541327Z ##[group]Operating System
+2026-10-19T07:37:34.3541921Z Ubuntu
+2026-10-19T07:37:34.3542408Z 24.04.5
+2026-10-19T07:37:34.3542898Z LTS
+2026-10-19T07:37:34.3543377Z ##[endgroup]
+2026-10-19T07:37:34.3543867Z ##[group]Runner Image
+2026-10-19T07:37:34.3544388Z Image: ubuntu-24.04
+2026-10-19T07:37:34.3544926Z Version: 20261012.334.1
+2026-10-19T07:37:34.3546374Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-19T07:37:34.3547931Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-19T07:37:34.3548777Z ##[endgroup]
+2026-10-19T07:37:34.3549836Z ##[group]GITHUB_TOKEN Permissions
+2026-10-19T07:37:34.3551921Z Contents: read
+2026-10-19T07:37:34.3552483Z Metadata: read
+2026-10-19T07:37:34.3552992Z ##[endgroup]
+2026-10-19T07:37:34.3555006Z Secret source: Actions
+2026-10-19T07:37:34.3555846Z Cache mode: write
+2026-10-19T07:37:34.3556657Z Prepare workflow directory
+2026-10-19T07:37:34.3863965Z Prepare all required actions
+2026-10-19T07:37:34.3933307Z Getting action download info
+2026-10-19T07:37:34.7050046Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-19T07:37:34.8013434Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-19T07:37:34.9739185Z Complete job name: cpu-source (02a, g++, 11, OFF, 2, 02a-gcc-11-native)
+2026-10-19T07:37:35.0404037Z ##[group]Run actions/checkout@v4
+2026-10-19T07:37:35.0404950Z with:
+2026-10-19T07:37:35.0405439Z   repository: jiwhan112/um.github.io
+2026-10-19T07:37:35.0409226Z   token: ***
+2026-10-19T07:37:35.0409700Z   ssh-strict: true
+2026-10-19T07:37:35.0410169Z   ssh-user: git
+2026-10-19T07:37:35.0410670Z   persist-credentials: true
+2026-10-19T07:37:35.0411175Z   clean: true
+2026-10-19T07:37:35.0411660Z   sparse-checkout-cone-mode: true
+2026-10-19T07:37:35.0412225Z   fetch-depth: 1
+2026-10-19T07:37:35.0412681Z   fetch-tags: false
+2026-10-19T07:37:35.0413151Z   show-progress: true
+2026-10-19T07:37:35.0413626Z   lfs: false
+2026-10-19T07:37:35.0414101Z   submodules: false
+2026-10-19T07:37:35.0414603Z   set-safe-directory: true
+2026-10-19T07:37:35.0415123Z   allow-unsafe-pr-checkout: false
+2026-10-19T07:37:35.0415955Z ##[endgroup]
+2026-10-19T07:37:35.1487225Z Syncing repository: jiwhan112/um.github.io
+2026-10-19T07:37:35.1489007Z ##[group]Getting Git version info
+2026-10-19T07:37:35.1489836Z Working directory is '/home/runner/work/um.github.io/um.github.io'
+2026-10-19T07:37:35.1490804Z [command]/usr/bin/git version
+2026-10-19T07:37:35.1491386Z git version 2.55.0
+2026-10-19T07:37:35.1492815Z ##[endgroup]
+2026-10-19T07:37:35.1497426Z Temporarily overriding HOME='/home/runner/work/_temp/e34c1668-8fae-46d4-80f6-1a114acf42c8' before making global git config changes
+2026-10-19T07:37:35.1498624Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-19T07:37:35.1499746Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/um.github.io/um.github.io
+2026-10-19T07:37:35.1508608Z Deleting the contents of '/home/runner/work/um.github.io/um.github.io'
+2026-10-19T07:37:35.1512277Z ##[group]Initializing the repository
+2026-10-19T07:37:35.1515866Z [command]/usr/bin/git init /home/runner/work/um.github.io/um.github.io
+2026-10-19T07:37:35.1609012Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-19T07:37:35.1610741Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-19T07:37:35.1612071Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-19T07:37:35.1612727Z hint: call:
+2026-10-19T07:37:35.1613089Z hint:
+2026-10-19T07:37:35.1613546Z hint: 	git config --global init.defaultBranch <name>
+2026-10-19T07:37:35.1614078Z hint:
+2026-10-19T07:37:35.1614598Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-19T07:37:35.1615421Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-19T07:37:35.1616074Z hint:
+2026-10-19T07:37:35.1616439Z hint: 	git branch -m <name>
+2026-10-19T07:37:35.1617268Z hint:
+2026-10-19T07:37:35.1617966Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-19T07:37:35.1618904Z Initialized empty Git repository in /home/runner/work/um.github.io/um.github.io/.git/
+2026-10-19T07:37:35.1621189Z [command]/usr/bin/git remote add origin https://github.com/jiwhan112/um.github.io
+2026-10-19T07:37:35.1690235Z ##[endgroup]
+2026-10-19T07:37:35.1690946Z ##[group]Disabling automatic garbage collection
+2026-10-19T07:37:35.1693446Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-19T07:37:35.1718033Z ##[endgroup]
+2026-10-19T07:37:35.1718717Z ##[group]Setting up auth
+2026-10-19T07:37:35.1724018Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T07:37:35.1748105Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T07:37:35.2026401Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T07:37:35.2054434Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T07:37:35.2234546Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T07:37:35.2262951Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T07:37:35.2431870Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-19T07:37:35.2464120Z ##[endgroup]
+2026-10-19T07:37:35.2464898Z ##[group]Fetching the repository
+2026-10-19T07:37:35.2472884Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a9218eae7ce7e15ffdb211a15cc8fcd86a9121a3:refs/remotes/origin/feature/dx9-implementation-migrate-20261019
+2026-10-19T07:37:36.3718600Z From https://github.com/jiwhan112/um.github.io
+2026-10-19T07:37:36.3720822Z  * [new ref]         a9218eae7ce7e15ffdb211a15cc8fcd86a9121a3 -> origin/feature/dx9-implementation-migrate-20261019
+2026-10-19T07:37:36.3727238Z ##[endgroup]
+2026-10-19T07:37:36.3728634Z ##[group]Determining the checkout info
+2026-10-19T07:37:36.3730034Z ##[endgroup]
+2026-10-19T07:37:36.3730967Z [command]/usr/bin/git sparse-checkout disable
+2026-10-19T07:37:36.3782496Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-19T07:37:36.3809946Z ##[group]Checking out the ref
+2026-10-19T07:37:36.3815740Z [command]/usr/bin/git checkout --progress --force -B feature/dx9-implementation-migrate-20261019 refs/remotes/origin/feature/dx9-implementation-migrate-20261019
+2026-10-19T07:37:36.4497900Z Switched to a new branch 'feature/dx9-implementation-migrate-20261019'
+2026-10-19T07:37:36.4501776Z branch 'feature/dx9-implementation-migrate-20261019' set up to track 'origin/feature/dx9-implementation-migrate-20261019'.
+2026-10-19T07:37:36.4509290Z ##[endgroup]
+2026-10-19T07:37:36.4547418Z [command]/usr/bin/git log -1 --format=%H
+2026-10-19T07:37:36.4569490Z a9218eae7ce7e15ffdb211a15cc8fcd86a9121a3
+2026-10-19T07:37:36.4832916Z ##[group]Run set -o pipefail
+2026-10-19T07:37:36.4834163Z [36;1mset -o pipefail[0m
+2026-10-19T07:37:36.4835324Z [36;1mmkdir -p "knowledge/verification/dx9/02a-gcc-11-native"[0m
+2026-10-19T07:37:36.4840246Z [36;1mcmake -S "knowledge/shared/dx9-impl-02a" -B "/tmp/atlas-dx9-02a-gcc-11-native" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER="g++" -DCMAKE_CXX_STANDARD="11" -DLAB_CXX_STANDARD="11" -DFRUSTUM_CXX_STANDARD="11" -DCMAKE_CXX_FLAGS="" 2>&1 | tee "knowledge/verification/dx9/02a-gcc-11-native/configure.log"[0m
+2026-10-19T07:37:36.5021474Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T07:37:36.5022709Z ##[endgroup]
+2026-10-19T07:37:36.6805643Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-19T07:37:36.6954100Z -- Detecting CXX compiler ABI info
+2026-10-19T07:37:36.7648635Z -- Detecting CXX compiler ABI info - done
+2026-10-19T07:37:36.7807366Z -- Check for working CXX compiler: /usr/bin/g++ - skipped
+2026-10-19T07:37:36.7812903Z -- Detecting CXX compile features
+2026-10-19T07:37:36.7821348Z -- Detecting CXX compile features - done
+2026-10-19T07:37:36.7894011Z -- Configuring done (0.2s)
+2026-10-19T07:37:36.8003843Z -- Generating done (0.0s)
+2026-10-19T07:37:36.8006011Z CMake Warning:
+2026-10-19T07:37:36.8009006Z   Manually-specified variables were not used by the project:
+2026-10-19T07:37:36.8010949Z 
+2026-10-19T07:37:36.8011548Z     FRUSTUM_CXX_STANDARD
+2026-10-19T07:37:36.8012913Z     LAB_CXX_STANDARD
+2026-10-19T07:37:36.8013723Z 
+2026-10-19T07:37:36.8013743Z 
+2026-10-19T07:37:36.8014852Z -- Build files have been written to: /tmp/atlas-dx9-02a-gcc-11-native
+2026-10-19T07:37:36.8101863Z ##[group]Run set -o pipefail
+2026-10-19T07:37:36.8102909Z [36;1mset -o pipefail[0m
+2026-10-19T07:37:36.8105050Z [36;1mcmake --build "/tmp/atlas-dx9-02a-gcc-11-native" --parallel 2 2>&1 | tee "knowledge/verification/dx9/02a-gcc-11-native/build.log"[0m
+2026-10-19T07:37:36.8143157Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T07:37:36.8144485Z ##[endgroup]
+2026-10-19T07:37:36.8337496Z [ 16%] Building CXX object CMakeFiles/engine.dir/src/engine_api.cpp.o
+2026-10-19T07:37:36.9191605Z [ 33%] Linking CXX shared library bin/libengine.so
+2026-10-19T07:37:36.9647722Z [ 33%] Built target engine
+2026-10-19T07:37:36.9709335Z [ 50%] Building CXX object CMakeFiles/engine_contract_tests.dir/tests/engine_contract_tests.cpp.o
+2026-10-19T07:37:36.9712458Z [ 66%] Building CXX object CMakeFiles/client.dir/src/client.cpp.o
+2026-10-19T07:37:37.1621913Z [ 83%] Linking CXX executable bin/client
+2026-10-19T07:37:37.1778305Z [100%] Linking CXX executable bin/engine_contract_tests
+2026-10-19T07:37:37.2095860Z [100%] Built target client
+2026-10-19T07:37:37.2253387Z [100%] Built target engine_contract_tests
+2026-10-19T07:37:37.2360938Z ##[group]Run set -o pipefail
+2026-10-19T07:37:37.2362030Z [36;1mset -o pipefail[0m
+2026-10-19T07:37:37.2364081Z [36;1mctest --test-dir "/tmp/atlas-dx9-02a-gcc-11-native" -V --output-on-failure 2>&1 | tee "knowledge/verification/dx9/02a-gcc-11-native/ctest.log"[0m
+2026-10-19T07:37:37.2367145Z [36;1mgrep -F "100% tests passed, 0 tests failed out of 2" "knowledge/verification/dx9/02a-gcc-11-native/ctest.log"[0m
+2026-10-19T07:37:37.2404632Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T07:37:37.2405875Z env:
+2026-10-19T07:37:37.2406924Z   ASAN_OPTIONS: detect_leaks=1
+2026-10-19T07:37:37.2407945Z   UBSAN_OPTIONS: halt_on_error=1
+2026-10-19T07:37:37.2408954Z ##[endgroup]
+2026-10-19T07:37:37.8961665Z Internal ctest changing into directory: /tmp/atlas-dx9-02a-gcc-11-native
+2026-10-19T07:37:37.8963270Z UpdateCTestConfiguration  from :/tmp/atlas-dx9-02a-gcc-11-native/DartConfiguration.tcl
+2026-10-19T07:37:37.9683539Z UpdateCTestConfiguration  from :/tmp/atlas-dx9-02a-gcc-11-native/DartConfiguration.tcl
+2026-10-19T07:37:37.9712028Z Test project /tmp/atlas-dx9-02a-gcc-11-native
+2026-10-19T07:37:37.9717231Z Constructing a list of tests
+2026-10-19T07:37:37.9833908Z Done constructing a list of tests
+2026-10-19T07:37:37.9835239Z Updating test list for fixtures
+2026-10-19T07:37:37.9836246Z Added 0 tests to meet fixture requirements
+2026-10-19T07:37:38.0105728Z Checking test dependency graph...
+2026-10-19T07:37:38.0107203Z Checking test dependency graph end
+2026-10-19T07:37:38.0297018Z test 1
+2026-10-19T07:37:38.0298195Z     Start 1: client_smoke
+2026-10-19T07:37:38.0298782Z 
+2026-10-19T07:37:38.0299401Z 1: Test command: /tmp/atlas-dx9-02a-gcc-11-native/bin/client
+2026-10-19T07:37:38.0300635Z 1: Working Directory: /tmp/atlas-dx9-02a-gcc-11-native
+2026-10-19T07:37:38.0350242Z 1: Test timeout computed to be: 10000000
+2026-10-19T07:37:38.0369023Z 1: Elapsed: 0.05 seconds
+2026-10-19T07:37:38.0370643Z 1/2 Test #1: client_smoke .....................   Passed    0.00 sec
+2026-10-19T07:37:38.0421763Z test 2
+2026-10-19T07:37:38.0422663Z     Start 2: exported_api_contract
+2026-10-19T07:37:38.0423220Z 
+2026-10-19T07:37:38.0423846Z 2: Test command: /tmp/atlas-dx9-02a-gcc-11-native/bin/engine_contract_tests
+2026-10-19T07:37:38.0425089Z 2: Working Directory: /tmp/atlas-dx9-02a-gcc-11-native
+2026-10-19T07:37:38.0426144Z 2: Test timeout computed to be: 10000000
+2026-10-19T07:37:38.0437517Z 2: checks=21 failures=0
+2026-10-19T07:37:38.0438919Z 2/2 Test #2: exported_api_contract ............   Passed    0.00 sec
+2026-10-19T07:37:38.0440976Z 
+2026-10-19T07:37:38.0441489Z 100% tests passed, 0 tests failed out of 2
+2026-10-19T07:37:38.0442080Z 
+2026-10-19T07:37:38.0442529Z Total Test time (real) =   0.07 sec
+2026-10-19T07:37:38.0774449Z 100% tests passed, 0 tests failed out of 2
+2026-10-19T07:37:38.0877944Z ##[group]Run actions/upload-artifact@v4
+2026-10-19T07:37:38.0878791Z with:
+2026-10-19T07:37:38.0879547Z   name: dx9-source-02a-gcc-11-native
+2026-10-19T07:37:38.0880452Z   path: knowledge/verification/dx9/02a-gcc-11-native/*.log
+2026-10-19T07:37:38.0881340Z   retention-days: 14
+2026-10-19T07:37:38.0882136Z   if-no-files-found: warn
+2026-10-19T07:37:38.0882910Z   compression-level: 6
+2026-10-19T07:37:38.0883658Z   overwrite: false
+2026-10-19T07:37:38.0884416Z   include-hidden-files: false
+2026-10-19T07:37:38.0885196Z ##[endgroup]
+2026-10-19T07:37:38.2484712Z (node:2392) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-19T07:37:38.2486097Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-19T07:37:38.2546844Z With the provided path, there will be 3 files uploaded
+2026-10-19T07:37:38.2548313Z Artifact name is valid!
+2026-10-19T07:37:38.2549260Z Root directory input is valid!
+2026-10-19T07:37:38.5877429Z Beginning upload of artifact content to blob storage
+2026-10-19T07:37:38.6159346Z (node:2392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-19T07:37:38.8362260Z Uploaded bytes 1262
+2026-10-19T07:37:38.8999183Z Finished uploading artifact content to blob storage!
+2026-10-19T07:37:38.9000419Z SHA256 digest of uploaded artifact zip is 2f6ce495a676f135a53af279826dc582236a8df19046e5464da69d6aa8736e9a
+2026-10-19T07:37:38.9001679Z Finalizing artifact upload
+2026-10-19T07:37:39.1653427Z Artifact dx9-source-02a-gcc-11-native.zip successfully finalized. Artifact ID 12169144447
+2026-10-19T07:37:39.1654378Z Artifact dx9-source-02a-gcc-11-native has been successfully uploaded! Final size is 1262 bytes. Artifact ID is 12169144447
+2026-10-19T07:37:39.1666910Z Artifact download URL: https://github.com/jiwhan112/um.github.io/actions/runs/39217190011/artifacts/12169144447
+2026-10-19T07:37:39.1852009Z Post job cleanup.
+2026-10-19T07:37:39.2667323Z [command]/usr/bin/git version
+2026-10-19T07:37:39.2699919Z git version 2.55.0
+2026-10-19T07:37:39.2734256Z Temporarily overriding HOME='/home/runner/work/_temp/543ff99b-70e2-44b7-8835-575819184ab8' before making global git config changes
+2026-10-19T07:37:39.2735771Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-19T07:37:39.2739612Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/um.github.io/um.github.io
+2026-10-19T07:37:39.2770228Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T07:37:39.2798372Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T07:37:39.2972765Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T07:37:39.2996912Z http.https://github.com/.extraheader
+2026-10-19T07:37:39.3005730Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-19T07:37:39.3032594Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T07:37:39.3204833Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T07:37:39.3231775Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T07:37:39.3513085Z Cleaning up orphan processes
+2026-10-19T07:37:39.3725061Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
