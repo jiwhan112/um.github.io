@@ -29,7 +29,7 @@ jobs:
         run: bash scripts/install-browser.sh
       - name: Refresh only intentionally changed mobile home snapshot
         working-directory: web
-        run: npx playwright test tests/visual.spec.ts --project=mobile --grep '^visual dashboard$' --update-snapshots
+        run: npx playwright test tests/visual.spec.ts --project=mobile --grep 'visual dashboard' --update-snapshots
       - name: Record reviewed mobile baseline as source-controlled snapshot
         run: |
           git status --short
