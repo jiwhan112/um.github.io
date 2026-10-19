@@ -1,0 +1,1 @@
+import{l as o}from"./index-Dl5kma2K.js";const e={name:"code-xml",size:24,node:[["path",{d:"m18 16 4-4-4-4",key:"1inbqp"}],["path",{d:"m6 8-4 4 4 4",key:"15zrgr"}],["path",{d:"m14.5 4-5 16",key:"e7oirm"}]],aliases:["code-2"]};e.node;const d=o(e);export{d as C};
