@@ -1,0 +1,72 @@
+name: Knowledge shared C++ CPU labs
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'knowledge/shared/**'
+      - '.github/workflows/knowledge-shared-labs-check.yml'
+  push:
+    branches: [master, 'feature/knowledge-*']
+    paths:
+      - 'knowledge/shared/**'
+      - '.github/workflows/knowledge-shared-labs-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: knowledge-labs-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  cpu-labs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lab: game-math-winapi-lab
+            compiler: g++
+            sanitizer: OFF
+            test_total: 6
+          - lab: game-math-winapi-lab
+            compiler: clang++
+            sanitizer: ON
+            test_total: 6
+          - lab: dx9-pipeline-lab
+            compiler: g++
+            sanitizer: OFF
+            test_total: 5
+          - lab: dx9-pipeline-lab
+            compiler: clang++
+            sanitizer: ON
+            test_total: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p knowledge/verification/shared/${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}
+          cmake -S "knowledge/shared/${{ matrix.lab }}" -B "/tmp/atlas-${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" -DENABLE_SANITIZERS="${{ matrix.sanitizer }}" 2>&1 | tee "knowledge/verification/shared/${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}/configure.log"
+      - name: Build
+        shell: bash
+        run: |
+          set -o pipefail
+          cmake --build "/tmp/atlas-${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}" --parallel 2 2>&1 | tee "knowledge/verification/shared/${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}/build.log"
+      - name: Test
+        shell: bash
+        env:
+          ASAN_OPTIONS: detect_leaks=1
+          UBSAN_OPTIONS: halt_on_error=1
+        run: |
+          set -o pipefail
+          ctest --test-dir "/tmp/atlas-${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}" -V --output-on-failure 2>&1 | tee "knowledge/verification/shared/${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}/ctest.log"
+          grep -F "${{ matrix.test_total }}/${{ matrix.test_total }} Test #" "knowledge/verification/shared/${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}/ctest.log"
+          grep -F "100% tests passed, 0 tests failed out of ${{ matrix.test_total }}" "knowledge/verification/shared/${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}/ctest.log"
+      - name: Keep raw stage logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}
+          path: knowledge/verification/shared/${{ matrix.lab }}-${{ matrix.compiler }}-${{ matrix.sanitizer }}/*.log
+          retention-days: 14
