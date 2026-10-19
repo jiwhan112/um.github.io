@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Home, Newspaper, BookOpen, Braces, FlaskConical, Archive, Bookmark, Search, Menu, Sparkles, ArrowUpRight, Cloud, Check, Gamepad2 } from 'lucide-react';
+import { Home, Newspaper, BookOpen, Braces, FlaskConical, Archive, Bookmark, Search, Menu, Sparkles, ArrowUpRight, Cloud, Check, Gamepad2, LibraryBig } from 'lucide-react';
 import { useData } from '@/lib/data';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
@@ -9,7 +9,7 @@ import { keys, useStored, objectBooleans } from '@/lib/storage';
 import { lessonProgress } from '@/lib/language-progress';
 import { startCloud } from '@/lib/cloud';
 import { SyncSettings } from './SyncSettings';
-const navigation=[{to:'/',name:'홈',icon:Home},{to:'/daily-briefing/',name:'데일리 브리핑',icon:Newspaper},{to:'/language-study/',name:'언어 학습',icon:BookOpen},{to:'/thinking-lab/',name:'사고력 훈련',icon:Braces},{to:'/game-design/',name:'게임 기획 연구실',icon:Gamepad2},{to:'/ai-asset-lab/',name:'AI 리소스 실험실',icon:FlaskConical},{to:'/opensource-lab/',name:'오픈소스 보관함',icon:Archive}];
+const navigation=[{to:'/',name:'홈',icon:Home},{to:'/daily-briefing/',name:'데일리 브리핑',icon:Newspaper},{to:'/language-study/',name:'언어 학습',icon:BookOpen},{to:'/knowledge/',name:'프로그래밍 학습',icon:LibraryBig},{to:'/thinking-lab/',name:'사고력 훈련',icon:Braces},{to:'/game-design/',name:'게임 기획 연구실',icon:Gamepad2},{to:'/ai-asset-lab/',name:'AI 리소스 실험실',icon:FlaskConical},{to:'/opensource-lab/',name:'오픈소스 보관함',icon:Archive}];
 export function Sidebar({onNavigate}:{onNavigate?:()=>void}){
  const {catalog}=useData(),{pathname,search}=useLocation(),[langStored]=useStored<unknown>(keys.language,{}),[readStored]=useStored<unknown>(keys.reading,{}),read=objectBooleans(readStored);
  const section=pathname.split('/')[1];const docs=catalog.documents.filter(d=>d.route.startsWith('/'+section+'/')&&d.kind!=='report');
@@ -21,7 +21,7 @@ export function Sidebar({onNavigate}:{onNavigate?:()=>void}){
 }
 export function SearchDialog({open,onOpenChange}:{open:boolean;onOpenChange:(value:boolean)=>void}){
  const {catalog,articles}=useData(),[query,setQuery]=useState('');
- const rows=useMemo(()=>[...catalog.documents.map(d=>({title:d.title,category:d.kind==='thinking'?'사고력':'문서',to:d.route})),...(['english','japanese'] as const).flatMap(lang=>catalog.languages[lang].map(m=>({title:m.title,category:lang==='english'?'영어':'일본어',to:`/language-study/${lang}/${m.id}/`}))),...articles.map(a=>({title:cleanTitle(a.title),category:'브리핑',to:'/daily-briefing/?article='+encodeURIComponent(a.id)+'&date='+a.date}))],[catalog,articles]);
+ const rows=useMemo(()=>[...catalog.documents.map(d=>({title:d.title,category:d.kind==='thinking'?'사고력':d.kind==='knowledge'?'프로그래밍':'문서',to:d.route})),...(['english','japanese'] as const).flatMap(lang=>catalog.languages[lang].map(m=>({title:m.title,category:lang==='english'?'영어':'일본어',to:`/language-study/${lang}/${m.id}/`}))),...articles.map(a=>({title:cleanTitle(a.title),category:'브리핑',to:'/daily-briefing/?article='+encodeURIComponent(a.id)+'&date='+a.date}))],[catalog,articles]);
  const filtered=rows.filter(x=>!query||x.title.toLocaleLowerCase().includes(query.toLocaleLowerCase())).slice(0,24);
  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="search-dialog"><DialogTitle>학습 자료 검색</DialogTitle><DialogDescription>기사 제목, 레슨, 문제와 실험 기록을 검색합니다.</DialogDescription><label className="search-input"><Search size={17}/><input autoFocus value={query} onChange={e=>setQuery(e.target.value)} placeholder="검색어를 입력하세요" aria-label="통합 검색"/></label><div className="search-results">{filtered.map((row,i)=><Link to={row.to} key={i} onClick={()=>onOpenChange(false)}><span className="badge">{row.category}</span><span>{row.title}</span><ArrowUpRight size={15}/></Link>)}{!filtered.length&&<p>검색 결과가 없습니다.</p>}</div></DialogContent></Dialog>;
 }
