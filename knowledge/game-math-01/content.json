@@ -524,6 +524,66 @@
           ]
         }
       ]
+    },
+    {
+      "id": "full-source-refs",
+      "title": "전체 소스와 실행 가능한 공통 실습",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 단원에서 설명한 코드의 전체 파일을 같은 ATLAS NOTE에서 볼 수 있습니다. 사용자 라이브러리의 독립 소스 원본과 대조했고 Linux CPU 검사만 새로 수행했습니다. Windows/MSVC·실제 Win32 GUI/GPU 실측은 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 CMake·헤더·프로그램 소스 보기",
+              "kind": "link",
+              "href": "/knowledge/winapi-math-lab/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "include/math.hpp — 원본 GitHub 코드 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/include/math.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "src/vector_motion.cpp — 원본 GitHub 코드 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/src/vector_motion.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 파일·SHA 무결성·새 CPU 테스트 원장",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
