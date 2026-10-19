@@ -1,0 +1,617 @@
+{
+  "id": "knowledge--game-math-03",
+  "route": "/knowledge/game-math-03/",
+  "kind": "knowledge",
+  "title": "게임 수학 03 · 충돌·카메라·타일 피킹",
+  "subtitle": "AABB·선분·클라이언트/월드 좌표·마름모 타일",
+  "date": "2026-10-13",
+  "number": "MATH / 03",
+  "category": "게임 수학",
+  "topic": "게임 수학",
+  "tags": [
+    "게임 수학",
+    "C++",
+    "Windows SDK"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "개요·원본 및 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f40814e905fe501f75cddc9"
+                },
+                {
+                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "충돌과 피킹은 같은 공간으로 변환한 뒤, 경계의 의미를 정하는 문제입니다.",
+                  "kind": "strong"
+                },
+                {
+                  "text": " C++20 · 2026-10-13 · 실습 "
+                },
+                {
+                  "text": "src/geometry.cpp",
+                  "kind": "code"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "게임 수학·MFC — 개정판 v1.0",
+              "kind": "link",
+              "href": "/knowledge/#knowledge-windows"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 검사의 결과와 게임의 반응을 분리합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "충돌 검사는 두 형태가 겹쳤는지 또는 접촉했는지를 판단합니다. 그 뒤 밀어내기, 피해, 튕김, 정지 같은 반응을 정하는 것은 별도입니다. 매 프레임 겹침을 확인했다고 고속 총알이 얇은 벽을 통과하지 않는 것은 아닙니다. 빠른 물체에는 이동 구간 검사나 연속 충돌 판정이 필요할 수 있습니다. 많은 물체를 비교할 때는 후보를 줄이는 넓은 단계와 정확한 형태를 검사하는 좁은 단계를 구분합니다. 이번 작은 실습은 개별 형태 검사이며 공간 분할·물리 해결기를 구현한 것은 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. AABB와 원의 경계 조건",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "축 정렬 사각형 AABB는 각 축의 최소·최대 좌표로 표현합니다. x와 y 양쪽의 구간이 모두 겹쳐야 두 사각형이 겹칩니다. 실습은 "
+            },
+            {
+              "text": "모서리가 닿는 것도 충돌",
+              "kind": "strong"
+            },
+            {
+              "text": "로 셉니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// min <= max라는 입력 계약이 필요합니다.\nbool Intersects(Aabb a, Aabb b) {\n    return a.min.x <= b.max.x && a.max.x >= b.min.x &&\n           a.min.y <= b.max.y && a.max.y >= b.min.y;\n}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "폭·높이가 음수인 입력, NaN과 무한대는 검사 전에 거부합니다. 겹친 면적이 양수일 때만 충돌로 처리하려면 부등호를 바꿔야 합니다. 반면 타일의 소속 판정은 경계가 두 타일에 동시에 속하지 않도록 반열린 구간을 사용할 수 있습니다. "
+            },
+            {
+              "text": "충돌 경계 정책과 픽셀·타일 소속 정책은 같을 필요가 없습니다.",
+              "kind": "strong"
+            },
+            {
+              "text": " 원의 중심 사이 거리가 반지름 합 이하이면 접촉·겹침입니다. 제곱 거리로 비교하면 제곱근을 생략할 수 있지만 데이터가 매우 클 때 제곱의 범위도 고려해야 합니다. 실습은 "
+            },
+            {
+              "text": "hypot",
+              "kind": "code"
+            },
+            {
+              "text": "을 사용하고 음수 반지름을 거부합니다. 원과 원의 충돌 반응은 이 함수에 포함하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. 수직선에서도 동작하는 선분 접근",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기울기 "
+            },
+            {
+              "text": "(y2-y1)/(x2-x1)",
+              "kind": "code"
+            },
+            {
+              "text": "만 쓰면 수직선에서 분모가 0입니다. 선분 A→B 위의 가장 가까운 점은 벡터 투영으로 구할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "t=\\operatorname{clamp}\\!\\left(\\frac{(P-A)\\cdot(B-A)}{(B-A)\\cdot(B-A)},0,1\\right),\\qquad Q=A+t(B-A)"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "A와 B가 같은 점이면 분모를 쓰지 않고 A를 반환합니다. 이 방법은 기울기를 따로 정의할 필요가 없고, 선분 밖의 점도 끝점으로 제한합니다. 다만 플랫폼 게임의 ‘발 위치를 바닥에 붙이는 것’과 ‘중심에서 가장 가까운 점 찾기’는 다른 요구사항입니다. 캐릭터 높이, 이전 프레임 위치, 점프·착지 방향을 따로 고려하세요."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. 카메라는 월드 데이터를 직접 이동시키지 않습니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 문서의 "
+            },
+            {
+              "text": "Camera2D",
+              "kind": "code"
+            },
+            {
+              "text": "는 월드 x 오른쪽·y 위쪽을 화면 x 오른쪽·y 아래쪽으로 바꿉니다. 카메라 위치 c, 화면 기준점 a, 양의 줌 z에 대해 다음과 같습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "s_x=a_x+(w_x-c_x)z,\\qquad s_y=a_y-(w_y-c_y)z"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "역변환은 "
+            },
+            {
+              "text": "wx=cx+(sx-ax)/z",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "wy=cy-(sy-ay)/z",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. zoom=0이나 음수는 이번 모델에서 거부합니다. 화면 스크롤 때 월드 오브젝트 위치를 모두 수정하면 충돌·저장·네트워크 값까지 달라집니다. 월드 데이터는 유지하고 그릴 때 뷰 변환을 적용합니다. Windows에서 얻은 마우스 좌표가 화면 좌표인지 클라이언트 좌표인지 먼저 확인합니다. 그다음 DPI 변환·뷰 영역 오프셋·줌·카메라 역변환을 "
+            },
+            {
+              "text": "그릴 때의 역순으로",
+              "kind": "strong"
+            },
+            {
+              "text": " 적용합니다. 한 번 변환한 값을 다시 "
+            },
+            {
+              "text": "ScreenToClient",
+              "kind": "code"
+            },
+            {
+              "text": "에 넣는 식의 이중 변환은 피합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n    M[\"마우스 입력\"] --> C[\"해당 창의 클라이언트 좌표\"]\n    C --> D[\"DPI와 뷰 영역 규약 맞춤\"]\n    D --> V[\"카메라 역변환\"]\n    V --> L[\"필요하면 오브젝트 역변환\"]\n    L --> P[\"형태 또는 타일 소속 검사\"]"
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. 마름모 타일은 투영식의 역을 구합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "여기서는 타일 중심의 정수 좌표를 "
+            },
+            {
+              "text": "(u,v)",
+              "kind": "code"
+            },
+            {
+              "text": ", 마름모 반폭·반높이를 "
+            },
+            {
+              "text": "(hx,hy)",
+              "kind": "code"
+            },
+            {
+              "text": "로 정합니다. 투영 평면은 x 오른쪽·y 아래쪽이며 식은 다음과 같습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "x=(u-v)h_x,\\qquad y=(u+v)h_y"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "따라서 연속 타일 좌표는 다음과 같습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "u=\\frac{x/h_x+y/h_y}{2},\\qquad\nv=\\frac{y/h_y-x/h_x}{2}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 중심 기준 규약에서 타일 u의 영역은 "
+            },
+            {
+              "text": "[u-0.5,u+0.5)",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. "
+            },
+            {
+              "text": "floor(u+0.5)",
+              "kind": "code"
+            },
+            {
+              "text": "와 "
+            },
+            {
+              "text": "floor(v+0.5)",
+              "kind": "code"
+            },
+            {
+              "text": "로 소속 타일을 고른 뒤 맵 경계를 검사합니다. 음수에서 정수 캐스팅의 0 방향 버림을 쓰면 잘못된 타일을 선택할 수 있습니다. 기존 강의의 홀짝 행 배치는 다른 인덱싱 규약이므로 이 식에 그대로 대입하지 않습니다. "
+            },
+            {
+              "text": "이 투영 평면과 앞 절의 y 위쪽 월드는 다른 규약입니다.",
+              "kind": "strong"
+            },
+            {
+              "text": " 실제 연결 시 입력을 먼저 타일 투영 평면으로 되돌립니다. 피킹이 한 칸씩 어긋나면 반폭/전체 폭, 중심/꼭짓점 기준, y방향, 카메라 이동량을 각각 확인하세요. 임의 사각형이나 볼록 다각형은 변의 반평면 검사를 사용할 수도 있습니다. 법선 방향과 정점 순서를 고정해야 하며, 모든 내적이 음수라는 조건은 그 방향 선택 아래에서만 맞습니다. 오목 다각형에는 같은 판정을 그대로 적용하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "6. 컬링·미니맵·Y 정렬의 역할",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "컬링은 그려도 화면에 보이지 않을 후보를 제외하는 작업입니다. 화면 영역을 맵 공간으로 역변환한 뒤 타일 인덱스 범위를 구하되, 타일 이미지가 셀 밖으로 솟는 경우 그 여유까지 포함해야 합니다. 카메라에 회전이 있으면 역변환된 화면이 축 정렬 사각형이 아니므로 보수적인 경계나 추가 형태 검사가 필요합니다. 미니맵은 같은 맵 데이터를 다른 카메라와 화면 영역으로 보여 줍니다. 가로·세로를 독립적으로 늘려 찌그러뜨릴지, "
+            },
+            {
+              "text": "min(뷰폭/맵폭, 뷰높이/맵높이)",
+              "kind": "code"
+            },
+            {
+              "text": "의 단일 배율로 비율을 유지할지 결정합니다. 비율 유지 시 남은 영역의 오프셋도 피킹에 반영합니다. Y 정렬은 특정 2D 장면의 겹침 순서를 정하는 휴리스틱입니다. 보통 바닥 접점 같은 기준점을 쓰고, 동률에는 안정된 ID 등 결정 규칙을 둡니다. 오브젝트 중심 y만 정렬해서 모든 높이·투명도·복잡한 겹침을 해결할 수는 없습니다. 렌더 목록은 비소유 참조인지 소유 목록인지 구분하며, 원본 오브젝트를 그리기 후 지워 버리지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "7. 검증 범위와 질문",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "형태·작업"
+                  }
+                ],
+                [
+                  {
+                    "text": "경계 정책"
+                  }
+                ],
+                [
+                  {
+                    "text": "일반적인 실패"
+                  }
+                ],
+                [
+                  {
+                    "text": "게임 활용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "AABB 겹침"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 예제는 접점도 충돌에 포함 (≤/≥)"
+                  }
+                ],
+                [
+                  {
+                    "text": "NaN·min>max·고속 이동 터널링"
+                  }
+                ],
+                [
+                  {
+                    "text": "넓은 단계 후보 검사"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원-원"
+                  }
+                ],
+                [
+                  {
+                    "text": "두 중심 거리 ≤ 반지름 합"
+                  }
+                ],
+                [
+                  {
+                    "text": "음수 반지름·제곱 오버플로"
+                  }
+                ],
+                [
+                  {
+                    "text": "간단한 근접 판정"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "점-선분 최근접점"
+                  }
+                ],
+                [
+                  {
+                    "text": "투영 계수 t를 [0,1]로 제한"
+                  }
+                ],
+                [
+                  {
+                    "text": "길이 0 선분·기울기 나눗셈"
+                  }
+                ],
+                [
+                  {
+                    "text": "발판·경로와의 거리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "타일 소속"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 실습은 반열린 경계와 floor 사용"
+                  }
+                ],
+                [
+                  {
+                    "text": "음수 좌표 정수 캐스팅·DPI/줌 중복"
+                  }
+                ],
+                [
+                  {
+                    "text": "마우스 피킹·맵 편집"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "geometry",
+              "kind": "code"
+            },
+            {
+              "text": "의 78회 검사에서 AABB 접촉·비접촉·잘못된 경계, 원 접촉, 수직·퇴화 선분, 타일 중심과 경계·맵 밖 선택을 확인했습니다. 카메라 왕복 검사는 "
+            },
+            {
+              "text": "transforms",
+              "kind": "code"
+            },
+            {
+              "text": "의 29회 검사에 포함됩니다. GCC·Clang·ASan/UBSan에서 통과했습니다. 미니맵 GUI, 실제 이미지 컬링과 Y 정렬 렌더링은 수식·설계 설명이며 화면 실행 검증을 하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "줌을 2배로 바꾸자 클릭 지점이 두 배 멀리 잡힌다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "렌더링에는 줌을 적용했지만 입력에는 역변환을 빠뜨렸는지 확인합니다. 화면 위치에서 기준점을 빼고 줌으로 나누며, y반전과 카메라 위치를 동일한 규약으로 되돌려야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "타일 경계의 점이 두 타일에 모두 선택되는 것을 어떻게 정리할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 타일 소속에 반열린 경계 규칙을 정하고 모든 피킹 함수에 동일하게 적용합니다. 단순히 epsilon을 더하면 겹침 방향이 바뀔 뿐 정책이 명확해지지 않을 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "API 참고: "
+            },
+            {
+              "text": "Microsoft — 창과 클라이언트 영역",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/learnwin32/creating-a-window"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "GetDpiForWindow",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdpiforwindow"
+            },
+            {
+              "text": ". 카메라·타일 식은 이 실습이 명시적으로 선택한 모델에서 유도했습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-source-refs",
+      "title": "전체 소스와 실행 가능한 공통 실습",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 단원에서 설명한 코드의 전체 파일을 같은 ATLAS NOTE에서 볼 수 있습니다. 사용자 라이브러리의 독립 소스 원본과 대조했고 Linux CPU 검사만 새로 수행했습니다. Windows/MSVC·실제 Win32 GUI/GPU 실측은 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 CMake·헤더·프로그램 소스 보기",
+              "kind": "link",
+              "href": "/knowledge/winapi-math-lab/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "include/math.hpp — 원본 GitHub 코드 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/include/math.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "src/geometry.cpp — 원본 GitHub 코드 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/src/geometry.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 파일·SHA 무결성·새 CPU 테스트 원장",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

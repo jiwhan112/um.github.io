@@ -24,9 +24,9 @@ const areas: Area[] = [
     {id:'cpp-effective-modern',title:'Effective Modern C++',description:'Scott Meyers 저서 중심의 현대 C++ 관용구',phase:'new'}
   ]},
   {id:'windows',title:'Windows·그래픽스 프로그래밍',subtitle:'Windows SDK 기반 게임 클라이언트 · DirectX 구현',icon:Code2,topics:[
-    {id:'winapi',title:'WinAPI',description:'메시지 루프·윈도우·입력·시스템 API',phase:'legacy'},
-    {id:'game-math',title:'게임 수학',description:'벡터·행렬·변환·충돌 수학',phase:'legacy'},
-    {id:'dx9',title:'DirectX 9',description:'기존 DX9 기반 엔진과 렌더링 구조',phase:'legacy'},
+    {id:'winapi',title:'WinAPI',description:'메시지 루프·윈도우·입력·시스템 API',phase:'legacy',category:'WinAPI'},
+    {id:'game-math',title:'게임 수학',description:'벡터·행렬·변환·충돌 수학',phase:'legacy',category:'게임 수학'},
+    {id:'dx9',title:'DirectX 9',description:'기존 DX9 엔진과 렌더링 파이프라인',phase:'legacy',category:'DirectX 9'},
     {id:'dx11',title:'DirectX 11',description:'자원·렌더링 파이프라인·엔진 기능',phase:'legacy',category:'DirectX 11'},
     {id:'dx12',title:'DirectX 12',description:'명시적 GPU 자원·명령 기록·동기화 (추후 집필)',phase:'new'}
   ]},
@@ -127,13 +127,13 @@ export default function Knowledge() {
           </div>
         </section>
         <section className="knowledge-recent" aria-label="기존 공개 프로토타입">
-          <div className="section-heading"><h2><FolderOpen size={19}/> 기존 공개 교재 · 참고 자료</h2><span className="muted text-xs">{archived.length} / {docs.length}개</span></div>
+          <div className="section-heading"><h2><FolderOpen size={19}/> 공개 학습 교재 · 검색</h2><span className="muted text-xs">{archived.length} / {docs.length}개</span></div>
           <div className="knowledge-recent-list">{archived.map(d=><Link key={d.id} to={d.route}><span className="knowledge-recent-icon"><FileText size={17}/></span><span><small>{d.category}</small><strong>{d.title}</strong></span><ArrowRight size={16}/></Link>)}</div>
-          <p className="knowledge-catalog-note">기존 DX11·LIS·BeautifulSoup 시범 교재의 URL은 유지됩니다. 특히 예전 Python·알고리즘 시범 교재는 새 집필 목차의 확정 단원으로 간주하지 않습니다.</p>
+          <p className="knowledge-catalog-note">WinAPI·게임 수학 기존 본문을 단계별로 이관하고 있습니다. DX11·LIS·BeautifulSoup 시범 교재의 URL도 유지됩니다. 공통 Win32 GUI 소스 텍스트는 복원했지만 Windows 실기기 실행과 원본 ZIP·첨부 바이너리는 아직 미검증입니다.</p>
         </section>
         <DocumentLibrary docs={docs} thinking={false}/>
       </div>
     </div>
-    <p className="knowledge-footnote">이 페이지는 사이트 목차·집필 계획 변경입니다. Notion 추가 이관이나 새 교재 발행은 수행하지 않았으며 기존 공개 자료와 URL은 그대로 보존합니다.</p>
+    <p className="knowledge-footnote">기존 Notion 본문을 순차적으로 읽어 GitHub에 독립 보관합니다. 실제 게시 문서만 공개 숫자에 포함하며, 신규 교재 집필 예정 항목은 이관 완료로 간주하지 않습니다. Windows/MSVC·DirectX/GPU 실행은 별도 검증 대상입니다.</p>
   </div>;
 }

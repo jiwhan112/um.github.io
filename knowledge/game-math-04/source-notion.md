@@ -1,0 +1,90 @@
+<callout icon="🛠️" color="blue_bg">
+	**편집 데이터, 화면, 렌더러, 파일 형식을 분리하면 툴을 바꿔도 데이터를 지킬 수 있습니다.**
+	<mention-date start="2026-10-13"/> · 공통 모델 실습 `include/grid.hpp`, `src/tile_document.cpp` · MFC GUI 실행 미검증
+</callout>
+<mention-page url="https://app.notion.com/p/3bde90ebffa44ef0a6455ca8e68a7886">게임 수학·MFC — 개정판 v1.0</mention-page>
+<table_of_contents color="gray"/>
+## 1. MFC와 Direct3D 9와 Direct2D는 다른 층입니다
+기존 노트의 ‘MFC D2D’ 예제에는 `IDirect3DDevice9`, D3DX 스프라이트와 텍스처가 등장합니다. 이는 MFC 창 위에서 **Direct3D 9와 D3DX로 2D 이미지를 그리는 구성**이며, 이름 때문에 Direct2D API와 혼동하면 안 됩니다.
+MFC는 Windows 응용 프로그램을 위한 C++ 클래스·프레임워크입니다. Direct3D는 렌더링 API이고 D3DX는 과거 Direct3D를 돕는 유틸리티입니다. D3DX가 deprecated라는 사실과 기존 DX9 프로젝트를 유지해야 하는 현실은 함께 다뤄야 합니다. 새 예제를 위해 무조건 과거 SDK 경로를 전역 등록하지 말고, 해당 프로젝트의 의존성·플랫폼·헤더와 라이브러리 구성을 고정합니다.
+공식 참고: [MFC 문서/뷰 구조](https://learn.microsoft.com/en-us/cpp/mfc/document-view-architecture?view=msvc-170), [D3DX의 역할과 유지보수 경로](https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dx). 이번 실습 팩은 순수 Win32 GUI 예제를 제공하며 MFC·D3DX 프로젝트를 빌드했다고 표시하지 않습니다.
+## 2. 문서와 뷰의 책임을 나눕니다
+**CDocument**는 편집할 데이터와 저장 상태를, **CView**는 데이터의 표시와 사용자의 상호작용을 맡는 구조로 이해합니다. 프레임은 메뉴·도킹 영역·뷰를 담는 창의 틀입니다. 미니맵과 큰 맵을 함께 보여 준다고 맵 데이터 두 벌을 만들 필요는 없습니다.
+```mermaid
+flowchart TD
+    D["문서: 타일 데이터와 개정 번호"] --> V["메인 맵 뷰"]
+    D --> M["미니맵 뷰"]
+    D --> P["속성 편집 뷰"]
+    V --> C["편집 명령: Paint, Undo, Redo"]
+    P --> C
+    C --> D
+    D --> N["변경 알림과 다시 그리기 요청"]
+    N --> V
+    N --> M
+```
+뷰가 다른 뷰의 내부 벡터를 직접 찾아 고치는 구조보다, 공유 모델에 명령을 전달한 뒤 관련 뷰에 갱신을 알리는 구조를 권합니다. MFC의 `SetModifiedFlag`와 `UpdateAllViews`는 이 경계에서 검토할 수 있는 도구입니다. 프로젝트가 문서/뷰를 쓰지 않는 대화상자형이라면 별도 모델 객체를 두면 됩니다. 문서/뷰 사용이 모든 MFC 앱의 의무는 아닙니다.
+`CObject`는 C++ 모든 객체의 최상위 부모가 아닙니다. `CWnd`와 HWND도 동일한 타입이 아니고, `CDC`는 HDC를 다루는 C++ 래퍼이지 HDC 그 자체가 아닙니다. 프레임워크 객체의 수명과 OS 핸들의 수명을 구분합니다.
+## 3. 스플리터와 스크롤도 화면 규약입니다
+CSplitterWnd로 분리된 각각의 pane은 별도 뷰일 수 있습니다. 서로 다른 뷰의 마우스 좌표를 가져다 쓰면 좌표계가 어긋납니다. 선택한 뷰의 클라이언트 영역, 스크롤, 줌을 기준으로 입력을 해석합니다.
+CScrollView는 GDI 경로에서 뷰포트 원점과 논리 단위 설정을 도울 수 있습니다. Direct3D로 그리는 데이터에 그 GDI 설정이 자동 적용된다고 가정하지 않습니다. 이미 스크롤을 반영한 DC에 좌표를 다시 빼서 두 번 이동시키는 문제도 피해야 합니다. [CScrollView 공식 설명](https://learn.microsoft.com/en-us/cpp/mfc/reference/cscrollview-class)을 통해 어떤 DC와 좌표에 적용되는지 확인합니다.
+## 4. UI 입력은 읽었다고 바로 유효한 데이터가 되지 않습니다
+DDX는 컨트롤과 멤버 사이의 데이터 교환, DDV는 검증에 사용하는 MFC 기능입니다. `UpdateData(TRUE)`는 UI에서 변수로 읽고 검증하는 방향이며, FALSE는 변수 값을 UI에 반영하는 방향입니다. TRUE가 실패하면 모델 변경을 진행하지 않는 경로가 필요합니다.
+예를 들어 타일 ID 입력은 숫자 변환 성공, 허용 범위, 실제 자산 존재까지 확인해야 합니다. 리스트 박스의 행 번호는 정렬·삭제로 바뀔 수 있으므로 영속적인 타일 ID와 같다고 두지 않습니다. 파일명에 포함된 숫자를 억지로 잘라 ID로 쓰기보다 명시적인 자산 ID와 경로를 저장합니다.
+[MFC CWnd::UpdateData](https://learn.microsoft.com/en-us/cpp/mfc/reference/cwnd-class?view=msvc-170#updatedata).
+## 5. 대화상자 창과 C++ 객체의 수명
+모달 대화상자는 보통 `DoModal`로 진입하여 결과를 받고, modeless 대화상자는 다른 창과 함께 살아 있으므로 소유자가 수명을 유지해야 합니다. 지역 변수로 만들고 생성 함수가 끝난 뒤에도 창이 그 객체를 참조하게 두면 안 됩니다.
+창을 닫는 것과 C++ 객체를 delete하는 것은 다른 작업입니다. 모델리스 창에서는 `DestroyWindow`, 프로젝트의 `PostNcDestroy` 정책, 부모 객체의 정리를 서로 맞춰야 합니다. 자동 해제와 수동 삭제를 둘 다 적용하면 이중 삭제가 됩니다. [Microsoft — 대화상자 파괴](https://learn.microsoft.com/en-us/cpp/mfc/destroying-the-dialog-box?view=msvc-170).
+## 6. 편집 명령과 실행 취소
+공통 실습의 `TileDocument`는 `Paint(cell,newId)`를 받아 변경 전·후 값을 Edit에 기록합니다. Undo는 이전 값으로, Redo는 이후 값으로 되돌립니다. 같은 값을 다시 칠하는 작업은 불필요한 기록을 만들지 않습니다. 새 편집 후에는 기존 redo 분기를 지웁니다.
+```c++
+study::TileDocument document(study::Grid(3, 3));
+document.Paint({1, 1}, 7);
+document.Undo();
+document.Redo();
+```
+위는 실제 공통 모델의 사용 예입니다. 전체 파일에는 경계 검사와 테스트가 있습니다. Undo 기록 확보가 실패하기 전에 원본을 바꾸지 않는 순서도 고려합니다. 이 작은 모델은 단일 타일 편집을 다루며, 드래그 한 번을 명령 하나로 묶는 작업·기록 용량 제한·협업 충돌 해결은 구현하지 않았습니다.
+## 7. 저장 형식은 객체 메모리와 별개입니다
+실습 포맷은 `MAP1 width height` 헤더와 행별 타일 정수입니다. 폭·높이는 각각 1\~256, 타일 ID는 0\~4095, 입력 텍스트는 최대 4MiB로 제한했습니다. 읽기 전에 크기를 제한하고, 필요한 원소 수를 정확히 확인한 뒤 추가 토큰도 거부합니다.
+불러오기는 **임시 Grid에 파싱·검증 → 성공한 완성본만 모델 교체**로 진행합니다. 파싱 실패 시 기존 맵이 유지되는지 테스트했습니다. 편집 기록 초기화도 새 맵의 파싱에 성공한 뒤에만 수행하도록 구현했습니다. 구조체 패딩·포인터·CString 내부 표현을 통째로 fwrite한 바이트는 이식 가능한 맵 형식이 아닙니다.
+단, 이 실습의 Save는 텍스트 생성입니다. 디스크에 안전하게 교체하는 원자적 저장, 전원 장애 복구, 버전 이관 도구까지 구현한 것은 아닙니다. 파일 대화상자의 취소와 실제 쓰기 실패도 구분해야 합니다.
+## 8. 자산과 렌더 자원의 수명
+경로 목록은 프로젝트 자산 루트를 기준으로 관리하고, 외부 파일을 드롭했을 때 루트 밖의 경로를 허용할지 복사해 올지 정책을 정합니다. 디렉터리의 파일 개수가 N이라고 `0.png`부터 `N-1.png`까지 모두 존재하는 것은 아닙니다. 목록을 실제 열거하고 필요한 순서로 정렬하며 확장자·중복·접근 실패를 처리합니다.
+COM 인터페이스는 계약에 맞게 AddRef/Release로 수명을 관리합니다. 단순 raw 포인터 복사만으로 참조 수가 자동 증가하지 않고, 마지막 참조를 해제한 뒤 남은 관찰 포인터가 자동 nullptr가 되는 것도 아닙니다. [Microsoft — COM 객체 수명](https://learn.microsoft.com/en-us/windows/win32/learnwin32/managing-the-lifetime-of-an-object).
+D3D9 장치·스왑체인·텍스처·스프라이트·폰트·선 그리기를 ‘한 종류의 객체’로 합치지 않습니다. 각 리소스의 생성 실패와 해제 순서를 관리하며 뷰별 viewport·렌더 대상도 구분합니다. 다중 뷰 출력과 장치 Reset, 스프라이트/폰트 복구의 실제 D3D9 구현은 다음 DX9 단계의 검증 대상입니다.
+## 9. 검증과 이해 확인
+<table header-row="true">
+<tr>
+<td>요소</td>
+<td>책임</td>
+<td>대표 오류</td>
+</tr>
+<tr>
+<td>CDocument</td>
+<td>데이터·저장 상태</td>
+<td>각 뷰에서 데이터 복사본 중복 보관</td>
+</tr>
+<tr>
+<td>CView</td>
+<td>입력·화면 갱신</td>
+<td>서로 다른 창 좌표 혼용</td>
+</tr>
+<tr>
+<td>임시 Grid</td>
+<td>전체 파싱 성공 후 교체</td>
+<td>파싱 실패 시 일부만 반영</td>
+</tr>
+<tr>
+<td>COM/GDI</td>
+<td>명시적 소유권과 해제</td>
+<td>이중 해제·선택 객체 미복구</td>
+</tr>
+</table>
+`tile_document`의 26회 조건 검사에서 편집·실행 취소·재실행, 저장 문자열 왕복, 잘못된 크기·ID·부족한 원소·추가 데이터 거부, 실패 시 원본 유지와 작업 스냅샷 예제를 확인했습니다. 세 Linux 빌드 구성에서 통과했습니다. MFC DDX·스플리터·대화상자 GUI를 실행한 결과와 혼동하지 않습니다.
+<details>
+<summary>미니맵이 갱신되지 않아 메인 뷰 벡터를 복사하면 해결될까?</summary>
+	복사본을 늘리면 다음 변경에서 다시 불일치할 수 있습니다. 데이터의 단일 소유자와 변경 알림을 먼저 정하고, 미니맵은 같은 모델을 다른 변환으로 표시하게 합니다.
+</details>
+<details>
+<summary>맵 파일 중간이 손상되었을 때 이미 읽은 타일만 먼저 적용해도 될까?</summary>
+	이 실습은 부분 적용을 금지합니다. 임시 모델 전체가 검증되어야 교체합니다. 부분 복구가 필요한 도구라면 사용자가 그것을 인지하도록 별도의 복구 모드를 설계해야 합니다.
+</details>

@@ -1,0 +1,475 @@
+{
+  "id": "knowledge--dx9-pipeline-lab",
+  "route": "/knowledge/dx9-pipeline-lab/",
+  "kind": "knowledge",
+  "title": "DX9 렌더링 파이프라인 — 공통 실습 전체 소스",
+  "subtitle": "정점 입력·클리핑·래스터화·깊이·블렌딩 · 5개 CPU 실행 예제",
+  "date": "2026-10-19",
+  "number": "DX9 SOURCE",
+  "category": "DirectX 9",
+  "topic": "DirectX 9",
+  "tags": [
+    "DirectX 9",
+    "C++20",
+    "CPU",
+    "실습 소스"
+  ],
+  "sections": [
+    {
+      "id": "readme",
+      "title": "원본·실습 범위와 빌드 방법",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "외부 참고 원문이 아니라 사용자 자료의 원본 소스 파일을 재구성한 독립 학습 실습입니다. 아래에 파일별 전체 코드를 제공하며 GitHub의 독립 원본 파일을 직접 다운로드할 수 있습니다. 원래 ZIP 압축본의 바이너리 동일성은 아직 미검증이고 Windows/MSVC·GPU 실행은 하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "환경"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 GitHub CI 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "cells": [
+                [
+                  {
+                    "text": "GCC 14.2 · Linux C++20"
+                  }
+                ],
+                [
+                  {
+                    "text": "CTest 5/5 통과"
+                  }
+                ],
+                [
+                  {
+                    "text": "CPU 모델만 검사"
+                  }
+                ]
+              ],
+              "header": false
+            },
+            {
+              "cells": [
+                [
+                  {
+                    "text": "Clang 17 · Linux ASan/UBSan"
+                  }
+                ],
+                [
+                  {
+                    "text": "CTest 5/5 통과"
+                  }
+                ],
+                [
+                  {
+                    "text": "동일 CPU 조건 반복, 새 독립 검사 수로 중복 집계하지 않음"
+                  }
+                ]
+              ],
+              "header": false
+            },
+            {
+              "cells": [
+                [
+                  {
+                    "text": "Windows/MSVC·D3D/GPU"
+                  }
+                ],
+                [
+                  {
+                    "text": "미검증"
+                  }
+                ],
+                [
+                  {
+                    "text": "Win32 소스는 읽을 수 있으나 이 환경에서 컴파일·실행하지 않음"
+                  }
+                ]
+              ],
+              "header": false
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S knowledge/shared/dx9-pipeline-lab -B build-dx9-pipeline-lab -DCMAKE_BUILD_TYPE=Debug\ncmake --build build-dx9-pipeline-lab --parallel 2\nctest --test-dir build-dx9-pipeline-lab -V --output-on-failure"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 파일별 구조와 실습 설명",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "GitHub CPU CI 새 로그와 출처 감사",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "이 소스가 DX9·WinAPI 실제 게임에서 검증됐나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. Linux CPU 시뮬레이션 실행만 새로 검증했습니다. 코드 중 Windows SDK·Win32 GUI·HLSL은 해당 도구 및 GPU에서 실제 컴파일하지 않았으므로 결과를 별도로 표시합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "왜 같은 CTest를 두 컴파일러에서 돌리나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "컴파일러와 sanitizer 조합에 따른 이식성과 정의되지 않은 동작 징후를 확인하기 위해서입니다. 같은 입력 조건을 두 번 실행한 결과를 두 개의 독립 요구사항으로 중복 계산하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "file-1",
+      "title": "README.md",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/README.md · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/README.md"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "markdown",
+          "text": "# DX9 렌더링 파이프라인 — CPU 학습 실습 v1.0\n\n개정일: 2026-10-13. C++20. 외부 라이브러리 없이 CMake로 빌드하는 **수치·상태 학습 모델**입니다.\nD3D9 런타임이나 GPU를 호출하는 렌더러가 아닙니다. 창이나 이미지를 출력하지 않고 결과를 콘솔과 조건 검사로 확인합니다.\n\n## 읽는 순서\n\n| 실행 파일 | 소스 | 관찰하는 것 | 검사 횟수 |\n|---|---|---|---:|\n| vertex_input | src/vertex_input.cpp | 구조체 크기, stride, 속성 offset, 인덱스·버퍼 경계 | 22 |\n| transform_clip | src/transform_clip.cpp | 로컬→화면, near/far, 동차 6평면 클리핑 | 79 |\n| raster_uv | src/raster_uv.cpp | Top-left 소속, 무게중심, UV 원근 보정, 깊이·텍셀 중심 | 71 |\n| depth_blend | src/depth_blend.cpp | 깊이 비교/쓰기, 알파 거부, 혼합 순서, premultiplied 표현 | 19 |\n| pipeline_trace | src/pipeline_trace.cpp | 8×8 타깃의 단일 삼각형 처리 흐름 | 105 |\n| **합계** | | 동일 조건을 각 빌드 구성에서 반복 | **296** |\n\n`include/pipeline.hpp`는 공통 계산, `include/check.hpp`는 테스트 보조입니다.\n`examples/texture_sm3.hlsl`은 D3D9 셰이더 대응을 설명하는 **컴파일·GPU 실행 미검증 참고 소스**입니다.\n`docs/validation.md`에 실제 검증과 제한을, `logs/`에 최초 제공 시 검증 원시 로그를 담았습니다.\n\n## 일반 빌드\n\nC++20을 지원하는 컴파일러와 CMake 3.20 이상이 필요합니다.\n\n```sh\ncmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build --config Debug\nctest --test-dir build -C Debug --output-on-failure\n```\n\n상세 출력을 보려면 `ctest --test-dir build -C Debug -V`를 실행합니다.\nWindows/MSVC에서도 사용할 수 있는 설정을 넣었지만 **이번 제공본에서 실제 Windows 빌드를 수행한 것은 아닙니다**.\n회사의 C++11 프로젝트에 그대로 복사하지 마세요. std::span, std::lerp 등 C++20 기능을 사용합니다.\n\n## 재검증 스크립트\n\nPython 3.9 이상과 CMake가 있는 환경에서 다음과 같이 실행합니다.\n\n```sh\npython3 verify.py --compiler g++ --build-dir ../pipeline-check-gcc\npython3 verify.py --compiler clang++ --build-dir ../pipeline-check-clang\npython3 verify.py --compiler clang++ --sanitizers --build-dir ../pipeline-check-san\n```\n\nWindows Python 명령은 `python`일 수 있습니다. MSVC는 Developer Command Prompt에서 컴파일러 인자를 생략해 CMake 기본 생성기를 쓰세요.\nSanitizer 옵션은 이 프로젝트에서 GCC/Clang 계열용이며 MSVC용으로 구현하지 않았습니다.\n스크립트는 한 번 실행하고 종료합니다. 기존 디렉터리를 삭제하지 않습니다. 다른 컴파일러로 바꾸려면 새로운 build-dir을 지정합니다.\n\n## 계산 계약\n\n행 벡터 `p' = pM`, 행별 4×4 double 배열, 뷰 공간 +Z 전방, 일반 깊이 near→0/far→1을 사용합니다.\n원근 행렬은 `0<fov<pi`, `aspect>0`, `0<near<far`만 지원합니다. Reverse-Z·무한 far·역투영은 범위 밖입니다.\n클리핑은 볼록 다각형에 대한 6개 동차 평면과 원래 UV의 선형 교점 생성입니다. 입력 정점 수는 최대64이며 경계 중복 정점 제거는 보장하지 않습니다.\nProject는 **클리핑을 대신하지 않습니다**. 호출자는 클리핑 후 w>1e-12인 정점을 전달해야 합니다.\n\nCovers는 방향을 맞춘 뒤 Top-left 규칙으로 정수 중심 단일 샘플을 판정합니다. 그 자체로 앞/뒷면을 제거하지 않습니다.\nBarycentric/PerspectiveUV는 유효한 화면 삼각형과 그 샘플을 대상으로 합니다. 원래 UV 및 입력 데이터가 유한하고 해당 계약을 만족해야 합니다.\n깊이는 이미 나눈 z/w의 화면 선형 보간입니다. UV용 원근 보정 식을 다시 적용하지 않습니다.\n텍스처 실습은 1차원 level0 선형 필터와 clamp만 지원합니다. 모든 입력 텍셀은 유한한 값이어야 합니다.\n\n출력 모델은 LESS_EQUAL, 선택적인 연속 double 알파 cutoff, ADD/source-over RGB, 별도 알파 ONE/INVSRCALPHA, RGBA 쓰기만 지원합니다.\n목적지 색·깊이는 유효하게 초기화되어야 합니다. 스텐실, 다른 비교/블렌딩 연산, 쓰기 마스크, 포맷 양자화, sRGB, MSAA는 없습니다.\n`depth_test=false`면 깊이 쓰기도 하지 않는 D3DRS_ZENABLE=FALSE 의미를 사용합니다.\n\n수치 헬퍼 일부는 절댓값1e9 범위와 절대 임계값1e-12를 둡니다. 모든 크기의 입력에 대한 안정성·조건수 평가·생산용 수학 라이브러리를 대체하지 않습니다.\nFetchOffset은 안전한 단일 스트림 바이트 산술 예제입니다. 드라이버의 전체 유효성 검사·선언 정합성을 구현하지 않으며 stride0의 API 특수 사용도 제외했습니다.\n\n## 핵심 관찰\n\n- `(1,1,0,1)` → W(1,0,0) → V(0,0,5) → P(90°,4/3,1,11) → clip(1.5,1,4.4,5) → NDC(0.3,0.2,0.88) → 화면(520,240),깊이0.88.\n- 꼭짓점이 모두 화면 밖이어도 삼각형 내부가 클립 영역과 교차할 수 있습니다.\n- lambda=(.5,.25,.25), w=(1,2,4), UV=((0,0),(1,0),(0,1))에서 단순 UV는(.25,.25), 원근 보정은(2/11,1/11)입니다.\n- 알파0인 면도 깊이 쓰기가 켜져 있으면 뒤 물체를 가릴 수 있습니다.\n- 삼각형 추적의 커버된 샘플은25개이며, 샘플(4,4)의 UV=(.5,.5),깊이=.4입니다.\n\n## 이번에 수행하지 않은 것\n\n실제 D3D9/Windows/MSVC/FXC/HLSL/GPU 실행, 성능 측정, 드라이버 적합성, 모든 GPU 정밀도·서브픽셀 규칙의 모사는 수행하지 않았습니다.\nSanitizer 통과가 전체 입력과 모든 환경에서 안전하다는 증명은 아닙니다.\n수식 테스트는 의도한 계산을 확인합니다. 실제 GPU 캡처와 비교한 결과로 제시하지 않습니다.\n\n## 학습 문서\n\n[Notion 학습 목차](https://app.notion.com/p/3e66577f53a549fe99a94ac26f68a685)\n"
+        }
+      ]
+    },
+    {
+      "id": "file-2",
+      "title": "CMakeLists.txt",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/CMakeLists.txt · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cmake",
+          "text": "cmake_minimum_required(VERSION 3.20)\nproject(dx9_pipeline_lab LANGUAGES CXX)\noption(ENABLE_SANITIZERS \"Enable address and undefined behavior sanitizers\" OFF)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nif(MSVC AND ENABLE_SANITIZERS)\n  message(FATAL_ERROR \"This lab sanitizer configuration requires GCC or Clang, not MSVC.\")\nendif()\nenable_testing()\nforeach(name IN ITEMS vertex_input transform_clip raster_uv depth_blend pipeline_trace)\n  add_executable(${name} src/${name}.cpp)\n  target_include_directories(${name} PRIVATE include)\n  if(MSVC)\n    target_compile_options(${name} PRIVATE /W4 /permissive- /utf-8)\n  else()\n    target_compile_options(${name} PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)\n    if(ENABLE_SANITIZERS)\n      target_compile_options(${name} PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)\n      target_link_options(${name} PRIVATE -fsanitize=address,undefined)\n    endif()\n  endif()\n  add_test(NAME ${name} COMMAND ${name})\nendforeach()\n"
+        }
+      ]
+    },
+    {
+      "id": "file-3",
+      "title": "verify.py",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/verify.py · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/verify.py"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "text": "#!/usr/bin/env python3\n\"\"\"Configure, build and run this CPU lab once, saving logs in the chosen build dir.\"\"\"\nfrom __future__ import annotations\nimport argparse\nfrom pathlib import Path\nimport shutil\nimport subprocess\nimport sys\n\n\ndef main() -> int:\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--compiler', help='C++ compiler name or executable path')\n    parser.add_argument('--build-dir', type=Path, default=Path('build-verify'))\n    parser.add_argument('--config', default='Debug')\n    parser.add_argument('--sanitizers', action='store_true')\n    args = parser.parse_args()\n    root = Path(__file__).resolve().parent\n    build = args.build_dir.resolve()\n    if build == root or build in root.parents:\n        parser.error('Use a dedicated build directory, not the source or its parent.')\n    cmake = shutil.which('cmake')\n    ctest = shutil.which('ctest')\n    if not cmake or not ctest:\n        parser.error('CMake and CTest must be installed and available on PATH.')\n    configure = [cmake, '-S', str(root), '-B', str(build),\n                 f'-DCMAKE_BUILD_TYPE={args.config}']\n    if args.compiler:\n        compiler = shutil.which(args.compiler)\n        if not compiler:\n            parser.error(f'Compiler not found: {args.compiler}')\n        configure.append(f'-DCMAKE_CXX_COMPILER={compiler}')\n    configure.append(f'-DENABLE_SANITIZERS={\"ON\" if args.sanitizers else \"OFF\"}')\n    commands = [\n        ('configure', configure),\n        ('build', [cmake, '--build', str(build), '--config', args.config, '--parallel', '2']),\n        ('test', [ctest, '--test-dir', str(build), '-C', args.config, '-V', '--output-on-failure']),\n    ]\n    build.mkdir(parents=True, exist_ok=True)\n    for name, command in commands:\n        print(f'[{name}] ' + ' '.join(command), flush=True)\n        result = subprocess.run(command, stdout=subprocess.PIPE,\n                                stderr=subprocess.STDOUT, text=True,\n                                encoding='utf-8', errors='replace', timeout=300)\n        (build / f'verify-{name}.log').write_text(result.stdout, encoding='utf-8')\n        print(result.stdout)\n        if result.returncode:\n            return result.returncode\n    return 0\n\n\nif __name__ == '__main__':\n    try:\n        raise SystemExit(main())\n    except (OSError, subprocess.TimeoutExpired) as exc:\n        print(f'Verification failed: {exc}', file=sys.stderr)\n        raise SystemExit(1)\n"
+        }
+      ]
+    },
+    {
+      "id": "file-4",
+      "title": "include/check.hpp",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/include/check.hpp · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/include/check.hpp"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#ifndef STUDY_PIPELINE_CHECK_HPP\n#define STUDY_PIPELINE_CHECK_HPP\n#include <cmath>\n#include <iostream>\n#include <stdexcept>\n#include <string>\n#include <utility>\nstruct Checks {\n    int count{};\n    void That(bool ok,const char* label) {\n        ++count; if (!ok) throw std::runtime_error(std::string(\"FAIL: \")+label);\n    }\n    void Near(double value,double expected,const char* label) {\n        That(std::isfinite(value) && std::abs(value-expected)<=1e-9*(1+std::abs(expected)),label);\n    }\n    template<class F> void Rejects(F&& f,const char* label) {\n        bool rejected=false;\n        try { std::forward<F>(f)(); } catch(const std::invalid_argument&) { rejected=true; }\n        That(rejected,label);\n    }\n};\ntemplate<class F> int Run(const char* name,F f) {\n    try { Checks c; f(c); std::cout<<\"PASS \"<<name<<\" checks=\"<<c.count<<'\\n'; return 0; }\n    catch(const std::exception& e) { std::cerr<<name<<\": \"<<e.what()<<'\\n'; return 1; }\n}\n#endif\n"
+        }
+      ]
+    },
+    {
+      "id": "file-5",
+      "title": "include/pipeline.hpp",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/include/pipeline.hpp · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/include/pipeline.hpp"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#ifndef STUDY_DX9_PIPELINE_HPP\n#define STUDY_DX9_PIPELINE_HPP\n// Educational scalar model. Not a D3D9 driver, rasterizer conformance test,\n// or production renderer. See README.md for the deliberately limited scope.\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <cstddef>\n#include <cstdint>\n#include <cstring>\n#include <limits>\n#include <optional>\n#include <span>\n#include <stdexcept>\n#include <utility>\n#include <vector>\n\nnamespace pipeline {\ninline void Require(bool ok, const char* message) {\n    if (!ok) throw std::invalid_argument(message);\n}\nusing Vec4 = std::array<double, 4>;\nusing Mat4 = std::array<std::array<double, 4>, 4>;\nstruct Vec2 { double x{}, y{}; };\ninline bool Finite(Vec4 v) {\n    return std::all_of(v.begin(), v.end(), [](double x) {\n        return std::isfinite(x) && std::abs(x) <= 1e9;\n    });\n}\ninline Mat4 Identity() {\n    Mat4 m{};\n    for (std::size_t i=0; i<4; ++i) m[i][i]=1;\n    return m;\n}\ninline Mat4 Translation(double x, double y, double z) {\n    Require(Finite({x,y,z,1}), \"translation range\");\n    auto m=Identity(); m[3]={x,y,z,1}; return m;\n}\ninline Mat4 Multiply(const Mat4& a, const Mat4& b) {\n    Mat4 r{};\n    for (std::size_t i=0; i<4; ++i)\n        for (std::size_t j=0; j<4; ++j)\n            for (std::size_t k=0; k<4; ++k) r[i][j]+=a[i][k]*b[k][j];\n    for (auto row:r) Require(Finite(row), \"matrix result range\");\n    return r;\n}\ninline Vec4 Transform(Vec4 v, const Mat4& m) {\n    Require(Finite(v), \"vertex range\");\n    Vec4 r{};\n    for (std::size_t j=0; j<4; ++j)\n        for (std::size_t i=0; i<4; ++i) r[j]+=v[i]*m[i][j];\n    Require(Finite(r), \"transform result range\"); return r;\n}\n// Row vectors, +Z forward, conventional near->0 / far->1 depth mapping.\ninline Mat4 PerspectiveLH(double fov_y, double aspect, double near_z, double far_z) {\n    constexpr double pi=3.14159265358979323846;\n    Require(std::isfinite(fov_y) && fov_y>0 && fov_y<pi, \"fov\");\n    Require(std::isfinite(aspect) && aspect>0, \"aspect\");\n    Require(std::isfinite(near_z) && std::isfinite(far_z) &&\n            near_z>0 && far_z>near_z, \"near/far\");\n    const double sy=1/std::tan(fov_y/2), q=far_z/(far_z-near_z);\n    Mat4 m{}; m[0][0]=sy/aspect; m[1][1]=sy; m[2][2]=q;\n    m[2][3]=1; m[3][2]=-near_z*q;\n    for (auto row:m) Require(Finite(row), \"projection range\");\n    return m;\n}\nstruct Vertex { Vec4 clip{}; Vec2 uv{}; };\ninline double PlaneDistance(Vec4 p, std::size_t plane) {\n    switch(plane) {\n    case 0: return p[0]+p[3]; case 1: return p[3]-p[0];\n    case 2: return p[1]+p[3]; case 3: return p[3]-p[1];\n    case 4: return p[2]; case 5: return p[3]-p[2];\n    default: throw std::invalid_argument(\"plane index\");\n    }\n}\ninline bool Inside(Vec4 p, double tolerance=0) {\n    if (!Finite(p)) return false;\n    for (std::size_t k=0;k<6;++k)\n        if (PlaneDistance(p,k)<-tolerance) return false;\n    return true;\n}\ninline Vertex Lerp(Vertex a, Vertex b, double t) {\n    Vertex r{};\n    for (std::size_t k=0;k<4;++k) r.clip[k]=std::lerp(a.clip[k],b.clip[k],t);\n    r.uv={std::lerp(a.uv.x,b.uv.x,t),std::lerp(a.uv.y,b.uv.y,t)};\n    return r;\n}\n// Convex polygon clipping, preserving raw (not uv/w) attributes until rasterization.\ninline std::vector<Vertex> Clip(std::span<const Vertex> input) {\n    Require(input.size()<=64, \"polygon limit\");\n    for (auto v:input) Require(Finite(v.clip) &&\n        std::isfinite(v.uv.x) && std::isfinite(v.uv.y) &&\n        std::abs(v.uv.x)<=1e9 && std::abs(v.uv.y)<=1e9, \"nonfinite vertex\");\n    std::vector<Vertex> polygon(input.begin(), input.end());\n    for (std::size_t plane=0;plane<6 && !polygon.empty();++plane) {\n        std::vector<Vertex> output;\n        Vertex a=polygon.back(); double da=PlaneDistance(a.clip,plane);\n        for (Vertex b:polygon) {\n            const double db=PlaneDistance(b.clip,plane);\n            const bool in_a=da>=0, in_b=db>=0;\n            if (in_a!=in_b) output.push_back(Lerp(a,b,da/(da-db)));\n            if (in_b) output.push_back(b);\n            a=b; da=db;\n        }\n        polygon=std::move(output);\n    }\n    return polygon;\n}\nstruct Viewport { double x{},y{},width{},height{},min_z{},max_z{1}; };\nstruct ScreenVertex { Vec2 p{}; double depth{}, inv_w{}; Vec2 uv{}; };\ninline ScreenVertex Project(Vertex v, Viewport vp) {\n    Require(Finite(v.clip) && v.clip[3]>1e-12, \"w is not projectable\");\n    Require(Finite({vp.x,vp.y,vp.width,vp.height}) && vp.width>0 && vp.height>0,\n            \"viewport rectangle\");\n    Require(std::isfinite(vp.min_z) && std::isfinite(vp.max_z) &&\n            vp.min_z>=0 && vp.min_z<=vp.max_z && vp.max_z<=1, \"viewport depth\");\n    const double iw=1/v.clip[3];\n    return {{vp.x+(v.clip[0]*iw+1)*vp.width/2,\n             vp.y+(1-v.clip[1]*iw)*vp.height/2},\n            vp.min_z+v.clip[2]*iw*(vp.max_z-vp.min_z), iw, v.uv};\n}\ninline double Edge(Vec2 a, Vec2 b, Vec2 p) {\n    return (b.x-a.x)*(p.y-a.y)-(b.y-a.y)*(p.x-a.x);\n}\ninline bool TopLeft(Vec2 a, Vec2 b) {\n    const double dx=b.x-a.x, dy=b.y-a.y;\n    return dy<0 || (dy==0 && dx>0); // screen Y points down; positive signed area\n}\ninline bool Covers(std::array<Vec2,3> v, Vec2 p) {\n    for (auto q:v) if (!Finite({q.x,q.y,p.x,p.y})) return false;\n    const double area=Edge(v[0],v[1],v[2]);\n    if (!std::isfinite(area) || std::abs(area)<1e-12) return false;\n    if (area<0) std::swap(v[1],v[2]);\n    for (std::size_t k=0;k<3;++k) {\n        const auto a=v[k], b=v[(k+1)%3]; const double e=Edge(a,b,p);\n        if (e<0 || (e==0 && !TopLeft(a,b))) return false;\n    }\n    return true;\n}\ninline std::optional<std::array<double,3>> Barycentric(std::array<Vec2,3> v, Vec2 p) {\n    for (auto q:v) if (!Finite({q.x,q.y,p.x,p.y})) return std::nullopt;\n    const double area=Edge(v[0],v[1],v[2]);\n    if (!std::isfinite(area) || std::abs(area)<1e-12) return std::nullopt;\n    return std::array<double,3>{Edge(v[1],v[2],p)/area,\n                              Edge(v[2],v[0],p)/area,\n                              Edge(v[0],v[1],p)/area};\n}\ninline Vec2 PerspectiveUV(std::array<ScreenVertex,3> v, std::array<double,3> l) {\n    double sum=0; Vec2 uv{};\n    for (std::size_t k=0;k<3;++k) {\n        Require(std::isfinite(l[k]) && std::isfinite(v[k].inv_w) && v[k].inv_w>0,\n                \"interpolation input\");\n        const double q=l[k]*v[k].inv_w; sum+=q;\n        uv.x+=q*v[k].uv.x; uv.y+=q*v[k].uv.y;\n    }\n    Require(std::isfinite(sum) && sum>1e-12, \"interpolation denominator\");\n    return {uv.x/sum,uv.y/sum};\n}\ninline double AffineDepth(std::array<ScreenVertex,3> v, std::array<double,3> l) {\n    return l[0]*v[0].depth+l[1]*v[1].depth+l[2]*v[2].depth;\n}\n// One-dimensional, level-0 linear sampling with clamp addressing, for texel-center tests.\ninline double LinearClamp(std::span<const double> texels, double u) {\n    Require(!texels.empty() && texels.size()<=10000 && std::isfinite(u), \"sampler input\");\n    const int n=static_cast<int>(texels.size());\n    const double x=std::clamp(u,0.0,1.0)*n-0.5;\n    const int left=static_cast<int>(std::floor(x)); const double t=x-left;\n    const auto at=[&](int i) { return texels[static_cast<std::size_t>(std::clamp(i,0,n-1))]; };\n    return std::lerp(at(left),at(left+1),t);\n}\n// Checked address arithmetic for one stream. A CPU range check, not a driver query.\ninline std::size_t FetchOffset(std::size_t bytes, std::size_t stream_offset,\n                              std::size_t stride, std::int64_t base,\n                              std::uint32_t index, std::size_t element_offset,\n                              std::size_t element_size) {\n    Require(stride>0 && element_size>0 && element_offset<=stride &&\n            element_size<=stride-element_offset, \"vertex element layout\");\n    Require(base>=std::numeric_limits<std::int32_t>::min() &&\n            base<=std::numeric_limits<std::int32_t>::max(), \"base index range\");\n    const std::int64_t absolute=base+static_cast<std::int64_t>(index);\n    Require(absolute>=0, \"negative vertex index\");\n    const auto vertex=static_cast<std::uint64_t>(absolute);\n    Require(stream_offset<=bytes && element_offset<=bytes-stream_offset, \"stream offset\");\n    const std::size_t start=stream_offset+element_offset;\n    Require(element_size<=bytes-start, \"truncated element\");\n    Require(vertex<=(bytes-start-element_size)/stride, \"vertex outside buffer\");\n    return start+static_cast<std::size_t>(vertex)*stride;\n}\nstruct Color { double r{},g{},b{},a{1}; };\nstruct Pixel { Color color{}; double depth{1}; };\nstruct OutputState { bool depth_test{true}, depth_write{true}, blend{}, premultiplied{};\n                     double alpha_cutoff{-1}; };\n// Scope: LESS_EQUAL depth, optional alpha >= cutoff, ADD/source-over, RGBA writes.\n// Separate alpha factors ONE and INV_SRC_ALPHA are represented explicitly here.\ninline bool Fragment(Pixel& destination, Color source, double depth, OutputState state) {\n    Require(Finite({source.r,source.g,source.b,source.a}) && source.a>=0 && source.a<=1,\n            \"fragment color\");\n    Require(std::isfinite(depth) && depth>=0 && depth<=1, \"fragment depth\");\n    if (source.a<state.alpha_cutoff) return false;\n    if (state.depth_test && depth>destination.depth) return false;\n    if (state.blend) {\n        const double sf=state.premultiplied?1:source.a, df=1-source.a;\n        destination.color={source.r*sf+destination.color.r*df,\n                           source.g*sf+destination.color.g*df,\n                           source.b*sf+destination.color.b*df,\n                           source.a+destination.color.a*df};\n    } else destination.color=source;\n    // D3DRS_ZENABLE=FALSE disables both test and depth-buffer updates.\n    if (state.depth_test && state.depth_write) destination.depth=depth;\n    return true;\n}\n} // namespace pipeline\n#endif\n"
+        }
+      ]
+    },
+    {
+      "id": "file-6",
+      "title": "src/depth_blend.cpp",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/src/depth_blend.cpp · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/src/depth_blend.cpp"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include \"pipeline.hpp\"\n#include \"check.hpp\"\nint main(){return Run(\"depth_blend\",[](Checks& c){\n    using namespace pipeline;\n    const Color red{1,0,0,1},blue{0,0,1,1},half_red{1,0,0,.5},half_blue{0,0,1,.5};\n    Pixel p{blue,1};c.That(Fragment(p,red,.4,{}),\"near fragment accepted\");\n    c.That(!Fragment(p,blue,.8,{}),\"occluded fragment rejected\");c.Near(p.depth,.4,\"depth stored\");\n    Pixel a{{0,0,0,1},1};OutputState translucent{true,false,true,false,-1};\n    Fragment(a,half_blue,.8,translucent);Fragment(a,half_red,.2,translucent);\n    c.Near(a.color.r,.5,\"back to front red\");c.Near(a.color.b,.25,\"back to front blue\");c.Near(a.depth,1,\"transparent no z writes\");\n    Pixel b{{0,0,0,1},1};Fragment(b,half_red,.2,translucent);Fragment(b,half_blue,.8,translucent);\n    c.Near(b.color.r,.25,\"reversed red differs\");c.Near(b.color.b,.5,\"reversed blue differs\");\n    Pixel hole{blue,1};auto bad=translucent;bad.depth_write=true;\n    Fragment(hole,{1,0,0,0},.2,bad);\n    c.Near(hole.color.b,1,\"zero alpha preserves color\");c.Near(hole.depth,.2,\"zero alpha can still write z\");\n    c.That(!Fragment(hole,red,.5,{}),\"invisible foreground blocks later opaque\");\n    Pixel cut{blue,1};bad.alpha_cutoff=.5;\n    c.That(!Fragment(cut,{1,0,0,0},.2,bad),\"alpha test rejects\");c.Near(cut.depth,1,\"cutout did not write z\");\n    Pixel s{blue,1},m{blue,1};Fragment(s,half_red,.2,translucent);\n    auto pm=translucent;pm.premultiplied=true;Fragment(m,{.5,0,0,.5},.2,pm);\n    c.Near(s.color.r,m.color.r,\"straight and premultiplied match with matching factors\");\n    c.Near(s.color.b,m.color.b,\"destination factor matches\");\n    c.Near(s.color.a,1,\"explicit separate alpha source-over\");\n    Pixel no_z{blue,.1};OutputState disabled{false,true,false,false,-1};\n    c.That(Fragment(no_z,red,.8,disabled),\"depth disabled bypasses test\");\n    c.Near(no_z.depth,.1,\"depth disabled also suppresses writes\");\n    c.Rejects([&]{Fragment(no_z,red,-.1,{});},\"invalid depth rejected\");\n    std::cout<<\"transparent back-to-front RGB=(0.5,0,0.25), reverse=(0.25,0,0.5)\\n\";\n});}\n"
+        }
+      ]
+    },
+    {
+      "id": "file-7",
+      "title": "src/pipeline_trace.cpp",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/src/pipeline_trace.cpp · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/src/pipeline_trace.cpp"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include \"pipeline.hpp\"\n#include \"check.hpp\"\n\nint main() {\n    return Run(\"pipeline_trace\", [](Checks& c) {\n        using namespace pipeline;\n        // This triangle is entirely inside the six clip planes. Clipping that\n        // creates a polygon is tested separately in transform_clip.cpp.\n        const std::array<Vertex, 3> input{{\n            {{-0.8, 0.8, 0.4, 1}, {0, 0}},\n            {{0.8, 0.8, 0.4, 1}, {1, 0}},\n            {{0, -0.8, 0.4, 1}, {0.5, 1}}\n        }};\n        const auto polygon = Clip(input);\n        c.That(polygon.size() == 3, \"triangle survives clipping\");\n\n        std::array<ScreenVertex, 3> screen{};\n        for (std::size_t i = 0; i < 3; ++i) {\n            screen[i] = Project(polygon[i], {0, 0, 8, 8, 0, 1});\n        }\n        const std::array<Vec2, 3> xy{screen[0].p, screen[1].p, screen[2].p};\n        int covered = 0;\n        for (int y = 0; y < 8; ++y) {\n            for (int x = 0; x < 8; ++x) {\n                const Vec2 point{static_cast<double>(x), static_cast<double>(y)};\n                if (!Covers(xy, point)) {\n                    continue;\n                }\n                ++covered;\n                const auto weights = Barycentric(xy, point);\n                c.That(weights.has_value(), \"sample barycentric\");\n                const auto uv = PerspectiveUV(screen, *weights);\n                const double depth = AffineDepth(screen, *weights);\n\n                // An independent target sample, initially black with depth 1.\n                Pixel output{{0, 0, 0, 1}, 1};\n                c.That(Fragment(output, {uv.x, uv.y, 0, 1}, depth, {}),\n                       \"fragment passes output stage\");\n                c.That(uv.x >= -1e-12 && uv.x <= 1 + 1e-12 &&\n                       uv.y >= -1e-12 && uv.y <= 1 + 1e-12,\n                       \"interpolated uv in range\");\n                c.Near(output.depth, 0.4, \"constant depth across triangle\");\n            }\n        }\n        c.That(covered == 25, \"25 covered samples\");\n        const auto center_weights = Barycentric(xy, {4, 4});\n        if (!center_weights) {\n            throw std::runtime_error(\"center has no barycentric coordinates\");\n        }\n        const auto center_uv = PerspectiveUV(screen, *center_weights);\n        c.Near(center_uv.x, 0.5, \"center u\");\n        c.Near(center_uv.y, 0.5, \"center v\");\n\n        auto reversed = xy;\n        std::swap(reversed[1], reversed[2]);\n        c.That(Edge(xy[0], xy[1], xy[2]) ==\n                   -Edge(reversed[0], reversed[1], reversed[2]),\n               \"culling diagnostic\");\n        std::cout << \"8x8 viewport: covered samples=\" << covered\n                  << \", sample (4,4): uv=(0.5,0.5), z=0.4\\n\";\n    });\n}\n"
+        }
+      ]
+    },
+    {
+      "id": "file-8",
+      "title": "src/raster_uv.cpp",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/src/raster_uv.cpp · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/src/raster_uv.cpp"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include \"pipeline.hpp\"\n#include \"check.hpp\"\nint main(){return Run(\"raster_uv\",[](Checks& c){\n    using namespace pipeline;\n    const std::array<Vec2,3> a{{{0,0},{4,0},{4,4}}},b{{{0,0},{4,4},{0,4}}};\n    int total=0;\n    for(int y=-1;y<=5;++y)for(int x=-1;x<=5;++x){\n        const Vec2 sample{static_cast<double>(x),static_cast<double>(y)};\n        const int covered=static_cast<int>(Covers(a,sample))+static_cast<int>(Covers(b,sample));\n        const int wanted=(x>=0 && x<4 && y>=0 && y<4)?1:0;\n        c.That(covered==wanted,\"shared edge has exactly one owner\");total+=covered;\n    }\n    c.That(total==16,\"quad covers 16 integer pixel centers\");\n    auto reversed=a;std::swap(reversed[1],reversed[2]);\n    c.That(Covers(reversed,{2,1})==Covers(a,{2,1}),\"coverage invariant without culling\");\n    c.That(Edge(a[0],a[1],a[2])>0 && Edge(reversed[0],reversed[1],reversed[2])<0,\"winding changes sign\");\n    std::array<ScreenVertex,3> t{{{{0,0},.2,1,{0,0}},{{4,0},.6,.5,{1,0}},{{0,4},.9,.25,{0,1}}}};\n    auto l=Barycentric({t[0].p,t[1].p,t[2].p},{1,1});c.That(l.has_value(),\"nondegenerate triangle\");\n    c.Near((*l)[0],.5,\"weight0\");c.Near((*l)[1],.25,\"weight1\");c.Near((*l)[2],.25,\"weight2\");\n    auto uv=PerspectiveUV(t,*l);c.Near(uv.x,2.0/11,\"perspective u\");c.Near(uv.y,1.0/11,\"perspective v\");\n    c.Near(AffineDepth(t,*l),.475,\"depth uses screen-linear z/w\");\n    c.That(!Barycentric({Vec2{0,0},Vec2{1,1},Vec2{2,2}},{1,1}),\"degenerate rejected\");\n    const std::array<double,4> texels{0,1,0,1};\n    for(int i=0;i<4;++i)c.Near(LinearClamp(texels,(i+.5)/4),texels[static_cast<std::size_t>(i)],\"texel center\");\n    c.Near(LinearClamp(texels,.25),.5,\"uncorrected pixel mixes texels\");\n    c.Near(LinearClamp(texels,(1+.5)/4),1,\"minus half-pixel vertex alignment\");\n    c.Near(LinearClamp(texels,-1),0,\"left clamp\");c.Near(LinearClamp(texels,2),1,\"right clamp\");\n    c.Rejects([]{LinearClamp({},0);},\"empty texture\");\n    const double nan=std::numeric_limits<double>::quiet_NaN();\n    c.That(!Covers(a,{nan,0}),\"nonfinite sample is not covered\");\n    c.That(!Barycentric(a,{0,nan}),\"nonfinite barycentric input rejected\");\n    std::cout<<\"weights=(0.5,0.25,0.25) affine_uv=(0.25,0.25) perspective_uv=(2/11,1/11) depth=0.475\\n\";\n});}\n"
+        }
+      ]
+    },
+    {
+      "id": "file-9",
+      "title": "src/transform_clip.cpp",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/src/transform_clip.cpp · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/src/transform_clip.cpp"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include \"pipeline.hpp\"\n#include \"check.hpp\"\nint main(){return Run(\"transform_clip\",[](Checks& c){\n    using namespace pipeline;\n    constexpr double pi=3.14159265358979323846;\n    auto p=PerspectiveLH(pi/2,4.0/3.0,1,11);\n    auto w=Translation(1,0,0), v=Translation(0,0,5);\n    auto clip=Transform({1,1,0,1},Multiply(Multiply(w,v),p));\n    const Vec4 expected{1.5,1,4.4,5};\n    for(std::size_t k=0;k<4;++k)c.Near(clip[k],expected[k],\"clip result\");\n    c.That(Inside(clip),\"inside frustum\");\n    auto screen=Project({clip,{}},{0,0,800,600,0,1});\n    c.Near(screen.p.x,520,\"screen x\"); c.Near(screen.p.y,240,\"screen y\");\n    c.Near(screen.depth,.88,\"screen depth\");\n    for (double z:{1.0,2.0,6.0,11.0}) {\n        auto q=Transform({0,0,z,1},p);\n        c.Near(q[3],z,\"clip w equals view z in this projection\");\n        c.Near(q[2]/q[3],1.1-1.1/z,\"depth mapping\");\n    }\n    auto near=Project({Transform({0,0,1,1},p),{}},{100,50,400,300,.2,.8});\n    c.Near(near.p.x,300,\"viewport x offset\"); c.Near(near.p.y,200,\"viewport y offset\");\n    c.Near(near.depth,.2,\"min z remap\");\n    c.Rejects([]{PerspectiveLH(1,1,0,10);},\"near zero\");\n    c.Rejects([]{PerspectiveLH(1,1,5,5);},\"near equals far\");\n    c.Rejects([]{PerspectiveLH(1,0,1,10);},\"aspect zero\");\n    c.Rejects([]{Project({{0,0,0,0},{}},{0,0,800,600,0,1});},\"zero w\");\n    c.Rejects([]{Project({{0,0,0,-1},{}},{0,0,800,600,0,1});},\"negative w\");\n    c.Rejects([]{Project({{0,0,0,1},{}},{0,0,0,600,0,1});},\"zero viewport width\");\n    const std::array<Vertex,3> crossing{{{{-.5,-.5,-.5,1},{0,0}},{{.5,-.5,.5,1},{1,0}},{{0,.5,.5,1},{.5,1}}}};\n    const auto polygon=Clip(crossing); c.That(polygon.size()==4,\"near clip creates quad\");\n    int on_plane=0;\n    for(auto q:polygon){c.That(Inside(q.clip,1e-12),\"clipped vertex inside\");if(std::abs(q.clip[2])<1e-12)++on_plane;}\n    c.That(on_plane==2,\"two new boundary vertices\");\n    c.Near(polygon[0].uv.x,.25,\"new vertex raw attribute interpolation\");\n    std::array<Vertex,3> outside=crossing;\n    for(auto& q:outside)q.clip[2]=-1;\n    c.That(Clip(outside).empty(),\"fully outside rejected\");\n    for(std::size_t plane=0;plane<6;++plane){\n        auto q=Vec4{0,0,.5,1};\n        if(plane<2)q[0]=plane==0?-2:2;\n        else if(plane<4)q[1]=plane==2?-2:2;\n        else q[2]=plane==4?-1:2;\n        c.That(!Inside(q),\"each clip plane rejects outside\");\n    }\n    const std::array<Vertex,3> surround{{{{-3,-3,.5,1},{}},{{3,-3,.5,1},{}},{{0,3,.5,1},{}}}};\n    for(auto q:surround)c.That(!Inside(q.clip),\"source vertex is outside\");\n    auto enclosing=Clip(surround);\n    c.That(enclosing.size()>=3,\"all-outside vertices do not imply invisible triangle\");\n    for(auto q:enclosing)c.That(Inside(q.clip,1e-12),\"frustum intersection survives\");\n    for(std::size_t plane=0;plane<6;++plane){\n        std::array<Vertex,3> crossing_plane{{{{-.25,-.25,.5,1},{0,0}},{{.25,-.25,.5,1},{1,0}},{{0,.25,.5,1},{.5,1}}}};\n        auto& q=crossing_plane[0].clip;\n        if(plane<2)q[0]=plane==0?-2:2;\n        else if(plane<4)q[1]=plane==2?-2:2;\n        else q[2]=plane==4?-1:2;\n        auto result=Clip(crossing_plane);\n        c.That(result.size()>=3,\"partial intersection retained for every plane\");\n        for(auto r:result)c.That(Inside(r.clip,1e-12),\"all generated vertices obey planes\");\n    }\n    std::cout<<\"local=(1,1,0,1) world=(2,1,0,1) view=(2,1,5,1)\\n\"\n             <<\"clip=(1.5,1,4.4,5) ndc=(0.3,0.2,0.88) screen=(520,240,0.88)\\n\";\n});}\n"
+        }
+      ]
+    },
+    {
+      "id": "file-10",
+      "title": "src/vertex_input.cpp",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/src/vertex_input.cpp · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/src/vertex_input.cpp"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include \"pipeline.hpp\"\n#include \"check.hpp\"\n#include <type_traits>\nstruct VertexPT { float x,y,z,u,v; };\nstatic_assert(std::is_standard_layout_v<VertexPT> && std::is_trivially_copyable_v<VertexPT>);\nstatic_assert(sizeof(float)==4 && sizeof(VertexPT)==20 && offsetof(VertexPT,u)==12);\nint main() { return Run(\"vertex_input\",[](Checks& c) {\n    using namespace pipeline;\n    const std::array<VertexPT,4> vertices{{{-1,1,2,0,0},{1,1,2,1,0},{1,-1,2,1,1},{-1,-1,2,0,1}}};\n    const std::array<std::uint32_t,6> indices{0,1,2,0,2,3};\n    const auto bytes=std::as_bytes(std::span(vertices));\n    for(auto i:indices) {\n        const auto off=FetchOffset(bytes.size(),0,sizeof(VertexPT),0,i,12,8);\n        std::array<float,2> uv{}; std::memcpy(uv.data(),bytes.data()+off,sizeof(uv));\n        c.Near(uv[0],vertices[i].u,\"u matches declaration\");\n        c.Near(uv[1],vertices[i].v,\"v matches declaration\");\n    }\n    c.That(indices.size()/3==2,\"two triangle-list primitives\");\n    c.That(FetchOffset(120,0,20,2,3,12,8)==112,\"base index and byte offset differ\");\n    c.That(FetchOffset(100,20,20,0,3,12,8)==92,\"stream offset in bytes\");\n    c.Rejects([]{FetchOffset(80,0,20,0,4,0,12);},\"index beyond buffer\");\n    c.Rejects([]{FetchOffset(80,0,20,-1,0,0,12);},\"negative effective index\");\n    c.Rejects([]{FetchOffset(80,0,16,0,0,12,8);},\"stride too short\");\n    c.Rejects([]{FetchOffset(80,81,20,0,0,0,4);},\"stream offset beyond buffer\");\n    c.Rejects([]{FetchOffset(80,0,0,0,0,0,4);},\"zero stride unsupported by this model\");\n    c.Rejects([]{FetchOffset(80,0,20,0,0,19,4);},\"element crosses stride\");\n    c.Rejects([]{FetchOffset(80,0,20,0,0xffffffffu,0,4);},\"huge index cannot wrap\");\n    std::cout<<\"quad: 4 vertices / 6 indices / 2 triangles / stride=20\\n\";\n}); }\n"
+        }
+      ]
+    },
+    {
+      "id": "file-11",
+      "title": "examples/texture_sm3.hlsl",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/examples/texture_sm3.hlsl · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/examples/texture_sm3.hlsl"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "hlsl",
+          "text": "// Reference only: NOT compiled with FXC and NOT executed on a GPU in this revision.\n// D3D9: compile VSMain as vs_3_0 and PSMain as ps_3_0 in your Windows toolchain.\n// Host contract: POSITION0 float3, TEXCOORD0 float2; four float4 ROWS at c0;\n// a 2D texture and sampler states at s0; valid target/depth/output state.\n// The CPU lab uses double arrays: do NOT upload their bytes as float registers.\nrow_major float4x4 gWorldViewProjection : register(c0);\nsampler2D gAlbedo : register(s0);\n\nstruct VSInput {\n    float3 position : POSITION0;\n    float2 uv : TEXCOORD0;\n};\nstruct VSOutput {\n    float4 position : POSITION0;\n    float2 uv : TEXCOORD0;\n};\n\nVSOutput VSMain(VSInput input) {\n    VSOutput output;\n    // Keep homogeneous w for hardware clipping and perspective interpolation.\n    output.position = mul(float4(input.position, 1.0), gWorldViewProjection);\n    output.uv = input.uv;\n    return output;\n}\n\nfloat4 PSMain(float2 uv : TEXCOORD0) : COLOR0 {\n    return tex2D(gAlbedo, uv);\n}\n"
+        }
+      ]
+    },
+    {
+      "id": "file-12",
+      "title": "docs/validation.md",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: dx9-pipeline-lab/docs/validation.md · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/docs/validation.md"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "markdown",
+          "text": "# DX9 렌더링 파이프라인 실습 검증 기록 v1.0\n\n개정일: 2026-10-13. 대상: CPU 수치·상태 모델. 실제 Direct3D 런타임/GPU 검증이 아닙니다.\n\n## 실행 환경\nLinux x86-64; GCC 14.2.0 (Debian 14.2.0-19); Clang 17.0.0; CMake 3.31.6; C++20.\n\n| 프로그램 | 조건 검사 | 확인 내용 |\n|---|---:|---|\n| vertex_input | 22 | stride, attribute offset, byte/index units, range rejection |\n| transform_clip | 79 | W/V/P, homogeneous clip planes, viewport, invalid input |\n| raster_uv | 71 | top-left coverage, barycentrics, perspective UV, depth, texel centers |\n| depth_blend | 19 | depth test/write, alpha rejection, alpha-zero occlusion, blending order |\n| pipeline_trace | 105 | 8x8 single-sample triangle trace, 25 covered samples |\n| 합계 | 296 | 반복 샘플 조건 검사 포함 |\n\nGCC, Clang, Clang+ASan/UBSan에서 각각 5/5 프로그램 및 296회 조건 검사가 통과했습니다.\n동일 검사를 반복했으므로 서로 다른 조건 888개로 합산하지 않습니다.\n컴파일 거부 예제는 없으며, 잘못된 입력의 함수 거부를 실행 중 검사했습니다.\n최종 소스에 대해 verify.py의 구성·빌드·CTest 동작도 세 구성에서 실제 실행했습니다.\n\n## 관찰 결과\n- 로컬(1,1,0,1), 월드 이동(1,0,0), 뷰 이동(0,0,5), FOV90도/aspect4:3/near1/far11에서 clip=(1.5,1,4.4,5), NDC=(.3,.2,.88), 800x600 화면=(520,240),깊이=.88.\n- near 교차 삼각형을 4정점 다각형으로 잘랐고, 새 교점의 UV도 검사했습니다.\n- 세 꼭짓점이 모두 바깥에 있어도 삼각형이 클립 영역과 교차하는 사례를 검사했습니다.\n- UV의 단순 보간(.25,.25)과 원근 보정(2/11,1/11)을 비교했습니다.\n- 정수 샘플 중심을 이용한 두 삼각형의 공유 모서리 소속을 확인했습니다.\n- 텍셀(0,1,0,1)에서 u=.25의 값=.5, u=.375의 값=1을 확인했습니다.\n- 알파0도 깊이 쓰기가 켜지면 뒤 물체를 가릴 수 있음을 확인했습니다.\n- 투명 파랑→빨강 RGB=(.5,0,.25), 반대 순서=(.25,0,.5).\n- 통합 추적은 25개 샘플을 포함하며, 샘플(4,4)의 UV=(.5,.5),깊이=.4.\n\n## 빌드 옵션과 로그\nGCC/Clang: -Wall -Wextra -Wpedantic -Wconversion -Wshadow, C++20, 확장 비활성.\nSanitizer: -fsanitize=address,undefined -fno-omit-frame-pointer.\nlogs/의 gcc_*, clang_*, sanitizer_* 파일은 각 구성의 최종 configure/build/test 출력입니다.\n전체 소스와 재검증 명령은 README 및 verify.py에 있습니다.\n\n## 해석 제한\n이 결과는 실제 화면 캡처나 GPU와의 비트 단위 대조가 아닙니다.\nWindows/MSVC, FXC/HLSL, D3D9 자원·드로우·Present, GPU 실행과 성능은 미검증입니다.\nexamples/texture_sm3.hlsl은 CMake 기본 대상에서 제외한 미검증 참고 소스입니다.\n스텐실·sRGB·MSAA·실제 2D 텍스처 필터·하드웨어 포맷 정밀도는 구현하지 않았습니다.\nCPU 모델의 수치 범위·입력 계약과 1차원 샘플러 제한은 README에 명시했습니다.\n검사기에서 진단이 없다는 사실만으로 모든 입력·환경의 안전성이 증명되지는 않습니다.\n\n## 관련 문서\n- [DX9 렌더링 파이프라인](https://app.notion.com/p/3e66577f53a549fe99a94ac26f68a685)\n- [실습·진단 본문](https://app.notion.com/p/3f8a99703f408105948ddf79d5139bb1)\n"
+        }
+      ]
+    }
+  ]
+}

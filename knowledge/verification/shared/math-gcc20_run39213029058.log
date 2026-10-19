@@ -1,0 +1,279 @@
+﻿2026-10-19T06:58:26.7663257Z Current runner version: '2.337.0'
+2026-10-19T06:58:26.7688036Z ##[group]Runner Image Provisioner
+2026-10-19T06:58:26.7688914Z Hosted Compute Agent
+2026-10-19T06:58:26.7689539Z Version: 20261012.601
+2026-10-19T06:58:26.7690285Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-19T06:58:26.7691003Z Build Date: 2026-10-12T17:48:21Z
+2026-10-19T06:58:26.7691664Z Worker ID: {2d357226-0a40-4e33-bd20-4b525237ad6d}
+2026-10-19T06:58:26.7692811Z Region: northcentralus
+2026-10-19T06:58:26.7693518Z Cloud: Azure
+2026-10-19T06:58:26.7694110Z ##[endgroup]
+2026-10-19T06:58:26.7695613Z ##[group]Operating System
+2026-10-19T06:58:26.7696265Z Ubuntu
+2026-10-19T06:58:26.7696876Z 24.04.5
+2026-10-19T06:58:26.7697421Z LTS
+2026-10-19T06:58:26.7697963Z ##[endgroup]
+2026-10-19T06:58:26.7698528Z ##[group]Runner Image
+2026-10-19T06:58:26.7699117Z Image: ubuntu-24.04
+2026-10-19T06:58:26.7699752Z Version: 20261012.334.1
+2026-10-19T06:58:26.7700982Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-19T06:58:26.7702951Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-19T06:58:26.7703948Z ##[endgroup]
+2026-10-19T06:58:26.7705157Z ##[group]GITHUB_TOKEN Permissions
+2026-10-19T06:58:26.7707231Z Contents: read
+2026-10-19T06:58:26.7707946Z Metadata: read
+2026-10-19T06:58:26.7708507Z ##[endgroup]
+2026-10-19T06:58:26.7710618Z Secret source: Actions
+2026-10-19T06:58:26.7711611Z Cache mode: write
+2026-10-19T06:58:26.7713055Z Prepare workflow directory
+2026-10-19T06:58:26.8129293Z Prepare all required actions
+2026-10-19T06:58:26.8199446Z Getting action download info
+2026-10-19T06:58:27.0534085Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-19T06:58:27.1651135Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-19T06:58:27.3811123Z Complete job name: cpu-labs (game-math-winapi-lab, g++, OFF, 6)
+2026-10-19T06:58:27.4575554Z ##[group]Run actions/checkout@v4
+2026-10-19T06:58:27.4576415Z with:
+2026-10-19T06:58:27.4576877Z   repository: jiwhan112/um.github.io
+2026-10-19T06:58:27.4580481Z   token: ***
+2026-10-19T06:58:27.4580913Z   ssh-strict: true
+2026-10-19T06:58:27.4581350Z   ssh-user: git
+2026-10-19T06:58:27.4581792Z   persist-credentials: true
+2026-10-19T06:58:27.4582486Z   clean: true
+2026-10-19T06:58:27.4582948Z   sparse-checkout-cone-mode: true
+2026-10-19T06:58:27.4583484Z   fetch-depth: 1
+2026-10-19T06:58:27.4583921Z   fetch-tags: false
+2026-10-19T06:58:27.4584360Z   show-progress: true
+2026-10-19T06:58:27.4584810Z   lfs: false
+2026-10-19T06:58:27.4585222Z   submodules: false
+2026-10-19T06:58:27.4585669Z   set-safe-directory: true
+2026-10-19T06:58:27.4586170Z   allow-unsafe-pr-checkout: false
+2026-10-19T06:58:27.4587067Z ##[endgroup]
+2026-10-19T06:58:27.5600900Z Syncing repository: jiwhan112/um.github.io
+2026-10-19T06:58:27.5603083Z ##[group]Getting Git version info
+2026-10-19T06:58:27.5603939Z Working directory is '/home/runner/work/um.github.io/um.github.io'
+2026-10-19T06:58:27.5605001Z [command]/usr/bin/git version
+2026-10-19T06:58:27.5700128Z git version 2.55.0
+2026-10-19T06:58:27.5720321Z ##[endgroup]
+2026-10-19T06:58:27.5734501Z Temporarily overriding HOME='/home/runner/work/_temp/154349f5-5e7d-42f4-ae7b-09370159af58' before making global git config changes
+2026-10-19T06:58:27.5737072Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-19T06:58:27.5739410Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/um.github.io/um.github.io
+2026-10-19T06:58:27.5788707Z Deleting the contents of '/home/runner/work/um.github.io/um.github.io'
+2026-10-19T06:58:27.5794384Z ##[group]Initializing the repository
+2026-10-19T06:58:27.5798419Z [command]/usr/bin/git init /home/runner/work/um.github.io/um.github.io
+2026-10-19T06:58:27.5911499Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-19T06:58:27.5913307Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-19T06:58:27.5915287Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-19T06:58:27.5916727Z hint: call:
+2026-10-19T06:58:27.5917328Z hint:
+2026-10-19T06:58:27.5917878Z hint: 	git config --global init.defaultBranch <name>
+2026-10-19T06:58:27.5918539Z hint:
+2026-10-19T06:58:27.5919154Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-19T06:58:27.5920159Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-19T06:58:27.5920961Z hint:
+2026-10-19T06:58:27.5921396Z hint: 	git branch -m <name>
+2026-10-19T06:58:27.5921905Z hint:
+2026-10-19T06:58:27.5923174Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-19T06:58:27.5924664Z Initialized empty Git repository in /home/runner/work/um.github.io/um.github.io/.git/
+2026-10-19T06:58:27.5927102Z [command]/usr/bin/git remote add origin https://github.com/jiwhan112/um.github.io
+2026-10-19T06:58:27.5978327Z ##[endgroup]
+2026-10-19T06:58:27.5979215Z ##[group]Disabling automatic garbage collection
+2026-10-19T06:58:27.5981469Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-19T06:58:27.6010054Z ##[endgroup]
+2026-10-19T06:58:27.6010778Z ##[group]Setting up auth
+2026-10-19T06:58:27.6017413Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T06:58:27.6046949Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T06:58:27.6413268Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T06:58:27.6444661Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T06:58:27.6658488Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T06:58:27.6687636Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T06:58:27.6899110Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-19T06:58:27.6933924Z ##[endgroup]
+2026-10-19T06:58:27.6934702Z ##[group]Fetching the repository
+2026-10-19T06:58:27.6942864Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ececd603bc703088e285d670b28a7cb3b3e35a72:refs/remotes/pull/5/merge
+2026-10-19T06:58:28.3664434Z From https://github.com/jiwhan112/um.github.io
+2026-10-19T06:58:28.3666905Z  * [new ref]         ececd603bc703088e285d670b28a7cb3b3e35a72 -> pull/5/merge
+2026-10-19T06:58:28.3670960Z ##[endgroup]
+2026-10-19T06:58:28.3672660Z ##[group]Determining the checkout info
+2026-10-19T06:58:28.3674162Z ##[endgroup]
+2026-10-19T06:58:28.3675873Z [command]/usr/bin/git sparse-checkout disable
+2026-10-19T06:58:28.3725937Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-19T06:58:28.3763714Z ##[group]Checking out the ref
+2026-10-19T06:58:28.3765099Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/5/merge
+2026-10-19T06:58:28.4430442Z Note: switching to 'refs/remotes/pull/5/merge'.
+2026-10-19T06:58:28.4431917Z 
+2026-10-19T06:58:28.4433152Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-19T06:58:28.4435344Z changes and commit them, and you can discard any commits you make in this
+2026-10-19T06:58:28.4437447Z state without impacting any branches by switching back to a branch.
+2026-10-19T06:58:28.4438688Z 
+2026-10-19T06:58:28.4439551Z If you want to create a new branch to retain commits you create, you may
+2026-10-19T06:58:28.4441477Z do so (now or later) by using -c with the switch command. Example:
+2026-10-19T06:58:28.4443317Z 
+2026-10-19T06:58:28.4444193Z   git switch -c <new-branch-name>
+2026-10-19T06:58:28.4444901Z 
+2026-10-19T06:58:28.4445390Z Or undo this operation with:
+2026-10-19T06:58:28.4446152Z 
+2026-10-19T06:58:28.4446673Z   git switch -
+2026-10-19T06:58:28.4447296Z 
+2026-10-19T06:58:28.4448240Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-19T06:58:28.4449574Z 
+2026-10-19T06:58:28.4451208Z HEAD is now at ececd60 Merge effd695e379be6a0e9cbf47f3fa8d27095bf9c78 into dea8eabc4516038b5920767a890b6efcd56ef331
+2026-10-19T06:58:28.4456565Z ##[endgroup]
+2026-10-19T06:58:28.4488937Z [command]/usr/bin/git log -1 --format=%H
+2026-10-19T06:58:28.4512301Z ececd603bc703088e285d670b28a7cb3b3e35a72
+2026-10-19T06:58:28.4815286Z ##[group]Run set -o pipefail
+2026-10-19T06:58:28.4816623Z [36;1mset -o pipefail[0m
+2026-10-19T06:58:28.4818369Z [36;1mmkdir -p knowledge/verification/shared/game-math-winapi-lab-g++-OFF[0m
+2026-10-19T06:58:28.4823929Z [36;1mcmake -S "knowledge/shared/game-math-winapi-lab" -B "/tmp/atlas-game-math-winapi-lab-g++-OFF" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER="g++" -DENABLE_SANITIZERS="OFF" 2>&1 | tee "knowledge/verification/shared/game-math-winapi-lab-g++-OFF/configure.log"[0m
+2026-10-19T06:58:28.5127554Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T06:58:28.5129445Z ##[endgroup]
+2026-10-19T06:58:28.7364014Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-19T06:58:28.7525781Z -- Detecting CXX compiler ABI info
+2026-10-19T06:58:28.8758719Z -- Detecting CXX compiler ABI info - done
+2026-10-19T06:58:28.8939132Z -- Check for working CXX compiler: /usr/bin/g++ - skipped
+2026-10-19T06:58:28.8945413Z -- Detecting CXX compile features
+2026-10-19T06:58:28.8954072Z -- Detecting CXX compile features - done
+2026-10-19T06:58:28.9052878Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+2026-10-19T06:58:29.0033313Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+2026-10-19T06:58:29.0047681Z -- Found Threads: TRUE
+2026-10-19T06:58:29.0057305Z -- Configuring done (0.4s)
+2026-10-19T06:58:29.0156040Z -- Generating done (0.0s)
+2026-10-19T06:58:29.0159115Z -- Build files have been written to: /tmp/atlas-game-math-winapi-lab-g++-OFF
+2026-10-19T06:58:29.0307328Z ##[group]Run set -o pipefail
+2026-10-19T06:58:29.0307721Z [36;1mset -o pipefail[0m
+2026-10-19T06:58:29.0308476Z [36;1mcmake --build "/tmp/atlas-game-math-winapi-lab-g++-OFF" --parallel 2 2>&1 | tee "knowledge/verification/shared/game-math-winapi-lab-g++-OFF/build.log"[0m
+2026-10-19T06:58:29.0370354Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T06:58:29.0370771Z ##[endgroup]
+2026-10-19T06:58:29.0596104Z [  8%] Building CXX object CMakeFiles/transforms.dir/src/transforms.cpp.o
+2026-10-19T06:58:29.0597650Z [ 16%] Building CXX object CMakeFiles/vector_motion.dir/src/vector_motion.cpp.o
+2026-10-19T06:58:29.7110179Z [ 25%] Linking CXX executable transforms
+2026-10-19T06:58:29.7631734Z [ 25%] Built target transforms
+2026-10-19T06:58:29.7704532Z [ 33%] Building CXX object CMakeFiles/geometry.dir/src/geometry.cpp.o
+2026-10-19T06:58:29.8096422Z [ 41%] Linking CXX executable vector_motion
+2026-10-19T06:58:29.8600893Z [ 41%] Built target vector_motion
+2026-10-19T06:58:29.8669300Z [ 50%] Building CXX object CMakeFiles/loop_input.dir/src/loop_input.cpp.o
+2026-10-19T06:58:30.2820928Z [ 58%] Linking CXX executable geometry
+2026-10-19T06:58:30.3312379Z [ 58%] Built target geometry
+2026-10-19T06:58:30.3381332Z [ 66%] Building CXX object CMakeFiles/tile_document.dir/src/tile_document.cpp.o
+2026-10-19T06:58:30.3832999Z [ 75%] Linking CXX executable loop_input
+2026-10-19T06:58:30.4317164Z [ 75%] Built target loop_input
+2026-10-19T06:58:30.4386843Z [ 83%] Building CXX object CMakeFiles/pathfinding.dir/src/pathfinding.cpp.o
+2026-10-19T06:58:31.2949874Z [ 91%] Linking CXX executable pathfinding
+2026-10-19T06:58:31.3484981Z [ 91%] Built target pathfinding
+2026-10-19T06:58:31.7744791Z [100%] Linking CXX executable tile_document
+2026-10-19T06:58:31.8299079Z [100%] Built target tile_document
+2026-10-19T06:58:31.8394883Z ##[group]Run set -o pipefail
+2026-10-19T06:58:31.8395212Z [36;1mset -o pipefail[0m
+2026-10-19T06:58:31.8395938Z [36;1mctest --test-dir "/tmp/atlas-game-math-winapi-lab-g++-OFF" -V --output-on-failure 2>&1 | tee "knowledge/verification/shared/game-math-winapi-lab-g++-OFF/ctest.log"[0m
+2026-10-19T06:58:31.8396883Z [36;1mgrep -F "6/6 Test #" "knowledge/verification/shared/game-math-winapi-lab-g++-OFF/ctest.log"[0m
+2026-10-19T06:58:31.8397632Z [36;1mgrep -F "100% tests passed, 0 tests failed out of 6" "knowledge/verification/shared/game-math-winapi-lab-g++-OFF/ctest.log"[0m
+2026-10-19T06:58:31.8461053Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T06:58:31.8461412Z env:
+2026-10-19T06:58:31.8461614Z   ASAN_OPTIONS: detect_leaks=1
+2026-10-19T06:58:31.8461875Z   UBSAN_OPTIONS: halt_on_error=1
+2026-10-19T06:58:31.8462369Z ##[endgroup]
+2026-10-19T06:58:32.2979381Z Internal ctest changing into directory: /tmp/atlas-game-math-winapi-lab-g++-OFF
+2026-10-19T06:58:32.2981141Z UpdateCTestConfiguration  from :/tmp/atlas-game-math-winapi-lab-g++-OFF/DartConfiguration.tcl
+2026-10-19T06:58:32.3670671Z UpdateCTestConfiguration  from :/tmp/atlas-game-math-winapi-lab-g++-OFF/DartConfiguration.tcl
+2026-10-19T06:58:32.3707961Z Test project /tmp/atlas-game-math-winapi-lab-g++-OFF
+2026-10-19T06:58:32.3715477Z Constructing a list of tests
+2026-10-19T06:58:32.3887514Z Done constructing a list of tests
+2026-10-19T06:58:32.3888186Z Updating test list for fixtures
+2026-10-19T06:58:32.3888595Z Added 0 tests to meet fixture requirements
+2026-10-19T06:58:32.4044944Z Checking test dependency graph...
+2026-10-19T06:58:32.4045334Z Checking test dependency graph end
+2026-10-19T06:58:32.4196420Z test 1
+2026-10-19T06:58:32.4196864Z     Start 1: vector_motion
+2026-10-19T06:58:32.4197197Z 
+2026-10-19T06:58:32.4197774Z 1: Test command: /tmp/atlas-game-math-winapi-lab-g++-OFF/vector_motion
+2026-10-19T06:58:32.4198508Z 1: Working Directory: /tmp/atlas-game-math-winapi-lab-g++-OFF
+2026-10-19T06:58:32.4259801Z 1: Test timeout computed to be: 10000000
+2026-10-19T06:58:32.4278235Z 1: vector_motion: 19 checks passed
+2026-10-19T06:58:32.4280063Z 1/6 Test #1: vector_motion ....................   Passed    0.00 sec
+2026-10-19T06:58:32.4336377Z test 2
+2026-10-19T06:58:32.4336752Z     Start 2: transforms
+2026-10-19T06:58:32.4337072Z 
+2026-10-19T06:58:32.4337480Z 2: Test command: /tmp/atlas-game-math-winapi-lab-g++-OFF/transforms
+2026-10-19T06:58:32.4338350Z 2: Working Directory: /tmp/atlas-game-math-winapi-lab-g++-OFF
+2026-10-19T06:58:32.4339062Z 2: Test timeout computed to be: 10000000
+2026-10-19T06:58:32.4351023Z 2: SRT(1,0,0,1) = (10,2,0,1)
+2026-10-19T06:58:32.4351488Z 2: transforms: 29 checks passed
+2026-10-19T06:58:32.4352605Z 2/6 Test #2: transforms .......................   Passed    0.00 sec
+2026-10-19T06:58:32.4354687Z test 3
+2026-10-19T06:58:32.4355057Z     Start 3: geometry
+2026-10-19T06:58:32.4355343Z 
+2026-10-19T06:58:32.4355575Z 3: Test command: /tmp/atlas-game-math-winapi-lab-g++-OFF/geometry
+2026-10-19T06:58:32.4356388Z 3: Working Directory: /tmp/atlas-game-math-winapi-lab-g++-OFF
+2026-10-19T06:58:32.4357101Z 3: Test timeout computed to be: 10000000
+2026-10-19T06:58:32.4369072Z 3: geometry: 78 checks passed
+2026-10-19T06:58:32.4370618Z 3/6 Test #3: geometry .........................   Passed    0.00 sec
+2026-10-19T06:58:32.4372527Z test 4
+2026-10-19T06:58:32.4372868Z     Start 4: loop_input
+2026-10-19T06:58:32.4373126Z 
+2026-10-19T06:58:32.4373443Z 4: Test command: /tmp/atlas-game-math-winapi-lab-g++-OFF/loop_input
+2026-10-19T06:58:32.4374312Z 4: Working Directory: /tmp/atlas-game-math-winapi-lab-g++-OFF
+2026-10-19T06:58:32.4374949Z 4: Test timeout computed to be: 10000000
+2026-10-19T06:58:32.4386851Z 4: loop_input: 484 checks passed
+2026-10-19T06:58:32.4388156Z 4/6 Test #4: loop_input .......................   Passed    0.00 sec
+2026-10-19T06:58:32.4390145Z test 5
+2026-10-19T06:58:32.4390485Z     Start 5: tile_document
+2026-10-19T06:58:32.4390717Z 
+2026-10-19T06:58:32.4391161Z 5: Test command: /tmp/atlas-game-math-winapi-lab-g++-OFF/tile_document
+2026-10-19T06:58:32.4392447Z 5: Working Directory: /tmp/atlas-game-math-winapi-lab-g++-OFF
+2026-10-19T06:58:32.4393098Z 5: Test timeout computed to be: 10000000
+2026-10-19T06:58:32.4406703Z 5: tile_document: 26 checks passed
+2026-10-19T06:58:32.4408503Z 5/6 Test #5: tile_document ....................   Passed    0.00 sec
+2026-10-19T06:58:32.4410433Z test 6
+2026-10-19T06:58:32.4410821Z     Start 6: pathfinding
+2026-10-19T06:58:32.4411102Z 
+2026-10-19T06:58:32.4411468Z 6: Test command: /tmp/atlas-game-math-winapi-lab-g++-OFF/pathfinding
+2026-10-19T06:58:32.4412421Z 6: Working Directory: /tmp/atlas-game-math-winapi-lab-g++-OFF
+2026-10-19T06:58:32.4412841Z 6: Test timeout computed to be: 10000000
+2026-10-19T06:58:32.4866025Z 6: 41472 exhaustive 3x3 map/start/goal scenarios
+2026-10-19T06:58:32.4866927Z 6: pathfinding: 93561 checks passed
+2026-10-19T06:58:32.4867806Z 6/6 Test #6: pathfinding ......................   Passed    0.05 sec
+2026-10-19T06:58:32.4873317Z 
+2026-10-19T06:58:32.4873566Z 100% tests passed, 0 tests failed out of 6
+2026-10-19T06:58:32.4873960Z 
+2026-10-19T06:58:32.4874070Z Total Test time (real) =   0.12 sec
+2026-10-19T06:58:32.5300322Z 6/6 Test #6: pathfinding ......................   Passed    0.05 sec
+2026-10-19T06:58:32.5312442Z 100% tests passed, 0 tests failed out of 6
+2026-10-19T06:58:32.5379111Z ##[group]Run actions/upload-artifact@v4
+2026-10-19T06:58:32.5379414Z with:
+2026-10-19T06:58:32.5379644Z   name: shared-game-math-winapi-lab-g++-OFF
+2026-10-19T06:58:32.5380055Z   path: knowledge/verification/shared/game-math-winapi-lab-g++-OFF/*.log
+2026-10-19T06:58:32.5380432Z   retention-days: 14
+2026-10-19T06:58:32.5380645Z   if-no-files-found: warn
+2026-10-19T06:58:32.5380878Z   compression-level: 6
+2026-10-19T06:58:32.5381084Z   overwrite: false
+2026-10-19T06:58:32.5381290Z   include-hidden-files: false
+2026-10-19T06:58:32.5381522Z ##[endgroup]
+2026-10-19T06:58:32.7020950Z (node:2489) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-19T06:58:32.7022955Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-19T06:58:32.7113021Z With the provided path, there will be 3 files uploaded
+2026-10-19T06:58:32.7143184Z Artifact name is valid!
+2026-10-19T06:58:32.7143715Z Root directory input is valid!
+2026-10-19T06:58:32.9487885Z Beginning upload of artifact content to blob storage
+2026-10-19T06:58:32.9701108Z (node:2489) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-19T06:58:33.0691324Z Uploaded bytes 1514
+2026-10-19T06:58:33.1036446Z Finished uploading artifact content to blob storage!
+2026-10-19T06:58:33.1038381Z SHA256 digest of uploaded artifact zip is 59b3652f19306b12d2cb0a55b75648081873de693de62b396b6e54b0f29e9c05
+2026-10-19T06:58:33.1040151Z Finalizing artifact upload
+2026-10-19T06:58:33.3552469Z Artifact shared-game-math-winapi-lab-g++-OFF.zip successfully finalized. Artifact ID 12168915166
+2026-10-19T06:58:33.3554641Z Artifact shared-game-math-winapi-lab-g++-OFF has been successfully uploaded! Final size is 1514 bytes. Artifact ID is 12168915166
+2026-10-19T06:58:33.3559316Z Artifact download URL: https://github.com/jiwhan112/um.github.io/actions/runs/39213029058/artifacts/12168915166
+2026-10-19T06:58:33.3759317Z Post job cleanup.
+2026-10-19T06:58:33.4571517Z [command]/usr/bin/git version
+2026-10-19T06:58:33.4607582Z git version 2.55.0
+2026-10-19T06:58:33.4645636Z Temporarily overriding HOME='/home/runner/work/_temp/379e8952-dd0f-4b05-ad18-df5b4e006edc' before making global git config changes
+2026-10-19T06:58:33.4646774Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-19T06:58:33.4650989Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/um.github.io/um.github.io
+2026-10-19T06:58:33.4687332Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T06:58:33.4718836Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T06:58:33.4944648Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T06:58:33.4970674Z http.https://github.com/.extraheader
+2026-10-19T06:58:33.4981061Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-19T06:58:33.5013603Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T06:58:33.5231638Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T06:58:33.5264073Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T06:58:33.5621027Z Cleaning up orphan processes
+2026-10-19T06:58:33.5936626Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

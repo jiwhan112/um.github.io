@@ -1,0 +1,269 @@
+﻿2026-10-19T06:58:27.2503406Z Current runner version: '2.337.0'
+2026-10-19T06:58:27.2528858Z ##[group]Runner Image Provisioner
+2026-10-19T06:58:27.2529828Z Hosted Compute Agent
+2026-10-19T06:58:27.2530484Z Version: 20261012.601
+2026-10-19T06:58:27.2531131Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-19T06:58:27.2531933Z Build Date: 2026-10-12T17:48:21Z
+2026-10-19T06:58:27.2532699Z Worker ID: {d0e7a584-bf3a-4ce1-b0b3-a54d80593c78}
+2026-10-19T06:58:27.2533721Z Region: westus
+2026-10-19T06:58:27.2534377Z Cloud: Azure
+2026-10-19T06:58:27.2534974Z ##[endgroup]
+2026-10-19T06:58:27.2536603Z ##[group]Operating System
+2026-10-19T06:58:27.2537277Z Ubuntu
+2026-10-19T06:58:27.2537796Z 24.04.5
+2026-10-19T06:58:27.2538392Z LTS
+2026-10-19T06:58:27.2538914Z ##[endgroup]
+2026-10-19T06:58:27.2539502Z ##[group]Runner Image
+2026-10-19T06:58:27.2540200Z Image: ubuntu-24.04
+2026-10-19T06:58:27.2540830Z Version: 20261012.334.1
+2026-10-19T06:58:27.2542228Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-19T06:58:27.2544107Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-19T06:58:27.2545174Z ##[endgroup]
+2026-10-19T06:58:27.2546338Z ##[group]GITHUB_TOKEN Permissions
+2026-10-19T06:58:27.2548527Z Contents: read
+2026-10-19T06:58:27.2549184Z Metadata: read
+2026-10-19T06:58:27.2549881Z ##[endgroup]
+2026-10-19T06:58:27.2552063Z Secret source: Actions
+2026-10-19T06:58:27.2553390Z Cache mode: write
+2026-10-19T06:58:27.2554152Z Prepare workflow directory
+2026-10-19T06:58:27.2916506Z Prepare all required actions
+2026-10-19T06:58:27.2990777Z Getting action download info
+2026-10-19T06:58:27.6822396Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-19T06:58:27.7935096Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-19T06:58:28.0132369Z Complete job name: cpu-labs (dx9-pipeline-lab, g++, OFF, 5)
+2026-10-19T06:58:28.0949920Z ##[group]Run actions/checkout@v4
+2026-10-19T06:58:28.0950935Z with:
+2026-10-19T06:58:28.0951462Z   repository: jiwhan112/um.github.io
+2026-10-19T06:58:28.0955670Z   token: ***
+2026-10-19T06:58:28.0956130Z   ssh-strict: true
+2026-10-19T06:58:28.0956583Z   ssh-user: git
+2026-10-19T06:58:28.0957043Z   persist-credentials: true
+2026-10-19T06:58:28.0957544Z   clean: true
+2026-10-19T06:58:28.0958001Z   sparse-checkout-cone-mode: true
+2026-10-19T06:58:28.0958538Z   fetch-depth: 1
+2026-10-19T06:58:28.0958980Z   fetch-tags: false
+2026-10-19T06:58:28.0959424Z   show-progress: true
+2026-10-19T06:58:28.0959872Z   lfs: false
+2026-10-19T06:58:28.0960300Z   submodules: false
+2026-10-19T06:58:28.0960752Z   set-safe-directory: true
+2026-10-19T06:58:28.0961280Z   allow-unsafe-pr-checkout: false
+2026-10-19T06:58:28.0962573Z ##[endgroup]
+2026-10-19T06:58:28.2019295Z Syncing repository: jiwhan112/um.github.io
+2026-10-19T06:58:28.2021288Z ##[group]Getting Git version info
+2026-10-19T06:58:28.2022198Z Working directory is '/home/runner/work/um.github.io/um.github.io'
+2026-10-19T06:58:28.2023622Z [command]/usr/bin/git version
+2026-10-19T06:58:28.2079776Z git version 2.55.0
+2026-10-19T06:58:28.2101998Z ##[endgroup]
+2026-10-19T06:58:28.2119902Z Temporarily overriding HOME='/home/runner/work/_temp/c548132e-30cf-4566-9a53-0a63c87c4eab' before making global git config changes
+2026-10-19T06:58:28.2122412Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-19T06:58:28.2126740Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/um.github.io/um.github.io
+2026-10-19T06:58:28.2180793Z Deleting the contents of '/home/runner/work/um.github.io/um.github.io'
+2026-10-19T06:58:28.2187573Z ##[group]Initializing the repository
+2026-10-19T06:58:28.2194091Z [command]/usr/bin/git init /home/runner/work/um.github.io/um.github.io
+2026-10-19T06:58:28.2309026Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-19T06:58:28.2310894Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-19T06:58:28.2312815Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-19T06:58:28.2314154Z hint: call:
+2026-10-19T06:58:28.2314589Z hint:
+2026-10-19T06:58:28.2315134Z hint: 	git config --global init.defaultBranch <name>
+2026-10-19T06:58:28.2315772Z hint:
+2026-10-19T06:58:28.2316370Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-19T06:58:28.2317552Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-19T06:58:28.2318602Z hint:
+2026-10-19T06:58:28.2319092Z hint: 	git branch -m <name>
+2026-10-19T06:58:28.2319637Z hint:
+2026-10-19T06:58:28.2320334Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-19T06:58:28.2321543Z Initialized empty Git repository in /home/runner/work/um.github.io/um.github.io/.git/
+2026-10-19T06:58:28.2324307Z [command]/usr/bin/git remote add origin https://github.com/jiwhan112/um.github.io
+2026-10-19T06:58:28.2374138Z ##[endgroup]
+2026-10-19T06:58:28.2374953Z ##[group]Disabling automatic garbage collection
+2026-10-19T06:58:28.2378220Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-19T06:58:28.2410544Z ##[endgroup]
+2026-10-19T06:58:28.2411338Z ##[group]Setting up auth
+2026-10-19T06:58:28.2418192Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T06:58:28.2451366Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T06:58:28.2800867Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T06:58:28.2837647Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T06:58:28.3071114Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T06:58:28.3110266Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T06:58:28.3374063Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-19T06:58:28.3418028Z ##[endgroup]
+2026-10-19T06:58:28.3418993Z ##[group]Fetching the repository
+2026-10-19T06:58:28.3431708Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ececd603bc703088e285d670b28a7cb3b3e35a72:refs/remotes/pull/5/merge
+2026-10-19T06:58:29.0741996Z From https://github.com/jiwhan112/um.github.io
+2026-10-19T06:58:29.0745409Z  * [new ref]         ececd603bc703088e285d670b28a7cb3b3e35a72 -> pull/5/merge
+2026-10-19T06:58:29.0756568Z ##[endgroup]
+2026-10-19T06:58:29.0758580Z ##[group]Determining the checkout info
+2026-10-19T06:58:29.0760911Z ##[endgroup]
+2026-10-19T06:58:29.0762492Z [command]/usr/bin/git sparse-checkout disable
+2026-10-19T06:58:29.0825530Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-19T06:58:29.0859000Z ##[group]Checking out the ref
+2026-10-19T06:58:29.0862826Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/5/merge
+2026-10-19T06:58:29.1538071Z Note: switching to 'refs/remotes/pull/5/merge'.
+2026-10-19T06:58:29.1539494Z 
+2026-10-19T06:58:29.1540507Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-19T06:58:29.1542919Z changes and commit them, and you can discard any commits you make in this
+2026-10-19T06:58:29.1545938Z state without impacting any branches by switching back to a branch.
+2026-10-19T06:58:29.1547923Z 
+2026-10-19T06:58:29.1549103Z If you want to create a new branch to retain commits you create, you may
+2026-10-19T06:58:29.1551667Z do so (now or later) by using -c with the switch command. Example:
+2026-10-19T06:58:29.1553924Z 
+2026-10-19T06:58:29.1555089Z   git switch -c <new-branch-name>
+2026-10-19T06:58:29.1556305Z 
+2026-10-19T06:58:29.1557294Z Or undo this operation with:
+2026-10-19T06:58:29.1558561Z 
+2026-10-19T06:58:29.1559318Z   git switch -
+2026-10-19T06:58:29.1560308Z 
+2026-10-19T06:58:29.1561684Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-19T06:58:29.1563925Z 
+2026-10-19T06:58:29.1566462Z HEAD is now at ececd60 Merge effd695e379be6a0e9cbf47f3fa8d27095bf9c78 into dea8eabc4516038b5920767a890b6efcd56ef331
+2026-10-19T06:58:29.1571636Z ##[endgroup]
+2026-10-19T06:58:29.1600490Z [command]/usr/bin/git log -1 --format=%H
+2026-10-19T06:58:29.1625733Z ececd603bc703088e285d670b28a7cb3b3e35a72
+2026-10-19T06:58:29.1946357Z ##[group]Run set -o pipefail
+2026-10-19T06:58:29.1947785Z [36;1mset -o pipefail[0m
+2026-10-19T06:58:29.1950496Z [36;1mmkdir -p knowledge/verification/shared/dx9-pipeline-lab-g++-OFF[0m
+2026-10-19T06:58:29.1957200Z [36;1mcmake -S "knowledge/shared/dx9-pipeline-lab" -B "/tmp/atlas-dx9-pipeline-lab-g++-OFF" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER="g++" -DENABLE_SANITIZERS="OFF" 2>&1 | tee "knowledge/verification/shared/dx9-pipeline-lab-g++-OFF/configure.log"[0m
+2026-10-19T06:58:29.2221289Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T06:58:29.2224090Z ##[endgroup]
+2026-10-19T06:58:30.0578576Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-19T06:58:30.1632692Z -- Detecting CXX compiler ABI info
+2026-10-19T06:58:30.3489799Z -- Detecting CXX compiler ABI info - done
+2026-10-19T06:58:30.3680181Z -- Check for working CXX compiler: /usr/bin/g++ - skipped
+2026-10-19T06:58:30.3729985Z -- Detecting CXX compile features
+2026-10-19T06:58:30.3771653Z -- Detecting CXX compile features - done
+2026-10-19T06:58:30.3939585Z -- Configuring done (0.7s)
+2026-10-19T06:58:30.4024184Z -- Generating done (0.0s)
+2026-10-19T06:58:30.4027613Z -- Build files have been written to: /tmp/atlas-dx9-pipeline-lab-g++-OFF
+2026-10-19T06:58:30.4235904Z ##[group]Run set -o pipefail
+2026-10-19T06:58:30.4236303Z [36;1mset -o pipefail[0m
+2026-10-19T06:58:30.4236972Z [36;1mcmake --build "/tmp/atlas-dx9-pipeline-lab-g++-OFF" --parallel 2 2>&1 | tee "knowledge/verification/shared/dx9-pipeline-lab-g++-OFF/build.log"[0m
+2026-10-19T06:58:30.4302031Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T06:58:30.4302511Z ##[endgroup]
+2026-10-19T06:58:30.4547188Z [ 10%] Building CXX object CMakeFiles/vertex_input.dir/src/vertex_input.cpp.o
+2026-10-19T06:58:30.4549031Z [ 20%] Building CXX object CMakeFiles/transform_clip.dir/src/transform_clip.cpp.o
+2026-10-19T06:58:31.2964678Z [ 30%] Linking CXX executable vertex_input
+2026-10-19T06:58:31.3407601Z [ 40%] Linking CXX executable transform_clip
+2026-10-19T06:58:31.3473207Z [ 40%] Built target vertex_input
+2026-10-19T06:58:31.3554706Z [ 50%] Building CXX object CMakeFiles/raster_uv.dir/src/raster_uv.cpp.o
+2026-10-19T06:58:31.3979290Z [ 50%] Built target transform_clip
+2026-10-19T06:58:31.4052121Z [ 60%] Building CXX object CMakeFiles/depth_blend.dir/src/depth_blend.cpp.o
+2026-10-19T06:58:32.0040273Z [ 70%] Linking CXX executable raster_uv
+2026-10-19T06:58:32.0557917Z [ 70%] Built target raster_uv
+2026-10-19T06:58:32.0574646Z [ 80%] Linking CXX executable depth_blend
+2026-10-19T06:58:32.0626949Z [ 90%] Building CXX object CMakeFiles/pipeline_trace.dir/src/pipeline_trace.cpp.o
+2026-10-19T06:58:32.1062007Z [ 90%] Built target depth_blend
+2026-10-19T06:58:32.7463538Z [100%] Linking CXX executable pipeline_trace
+2026-10-19T06:58:32.7997500Z [100%] Built target pipeline_trace
+2026-10-19T06:58:32.8087151Z ##[group]Run set -o pipefail
+2026-10-19T06:58:32.8087498Z [36;1mset -o pipefail[0m
+2026-10-19T06:58:32.8088235Z [36;1mctest --test-dir "/tmp/atlas-dx9-pipeline-lab-g++-OFF" -V --output-on-failure 2>&1 | tee "knowledge/verification/shared/dx9-pipeline-lab-g++-OFF/ctest.log"[0m
+2026-10-19T06:58:32.8089172Z [36;1mgrep -F "5/5 Test #" "knowledge/verification/shared/dx9-pipeline-lab-g++-OFF/ctest.log"[0m
+2026-10-19T06:58:32.8089959Z [36;1mgrep -F "100% tests passed, 0 tests failed out of 5" "knowledge/verification/shared/dx9-pipeline-lab-g++-OFF/ctest.log"[0m
+2026-10-19T06:58:32.8151979Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T06:58:32.8152365Z env:
+2026-10-19T06:58:32.8152581Z   ASAN_OPTIONS: detect_leaks=1
+2026-10-19T06:58:32.8152861Z   UBSAN_OPTIONS: halt_on_error=1
+2026-10-19T06:58:32.8153476Z ##[endgroup]
+2026-10-19T06:58:33.0956803Z Internal ctest changing into directory: /tmp/atlas-dx9-pipeline-lab-g++-OFF
+2026-10-19T06:58:33.0958853Z UpdateCTestConfiguration  from :/tmp/atlas-dx9-pipeline-lab-g++-OFF/DartConfiguration.tcl
+2026-10-19T06:58:33.1488735Z UpdateCTestConfiguration  from :/tmp/atlas-dx9-pipeline-lab-g++-OFF/DartConfiguration.tcl
+2026-10-19T06:58:33.1519805Z Test project /tmp/atlas-dx9-pipeline-lab-g++-OFF
+2026-10-19T06:58:33.1525144Z Constructing a list of tests
+2026-10-19T06:58:33.1661883Z Done constructing a list of tests
+2026-10-19T06:58:33.1663325Z Updating test list for fixtures
+2026-10-19T06:58:33.1664073Z Added 0 tests to meet fixture requirements
+2026-10-19T06:58:33.1783727Z Checking test dependency graph...
+2026-10-19T06:58:33.1784845Z Checking test dependency graph end
+2026-10-19T06:58:33.1894200Z test 1
+2026-10-19T06:58:33.1894748Z     Start 1: vertex_input
+2026-10-19T06:58:33.1895097Z 
+2026-10-19T06:58:33.1895513Z 1: Test command: /tmp/atlas-dx9-pipeline-lab-g++-OFF/vertex_input
+2026-10-19T06:58:33.1896596Z 1: Working Directory: /tmp/atlas-dx9-pipeline-lab-g++-OFF
+2026-10-19T06:58:33.1937854Z 1: Test timeout computed to be: 10000000
+2026-10-19T06:58:33.1956624Z 1: quad: 4 vertices / 6 indices / 2 triangles / stride=20
+2026-10-19T06:58:33.1957239Z 1: PASS vertex_input checks=22
+2026-10-19T06:58:33.1958074Z 1/5 Test #1: vertex_input .....................   Passed    0.00 sec
+2026-10-19T06:58:33.2011832Z test 2
+2026-10-19T06:58:33.2012200Z     Start 2: transform_clip
+2026-10-19T06:58:33.2012422Z 
+2026-10-19T06:58:33.2012675Z 2: Test command: /tmp/atlas-dx9-pipeline-lab-g++-OFF/transform_clip
+2026-10-19T06:58:33.2013728Z 2: Working Directory: /tmp/atlas-dx9-pipeline-lab-g++-OFF
+2026-10-19T06:58:33.2014196Z 2: Test timeout computed to be: 10000000
+2026-10-19T06:58:33.2029377Z 2: local=(1,1,0,1) world=(2,1,0,1) view=(2,1,5,1)
+2026-10-19T06:58:33.2030112Z 2: clip=(1.5,1,4.4,5) ndc=(0.3,0.2,0.88) screen=(520,240,0.88)
+2026-10-19T06:58:33.2030904Z 2: PASS transform_clip checks=79
+2026-10-19T06:58:33.2031683Z 2/5 Test #2: transform_clip ...................   Passed    0.00 sec
+2026-10-19T06:58:33.2033648Z test 3
+2026-10-19T06:58:33.2034107Z     Start 3: raster_uv
+2026-10-19T06:58:33.2034468Z 
+2026-10-19T06:58:33.2034893Z 3: Test command: /tmp/atlas-dx9-pipeline-lab-g++-OFF/raster_uv
+2026-10-19T06:58:33.2036216Z 3: Working Directory: /tmp/atlas-dx9-pipeline-lab-g++-OFF
+2026-10-19T06:58:33.2036963Z 3: Test timeout computed to be: 10000000
+2026-10-19T06:58:33.2048330Z 3: weights=(0.5,0.25,0.25) affine_uv=(0.25,0.25) perspective_uv=(2/11,1/11) depth=0.475
+2026-10-19T06:58:33.2049089Z 3: PASS raster_uv checks=71
+2026-10-19T06:58:33.2049975Z 3/5 Test #3: raster_uv ........................   Passed    0.00 sec
+2026-10-19T06:58:33.2052144Z test 4
+2026-10-19T06:58:33.2052506Z     Start 4: depth_blend
+2026-10-19T06:58:33.2052774Z 
+2026-10-19T06:58:33.2053293Z 4: Test command: /tmp/atlas-dx9-pipeline-lab-g++-OFF/depth_blend
+2026-10-19T06:58:33.2054121Z 4: Working Directory: /tmp/atlas-dx9-pipeline-lab-g++-OFF
+2026-10-19T06:58:33.2054782Z 4: Test timeout computed to be: 10000000
+2026-10-19T06:58:33.2066470Z 4: transparent back-to-front RGB=(0.5,0,0.25), reverse=(0.25,0,0.5)
+2026-10-19T06:58:33.2067191Z 4: PASS depth_blend checks=19
+2026-10-19T06:58:33.2067855Z 4/5 Test #4: depth_blend ......................   Passed    0.00 sec
+2026-10-19T06:58:33.2069704Z test 5
+2026-10-19T06:58:33.2070063Z     Start 5: pipeline_trace
+2026-10-19T06:58:33.2070370Z 
+2026-10-19T06:58:33.2070696Z 5: Test command: /tmp/atlas-dx9-pipeline-lab-g++-OFF/pipeline_trace
+2026-10-19T06:58:33.2071620Z 5: Working Directory: /tmp/atlas-dx9-pipeline-lab-g++-OFF
+2026-10-19T06:58:33.2072259Z 5: Test timeout computed to be: 10000000
+2026-10-19T06:58:33.2083644Z 5: 8x8 viewport: covered samples=25, sample (4,4): uv=(0.5,0.5), z=0.4
+2026-10-19T06:58:33.2084321Z 5: PASS pipeline_trace checks=105
+2026-10-19T06:58:33.2085218Z 5/5 Test #5: pipeline_trace ...................   Passed    0.00 sec
+2026-10-19T06:58:33.2088700Z 
+2026-10-19T06:58:33.2088995Z 100% tests passed, 0 tests failed out of 5
+2026-10-19T06:58:33.2089297Z 
+2026-10-19T06:58:33.2089408Z Total Test time (real) =   0.06 sec
+2026-10-19T06:58:33.2395614Z 5/5 Test #5: pipeline_trace ...................   Passed    0.00 sec
+2026-10-19T06:58:33.2408409Z 100% tests passed, 0 tests failed out of 5
+2026-10-19T06:58:33.2479733Z ##[group]Run actions/upload-artifact@v4
+2026-10-19T06:58:33.2480040Z with:
+2026-10-19T06:58:33.2480260Z   name: shared-dx9-pipeline-lab-g++-OFF
+2026-10-19T06:58:33.2480651Z   path: knowledge/verification/shared/dx9-pipeline-lab-g++-OFF/*.log
+2026-10-19T06:58:33.2481031Z   retention-days: 14
+2026-10-19T06:58:33.2481276Z   if-no-files-found: warn
+2026-10-19T06:58:33.2481513Z   compression-level: 6
+2026-10-19T06:58:33.2481731Z   overwrite: false
+2026-10-19T06:58:33.2481957Z   include-hidden-files: false
+2026-10-19T06:58:33.2482207Z ##[endgroup]
+2026-10-19T06:58:33.4185451Z (node:2412) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-19T06:58:33.4186588Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-19T06:58:33.4248993Z With the provided path, there will be 3 files uploaded
+2026-10-19T06:58:33.4255316Z Artifact name is valid!
+2026-10-19T06:58:33.4255974Z Root directory input is valid!
+2026-10-19T06:58:33.9158280Z Beginning upload of artifact content to blob storage
+2026-10-19T06:58:33.9386223Z (node:2412) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-19T06:58:34.1978434Z Uploaded bytes 1581
+2026-10-19T06:58:34.2713804Z Finished uploading artifact content to blob storage!
+2026-10-19T06:58:34.2715471Z SHA256 digest of uploaded artifact zip is d98e151780931077bfe503902bd0d26a83032fe3c4702dc6cc543234d12dc6ec
+2026-10-19T06:58:34.2716915Z Finalizing artifact upload
+2026-10-19T06:58:34.5451303Z Artifact shared-dx9-pipeline-lab-g++-OFF.zip successfully finalized. Artifact ID 12168566738
+2026-10-19T06:58:34.5453892Z Artifact shared-dx9-pipeline-lab-g++-OFF has been successfully uploaded! Final size is 1581 bytes. Artifact ID is 12168566738
+2026-10-19T06:58:34.5460721Z Artifact download URL: https://github.com/jiwhan112/um.github.io/actions/runs/39213029058/artifacts/12168566738
+2026-10-19T06:58:34.5677108Z Post job cleanup.
+2026-10-19T06:58:34.6555724Z [command]/usr/bin/git version
+2026-10-19T06:58:34.6595501Z git version 2.55.0
+2026-10-19T06:58:34.6636858Z Temporarily overriding HOME='/home/runner/work/_temp/b9463493-859c-4dda-9b24-5c898d3a7c18' before making global git config changes
+2026-10-19T06:58:34.6638140Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-19T06:58:34.6644585Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/um.github.io/um.github.io
+2026-10-19T06:58:34.6684987Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T06:58:34.6722927Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T06:58:34.6955290Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T06:58:34.6982465Z http.https://github.com/.extraheader
+2026-10-19T06:58:34.6995258Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-19T06:58:34.7030984Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T06:58:34.7262785Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T06:58:34.7296767Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T06:58:34.7670417Z Cleaning up orphan processes
+2026-10-19T06:58:34.7981532Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

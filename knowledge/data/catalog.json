@@ -37,5 +37,228 @@
       "테스트"
     ],
     "notion_url": "https://app.notion.com/p/3fda99703f408164a6f6f6006e6be923"
+  },
+  {
+    "path": "winapi-01",
+    "title": "WinAPI 01 · 창·핸들·메시지·호출 규약",
+    "subtitle": "Win32 핸들과 생성 콜백·GetMessage·ABI 계약",
+    "date": "2026-10-13",
+    "category": "WinAPI",
+    "tags": [
+      "WinAPI",
+      "C++",
+      "Windows SDK"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408108847ded19eeeed81f"
+  },
+  {
+    "path": "winapi-02",
+    "title": "WinAPI 02 · 게임 루프·입력·시간·DPI",
+    "subtitle": "QPC·고정 시간·키 에지·포커스와 픽셀 좌표",
+    "date": "2026-10-13",
+    "category": "WinAPI",
+    "tags": [
+      "WinAPI",
+      "C++",
+      "Windows SDK"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408137ac5ed11df7858a5f"
+  },
+  {
+    "path": "winapi-03",
+    "title": "WinAPI 03 · GDI·더블 버퍼링·애니메이션",
+    "subtitle": "HDC·선택 자원·WM_PAINT와 백버퍼 실패 처리",
+    "date": "2026-10-13",
+    "category": "WinAPI",
+    "tags": [
+      "WinAPI",
+      "C++",
+      "Windows SDK"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f4081a59040d64ecde49946"
+  },
+  {
+    "path": "winapi-04",
+    "title": "WinAPI 04 · Win32 앱 구성·검증 경계",
+    "subtitle": "파일 구성·빌드 방법·Windows GUI 미검증 구분",
+    "date": "2026-10-13",
+    "category": "WinAPI",
+    "tags": [
+      "WinAPI",
+      "C++",
+      "Windows SDK"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f40812fbfd4e2c48de2e58b"
+  },
+  {
+    "path": "winapi-04a",
+    "title": "WinAPI 04A · 고정 시간 단계 CPU 실습",
+    "subtitle": "C++11/20 전체 소스와 경과 시간 드롭 계약",
+    "date": "2026-10-19",
+    "category": "WinAPI",
+    "tags": [
+      "WinAPI",
+      "C++",
+      "Windows SDK"
+    ],
+    "notion_url": "https://app.notion.com/p/3fda99703f4081b18c16d94ceb844473"
+  },
+  {
+    "path": "game-math-01",
+    "title": "게임 수학 01 · 벡터·이동·회전",
+    "subtitle": "정규화·내적·외적·각도·목표 도착",
+    "date": "2026-10-13",
+    "category": "게임 수학",
+    "tags": [
+      "게임 수학",
+      "C++",
+      "Windows SDK"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f40815c894affc335c2e205"
+  },
+  {
+    "path": "game-math-02",
+    "title": "게임 수학 02 · 행렬·좌표계·역변환",
+    "subtitle": "행 벡터·SRT·동차 좌표·역전치 법선",
+    "date": "2026-10-13",
+    "category": "게임 수학",
+    "tags": [
+      "게임 수학",
+      "C++",
+      "Windows SDK"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f40811686bfe7d95d9bd027"
+  },
+  {
+    "path": "game-math-03",
+    "title": "게임 수학 03 · 충돌·카메라·타일 피킹",
+    "subtitle": "AABB·선분·클라이언트/월드 좌표·마름모 타일",
+    "date": "2026-10-13",
+    "category": "게임 수학",
+    "tags": [
+      "게임 수학",
+      "C++",
+      "Windows SDK"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f40814e905fe501f75cddc9"
+  },
+  {
+    "path": "game-math-04",
+    "title": "게임 수학 04 · MFC 문서/뷰·툴 데이터",
+    "subtitle": "MFC 문서·뷰·Undo/Redo·자원 소유권",
+    "date": "2026-10-13",
+    "category": "게임 수학",
+    "tags": [
+      "게임 수학",
+      "C++",
+      "Windows SDK"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f4081b1b3adeacf535ee6da"
+  },
+  {
+    "path": "game-math-05",
+    "title": "게임 수학 05 · 타일맵·A*·비동기 로딩",
+    "subtitle": "A*·BFS 비교·스냅샷·결과 버전 관리",
+    "date": "2026-10-13",
+    "category": "게임 수학",
+    "tags": [
+      "게임 수학",
+      "C++",
+      "Windows SDK"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f40814bb111e208530bf6b7"
+  },
+  {
+    "path": "dx9-pipeline-01",
+    "title": "DX9 파이프라인 01 · 정점 입력·드로우·셰이더",
+    "subtitle": "버퍼·FVF·stride·primitive count와 셰이더 경계",
+    "date": "2026-10-13",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408146bf8fd6f6f9024a0d"
+  },
+  {
+    "path": "dx9-pipeline-02",
+    "title": "DX9 파이프라인 02 · 좌표·투영·클리핑",
+    "subtitle": "로컬→월드→뷰→클립·동차 w·뷰포트",
+    "date": "2026-10-13",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f40817a8aabd25d7443f2ba"
+  },
+  {
+    "path": "dx9-pipeline-03",
+    "title": "DX9 파이프라인 03 · 래스터화·UV 보간",
+    "subtitle": "샘플 소속·원근 보정·텍셀 중심·반 픽셀",
+    "date": "2026-10-13",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f4081b98c00f5601b7d0c54"
+  },
+  {
+    "path": "dx9-pipeline-04",
+    "title": "DX9 파이프라인 04 · 깊이·스텐실·블렌딩",
+    "subtitle": "깊이 비교와 쓰기·알파·스텐실·출력 상태",
+    "date": "2026-10-13",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408106aba0d3b6a9b101b0"
+  },
+  {
+    "path": "dx9-pipeline-05",
+    "title": "DX9 파이프라인 05 · 추적·디버깅·검증",
+    "subtitle": "CPU 파이프라인 추적·증상별 검사와 실행 조건",
+    "date": "2026-10-13",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408105948ddf79d5139bb1"
+  },
+  {
+    "path": "winapi-math-lab",
+    "title": "WinAPI·게임 수학 — 공통 실습 전체 소스",
+    "subtitle": "CMake · Win32 GUI · 벡터/행렬 · 타일·A* · 6개 CPU 실행 예제",
+    "date": "2026-10-19",
+    "category": "WinAPI",
+    "tags": [
+      "WinAPI",
+      "C++20",
+      "CPU",
+      "실습 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/fffca9a4ce864ac7bade7efe90186be7"
+  },
+  {
+    "path": "dx9-pipeline-lab",
+    "title": "DX9 렌더링 파이프라인 — 공통 실습 전체 소스",
+    "subtitle": "정점 입력·클리핑·래스터화·깊이·블렌딩 · 5개 CPU 실행 예제",
+    "date": "2026-10-19",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++20",
+      "CPU",
+      "실습 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3e66577f53a549fe99a94ac26f68a685"
   }
 ]

@@ -1,0 +1,63 @@
+name: Knowledge CPU source verification
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'knowledge/**'
+      - '.github/workflows/knowledge-cpu-check.yml'
+  push:
+    branches: [master, 'feature/knowledge-*']
+    paths:
+      - 'knowledge/**'
+      - '.github/workflows/knowledge-cpu-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: knowledge-cpu-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  fixed-stepper:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: gcc20
+            compiler: g++
+            standard: 20
+            flags: ""
+          - id: gcc11
+            compiler: g++
+            standard: 11
+            flags: ""
+          - id: clangsan
+            compiler: clang++
+            standard: 20
+            flags: "-fsanitize=address,undefined -fno-omit-frame-pointer"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure ${{ matrix.id }}
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p knowledge/verification/${{ matrix.id }}
+          cmake -S knowledge/winapi-04a -B /tmp/atlas-stepper-${{ matrix.id }} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DLAB_CXX_STANDARD=${{ matrix.standard }} -DCMAKE_CXX_FLAGS="${{ matrix.flags }}" 2>&1 | tee knowledge/verification/${{ matrix.id }}/configure.log
+      - name: Build ${{ matrix.id }}
+        shell: bash
+        run: |
+          set -o pipefail
+          cmake --build /tmp/atlas-stepper-${{ matrix.id }} --parallel 2 2>&1 | tee knowledge/verification/${{ matrix.id }}/build.log
+      - name: CTest ${{ matrix.id }}
+        shell: bash
+        run: |
+          set -o pipefail
+          ctest --test-dir /tmp/atlas-stepper-${{ matrix.id }} -V --output-on-failure 2>&1 | tee knowledge/verification/${{ matrix.id }}/ctest.log
+      - name: Keep exact CI console logs for inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: knowledge-stepper-${{ matrix.id }}
+          path: knowledge/verification/${{ matrix.id }}/*.log
+          retention-days: 14

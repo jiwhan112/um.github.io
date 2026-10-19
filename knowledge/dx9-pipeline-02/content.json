@@ -1,0 +1,895 @@
+{
+  "id": "knowledge--dx9-pipeline-02",
+  "route": "/knowledge/dx9-pipeline-02/",
+  "kind": "knowledge",
+  "title": "DX9 파이프라인 02 · 좌표·투영·클리핑",
+  "subtitle": "로컬→월드→뷰→클립·동차 w·뷰포트",
+  "date": "2026-10-13",
+  "number": "DX9 PIPE / 02",
+  "category": "DirectX 9",
+  "topic": "DirectX 9",
+  "tags": [
+    "DirectX 9",
+    "그래픽스",
+    "C++"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "도입·원본과 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본 Notion 본문을 GitHub Pages로 이전해 보존했습니다. 실제 GPU/Direct3D 실행 결과가 아닙니다. "
+                },
+                {
+                  "text": "원본 Notion",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f40817a8aabd25d7443f2ba"
+                },
+                {
+                  "text": " · 공통 DX9 CPU 실습 파일 전체 ZIP은 아직 확보되지 않았으며 Mermaid/수식은 원본 코드로 제공합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "투영 행렬을 곱한 결과는 아직 화면 좌표가 아닙니다.",
+                  "kind": "strong"
+                },
+                {
+                  "text": " 학습 기준: 행 벡터 · +Z 전방의 왼손 뷰 공간 · 일반적인 near→0 / far→1 깊이 · 2026-10-13. 실습: "
+                },
+                {
+                  "text": "src/transform_clip.cpp",
+                  "kind": "code"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DX9 렌더링 파이프라인 — 개정판 v1.0",
+              "kind": "link",
+              "href": "/knowledge/#knowledge-windows"
+            },
+            {
+              "text": " · 행렬 기초 "
+            },
+            {
+              "text": "관련 문서",
+              "kind": "link",
+              "href": "/knowledge/game-math-02/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 같은 숫자라도 어느 공간인지 먼저 묻습니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "(1,1,0)",
+              "kind": "code"
+            },
+            {
+              "text": "이라는 좌표만으로 화면 어느 위치인지 알 수 없습니다. 로컬 공간의 메시 꼭짓점인지, 월드의 위치인지, 카메라 기준 좌표인지가 필요합니다. 공간은 좌표가 의미하는 기준입니다. 다음 표의 흐름을 함수와 변수 이름에 드러내면 디버깅이 쉬워집니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "공간"
+                  }
+                ],
+                [
+                  {
+                    "text": "의미"
+                  }
+                ],
+                [
+                  {
+                    "text": "다음 계산"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "로컬"
+                  }
+                ],
+                [
+                  {
+                    "text": "오브젝트 자체의 원점·축 기준"
+                  }
+                ],
+                [
+                  {
+                    "text": "월드 행렬 W"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "월드"
+                  }
+                ],
+                [
+                  {
+                    "text": "장면 공통 기준"
+                  }
+                ],
+                [
+                  {
+                    "text": "뷰 행렬 V"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "뷰"
+                  }
+                ],
+                [
+                  {
+                    "text": "카메라의 위치·방향을 기준으로 본 좌표"
+                  }
+                ],
+                [
+                  {
+                    "text": "투영 행렬 P"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "클립"
+                  }
+                ],
+                [
+                  {
+                    "text": "투영 후 4성분 동차 좌표"
+                  }
+                ],
+                [
+                  {
+                    "text": "클리핑 후 xyz를 w로 나눔"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "NDC"
+                  }
+                ],
+                [
+                  {
+                    "text": "정규화 장치 좌표"
+                  }
+                ],
+                [
+                  {
+                    "text": "뷰포트 변환"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "화면"
+                  }
+                ],
+                [
+                  {
+                    "text": "렌더 타깃 안의 샘플 위치·깊이"
+                  }
+                ],
+                [
+                  {
+                    "text": "래스터화와 출력 처리"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 문서는 "
+            },
+            {
+              "text": "pClip = pLocal × W × V × P",
+              "kind": "code"
+            },
+            {
+              "text": "인 행 벡터 규약을 사용합니다. 행렬의 메모리 저장 순서, 벡터를 곱하는 쪽, 좌표계의 왼손·오른손은 구별해야 합니다. HLSL 전송 시 필요한 전치 여부도 별도의 데이터 계약입니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 월드 행렬과 카메라의 역변환",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "월드 행렬은 오브젝트를 장면에 배치합니다. 일반적인 크기·회전·이동 예는 행 벡터에서 "
+            },
+            {
+              "text": "W=SRT",
+              "kind": "code"
+            },
+            {
+              "text": "이지만 모든 물체가 같은 변환식을 가져야 하는 것은 아닙니다. 부모가 있다면 이 규약에서 자식 월드 변환은 "
+            },
+            {
+              "text": "childLocal × parentWorld",
+              "kind": "code"
+            },
+            {
+              "text": "로 연결합니다. 뷰 행렬은 카메라의 월드 배치에 대한 역변환으로 이해할 수 있습니다. 카메라를 옮겼다고 월드에 저장된 모든 오브젝트 좌표를 수정하지 않습니다. 그릴 때 카메라 기준으로 다시 표현하는 것입니다. 카메라 회전이 있으면 위치를 빼는 것만으로는 충분하지 않고 축 방향도 바꿔야 합니다. 이번 수치 예제의 카메라는 "
+            },
+            {
+              "text": "(0,0,-5)",
+              "kind": "code"
+            },
+            {
+              "text": "에 있고 +Z를 봅니다. 회전이 없으므로 뷰 행렬은 z를 +5 옮기는 행렬입니다. 이 예제에서 +Z가 전방인 것은 우리가 선택한 뷰 규약이지 모든 엔진 카메라의 필수 규칙은 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. 원근 투영의 x·y와 깊이",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가까운 물체가 크게 보이는 원리를 비슷한 삼각형으로 생각하면, 화면 방향 좌표는 대략 "
+            },
+            {
+              "text": "x/z",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "y/z",
+              "kind": "code"
+            },
+            {
+              "text": "에 비례합니다. 이를 행렬과 후속 w 나눗셈으로 나누어 표현합니다. 수직 시야각을 θ, 화면 종횡비를 a, near를 n, far를 f라고 하면 이번 행 벡터 투영은 다음과 같습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "s_y=\\frac{1}{\\tan(\\theta/2)},\\quad s_x=\\frac{s_y}{a},\\quad q=\\frac{f}{f-n}"
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "P=\\begin{bmatrix}s_x&0&0&0\\\\0&s_y&0&0\\\\0&0&q&1\\\\0&0&-nq&0\\end{bmatrix}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "뷰 좌표 "
+            },
+            {
+              "text": "(x,y,z,1)",
+              "kind": "code"
+            },
+            {
+              "text": "에 곱하면 클립 좌표는 "
+            },
+            {
+              "text": "(s_x x, s_y y, qz-nq, z)",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. 이 행렬에서 "
+            },
+            {
+              "text": "clip.w가 view.z",
+              "kind": "strong"
+            },
+            {
+              "text": "가 되고, 나중에 w로 나누면서 원근감이 만들어집니다. 모든 종류의 투영에서 w가 z와 같다는 뜻은 아닙니다. 실습은 "
+            },
+            {
+              "text": "0<θ<π",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "a>0",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "0<n<f",
+              "kind": "code"
+            },
+            {
+              "text": "를 요구합니다. 0 또는 음수인 near, 같은 near/far를 이 함수에 넣는 것은 잘못된 입력입니다. Reverse-Z나 특수 투영을 지원하지 않는 학습용 계약이며 그런 기법 자체가 불가능하다는 뜻은 아닙니다. 정사영은 거리에 따른 크기 축소가 없는 별도 투영입니다. 일반적인 정사영에서 w가 1로 유지되어도 클립 범위와 뷰포트 계산은 여전히 필요합니다. 근거: "
+            },
+            {
+              "text": "D3D9 투영 변환과 행렬",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/projection-transform"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. 한 정점을 끝까지 계산해 봅니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "입력은 로컬 "
+            },
+            {
+              "text": "(1,1,0,1)",
+              "kind": "code"
+            },
+            {
+              "text": "이고, 월드 변환은 x 방향 +1 이동입니다. 카메라는 앞 절의 위치를 사용합니다. 수직 시야각 90°, aspect=4/3, near=1, far=11, 뷰포트는 800×600입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 값"
+                  }
+                ],
+                [
+                  {
+                    "text": "읽는 방법"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "로컬"
+                  }
+                ],
+                [
+                  {
+                    "text": "(1, 1, 0, 1)"
+                  }
+                ],
+                [
+                  {
+                    "text": "메시 원점 기준"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "월드"
+                  }
+                ],
+                [
+                  {
+                    "text": "(2, 1, 0, 1)"
+                  }
+                ],
+                [
+                  {
+                    "text": "x 방향으로 1 이동"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "뷰"
+                  }
+                ],
+                [
+                  {
+                    "text": "(2, 1, 5, 1)"
+                  }
+                ],
+                [
+                  {
+                    "text": "카메라 앞 5만큼 떨어짐"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "클립"
+                  }
+                ],
+                [
+                  {
+                    "text": "(1.5, 1, 4.4, 5)"
+                  }
+                ],
+                [
+                  {
+                    "text": "투영 행렬을 곱했지만 아직 나누지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "NDC"
+                  }
+                ],
+                [
+                  {
+                    "text": "(0.3, 0.2, 0.88)"
+                  }
+                ],
+                [
+                  {
+                    "text": "앞의 xyz를 5로 나눔"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "화면"
+                  }
+                ],
+                [
+                  {
+                    "text": "(520, 240), 깊이 0.88"
+                  }
+                ],
+                [
+                  {
+                    "text": "중앙보다 오른쪽·위쪽"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음은 공통 헤더를 사용하는 계산 조각입니다. 헤더와 main을 포함한 전체 실행 예제는 실습 팩에 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "using namespace pipeline;\nconst auto world = Translation(1, 0, 0);\nconst auto view = Translation(0, 0, 5);\nconst auto projection = PerspectiveLH(pi / 2, 4.0 / 3.0, 1, 11);\nconst auto wvp = Multiply(Multiply(world, view), projection);\nconst auto clip = Transform({1, 1, 0, 1}, wvp);\n// clip = {1.5, 1, 4.4, 5}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "pi",
+              "kind": "code"
+            },
+            {
+              "text": "는 호출 코드에서 정의한 상수입니다. 위 결과는 이 문서가 선택한 행렬과 좌표에서 계산한 값으로, GPU에서 읽어 온 값은 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. 클리핑은 보이지 않는 정점만 삭제하는 일이 아닙니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "일반적인 D3D 동차 클립 영역은 다음 부등식으로 나타냅니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "-w_c\\le x_c\\le w_c,\\qquad -w_c\\le y_c\\le w_c,\\qquad 0\\le z_c\\le w_c"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "삼각형이 이 경계를 가로지르면 경계와의 교점을 만들고 안쪽 다각형을 남깁니다. 밖에 있는 정점만 목록에서 지우면 삼각형의 모양과 UV가 손상됩니다. 세 정점이 각각 화면 밖에 있어도 그 사이 삼각형이 화면 전체를 덮을 수 있습니다. "
+            },
+            {
+              "text": "정점이 모두 밖이라는 사실만으로 프리미티브 전체를 버리면 안 됩니다.",
+              "kind": "strong"
+            },
+            {
+              "text": " 한 평면에서 A의 부호 있는 거리 da와 B의 거리 db가 반대라면, 교점의 매개변수는 다음과 같습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "t=\\frac{d_a}{d_a-d_b},\\qquad C=(1-t)A+tB"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "여기서 거리란 정규화된 실제 길이일 필요가 없습니다. 예를 들어 왼쪽 평면은 "
+            },
+            {
+              "text": "x+w",
+              "kind": "code"
+            },
+            {
+              "text": ", near 평면은 "
+            },
+            {
+              "text": "z",
+              "kind": "code"
+            },
+            {
+              "text": "를 부호 검사에 씁니다. 이번 Clip은 여섯 평면에 대해 볼록 다각형을 차례로 잘라냅니다. 교점에서는 "
+            },
+            {
+              "text": "clip.xyzw와 원래 UV를 같은 t로 보간",
+              "kind": "strong"
+            },
+            {
+              "text": "합니다. UV/w를 미리 만들어 그 값을 같은 방식으로 자르는 것과 혼동하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n    A[\"입력 삼각형: 클립 좌표와 원래 UV\"] --> B[\"평면별 안쪽·바깥쪽 판정\"]\n    B --> C[\"경계 교점과 UV 생성\"]\n    C --> D[\"남은 볼록 다각형\"]\n    D --> E[\"삼각형으로 다시 구성\"]\n    E --> F[\"w 나눗셈과 화면 변환\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습에서는 near 뒤에 정점 하나가 있는 삼각형이 정점 네 개의 다각형으로 바뀌는 사례를 확인합니다. 클리핑을 뷰 공간의 평면 방정식으로 구현하는 방법도 있으므로 ‘클리핑은 어떤 표현에서나 무조건 투영 뒤’라고 외울 필요는 없습니다. 다만 "
+            },
+            {
+              "text": "이 문서의 동차 클립 부등식은 투영한 결과에 적용하며, 원근 나눗셈보다 먼저 사용",
+              "kind": "strong"
+            },
+            {
+              "text": "합니다. 근거: "
+            },
+            {
+              "text": "D3D9 뷰포트와 클리핑",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/viewports-and-clipping"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "투영 뒤·원근 나눗셈 전의 클립 평면",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/user-clip-planes-on-10level9"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "6. 원근 나눗셈과 뷰포트",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "클리핑을 통과한 투영 가능한 정점은 "
+            },
+            {
+              "text": "(xc/wc,yc/wc,zc/wc)",
+              "kind": "code"
+            },
+            {
+              "text": "로 바꿉니다. w가 0이거나 거의 0인 점을 무조건 나누면 무한대나 매우 큰 수가 발생합니다. 카메라 뒤 점의 음수 w를 나눈 뒤 정상 화면 안에 들어왔다고 오판하지 않도록, 부호와 클립 조건을 먼저 봅니다. 실습 Project는 w가 1e−12보다 커야 한다는 수치적 제한을 둡니다. 뷰포트 원점을 "
+            },
+            {
+              "text": "(X,Y)",
+              "kind": "code"
+            },
+            {
+              "text": ", 폭과 높이를 W,H라고 하면 다음과 같습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "x_s=X+\\frac{x_{ndc}+1}{2}W,\\qquad y_s=Y+\\frac{1-y_{ndc}}{2}H"
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "z_s=MinZ+z_{ndc}(MaxZ-MinZ)"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "화면 y가 아래로 증가하기 때문에 y식의 부호가 반대입니다. "
+            },
+            {
+              "text": "MinZ/MaxZ는 투영 near/far 거리가 아니라 정규화 깊이를 저장 범위로 재배치하는 값",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다. 폭·높이 0인 뷰포트도 정상 투영 입력으로 취급하지 않습니다. NDC 오른쪽 경계가 X+W로 매핑된다고 그 위치가 항상 실제 타깃의 유효 픽셀 중심이라는 뜻은 아닙니다. 하드웨어나 설명 문헌은 동차 좌표에서 뷰포트 변환을 먼저 합성하고 마지막에 나눗셈을 수행하기도 합니다. 결과가 동등한 식 변형과 잘못된 좌표 혼용을 구분하세요. 여기서는 사람이 계산을 따라가기 쉬운 순서로 나누어 설명합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "7. near/far와 깊이 정밀도",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 원근 행렬의 깊이는 "
+            },
+            {
+              "text": "d(z)=q−nq/z",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. 예제에서는 "
+            },
+            {
+              "text": "1.1−1.1/z",
+              "kind": "code"
+            },
+            {
+              "text": "이고 z=1은 0, z=11은 1, z=5는 0.88입니다. 카메라 거리와 깊이 버퍼 값 사이가 선형이 아닙니다. 같은 거리 차이라도 near 쪽과 far 쪽에서 깊이 차이가 다릅니다. 원 평면을 크게 잡으면 클립 범위는 늘어나지만 시야 밖·가려진 물체까지 모두 보이게 되지는 않습니다. 필요한 장면 범위에 맞추고, near를 지나치게 작게 잡아 깊이 구분을 악화시키지 않도록 합니다. 실제 정밀도는 깊이 포맷과 투영 방식까지 함께 봐야 합니다. 근거: "
+            },
+            {
+              "text": "깊이 버퍼",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/depth-buffers"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-8",
+      "title": "8. 이해 확인과 실제 검증",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "near 평면의 x와 y는 항상 −1부터 +1일까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 뷰 공간에서 near 평면의 실제 폭과 높이는 near 거리·시야각·종횡비에 의해 정해집니다. −1부터 +1은 클립 후 w로 나눈 정규화 좌표의 x/y 범위입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "삼각형 꼭짓점 세 개 모두 화면 밖이면 그 삼각형을 건너뛰어도 될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그것만으로는 판단할 수 없습니다. 모두 같은 클립 평면의 바깥에 있는 등 전체 탈락을 보장하는 조건이 필요합니다. 화면을 크게 감싼 삼각형은 세 꼭짓점이 밖이어도 화면 내부를 덮습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "transform_clip",
+              "kind": "code"
+            },
+            {
+              "text": "은 79회 조건 검사에서 단계별 좌표, near/far, 뷰포트 깊이 변환, 여섯 클립 평면, 경계 교점·속성, 전체 꼭짓점이 바깥인 교차 삼각형, 잘못된 투영 입력을 확인했습니다. GCC·Clang·Clang ASan/UBSan에서 통과했습니다. Double 기반 CPU 학습 모델이며 GPU 정밀도·guard band·하드웨어 클리퍼의 비트 단위 결과를 검증한 것은 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-source-refs",
+      "title": "전체 소스·CMake·재검증",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원문 본문은 그대로 보존하고, 이 단원과 직접 연결된 전체 실습 코드도 ATLAS NOTE에서 열 수 있도록 연결했습니다. Linux GCC/Clang CPU 모델은 검증했지만 Windows/MSVC·Direct3D/GPU·HLSL 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 실습 프로젝트 · CMake · 코드 모음 열기",
+              "kind": "link",
+              "href": "/knowledge/dx9-pipeline-lab/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "include/pipeline.hpp — GitHub 원본 코드",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/include/pipeline.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "src/transform_clip.cpp — GitHub 원본 코드",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/src/transform_clip.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 무결성 및 2026-10-19 GitHub CPU 재검증",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
