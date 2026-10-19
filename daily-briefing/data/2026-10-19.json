@@ -1,7 +1,7 @@
 {
   "date": "2026-10-19",
   "title": "게임·AI 데일리 브리핑",
-  "intro": "10월 19일 월요일 아침에는 주말 사이 확인 가능한 대형 엔진 릴리스가 많지 않아, 10월 13~16일의 공식 자료 가운데 이전 브리핑에서 다루지 않았던 5건을 선정했어. 오늘의 공통 흐름은 엔진에서 재사용할 기능을 늘리는 일, 오래된 게임을 보존하며 재출시하는 일, AI의 실행과 안전성 평가를 분리하는 일, 실제 장면 제작 파이프라인, 개발 자동화의 최소 권한 설계야.",
+  "intro": "2026년 10월 19일 개편판. 매일 정확히 5건을 채우는 제한을 없애고 AI·게임 개발·게임 전반 이슈의 의미 있는 소식을 중요도에 따라 분류한다. 5개 기존 기사의 순서와 date:index 식별자는 보존하고, 새 검증 소식을 추가했다. 심층 해설은 엔진/그래픽스 구조와 에이전트 안전성 등 직접적인 학습 가치가 높은 항목에 집중하며, 출시·정책·시장 신호 등은 빠른 요약으로 제공한다. 10월 19일 정오(KST) 기준 Steam Next Fest는 한국시간 20일 새벽 시작 예정이다.",
   "items": [
     {
       "category": "game-dev",
@@ -23,7 +23,8 @@
         "GDExtension",
         "C++",
         "Engine Architecture"
-      ]
+      ],
+      "depth": "deep"
     },
     {
       "category": "game-industry",
@@ -45,7 +46,8 @@
         "Platform Porting",
         "Fixed Timestep",
         "Asset Cooking"
-      ]
+      ],
+      "depth": "brief"
     },
     {
       "category": "ai",
@@ -67,7 +69,8 @@
         "RL",
         "LLM Agent",
         "AI Security"
-      ]
+      ],
+      "depth": "deep"
     },
     {
       "category": "game-dev",
@@ -89,10 +92,11 @@
         "RealityScan",
         "Volumetric Fog",
         "Blueprint"
-      ]
+      ],
+      "depth": "deep"
     },
     {
-      "category": "opensource",
+      "category": "game-dev",
       "title": "🛡️ GitHub App 최소 권한 개선 — repository_creation·설치 범위와 토큰 회전",
       "source": "GitHub Changelog 공식 발표",
       "published": "2026-10-13",
@@ -111,7 +115,176 @@
         "Refresh Token",
         "DevSecOps",
         "CI/CD"
-      ]
+      ],
+      "depth": "brief"
+    },
+    {
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "🎮 UE5 Chaos 물리 확장 — 『Virtue and a Sledgehammer』의 Voronoi 파괴 구현",
+      "source": "Creative Bloq · Deconstructeam 인터뷰",
+      "published": "2026-10-16",
+      "url": "https://www.creativebloq.com/features/how-unreal-5s-chaos-physics-was-modified-for-this-indie-game-about-tearing-down-your-hometown-with-a-sledgehammer",
+      "tags": [
+        "Unreal Engine 5",
+        "Chaos Physics",
+        "Voronoi Fracture",
+        "Destruction",
+        "Rigid Body",
+        "Steam Deck",
+        "GPU Cost"
+      ],
+      "easy_explainer": "《Virtue and a Sledgehammer》의 개발진은 Unreal Engine 5의 Chaos 물리 시스템을 활용하면서 물체를 망치로 파괴하는 동작을 더 자유롭게 만들기 위해 시스템을 수정했다고 설명했어. 핵심은 정적인 메시를 여러 조각으로 분할하고, 타격을 받은 부분에서 조각들이 강체로 전환되어 흩어지게 만드는 거야. Voronoi 분할은 공간에 여러 씨앗 점을 두고 각 점에 가장 가까운 영역으로 공간을 나누는 방식이야. 3D 물체를 이 셀 경계로 분할하면 부서지는 조각의 모양을 만들 수 있지. 하지만 한 물체가 30개 조각으로 변하면 충돌체·강체 시뮬레이션·그림자·Draw Call 비용까지 함께 증가할 수 있어. 개발팀은 Steam Deck과 저사양 환경을 고려해 파괴 뒤의 그림자를 낮은 그래픽 설정에서 끄는 최적화도 설명했어. 이는 게임 전체에서 Chaos를 새로 만든 것이 아니라 개별 파괴 동작에 맞춰 수정한 개발 사례이며 내부 소스코드 전체가 공개된 것은 아니야.\n\n엔진 학습 관점에서 중요한 것은 렌더링 모델 하나의 시각적 변화가 물리·충돌·Scene Graph·자원 수명·성능 제한을 동시에 건드린다는 점이야. 원본 메시를 감추고 파편 오브젝트를 생성할지, 파괴 데이터를 미리 Bake할지 런타임에 분할할지, 멀티플레이에서 모든 파편을 복제할지 선택해야 해. 파편 수를 무제한으로 늘리지 않는 Budget 시스템도 필요해.",
+      "short_summary": "UE5 기반 신작 《Virtue and a Sledgehammer》는 Chaos 물리를 수정해 Voronoi 방식의 메시 파괴를 구현했어. 파편이 늘면 강체·충돌·그림자 비용도 함께 증가해. 개발팀은 저사양 설정에서 파괴 후 그림자를 비활성화하는 방식도 소개했어.",
+      "technical_context": "개념 흐름: Hit Event → 충격 위치/방향 계산 → Voronoi Fracture 또는 사전 생성 파편 참조 → 원본 Static Mesh 가림 → Fragment Rigid Bodies 활성화 → 파편 수명/충돌/그림자 LOD 관리. 이는 기사의 설계를 이해하기 위한 일반화된 파이프라인이지 개발팀의 실제 내부 함수명을 재구성한 것은 아니야. 파괴 효과는 지오메트리 생성 비용만이 아니라 Broadphase 충돌 쌍, 물리 솔버 반복, 그림자 패스, 오브젝트 할당·회수와 연결돼. 파편마다 그림자를 만들 필요가 없거나 수명이 짧은 경우 품질 설정으로 최적화할 수 있어.",
+      "why_it_matters": "파괴 연출처럼 눈에 잘 보이는 기능은 렌더러·Physics World·Scene 관리 사이의 경계가 잘 정의돼야 성능을 통제할 수 있어. 작은 팀도 기존 엔진 서브시스템을 특정 게임플레이 요구에 맞춰 확장할 수 있다는 사례야.",
+      "developer_view": "C++ 엔진에서 파괴 시스템을 구현한다면 게임 규칙의 Damage Event와 그래픽 파편 생성, 물리 강체 등록을 독립시키는 편이 좋아. 파편 객체를 풀로 재활용하고, 거리별 파편 수 및 그림자 사용 정책을 정한 뒤 CPU Physics 시간과 GPU Shadow Pass 시간을 따로 측정해야 해. 물리 상태의 재현성과 네트워크 복제 범위를 확실히 제한하는 것도 중요해."
+    },
+    {
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "🧩 BRUTAL C# 프레임워크 — Unity 밖의 자체 엔진 구성 요소를 공개",
+      "source": "BRUTAL 공식 GitHub · 개발자 인터뷰",
+      "published": "2026-10-17",
+      "url": "https://github.com/ahwootech/BRUTAL",
+      "tags": [
+        "BRUTAL",
+        "C#",
+        ".NET 10",
+        "Vulkan",
+        "Interop",
+        "Job System",
+        "RimWorld"
+      ],
+      "easy_explainer": "DayZ 제작자 Dean Hall이 참여한 BRUTAL 프레임워크가 게임 개발자의 엔진 선택권에 대한 최근 인터뷰에서 다시 주목받았어. 공식 저장소에 따르면 BRUTAL은 Unity/Unreal처럼 에디터·Scene Graph·렌더러까지 갖춘 완성형 엔진이 아니라, 최신 C#에서 Vulkan 등 네이티브 API를 직접 호출하기 위한 Interop·메모리·동시성·수학·외부 라이브러리 바인딩을 제공하는 저수준 기반이야. RimWorld의 Waylith 엔진과 Kitten Space Agency가 활용한다고 소개해. 초기 자료에서 MIT 기반 라이선스라고 부르지만 실제로는 크레디트 표시와 로고 등의 추가 의무가 있어 순수 MIT와 같다고 단정하면 안 돼.",
+      "short_summary": "BRUTAL은 C#으로 자체 엔진을 만들 수 있도록 Vulkan·메모리·동시성·네이티브 바인딩을 제공하는 프레임워크야. 에디터와 Scene Graph는 포함하지 않아. 상용 이용 시 추가 표시 의무가 있는 라이선스를 확인해야 해.",
+      "technical_context": "프레임워크는 .NET 10, Vulkan 1.3(렌더링 시)을 전제로 하며 C# ↔ 네이티브 API의 비용과 데이터 소유권을 직접 관리할 수 있게 구성돼 있어. 공식 README는 renderer/editor 제공이 목표가 아님을 명시해.",
+      "why_it_matters": "완성형 상용 엔진과 자체 엔진의 중간 지점을 제공하지만 필요한 엔진 시스템을 개발팀이 직접 책임져야 해.",
+      "developer_view": "기존 C++ 엔진 개발자가 자주 다루는 메모리 할당·Job System·렌더링 추상화 계층을 C# 환경에서 직접 구현하고 싶을 때 구조를 비교할 만해."
+    },
+    {
+      "category": "ai",
+      "depth": "brief",
+      "title": "🤖 Anthropic — 외부 평가기관 METR에 내부 직원 수준의 접근 권한 제공",
+      "source": "Anthropic 공식 발표",
+      "published": "2026-10-15",
+      "url": "https://www.anthropic.com/news/an-update-on-independent-evaluators",
+      "tags": [
+        "Anthropic",
+        "METR",
+        "AI Safety",
+        "Independent Evaluation",
+        "Auditing"
+      ],
+      "easy_explainer": "Anthropic은 프런티어 모델의 위험을 독립적으로 평가하기 위해 비영리 평가기관 METR 연구팀에 직원 수준의 접근 권한을 제공하기 시작했다고 발표했어. METR은 위험 평가 결과를 공개할 예정이며, 회사는 SecureBio·Accenture와도 평가를 진행하고 Hugging Face 등과 논의 중이라고 설명해. 이것은 새 모델 출시나 안전성을 완전히 보증하는 인증이 아니라, 회사 내부에서 진행하던 일부 평가에 외부 검증자가 더 깊이 참여할 수 있게 한 변화야.",
+      "short_summary": "Anthropic이 AI 안전성 외부 평가를 강화하며 METR 연구팀에 내부 수준의 접근 권한을 제공해. 평가 결과는 공개될 예정이지만 새 모델 출시 소식은 아니야.",
+      "technical_context": "모델의 공개 데모 수준을 넘어 평가 담당자에게 내부 도구·실험 정보를 제공해야 도구 실행이나 오남용 시나리오의 실제 위험을 검토할 수 있어. 다만 접근 범위·독립성·평가 재현성은 공개되는 보고서를 통해 지속 확인해야 해.",
+      "why_it_matters": "모델을 만든 회사의 자체 테스트만으로 신뢰성을 판단하지 않고 제3자 검증 절차를 강화하는 흐름이야.",
+      "developer_view": "사내 AI 코딩 에이전트 도입 평가에서도 도입팀의 자체 성공 사례뿐 아니라 독립적으로 선정된 회귀 테스트와 보안 시험이 필요해."
+    },
+    {
+      "category": "ai",
+      "depth": "brief",
+      "title": "📈 OpenAI — EU 중소기업의 에이전트 이용자 증가 보고",
+      "source": "OpenAI Economic Research",
+      "published": "2026-10-14",
+      "url": "https://openai.com/index/the-eus-next-chapter-in-ai-is-agentic/",
+      "tags": [
+        "OpenAI",
+        "Agentic AI",
+        "ChatGPT Work",
+        "Codex",
+        "AI Adoption",
+        "Research"
+      ],
+      "easy_explainer": "OpenAI가 10월 14일 EU 기업의 AI 에이전트 이용 현황을 분석한 보고서를 발표했어. 보고서의 EU 중소기업 표본에서는 5월 이후 에이전트 기능의 주간 활성 이용자가 8.1배 증가했다고 설명해. ChatGPT Enterprise 이용자 표본의 출력 토큰 중 Codex와 ChatGPT Work가 절반 이상을 차지한다는 분석도 있어. 이 수치는 선택된 제품·기업 이용 데이터에 관한 것으로 EU 모든 기업에서 같은 변화가 일어났다는 뜻은 아니야. AI가 질문 답변에서 실제 도구 수행으로 사용 방식이 옮겨가고 있다는 관찰로 볼 수 있어.",
+      "short_summary": "OpenAI의 EU 기업 이용 보고서에서는 중소기업 표본의 에이전트 주간 활성 이용자가 5월 이후 8.1배 증가했어. 조사 표본의 변화이지 전체 기업의 보편적 이용률은 아니야.",
+      "technical_context": "AI 에이전트 이용량은 대화 수뿐 아니라 도구 호출, 작업 단계와 출력 토큰으로 측정할 수 있어. 보고서의 제품 표본 구성과 기간을 확인해야 수치를 해석할 수 있어.",
+      "why_it_matters": "개발 도구나 업무 자동화에서 단순 질의응답보다 과제를 실제로 끝내는 에이전트 실행의 중요성이 커지고 있다는 산업적 신호야.",
+      "developer_view": "게임 개발팀에서도 코드 작성량이 아니라 빌드·테스트·문서화 등 작업 완료율을 에이전트 평가 지표로 삼을 필요가 있어."
+    },
+    {
+      "category": "ai",
+      "depth": "brief",
+      "title": "⚠️ GitHub Copilot — 11월 16일 일부 모델 지원 종료 예정",
+      "source": "GitHub Changelog",
+      "published": "2026-10-15",
+      "url": "https://github.blog/changelog/2026-10-15-upcoming-deprecation-of-selected-github-copilot-models-in-mid-November/",
+      "tags": [
+        "GitHub Copilot",
+        "Model Deprecation",
+        "Claude Opus",
+        "GPT-5.6",
+        "Workflow Migration"
+      ],
+      "easy_explainer": "GitHub는 Copilot에 등록된 일부 모델을 2026년 11월 16일 종료할 예정이라고 공지했어. Claude Opus 4.8과 5, GPT-5.6 Terra가 대상이며 추천 대체 모델은 Claude Opus 5.5, GPT-6.1 Sol 또는 GPT-6 Luna야. 단 Claude Opus 4.8은 연간 구독 개인 이용자에게 예외가 있다고 밝혔어. 특정 모델명을 고정한 IDE 설정이나 자동화 스크립트가 있다면 해당 종료일 전에 모델 정책과 호환성을 확인해야 해.",
+      "short_summary": "GitHub Copilot은 11월 16일 Claude Opus 4.8·5와 GPT-5.6 Terra 지원을 종료할 예정이야. 기업·개인 플랜별 예외와 대체 모델 설정을 확인해야 해.",
+      "technical_context": "모델명을 고정한 클라이언트 설정 또는 에이전트 실행 구성이 있는 경우, 지원 중단과 함께 오류가 발생할 수 있어. 모델 정책을 조직에서 관리한다면 대체 모델 활성화 여부도 확인해야 해.",
+      "why_it_matters": "모델 공급자의 버전 수명주기가 개발 자동화의 운영 안정성에 직접 영향을 주는 사례야.",
+      "developer_view": "빌드 자동화에 연결된 코딩 에이전트는 모델 ID를 설정으로 분리하고 회귀 테스트로 대체 모델을 검증하는 것이 유용해."
+    },
+    {
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🕹️ Call of Duty: Modern Warfare 4 — 10월 23일 출시, Game Pass 출시일 미포함",
+      "source": "Call of Duty 공식 블로그",
+      "published": "2026-10-15",
+      "url": "https://www.callofduty.com/blog/2026/10/call-of-duty-intel-modern-warfare-4-launch-xbox-game-pass/",
+      "tags": [
+        "Call of Duty",
+        "Modern Warfare 4",
+        "Xbox",
+        "Game Pass",
+        "Game Industry",
+        "Distribution"
+      ],
+      "easy_explainer": "Activision은 《Call of Duty: Modern Warfare 4》를 2026년 10월 23일 독립 판매 작품으로 출시하며 첫날에는 Game Pass에 포함하지 않는다고 발표했어. 공식 안내에 따르면 Game Pass 편입 시점은 2027년 연말 시즌으로 예정돼 있어. 디지털 예약 구매자는 조건에 따라 10월 16일 캠페인 조기 이용, 10월 20일 DMZ 조기 이용을 할 수 있어. 이는 게임 엔진 업데이트보다 대형 게임의 출시 가격·구독 서비스·예약 구매 유인의 관계를 보여 주는 중요한 산업 소식이야.",
+      "short_summary": "《Modern Warfare 4》는 10월 23일 출시되지만 출시일 Game Pass에는 포함되지 않아. 공식 발표는 2027년 연말 시즌 편입을 안내했어. 예약 구매자용 조기 이용 일정은 별도 조건이 있어.",
+      "technical_context": "게임의 단일 SKU 판매와 구독 서비스 제공은 상품 권한 검사, 플랫폼 스토어 인증, 사전 다운로드, 온라인 라이브 서비스 운영을 조합하는 방식에 영향을 줘.",
+      "why_it_matters": "대형 프랜차이즈의 판매 방식과 구독 정책은 이용자 유입과 플랫폼 전략에 큰 영향을 줄 수 있어.",
+      "developer_view": "게임 클라이언트에는 제품의 구매 경로와 무관하게 상품 권한과 DLC·온라인 서비스 접근 권한을 일관된 인터페이스에서 검사하는 구조가 중요해."
+    },
+    {
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🎮 Steam Next Fest 10월 행사 — 한국시간 10월 20일 오전 2시 시작",
+      "source": "Valve Steamworks 공식 문서",
+      "published": "2026-10-19",
+      "url": "https://partner.steamgames.com/doc/marketing/upcoming_events/nextfest/2026october",
+      "tags": [
+        "Steam Next Fest",
+        "Valve",
+        "Demo",
+        "Discoverability",
+        "PC Games",
+        "Steamworks"
+      ],
+      "easy_explainer": "Valve의 Steam Next Fest 2026년 10월 행사는 미국 태평양시간 10월 19일 오전 10시부터 26일 오전 10시까지 열릴 예정이야. 한국시간으로는 10월 20일 오전 2시부터 27일 오전 2시까지이므로 19일 낮 현재 이미 시작했다고 표현하면 안 돼. 행사에서는 출시 전 게임의 무료 체험판과 개발자 방송, 피드백이 집중 소개돼. 게임 업계 전반의 신작 발견과 데모 빌드 품질 검증에 중요한 일정이야.",
+      "short_summary": "10월 Steam Next Fest는 미국시간 19일부터 26일까지 예정됐어. 한국시간 시작은 20일 오전 2시야. 출시 전 게임 체험판과 개발자 방송을 볼 수 있는 행사야.",
+      "technical_context": "데모 빌드는 본편과 별도로 입력·저장·그래픽 설정·초기 온보딩·크래시 수집을 검증해야 해. 관심이 몰리는 시점에는 스토어 페이지와 다운로드, 서버 부하도 함께 고려해야 해.",
+      "why_it_matters": "대규모 신작 데모 행사는 특정 작품 한 편보다 넓은 범위의 출시 예정 게임과 개발자 피드백 경로를 제공해.",
+      "developer_view": "게임팀에서는 데모 전용 Content Manifest, 저장 호환 정책, 스모크 테스트와 첫 실행 크래시 수집을 분리해 관리하는 편이 좋아."
+    },
+    {
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🎬 Tenebris Somnia 출시 — 2D 픽셀 호러와 실사 컷신 결합",
+      "source": "Steam 공식 제품 페이지 · New Blood Interactive",
+      "published": "2026-10-16",
+      "url": "https://store.steampowered.com/app/2121510/Tenebris_Somnia/",
+      "tags": [
+        "Tenebris Somnia",
+        "Steam",
+        "Survival Horror",
+        "FMV",
+        "Pixel Art",
+        "Cutscene"
+      ],
+      "easy_explainer": "New Blood Interactive가 배급한 《Tenebris Somnia》가 10월 16일 Steam에 출시됐어. 고전 2D 픽셀 아트 서바이벌 호러의 게임플레이와 실제 배우가 등장하는 실사 컷신을 결합한 작품이야. 작은 규모의 작품이더라도 서로 다른 영상 표현을 한 게임 안에서 연결할 수 있음을 보여 준다는 점이 특징이지. 실사 영상과 게임의 색감·카메라 흐름·입력 복귀 타이밍을 맞추는 편집 연출이 중요한 설계 요소가 될 수 있어.",
+      "short_summary": "《Tenebris Somnia》가 10월 16일 출시됐어. 2D 픽셀 아트 호러와 실사 영상 컷신을 결합한 연출이 특징이야.",
+      "technical_context": "실사 컷신은 동영상 디코딩, 오디오 동기화, 게임플레이 이벤트와의 타이밍, 해상도 및 자막 처리 경로를 필요로 해. 실제 내부 엔진 구현은 공개 스토어 설명만으로 확정할 수 없어.",
+      "why_it_matters": "소규모 작품에서도 2D 게임플레이와 실사 영화 연출을 결합해 차별화할 수 있다는 사례야.",
+      "developer_view": "게임 엔진의 Cutscene Manager를 게임 상태 머신과 분리하고, 영상 종료·중단 시 입력 상태와 카메라·오디오가 안전하게 복귀하도록 설계하는 것이 좋아."
     }
   ]
 }
