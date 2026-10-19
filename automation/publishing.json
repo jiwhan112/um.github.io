@@ -38,8 +38,9 @@
         "^daily-briefing/data/catalog\\.json$",
         "^daily-briefing/data/\\d{4}-\\d{2}-\\d{2}\\.json$"
       ],
-      "limit": "one daily bundle; five verified news items",
-      "archive": "Preserve existing Google Drive Markdown/PDF daily and Saturday weekly archive"
+      "limit": "Variable article count: verified significant stories only; 3 domains (AI, game-dev, game-industry), depth=deep|brief. No fixed minimum or maximum.",
+      "archive": "Preserve existing Google Drive Markdown/PDF daily and Saturday weekly archive",
+      "editorialPolicy": "From 2026-10-19, preserve existing date:index IDs. Group into three domains; substantial directly relevant technology gets detailed coverage, other meaningful releases/industry items get short summaries. No quota filler or repeated unchanged news."
     },
     {
       "id": "language",
