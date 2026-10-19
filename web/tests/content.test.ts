@@ -7,7 +7,7 @@ import {parseStored,briefingState,objectBooleans} from '../src/lib/storage';
 import {lessonProgress,reviewId} from '../src/lib/language-progress';
 import {canSyncKey} from '../src/lib/cloud';
 import {filterDocuments,readLibraryFilter,matchesDocument} from '../src/lib/document-library';
-import type {Block} from '../src/lib/types';
+import {catalogSchema, documentSchema, type Block} from '../src/lib/types';
 const catalog=await buildContent();
 test('all source lessons and documents are compiled',()=>{assert.equal(catalog.version,2);assert.ok(catalog.documents.length>=9);assert.ok(catalog.languages.english.length>=9);assert.ok(catalog.languages.japanese.length>=9);assert.ok(catalog.articleCount>=135);});
 test('memo storage keys are preserved exactly',()=>{const expected:Record<string,string>={'1.1':'thinking-ctci-1-1-draft','1.2':'thinking-ctci-1-2-draft','1.3':'thinking-ctci-1.3-draft','1.4':'thinking-ctci-1.4-draft'};for(const [number,key]of Object.entries(expected))assert.equal(catalog.documents.find(d=>d.kind==='thinking'&&d.number===number)?.memoKey,key);});
@@ -79,4 +79,19 @@ test('game design illustrations are copied into the published resource tree',asy
  const pics=document.sections.flatMap((section:{blocks:Block[]})=>images(section.blocks));
  assert.ok(pics.length>=2,'first lesson should include two concept diagrams');
  for(const path of pics){assert.match(path,/^\/game-design\/ep-[a-z0-9-]+\/assets\/[a-z0-9-]+\.svg$/);const bytes=await readFile('public/'+path.slice(1),'utf8');assert.ok(bytes.includes('<svg'),path);}
+});
+
+test('knowledge prototype is parseable by runtime catalog and each full document schema',async()=>{
+ const checked=catalogSchema.parse(catalog);
+ const docs=checked.documents.filter(d=>d.kind==='knowledge');
+ assert.equal(docs.length,3);
+ assert.deepEqual(new Set(docs.map(d=>d.route)),new Set(['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/']));
+ for(const doc of docs){
+  const full=documentSchema.parse(JSON.parse(await readFile('public/'+doc.file,'utf8')));
+  assert.equal(full.id,doc.id);
+  assert.equal(full.route,doc.route);
+  assert.ok(full.sections.some(s=>s.blocks.some(b=>b.type==='code')),'code is preserved for '+doc.route);
+  assert.ok(full.sections.some(s=>s.blocks.some(b=>b.type==='table')),'comparison table for '+doc.route);
+  assert.ok(full.sections.some(s=>s.blocks.some(b=>b.type==='details')),'review answers for '+doc.route);
+ }
 });
