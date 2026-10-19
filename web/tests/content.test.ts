@@ -86,12 +86,12 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,13);
- assert.equal(sourceCatalog.length,13);
+ assert.equal(docs.length,18);
+ assert.equal(sourceCatalog.length,18);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
- const imports=sourceCatalog.filter(x=>/^winapi-|^game-math-/.test(x.path));
- assert.equal(imports.length,10);
+ const imports=sourceCatalog.filter(x=>/^winapi-|^game-math-|^dx9-pipeline-/.test(x.path));
+ assert.equal(imports.length,15);
  for(const entry of sourceCatalog){
   const meta=docs.find(d=>d.route==='/knowledge/'+entry.path+'/');
   assert.ok(meta,'catalog misses '+entry.path);
@@ -109,6 +109,7 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
   assert.ok(original.length>4000,'full original was truncated '+entry.path);
   assert.ok(original.includes('```mermaid'),'native Mermaid source absent '+entry.path);
   assert.ok(original.includes('<details>'),'folded answers absent '+entry.path);
+  if(entry.path.startsWith('dx9-pipeline-'))assert.ok(full.sections.some(section=>section.blocks.some(b=>b.type==='table')),'DX9 source comparison table lost '+entry.path);
   assert.ok(full.sections.some(s=>s.blocks.some(b=>b.type==='code'&&b.language==='mermaid')),'diagram source lost '+entry.path);
  }
 });
