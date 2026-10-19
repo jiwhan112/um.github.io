@@ -1,0 +1,73 @@
+name: DX11 09-12 CPU contracts
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'knowledge/shared/dx11-09/**'
+      - 'knowledge/shared/dx11-10/**'
+      - 'knowledge/shared/dx11-11-12/**'
+      - '.github/workflows/knowledge-dx11-09-12-cpu.yml'
+  push:
+    branches: [master, 'feature/dx11-*']
+    paths:
+      - 'knowledge/shared/dx11-09/**'
+      - 'knowledge/shared/dx11-10/**'
+      - 'knowledge/shared/dx11-11-12/**'
+      - '.github/workflows/knowledge-dx11-09-12-cpu.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: dx11-09-12-cpu-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  cpu:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: gcc20
+            compiler: g++
+            standard: 20
+            flags: ''
+          - id: gcc11
+            compiler: g++
+            standard: 11
+            flags: ''
+          - id: clangsan
+            compiler: clang++
+            standard: 20
+            flags: '-fsanitize=address,undefined -fno-omit-frame-pointer'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure, compile, and CTest each source package
+        shell: bash
+        env:
+          ASAN_OPTIONS: detect_leaks=1
+          UBSAN_OPTIONS: halt_on_error=1
+        run: |
+          set -euo pipefail
+          mkdir -p "knowledge/verification/dx11-09-12/${{ matrix.id }}"
+          for package in dx11-09 dx11-10 dx11-11-12; do
+            build="/tmp/atlas-${{ matrix.id }}-${package}"
+            log="knowledge/verification/dx11-09-12/${{ matrix.id }}/${package}"
+            echo "::group::${package} ${{ matrix.id }}"
+            cmake -S "knowledge/shared/${package}" -B "${build}" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" -DLAB_CXX_STANDARD="${{ matrix.standard }}" -DCMAKE_CXX_FLAGS="${{ matrix.flags }}" 2>&1 | tee "${log}-configure.log"
+            cmake --build "${build}" --parallel 2 2>&1 | tee "${log}-build.log"
+            ctest --test-dir "${build}" -V --output-on-failure 2>&1 | tee "${log}-ctest.log"
+            if [ "${package}" = "dx11-11-12" ]; then
+              grep -F "100% tests passed, 0 tests failed out of 2" "${log}-ctest.log"
+            else
+              grep -F "100% tests passed, 0 tests failed out of 1" "${log}-ctest.log"
+            fi
+            echo "::endgroup::"
+          done
+      - name: Preserve raw CI stage logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dx11-09-12-${{ matrix.id }}
+          path: knowledge/verification/dx11-09-12/${{ matrix.id }}/*.log
+          retention-days: 14

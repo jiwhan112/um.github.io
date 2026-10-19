@@ -86,8 +86,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,53);
- assert.equal(sourceCatalog.length,53);
+ assert.equal(docs.length,60);
+ assert.equal(sourceCatalog.length,60);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -257,4 +257,52 @@ test('DX11 01–08 original chapter pages and five full native source articles a
  assert.ok((await readFile('../knowledge/shared/dx11-05-08/CMakeLists.txt','utf8')).includes('add_subdirectory(08_terrain)'));
  const native01=await readFile('../knowledge/dx11-01/source-notion.md','utf8');
  assert.ok(native01.includes('notion-file-block://'),'source attachment reference was lost');
+});
+
+test('DX11 09-12 full theory and source references survive site generation',async()=>{
+ const topics=['09','10','11','12'];
+ for(const n of topics){
+  const slug='dx11-'+n;
+  const original=await readFile('../knowledge/'+slug+'/source-notion.md','utf8');
+  const output=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--'+slug+'.json','utf8')));
+  assert.ok(original.length>3500,'truncated source '+slug);
+  assert.ok(original.includes('```mermaid'),'Mermaid source absent '+slug);
+  assert.ok(original.includes('<table'),'original comparison table missing '+slug);
+  assert.ok(original.includes('<details>'),'original review Q&A missing '+slug);
+  assert.ok(output.sections.some(s=>s.blocks.some(b=>b.type==='code'&&b.language==='mermaid')),'renderable code diagram missing '+slug);
+  assert.ok(output.sections.some(s=>s.blocks.some(b=>b.type==='table')),'typed table missing '+slug);
+  assert.ok(output.sections.some(s=>s.blocks.some(b=>b.type==='details')),'typed folded answer missing '+slug);
+  assert.ok(output.sections.some(s=>s.id==='full-cpu-source'&&s.blocks.some(b=>b.type==='paragraph'&&b.content.some(c=>c.kind==='link'&&c.href?.startsWith('/knowledge/dx11-sources-')))),'full source link missing '+slug);
+ }
+ for(const [source,files] of Object.entries({
+  'dx11-sources-09':['main.cpp','CMakeLists.txt'],
+  'dx11-sources-10':['main.cpp','CMakeLists.txt'],
+  'dx11-sources-11-12':['11_collision/main.cpp','12_navmesh/main.cpp','CMakeLists.txt']
+ })){
+  const doc=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--'+source+'.json','utf8')));
+  for(const file of files)assert.ok(doc.sections.some(s=>s.title===file&&s.blocks.some(b=>b.type==='code'&&b.text.length>200)),file+' not accessible '+source);
+ }
+});
+test('DX11 09-12 GitHub C++ sources match native Notion original code fences',async()=>{
+ const mappings=[
+  {origin:'dx11-09/native-notion-source-09.md',head:'main.cpp',file:'dx11-09/main.cpp'},
+  {origin:'dx11-10/native-notion-source-10.md',head:'main.cpp',file:'dx11-10/main.cpp'},
+  {origin:'dx11-11-12/native-notion-source-11.md',head:'main.cpp',file:'dx11-11-12/11_collision/main.cpp'}
+ ];
+ const sourceFrom=(text:string,head:string)=>{
+  const heading='## '+head+'\n',i=text.indexOf(heading);
+  assert.ok(i>=0,'missing Markdown heading '+head);
+  const startFence=text.indexOf('```',i),start=text.indexOf('\n',startFence)+1,end=text.indexOf('\n```',start);
+  assert.ok(startFence>=0&&start>0&&end>=start,'unclosed source fence '+head);
+  return text.slice(start,end);
+ };
+ for(const m of mappings){
+  const raw=await readFile('../knowledge/shared/'+m.origin,'utf8');
+  const code=await readFile('../knowledge/shared/'+m.file,'utf8');
+  assert.equal(code,sourceFrom(raw,m.head),m.file+' byte-for-byte source mismatch');
+ }
+ const native12=await readFile('../knowledge/shared/dx11-11-12/native-notion-source-12.md','utf8');
+ const rebuilt=sourceFrom(native12,'main.cpp Part 1/2')+'\n'+sourceFrom(native12,'main.cpp Part 2/2');
+ const code12=await readFile('../knowledge/shared/dx11-11-12/12_navmesh/main.cpp','utf8');
+ assert.equal(code12,rebuilt,'navmesh two-part exact join mismatch');
 });

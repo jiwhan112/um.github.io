@@ -1,0 +1,724 @@
+{
+  "id": "knowledge--dx11-11",
+  "route": "/knowledge/dx11-11/",
+  "kind": "knowledge",
+  "title": "DX11 11 · Collider",
+  "subtitle": "AABB·Sphere·OBB XZ·Ray의 충돌 계약",
+  "date": "2026-10-16",
+  "number": "DX11 / 11",
+  "category": "DirectX 11",
+  "topic": "DirectX 11",
+  "tags": [
+    "DirectX 11",
+    "C++",
+    "그래픽스"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "개요·원본·전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Notion 원본 본문 이관본입니다. 소스·CMake 전체 파일은 GitHub의 독립 소스 페이지에 보존했습니다. CPU 검증 결과와 실제 Assimp/Windows·Direct3D11/GPU 실행 여부는 구분합니다. "
+                },
+                {
+                  "text": "원본 Notion",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3fba99703f40817da5aed4a0ebfb22d1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "DX11 개정 11 · Collider — CPU 경계 상자·구·레이·평면 OBB 판정",
+                  "kind": "strong"
+                },
+                {
+                  "text": " 2026-10-16. 기존 강의의 콜라이더·충돌체 그리기·충돌연산·AABB 구현을 검증 가능한 수학 계약으로 다시 정리했습니다. 이 실습은 D3D11 렌더링이 아니라 CPU 충돌 판정입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 정의: 충돌 판정 ≠ 물리 해결 ≠ 디버그 렌더링",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Collider",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": "는 모양과 위치를 표현하는 데이터입니다. "
+                  },
+                  {
+                    "text": "Intersection test",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": "는 두 영역의 접촉/겹침 여부를 반환합니다. "
+                  },
+                  {
+                    "text": "Collision response",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": "는 관통 깊이/법선/속도/충격량 등 추가 정보를 사용해 물리적 후속 처리를 수행합니다. 서로 다릅니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "CPU의 DirectXMath/DirectXCollision "
+                  },
+                  {
+                    "text": "BoundingBox",
+                    "kind": "code"
+                  },
+                  {
+                    "text": ", "
+                  },
+                  {
+                    "text": "BoundingOrientedBox",
+                    "kind": "code"
+                  },
+                  {
+                    "text": ", "
+                  },
+                  {
+                    "text": "BoundingSphere",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "는 D3D11 Device 생성 없이도 사용하는 충돌 수학 구조입니다. DirectX Tool Kit의 디버그 그리기는 "
+                  },
+                  {
+                    "text": "시각화",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": "일 뿐 충돌의 진실 원본이 되어서는 안 됩니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Local Collider를 World에 반영할 때는 위치만 단순 복사해서는 안 되고 회전·비균일 스케일·축 정의를 반영해야 합니다. 회전된 AABB의 World 경계는 다시 계산하거나 OBB로 표현할 수 있습니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n A[\"Mesh / Actor Transform\"] --> B[\"World collider 업데이트\"]\n B --> C[\"Broad phase: 빠른 AABB 필터\"]\n C --> D[\"Narrow phase: Sphere / OBB / Ray\"]\n D --> E[\"Hit / Miss 및 필요 시 접촉 정보\"]\n B --> F[\"Debug visualization\"]"
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 형상별 계약과 계산 방법",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "형상"
+                  }
+                ],
+                [
+                  {
+                    "text": "저장"
+                  }
+                ],
+                [
+                  {
+                    "text": "핵심 판정"
+                  }
+                ],
+                [
+                  {
+                    "text": "주의"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "AABB (3D)"
+                  }
+                ],
+                [
+                  {
+                    "text": "min.xyz",
+                    "kind": "link",
+                    "href": "http://min.xyz"
+                  },
+                  {
+                    "text": "·"
+                  },
+                  {
+                    "text": "max.xyz",
+                    "kind": "link",
+                    "href": "http://max.xyz"
+                  }
+                ],
+                [
+                  {
+                    "text": "모든 축에서 닫힌 구간이 겹치는가"
+                  }
+                ],
+                [
+                  {
+                    "text": "회전 방향을 직접 담지 못함"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Sphere (3D)"
+                  }
+                ],
+                [
+                  {
+                    "text": "중심·반지름"
+                  }
+                ],
+                [
+                  {
+                    "text": "중심에서 AABB의 최근접점까지 거리² ≤ 반지름²"
+                  }
+                ],
+                [
+                  {
+                    "text": "음수 반지름·NaN 거부"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "OBB XZ (2D 투영)"
+                  }
+                ],
+                [
+                  {
+                    "text": "중심·XZ 반축·Yaw"
+                  }
+                ],
+                [
+                  {
+                    "text": "양 사각형의 4개 축에 대한 SAT 분리축 검사"
+                  }
+                ],
+                [
+                  {
+                    "text": "Y축을 검사하지 않음. 완전한 3D OBB가 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Ray × AABB (3D)"
+                  }
+                ],
+                [
+                  {
+                    "text": "Origin·Direction·maxT"
+                  }
+                ],
+                [
+                  {
+                    "text": "세 축의 Slab 진입/진출 매개변수 구간 교집합"
+                  }
+                ],
+                [
+                  {
+                    "text": "Direction의 단위벡터 여부에 따라 t의 거리 의미가 달라짐"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "AABB: 접촉을 포함하는 닫힌 구간 계약"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "A.min.x <= B.max.x && A.max.x >= B.min.x",
+              "kind": "code"
+            },
+            {
+              "text": "를 X,Y,Z 세 축 모두에서 검사합니다. 이 실습은 면·모서리에서 "
+            },
+            {
+              "text": "접촉만 해도 true",
+              "kind": "strong"
+            },
+            {
+              "text": "로 정의합니다. 게임 로직이 관통만 충돌로 볼지 접촉을 포함할지 계약을 명확히 해야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "Sphere × AABB: 좌표별 Clamp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "구 중심 C를 AABB [min,max]에 각 축별 clamp하여 최근접점 Q를 만들고 "
+            },
+            {
+              "text": "dot(C-Q,C-Q) <= r*r",
+              "kind": "code"
+            },
+            {
+              "text": "를 판정합니다. 경계 조건과 제곱 거리를 사용하면 루트를 피할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "OBB × OBB: XZ 풋프린트 전용 SAT"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "코드의 "
+            },
+            {
+              "text": "ObbXZ",
+              "kind": "code"
+            },
+            {
+              "text": "는 XZ 평면에 직교하는 두 반축을 가지며 상대 상자와 총 네 방향의 축을 투영합니다. "
+            },
+            {
+              "text": "Y가 20만큼 떨어져도 XZ가 겹치면 true",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다. 전체 3D OBB × OBB 판정은 각 상자의 3개 축과 두 상자의 교차축 최대 9개를 포함하는 3D SAT 등 다른 알고리즘이 필요합니다. 충돌 컴포넌트에서 이 2D 테스트를 그대로 3D OBB 테스트로 대체하면 안 됩니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "Ray × AABB: 3축 Slab"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "레이 "
+            },
+            {
+              "text": "origin+t*dir",
+              "kind": "code"
+            },
+            {
+              "text": "에서 "
+            },
+            {
+              "text": "0 <= t <= maxT",
+              "kind": "code"
+            },
+            {
+              "text": "의 유효구간을 각 축 슬랩과 교차합니다. 축 방향 성분이 0에 가까우면 시작점이 해당 축 구간 안에 있는지 확인합니다. "
+            },
+            {
+              "text": "outT",
+              "kind": "code"
+            },
+            {
+              "text": "는 "
+            },
+            {
+              "text": "적중할 때만",
+              "kind": "strong"
+            },
+            {
+              "text": " 유효하며 내부에서 출발한 레이는 0을 반환합니다. 이 CPU 예제의 "
+            },
+            {
+              "text": "maxT",
+              "kind": "code"
+            },
+            {
+              "text": "는 실제 길이가 아니라 매개변수 t 상한일 수 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. 정밀도·예외·수명 관리",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "NaN/Inf, 뒤집힌 min/max, 음수 반지름, 0 방향 레이는 거부합니다. 작은 epsilon은 모형에 도입했지만 실제 엔진에는 월드 스케일별 허용 오차가 필요합니다. 충돌 결과를 이용해 물리 반응을 하려면 "
+            },
+            {
+              "text": "접촉 법선·깊이 또는 TOI, 단계적 이동",
+              "kind": "strong"
+            },
+            {
+              "text": " 등이 추가되어야 합니다. Ray 교차는 충돌체끼리의 상호작용과 다른 질문입니다. 메시의 렌더 컴포넌트와 Collider 컴포넌트는 수명·소유권·업데이트 타이밍이 다를 수 있습니다. 복제시 충돌 형상은 값 복사 또는 독립 소유로 관리하고, 공유 불변 형상 데이터와 인스턴스별 World 변환을 구분합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. 전체 실행 가능 실습",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "11A 전체 소스/로그: 해당 단원 하위 페이지 참조. "
+            },
+            {
+              "text": "main.cpp",
+              "kind": "code"
+            },
+            {
+              "text": " 단일 파일과 "
+            },
+            {
+              "text": "CMakeLists.txt",
+              "kind": "code"
+            },
+            {
+              "text": "로 실행합니다. 일반 C++11로도 빌드되는 독립 C++ 예제입니다. 원본 함수와 동일한 DTK 구현을 그대로 복사하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "GCC 14.2 / C++20: 29 조건, CTest 1/1 통과"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "GCC 14.2 / C++11: 동일 29 조건, CTest 1/1 통과"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Clang 17 / C++20 + ASan/UBSan: 동일 29 조건, CTest 1/1 통과"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Windows/MSVC·실제 DirectXCollision API 호출·DX11 GPU/DTK 디버그 렌더링은 미실행",
+                    "kind": "strong"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. 흔한 오해와 이해 확인",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "Q. AABB에 회전을 더하면 그대로 OBB가 됩니까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. AABB 표현은 월드 축 정렬을 전제합니다. 회전한 기하에 대해 새 World AABB를 재계산하거나 OBB 형상을 별도로 유지해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. 이 코드의 OBB 교차 결과로 위아래 층끼리 충돌을 판정할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 됩니다. XZ 투영 SAT라 Y 분리가 완전히 무시됩니다. 높이 범위의 추가 검사 또는 완전한 3D SAT가 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. Ray Direction을 정규화하지 않으면 outT는 미터가 됩니까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 거리 = t * \\|Direction\\|입니다. 단위 방향벡터면 t가 거리처럼 해석되지만 이 실습은 정규화를 요구하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "6. 공식 근거 · 변경 기록",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft Learn · directxcollision.h",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/directxcollision/"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft Learn · BoundingBox",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/directxcollision/ns-directxcollision-boundingbox"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft Learn · BoundingOrientedBox",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/directxcollision/ns-directxcollision-boundingorientedbox"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft Learn · BoundingSphere",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/directxcollision/ns-directxcollision-boundingsphere"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-16 v1.0. 콜라이더의 데이터/판정/해결/디버그 출력 역할을 분리하고, 평면 OBB와 3D OBB의 범위를 구분했습니다. 결과는 CPU 경계 수학의 범위 내에서만 검증됐습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "11A · Collider CPU 전체 소스·CMake·검증 기록",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-11-12/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-cpu-source",
+      "title": "전체 소스·CMake·검증 출처",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본 하위 CPU 전체 파일은 별도 GitHub 페이지에 복구했습니다. C++20·C++11 및 Clang ASan/UBSan의 신규 실행 결과는 별도 GitHub Actions 결과를 확인한 경우에만 새 검증으로 보고합니다. 실제 GPU·SDK 통합은 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 C++ 및 CMake 파일 열기",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-11-12/"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "원본 복구·검증 원장",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/DX11_09_12_SOURCE_LEDGER_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "11A · Collider CPU 전체 소스·CMake·검증 기록 · Notion 원본",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f40810fa644ef6c5351b3bf"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "D3D11/GPU·Assimp SDK를 실제로 실행한 결과인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 이번 프로젝트의 CPU 학습 모델은 개념·자료구조·수학 계약만 검증합니다. Windows/MSVC·D3D11 GPU·Assimp 라이브러리 통합·Recast/Funnel 실행 결과로 확대해서 해석하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

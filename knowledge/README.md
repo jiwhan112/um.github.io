@@ -22,6 +22,13 @@ DX9 구현의 전체 소스는 `knowledge/shared/dx9-impl-*/`에 독립 보관�
 
 추가 학습 문서가 검증되면 `knowledge/data/catalog.json`에 명시적으로 추가합니다. 빌드가 내부 문서 색인과 직접 접근 URL을 생성하며, 기존 언어·브리핑·사고력 자료와 Supabase/localStorage 키는 변경하지 않습니다.
 
+## DX11 09–12 본문·소스 이관 (2026-10-19)
+
+- [원본 코드 보존 원장](shared/DX11_09_12_SOURCE_LEDGER_20261019.md) · [교재·검증·미완료 원장](MIGRATION_DX11_09_12_20261019.md)
+- Mesh/Assimp Scene(09)·Skeletal Animation(10)·Collider(11)·Navigation Mesh(12)의 네 개 독립 본문과 전체 소스 탐색 페이지 세 개를 추가. 현재 총 **60개 학습 문서**.
+- 원본 C++ 소스·CMake 텍스트를 네이티브 코드 블록에서 복구했으며 DX11 12의 main.cpp는 원본 두 블록 사이에 줄바꿈 1개를 두어 정확히 결합했습니다.
+- Assimp SDK·Recast/Detour/Funnel·D3D11/GPU를 실제 실행한 것은 아니며, 새 Linux CPU CTest 결과는 [GitHub CI 기록](https://github.com/jiwhan112/um.github.io/actions/workflows/knowledge-dx11-09-12-cpu.yml)으로 별도 보관합니다.
+
 ## DX11 01–08 전체 소스 복구 및 본문 보강
 
 - [DX11 01–08 전체 소스 복구 원장](shared/DX11_SOURCE_LEDGER_20261019.md) 및 [배치 감사](MIGRATION_DX11_01_08_20261019.md): Notion 01A–08A의 네이티브 코드와 CMake·Win32 예제·HLSL, 과거 원시 CTest를 GitHub에 보존했습니다.

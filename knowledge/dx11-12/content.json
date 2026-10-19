@@ -1,0 +1,671 @@
+{
+  "id": "knowledge--dx11-12",
+  "route": "/knowledge/dx11-12/",
+  "kind": "knowledge",
+  "title": "DX11 12 · Navigation Mesh",
+  "subtitle": "Triangle Cell·인접 그래프·Point Location·A*",
+  "date": "2026-10-16",
+  "number": "DX11 / 12",
+  "category": "DirectX 11",
+  "topic": "DirectX 11",
+  "tags": [
+    "DirectX 11",
+    "C++",
+    "그래픽스"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "개요·원본·전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Notion 원본 본문 이관본입니다. 소스·CMake 전체 파일은 GitHub의 독립 소스 페이지에 보존했습니다. CPU 검증 결과와 실제 Assimp/Windows·Direct3D11/GPU 실행 여부는 구분합니다. "
+                },
+                {
+                  "text": "원본 Notion",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3fba99703f408107ba7cf3679dbe98d8"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "DX11 개정 12 · Navigation Mesh — Triangle Cell·인접성·Point Location·A",
+                  "kind": "strong"
+                },
+                {
+                  "text": " 2026-10-16. 기존 네비게이션 메시 메모의 삼각형·공유 변·이웃 셀·이동 기능을 2D XZ CPU 모델로 분해했습니다. Navigation Mesh는 ",
+                  "kind": "em"
+                },
+                {
+                  "text": "걸을 수 있는 공간과 경로 계획",
+                  "kind": "em"
+                },
+                {
+                  "text": "*을 표현하며 모든 Collider를 대체하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 기본 계약",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "NavMesh는 삼각형/다각형의 "
+            },
+            {
+              "text": "walkable region",
+              "kind": "strong"
+            },
+            {
+              "text": "과 연결성을 기록합니다. "
+            },
+            {
+              "text": "Collider",
+              "kind": "strong"
+            },
+            {
+              "text": "는 물체끼리 겹치는지를 테스트하고, "
+            },
+            {
+              "text": "NavMesh",
+              "kind": "strong"
+            },
+            {
+              "text": "는 에이전트가 어디를 지날 수 있는지 판단합니다. 동적 장애물, 캐릭터 간 충돌, 물리적 반응은 별도로 처리해야 합니다. 에이전트 반경에 따른 오프셋/장애물 여유폭도 이 예제에는 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n A[\"Vertex + Triangle indices\"] --> B[\"Cell 검증: Index·면적\"]\n B --> C[\"공유 Edge 기반 adjacency\"]\n C --> D[\"Start / Goal 의 Cell 검색\"]\n D --> E[\"A*: Cell 중심 그래프\"]\n E --> F[\"Triangle Corridor\"]\n F --> G[\"Funnel / Nav Steering (추가 작업)\"]"
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 세부 단계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2.1 자료 모델과 좌표"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "points = vector<P{x,z}>",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "tris = vector<Tri{a,b,c}>",
+              "kind": "code"
+            },
+            {
+              "text": ". 높이와 경사를 제외한 "
+            },
+            {
+              "text": "XZ 평면 투영",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다. 실제 3D 지형은 Y/경사·층 분리/오프메시 링크가 있어야 하며, 투영상 겹치는 다른 층을 하나의 면으로 혼동하지 않아야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2.2 삼각형 유효성 검증"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인덱스 범위, 세 정점의 중복, NaN/Inf, 외적에 의한 0면적 검사를 수행합니다. "
+            },
+            {
+              "text": "cross(A,B,C)",
+              "kind": "code"
+            },
+            {
+              "text": "의 부호가 Winding을 나타냅니다. 이 예제의 삼각형 포함 검사는 각 Triangle의 "
+            },
+            {
+              "text": "부호가 함께 반전될 수 있도록",
+              "kind": "strong"
+            },
+            {
+              "text": " 분모 면적을 이용합니다. 실제 파일 Import 파이프라인에서는 중복 정점 병합 및 일정한 Winding을 별도 고려합니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2.3 공유 Edge 인접 그래프"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "서로 다른 두 Triangle이 "
+            },
+            {
+              "text": "동일한 vertex index 두 개를 공유",
+              "kind": "strong"
+            },
+            {
+              "text": "하면 인접 셀로 연결합니다. 단지 좌표가 같은 별도 Vertex는 이 모델에서 이웃으로 취급하지 않습니다. 자료를 내보낼 때 인덱스 동일성 보장을 확인해야 합니다. 두 셀에 3점이 같은 경우 중복 Triangle로 거부합니다. 현 구현은 삼각형 모든 쌍을 비교하므로 이웃 구성 시간은 대략 "
+            },
+            {
+              "text": "O(T²)",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. 실서비스의 대형 NavMesh는 정렬된 변 키 "
+            },
+            {
+              "text": "(min(vertexId),max(vertexId))",
+              "kind": "code"
+            },
+            {
+              "text": "로 해시/맵을 구성해 인접 탐색을 가속하고, "
+            },
+            {
+              "text": "세 개 이상의 삼각형이 한 Edge를 공유하는 비매니폴드 구조",
+              "kind": "strong"
+            },
+            {
+              "text": "를 검출해야 합니다. 현재 실습은 비매니폴드 검출을 "
+            },
+            {
+              "text": "구현하지 않았습니다",
+              "kind": "strong"
+            },
+            {
+              "text": "."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2.4 Point Location"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "삼각형의 외적/무게중심 계수로 현재 XZ 점을 포함하는 Cell을 찾습니다. 경계점은 오차 "
+            },
+            {
+              "text": "1e-10",
+              "kind": "code"
+            },
+            {
+              "text": " 범위 안에서 포함합니다. 같은 변 위의 점은 여러 Cell에 속할 수 있어 먼저 발견한 인덱스를 반환합니다. 이 검색은 단순 선형 "
+            },
+            {
+              "text": "O(T)",
+              "kind": "code"
+            },
+            {
+              "text": "이며 BVH/쿼드트리 같은 가속 구조가 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2.5 A* Triangle 경로"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Cell 중심 간 거리로 Edge 비용을 정하고, 목표 중심까지의 직선 거리를 A"
+            },
+            {
+              "text": " 휴리스틱으로 사용합니다. 결과는 삼각형 인덱스의 Corridor",
+              "kind": "em"
+            },
+            {
+              "text": "*이지 실제 캐릭터의 매끈한 3D 좌표 경로가 아닙니다. 좁은 통로나 코너에서 자연스러운 경로는 Portal/Funnel과 에이전트 반경을 고려하는 추가 단계가 필요합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구분"
+                  }
+                ],
+                [
+                  {
+                    "text": "본 CPU 예제"
+                  }
+                ],
+                [
+                  {
+                    "text": "엔진에 필요한 확장"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "공간"
+                  }
+                ],
+                [
+                  {
+                    "text": "XZ 2D"
+                  }
+                ],
+                [
+                  {
+                    "text": "3D Surface·층·경사"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "인접"
+                  }
+                ],
+                [
+                  {
+                    "text": "공유 인덱스 두 개"
+                  }
+                ],
+                [
+                  {
+                    "text": "Edge 해시·비매니폴드 검사"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "검색"
+                  }
+                ],
+                [
+                  {
+                    "text": "선형 Cell 스캔"
+                  }
+                ],
+                [
+                  {
+                    "text": "공간 인덱스"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "경로"
+                  }
+                ],
+                [
+                  {
+                    "text": "Cell 중심 A*"
+                  }
+                ],
+                [
+                  {
+                    "text": "Portal/Funnel·Local avoidance"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "장애물"
+                  }
+                ],
+                [
+                  {
+                    "text": "정적 연결성"
+                  }
+                ],
+                [
+                  {
+                    "text": "Dynamic obstacle·Off-mesh link"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. 전체 실습·검증",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "12A 하위 페이지에 "
+            },
+            {
+              "text": "main.cpp",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "CMakeLists.txt",
+              "kind": "code"
+            },
+            {
+              "text": ", 실제 로그를 저장합니다. 전체 코드에서 4개 연결 삼각형·A* 경로·같은 셀·고립 셀·부정확한 인덱스·중복 삼각형·퇴화 면·NaN을 테스트합니다."
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "GCC 14.2 C++20: 27조건, CTest 1/1"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "GCC 14.2 C++11: 동일 27조건, CTest 1/1"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Clang 17 C++20 + ASan/UBSan: 동일 27조건, CTest 1/1"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "실제 Recast/Detour SDK·Windows/D3D11·GPU는 검증하지 않음.",
+                    "kind": "strong"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. 게임 개발에 적용",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "AI Steering은 "
+            },
+            {
+              "text": "NavMesh -> Corridor -> Desired velocity -> Character movement -> Collision resolution",
+              "kind": "code"
+            },
+            {
+              "text": "으로 책임을 나누는 편이 안전합니다. 경로 탐색을 이미 마쳤어도 매 프레임 움직이는 장애물에 부딪힐 수 있습니다. NavMesh만으로 장애물 처리를 완전히 없앨 수 있다는 기존 수업 메모의 표현은 과도합니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. 두 삼각형의 좌표값이 같으면 무조건 인접한가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 현 CPU 실습은 같은 정점 인덱스 두 개를 공유하는지를 판단합니다. 좌표 동등성과 인덱스 동일성은 다른 계약입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. A\\*가 반환한 Cell 목록을 그대로 캐릭터가 통과할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "꼭 그렇지는 않습니다. Cell 중심 경로는 최적의 실제 이동 경로가 아닙니다. Portal/Funnel, 에이전트 반경, 높이, 동적 장애물까지 다뤄야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. 서로 다른 두 층의 XZ 위치가 같아도 본 실습에서 분리되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 모델에는 Y가 없으므로 그 보장이 없습니다. 실제 NavMesh의 층·공간 관계를 따로 표현해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. 참고 · 변경 기록",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Recast Navigation 공식 저장소",
+                    "kind": "link",
+                    "href": "https://github.com/recastnavigation/recastnavigation"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "A* 원 논문 Hart et al. (1968), IEEE",
+                    "kind": "link",
+                    "href": "https://doi.org/10.1109/TSSC.1968.300136"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-16 v1.0. 단순 삼각형 공유·내적 검사·메시당 충돌 대체라는 메모를 Cell 그래프/Pathfinding/물리 책임 분리로 재작성했습니다. C++ 모델은 설계의 제한을 표시한 채 독립 실행 가능하도록 만들었습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "12A · Navigation Mesh C++ 전체 소스·CMake·CTest 기록",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-11-12/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-cpu-source",
+      "title": "전체 소스·CMake·검증 출처",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본 하위 CPU 전체 파일은 별도 GitHub 페이지에 복구했습니다. C++20·C++11 및 Clang ASan/UBSan의 신규 실행 결과는 별도 GitHub Actions 결과를 확인한 경우에만 새 검증으로 보고합니다. 실제 GPU·SDK 통합은 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 C++ 및 CMake 파일 열기",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-11-12/"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "원본 복구·검증 원장",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/DX11_09_12_SOURCE_LEDGER_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "12A · Navigation Mesh C++ 전체 소스·CMake·CTest 기록 · Notion 원본",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f40813cbfb7f09b58180b55"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "D3D11/GPU·Assimp SDK를 실제로 실행한 결과인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 이번 프로젝트의 CPU 학습 모델은 개념·자료구조·수학 계약만 검증합니다. Windows/MSVC·D3D11 GPU·Assimp 라이브러리 통합·Recast/Funnel 실행 결과로 확대해서 해석하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
