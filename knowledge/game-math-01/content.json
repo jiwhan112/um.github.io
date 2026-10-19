@@ -1,0 +1,529 @@
+{
+  "id": "knowledge--game-math-01",
+  "route": "/knowledge/game-math-01/",
+  "kind": "knowledge",
+  "title": "게임 수학 01 · 벡터·이동·회전",
+  "subtitle": "정규화·내적·외적·각도·목표 도착",
+  "date": "2026-10-13",
+  "number": "MATH / 01",
+  "category": "게임 수학",
+  "topic": "게임 수학",
+  "tags": [
+    "게임 수학",
+    "C++",
+    "Windows SDK"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "개요·원본 및 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f40815c894affc335c2e205"
+                },
+                {
+                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "숫자의 의미와 단위를 먼저 정하면 이동 코드를 외울 필요가 줄어듭니다.",
+                  "kind": "strong"
+                },
+                {
+                  "text": " C++20 학습 기준 · 개정일 2026-10-13 · 실습 "
+                },
+                {
+                  "text": "src/vector_motion.cpp",
+                  "kind": "code"
+                },
+                {
+                  "text": ", "
+                },
+                {
+                  "text": "include/math.hpp",
+                  "kind": "code"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "게임 수학·MFC — 개정판 v1.0",
+              "kind": "link",
+              "href": "/knowledge/#knowledge-windows"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 점·변위·속도·방향을 구분합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "같은 "
+            },
+            {
+              "text": "(x,y)",
+              "kind": "code"
+            },
+            {
+              "text": " 형태도 의미는 다를 수 있습니다. 점은 기준 좌표계에서의 위치이고, 변위는 두 위치의 차이입니다. 속도 벡터는 단위 시간 동안의 위치 변화이며, 속력은 그 크기입니다. 따라서 벡터를 무조건 ‘방향과 속도를 가진 구조체’라고 정의하지 않습니다. 힘·법선·색상 계산 등에도 벡터 표현이 쓰입니다. 플레이어가 A=(2,1), 목표가 B=(5,5)이면 목표를 향하는 변위는 B−A=(3,4)입니다. 길이는 5, 단위 방향은 (0.6,0.8)입니다. 속력 10 unit/s로 0.2 s 이동한다면 변위는 (1.2,1.6), 새 위치는 (3.2,2.6)입니다. 원래 위치와 이동량을 같은 변수 이름으로 섞지 마세요."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "\\mathbf{d}=\\mathbf{target}-\\mathbf{position},\\qquad\n\\Delta\\mathbf{p}=\\hat{\\mathbf{d}}\\,v\\,\\Delta t"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "여기서 v는 속력, Δt는 초입니다. 픽셀/프레임과 월드 단위/초를 섞으면 프레임 수나 줌 배율이 게임 속도를 바꾸게 됩니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 정규화에는 실패 조건이 있습니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "길이가 0인 벡터는 방향이 없습니다. 길이로 나누기 전에 유효성을 검사해야 합니다. 너무 작은 길이를 어떤 기준으로 0처럼 취급할지는 사용하는 단위와 오차 정책에 따라 정합니다. 이 실습의 기본 임계값 1e−12는 교육용 선택이지 모든 엔진의 정답이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include <cmath>\n#include <optional>\nstruct Vec2 { double x{}, y{}; };\nstd::optional<Vec2> Unit(Vec2 v) {\n    const double length = std::hypot(v.x, v.y);\n    if (!std::isfinite(length) || length <= 1e-12)\n        return std::nullopt;\n    return Vec2{v.x / length, v.y / length};\n}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위는 핵심 발췌입니다. 실습 팩의 "
+            },
+            {
+              "text": "study::Normalize",
+              "kind": "code"
+            },
+            {
+              "text": "에는 입력·임계값 검사와 3차원 버전도 있습니다. 실패하면 방향을 유지할지, 멈출지, 오류를 보고할지를 호출자가 정합니다. 실패 결과를 "
+            },
+            {
+              "text": "(0,0)",
+              "kind": "code"
+            },
+            {
+              "text": "의 정상 방향과 혼동하지 않도록 optional을 사용했습니다. 키보드 입력 "
+            },
+            {
+              "text": "(1,1)",
+              "kind": "code"
+            },
+            {
+              "text": "의 길이는 √2입니다. 네 방향 키처럼 각 축이 −1/0/1인 입력을 정규화하면 대각선 속력이 일정해집니다. 반면 아날로그 스틱의 작은 입력까지 항상 길이 1로 바꾸면 세기 정보가 사라집니다. 스틱은 데드존과 최대 길이 제한을 별도로 설계해야 합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. 내적은 같은 위치의 성분을 곱한 합입니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "\\mathbf{a}\\cdot\\mathbf{b}=a_xb_x+a_yb_y+a_zb_z\n=\\|\\mathbf{a}\\|\\,\\|\\mathbf{b}\\|\\cos\\theta"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 메모의 "
+            },
+            {
+              "text": "Ax*Ax + Ay*Ay",
+              "kind": "code"
+            },
+            {
+              "text": "는 두 벡터의 내적이 아니라 2차원에서 A 자신의 길이 제곱에 해당합니다. 예를 들어 A=(1,2,3), B=(4,5,6)의 내적은 32입니다. 두 벡터 모두 단위 벡터일 때만 내적이 곧 cosθ가 됩니다. 내적의 부호는 대략적인 앞·옆·뒤 판단에 유용합니다. 전방과 목표 방향을 정규화한 뒤 내적이 "
+            },
+            {
+              "text": "cos(시야 반각)",
+              "kind": "code"
+            },
+            {
+              "text": " 이상인지 비교하면 각도를 매번 구하지 않고 시야각 조건을 만들 수 있습니다. 같은 위치인 목표는 정규화 전에 별도 처리합니다. 각도 자체가 필요하면 "
+            },
+            {
+              "text": "acos(clamp(dot,-1,1))",
+              "kind": "code"
+            },
+            {
+              "text": "처럼 부동소수점 오차가 정의역 밖으로 나가지 않도록 합니다. 다만 acos의 결과는 0~π라서 회전 방향 정보는 주지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. 외적의 부호와 순서는 의미가 있습니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "\\mathbf{a}\\times\\mathbf{b}=\n(a_yb_z-a_zb_y,\\ a_zb_x-a_xb_z,\\ a_xb_y-a_yb_x)"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 메모의 덧셈 세 개는 위의 뺄셈 공식으로 교정합니다. "
+            },
+            {
+              "text": "(1,0,0) × (0,1,0) = (0,0,1)",
+              "kind": "code"
+            },
+            {
+              "text": "이며 순서를 뒤집으면 부호가 반대입니다. 평행하거나 한쪽이 영벡터라면 외적이 영벡터가 되므로 유효한 법선을 얻었다고 가정할 수 없습니다. 외적 크기는 두 벡터가 만드는 평행사변형 넓이와 연결됩니다. 2차원 회전 방향에는 "
+            },
+            {
+              "text": "ax*by-ay*bx",
+              "kind": "code"
+            },
+            {
+              "text": "라는 스칼라 값을 사용합니다. 2D 외적의 z성분에 해당하며, 양수의 화면상 의미는 y축 방향에 따라 달라집니다. 여기서 수학 설명은 x 오른쪽·y 위쪽을 기본으로 합니다. 공식 대조: "
+            },
+            {
+              "text": "Microsoft — XMVector3Cross",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/directxmath/nf-directxmath-xmvector3cross"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. 조준 각도에는 atan2를 사용합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "atan2(dy,dx)",
+              "kind": "code"
+            },
+            {
+              "text": "는 분모가 0인 경우와 사분면을 함께 다룹니다. "
+            },
+            {
+              "text": "atan(dy/dx)",
+              "kind": "code"
+            },
+            {
+              "text": "나 acos 결과에 수동 보정을 덧붙이는 방식보다 의도를 드러내기 쉽습니다. 방향 벡터 "
+            },
+            {
+              "text": "(cosθ,sinθ)",
+              "kind": "code"
+            },
+            {
+              "text": "는 y 위쪽 기준이고, y 아래쪽 좌표에서 같은 수식을 쓰면 화면상 양의 회전 방향이 반대입니다. 한쪽에서는 y를 뒤집고 다른 쪽에서는 뒤집지 않는 식으로 혼용하지 않습니다. 각도는 라디안으로 계산합니다. 90°=π/2, 270°의 단위 방향은 "
+            },
+            {
+              "text": "(0,-1)",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. 삼각함수에 숫자 90을 그대로 전달해서 90도로 해석되기를 기대하면 안 됩니다. 현재 각도 179°에서 목표 −179°로 회전할 때 차이는 −358°가 아니라 짧은 경로 +2°로 정규화할 수 있습니다. "
+            },
+            {
+              "text": "TurnTowards",
+              "kind": "code"
+            },
+            {
+              "text": "는 차이를 한 바퀴 범위로 정리한 뒤 "
+            },
+            {
+              "text": "회전 속도(rad/s) × dt",
+              "kind": "code"
+            },
+            {
+              "text": "만큼 제한합니다. 정확히 반대인 방향은 어느 쪽으로 돌지 결정 규칙을 정해야 합니다. 실습은 반 바퀴 동률을 양의 방향으로 선택합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n    A[\"현재 위치와 목표 위치\"] --> B[\"목표 - 현재\"]\n    B --> C{\"길이가 충분한가?\"}\n    C -->|\"아니오\"| D[\"도착 처리 또는 이전 방향 유지\"]\n    C -->|\"예\"| E[\"단위 방향과 atan2 각도\"]\n    E --> F[\"이동 거리와 회전량을 dt로 제한\"]\n    F --> G[\"새 위치와 방향\"]"
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "6. 추적과 점프를 실패 조건까지 생각합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목표까지 1 unit 남았는데 이번 이동 거리가 3이면 목표를 지나쳐 반대쪽으로 흔들릴 수 있습니다. "
+            },
+            {
+              "text": "MoveTowards",
+              "kind": "code"
+            },
+            {
+              "text": "는 이동 거리와 남은 거리를 비교해 목표에서 멈춥니다. 방향을 즉시 바꾸는 추적과 회전 속도가 제한된 유도탄은 다른 모델입니다. 후자는 제한된 방향을 먼저 갱신한 뒤 그 방향으로 이동해야 합니다. 일정한 가속도에서 점프 위치는 다음과 같습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "y(t)=y_0+v_0t+\\tfrac12at^2"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "첫 항의 v₀는 "
+            },
+            {
+              "text": "초기 속도",
+              "kind": "strong"
+            },
+            {
+              "text": "이지 힘이 아닙니다. y 위쪽이면 중력 가속도는 음수입니다. 힘에서 출발하려면 질량과 가속도 관계까지 필요합니다. 이 실습은 공기 저항과 충돌이 없는 구간의 해석식이며, 착지 판정·천장 충돌·플랫폼 이동을 자동으로 해결하지 않습니다. 수치 적분과 섞을 때는 현재 속도·위치 갱신 방식과 시간 간격을 명시해야 합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "7. 검증과 이해 확인",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "연산·표현"
+                  }
+                ],
+                [
+                  {
+                    "text": "입력 계약"
+                  }
+                ],
+                [
+                  {
+                    "text": "결과·게임 적용"
+                  }
+                ],
+                [
+                  {
+                    "text": "주요 반례"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Normalize(변위)"
+                  }
+                ],
+                [
+                  {
+                    "text": "길이가 유한하고 임계값보다 커야 함"
+                  }
+                ],
+                [
+                  {
+                    "text": "단위 이동·조준 방향"
+                  }
+                ],
+                [
+                  {
+                    "text": "영벡터, NaN, 아날로그 입력의 세기 소실"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "dot(a,b)"
+                  }
+                ],
+                [
+                  {
+                    "text": "각도 용도라면 정규화된 방향"
+                  }
+                ],
+                [
+                  {
+                    "text": "시야각·전후방 판정"
+                  }
+                ],
+                [
+                  {
+                    "text": "비단위 벡터의 내적을 cosθ로 착각"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "cross(a,b)"
+                  }
+                ],
+                [
+                  {
+                    "text": "좌표축·입력 순서를 고정"
+                  }
+                ],
+                [
+                  {
+                    "text": "법선·좌우 회전 방향"
+                  }
+                ],
+                [
+                  {
+                    "text": "순서 반대, 평행 벡터"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "atan2(dy,dx)"
+                  }
+                ],
+                [
+                  {
+                    "text": "화면 y축과 라디안 규약 결정"
+                  }
+                ],
+                [
+                  {
+                    "text": "사분면을 포함한 조준 각도"
+                  }
+                ],
+                [
+                  {
+                    "text": "atan(dy/dx)의 0 분모·사분면 모호성"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "vector_motion",
+              "kind": "code"
+            },
+            {
+              "text": "의 19회 조건 검사에서 정규화·영벡터·NaN 거부, 내외적, 목표 도착, 잘못된 시간, 각도 경계, 점프 결과를 확인했습니다. GCC 14.2 / Clang 17 / Clang ASan·UBSan에서 통과했습니다. 작은 유한 입력을 대상으로 한 스칼라 교육용 코드이며 SIMD 최적화나 모든 실수 범위의 수치 안정성을 증명하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "단위 방향을 구하지 않고 (target-position)*speed*dt로 이동하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "목표와 멀수록 속력이 커집니다. 일정 속도 이동이 아니라 거리 비례 이동에 가까워지며, 큰 시간 간격에서는 지나침도 생깁니다. 원하는 움직임이 무엇인지 먼저 결정해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "내적이 1.00000001인 단위 방향 두 개에서 acos를 바로 호출해도 될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "반올림 오차로 정의역 밖의 값이 될 수 있습니다. 유효한 입력·정규화 여부를 확인한 뒤 각도 계산 직전에 −1~1로 제한합니다. 이 제한으로 영벡터나 손상된 입력까지 정상화하지는 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

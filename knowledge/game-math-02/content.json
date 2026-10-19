@@ -1,0 +1,566 @@
+{
+  "id": "knowledge--game-math-02",
+  "route": "/knowledge/game-math-02/",
+  "kind": "knowledge",
+  "title": "게임 수학 02 · 행렬·좌표계·역변환",
+  "subtitle": "행 벡터·SRT·동차 좌표·역전치 법선",
+  "date": "2026-10-13",
+  "number": "MATH / 02",
+  "category": "게임 수학",
+  "topic": "게임 수학",
+  "tags": [
+    "게임 수학",
+    "C++",
+    "Windows SDK"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "개요·원본 및 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f40811686bfe7d95d9bd027"
+                },
+                {
+                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "행렬 순서는 암기 구호가 아니라 좌표가 이동하는 경로로 읽습니다.",
+                  "kind": "strong"
+                },
+                {
+                  "text": " C++20 · 2026-10-13 · 실습 "
+                },
+                {
+                  "text": "src/transforms.cpp",
+                  "kind": "code"
+                },
+                {
+                  "text": ", "
+                },
+                {
+                  "text": "include/math.hpp",
+                  "kind": "code"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "게임 수학·MFC — 개정판 v1.0",
+              "kind": "link",
+              "href": "/knowledge/#knowledge-windows"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 먼저 계산 규약을 고정합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 실습은 "
+            },
+            {
+              "text": "행 벡터를 왼쪽에 놓는 규약",
+              "kind": "strong"
+            },
+            {
+              "text": "을 사용합니다. 계산식은 "
+            },
+            {
+              "text": "p' = pM",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. 4×4 값은 행별 배열에 저장합니다. 저장 순서(row-major/column-major), 벡터를 곱하는 쪽, 좌표계의 왼손·오른손은 서로 다른 선택입니다. ‘행 우선이므로 왼손 좌표계’처럼 연결하면 안 됩니다. DirectXMath는 행 우선 행렬·행 벡터 규약을 사용하며 왼손·오른손용 함수를 구분합니다. HLSL에 전달할 때는 셰이더 선언의 저장 규칙과 "
+            },
+            {
+              "text": "mul",
+              "kind": "code"
+            },
+            {
+              "text": "의 피연산자 순서까지 맞춰야 합니다. 이번 코드는 CPU 스칼라 계산이며 셰이더 전달 검증은 다음 그래픽스 단계에서 다룹니다. 근거: "
+            },
+            {
+              "text": "Microsoft — DirectXMath 시작하기",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/dxmath/pg-xnamath-getting-started"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "XMMATRIX",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/directxmath/ns-directxmath-xmmatrix"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 행렬 곱과 항등행렬",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "m×n 행렬과 n×p 행렬을 곱하면 m×p 결과가 나옵니다. 각 결과 원소는 앞 행렬의 행과 뒤 행렬의 열을 내적한 값입니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "(AB)_{ij}=\\sum_k A_{ik}B_{kj}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "항등행렬은 대각 성분이 1이고 나머지가 0인 정방행렬입니다. 대각 성분만 1이고 나머지가 임의 값인 행렬은 항등행렬이 아닙니다. "
+            },
+            {
+              "text": "AI=IA=A",
+              "kind": "code"
+            },
+            {
+              "text": "는 성립하지만 일반적으로 "
+            },
+            {
+              "text": "AB=BA",
+              "kind": "code"
+            },
+            {
+              "text": "는 성립하지 않습니다. 결합법칙으로 괄호를 묶는 것과 곱셈 순서를 바꾸는 것을 구분합니다. 실습 "
+            },
+            {
+              "text": "Mat4",
+              "kind": "code"
+            },
+            {
+              "text": "는 4×4 배열에 값을 저장하고 세 겹 반복문으로 행렬 곱을 계산합니다. 효율적인 엔진 수학 라이브러리를 대신하기 위한 구현은 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. 위치에는 w=1, 방향에는 w=0을 사용합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "행 벡터 규약에서 이동행렬은 마지막 행에 이동량을 둡니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "T=\\begin{bmatrix}\n1&0&0&0\\\\0&1&0&0\\\\0&0&1&0\\\\t_x&t_y&t_z&1\n\\end{bmatrix}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "(x,y,z,1)T",
+              "kind": "code"
+            },
+            {
+              "text": "에는 이동이 적용되고 "
+            },
+            {
+              "text": "(dx,dy,dz,0)T",
+              "kind": "code"
+            },
+            {
+              "text": "에는 적용되지 않습니다. 이는 방향이 위치와 같은 숫자 세 개여도 의미가 다르다는 사실을 행렬 계산에 넣은 것입니다. 투영까지 포함한 동차 좌표는 계산 후 w가 1이 아닐 수 있습니다. 화면 좌표로 진행할 때는 적절한 클리핑과 w에 의한 나눗셈이 필요합니다. 이번 "
+            },
+            {
+              "text": "Transform",
+              "kind": "code"
+            },
+            {
+              "text": "은 w까지 포함한 "
+            },
+            {
+              "text": "원시 4성분 결과",
+              "kind": "strong"
+            },
+            {
+              "text": "를 반환하고 자동으로 나누지 않습니다. w=0에 무조건 나눗셈을 적용하지 마세요. 공식 함수 비교: "
+            },
+            {
+              "text": "XMVector3TransformCoord",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/directxmath/nf-directxmath-xmvector3transformcoord"
+            },
+            {
+              "text": "는 입력을 위치로 처리하고 동차 나눗셈을 수행합니다. "
+            },
+            {
+              "text": "XMVector3TransformNormal",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/directxmath/nf-directxmath-xmvector3transformnormal"
+            },
+            {
+              "text": "은 이동 성분을 사용하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. SRT를 숫자로 검산합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "로컬 점 "
+            },
+            {
+              "text": "(1,0,0)",
+              "kind": "code"
+            },
+            {
+              "text": "을 x 방향으로 2배 확대하고, z축으로 +90° 회전한 뒤, "
+            },
+            {
+              "text": "(10,0,0)",
+              "kind": "code"
+            },
+            {
+              "text": "만큼 이동해 봅시다. x 오른쪽·y 위쪽 예제에서 결과는 "
+            },
+            {
+              "text": "(10,2,0)",
+              "kind": "code"
+            },
+            {
+              "text": "입니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// study::Mat4 함수의 사용 예. 전체 실행 코드는 transforms.cpp에 있습니다.\nconst auto world = Scale(2, 1, 1) * RotationZ(pi / 2) * Translation(10, 0, 0);\nconst auto point = Transform({1, 0, 0, 1}, world);\n// point = {10, 2, 0, 1}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 규약에서는 왼쪽부터 크기→회전→이동을 적용합니다. 이동을 먼저 곱하면 이미 옮긴 점까지 회전하거나 확대하게 됩니다. ‘크기×자전×이동×공전×부모’는 특정 장면을 구성한 결과이지 모든 오브젝트가 무조건 따라야 하는 공식이 아닙니다. 원점이 아닌 피벗 c를 중심으로 회전하려면 "
+            },
+            {
+              "text": "T(-c) R T(c)",
+              "kind": "code"
+            },
+            {
+              "text": "처럼 피벗으로 이동해 회전하고 되돌리는 경로로 이해합니다. 공전과 자전도 어느 기준점과 공간에서 회전시키는지의 차이입니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n    L[\"로컬 점\"] --> S[\"로컬 크기 S\"]\n    S --> R[\"로컬 회전 R\"]\n    R --> T[\"부모 공간 위치 T\"]\n    T --> P[\"부모의 월드 변환\"]\n    P --> W[\"월드 점\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "자식의 월드 행렬은 이 규약에서 "
+            },
+            {
+              "text": "childLocal * parentWorld",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. 부모 이동을 행렬에도 넣고 최종 위치에 다시 더하면 이중 적용입니다. 버텍스 버퍼를 CPU에서 매 프레임 수정해야 한다는 규칙은 없습니다. 로컬 정점은 유지하고 변환만 GPU에 전달하는 방법과 CPU 변형을 목적에 따라 구분합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. 역변환은 존재할 때만 사용할 수 있습니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "pWorld = pLocal * W",
+              "kind": "code"
+            },
+            {
+              "text": "이면 역행렬이 존재할 때 "
+            },
+            {
+              "text": "pLocal = pWorld * inverse(W)",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. 클릭 지점을 오브젝트 로컬 공간으로 되돌리거나, 카메라가 보는 좌표를 구할 때 사용합니다. 역행렬은 일반적인 원소별 역수가 아닙니다. 한 축의 스케일이 0이면 정보가 사라져 역행렬이 존재하지 않을 수 있습니다. 0에 매우 가까우면 수치적으로 불안정할 수 있습니다. 실습의 Gauss–Jordan 역행렬은 부분 피벗과 절대 임계값 1e−12를 쓰는 학습용입니다. 임의 크기의 행렬에 대한 조건수 평가나 안정적인 선형대수 라이브러리를 대체하지 않습니다. 카메라가 월드 안에 배치된 변환 C를 가진다면, 그 카메라 기준으로 월드를 보는 뷰 변환은 일반적으로 C의 역변환으로 이해할 수 있습니다. 단순 2D 카메라에서는 위치를 빼고 줌·화면축 변환을 적용하는 식으로 이를 직접 구현할 수 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "6. 법선은 아무 방향 벡터처럼 변환하면 안 됩니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "표면의 접선 t와 법선 n이 수직이면 내적이 0입니다. 비균일 스케일 A를 적용한 후에도 이 관계가 유지되어야 합니다. 따라서 법선은 위치 변환의 선형 부분 A에 대해 "
+            },
+            {
+              "text": "역전치",
+              "kind": "strong"
+            },
+            {
+              "text": "로 변환합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "t'=tA,\\qquad n'=n(A^{-1})^T"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "그 뒤 필요하면 정규화합니다. 회전만 있을 때와 비균일 스케일이 있을 때의 차이를 "
+            },
+            {
+              "text": "transforms",
+              "kind": "code"
+            },
+            {
+              "text": "에서 내적으로 검산합니다. API 이름에 Normal이 들어 있다고 임의의 월드 행렬을 넘기면 내부에서 자동으로 역전치를 구하는 것은 아닙니다. 필요한 행렬을 호출자가 준비해야 합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "7. 테스트와 이해 확인",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "항목"
+                  }
+                ],
+                [
+                  {
+                    "text": "행 벡터·왼쪽 곱 pM 기준"
+                  }
+                ],
+                [
+                  {
+                    "text": "피해야 할 오해"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "점과 방향"
+                  }
+                ],
+                [
+                  {
+                    "text": "점 w=1은 이동 영향, 방향 w=0은 이동 영향 없음"
+                  }
+                ],
+                [
+                  {
+                    "text": "방향 벡터에 변환 후 위치를 더함"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "로컬→월드"
+                  }
+                ],
+                [
+                  {
+                    "text": "childLocal × parentWorld"
+                  }
+                ],
+                [
+                  {
+                    "text": "행렬 곱은 항상 교환 가능하다는 가정"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "뷰 변환"
+                  }
+                ],
+                [
+                  {
+                    "text": "카메라 월드 행렬이 가역일 때 inverse(cameraWorld)"
+                  }
+                ],
+                [
+                  {
+                    "text": "역행렬을 원소별 역수로 취급"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "법선"
+                  }
+                ],
+                [
+                  {
+                    "text": "선형 변환의 역전치 후 필요 시 정규화"
+                  }
+                ],
+                [
+                  {
+                    "text": "비균일 스케일에 접선과 똑같은 행렬 적용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "HLSL 업로드"
+                  }
+                ],
+                [
+                  {
+                    "text": "CPU 벡터 규약·mul 순서·셰이더 행렬 저장 규약을 함께 확인"
+                  }
+                ],
+                [
+                  {
+                    "text": "row-major 저장과 왼손 좌표계를 같은 뜻으로 취급"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "29회 조건 검사에서 SRT 결과, 위치·방향의 이동 차이, 곱셈 순서, 역행렬 왕복, 특이 행렬 거부, 정상 변환된 법선의 직교성을 확인했습니다. Linux의 GCC·Clang·ASan/UBSan에서 통과했습니다. GPU 행렬 업로드, HLSL 저장 규칙과 렌더링 화면은 이번 실행 범위에 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "행렬을 transpose하면 모든 좌표계 문제가 해결될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 저장 순서 문제인지, 벡터 곱 방향 문제인지, 좌표축 방향 문제인지 먼저 분리해야 합니다. 전치가 필요한 전송 규약도 있지만 무조건 전치하면 올바른 계산을 잘못 바꿀 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "오브젝트를 축 하나로 납작하게 만들었는데 마우스 역변환이 실패한다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정보를 잃는 스케일 때문에 역행렬이 존재하지 않을 수 있습니다. 실패를 처리하고, 별도의 충돌 형태나 투영된 기하에서의 피킹으로 설계를 바꿔야 합니다. 이전 프레임의 역행렬을 묵시적으로 재사용하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

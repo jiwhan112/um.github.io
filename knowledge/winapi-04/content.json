@@ -1,0 +1,996 @@
+{
+  "id": "knowledge--winapi-04",
+  "route": "/knowledge/winapi-04/",
+  "kind": "knowledge",
+  "title": "WinAPI 04 · Win32 앱 구성·검증 경계",
+  "subtitle": "파일 구성·빌드 방법·Windows GUI 미검증 구분",
+  "date": "2026-10-13",
+  "number": "WinAPI / 04",
+  "category": "WinAPI",
+  "topic": "WinAPI",
+  "tags": [
+    "WinAPI",
+    "C++",
+    "Windows SDK"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "개요·원본 및 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f40812fbfd4e2c48de2e58b"
+                },
+                {
+                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실행한 공통 로직과 아직 실행하지 못한 Windows 코드를 명확히 구분합니다.",
+                  "kind": "strong"
+                },
+                {
+                  "text": " C++20 · 2026-10-13 · 팩 이름 "
+                },
+                {
+                  "text": "game_math_winapi_lab_v1",
+                  "kind": "code"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "WinAPI 게임 프로그래밍 — 개정판 v1.0",
+              "kind": "link",
+              "href": "/knowledge/#knowledge-windows"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 새 실습의 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "하나의 CMake 프로젝트에 플랫폼 독립 실습 6개와 Windows 전용 GUI 소스 1개를 넣었습니다. Windows 빌드에서만 "
+            },
+            {
+              "text": "winapi_demo",
+              "kind": "code"
+            },
+            {
+              "text": " 타깃을 추가합니다. Linux에서 6개가 통과했다는 사실이 Windows 분기도 컴파일되었다는 뜻은 아닙니다. GUI 소스는 창 생성, 상태 연결, 메시지 처리, 방향키 이동, 클릭 목표 추적, 고정 시간 갱신, 포커스 초기화, DPI 처리, GDI 더블 버퍼와 종료 시 자원 정리를 다룹니다. 외부 이미지나 회사 코드는 필요하지 않습니다. 조작은 방향키 이동, 클릭한 점으로 추적, Space 위치 초기화, Esc 종료입니다. 그래픽은 단순 도형이고 MFC 편집기나 완성된 게임 프로젝트는 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 파일 구조와 읽는 순서",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "파일"
+                  }
+                ],
+                [
+                  {
+                    "text": "역할"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "include/math.hpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "벡터·행렬·카메라·충돌·타일 좌표의 스칼라 학습 코드"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "include/loop.hpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "입력 상태·고정 시간 단계·애니메이션 시계"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "include/grid.hpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "타일 데이터·파싱·Undo/Redo·A*"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "src의 6개 cpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "각 개념의 정상·경계·실패 검사"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "windows/winapi_demo.cpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "Win32 메시지·GDI와 공통 이동 로직을 연결"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "windows/app.manifest와 app.rc"
+                  }
+                ],
+                [
+                  {
+                    "text": "PerMonitorV2 DPI 설정을 실행 파일 리소스에 포함"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "CMakeLists.txt"
+                  }
+                ],
+                [
+                  {
+                    "text": "C++20, 경고 옵션, 테스트, Windows 분기 설정"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "logs"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 실행한 빌드와 CTest 원시 로그"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "GUI 파일은 App의 데이터 → BackBuffer 자원 → Paint → WindowProc → wWinMain 루프 순서로 읽으면 좋습니다. 전체 코드를 매 문서에 복제하지 않고 공통 실습 팩 한 벌을 기준으로 삼습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. 빌드 방법",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축을 푼 폴더에서 C++20 컴파일러와 CMake를 사용합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build --config Debug\nctest --test-dir build -C Debug --output-on-failure"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows에서는 MSVC C++ 개발 도구와 Windows SDK가 준비된 x64 개발자 터미널 또는 Visual Studio의 CMake 프로젝트 기능을 사용합니다. 이 예제의 DPI 경로는 Windows 10 version 1703 이상을 대상으로 작성했습니다. 이미 다른 생성기의 build 폴더가 있다면 별도 빌드 폴더를 사용하세요. Windows GUI 실행 파일의 위치는 생성기에 따라 "
+            },
+            {
+              "text": "build/Debug/winapi_demo.exe",
+              "kind": "code"
+            },
+            {
+              "text": " 또는 "
+            },
+            {
+              "text": "build/winapi_demo.exe",
+              "kind": "code"
+            },
+            {
+              "text": "처럼 달라질 수 있습니다. MFC는 이 GUI 타깃의 의존성이 아니며, MFC 프로젝트를 따로 실습하려면 해당 개발 구성 요소가 필요합니다. 이번 작업에서는 사용자 PC 설정을 변경하지 않았습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. 실제 수행한 검증",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구성"
+                  }
+                ],
+                [
+                  {
+                    "text": "실행 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "GCC 14.2.0 / C++20"
+                  }
+                ],
+                [
+                  {
+                    "text": "6/6 프로그램 통과"
+                  }
+                ],
+                [
+                  {
+                    "text": "94,197회 조건 검사"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Clang 17.0.0 / C++20"
+                  }
+                ],
+                [
+                  {
+                    "text": "6/6 프로그램 통과"
+                  }
+                ],
+                [
+                  {
+                    "text": "동일 조건을 다른 컴파일러로 확인"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Clang + ASan·UBSan"
+                  }
+                ],
+                [
+                  {
+                    "text": "6/6 프로그램 통과"
+                  }
+                ],
+                [
+                  {
+                    "text": "실행 중 해당 검사기 진단 없음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "공통 헤더 독립 포함"
+                  }
+                ],
+                [
+                  {
+                    "text": "GCC·Clang 통과"
+                  }
+                ],
+                [
+                  {
+                    "text": "math.hpp·loop.hpp·grid.hpp 각각 단독 include, 경고를 오류로 처리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Windows/MSVC와 GUI"
+                  }
+                ],
+                [
+                  {
+                    "text": "컴파일·실행 미검증"
+                  }
+                ],
+                [
+                  {
+                    "text": "소스 작성과 API 계약 대조만 수행"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "조건 검사 수에는 반복된 원소·경로 검사가 포함됩니다. A*는 3×3 장애물 배치 전체와 시작·목표 조합 41,472개를 별도 BFS와 대조했습니다. 작은 범위의 전수 비교이지 모든 크기의 모든 그래프에 대한 증명은 아닙니다. 환경은 Linux x86-64, CMake 3.31.6입니다. 현재 도구에는 Windows SDK·MFC·Windows GUI 실행기가 없어 해당 부분을 실행하지 못했습니다. GPU·DirectX·FMOD·프로파일 성능·ThreadSanitizer 검증도 수행하지 않았습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. Windows에서 확인할 수동 테스트",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래는 "
+            },
+            {
+              "text": "해야 할 테스트",
+              "kind": "strong"
+            },
+            {
+              "text": "이며 이미 통과한 결과가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "상황"
+                  }
+                ],
+                [
+                  {
+                    "text": "기대하는 관찰"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "방향키와 대각선"
+                  }
+                ],
+                [
+                  {
+                    "text": "대각선 속력이 커지지 않고 초당 이동량이 일관됨"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "클릭한 목표에 도착"
+                  }
+                ],
+                [
+                  {
+                    "text": "지나쳐 흔들리지 않고 목표에서 멈춤"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "키를 누른 채 앱 전환"
+                  }
+                ],
+                [
+                  {
+                    "text": "복귀 후 키가 계속 눌린 상태로 남지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "최소화·복구, 창 크기 조정"
+                  }
+                ],
+                [
+                  {
+                    "text": "복귀 순간 긴 시간을 한꺼번에 적용하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "DPI 100/150/200%와 모니터 이동"
+                  }
+                ],
+                [
+                  {
+                    "text": "도형 위치와 클릭 좌표가 같은 규약을 유지"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "연속 리사이즈·창 종료"
+                  }
+                ],
+                [
+                  {
+                    "text": "GDI 객체 수가 계속 증가하지 않고 종료 정리가 일어남"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "API 실패·큰 창"
+                  }
+                ],
+                [
+                  {
+                    "text": "버퍼 생성 실패 시 대체 그리기 또는 명시적 종료"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "간단한 도형 크기와 입력 좌표의 DPI 변환은 소스에 포함했지만 고급 글꼴 스케일링·입력기·접근성·다중 창·게임패드까지 구현하지 않았습니다. Win32 예외 경계는 일반 C++ 예외 처리이며 모든 OS 오류나 메모리 손상을 안전하게 복구하는 기능이 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "6. 기존 강의 기능의 연결 위치",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 WinAPI 노트의 대각선 이동·포신·유도탄·점프는 게임 수학의 벡터 문서로, 사각형·원·라인 충돌과 카메라·타일 피킹·미니맵·Y 정렬은 기하 문서로 연결했습니다. 라인·타일 에디터의 저장·불러오기와 모델 분리는 MFC 문서에서 다룹니다. "
+            },
+            {
+              "text": "Notion 관련 문서",
+              "kind": "link",
+              "href": "/knowledge/game-math-01/"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "Notion 관련 문서",
+              "kind": "link",
+              "href": "/knowledge/game-math-03/"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "Notion 관련 문서",
+              "kind": "link",
+              "href": "/knowledge/game-math-04/"
+            },
+            {
+              "text": " 팩토리·반복자·싱글턴·중재자·브릿지·옵저버라는 이름을 붙이는 것보다 소유권·호출 방향·변경 알림의 목적을 먼저 정합니다. 간단한 App에 전역 매니저를 여러 개 만들지 않고 필요한 상태를 명시적으로 전달했습니다. 패턴별 전면 개정은 별도 순서에 있으며 이번에 패턴 전체를 완성했다고 표시하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "7. FMOD와 자산 로딩의 확장 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 사운드 메모의 이름은 FMOD로 바로잡습니다. FMOD Core API에서 Sound는 로드한 소리 데이터, Channel은 재생 인스턴스에 해당하는 개념입니다. 소리를 재생하는 것과 데이터 수명을 관리하는 것을 분리하고, 반환 코드와 재생 종료 후 핸들의 유효성을 확인해야 합니다. 게임 코드에는 ‘효과음을 재생한다’는 좁은 인터페이스를 두고 SDK 타입·초기화·종료·리소스 경로는 어댑터 안에 모으는 설계를 권합니다. 참고: "
+            },
+            {
+              "text": "FMOD Core API 개념",
+              "kind": "link",
+              "href": "https://www.fmod.com/docs/2.03/api/core-api-concepts.html"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "System API",
+              "kind": "link",
+              "href": "https://www.fmod.com/docs/2.04/api/core-api-system.html"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "재생 핸들 수명",
+              "kind": "link",
+              "href": "https://fmod.com/docs/2.04/api/mixing-and-routing-in-the-core-api.html"
+            },
+            {
+              "text": ". 확인한 문서의 버전을 표시한 것이며 실습에 SDK를 설치했다는 뜻은 아닙니다. 실제 통합 시 선택한 SDK 버전·바이너리·사용 조건을 별도로 확인합니다. 이번 팩에는 FMOD 바이너리와 실행 예제가 없습니다. 파일 탐색은 현재 작업 디렉터리에 암묵적으로 기대지 말고 자산 루트를 정합니다. 파일명 순서를 실제로 열거한 목록과 일치시키고 접근 실패·취소·파일 형식 오류를 구분합니다. C++의 파일·자원 수명 설명은 앞서 개정한 기초 문서와 함께 확인합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-8",
+      "title": "8. 메시지 루프와 CPU 시뮬레이션의 설계 경계 · 2026-10-19 보강",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습의 실행 책임을 "
+            },
+            {
+              "text": "OS 이벤트 펌프 → 시간 측정 → 고정 단계 계산 → CPU Update → 렌더링 요청",
+              "kind": "strong"
+            },
+            {
+              "text": "으로 분해합니다. "
+            },
+            {
+              "text": "PeekMessageW",
+              "kind": "code"
+            },
+            {
+              "text": "는 들어온 메시지를 처리하기 위한 인터페이스이지 프레임 타이머가 아니며, "
+            },
+            {
+              "text": "QueryPerformanceCounter",
+              "kind": "code"
+            },
+            {
+              "text": " 카운터 값은 "
+            },
+            {
+              "text": "QueryPerformanceFrequency",
+              "kind": "code"
+            },
+            {
+              "text": "로 환산해야 초 단위 시간이 됩니다. "
+            },
+            {
+              "text": "WM_PAINT",
+              "kind": "code"
+            },
+            {
+              "text": "는 그리기를 요청하는 메시지이고, "
+            },
+            {
+              "text": "입력/시뮬레이션 업데이트를 WM_PAINT 발생 횟수에 직접 결박하지 않습니다.",
+              "kind": "strong"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"메시지 펌프: PeekMessageW\"] --> B[\"WM_QUIT 여부 확인\"]\n B -->|종료| Z[\"리소스 정리 · 루프 종료\"]\n B -->|계속| C[\"고해상도 타이머의 경과 시간\"]\n C --> D[\"프레임 상한 · 누적 시간\"]\n D --> E[\"고정 step 한도 내 Update 반복\"]\n E --> F[\"남은 완전 step 드롭 여부 기록\"]\n F --> G[\"보간 계수 alpha 계산\"]\n G --> H[\"렌더 요청 · 다음 메시지 처리\"]\n H --> A"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구분"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 실습의 책임"
+                  }
+                ],
+                [
+                  {
+                    "text": "검증 상태"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "메시지 · 창 · GDI"
+                  }
+                ],
+                [
+                  {
+                    "text": "Win32 API 창과 자원 수명"
+                  }
+                ],
+                [
+                  {
+                    "text": "정적 계약 검토, Windows/MSVC 실행 미검증"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "고정 step · 누적 · 드롭"
+                  }
+                ],
+                [
+                  {
+                    "text": "플랫폼 독립 순수 CPU 알고리즘"
+                  }
+                ],
+                [
+                  {
+                    "text": "Win04A · 고정 시간 단계·누적·프레임 드롭 CPU 계약 (C++11/20)",
+                    "kind": "link",
+                    "href": "/knowledge/winapi-04a/"
+                  },
+                  {
+                    "text": "에서 GCC C++20·C++11 및 Clang ASan/UBSan, 각 CTest 1/1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "리소스 반환"
+                  }
+                ],
+                [
+                  {
+                    "text": "GDI 객체 선택 상태 원복, 타이머·윈도우 리소스 종료"
+                  }
+                ],
+                [
+                  {
+                    "text": "Windows GUI 직접 측정 미검증"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q1. 메시지 큐가 가득 차면 `WM_PAINT` 안에서 `Update(dt)`를 호출해도 되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그러면 그리기 메시지 빈도가 시뮬레이션의 시간 흐름을 좌우할 수 있습니다. 별도 업데이트 단계와 이벤트 처리를 번갈아 제공하고 경과 시간을 기준으로 시뮬레이션을 갱신합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q2. 고정 시간이면 모든 실제 경과 시간을 반드시 보존하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. "
+                },
+                {
+                  "text": "Win04A",
+                  "kind": "code"
+                },
+                {
+                  "text": " 실습은 과도한 "
+                },
+                {
+                  "text": "dt",
+                  "kind": "code"
+                },
+                {
+                  "text": "를 제한하고 프레임별 업데이트 예산을 넘긴 step을 명시적으로 버리는 교육용 정책입니다. 분수 나머지와 버려진 시간을 구분합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q3. Linux의 C++20·C++11·ASan/UBSan 통과로 Win32 GUI의 DPI/GDI 동작을 검증했다고 말할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "말할 수 없습니다. 순수 CPU 상태전이만 실행했으며 창 생성·메시지 전달·DPI 좌표·GDI 누수는 Windows에서 별도의 수동/자동 검증이 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "참고:",
+              "kind": "strong"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "Microsoft PeekMessageW",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "고해상도 타이머",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/acquiring-high-resolution-time-stamps"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "Win04A",
+              "kind": "code"
+            },
+            {
+              "text": " 전체 소스는 이 페이지 하위의 2개 "
+            },
+            {
+              "text": "main.cpp",
+              "kind": "code"
+            },
+            {
+              "text": " 조각, CMake 및 원시 로그 페이지에 저장되어 있습니다. "
+            },
+            {
+              "text": "이번 보강은 플랫폼 코드를 재컴파일한 기록이 아닙니다.",
+              "kind": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-9",
+      "title": "9. 학습 진도와 다음 작업 지점",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DX9 문서 개정과 DX11/HLSL·SIMD의 일부 단원은 후속 실행에서 이미 진행됐습니다. 이 문서의 2026-10-13 시점 순서를 현재의 미완료 진도와 혼동하지 않습니다. 이후 재개점은 "
+            },
+            {
+              "text": "Notion 관련 문서",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f7a99703f40814d97c0d6a94fd29a61"
+            },
+            {
+              "text": "의 최신 원장을 따릅니다. 게임 엔진 아키텍처 책과 취업·면접 자료는 수정하지 않습니다. "
+            },
+            {
+              "text": "Win04A-1 · FixedStepper C++11/20 CPU main.cpp 1/2 · 2450B",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fda99703f4081ec9047dd6279a8a20d"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "Win04A-2 · FixedStepper C++11/20 CPU main.cpp 2/2 · 2251B",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fda99703f40813cb563f196516f849a"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "Win04A-3 · CPU 프로젝트 CMakeLists 전체 원본",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fda99703f4081b78842ea8ee31a51d2"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "Win04A gcc20 CTest 원시 988B · 23검사 1/1",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fda99703f40815594aaecbee624132e"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "Win04A gcc20 원시 Configure·Build 397B+145B",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fda99703f40817e9f52ce6ca9e697cb"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "Win04A gcc11 원시 Configure·Build 397B+145B",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fda99703f408178a476c6de0429fe3f"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "Win04A · 고정 시간 단계·누적·프레임 드롭 CPU 계약 (C++11/20)",
+              "kind": "link",
+              "href": "/knowledge/winapi-04a/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
