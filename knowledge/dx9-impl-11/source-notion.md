@@ -1,0 +1,283 @@
+
+<callout icon="🧪" color="blue_bg">
+	**개정판 v1.1 · 수동 재개**
+	<mention-date start="2026-10-16"/>. 중단된 11번 교재를 이어 작성하고 CPU 검증을 다시 수행했습니다. C++20 학습 기준이며 C++11 호환 빌드도 확인했습니다. 실제 Windows/MSVC·D3D9·GPU 렌더링은 미검증입니다. 예약 실행은 재활성화하지 않습니다.
+</callout>
+대표 문서: <mention-page url="https://app.notion.com/p/bdcccf3ce6d34930827bf0a519b4fa78">쥬신 5–6개월차 — DirectX 9</mention-page> · 이전 단원: <mention-page url="https://app.notion.com/p/3f8a99703f408155a685d66590c67b7a"/> · 진도 원장: <mention-page url="https://app.notion.com/p/3f7a99703f40814d97c0d6a94fd29a61"/>.
+<table_of_contents/>
+## 1. 무엇을 검사하는가
+**Frustum(시야 절두체)**은 근평면 Near, 원평면 Far, 좌·우·상·하의 경계가 만드는 카메라의 가시 체적입니다. 이 단원의 Frustum culling은 객체를 감싼 구 또는 박스가 그 체적 밖에 완전히 놓였다고 확신할 때, 해당 뷰의 렌더 제출을 생략하는 CPU 검사입니다.
+여기서 중요한 것은 객체의 위치 한 점이 아니라 **경계 체적 전체**입니다. 예를 들어 큰 지형 타일의 중심이 화면 오른쪽 밖에 있더라도 왼쪽 일부가 보인다면 제거하면 안 됩니다. 반대로 카메라 범위 안에 있어도 다른 벽 뒤에 가려질 수 있으므로 이 검사만으로 실제 화면에 보임을 확정할 수 없습니다.
+<table fit-page-width="true" header-row="true">
+<tr>
+<td>검사</td>
+<td>이 단원과의 차이</td>
+</tr>
+<tr>
+<td>Frustum culling</td>
+<td>카메라 체적과 객체 경계 체적을 비교하여 Draw 후보를 줄입니다.</td>
+</tr>
+<tr>
+<td>Clipping</td>
+<td>경계를 가로지르는 프리미티브를 클립 공간에서 잘라 처리합니다. CPU 객체 제거와 같은 연산이 아닙니다.</td>
+</tr>
+<tr>
+<td>Back-face culling</td>
+<td>삼각형의 앞·뒷면을 기준으로 제거합니다. 여기서 만드는 여섯 평면과 구별합니다.</td>
+</tr>
+<tr>
+<td>깊이 테스트·Occlusion</td>
+<td>다른 표면에 가려지는지 다룹니다. Frustum 통과만으로 통과를 보장하지 않습니다.</td>
+</tr>
+</table>
+Direct3D9의 클립 공간 조건은 [Microsoft Viewports and Clipping](https://learn.microsoft.com/en-us/windows/win32/direct3d9/viewports-and-clipping)을 기준으로 합니다. 아래 Sphere/AABB 판정식과 수치 예제는 그 조건에서 유도한 독립 설명입니다.
+## 2. 원본 메모에서 이어받은 범위와 확인 한계
+원본 Frustum 절에는 8개 투영 공간 꼭짓점을 만들고, 투영·뷰 역행렬로 월드 공간에 옮긴 뒤 6개 평면으로 그리기 여부를 판단하는 흐름이 있습니다. 이 구조를 없애는 대신 아래에서 행렬 계수 직접 추출 방식과 비교합니다.
+원본의 이미지153\~157 파일 참조는 그대로 보존했습니다. 이번 실행에서 이미지 다운로드 URL 조회는 성공했으나 이미지 바이트 취득은 DNS 오류 등으로 완료하지 못했습니다. **이미지 속 코드가 중심만 검사한다거나 반지름을 누락했다고 단정하지 않습니다.** 본문의 중심점 검사 오류는 일반적인 반례이며 원본 구현의 확정 오류 판정이 아닙니다. 이전 미게시 초안에서 이 구분이 불명확했던 문장을 수정했습니다.
+기존 대표 페이지의 원문·이미지·01\~10 하위 문서는 덮어쓰지 않았습니다. 이미 있는 원본 복제본 <mention-page url="https://app.notion.com/p/3f8a99703f40816eb9dbdced1f9a1855"/>의 보관함 이동은 별도 잔여 작업입니다.
+## 3. 먼저 고정할 좌표·행렬 계약
+<table fit-page-width="true" header-row="true">
+<tr>
+<td>항목</td>
+<td>이번 실습의 조건</td>
+</tr>
+<tr>
+<td>좌표계</td>
+<td>LH, 카메라의 +Z가 전방입니다. 이것은 이 예제의 선택이며 모든 렌더러의 보편 규칙은 아닙니다.</td>
+</tr>
+<tr>
+<td>벡터 곱</td>
+<td>행 벡터: clip = worldPosition × View × Projection.</td>
+</tr>
+<tr>
+<td>대상 공간</td>
+<td>월드 Sphere와 월드 축 정렬 AABB를 입력하므로 M = View × Projection에서 월드 평면을 추출합니다.</td>
+</tr>
+<tr>
+<td>깊이</td>
+<td>동차 clip에서 0 ≤ z ≤ w, 원근 나눗셈 후 NDC z는 \[0,1\]입니다.</td>
+</tr>
+<tr>
+<td>투영 범위</td>
+<td>기본 예제는 유한한 0 &lt; Near &lt; Far, 0 &lt; FOVy &lt; π, 양수 aspect입니다. 무한 Far·reverse-Z는 구현하지 않습니다.</td>
+</tr>
+<tr>
+<td>평면 부호</td>
+<td>내향 법선, 내부는 n·p + D ≥ 0. 다른 코드의 외향 법선을 섞지 않습니다.</td>
+</tr>
+</table>
+뷰 변환은 월드의 점을 카메라 좌표로 옮깁니다. 카메라 위치가 (0,0,5)이면 위치만 고려한 View의 이동은 (0,0,-5)입니다. 이 관계는 [View Transform](https://learn.microsoft.com/en-us/windows/win32/direct3d9/view-transform)과 대조했습니다.
+**행 벡터와 row-major 메모리 배치는 다른 질문입니다.** 전자는 수식의 곱 방향이고 후자는 배열에 저장하는 순서입니다. CPU에서 V×P를 썼다는 사실만으로 HLSL 업로드에 전치가 필요한지까지 결정하지 않습니다. 실제 셰이더의 mul 인자 순서·행렬 선언·업로드 경로를 함께 맞춰야 합니다.
+## 4. 원본의 8개 꼭짓점 방식과 직접 추출 방식
+원본 메모의 접근을 독립적으로 풀면 NDC에서 x,y를 각각 -1 또는 +1로, z를 0 또는 1로 고르는 8개 꼭짓점이 출발점입니다. 행 벡터 규약에서는 각 (x,y,z,1)에 inverse(Projection) × inverse(View)를 곱한 뒤 결과 xyz를 결과 w로 나누어 월드 점을 얻습니다. 일반적인 원근 절두체는 월드 공간에서 정육면체가 아닙니다.
+각 경계의 서로 일직선상에 있지 않은 점 3개로 평면을 만들 수 있습니다. 외적 방향은 점의 순서에 따라 달라지므로 절두체 내부의 기준점을 넣었을 때 n·p+D가 양수가 되는지 확인하고, 아니라면 n과 D를 함께 반전합니다. 역행렬의 존재, 변환 결과 w가 유효한지, 중복·공선 점으로 평면이 퇴화하지 않는지도 점검합니다.
+[D3DXVec3TransformCoord](https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3transformcoord)는 (x,y,z,1)을 변환하고 w=1로 재투영하는 API입니다. [D3DXPlaneFromPoints](https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxplanefrompoints)는 세 점으로 평면을 구성합니다. 여기서는 이 API를 실제 호출하지 않고 계약을 대조했습니다.
+직접 추출은 M = V×P의 계수에서 평면을 바로 얻습니다. 역행렬이나 꼭짓점 생성 없이 같은 클립 부등식을 월드 공간의 식으로 바꾸는 방법입니다. 어느 방법이든 올바른 공간과 법선 부호를 쓰면 됩니다. 이번 CPU 실행 소스는 **직접 추출 방식**을 구현하고, 8꼭짓점 D3DX 경로의 실행 검증을 대신하지 않습니다.
+## 5. 여섯 평면을 외우지 않고 유도하기
+행렬 M의 열을 C0, C1, C2, C3이라 하고 월드 동차 점을 p라 쓰면 clip.x = p·C0, clip.w = p·C3입니다. 왼쪽 경계 x+w≥0에 대입하면 p·(C0+C3)≥0이므로 Left 평면 계수는 C3+C0입니다. 나머지도 동일하게 옮깁니다.
+<table fit-page-width="true" header-row="true">
+<tr>
+<td>경계</td>
+<td>clip 부등식</td>
+<td>내향 평면 계수 (A,B,C,D)</td>
+</tr>
+<tr>
+<td>Left</td>
+<td>x+w ≥ 0</td>
+<td>C3+C0</td>
+</tr>
+<tr>
+<td>Right</td>
+<td>w-x ≥ 0</td>
+<td>C3-C0</td>
+</tr>
+<tr>
+<td>Bottom</td>
+<td>y+w ≥ 0</td>
+<td>C3+C1</td>
+</tr>
+<tr>
+<td>Top</td>
+<td>w-y ≥ 0</td>
+<td>C3-C1</td>
+</tr>
+<tr>
+<td>Near</td>
+<td>z ≥ 0</td>
+<td>**C2**</td>
+</tr>
+<tr>
+<td>Far</td>
+<td>w-z ≥ 0</td>
+<td>C3-C2</td>
+</tr>
+</table>
+Near가 C3+C2인 자료는 깊이 하한이 -w인 규약인지 확인해야 합니다. 이 예제의 Direct3D9 규약에 그대로 가져오면 Near 이전의 점을 잘못 통과시킵니다. 반대로 열 벡터 clip=M×p를 선택한 구현에서는 열이 아니라 행을 조합합니다. 이 표는 [Direct3D9 clip 부등식](https://learn.microsoft.com/en-us/windows/win32/direct3d9/viewports-and-clipping)에서 직접 유도했습니다.
+```mermaid
+flowchart TD
+  A["Camera: View와 Projection 확정"] --> B["M = View × Projection"]
+  B --> C["열 C0 C1 C2 C3 추출"]
+  C --> D["6개 내향 평면 조합"]
+  D --> E["법선과 D를 함께 정규화"]
+  E --> F["월드 Sphere 또는 AABB 검사"]
+  F --> G{"한 평면에서 체적 전체가 바깥인가?"}
+  G -->|"예"| H["이 뷰의 Draw 제출 생략"]
+  G -->|"아니오"| I["렌더 후보로 보존"]
+```
+## 6. 평면 정규화와 경계 체적 검사
+평면 식은 `A*x+B*y+C*z+D=0`입니다. n=(A,B,C)의 길이를 L이라 할 때 법선 n과 상수 D를 모두 L로 나눕니다. 법선만 나누면 평면 위치 자체가 달라집니다. 단위 법선이면 `s=n·center+D`가 부호 있는 거리입니다. [D3DXPlaneNormalize](https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxplanenormalize)의 정규화 계약과 일치합니다.
+구의 반지름은 모든 방향에서 r입니다. AABB는 중심 c와 각 월드 축의 반길이 h=(hx,hy,hz)로 나타냅니다. 박스 안 점을 c+δ라 쓰면 각 \|δj\|≤hj입니다. n·δ의 최댓값은 각 항의 부호를 맞출 때 얻으므로 평면 방향 반경은 \|nx\|hx+\|ny\|hy+\|nz\|hz입니다. 따라서 체적의 평면 값 범위는 \[s-r,s+r\]입니다.
+<table fit-page-width="true" header-row="true">
+<tr>
+<td>대상</td>
+<td>투영 반경 r</td>
+<td>평면 하나에서 전체가 바깥</td>
+</tr>
+<tr>
+<td>점</td>
+<td>0</td>
+<td>s &lt; 0</td>
+</tr>
+<tr>
+<td>Sphere</td>
+<td>구의 radius</td>
+<td>s &lt; -radius</td>
+</tr>
+<tr>
+<td>AABB</td>
+<td>\|nx\|hx + \|ny\|hy + \|nz\|hz</td>
+<td>s &lt; -r</td>
+</tr>
+</table>
+한 평면이라도 전체가 바깥이면 Result::Out입니다. 모든 평면에서 s&gt;r이면 Result::In이며, 그 외에는 Result::Intersect로 보존합니다. **Intersect는 정확한 기하학적 교차 확정이 아니라 이 보수적 검사에서 거부하지 못한 상태**로 읽습니다. 특히 모서리 근처에는 여섯 반공간과 각각 겹치지만 절두체와 실제로는 겹치지 않는 false positive가 가능합니다. 정확한 전체 체적 교차가 필요한 충돌 판정에 이 결과를 그대로 쓰지 않습니다.
+실행 소스는 수치 오차를 고려하여 Out 조건에 s&lt;-r-epsilon을 사용합니다. epsilon은 단위 평면과 같은 공간의 거리 단위이며, 이 double 실습의 기본값 1e-9를 float 기반 대규모 월드에 무조건 복사하지 않습니다. 넉넉한 허용 오차는 깜빡임을 줄일 수 있지만 불필요한 Draw 후보를 늘립니다. 이는 이 실습의 보수적 정책이지 D3D9 API가 강제하는 상수가 아닙니다.
+실패 입력은 음수 반지름·반길이·epsilon, NaN/Inf, 퇴화 평면 등입니다. v1.1은 정규화 결과 D의 오버플로도 검사합니다. 또한 분류 함수가 잘못된 평면으로 조기 반환하지 않도록 먼저 여섯 단위 법선을 확인합니다. 단, inward 방향이나 실제 절두체 모양까지 validate가 증명하지는 않습니다. extract로 생성한 평면을 사용하는 것이 기본 계약입니다.
+## 7. 수치 예제와 반례
+조건은 카메라 원점·무회전, FOVy=90°, aspect=1, Near=1, Far=10입니다. [D3DXMatrixPerspectiveFovLH](https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxmatrixperspectivefovlh)의 투영 계수와 대조한 CPU 행렬을 사용합니다. 정규화한 Near는 (0,0,1,-1), Far는 (0,0,-1,10)입니다.
+<table fit-page-width="true" header-row="true">
+<tr>
+<td>입력</td>
+<td>판정 과정</td>
+<td>결과</td>
+</tr>
+<tr>
+<td>Sphere c=(0,0,0.5), radius=0.5</td>
+<td>Near s=-0.5=-radius, 경계에 접촉</td>
+<td>보존</td>
+</tr>
+<tr>
+<td>Sphere c=(0,0,0.2), radius=0.1</td>
+<td>Near s=-0.8 &lt; -0.1</td>
+<td>Out</td>
+</tr>
+<tr>
+<td>AABB c=(0,0,0.8), h=(0.1,0.1,0.2)</td>
+<td>Near s=-0.2, r=0.2</td>
+<td>보존</td>
+</tr>
+<tr>
+<td>AABB c=(3,0,2), h=(1.5,1.5,0.5)</td>
+<td>중심은 오른쪽 밖이지만 박스 일부는 경계 안에 있음</td>
+<td>보존</td>
+</tr>
+<tr>
+<td>반지름 0, c=(0,0,0.75)</td>
+<td>정확한 Near=C2이면 Out. 잘못된 C3+C2이면 통과</td>
+<td>Near 공식 반례</td>
+</tr>
+</table>
+카메라가 월드 (0,0,5)로 이동하면 월드 (0,0,8)은 카메라 앞 3이고 월드 (0,0,5)는 Near 이전입니다. View를 갱신하지 않고 Projection에서만 평면을 뽑으면 카메라를 움직여도 가시 영역이 원점에 붙어 있는 오류가 납니다.
+회전도 같습니다. +X를 바라보는 카메라에는 월드 (5,0,0)이 앞쪽이고 (-5,0,0)이 뒤쪽입니다. 소스의 cameraView는 **이동 전용 함수**이며 회전 테스트는 별도로 명시한 View 행렬을 씁니다. 일반 LookAt 구현을 제공한 것으로 해석하지 않습니다.
+## 8. 게임 프레임에 연결하는 방법
+먼저 게임 상태·Transform과 현재 카메라의 View/Projection을 확정합니다. 그 다음 변형된 메시를 실제로 감싸는 월드 경계 체적을 준비하고 Frustum 검사를 수행합니다. Out이 아닌 객체만 해당 뷰의 렌더 큐에 넣습니다. 이 흐름은 학습용 책임 분리 예시이며 강의의 싱글턴·GameInstance·LateTick 명칭을 C++ 언어 규칙으로 취급하지 않습니다.
+```mermaid
+flowchart LR
+  A["게임 상태와 Transform 갱신"] --> B["월드 경계 체적 갱신"]
+  C["Camera View와 Projection 갱신"] --> D["가시성 검사"]
+  B --> D
+  D --> E["렌더 큐: 통과 객체만 등록"]
+  E --> F["머티리얼 및 정렬 정책"]
+  F --> G["실제 D3D9 Draw"]
+```
+로컬 AABB의 중심만 월드로 옮기고 h를 그대로 두면 회전·스케일에 대응하지 못합니다. 보수적인 월드 AABB는 변환한 8꼭짓점의 min/max로 얻거나, 행 벡터 선형 행렬 A에 대해 hWorld\[j\]=Σi \|A\[i\]\[j\]\|hLocal\[i\]로 얻을 수 있습니다. 후자는 각 출력 축에서 선형식의 최댓값을 취하는 같은 원리입니다. 이번 소스는 이미 월드 경계 체적이 준비되었다고 가정하며 변형·스키닝의 경계 계산은 구현하지 않습니다.
+카메라 뷰와 그림자 뷰는 다른 가시성 집합입니다. 메인 카메라 밖이라고 객체의 시뮬레이션, 다른 카메라 또는 그림자 렌더까지 무조건 생략하면 안 됩니다. 많은 객체를 검사하는 최적화에서는 평면 캐시·경계 갱신 비용도 측정해야 합니다. 현재 예제는 입력 검증을 매 분류 호출마다 수행하는 학습용 구현이고 성능 수치를 제시하지 않습니다.
+## 9. 전체 실행 소스·빌드 안내·로그
+**재현과 다음 실행의 기준은 전체 소스 페이지입니다:** <mention-page url="https://app.notion.com/p/3fba99703f4081129b47e72ac0c3fb0e">11A · 전체 CPU 소스·CMake·검증 로그 — v1.1</mention-page>. 전체 main.cpp, CMakeLists.txt, 빌드 안내와 원시 검증 로그를 네이티브 코드 블록으로 저장하고 마지막 main 함수와 로그 끝까지 다시 읽어 확인했습니다. 아래 두 첨부도 페이지에 연결되어 있으나 첨부 다운로드 도구가 1회 재시도 후에도 빈 객체를 반환하여 파일 바이트의 재다운로드 일치는 미검증입니다. 이 때문에 첨부만을 유일한 원본으로 두지 않습니다. 외부 에셋이나 입력 파일은 필요 없습니다.
+<file src="notion-file-block://06d30a2d-0eaf-4831-968b-77dc7c480fc5/229e21d8-cfec-41c4-9c8e-48da9fb7ffbd?space_id=815d1335-3b56-43a7-903b-d7addf097c9f&name=dx9_frustum11_v1_1_main.cpp.txt">전체 main.cpp — v1.1, 39개 검사</file>
+<file src="notion-file-block://0585ddab-ebbc-494a-9c9c-48bb333aa72c/e0a7add3-c31d-4ec0-ac53-d15f2c2223ac?space_id=815d1335-3b56-43a7-903b-d7addf097c9f&name=dx9_frustum11_v1_1_build_and_validation.md">전체 CMakeLists.txt·README·변경 이력·실행 원시 로그</file>
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j 2
+ctest --test-dir build --output-on-failure
+# CMake 없이 실행
+ g++ -std=c++20 -O2 -Wall -Wextra -Wpedantic -Werror main.cpp -o frustum_cpu
+ ./frustum_cpu
+```
+성공 출력은 아래와 같고 종료 코드는 0입니다. 실패한 명명 조건은 stderr에 표시하고 1을 반환합니다. assert에만 의존하지 않으므로 Release 빌드에서도 검사합니다.
+```plain text
+PASS 39 named checks; property sample points=15000. CPU-only (NOT D3D9 GPU).
+```
+사용한 언어 기능은 std::array·enum class·람다·범위 for·using 별칭·목록 초기화 등 C++11 범위입니다. 기본 CMake 학습 기준은 C++20이며 회사의 C++11 프로젝트 설정을 변경하지 않습니다. Windows/MSVC 재현 명령은 첨부에 별도 안내했고 이번 실행에서 수행하지 않았습니다.
+## 10. 이번 실행에서 실제 검증한 것
+<table fit-page-width="true" header-row="true">
+<tr>
+<td>환경</td>
+<td>결과</td>
+</tr>
+<tr>
+<td>기존 중단 소스 그대로 / GCC C++20</td>
+<td>28개 검사 재통과, 이전 SHA-256 일치 확인</td>
+</tr>
+<tr>
+<td>v1.1 / GCC 14.2.0 C++20</td>
+<td>동일한 39개 명명 검사 통과</td>
+</tr>
+<tr>
+<td>v1.1 / Clang 17.0.0 C++20</td>
+<td>동일한 39개 명명 검사 통과</td>
+</tr>
+<tr>
+<td>v1.1 / Clang 17 ASan·UBSan</td>
+<td>동일한 39개 통과, 검사기 진단 없음</td>
+</tr>
+<tr>
+<td>v1.1 / GCC 14.2.0 C++11</td>
+<td>동일한 39개 명명 검사 통과</td>
+</tr>
+<tr>
+<td>CMake 3.31.6 / GCC Release / CTest</td>
+<td>등록된 실행 테스트 1/1 통과</td>
+</tr>
+<tr>
+<td>Windows/MSVC·D3D9·GPU·렌더링 성능</td>
+<td>미실행·미검증</td>
+</tr>
+</table>
+39개 중 하나는 15,000개 결정적 샘플 점에서 직접 clip 부등식과 평면 판정의 일치를 검사하는 **단일 속성 검사**입니다. 15,000개의 서로 다른 명명 테스트라고 세지 않습니다. 그 속성 검사는 기본 원근 투영에 대한 점 검사이며 모든 카메라·모든 입력을 증명하지 않습니다. 회전·직교 투영은 별도 명시적 예제로 확인했습니다.
+원래 6,703바이트 main.cpp의 SHA-256은 `8b8c8929a4f07425b3895dcc0ba4c8ad1fb0fe214297c3301f2d9917abc0100b`입니다. 새 9,369바이트 소스는 `dcbb2900c718e7c3fb19dcfb8158a54cb784237ba267a708e462e52628a62925`이며 첨부의 파일 전체를 기준으로 합니다. CPU 실행 시각은 <mention-date start="2026-10-16" startTime="13:54" timeZone="Asia/Seoul"/>이며 초 단위 시작·종료와 명령·출력은 첨부 로그에 남겼습니다.
+## 11. 이해 확인과 접힌 해설
+<details>
+<summary>Q1. Near 평면만 C3+C2가 아니라 C2인 이유는?</summary>
+	이 단원의 동차 깊이 하한이 z≥0이기 때문입니다. clip.z=p·C2이므로 Near는 p·C2≥0입니다. z≥-w인 규약의 공식을 섞지 않습니다.
+</details>
+<details>
+<summary>Q2. 구 중심의 부호 거리가 -0.2이고 반지름이 0.5이면 제거하나요?</summary>
+	아닙니다. 구가 만드는 거리 구간은 \[-0.7,0.3\]이므로 평면 안쪽 부분이 남습니다. -0.2가 -0.5보다 작지 않으므로 이 평면에서는 제거할 수 없습니다. 다른 평면 검사도 계속해야 합니다.
+</details>
+<details>
+<summary>Q3. (0,0,2,-2)에서 법선만 정규화하면 왜 틀리나요?</summary>
+	원래 식은 2z-2=0, 즉 z=1입니다. 법선만 나누면 z-2=0, 즉 z=2가 됩니다. D까지 나누어 (0,0,1,-1)로 만들어야 같은 평면입니다.
+</details>
+<details>
+<summary>Q4. Intersect가 나왔으면 반드시 화면에 픽셀이 생기나요?</summary>
+	아닙니다. 이 분류는 보수적인 렌더 후보 판정입니다. 절두체 모서리의 false positive, 실제 메시와 경계 체적의 차이, 다른 객체의 가림, 뒤이은 렌더 상태 등에 의해 보이지 않을 수 있습니다.
+</details>
+<details>
+<summary>Q5. 39검사와 CTest 1/1은 모순인가요?</summary>
+	아닙니다. CTest에는 실행파일 하나를 등록했고 그 프로그램 안에서 39개 명명 조건을 검사했습니다. 같은 조건을 네 가지 구성으로 반복 실행했으며 GPU 테스트로 계산하지 않습니다.
+</details>
+## 12. 출처·변경 이력·남은 검수
+기술 사실은 각 절의 Microsoft 공식 API 문서에 연결했습니다. Context7의 `/microsoft/directxmath` 조회는 경계 체적·ContainedBy와 좌표 규약을 찾는 보조 수단으로만 사용했으며 조회 결과만으로 실행 성공을 판단하지 않았습니다. [DirectXCollision BoundingBox::ContainedBy](https://learn.microsoft.com/en-us/windows/win32/api/directxcollision/nf-directxcollision-boundingbox-containedby)는 비교 참고 자료이고 이 실습에서 호출한 API가 아닙니다. D3DX는 레거시 API이지만 기존 DX9 메모와의 연결을 위해 이름과 계약을 설명했습니다.
+**v1.0 → v1.1:** 중단된 실제 파일을 읽고 원본 28검사를 재실행했습니다. 새 코드는 평면·정규화 결과의 유한성 검증, 예외 출력 및 11개 회귀 검사를 보완했습니다. 본문에는 원본 이미지 미확인 한계, 8꼭짓점 방식과 직접 추출의 연결, 보수적인 Intersect 의미, 이동 전용 cameraView의 범위를 명확히 추가했습니다.
+**남은 사용자 환경 검수:** 실제 D3D9 카메라·셰이더에 넣는 V/P와 CPU 행렬이 같은지 대조하고, Near/Far/화면 가장자리의 큰 메시·회전/스케일된 객체를 실제 화면에서 확인해야 합니다. 원본 이미지153\~157의 시각 대조, 01\~08 등 이전 확장 실습 소스의 Notion 보관 누락, 원본 복제본 보관함 이동과 DX9 전체 원본-개정 대조도 남아 있습니다. 이 11번 교재의 저장과 전체 DX9 묶음 완료는 구별합니다.
+<page url="https://app.notion.com/p/3fba99703f4081129b47e72ac0c3fb0e">11A · 전체 CPU 소스·CMake·검증 로그 — v1.1</page>
