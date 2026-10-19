@@ -22,6 +22,13 @@ DX9 구현의 전체 소스는 `knowledge/shared/dx9-impl-*/`에 독립 보관�
 
 추가 학습 문서가 검증되면 `knowledge/data/catalog.json`에 명시적으로 추가합니다. 빌드가 내부 문서 색인과 직접 접근 URL을 생성하며, 기존 언어·브리핑·사고력 자료와 Supabase/localStorage 키는 변경하지 않습니다.
 
+## DX11 01–08 전체 소스 복구 및 본문 보강
+
+- [DX11 01–08 전체 소스 복구 원장](shared/DX11_SOURCE_LEDGER_20261019.md) 및 [배치 감사](MIGRATION_DX11_01_08_20261019.md): Notion 01A–08A의 네이티브 코드와 CMake·Win32 예제·HLSL, 과거 원시 CTest를 GitHub에 보존했습니다.
+- 기존 02–06 본문은 원본을 유지하며 GitHub 전체 소스 링크를 추가했고, 신규 01·07·08 본문도 독립 이관했습니다. DX11 01의 원본 파일 블록은 signed URL만 확인되어 첨부 바이너리 자체는 미검증입니다.
+- **Windows/MSVC/D3D11/GPU/HLSL 실기기 미검증.** 신규 Linux CPU CTest 결과와 과거 Notion 원시 로그는 별도 구분합니다.
+- React 학습 문서는 53개 (기존 45개 + DX11 본문 3개 + 전체 소스 페이지 5개)이며 현대 C++·DX12·엔진·Python 신규 학습과는 무관합니다.
+
 ## DX11 02–06 본문 이관 배치
 
 - [DX11 원문·하위 소스 잔여 감사](MIGRATION_DX11_PHASE1_20261019.md): 02–06 다섯 본문의 텍스트·코드·Mermaid·표·접기 구조를 GitHub에 저장했습니다. 원본 01에는 미확인 첨부가 있어 보류했습니다.
