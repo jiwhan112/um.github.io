@@ -830,6 +830,66 @@
           ]
         }
       ]
+    },
+    {
+      "id": "full-source-refs",
+      "title": "전체 소스·CMake·재검증",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원문 본문은 그대로 보존하고, 이 단원과 직접 연결된 전체 실습 코드도 ATLAS NOTE에서 열 수 있도록 연결했습니다. Linux GCC/Clang CPU 모델은 검증했지만 Windows/MSVC·Direct3D/GPU·HLSL 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 실습 프로젝트 · CMake · 코드 모음 열기",
+              "kind": "link",
+              "href": "/knowledge/dx9-pipeline-lab/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "include/pipeline.hpp — GitHub 원본 코드",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/include/pipeline.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "src/transform_clip.cpp — GitHub 원본 코드",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/src/transform_clip.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 무결성 및 2026-10-19 GitHub CPU 재검증",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
