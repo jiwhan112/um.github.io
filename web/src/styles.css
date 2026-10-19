@@ -214,3 +214,8 @@
 @media(max-width:1000px){.dashboard .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.knowledge-hero{padding:25px 22px}.knowledge-outline{padding:16px}.knowledge-topic-list{padding-left:19px}.knowledge-recent-list{grid-template-columns:1fr}.knowledge-outline-heading{align-items:flex-start;flex-direction:column}.knowledge-map-sidebar nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.dashboard .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard .quick-card:has(.icon-tile.blue){grid-column:1/-1}.knowledge-map-sidebar nav{grid-template-columns:1fr}.knowledge-tree-group{padding:12px 8px;gap:7px}.knowledge-area-icon{width:29px;height:29px}.knowledge-count{font-size:9px;padding:3px 5px}.knowledge-topic-list{padding-left:11px}.knowledge-topic{padding-left:9px}.knowledge-document-link{margin-left:7px}.knowledge-area-label small{line-height:1.5}}
+
+/* Curriculum statuses are plans, not migration completion or published lesson badges. */
+.knowledge-topic-row>span{padding:3px 6px;border-radius:5px;background:#252e3b;color:#acb8ca;text-align:center}
+.knowledge-catalog-note{font-size:11px;color:var(--muted);line-height:1.85;margin:12px 2px 0;padding:12px 13px;border-left:2px solid #607791;background:#18202b;border-radius:0 6px 6px 0}
+@media(max-width:560px){.knowledge-topic-row>span{font-size:9px;max-width:104px;white-space:normal;line-height:1.35}}
