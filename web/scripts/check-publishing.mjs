@@ -40,6 +40,6 @@ for(const e of catalog.episodes){
  const base='thinking-lab/'+e.path;if(!existsSync(resolve(root,base+'content.json'))&&!existsSync(resolve(root,base+'_content.html')))throw Error('Missing authoring input: '+e.path);
 }
 const publish=read('.github/workflows/react-pages.yml');
-if(!publish.includes('game-design/**')||!publish.includes('automation/**')||!publish.includes('Reconcile language lessons')||publish.includes("- 'language-study/data/**'"))throw Error('Publication triggers no longer match source ownership');
+if(!publish.includes('game-design/**')||!publish.includes('knowledge/**')||!publish.includes('automation/**')||!publish.includes('Reconcile language lessons')||publish.includes("- 'language-study/data/**'"))throw Error('Publication triggers no longer match source ownership');
 const reconcile=read('.github/workflows/language-study-reconcile.yml');if(!reconcile.includes("cron: '10 0 * * *'"))throw Error('Reconcile fallback must match 09:10 KST');
 console.log('Publishing contract passed: 3 scheduled writers, dark theme, classified thinking catalog.');
