@@ -1,0 +1,300 @@
+{
+  "id": "knowledge--dx9-impl-source-03a",
+  "route": "/knowledge/dx9-impl-source-03a/",
+  "kind": "knowledge",
+  "title": "DX9 03A · VB/IB·자원 풀 검증 전체 소스",
+  "subtitle": "Notion 기존 수정 소스 · 실행 경계·CMake·원시 검증 기록",
+  "date": "2026-10-16",
+  "number": "DX9 03A",
+  "category": "DirectX 9",
+  "topic": "DX9 구현",
+  "tags": [
+    "DirectX 9",
+    "C++",
+    "전체 소스",
+    "CPU"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "원본·학습 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 페이지는 Notion에 보관된 기존 전체 코드 전문을 학습용으로 이전한 자료입니다. GitHub에서 CMake·소스 파일을 각각 독립적으로 다운로드할 수 있습니다. 과거 Notion CPU 결과와 GitHub에서 새로 실행한 결과는 별도로 집계합니다. Windows/MSVC·D3D9·GPU는 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "**수동 검수 12 · 기존 03 실습의 보관 복구와 오류 교정**\n\t2026-10-16. 회수한 v1 원형의 26조건은 통과했지만 새 반례에서 상대 인덱스 범위 오류와 signed overflow를 발견했습니다. 원형 ZIP은 변경하지 않고 v1.1 소스와 32조건 검증을 별도로 작성했습니다. 원래 03 본문은 <mention-page url=\"https://app.notion.com/p/bdcccf3ce6d34930827bf0a519b4fa78\">쥬신 5–6개월차 — DirectX 9</mention-page> 안에 있으며, 이 페이지가 수정된 전체 실습의 보관 기준입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 무엇을 교정했는가",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "첫 번째 문제는 인덱스 버퍼의 상대 인덱스와 실제 정점 버퍼의 절대 인덱스를 섞은 것입니다. 기존 함수는 `minVertexIndex`를 `totalVertices`와 바로 비교하고 선언 범위를 `totalVertices - minVertexIndex`로 제한했습니다. 하지만 원래 API에서 인덱스 값과 MinVertexIndex는 모두 BaseVertexIndex에 상대적입니다. [Microsoft DrawIndexedPrimitive](https://learn.microsoft.com/en-us/windows/win32/api/d3d9/nf-d3d9-idirect3ddevice9-drawindexedprimitive), [버퍼 렌더링 설명](https://learn.microsoft.com/en-us/windows/win32/direct3d9/rendering-from-vertex-and-index-buffers)의 규약을 대조했습니다.\n예를 들어 IB=\\{3,4,5\\}, Base=-3, Min=3, NumVertices=3이면 실제 VB 위치는 \\{0,1,2\\}입니다. 정점 3개가 있는 VB에서 유효한 범위인데 원형 CPU 함수는 false를 반환했습니다. v1.1은 선언 범위의 양 끝을 Base 적용 후에 검사하고 각 IB 값이 선언된 상대 범위 안에 있는지 확인합니다.\n두 번째 문제는 CPU 함수의 넓은 int64 매개변수입니다. Base=INT64_MAX와 index=1의 합을 int64로 먼저 계산하면 범위 밖 연산이 발생합니다. 원형에서 UBSan의 signed integer overflow 진단과 종료 코드 1을 실제 재현했습니다. **D3D9 API의 BaseVertexIndex 타입은 INT이고 이 CPU 함수는 int64이므로, 이 극단값 재현을 실제 D3D9 호출 실패 사례라고 표현하지 않습니다.**"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 오버플로 없이 범위를 비교하는 원리",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목표는 수학적인 0 ≤ Base+relative &lt; total을 판단하는 것입니다. Base가 음수가 아니면 Base &lt; total을 먼저 확인한 뒤 relative &lt; total-Base로 바꿉니다. Base가 음수이면 그 절댓값 magnitude에 대해 relative ≥ magnitude와 relative-magnitude &lt; total을 검사합니다. INT64_MIN을 직접 부호 반전하지 않고 `-(Base+1)`을 unsigned로 옮긴 뒤 1을 더합니다.\nMin부터 NumVertices개의 마지막 상대 인덱스를 만들기 전에는 `NumVertices-1 ≤ SIZE_MAX-Min`을 확인합니다. IB 시작 위치와 삼각형 수 또한 먼저 남은 원소 수를 3으로 나눈 한도와 비교합니다. 큰 수를 더하거나 곱한 뒤 검사하는 방식이 아니라 연산 전에 범위를 좁힙니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"입력: VB 크기와 IB 범위\"] --> B[\"0개 정책 및 IB 남은 크기 검사\"]\n B --> C[\"Min + NumVertices - 1의 안전성 검사\"]\n C --> D[\"Base 적용 후 선언 범위 양 끝 검사\"]\n D --> E[\"사용할 IB 값이 상대 범위 안인지 검사\"]\n E --> F[\"CPU 모델 계약 통과\"]\n F --> G[\"실제 D3D9 caps·바인딩·HRESULT 검증은 별도\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 모델은 0개 primitive를 false로 처리하는 교육용 정책을 유지합니다. 모든 D3D9 유효 호출을 판별하는 공식 validation layer가 아닙니다. DeviceModel의 상태 전이와 DynamicRingModel 역시 논리 모형이며 GPU 명령·펜스·실제 장치 손실을 구현하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. 전체 파일과 빌드",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 코드를 `resource_model.cpp`, 뒤의 설정을 `CMakeLists.txt`로 저장합니다. 외부 입력 파일이나 에셋은 없습니다. 학습 기준은 C++20이며 이번에 GCC C++11 호환 빌드도 실제 확인했습니다. 성공하면 32조건 출력과 종료 코드 0을 얻습니다. 실패한 expect는 예외로 실패하며 CTest는 비정상 종료를 실패로 판정합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build -j 2\nctest --test-dir build --output-on-failure -V"
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. resource_model.cpp — v1.1 전체 소스",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// v1.1: checked index arithmetic and relative range repair. CPU only.\n#include <array>\n#include <cstddef>\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\n// A CPU-only teaching model. These states are NOT Direct3D 9 API return values.\nenum class Pool { Default, Managed, SystemMemory };\nenum class State { Operational, Lost, NotReset };\n\nstruct Resource {\n    Pool pool;\n    bool alive;\n    std::uint64_t generation;\n};\n\nclass DeviceModel {\npublic:\n    State state = State::Operational;\n    std::uint64_t generation = 1;\n    std::vector<Resource> resources;\n\n    std::size_t Create(Pool pool, bool dynamic = false) {\n        if (state != State::Operational)\n            throw std::logic_error(\"model: creation outside operational state\");\n        if (pool == Pool::Managed && dynamic)\n            throw std::invalid_argument(\"model: dynamic managed VB/IB forbidden\");\n        resources.push_back({pool, true, generation});\n        return resources.size() - 1;\n    }\n    void Lose() {\n        if (state != State::Operational) throw std::logic_error(\"model: not operational\");\n        state = State::Lost;\n    }\n    void CanReset() {\n        if (state != State::Lost) throw std::logic_error(\"model: not lost\");\n        state = State::NotReset;\n    }\n    void ReleaseDefaultResources() {\n        for (Resource& r : resources)\n            if (r.pool == Pool::Default) r.alive = false;\n    }\n    bool Reset() {\n        if (state != State::NotReset) return false;\n        for (const Resource& r : resources)\n            if (r.pool == Pool::Default && r.alive) return false;\n        ++generation;\n        state = State::Operational;\n        return true;\n    }\n    bool Usable(std::size_t id) const {\n        if (id >= resources.size() || state != State::Operational) return false;\n        const Resource& r = resources[id];\n        return r.alive && (r.pool != Pool::Default || r.generation == generation);\n    }\n};\n\nstruct Vertex { float x, y, z, u, v; };\nstatic_assert(sizeof(Vertex) == 5 * sizeof(float), \"Example assumes 5 floats\");\n\n// Check a mathematical base+relative index without signed addition overflow.\n// uintmax_t can represent size_t; -(base+1) avoids negating INT64_MIN.\nbool AdjustedVertexFits(std::size_t relative, std::int64_t base,\n                        std::size_t totalVertices) {\n    const std::uintmax_t raw = relative, count = totalVertices;\n    if (base >= 0) {\n        const auto offset = static_cast<std::uintmax_t>(base);\n        return offset < count && raw < count - offset;\n    }\n    const auto magnitude = static_cast<std::uintmax_t>(-(base + 1)) + 1;\n    return raw >= magnitude && raw - magnitude < count;\n}\n\nbool ValidateTriangleList(const std::vector<std::uint16_t>& indices,\n                          std::size_t totalVertices,\n                          std::size_t startIndex,\n                          std::size_t primitiveCount,\n                          std::int64_t baseVertex,\n                          std::size_t minVertexIndex,\n                          std::size_t numVertices) {\n    // Zero draws are rejected by this teaching model's policy, not an API claim.\n    if (primitiveCount == 0 || numVertices == 0 || totalVertices == 0)\n        return false;\n    if (startIndex > indices.size() ||\n        primitiveCount > (indices.size() - startIndex) / 3)\n        return false;\n    // Both declared range endpoints are relative to BaseVertexIndex.\n    if (numVertices - 1 > std::numeric_limits<std::size_t>::max() - minVertexIndex)\n        return false;\n    const std::size_t lastVertexIndex = minVertexIndex + (numVertices - 1);\n    if (!AdjustedVertexFits(minVertexIndex, baseVertex, totalVertices) ||\n        !AdjustedVertexFits(lastVertexIndex, baseVertex, totalVertices))\n        return false;\n    const std::size_t endIndex = startIndex + primitiveCount * 3;\n    for (std::size_t i = startIndex; i < endIndex; ++i) {\n        const std::size_t index = indices[i];\n        if (index < minVertexIndex || index > lastVertexIndex) return false;\n    }\n    return true;\n}\n\nstruct RingReservation {\n    std::size_t offset;\n    bool discard;\n};\n\nclass DynamicRingModel {\n    std::size_t capacity_;\n    std::size_t cursor_ = 0;\npublic:\n    explicit DynamicRingModel(std::size_t capacity) : capacity_(capacity) {\n        if (capacity_ == 0) throw std::invalid_argument(\"zero capacity\");\n    }\n    RingReservation Reserve(std::size_t count) {\n        if (count == 0 || count > capacity_) throw std::invalid_argument(\"invalid count\");\n        if (count > capacity_ - cursor_) {\n            cursor_ = count;\n            return {0, true}; // conceptual DISCARD, new storage region\n        }\n        const bool discard = cursor_ == 0;\n        const auto at = cursor_;\n        cursor_ += count;\n        return {at, discard}; // conceptual NOOVERWRITE when false\n    }\n};\n\nint main() {\n    int checks = 0;\n    auto expect = [&](bool cond, const char* message) {\n        ++checks;\n        if (!cond) throw std::runtime_error(message);\n    };\n    DeviceModel dev;\n    const auto defaultVB = dev.Create(Pool::Default, true);\n    const auto managedTexture = dev.Create(Pool::Managed);\n    const auto systemCopy = dev.Create(Pool::SystemMemory);\n    expect(dev.Usable(defaultVB), \"default initial\");\n    expect(dev.Usable(managedTexture), \"managed initial\");\n    expect(dev.Usable(systemCopy), \"system initial\");\n    try { dev.Create(Pool::Managed, true); expect(false, \"dynamic managed accepted\"); }\n    catch (const std::invalid_argument&) { expect(true, \"dynamic managed rejected\"); }\n    dev.Lose();\n    expect(!dev.Usable(defaultVB), \"lost unusable\");\n    expect(!dev.Reset(), \"reset before ready rejected\");\n    dev.CanReset();\n    expect(!dev.Reset(), \"default must be released\");\n    dev.ReleaseDefaultResources();\n    expect(dev.Reset(), \"reset after release\");\n    expect(!dev.Usable(defaultVB), \"old default remains invalid\");\n    expect(dev.Usable(managedTexture), \"managed survives reset\");\n    expect(dev.Usable(systemCopy), \"system memory survives reset\");\n    const auto newDefaultVB = dev.Create(Pool::Default, true);\n    expect(dev.Usable(newDefaultVB), \"new default ready\");\n    expect(newDefaultVB != defaultVB, \"not reusing old handle\");\n\n    const std::vector<std::uint16_t> indices = {0, 1, 2, 0, 2, 3};\n    expect(ValidateTriangleList(indices, 4, 0, 2, 0, 0, 4), \"two triangles\");\n    expect(ValidateTriangleList(indices, 4, 3, 1, 0, 0, 4), \"second triangle\");\n    expect(!ValidateTriangleList(indices, 4, 0, 3, 0, 0, 4), \"excess index range\");\n    expect(!ValidateTriangleList(indices, 4, 7, 1, 0, 0, 4), \"bad start index\");\n    expect(!ValidateTriangleList(indices, 4, 0, 2, 0, 0, 3), \"index outside declared range\");\n    expect(!ValidateTriangleList(indices, 4, 0, 2, -1, 0, 4), \"negative adjusted index\");\n    expect(!ValidateTriangleList(indices, 4, 0, 2, 1, 0, 4), \"adjusted index out of VB\");\n    expect(!ValidateTriangleList(indices, 4, 0, 0, 0, 0, 4), \"zero primitives\");\n\n    // v1.1: six additional boundary/contract regression checks.\n    const std::vector<std::uint16_t> shifted = {3, 4, 5};\n    expect(ValidateTriangleList(shifted, 3, 0, 1, -3, 3, 3),\n           \"negative base with valid adjusted range\");\n    const std::vector<std::uint16_t> ones = {1, 1, 1};\n    expect(!ValidateTriangleList(ones, 2, 0, 1,\n        std::numeric_limits<std::int64_t>::max(), 0, 2), \"INT64_MAX base rejected safely\");\n    expect(!ValidateTriangleList(ones, 2, 0, 1,\n        std::numeric_limits<std::int64_t>::min(), 0, 2), \"INT64_MIN base rejected safely\");\n    expect(!ValidateTriangleList(ones, 2, 0, 1, 0,\n        std::numeric_limits<std::size_t>::max(), 2), \"declared range overflow rejected\");\n    expect(!ValidateTriangleList(indices, 0, 0, 1, 0, 0, 1), \"empty VB rejected\");\n    const std::vector<std::uint16_t> zeros = {0, 0, 0};\n    expect(ValidateTriangleList(zeros, 1, 0, 1, 0, 0, 1),\n           \"repeated index is in range; geometry degeneracy is a separate question\");\n\n    DynamicRingModel ring(6);\n    const auto a = ring.Reserve(4), b = ring.Reserve(2), c = ring.Reserve(3);\n    expect(a.offset == 0 && a.discard, \"first discard\");\n    expect(b.offset == 4 && !b.discard, \"append nooverwrite\");\n    expect(c.offset == 0 && c.discard, \"wrap discard\");\n    try { ring.Reserve(7); expect(false, \"oversize accepted\"); }\n    catch (const std::invalid_argument&) { expect(true, \"oversize rejected\"); }\n    try { ring.Reserve(0); expect(false, \"zero accepted\"); }\n    catch (const std::invalid_argument&) { expect(true, \"zero rejected\"); }\n    std::cout << \"PASS: \" << checks << \" assertions (CPU model; not D3D9 GPU)\\n\";\n}"
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. CMakeLists.txt — 전체",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "text",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx9_resource_model LANGUAGES CXX)\nadd_executable(dx9_resource_model resource_model.cpp)\ntarget_compile_features(dx9_resource_model PRIVATE cxx_std_20)\nif(MSVC)\n  target_compile_options(dx9_resource_model PRIVATE /W4)\nelse()\n  target_compile_options(dx9_resource_model PRIVATE -Wall -Wextra -Wpedantic)\nendif()\nenable_testing()\nadd_test(NAME resource_lifecycle_and_indices COMMAND dx9_resource_model)"
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "6. 실패 재현과 수정 후 실행 로그",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원형 26조건의 재통과는 새 경계 사례를 포함하지 않았습니다. 원형 함수만 추출한 추가 재현에서 아래 두 결과를 얻었습니다. 첫 줄은 계약상 유효한 예제를 잘못 거부한 결과이고, 두 번째는 의도적으로 오류를 재현한 실패 로그입니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "$ clang++ -std=c++20 -g -fsanitize=undefined -fno-sanitize-recover=undefined baseline_probe.cpp -o baseline_probe\nexit=0\n$ ./baseline_probe\nnegative-base valid draw accepted=0\nexit=0\n$ ./baseline_probe overflow\nbaseline_probe.cpp:24:48: runtime error: signed integer overflow: 9223372036854775807 + 1 cannot be represented in type 'std::int64_t' (aka 'long')\nSUMMARY: UndefinedBehaviorSanitizer: undefined-behavior baseline_probe.cpp:24:48\nexit=1"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "수정 후에는 같은 32조건을 세 가지 구성으로 실제 실행했습니다. CTest는 실행파일 하나를 등록하므로 1/1이며 32개의 별도 CTest 등록 항목이라는 뜻은 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "Started UTC: 2026-10-16T05:37:49.449018+00:00\nPlatform: Linux-6.18.44-x86_64-with-glibc2.41\nSource SHA256: 13e2b28a4854f5438d0a9f2acc4616e115d9a6b2b62b21e77e04412bcb56ad37\n\n$ g++ -std=c++20 -O2 -Wall -Wextra -Wpedantic -Werror resource_model.cpp -o resource_gcc20\nexit=0\n$ ./resource_gcc20\nPASS: 32 assertions (CPU model; not D3D9 GPU)\nexit=0\n\n$ g++ -std=c++11 -O2 -Wall -Wextra -Wpedantic -Werror resource_model.cpp -o resource_gcc11\nexit=0\n$ ./resource_gcc11\nPASS: 32 assertions (CPU model; not D3D9 GPU)\nexit=0\n\n$ clang++ -std=c++20 -O1 -g -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer resource_model.cpp -o resource_san\nexit=0\n$ ./resource_san\nPASS: 32 assertions (CPU model; not D3D9 GPU)\nexit=0\n\n$ cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\n-- The CXX compiler identification is GNU 14.2.0\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: /usr/bin/c++ - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring done (0.2s)\n-- Generating done (0.0s)\n-- Build files have been written to: /mnt/data/dx9_audit12/resource_v1_1/build\nexit=0\n\n$ cmake --build build -j 2\n[ 50%] Building CXX object CMakeFiles/dx9_resource_model.dir/resource_model.cpp.o\n[100%] Linking CXX executable dx9_resource_model\n[100%] Built target dx9_resource_model\nexit=0\n\n$ ctest --test-dir build --output-on-failure -V\n1: PASS: 32 assertions (CPU model; not D3D9 GPU)\n1/1 Test #1: resource_lifecycle_and_indices ... Passed 0.00 sec\n100% tests passed, 0 tests failed out of 1\nTotal Test time (real) = 0.00 sec\nexit=0\nEnded UTC: 2026-10-16T05:37:51.948295+00:00\nWindows / MSVC / D3D9 / GPU: NOT RUN"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 실행의 핵심 출력은 위에 직접 보존했습니다. 상세 CTest 경로 출력과 자동 실행용 Python 스크립트는 별도 검수 파일 묶음에 함께 보존합니다. C++ 실습 자체는 위 소스와 CMake만으로 재현되며 그 Python 파일에 의존하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "7. 이해 확인",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "IB 값이 5이고 Base가 -3이면 VB의 몇 번째 정점을 검사하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "수학적인 최종 인덱스는 2입니다. Min/Num으로 선언한 상대 범위에 5가 포함되는지와, Base가 적용된 절대 범위가 VB 안에 있는지를 분리해서 봅니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원형 26조건이 모두 통과했는데 왜 v1.1이 필요했나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기존 테스트에는 INT64 극단값과 유효한 음수 Base 예제가 없었습니다. 테스트 통과는 테스트한 범위의 증거이지 모든 입력의 안전성 증명이 아닙니다. 이번에는 실제 실패 재현 후 회귀 조건을 추가했습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "RingReservation의 discard가 true이면 GPU가 새 버퍼를 제공한 사실도 검증되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. CPU 모형의 예약 위치와 플래그만 검사합니다. 실제 D3DLOCK_DISCARD/NOOVERWRITE와 GPU 사용 중 영역의 수명은 별도 D3D9 실행 검증이 필요합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-8",
+      "title": "8. 보관·버전·남은 한계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "회수한 원형 `resource_model.cpp`는 6,838바이트, SHA-256 `e3849fc099a76b1488f31c40376522c44097cf53331c4ddcc4a263d2d82a7666`입니다. 수정된 파일은 8,630바이트, SHA-256 `13e2b28a4854f5438d0a9f2acc4616e115d9a6b2b62b21e77e04412bcb56ad37`입니다. 이는 로컬 실제 컴파일 파일의 해시이며 Notion 줄끝 정규화까지 바이트 일치를 확인한 값이라고 표시하지 않습니다.\n기존 상태 모형·26조건을 유지하고 상대 범위 판정과 안전한 산술, 6개 회귀 검사를 추가했습니다. 이 코드에는 실제 렌더링 API 호출, D3DCAPS9·FVF/Declaration·스트림 상태 검증, 장치별 Reset, GPU 실행이 없습니다. 장치 세대 번호의 장기간 wrap-around 등 모형 전체의 모든 극단값을 검증한 것도 아닙니다. **이번 완료는 소스 보관과 발견한 입력 검증 오류의 수정이며 전체 DX9 교재의 최종 완료가 아닙니다.**"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "raw-source-index",
+      "title": "원본 전체 소스 파일과 빌드",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 코드가 보관된 GitHub 폴더",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/tree/master/knowledge/shared/dx9-impl-03a/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "resource_model.cpp · 8630문자 · 소스 열기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-03a/resource_model.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CMakeLists.txt · 445문자 · 소스 열기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-03a/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S knowledge/shared/dx9-impl-03a -B build-dx9-03a -DCMAKE_BUILD_TYPE=Debug\ncmake --build build-dx9-03a\nctest --test-dir build-dx9-03a -V --output-on-failure"
+        },
+        {
+          "type": "details",
+          "title": "이 소스가 실제 Windows/D3D9에서 실행됐나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. Windows SDK/MSVC·D3D9 드라이버·GPU 실행은 이번 이관에서 검증하지 않았습니다. 네이티브 전체 소스를 보존한 사실과 플랫폼 실행 검증을 혼동하지 마세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

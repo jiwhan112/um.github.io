@@ -260,5 +260,265 @@
       "실습 소스"
     ],
     "notion_url": "https://app.notion.com/p/3e66577f53a549fe99a94ac26f68a685"
+  },
+  {
+    "path": "dx9-impl-01",
+    "title": "DX9 01 · 장치 생성·COM 참조 수명",
+    "subtitle": "IDirect3D9·Device·Reset·참조 카운트 및 소유권",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408135a849f7c66e4d54ad"
+  },
+  {
+    "path": "dx9-impl-02",
+    "title": "DX9 02 · 엔진 DLL·클라이언트 ABI",
+    "subtitle": "DLL 경계·공개 헤더·생성/파괴 책임·C++ ABI",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408172837fe0d04c131e68"
+  },
+  {
+    "path": "dx9-impl-03",
+    "title": "DX9 03 · VB/IB·자원 풀·Lost Device",
+    "subtitle": "정점·인덱스 입력·DEFAULT 자원·Reset 상태 전이",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/bdcccf3ce6d34930827bf0a519b4fa78"
+  },
+  {
+    "path": "dx9-impl-04",
+    "title": "DX9 04 · Renderer·Transform·컴포넌트 수명",
+    "subtitle": "렌더 큐·공유 텍스처·SRT·Alpha 렌더 순서",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/bdcccf3ce6d34930827bf0a519b4fa78"
+  },
+  {
+    "path": "dx9-impl-05",
+    "title": "DX9 05 · 씬·게임 오브젝트·프레임 루프",
+    "subtitle": "레이어·고정 Update·지연 삭제·핸들 소유권",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408171ab68e3ed5b265f01"
+  },
+  {
+    "path": "dx9-impl-06",
+    "title": "DX9 06 · VIBuffer·Texture API 계약",
+    "subtitle": "버퍼 범위·행 Pitch·공유 텍스처·Lock",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f40817cbe12e85790420aab"
+  },
+  {
+    "path": "dx9-impl-07",
+    "title": "DX9 07 · 카메라·지형·Ray 피킹",
+    "subtitle": "월드·뷰·투영·Terrain·Ray 교차·NaN 검증",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f4081e3b908de685a551c23"
+  },
+  {
+    "path": "dx9-impl-08",
+    "title": "DX9 08 · Skybox·UI 좌표·렌더 상태",
+    "subtitle": "스카이박스 깊이·HUD·상태 복원·행 벡터",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f40811ca79ae3e8a74806d7"
+  },
+  {
+    "path": "dx9-impl-09",
+    "title": "DX9 09 · 월드 알파·빌보드·이펙트",
+    "subtitle": "알파 테스트·깊이 쓰기·쿼드 빌보드·정렬",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f4081ba8b8ae2fc6650bde2"
+  },
+  {
+    "path": "dx9-impl-10",
+    "title": "DX9 10 · Shader/Effect·Fog 계약",
+    "subtitle": "VS/PS 입력 출력·HLSL·D3DX Effect·Fog",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408155a685d66590c67b7a"
+  },
+  {
+    "path": "dx9-impl-11",
+    "title": "DX9 11 · Frustum 컬링·Sphere·AABB",
+    "subtitle": "6개 클립 평면·경계 테스트·보수적 가시성",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f40816eb333f270aad46a46"
+  },
+  {
+    "path": "dx9-impl-12",
+    "title": "DX9 12 · 삼각형·텍스처·Reset 통합 실습",
+    "subtitle": "Windows D3D9 전체 실습·CPU 입력 데이터 검사",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "게임 엔진"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081bfbad0d047f8a8d58f"
+  },
+  {
+    "path": "dx9-impl-source-01a",
+    "title": "DX9 01A · COM 소유권·장치 전체 소스",
+    "subtitle": "CMake·전체 CPU/Windows 소스와 검증 범위",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f40818aaa64e05944ea69a6"
+  },
+  {
+    "path": "dx9-impl-source-02a",
+    "title": "DX9 02A · DLL·클라이언트 전체 소스",
+    "subtitle": "CMake·전체 CPU/Windows 소스와 검증 범위",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081c38a5cce69f6b0542f"
+  },
+  {
+    "path": "dx9-impl-source-03a",
+    "title": "DX9 03A · VB/IB·자원 풀 검증 전체 소스",
+    "subtitle": "CMake·전체 CPU/Windows 소스와 검증 범위",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f408129bd94deff3cc1c807"
+  },
+  {
+    "path": "dx9-impl-source-04a",
+    "title": "DX9 04A · Renderer·Transform 전체 소스",
+    "subtitle": "CMake·전체 CPU/Windows 소스와 검증 범위",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f40816db73cf3e6c93d0b56"
+  },
+  {
+    "path": "dx9-impl-source-05a",
+    "title": "DX9 05A · Scene Loop 교정·전체 소스",
+    "subtitle": "CMake·전체 CPU/Windows 소스와 검증 범위",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081a3bfbec249986a6a3e"
+  },
+  {
+    "path": "dx9-impl-source-06a",
+    "title": "DX9 06A · Pitch·인덱스 안전성 전체 소스",
+    "subtitle": "CMake·전체 CPU/Windows 소스와 검증 범위",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f40814ba45ec3bbbc84ec1e"
+  },
+  {
+    "path": "dx9-impl-source-07b",
+    "title": "DX9 07B · NaN Ray 피킹·지형 전체 소스",
+    "subtitle": "CMake·전체 CPU/Windows 소스와 검증 범위",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081979e96cb9345976cce"
+  },
+  {
+    "path": "dx9-impl-source-11a",
+    "title": "DX9 11A · Frustum 컬링 CPU·CMake 전체 소스",
+    "subtitle": "CMake·전체 CPU/Windows 소스와 검증 범위",
+    "date": "2026-10-16",
+    "category": "DirectX 9",
+    "tags": [
+      "DirectX 9",
+      "C++",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081129b47e72ac0c3fb0e"
   }
 ]

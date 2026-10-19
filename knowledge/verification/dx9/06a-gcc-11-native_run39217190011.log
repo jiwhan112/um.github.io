@@ -1,0 +1,207 @@
+﻿2026-10-19T07:37:34.1984315Z Current runner version: '2.337.0'
+2026-10-19T07:37:34.2010334Z ##[group]Runner Image Provisioner
+2026-10-19T07:37:34.2011254Z Hosted Compute Agent
+2026-10-19T07:37:34.2011961Z Version: 20261012.601
+2026-10-19T07:37:34.2012600Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-19T07:37:34.2013402Z Build Date: 2026-10-12T17:48:21Z
+2026-10-19T07:37:34.2014107Z Worker ID: {ea47a278-eb5b-47d4-84c9-bf885dcfe8c2}
+2026-10-19T07:37:34.2015114Z Region: westus2
+2026-10-19T07:37:34.2015781Z Cloud: Azure
+2026-10-19T07:37:34.2016318Z ##[endgroup]
+2026-10-19T07:37:34.2018001Z ##[group]Operating System
+2026-10-19T07:37:34.2018722Z Ubuntu
+2026-10-19T07:37:34.2019245Z 24.04.5
+2026-10-19T07:37:34.2019820Z LTS
+2026-10-19T07:37:34.2020334Z ##[endgroup]
+2026-10-19T07:37:34.2020884Z ##[group]Runner Image
+2026-10-19T07:37:34.2021616Z Image: ubuntu-24.04
+2026-10-19T07:37:34.2022191Z Version: 20261012.334.1
+2026-10-19T07:37:34.2023935Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-19T07:37:34.2025737Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-19T07:37:34.2026776Z ##[endgroup]
+2026-10-19T07:37:34.2027874Z ##[group]GITHUB_TOKEN Permissions
+2026-10-19T07:37:34.2030080Z Contents: read
+2026-10-19T07:37:34.2030701Z Metadata: read
+2026-10-19T07:37:34.2031331Z ##[endgroup]
+2026-10-19T07:37:34.2033521Z Secret source: Actions
+2026-10-19T07:37:34.2034567Z Cache mode: write
+2026-10-19T07:37:34.2035635Z Prepare workflow directory
+2026-10-19T07:37:34.2383307Z Prepare all required actions
+2026-10-19T07:37:34.2433391Z Getting action download info
+2026-10-19T07:37:34.5889082Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-19T07:37:34.7033211Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-19T07:37:34.9097282Z Complete job name: cpu-source (06a, g++, 11, OFF, 1, 06a-gcc-11-native)
+2026-10-19T07:37:34.9877508Z ##[group]Run actions/checkout@v4
+2026-10-19T07:37:34.9878384Z with:
+2026-10-19T07:37:34.9878826Z   repository: jiwhan112/um.github.io
+2026-10-19T07:37:34.9882794Z   token: ***
+2026-10-19T07:37:34.9883243Z   ssh-strict: true
+2026-10-19T07:37:34.9883697Z   ssh-user: git
+2026-10-19T07:37:34.9884160Z   persist-credentials: true
+2026-10-19T07:37:34.9884644Z   clean: true
+2026-10-19T07:37:34.9885641Z   sparse-checkout-cone-mode: true
+2026-10-19T07:37:34.9886248Z   fetch-depth: 1
+2026-10-19T07:37:34.9886742Z   fetch-tags: false
+2026-10-19T07:37:34.9887255Z   show-progress: true
+2026-10-19T07:37:34.9887753Z   lfs: false
+2026-10-19T07:37:34.9888227Z   submodules: false
+2026-10-19T07:37:34.9888736Z   set-safe-directory: true
+2026-10-19T07:37:34.9889301Z   allow-unsafe-pr-checkout: false
+2026-10-19T07:37:34.9890344Z ##[endgroup]
+2026-10-19T07:37:35.0897457Z Syncing repository: jiwhan112/um.github.io
+2026-10-19T07:37:35.0899293Z ##[group]Getting Git version info
+2026-10-19T07:37:35.0900148Z Working directory is '/home/runner/work/um.github.io/um.github.io'
+2026-10-19T07:37:35.0901220Z [command]/usr/bin/git version
+2026-10-19T07:37:35.0990124Z git version 2.55.0
+2026-10-19T07:37:35.1012447Z ##[endgroup]
+2026-10-19T07:37:35.1027158Z Temporarily overriding HOME='/home/runner/work/_temp/b1032175-7d40-4150-9111-e30170e197be' before making global git config changes
+2026-10-19T07:37:35.1028565Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-19T07:37:35.1032549Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/um.github.io/um.github.io
+2026-10-19T07:37:35.1086566Z Deleting the contents of '/home/runner/work/um.github.io/um.github.io'
+2026-10-19T07:37:35.1091382Z ##[group]Initializing the repository
+2026-10-19T07:37:35.1095327Z [command]/usr/bin/git init /home/runner/work/um.github.io/um.github.io
+2026-10-19T07:37:35.1228849Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-19T07:37:35.1230843Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-19T07:37:35.1232871Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-19T07:37:35.1234369Z hint: call:
+2026-10-19T07:37:35.1235500Z hint:
+2026-10-19T07:37:35.1236357Z hint: 	git config --global init.defaultBranch <name>
+2026-10-19T07:37:35.1237852Z hint:
+2026-10-19T07:37:35.1238701Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-19T07:37:35.1239868Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-19T07:37:35.1240782Z hint:
+2026-10-19T07:37:35.1241396Z hint: 	git branch -m <name>
+2026-10-19T07:37:35.1242354Z hint:
+2026-10-19T07:37:35.1243255Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-19T07:37:35.1244339Z Initialized empty Git repository in /home/runner/work/um.github.io/um.github.io/.git/
+2026-10-19T07:37:35.1246330Z [command]/usr/bin/git remote add origin https://github.com/jiwhan112/um.github.io
+2026-10-19T07:37:35.1292369Z ##[endgroup]
+2026-10-19T07:37:35.1293165Z ##[group]Disabling automatic garbage collection
+2026-10-19T07:37:35.1296578Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-19T07:37:35.1325803Z ##[endgroup]
+2026-10-19T07:37:35.1326531Z ##[group]Setting up auth
+2026-10-19T07:37:35.1332278Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T07:37:35.1362647Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T07:37:35.1734726Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T07:37:35.1774151Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T07:37:35.1999777Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T07:37:35.2030077Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T07:37:35.2247613Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-19T07:37:35.2284737Z ##[endgroup]
+2026-10-19T07:37:35.2294118Z ##[group]Fetching the repository
+2026-10-19T07:37:35.2298174Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a9218eae7ce7e15ffdb211a15cc8fcd86a9121a3:refs/remotes/origin/feature/dx9-implementation-migrate-20261019
+2026-10-19T07:37:36.1241398Z From https://github.com/jiwhan112/um.github.io
+2026-10-19T07:37:36.1244010Z  * [new ref]         a9218eae7ce7e15ffdb211a15cc8fcd86a9121a3 -> origin/feature/dx9-implementation-migrate-20261019
+2026-10-19T07:37:36.1250349Z ##[endgroup]
+2026-10-19T07:37:36.1251889Z ##[group]Determining the checkout info
+2026-10-19T07:37:36.1253438Z ##[endgroup]
+2026-10-19T07:37:36.1256002Z [command]/usr/bin/git sparse-checkout disable
+2026-10-19T07:37:36.1308684Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-19T07:37:36.1339253Z ##[group]Checking out the ref
+2026-10-19T07:37:36.1344604Z [command]/usr/bin/git checkout --progress --force -B feature/dx9-implementation-migrate-20261019 refs/remotes/origin/feature/dx9-implementation-migrate-20261019
+2026-10-19T07:37:36.2177285Z Switched to a new branch 'feature/dx9-implementation-migrate-20261019'
+2026-10-19T07:37:36.2181753Z branch 'feature/dx9-implementation-migrate-20261019' set up to track 'origin/feature/dx9-implementation-migrate-20261019'.
+2026-10-19T07:37:36.2192146Z ##[endgroup]
+2026-10-19T07:37:36.2234182Z [command]/usr/bin/git log -1 --format=%H
+2026-10-19T07:37:36.2256944Z a9218eae7ce7e15ffdb211a15cc8fcd86a9121a3
+2026-10-19T07:37:36.2561742Z ##[group]Run set -o pipefail
+2026-10-19T07:37:36.2563431Z [36;1mset -o pipefail[0m
+2026-10-19T07:37:36.2565341Z [36;1mmkdir -p "knowledge/verification/dx9/06a-gcc-11-native"[0m
+2026-10-19T07:37:36.2571238Z [36;1mcmake -S "knowledge/shared/dx9-impl-06a" -B "/tmp/atlas-dx9-06a-gcc-11-native" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER="g++" -DCMAKE_CXX_STANDARD="11" -DLAB_CXX_STANDARD="11" -DFRUSTUM_CXX_STANDARD="11" -DCMAKE_CXX_FLAGS="" 2>&1 | tee "knowledge/verification/dx9/06a-gcc-11-native/configure.log"[0m
+2026-10-19T07:37:36.2881407Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T07:37:36.2883303Z ##[endgroup]
+2026-10-19T07:37:36.7021844Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-19T07:37:36.8075664Z -- Detecting CXX compiler ABI info
+2026-10-19T07:37:36.9895014Z -- Detecting CXX compiler ABI info - done
+2026-10-19T07:37:37.0138156Z -- Check for working CXX compiler: /usr/bin/g++ - skipped
+2026-10-19T07:37:37.0185066Z -- Detecting CXX compile features
+2026-10-19T07:37:37.0233086Z -- Detecting CXX compile features - done
+2026-10-19T07:37:37.0399280Z -- Configuring done (0.7s)
+2026-10-19T07:37:37.0434447Z -- Generating done (0.0s)
+2026-10-19T07:37:37.0435430Z CMake Warning:
+2026-10-19T07:37:37.0436099Z   Manually-specified variables were not used by the project:
+2026-10-19T07:37:37.0436681Z 
+2026-10-19T07:37:37.0436906Z     FRUSTUM_CXX_STANDARD
+2026-10-19T07:37:37.0437257Z 
+2026-10-19T07:37:37.0437276Z 
+2026-10-19T07:37:37.0438320Z -- Build files have been written to: /tmp/atlas-dx9-06a-gcc-11-native
+2026-10-19T07:37:37.0515918Z ##[group]Run set -o pipefail
+2026-10-19T07:37:37.0516312Z [36;1mset -o pipefail[0m
+2026-10-19T07:37:37.0516967Z [36;1mcmake --build "/tmp/atlas-dx9-06a-gcc-11-native" --parallel 2 2>&1 | tee "knowledge/verification/dx9/06a-gcc-11-native/build.log"[0m
+2026-10-19T07:37:37.0582193Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T07:37:37.0582642Z ##[endgroup]
+2026-10-19T07:37:37.0815154Z [ 50%] Building CXX object CMakeFiles/mesh_texture.dir/mesh_texture_contract.cpp.o
+2026-10-19T07:37:37.5215613Z [100%] Linking CXX executable mesh_texture
+2026-10-19T07:37:37.5719572Z [100%] Built target mesh_texture
+2026-10-19T07:37:37.5875857Z ##[group]Run set -o pipefail
+2026-10-19T07:37:37.5876214Z [36;1mset -o pipefail[0m
+2026-10-19T07:37:37.5876876Z [36;1mctest --test-dir "/tmp/atlas-dx9-06a-gcc-11-native" -V --output-on-failure 2>&1 | tee "knowledge/verification/dx9/06a-gcc-11-native/ctest.log"[0m
+2026-10-19T07:37:37.5877802Z [36;1mgrep -F "100% tests passed, 0 tests failed out of 1" "knowledge/verification/dx9/06a-gcc-11-native/ctest.log"[0m
+2026-10-19T07:37:37.5939457Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-19T07:37:37.5939803Z env:
+2026-10-19T07:37:37.5940003Z   ASAN_OPTIONS: detect_leaks=1
+2026-10-19T07:37:37.5940259Z   UBSAN_OPTIONS: halt_on_error=1
+2026-10-19T07:37:37.5940502Z ##[endgroup]
+2026-10-19T07:37:37.6336705Z Internal ctest changing into directory: /tmp/atlas-dx9-06a-gcc-11-native
+2026-10-19T07:37:37.6338180Z UpdateCTestConfiguration  from :/tmp/atlas-dx9-06a-gcc-11-native/DartConfiguration.tcl
+2026-10-19T07:37:37.6401393Z UpdateCTestConfiguration  from :/tmp/atlas-dx9-06a-gcc-11-native/DartConfiguration.tcl
+2026-10-19T07:37:37.6404116Z Test project /tmp/atlas-dx9-06a-gcc-11-native
+2026-10-19T07:37:37.6411790Z Constructing a list of tests
+2026-10-19T07:37:37.6426119Z Done constructing a list of tests
+2026-10-19T07:37:37.6426689Z Updating test list for fixtures
+2026-10-19T07:37:37.6427223Z Added 0 tests to meet fixture requirements
+2026-10-19T07:37:37.6441169Z Checking test dependency graph...
+2026-10-19T07:37:37.6441770Z Checking test dependency graph end
+2026-10-19T07:37:37.6458207Z test 1
+2026-10-19T07:37:37.6458623Z     Start 1: mesh_texture
+2026-10-19T07:37:37.6459001Z 
+2026-10-19T07:37:37.6459440Z 1: Test command: /tmp/atlas-dx9-06a-gcc-11-native/mesh_texture
+2026-10-19T07:37:37.6460085Z 1: Working Directory: /tmp/atlas-dx9-06a-gcc-11-native
+2026-10-19T07:37:37.6463053Z 1: Test timeout computed to be: 10000000
+2026-10-19T07:37:37.6482313Z 1: PASS 28 CPU contract assertions
+2026-10-19T07:37:37.6483662Z 1/1 Test #1: mesh_texture .....................   Passed    0.00 sec
+2026-10-19T07:37:37.6498396Z 
+2026-10-19T07:37:37.6498582Z 100% tests passed, 0 tests failed out of 1
+2026-10-19T07:37:37.6498833Z 
+2026-10-19T07:37:37.6498953Z Total Test time (real) =   0.01 sec
+2026-10-19T07:37:37.6551864Z 100% tests passed, 0 tests failed out of 1
+2026-10-19T07:37:37.6621971Z ##[group]Run actions/upload-artifact@v4
+2026-10-19T07:37:37.6622349Z with:
+2026-10-19T07:37:37.6622584Z   name: dx9-source-06a-gcc-11-native
+2026-10-19T07:37:37.6622918Z   path: knowledge/verification/dx9/06a-gcc-11-native/*.log
+2026-10-19T07:37:37.6623239Z   retention-days: 14
+2026-10-19T07:37:37.6623464Z   if-no-files-found: warn
+2026-10-19T07:37:37.6623701Z   compression-level: 6
+2026-10-19T07:37:37.6623916Z   overwrite: false
+2026-10-19T07:37:37.6624130Z   include-hidden-files: false
+2026-10-19T07:37:37.6624382Z ##[endgroup]
+2026-10-19T07:37:37.8363682Z (node:2365) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-19T07:37:37.8369013Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-19T07:37:37.8439531Z With the provided path, there will be 3 files uploaded
+2026-10-19T07:37:37.8440519Z Artifact name is valid!
+2026-10-19T07:37:37.8440933Z Root directory input is valid!
+2026-10-19T07:37:38.2499187Z Beginning upload of artifact content to blob storage
+2026-10-19T07:37:38.2714363Z (node:2365) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-19T07:37:38.5312154Z Uploaded bytes 1116
+2026-10-19T07:37:38.6048462Z Finished uploading artifact content to blob storage!
+2026-10-19T07:37:38.6050128Z SHA256 digest of uploaded artifact zip is 9f2ce7cc22fabd6a8a8ddbb40be2ef9e82dfcd0ad12326d62c1fcf75364ccd08
+2026-10-19T07:37:38.6051587Z Finalizing artifact upload
+2026-10-19T07:37:38.8906516Z Artifact dx9-source-06a-gcc-11-native.zip successfully finalized. Artifact ID 12170426032
+2026-10-19T07:37:38.8908326Z Artifact dx9-source-06a-gcc-11-native has been successfully uploaded! Final size is 1116 bytes. Artifact ID is 12170426032
+2026-10-19T07:37:38.8911905Z Artifact download URL: https://github.com/jiwhan112/um.github.io/actions/runs/39217190011/artifacts/12170426032
+2026-10-19T07:37:38.9121242Z Post job cleanup.
+2026-10-19T07:37:38.9991581Z [command]/usr/bin/git version
+2026-10-19T07:37:39.0029670Z git version 2.55.0
+2026-10-19T07:37:39.0068413Z Temporarily overriding HOME='/home/runner/work/_temp/bbeea166-9265-45b8-8f60-4ae99fc1a501' before making global git config changes
+2026-10-19T07:37:39.0070061Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-19T07:37:39.0077280Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/um.github.io/um.github.io
+2026-10-19T07:37:39.0127749Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-19T07:37:39.0160284Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-19T07:37:39.0385786Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-19T07:37:39.0411855Z http.https://github.com/.extraheader
+2026-10-19T07:37:39.0422934Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-19T07:37:39.0456149Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-19T07:37:39.0678058Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-19T07:37:39.0715290Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-19T07:37:39.1105619Z Cleaning up orphan processes
+2026-10-19T07:37:39.1385623Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

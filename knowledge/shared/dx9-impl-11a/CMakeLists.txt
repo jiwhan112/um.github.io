@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.16)
+project(dx9_frustum11_cpu LANGUAGES CXX)
+set(FRUSTUM_CXX_STANDARD 20 CACHE STRING "Teaching standard: 20, compatibility: 11")
+add_executable(frustum_cpu main.cpp)
+set_target_properties(frustum_cpu PROPERTIES
+  CXX_STANDARD ${FRUSTUM_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
+if(MSVC)
+  target_compile_options(frustum_cpu PRIVATE /W4 /permissive- /EHsc)
+else()
+  target_compile_options(frustum_cpu PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+enable_testing()
+add_test(NAME frustum_contract COMMAND frustum_cpu)

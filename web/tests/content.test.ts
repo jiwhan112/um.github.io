@@ -86,8 +86,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,20);
- assert.equal(sourceCatalog.length,20);
+ assert.equal(docs.length,40);
+ assert.equal(sourceCatalog.length,40);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -162,5 +162,45 @@ test('full shared source articles are published and reachable with CMake and com
   assert.ok(doc.sections.some(s=>s.title==='CMakeLists.txt'&&s.blocks.some(b=>b.type==='code'&&b.text.includes('project('))));
   assert.ok(doc.sections.some(s=>s.title.startsWith('src/')&&s.blocks.some(b=>b.type==='code'&&b.text.length>400)));
   assert.ok(doc.sections[0].blocks.some(b=>b.type==='table'),'verify environment comparison present');
+ }
+});
+
+test('DX9 implementation original lesson sections and independently archived full source pages are present',async()=>{
+ const map=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string}[];
+ const implementations=Array.from({length:12},(_,i)=>'dx9-impl-'+String(i+1).padStart(2,'0'));
+ const suffixes=['01a','02a','03a','04a','05a','06a','07b','11a'];
+ assert.equal(map.filter(x=>/^dx9-impl-/.test(x.path)).length,20);
+ for(const slug of [...implementations,...suffixes.map(s=>'dx9-impl-source-'+s)]){
+  const entry=map.find(x=>x.path===slug)!;
+  assert.ok(entry,'catalog missing '+slug);
+  const doc=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--'+slug+'.json','utf8')));
+  assert.equal(doc.route,'/knowledge/'+slug+'/');
+  const original=await readFile('../knowledge/'+slug+'/source-notion.md','utf8');
+  assert.ok(original.length>1800,slug+' source content truncated');
+  assert.ok(original.includes('## '),slug+' original headings absent');
+  assert.ok(doc.sections.length>=1,slug+' empty rendered document');
+  if(slug.endsWith('-03')||slug.endsWith('-04')){
+   assert.equal(entry.notion_url,'https://app.notion.com/p/bdcccf3ce6d34930827bf0a519b4fa78');
+  }
+ }
+ const linked=new Set(['01','02','03','04','05','06','07','11']);
+ for(const chapter of linked){
+  const doc=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--dx9-impl-'+chapter+'.json','utf8')));
+  assert.ok(doc.sections.some(s=>s.id==='source-files'&&s.blocks.some(b=>b.type==='paragraph'&&b.content.some(n=>n.kind==='link'&&n.href?.startsWith('/knowledge/dx9-impl-source-')))),'source chapter link missing '+chapter);
+ }
+ for(const [s,files] of Object.entries({
+  '01a':['com_owner.h','com_owner_tests.cpp','d3d9_window.cpp','CMakeLists.txt'],
+  '02a':['include/engine_api.h','src/engine_api.cpp','src/client.cpp','tests/engine_contract_tests.cpp','CMakeLists.txt'],
+  '03a':['resource_model.cpp','CMakeLists.txt'],
+  '04a':['renderer_components.cpp','notion_example.cpp','CMakeLists.txt'],
+  '05a':['scene_loop.hpp','tests.cpp','CMakeLists.txt'],
+  '06a':['mesh_texture_contract.cpp','CMakeLists.txt'],
+  '07b':['main.cpp','CMakeLists.txt'],
+  '11a':['main.cpp','CMakeLists.txt']
+ })){
+  for(const f of files)assert.ok((await readFile('../knowledge/shared/dx9-impl-'+s+'/'+f,'utf8')).length>70,f+' must contain full source');
+  const d=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--dx9-impl-source-'+s+'.json','utf8')));
+  assert.ok(d.sections.some(section=>section.blocks.some(b=>b.type==='code'&&b.language==='cpp'&&b.text.length>200)),'missing full C++ source in article '+s);
+  assert.ok(d.sections.some(section=>section.blocks.some(b=>b.type==='code'&&b.text.includes('project('))),'missing CMake code in article '+s);
  }
 });
