@@ -26,7 +26,7 @@ const areas: Area[] = [
   {id:'windows',title:'Windows·그래픽스 프로그래밍',subtitle:'Windows SDK 기반 게임 클라이언트 · DirectX 구현',icon:Code2,topics:[
     {id:'winapi',title:'WinAPI',description:'메시지 루프·윈도우·입력·시스템 API',phase:'legacy',category:'WinAPI'},
     {id:'game-math',title:'게임 수학',description:'벡터·행렬·변환·충돌 수학',phase:'legacy',category:'게임 수학'},
-    {id:'dx9',title:'DirectX 9',description:'기존 DX9 기반 엔진과 렌더링 구조',phase:'legacy'},
+    {id:'dx9',title:'DirectX 9',description:'기존 DX9 엔진과 렌더링 파이프라인',phase:'legacy',category:'DirectX 9'},
     {id:'dx11',title:'DirectX 11',description:'자원·렌더링 파이프라인·엔진 기능',phase:'legacy',category:'DirectX 11'},
     {id:'dx12',title:'DirectX 12',description:'명시적 GPU 자원·명령 기록·동기화 (추후 집필)',phase:'new'}
   ]},
