@@ -127,5 +127,4 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await tree.getByRole('link',{name:/Frustum Culling/}).click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-frustum\/$/);
  await expect(page.locator('main h1')).toContainText('Frustum Culling');
- await expect(page).toHaveURL(/\/knowledge\/dx11-frustum\/$/);
 });
