@@ -86,8 +86,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,40);
- assert.equal(sourceCatalog.length,40);
+ assert.equal(docs.length,45);
+ assert.equal(sourceCatalog.length,45);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -202,5 +202,18 @@ test('DX9 implementation original lesson sections and independently archived ful
   const d=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--dx9-impl-source-'+s+'.json','utf8')));
   assert.ok(d.sections.some(section=>section.blocks.some(b=>b.type==='code'&&b.language==='cpp'&&b.text.length>200)),'missing full C++ source in article '+s);
   assert.ok(d.sections.some(section=>section.blocks.some(b=>b.type==='code'&&b.text.includes('project('))),'missing CMake code in article '+s);
+ }
+});
+
+test('DX11 chapter 02–06 original text and diagram/answers are preserved without claiming child-source migration',async()=>{
+ for(const num of ['02','03','04','05','06']){
+  const slug='dx11-'+num;
+  const original=await readFile('../knowledge/'+slug+'/source-notion.md','utf8');
+  assert.ok(original.length>3000,slug+' original is too short');
+  assert.ok(original.includes('```mermaid'),slug+' original diagram missing');
+  const doc=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--'+slug+'.json','utf8')));
+  assert.equal(doc.route,'/knowledge/'+slug+'/');
+  assert.ok(doc.sections.some(s=>s.blocks.some(b=>b.type==='code'&&b.language==='mermaid')),slug+' Mermaid code missing');
+  assert.ok(doc.sections.some(s=>s.id==='source-followup'),slug+' original child links missing');
  }
 });

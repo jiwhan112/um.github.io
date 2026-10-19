@@ -97,28 +97,28 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await expect(page.getByRole('heading',{name:'프로그래밍 지식 라이브러리'})).toBeVisible();
  await expect(page.locator('.knowledge-map-sidebar nav a')).toHaveCount(7);
  const tree=page.locator('.knowledge-tree');
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(38);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(43);
  const cppTopics=page.locator('#knowledge-cpp .knowledge-topic-row strong');
  await expect(cppTopics).toHaveText(['C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++']);
  const windowsTopics=page.locator('#knowledge-windows .knowledge-topic-row strong');
  await expect(windowsTopics).toHaveText(['WinAPI','게임 수학','DirectX 9','DirectX 11','DirectX 12']);
  await expect(page.getByText('집필 시 설계').first()).toBeVisible();
  await expect(page.getByText('신규 집필 예정').first()).toBeVisible();
- await expect(page.locator('.knowledge-recent-list a')).toHaveCount(40);
+ await expect(page.locator('.knowledge-recent-list a')).toHaveCount(45);
  const dx11=tree.getByRole('button',{name:/Windows·그래픽스 프로그래밍/});
  await expect(dx11).toHaveAttribute('aria-expanded','true');
  await expect(tree.getByRole('link',{name:/Frustum Culling/})).toBeVisible();
  await page.getByRole('button',{name:'모두 접기'}).click();
  await expect(tree.locator('.knowledge-document-link')).toHaveCount(0);
  await dx11.click();
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(38);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(43);
  await page.getByLabel('학습 목차 검색').fill('BeautifulSoup');
  await expect(tree.locator('.knowledge-document-link')).toHaveCount(0);
  await expect(page.locator('.knowledge-recent-list a')).toHaveCount(1);
  await expect(page.locator('.knowledge-recent-list a').first()).toContainText('BeautifulSoup');
  await page.getByRole('button',{name:'목차 검색 초기화'}).click();
  await page.getByRole('button',{name:'모두 펼치기'}).click();
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(38);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(43);
  if(isMobile){
   await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
   await expect(page.getByRole('dialog').getByRole('link',{name:'프로그래밍 학습',exact:true})).toBeVisible();
@@ -134,7 +134,7 @@ test('WinAPI and game math migrated lessons are usable through the sitemap',asyn
  const section=page.locator('#knowledge-windows');
  await expect(section.getByRole('button',{name:/Windows·그래픽스 프로그래밍/})).toHaveAttribute('aria-expanded','true');
  const items=section.locator('.knowledge-document-link');
- await expect(items).toHaveCount(38);
+ await expect(items).toHaveCount(43);
  await expect(section.getByText('WinAPI 01 · 창·핸들·메시지·호출 규약')).toBeVisible();
  await section.getByRole('link',{name:/WinAPI 01/}).click();
  await expect(page).toHaveURL(/\/knowledge\/winapi-01\/$/);
@@ -177,4 +177,17 @@ test('DX9 implementation chapters and corrected full C++ source are linked insid
  await page.goto('knowledge/dx9-impl-12/');
  await expect(page.locator('main h1')).toContainText('DX9 12');
  await expect(page.locator('main .code-block').first()).toBeVisible();
+});
+
+test('DX11 migrated chapter sitemap and raw diagrams are readable on the website',async({page})=>{
+ await page.goto('knowledge/');
+ const dx=page.locator('#knowledge-windows');
+ await expect(dx.getByRole('link',{name:/DX11 02/})).toBeVisible();
+ await dx.getByRole('link',{name:/DX11 02/}).click();
+ await expect(page).toHaveURL(/\/knowledge\/dx11-02\/$/);
+ await expect(page.locator('main h1')).toContainText('DX11 02');
+ await expect(page.locator('main .code-block').filter({hasText:'flowchart'}).first()).toBeVisible();
+ await page.goto('knowledge/dx11-06/');
+ await expect(page.locator('main h1')).toContainText('DX11 06');
+ await expect(page.locator('main details').first()).toBeVisible();
 });
