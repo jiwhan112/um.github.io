@@ -1,0 +1,8 @@
+add_executable(dx11_08_cpu main.cpp)
+set_target_properties(dx11_08_cpu PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
+if(MSVC)
+ target_compile_options(dx11_08_cpu PRIVATE /W4 /EHsc)
+else()
+ target_compile_options(dx11_08_cpu PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+add_test(NAME dx11_08_cpu COMMAND dx11_08_cpu)
