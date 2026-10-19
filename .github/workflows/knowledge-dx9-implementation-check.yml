@@ -1,0 +1,181 @@
+name: DX9 implementation CPU source regression
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'knowledge/shared/dx9-impl-*/**'
+      - '.github/workflows/knowledge-dx9-implementation-check.yml'
+  push:
+    branches: [master, 'feature/dx9-*']
+    paths:
+      - 'knowledge/shared/dx9-impl-*/**'
+      - '.github/workflows/knowledge-dx9-implementation-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: dx9-source-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  cpu-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lab: 01a
+            compiler: g++
+            standard: 11
+            sanitizer: OFF
+            expected_tests: 1
+            label: 01a-gcc-11-native
+          - lab: 01a
+            compiler: clang++
+            standard: 11
+            sanitizer: ON
+            expected_tests: 1
+            label: 01a-clang-11-san
+          - lab: 02a
+            compiler: g++
+            standard: 11
+            sanitizer: OFF
+            expected_tests: 2
+            label: 02a-gcc-11-native
+          - lab: 02a
+            compiler: clang++
+            standard: 11
+            sanitizer: ON
+            expected_tests: 2
+            label: 02a-clang-11-san
+          - lab: 03a
+            compiler: g++
+            standard: 20
+            sanitizer: OFF
+            expected_tests: 1
+            label: 03a-gcc-20-native
+          - lab: 03a
+            compiler: clang++
+            standard: 20
+            sanitizer: ON
+            expected_tests: 1
+            label: 03a-clang-20-san
+          - lab: 04a
+            compiler: g++
+            standard: 20
+            sanitizer: OFF
+            expected_tests: 1
+            label: 04a-gcc-20-native
+          - lab: 04a
+            compiler: g++
+            standard: 11
+            sanitizer: OFF
+            expected_tests: 1
+            label: 04a-gcc-11-native
+          - lab: 04a
+            compiler: clang++
+            standard: 20
+            sanitizer: ON
+            expected_tests: 1
+            label: 04a-clang-20-san
+          - lab: 05a
+            compiler: g++
+            standard: 20
+            sanitizer: OFF
+            expected_tests: 1
+            label: 05a-gcc-20-native
+          - lab: 05a
+            compiler: g++
+            standard: 11
+            sanitizer: OFF
+            expected_tests: 1
+            label: 05a-gcc-11-native
+          - lab: 05a
+            compiler: clang++
+            standard: 20
+            sanitizer: ON
+            expected_tests: 1
+            label: 05a-clang-20-san
+          - lab: 06a
+            compiler: g++
+            standard: 20
+            sanitizer: OFF
+            expected_tests: 1
+            label: 06a-gcc-20-native
+          - lab: 06a
+            compiler: g++
+            standard: 11
+            sanitizer: OFF
+            expected_tests: 1
+            label: 06a-gcc-11-native
+          - lab: 06a
+            compiler: clang++
+            standard: 20
+            sanitizer: ON
+            expected_tests: 1
+            label: 06a-clang-20-san
+          - lab: 07b
+            compiler: g++
+            standard: 20
+            sanitizer: OFF
+            expected_tests: 1
+            label: 07b-gcc-20-native
+          - lab: 07b
+            compiler: g++
+            standard: 11
+            sanitizer: OFF
+            expected_tests: 1
+            label: 07b-gcc-11-native
+          - lab: 07b
+            compiler: clang++
+            standard: 20
+            sanitizer: ON
+            expected_tests: 1
+            label: 07b-clang-20-san
+          - lab: 11a
+            compiler: g++
+            standard: 20
+            sanitizer: OFF
+            expected_tests: 1
+            label: 11a-gcc-20-native
+          - lab: 11a
+            compiler: g++
+            standard: 11
+            sanitizer: OFF
+            expected_tests: 1
+            label: 11a-gcc-11-native
+          - lab: 11a
+            compiler: clang++
+            standard: 20
+            sanitizer: ON
+            expected_tests: 1
+            label: 11a-clang-20-san
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure source
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p "knowledge/verification/dx9/${{ matrix.label }}"
+          cmake -S "knowledge/shared/dx9-impl-${{ matrix.lab }}" -B "/tmp/atlas-dx9-${{ matrix.label }}" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" -DCMAKE_CXX_STANDARD="${{ matrix.standard }}" -DLAB_CXX_STANDARD="${{ matrix.standard }}" -DFRUSTUM_CXX_STANDARD="${{ matrix.standard }}" -DCMAKE_CXX_FLAGS="${{ matrix.sanitizer == 'ON' && '-fsanitize=address,undefined -fno-omit-frame-pointer' || '' }}" 2>&1 | tee "knowledge/verification/dx9/${{ matrix.label }}/configure.log"
+      - name: Build source
+        shell: bash
+        run: |
+          set -o pipefail
+          cmake --build "/tmp/atlas-dx9-${{ matrix.label }}" --parallel 2 2>&1 | tee "knowledge/verification/dx9/${{ matrix.label }}/build.log"
+      - name: Run CTest
+        shell: bash
+        env:
+          ASAN_OPTIONS: detect_leaks=1
+          UBSAN_OPTIONS: halt_on_error=1
+        run: |
+          set -o pipefail
+          ctest --test-dir "/tmp/atlas-dx9-${{ matrix.label }}" -V --output-on-failure 2>&1 | tee "knowledge/verification/dx9/${{ matrix.label }}/ctest.log"
+          grep -F "100% tests passed, 0 tests failed out of ${{ matrix.expected_tests }}" "knowledge/verification/dx9/${{ matrix.label }}/ctest.log"
+      - name: Preserve literal CI console logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dx9-source-${{ matrix.label }}
+          path: knowledge/verification/dx9/${{ matrix.label }}/*.log
+          retention-days: 14
