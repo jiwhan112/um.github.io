@@ -4,7 +4,7 @@ import { PageHeader, Panel } from '@/components/Common';
 import { useData } from '@/lib/data';
 import { cleanTitle, dateLabel, asset } from '@/lib/utils';
 import { keys, useStored, objectBooleans, briefingState } from '@/lib/storage';
-const quick=[{path:'/daily-briefing/',title:'데일리 브리핑',sub:'게임 · AI · 기술 소식',icon:Newspaper,tone:'rose'},{path:'/language-study/',title:'언어 학습',sub:'English · 日本語',icon:BookOpen,tone:'sky'},{path:'/thinking-lab/',title:'사고력 훈련',sub:'알고리즘 · C++11',icon:Braces,tone:'violet'},{path:'/knowledge/',title:'프로그래밍 지식',sub:'DirectX · C++ · Python',icon:BookOpen,tone:'sky'},{path:'/ai-asset-lab/',title:'AI 리소스 실험실',sub:'생성 · 비교 · 기록',icon:FlaskConical,tone:'green'}];
+const quick=[{path:'/daily-briefing/',title:'데일리 브리핑',sub:'게임 · AI · 기술 소식',icon:Newspaper,tone:'rose'},{path:'/language-study/',title:'언어 학습',sub:'English · 日本語',icon:BookOpen,tone:'sky'},{path:'/thinking-lab/',title:'사고력 훈련',sub:'알고리즘 · C++11',icon:Braces,tone:'violet'},{path:'/ai-asset-lab/',title:'AI 리소스 실험실',sub:'생성 · 비교 · 기록',icon:FlaskConical,tone:'green'}];
 export default function Dashboard(){
  const {catalog,articles}=useData(),[rv]=useStored<unknown>(keys.reading,{}),[bv]=useStored<unknown>(keys.briefing,{});const read=objectBooleans(rv),news=briefingState(bv);
  const thinking=catalog.documents.filter(d=>d.kind==='thinking').sort((a,b)=>b.date.localeCompare(a.date))[0],latest=articles[0];
