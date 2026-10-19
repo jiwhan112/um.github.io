@@ -682,6 +682,40 @@
           ]
         }
       ]
+    },
+    {
+      "id": "migration-review",
+      "title": "이관 보충 · 이해 확인",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "엔진 DLL에서 생성한 객체를 클라이언트가 무조건 delete해도 될까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 됩니다. DLL 경계에서는 각 모듈의 런타임·메모리 소유권, ABI와 예외 전파 가능성을 명확히 해야 합니다. 공개된 C ABI의 생성·해제 쌍을 사용하고 생성했던 모듈의 계약에 따라 객체를 정리하는 것이 이 교육용 엔진의 규칙입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 Notion 개정 문서를 보존한 뒤, 이해 확인을 이관 과정에서 보충했습니다. "
+            },
+            {
+              "text": "관련 전체 CPU 소스",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-02a/"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

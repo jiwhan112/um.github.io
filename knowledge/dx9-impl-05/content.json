@@ -304,6 +304,40 @@
           ]
         }
       ]
+    },
+    {
+      "id": "migration-review",
+      "title": "이관 보충 · 이해 확인",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "Render 큐가 저장한 객체가 같은 프레임 중 삭제되면 안전한가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안전하지 않습니다. 프레임 안의 객체 생성·삭제를 정해진 안전 지점에 반영하고, 렌더 큐에서 유효하지 않은 포인터를 쓰지 않도록 세대 번호가 있는 핸들 등의 유효성 검사를 수행해야 합니다. CPU 모형은 이 정책을 실행하고 실제 GPU 큐 수명은 별도 검증해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 Notion 개정 문서를 보존한 뒤, 이해 확인을 이관 과정에서 보충했습니다. "
+            },
+            {
+              "text": "관련 전체 CPU 소스",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-05a/"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
