@@ -103,13 +103,13 @@
         },
         {
           "type": "details",
-          "title": "Assimp를 실제 설치하고 Mesh를 import한 결과인가요?",
+          "title": "Bone Matrix Palette와 GPU Skinning을 실행한 결과인가요?",
           "blocks": [
             {
               "type": "paragraph",
               "content": [
                 {
-                  "text": "아닙니다. DX11 09 CPU 모델은 Assimp Scene 구조를 본뜬 교육용 검증입니다. 실제 Assimp DLL·헤더·모델 파일을 사용한 런타임 검증이 아닙니다."
+                  "text": "아닙니다. 이 C++ 프로그램은 CPU 상의 Node/Channel·키 보간·스키닝 관련 수학 계약을 검증합니다. 실제 Assimp 로딩이나 GPU Bone Matrix Palette 업로드·HLSL 실행은 수행하지 않았습니다."
                 }
               ]
             }

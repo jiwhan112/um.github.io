@@ -103,13 +103,13 @@
         },
         {
           "type": "details",
-          "title": "Assimp를 실제 설치하고 Mesh를 import한 결과인가요?",
+          "title": "Collider·Navigation Mesh의 물리·경로 엔진을 검증한 결과인가요?",
           "blocks": [
             {
               "type": "paragraph",
               "content": [
                 {
-                  "text": "아닙니다. DX11 09 CPU 모델은 Assimp Scene 구조를 본뜬 교육용 검증입니다. 실제 Assimp DLL·헤더·모델 파일을 사용한 런타임 검증이 아닙니다."
+                  "text": "아닙니다. CPU 충돌 및 삼각형 Cell 인접 그래프와 A* 예제입니다. 완전한 3D OBB/물리 Solver, Recast·Detour 연동, Funnel/Agent Radius, Windows D3D11 실행은 별도 검증 대상입니다."
                 }
               ]
             }
