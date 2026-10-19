@@ -39,7 +39,7 @@ const areas: Area[] = [
     {id:'network',title:'네트워크',description:'TCP/UDP·패킷·프로토콜',phase:'keep'}
   ]},
   {id:'algorithm',title:'자료구조 / 알고리즘',subtitle:'세부 학습 과정은 집필 시작 시 재설계',icon:Layers3,topics:[
-    {id:'algorithm-plan',title:'학습 순서·단원 구성 재계획',description:'자료구조·탐색·알고리즘·문제풀이의 세부 구성을 작성 전에 확정',phase:'replan',category:'알고리즘'}
+    {id:'algorithm-plan',title:'학습 순서·단원 구성 재계획',description:'자료구조·탐색·알고리즘·문제풀이의 세부 구성을 작성 전에 확정',phase:'replan'}
   ]},
   {id:'engine',title:'게임 엔진 개발',subtitle:'기존 Notion 설계 패턴·Unity 노트를 이관하지 않고 새로 집필',icon:Wrench,topics:[
     {id:'engine-systems',title:'엔진 파츠·시스템 설계',description:'새로운 게임 엔진 학습 교재로 기획 · 세부 목차는 작성 시 확정',phase:'new'}
