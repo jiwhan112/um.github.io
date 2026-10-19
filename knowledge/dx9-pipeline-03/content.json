@@ -1,0 +1,659 @@
+{
+  "id": "knowledge--dx9-pipeline-03",
+  "route": "/knowledge/dx9-pipeline-03/",
+  "kind": "knowledge",
+  "title": "DX9 파이프라인 03 · 래스터화·UV 보간",
+  "subtitle": "샘플 소속·원근 보정·텍셀 중심·반 픽셀",
+  "date": "2026-10-13",
+  "number": "DX9 PIPE / 03",
+  "category": "DirectX 9",
+  "topic": "DirectX 9",
+  "tags": [
+    "DirectX 9",
+    "그래픽스",
+    "C++"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "도입·원본과 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본 Notion 본문을 GitHub Pages로 이전해 보존했습니다. 실제 GPU/Direct3D 실행 결과가 아닙니다. "
+                },
+                {
+                  "text": "원본 Notion",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f4081b98c00f5601b7d0c54"
+                },
+                {
+                  "text": " · 공통 DX9 CPU 실습 파일 전체 ZIP은 아직 확보되지 않았으며 Mermaid/수식은 원본 코드로 제공합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "삼각형의 내부를 채운다는 것은, 각 샘플의 소속과 속성값을 계산한다는 뜻입니다.",
+                  "kind": "strong"
+                },
+                {
+                  "text": " Direct3D 9 · CPU 실습 C++20 · 2026-10-13 · 실습 "
+                },
+                {
+                  "text": "src/raster_uv.cpp",
+                  "kind": "code"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DX9 렌더링 파이프라인 — 개정판 v1.0",
+              "kind": "link",
+              "href": "/knowledge/#knowledge-windows"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 컬링과 클리핑은 다른 질문에 답합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "클리핑은 프리미티브가 클립 영역의 경계를 가로지를 때 안쪽 부분을 남깁니다. 후면 컬링은 삼각형의 앞·뒤 방향을 기준으로 그 삼각형을 그릴지 결정합니다. 화면 밖 물체를 제외하는 프러스텀 컬링이나 다른 물체에 가려진 것을 제외하는 오클루전 컬링도 목적이 다릅니다. D3D9의 "
+            },
+            {
+              "text": "D3DRS_CULLMODE",
+              "kind": "code"
+            },
+            {
+              "text": "에서 "
+            },
+            {
+              "text": "D3DCULL_CCW",
+              "kind": "code"
+            },
+            {
+              "text": "는 반시계 방향 삼각형을 "
+            },
+            {
+              "text": "버리는 설정",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다. CCW를 앞면으로 선택한다는 뜻으로 읽으면 반대로 이해할 수 있습니다. 면의 방향은 정점 순서가 투영된 결과와 연결됩니다. 법선 벡터만 뒤집는다고 인덱스 순서가 자동으로 바뀌지는 않습니다. 한 축에 음수 스케일을 적용하면 방향이 뒤집힐 수 있습니다. 컬링을 NONE으로 했을 때 보이지만 원래 설정에서는 사라진다면, 인덱스·삼각형 순서·반사 변환을 점검합니다. 컬링을 끄는 것은 원인 분리 수단이지 모든 모델의 최종 해결책은 아닙니다. 근거: "
+            },
+            {
+              "text": "D3DCULL",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dcull"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 래스터화는 샘플을 검사합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "삼각형의 화면 좌표를 구하면, 그 삼각형이 덮는 픽셀 또는 샘플을 판정합니다. 정점 수가 곧 픽셀 수는 아닙니다. 큰 삼각형 하나가 매우 많은 샘플을 덮을 수 있으므로 픽셀 셰이더와 블렌딩 비용은 그려지는 면적과 겹침 정도에도 영향을 받습니다. 이번 CPU 모델은 "
+            },
+            {
+              "text": "단일 샘플·삼각형·D3D9식 정수 픽셀 중심",
+              "kind": "strong"
+            },
+            {
+              "text": "을 사용합니다. 화면 x는 오른쪽, y는 아래쪽입니다. MSAA의 여러 샘플 위치, 정수 고정소수점 정밀도, quad 단위 셰이더 실행, GPU 내부 병렬화는 구현하지 않습니다. 모서리 함수는 점 P가 변 AB의 어느 쪽에 있는지 알려 줍니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "E(A,B,P)=(B_x-A_x)(P_y-A_y)-(B_y-A_y)(P_x-A_x)"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "세 변에 대한 부호를 일관되게 비교하면 내부인지 판단할 수 있습니다. 삼각형의 면적이 0이면 정상적인 면 내부를 정의할 수 없으므로 실습에서는 거부합니다. 아주 작은 면적을 어디까지 유효하다고 볼지는 수치 정책이므로 임계값을 문서화했습니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "공유 모서리를 두 번 칠하지 않기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사각형을 두 삼각형으로 나눴을 때 공유 대각선의 샘플을 둘 다 포함시키면 알파가 두 번 섞일 수 있습니다. 둘 다 제외하면 틈이 생깁니다. Top-left 규칙은 경계의 소속을 한쪽에 배정하는 방법입니다. 실습은 화면 y 아래 방향과 양의 모서리 면적 규약으로 방향을 맞춘 뒤, 위쪽 또는 왼쪽에 해당하는 변의 경계만 포함합니다. Covers 함수 안에서 정점 순서를 맞추는 것은 "
+            },
+            {
+              "text": "면 컬링을 수행하는 것이 아니라 포함 판정의 부호를 통일하는 것",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n    T[\"화면 공간 삼각형\"] --> B[\"검사할 사각 범위\"]\n    B --> E[\"샘플 위치의 모서리 함수\"]\n    E --> C[\"내부·Top-left 경계 판정\"]\n    C --> I[\"살아남은 샘플의 속성 보간\"]\n    I --> P[\"픽셀 처리\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 검사는 0부터 4까지의 사각형을 두 삼각형으로 구성하고 주변 격자를 순회합니다. 정수 중심 16개만 포함되고 공유 경계에서 이중 포함이 없음을 확인했습니다. 이것이 모든 GPU의 부동소수점·샘플 규칙과 일치한다는 뜻은 아닙니다. 근거: "
+            },
+            {
+              "text": "D3D9 래스터화 규칙",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/rasterization-rules"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. 무게중심 좌표로 내부의 값을 표현합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "삼각형 내부 점은 세 꼭짓점에 대한 가중치 λ0, λ1, λ2로 표현할 수 있습니다. 가중치의 합은 1입니다. 화면 좌표 A=(0,0), B=(4,0), C=(0,4)에서 P=(1,1)은 "
+            },
+            {
+              "text": "(0.5,0.25,0.25)",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. P가 A쪽에 더 가깝다는 의미를 수치로 읽을 수 있습니다. 화면 공간에서 선형인 값은 이 가중치로 직접 보간합니다. 하지만 원근 투영된 표면의 UV를 그대로 "
+            },
+            {
+              "text": "Σ λUV",
+              "kind": "code"
+            },
+            {
+              "text": "로 보간하면 기울어진 면의 텍스처가 틀어집니다. 화면의 같은 간격이 원래 표면의 같은 간격이 아니기 때문입니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. UV는 원근 보정이 필요합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "각 꼭짓점의 clip.w가 wi이고 UV가 ai이면, 일반적인 원근 보정 보간은 다음 형태입니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "a(P)=\\frac{\\sum_i\\lambda_i\\,a_i/w_i}{\\sum_i\\lambda_i/w_i}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "a/w",
+              "kind": "code"
+            },
+            {
+              "text": "와 "
+            },
+            {
+              "text": "1/w",
+              "kind": "code"
+            },
+            {
+              "text": "를 화면에서 선형 보간한 뒤 다시 나누는 식입니다. 이 공식은 이 문서에서 UV 같은 표면 속성의 원근 보정을 설명하기 위한 것입니다. D3D9의 모든 속성·shading mode가 항상 동일한 보간 방식이라는 주장으로 확대하지 않습니다. 앞 절의 λ에 대해 w=(1,2,4), UV=((0,0),(1,0),(0,1))로 비교해 봅시다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "계산"
+                  }
+                ],
+                [
+                  {
+                    "text": "결과"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "화면에서 단순히 UV를 선형 보간"
+                  }
+                ],
+                [
+                  {
+                    "text": "(0.25, 0.25)"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "분모 Σ λ/w"
+                  }
+                ],
+                [
+                  {
+                    "text": "0.5+0.125+0.0625 = 0.6875"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원근 보정 UV"
+                  }
+                ],
+                [
+                  {
+                    "text": "(2/11, 1/11), 약 (0.1818, 0.0909)"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 차이를 "
+            },
+            {
+              "text": "raster_uv",
+              "kind": "code"
+            },
+            {
+              "text": "에서 실제 계산해 비교합니다. 모든 w가 같으면 두 방식은 같아지지만, 그 특수한 예만 테스트하면 잘못된 보간 구현을 놓칠 수 있습니다. API의 원근 보정을 사용하는 일반 VS에서는 clip 좌표를 내보내고, 원래 UV도 전달합니다. VS에서 "
+            },
+            {
+              "text": "position.xyz",
+              "kind": "link",
+              "href": "http://position.xyz"
+            },
+            {
+              "text": "를 미리 w로 나눈 후 w=1로 덮어쓰는 방식은 클리핑·보간에 필요한 정보를 잃을 수 있습니다. 근거: "
+            },
+            {
+              "text": "D3D9 셰이더의 입출력과 보간",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-writing-shaders-9"
+            },
+            {
+              "text": ". 위 분수와 수치 예제는 선택한 삼각형의 보간식을 직접 계산한 결과입니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "깊이에는 같은 분수를 또 적용하지 않습니다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "일반적인 z-buffer 깊이인 "
+            },
+            {
+              "text": "zc/wc",
+              "kind": "code"
+            },
+            {
+              "text": "는 화면 공간에서 선형 보간합니다. 화면에서 λ=(0.5,0.25,0.25), 꼭짓점 깊이=(0.2,0.6,0.9)라면 결과는 "
+            },
+            {
+              "text": "0.475",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다. 이미 나눈 깊이에 다시 UV용 원근 보정 공식을 적용하면 다른 값을 만듭니다. View 공간 z가 필요할 때의 복원과 깊이 버퍼에 저장할 z/w의 보간은 서로 다른 계산입니다. 이 설명은 기본 z-buffer 경로이며 w-buffer나 셰이더가 직접 쓴 깊이는 별도로 분석합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. 텍스처와 샘플러를 구분합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "텍스처는 이미지나 표면 데이터를 저장합니다. 샘플러 상태는 주어진 UV에서 어떤 값을 읽을지 정합니다. 같은 텍스처를 사용해도 주소 처리, 확대·축소 필터, mip 선택이 달라지면 결과가 다릅니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "선택"
+                  }
+                ],
+                [
+                  {
+                    "text": "질문"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "주소 모드"
+                  }
+                ],
+                [
+                  {
+                    "text": "UV가 범위를 벗어나면 반복·고정·경계색 중 무엇을 사용할까?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "확대·축소 필터"
+                  }
+                ],
+                [
+                  {
+                    "text": "가까운 텍셀을 고를까, 이웃 값을 섞을까?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "mip 필터"
+                  }
+                ],
+                [
+                  {
+                    "text": "축소된 해상도 단계 사이를 어떻게 선택·혼합할까?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "비등방 필터"
+                  }
+                ],
+                [
+                  {
+                    "text": "기울어진 표면의 방향별 축소 차이를 어떻게 처리할까?"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "UV가 정확해도 아틀라스의 가장자리에 이웃 이미지가 섞일 수 있습니다. 필터가 샘플하는 범위와 mip에서 합쳐지는 내용을 고려해야 합니다. 단순히 UV를 아주 조금 줄이는 것만으로 모든 mip 단계의 번짐이 해결되는 것은 아닙니다. 패딩·경계 확장·mip 생성 정책을 함께 점검합니다. 실습의 LinearClamp는 "
+            },
+            {
+              "text": "1차원·level 0·선형 필터·clamp",
+              "kind": "strong"
+            },
+            {
+              "text": "만 구현했습니다. 2차원 bilinear, trilinear, 비등방 필터와 LOD 선택을 검증한 것으로 해석하지 않습니다. 근거: "
+            },
+            {
+              "text": "텍스처 필터링",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/texture-filtering"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "6. D3D9 반 픽셀 문제를 정확히 적용합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "D3D9에서는 정수 화면 좌표가 픽셀 중심인 반면, 폭 N 텍스처의 i번째 텍셀 중심 UV는 "
+            },
+            {
+              "text": "(i+0.5)/N",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. 화면과 텍스처의 중심을 1:1로 맞출 때 이 차이를 고려해야 합니다. 예를 들어 폭 4인 화면 사각형의 x를 0부터 4, UV를 0부터 1로 주면 정수 화면 x=1에서 u=0.25를 샘플합니다. 폭 4 텍스처의 두 번째 텍셀 중심은 u=0.375이므로 선형 필터에서 경계의 색을 섞을 수 있습니다. 실습 텍셀 "
+            },
+            {
+              "text": "[0,1,0,1]",
+              "kind": "code"
+            },
+            {
+              "text": "에서는 u=0.25가 0.5, u=0.375가 1을 반환합니다. "
+            },
+            {
+              "text": "미리 변환한 화면 공간 사각형",
+              "kind": "strong"
+            },
+            {
+              "text": "의 모서리를 x=-0.5부터 3.5로 두면 정수 중심 0,1,2,3에서 텍셀 중심 UV를 읽게 됩니다. y도 같은 기준으로 맞춥니다. 이는 해당 1:1 화면 정렬 규약에서의 해결책입니다. 모든 월드 좌표에서 0.5를 빼라는 뜻이 아닙니다. 이미 보정한 공용 셰이더나 스프라이트 경로에 다시 보정하면 이중 보정입니다. DX10/11의 픽셀 중심 규약은 달라서 DX9의 처방을 그대로 가져오면 오히려 어긋납니다. 근거: "
+            },
+            {
+              "text": "D3D9 텍셀·픽셀 직접 매핑",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/directly-mapping-texels-to-pixels"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "DX10 이후 좌표 규약의 변화",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d10/d3d10-graphics-programming-guide-resources-coordinates"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "7. 최소 셰이더와 적용 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음은 Shader Model 3 경로를 설명하는 "
+            },
+            {
+              "text": "참고 소스",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다. 이번에는 FXC 컴파일과 GPU 실행을 하지 않았습니다. 셰이더 생성·행렬 상수·정점 선언·텍스처·샘플러·출력 상태를 호출 측에서 준비해야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "javascript",
+          "text": "row_major float4x4 gWorldViewProjection : register(c0);\nsampler2D gAlbedo : register(s0);\n\nstruct VSInput {\n    float3 position : POSITION0;\n    float2 uv : TEXCOORD0;\n};\nstruct VSOutput {\n    float4 position : POSITION0;\n    float2 uv : TEXCOORD0;\n};\nVSOutput VSMain(VSInput input) {\n    VSOutput output;\n    output.position = mul(float4(input.position, 1.0), gWorldViewProjection);\n    output.uv = input.uv;\n    return output;\n}\nfloat4 PSMain(float2 uv : TEXCOORD0) : COLOR0 {\n    return tex2D(gAlbedo, uv);\n}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "D3D9의 POSITION/COLOR 출력과 DX11의 SV_Position/SV_Target 사용을 섞지 않습니다. 여기서는 행렬을 row_major로 선언하고 행 벡터를 왼쪽에 놓았습니다. CPU에서 네 행의 float4를 c0부터 전달한다는 계약까지 맞춰야 합니다. 실습의 double 행렬을 그대로 바이트 복사해 GPU 상수에 넣으면 타입부터 다릅니다. 근거: "
+            },
+            {
+              "text": "HLSL 시맨틱",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-8",
+      "title": "8. 이해 확인과 검증 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "텍스처가 찌그러지는데 모든 정점의 w를 1로 바꾸면 해결될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원근 보정에 필요한 정보가 사라질 수 있습니다. 위치의 클립 공간 출력, UV 전달, 1/w 보간을 분리해 확인해야 합니다. 정사영이나 모든 꼭짓점의 w가 같은 특수 사례에서 우연히 맞는 결과가 일반적인 해결책은 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "사각형의 대각선만 알파가 더 진하다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 삼각형이 공유 모서리 샘플을 중복 처리하는지 먼저 확인합니다. CPU 구현에서는 모서리 포함 규칙이 중요하고, 실제 GPU에서는 겹친 기하·중복 드로우·깊이·블렌딩 설정도 함께 확인합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "raster_uv",
+              "kind": "code"
+            },
+            {
+              "text": "의 71회 조건 검사에서 공유 모서리 소속, 퇴화 삼각형, 무게중심 좌표, UV 원근 보정, 깊이 보간, 1차원 선형 필터와 텍셀 중심을 확인했습니다. GCC·Clang·Clang ASan/UBSan에서 통과했습니다. GPU 래스터화 적합성, 텍스처 LOD, MSAA, HLSL 컴파일과 실제 출력 화면은 미검증입니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

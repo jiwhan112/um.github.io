@@ -1,0 +1,652 @@
+{
+  "id": "knowledge--dx9-pipeline-04",
+  "route": "/knowledge/dx9-pipeline-04/",
+  "kind": "knowledge",
+  "title": "DX9 파이프라인 04 · 깊이·스텐실·블렌딩",
+  "subtitle": "깊이 비교와 쓰기·알파·스텐실·출력 상태",
+  "date": "2026-10-13",
+  "number": "DX9 PIPE / 04",
+  "category": "DirectX 9",
+  "topic": "DirectX 9",
+  "tags": [
+    "DirectX 9",
+    "그래픽스",
+    "C++"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "도입·원본과 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본 Notion 본문을 GitHub Pages로 이전해 보존했습니다. 실제 GPU/Direct3D 실행 결과가 아닙니다. "
+                },
+                {
+                  "text": "원본 Notion",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f408106aba0d3b6a9b101b0"
+                },
+                {
+                  "text": " · 공통 DX9 CPU 실습 파일 전체 ZIP은 아직 확보되지 않았으며 Mermaid/수식은 원본 코드로 제공합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "픽셀 셰이더가 반환한 색과 최종 렌더 타깃의 색은 같지 않을 수 있습니다.",
+                  "kind": "strong"
+                },
+                {
+                  "text": " Direct3D 9 · C++20 CPU 출력 모델 · 2026-10-13 · 실습 "
+                },
+                {
+                  "text": "src/depth_blend.cpp",
+                  "kind": "code"
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DX9 렌더링 파이프라인 — 개정판 v1.0",
+              "kind": "link",
+              "href": "/knowledge/#knowledge-windows"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 픽셀 계산 뒤에도 남은 조건이 있습니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "래스터화가 샘플을 만들고 픽셀 셰이더가 색을 계산해도, 그 색이 반드시 저장되는 것은 아닙니다. 알파 테스트, 스텐실, 깊이 검사, 색 쓰기 마스크와 블렌딩 등이 출력에 관여합니다. 이미 렌더 타깃에 저장된 값을 목적지(destination), 이번에 계산한 값을 소스(source)라고 부릅니다. 아래는 "
+            },
+            {
+              "text": "결과를 설명하는 논리 모형",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다. 실제 GPU가 모든 샘플을 반드시 이 시간 순서로 처리한다는 뜻은 아닙니다. 조기 깊이 검사 같은 최적화와 셰이더의 discard·깊이 출력 조건을 별도로 생각해야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n    S[\"픽셀 처리 결과: 색·알파·깊이\"] --> A{\"알파 조건 통과?\"}\n    A -->|\"아니오\"| X[\"해당 샘플 출력 중단\"]\n    A -->|\"예\"| D{\"스텐실·깊이 조건 통과?\"}\n    D -->|\"아니오\"| F[\"설정된 실패 스텐실 연산·색 기록 중단\"]\n    D -->|\"예\"| B[\"기존 색과 블렌딩\"]\n    B --> C[\"허용된 색 채널 기록\"]\n    D -->|\"예\"| Z[\"깊이 쓰기·스텐실 성공 연산\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "고정 기능 텍스처 단계에서 텍스처끼리 결합하는 것과, 완성한 소스 색을 기존 렌더 타깃과 혼합하는 블렌딩은 다른 작업입니다. 사용자 PS를 사용하는 경우에도 깊이·알파·블렌딩 상태가 중요합니다. 근거: "
+            },
+            {
+              "text": "경로별 렌더 상태",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/setting-render-states-with-fixed-function-and-programmable-shader-pipeline"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 깊이 검사와 깊이 쓰기를 분리합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 실습은 작을수록 가까운 일반적인 z-buffer와 LESS_EQUAL 비교를 사용합니다. 새 깊이가 현재 값 이하이면 통과합니다. 불투명 물체는 일반적으로 깊이를 비교하고 통과한 새 값을 저장합니다. 비교와 쓰기는 다른 선택입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "상태"
+                  }
+                ],
+                [
+                  {
+                    "text": "역할"
+                  }
+                ],
+                [
+                  {
+                    "text": "혼동하지 말 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "D3DRS_ZENABLE"
+                  }
+                ],
+                [
+                  {
+                    "text": "깊이 버퍼링을 사용할지 결정"
+                  }
+                ],
+                [
+                  {
+                    "text": "FALSE에서 ZWRITEENABLE만 켜도 깊이 기록을 기대하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "D3DRS_ZFUNC"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 깊이와 기존 깊이의 비교 조건"
+                  }
+                ],
+                [
+                  {
+                    "text": "LESS와 LESS_EQUAL은 같은 깊이에서 다름"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "D3DRS_ZWRITEENABLE"
+                  }
+                ],
+                [
+                  {
+                    "text": "통과한 깊이를 저장할지 결정"
+                  }
+                ],
+                [
+                  {
+                    "text": "FALSE여도 활성화된 깊이 비교는 가능"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예를 들어 불투명 배경의 깊이가 0.6이고 투명 연기가 0.4에 있다면, 깊이 비교는 켜 두어야 뒤에 있는 연기가 앞 물체를 뚫고 보이지 않습니다. 다만 투명 연기끼리의 혼합을 위해 깊이 쓰기는 끄는 경우가 많습니다. 렌더 타깃과 호환되는 깊이 스텐실 표면을 실제로 바인딩했는지도 확인해야 합니다. 매 프레임 깊이 초기화, 비교 함수, 투영 방향이 서로 일치해야 합니다. 일반적인 near=0·far=1 예에서 깊이를 1로 지우는 관례를 Reverse-Z 구성에 무조건 적용하지 않습니다. 깊이가 비슷한 겹친 면에서 발생하는 z-fighting은 카메라 범위·깊이 포맷·기하 배치를 함께 확인합니다. Depth bias는 상황에 맞는 보정이지 모든 오류를 가리는 상수가 아닙니다. 근거: "
+            },
+            {
+              "text": "D3D9 깊이 버퍼",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/depth-buffers"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "렌더 상태의 ZENABLE·ZFUNC·ZWRITEENABLE",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3drenderstatetype"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. 스텐실은 색이 아닌 작은 표식입니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "스텐실 버퍼는 픽셀 위치별 정수 표식을 저장해 어느 영역을 처리할지 제어하는 데 사용합니다. 예를 들어 거울 모양에 1을 기록하고, 다음 패스에서 스텐실이 1인 곳에만 반사 장면을 그릴 수 있습니다. 투명도나 거리값을 저장하는 알파·깊이와 역할이 다릅니다. 기준값과 저장된 스텐실 값에 읽기 마스크를 적용한 뒤 비교합니다. 갱신은 스텐실 실패, 스텐실 통과 후 깊이 실패, 둘 다 통과한 경우를 나눕니다. "
+            },
+            {
+              "text": "실패한 샘플이면 어떤 버퍼도 절대 변하지 않는다",
+              "kind": "strong"
+            },
+            {
+              "text": "고 단정하면 스텐실 갱신을 놓칩니다. 읽기 마스크와 쓰기 마스크도 다릅니다. 전자는 비교에 사용할 비트, 후자는 기록 시 바꿀 비트를 제한합니다. 서로 다른 패스가 같은 스텐실을 사용할 때는 어떤 비트를 소유하는지 정해야 합니다. 스텐실 지원 포맷과 초기화·복원도 필요합니다. 이 절은 상태와 활용을 설명한 것이며, "
+            },
+            {
+              "text": "이번 CPU Fragment 함수에는 스텐실 구현이 없습니다.",
+              "kind": "strong"
+            },
+            {
+              "text": " 완전한 거울·포털·섀도 볼륨 렌더러를 제공한 것은 아닙니다. 근거: "
+            },
+            {
+              "text": "STENCIL 계열 렌더 상태",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3drenderstatetype"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. 알파 테스트와 알파 블렌딩은 다릅니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "알파 테스트는 샘플을 남길지 버릴지 결정하는 비교입니다. 나뭇잎·울타리처럼 경계가 있는 표면에서 사용할 수 있습니다. 알파 블렌딩은 남은 소스 색과 목적지 색을 혼합합니다. 알파 값이 0이라는 사실만으로 샘플 전체가 삭제되는 것은 아닙니다. D3D9에는 "
+            },
+            {
+              "text": "ALPHATESTENABLE",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "ALPHAFUNC",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "ALPHAREF",
+              "kind": "code"
+            },
+            {
+              "text": "가 있습니다. ALPHAREF는 DWORD 아래 8비트에 넣는 0~255 기준값입니다. HLSL에서 "
+            },
+            {
+              "text": "clip",
+              "kind": "code"
+            },
+            {
+              "text": " 등을 사용하는 경로와 고정 알파 테스트를 구분하고, 필요 없는 중복 기준으로 가장자리가 달라지지 않게 합니다. 이번 CPU 예제는 연속 double 알파에 대해 "
+            },
+            {
+              "text": "alpha >= cutoff",
+              "kind": "code"
+            },
+            {
+              "text": "를 검사하는 단순 모델입니다. D3D9의 8비트 변환·반올림·모든 비교 함수를 그대로 재현하지 않습니다. 근거: "
+            },
+            {
+              "text": "알파 테스트",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/alpha-testing-state"
+            },
+            {
+              "text": "."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "알파 0인데 뒤 오브젝트가 사라지는 이유"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습에서는 검은 배경에 알파 0인 붉은 샘플을 깊이 0.2로 제출합니다. SRCALPHA/INVSRCALPHA 블렌딩이라 색은 바뀌지 않지만, 깊이 쓰기가 켜져 있으므로 깊이는 0.2가 됩니다. 이후 깊이 0.5인 물체는 깊이 검사에서 탈락합니다. 즉 ‘눈에 안 보이니 아무 영향이 없다’는 가정이 틀렸습니다. 컷아웃 재질이라면 적절한 알파 거부 정책을, 반투명 재질이라면 깊이 쓰기·그리기 순서를 함께 설계해야 합니다. 모든 투명 문제를 알파 테스트 하나로 해결하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. RGB와 알파의 블렌딩 식을 따로 읽습니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ADD 연산과 일반적인 straight alpha의 RGB 혼합은 다음과 같습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "C_{out}=C_s\\alpha_s+C_d(1-\\alpha_s)"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "소스 RGB는 아직 알파가 곱해지지 않은 색입니다. 설정은 RGB에 대해 SRCBLEND=SRCALPHA, DESTBLEND=INVSRCALPHA에 해당합니다. Premultiplied alpha는 소스 RGB에 알파를 미리 곱한 표현입니다. 이때 같은 결과를 얻으려면 소스 계수는 ONE이 됩니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "C_{out}=C'_s+C_d(1-\\alpha_s),\\qquad C'_s=C_s\\alpha_s"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이미 곱해진 RGB에 SRCALPHA를 다시 적용하면 색이 더 어두워질 수 있습니다. 반대로 straight RGB를 ONE으로 합치면 예상보다 밝은 경계가 생길 수 있습니다. 텍스처 저장 방식과 셰이더의 출력 표현을 함께 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "소스 RGB 표현"
+                  }
+                ],
+                [
+                  {
+                    "text": "소스 계수"
+                  }
+                ],
+                [
+                  {
+                    "text": "목적지 계수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Straight alpha"
+                  }
+                ],
+                [
+                  {
+                    "text": "SRCALPHA"
+                  }
+                ],
+                [
+                  {
+                    "text": "INVSRCALPHA"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Premultiplied alpha"
+                  }
+                ],
+                [
+                  {
+                    "text": "ONE"
+                  }
+                ],
+                [
+                  {
+                    "text": "INVSRCALPHA"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "렌더 타깃의 알파도 사용한다면 RGB 설정만 확인해서는 부족합니다. 이 실습은 별도 알파 계수 ONE/INVSRCALPHA를 사용한 다음 식을 모델링합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "latex",
+          "text": "\\alpha_{out}=\\alpha_s+\\alpha_d(1-\\alpha_s)"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "D3D9에서는 지원 능력을 확인한 뒤 "
+            },
+            {
+              "text": "SEPARATEALPHABLENDENABLE",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "SRCBLENDALPHA",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "DESTBLENDALPHA",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "BLENDOPALPHA",
+              "kind": "code"
+            },
+            {
+              "text": "를 맞춥니다. 별도 알파 설정 없이 RGB와 같은 SRCALPHA 계수를 적용하면 알파 항에 제곱이 생겨 위 식과 다를 수 있습니다. 근거: "
+            },
+            {
+              "text": "알파 블렌딩 상태",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/alpha-blending-state"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "알파 텍스처 블렌딩",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/alpha-texture-blending"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "6. 반투명 그리기 순서",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검은 배경에 알파 0.5인 파란 면을 그리고 그 위에 알파 0.5인 빨간 면을 그리면 RGB는 "
+            },
+            {
+              "text": "(0.5,0,0.25)",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. 순서를 바꾸면 "
+            },
+            {
+              "text": "(0.25,0,0.5)",
+              "kind": "code"
+            },
+            {
+              "text": "입니다. 같은 색과 알파를 사용해도 결과가 다릅니다. 일반적인 source-over 반투명 패스는 불투명 물체를 먼저 그리고, 투명 물체를 뒤에서 앞으로 처리하면서 깊이 비교는 유지하고 깊이 쓰기는 끕니다. 다만 물체 중심 거리로 정렬하면 교차하는 면·큰 메시의 내부 순서를 완벽히 해결하지 못합니다. 재질·기하 분할·특수 투명 기법에 따른 별도 설계가 필요합니다. 더하기 계열 이펙트와 일반 반투명도 같은 패스로 묶지 않습니다. 특정 RGB 덧셈이 순서에 덜 민감해 보여도 깊이 쓰기·클램핑·알파 기록 등 다른 상태까지 모두 순서 독립적이라는 뜻은 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "7. 색공간·채널 마스크·MSAA",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "색을 섞는 계산은 어떤 색공간의 숫자를 다루는지 명시해야 합니다. 보통 색 텍스처의 sRGB 값을 선형으로 해석하고 조명·혼합을 수행한 뒤 출력에 맞게 변환합니다. 법선·마스크·수치 데이터 텍스처까지 색처럼 sRGB 변환하지 않습니다. 알파는 RGB 감마 변환과 분리합니다. D3D9의 sRGB 읽기·쓰기는 형식별 지원 능력을 확인해야 합니다. 또한 하드웨어가 필터링·블렌딩의 어느 지점에서 변환을 지원하는지에 제약이 있어, 플래그 하나를 켰다는 사실만으로 원하는 선형 합성이 모두 보장된다고 단정하지 않습니다. 이번 실습은 선형 수치 입력만 사용하며 감마 처리와 포맷 변환은 구현하지 않습니다. 근거: "
+            },
+            {
+              "text": "D3D9 감마 처리와 제약",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/gamma"
+            },
+            {
+              "text": ". 색 쓰기 마스크가 꺼져 있으면 PS가 정상이어도 해당 채널은 갱신되지 않습니다. MSAA에서는 한 픽셀 안의 여러 샘플에 커버리지·깊이·스텐실이 관여하므로 단일 샘플 그림과 완전히 같다고 해석하지 않습니다. 이번 실습에 MSAA·resolve 구현은 없습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-8",
+      "title": "8. Present와 상태 누수",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "렌더 타깃에 그리는 단계와 그것을 화면에 제시하는 단계는 다릅니다. 화면에 직접 제시할 백 버퍼 외에도 그림자·미니맵·후처리용 타깃을 사용할 수 있습니다. Present 호출은 앞서 만든 결과를 제시하는 API이며, 특정 픽셀이 모니터에 나타난 시각을 측정한 것과 같지 않습니다. 반환값과 장치 상태는 다음 DX9 구현 단계에서 다룹니다. 근거: "
+            },
+            {
+              "text": "IDirect3DDevice9::Present",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d9/nf-d3d9-idirect3ddevice9-present"
+            },
+            {
+              "text": ". D3D9 상태는 다음 드로우에도 영향을 줍니다. 이펙트 패스에서 켠 알파 블렌딩이나 꺼 둔 ZWRITEENABLE이 불투명 메시까지 남으면 엉뚱한 결과가 나옵니다. 패스마다 필요한 상태를 명시하는 방식 또는 저장·복원 계약을 정하고, 라이브러리·Effects가 어떤 상태를 바꾸는지도 확인합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-9",
+      "title": "9. 이해 확인과 실행 결과",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "투명 이펙트는 깊이 검사를 무조건 끄는 것이 맞을까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "깊이 검사를 끄면 벽 뒤의 이펙트가 벽 위에 보일 수 있습니다. 일반적인 반투명은 깊이 비교를 유지하고 쓰기를 끄는 구성을 먼저 생각하되, HUD나 특수 합성처럼 다른 요구사항은 별도 패스로 구분합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "알파 블렌딩을 켰는데 RGB는 맞고 타깃 알파만 이상하다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "별도 알파 블렌딩 설정과 타깃의 알파 채널을 확인합니다. RGB에 맞는 SRCALPHA를 알파에도 그대로 쓰면 목표한 source-over 알파 식과 달라질 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "depth_blend",
+              "kind": "code"
+            },
+            {
+              "text": "의 19회 조건 검사에서 깊이 탈락·통과, 깊이 쓰기 차이, 알파 0의 깊이 가림, 알파 거부, 두 그리기 순서, straight/premultiplied 결과 일치와 별도 알파식을 확인했습니다. GCC·Clang·Clang ASan/UBSan에서 통과했습니다. 스텐실·색공간·MSAA·포맷 양자화·GPU 출력은 이번 테스트 범위에 없습니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
