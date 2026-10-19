@@ -86,3 +86,37 @@ test('game design diagrams are readable inline and zoomed at desktop/mobile size
  expect(dialogImageWidth).toBeGreaterThan(isMobile?230:600);
  await expect(dialog.getByRole('link',{name:'원본 이미지 저장'})).toBeVisible();
 });
+
+
+test('homepage opens the Notion-style knowledge sitemap with searchable chapter tree',async({page,isMobile})=>{
+ await page.goto('');
+ const entry=page.locator('.dashboard .quick-card').filter({hasText:'프로그래밍 학습'});
+ await expect(entry).toBeVisible();
+ await entry.click();
+ await expect(page).toHaveURL(/\/knowledge\/$/);
+ await expect(page.getByRole('heading',{name:'프로그래밍 지식 라이브러리'})).toBeVisible();
+ await expect(page.locator('.knowledge-map-sidebar nav a')).toHaveCount(7);
+ const tree=page.locator('.knowledge-tree');
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(3);
+ const dx11=tree.getByRole('button',{name:/DirectX \/ Windows/});
+ await expect(dx11).toHaveAttribute('aria-expanded','true');
+ await expect(tree.getByRole('link',{name:/Frustum Culling/})).toBeVisible();
+ await page.getByRole('button',{name:'모두 접기'}).click();
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(0);
+ await dx11.click();
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(1);
+ await page.getByLabel('학습 목차 검색').fill('BeautifulSoup');
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(1);
+ await expect(tree.getByRole('link',{name:/BeautifulSoup/})).toBeVisible();
+ await page.getByRole('button',{name:'목차 검색 초기화'}).click();
+ await page.getByRole('button',{name:'모두 펼치기'}).click();
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(3);
+ if(isMobile){
+  await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
+  await expect(page.getByRole('dialog').getByRole('link',{name:'프로그래밍 학습',exact:true})).toBeVisible();
+  await page.keyboard.press('Escape');
+ }
+ await tree.getByRole('link',{name:/Frustum Culling/}).click();
+ await expect(page).toHaveURL(/\/knowledge\/dx11-frustum\/$/);
+ await expect(page.locator('main h1')).toContainText('Frustum Culling');
+});
