@@ -53,7 +53,7 @@
 
 언어 JSON 경로와 필드 스키마, 발음·해석·TTS에 쓰는 텍스트를 유지합니다. `Reconcile language lessons`는 레슨 push 또는 09:10 KST 보조 실행에서 카탈로그/진도를 재생성합니다. React 배포는 raw 레슨 push와 경쟁하지 않고 이 작업의 성공 뒤 최신 master를 빌드합니다. UI/워크플로 또는 다른 원본 변경은 평소처럼 React 배포를 시작합니다.
 
-브리핑은 정확히 5개 검증된 소식을 기록하며 `easy_explainer`, `short_summary`, `technical_context`, `why_it_matters`, `developer_view`, 실제 출처·날짜·URL을 유지합니다. `short_summary`는 문자열 또는 짧은 문장 배열을 지원합니다. 기존 `date:index` 기사 식별자를 위해 과거 items를 재정렬하지 않습니다. Drive 원문은 기존 MD/PDF 및 토요일 주간 보관 규칙을 유지합니다. 이 문서 정리 때문에 보관 양식을 바꾸지 않습니다.
+브리핑은 2026-10-19부터 고정 5개 제한 없이 검증된 중요 소식만 가변 개수로 기록하며, AI/게임 개발/게임 전반 이슈의 세 분야와 depth=deep|brief를 구분한다. 심층은 배경·원리·실무 의미까지 자세하게, 간략은 핵심 2~4문장으로 기록한다. 기존 과거 기사 순서·ID는 유지한다. 각 기사에서 `easy_explainer`, `short_summary`, `technical_context`, `why_it_matters`, `developer_view`, 실제 출처·날짜·URL을 유지합니다. `short_summary`는 문자열 또는 짧은 문장 배열을 지원합니다. 기존 `date:index` 기사 식별자를 위해 과거 items를 재정렬하지 않습니다. Drive 원문은 기존 MD/PDF 및 토요일 주간 보관 규칙을 유지합니다. 이 문서 정리 때문에 보관 양식을 바꾸지 않습니다.
 
 ## 화면 검증
 
