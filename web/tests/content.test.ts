@@ -1,6 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import {load} from 'cheerio';
 import {buildContent,compileBlocks,compileNews,safeLink} from '../scripts/content';
 import {parseStored,briefingState,objectBooleans} from '../src/lib/storage';
@@ -81,17 +82,45 @@ test('game design illustrations are copied into the published resource tree',asy
  for(const path of pics){assert.match(path,/^\/game-design\/ep-[a-z0-9-]+\/assets\/[a-z0-9-]+\.svg$/);const bytes=await readFile('public/'+path.slice(1),'utf8');assert.ok(bytes.includes('<svg'),path);}
 });
 
-test('knowledge prototype is parseable by runtime catalog and each full document schema',async()=>{
+test('migrated knowledge corpus preserves routes, typed content and Notion originals',async()=>{
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
- assert.equal(docs.length,3);
- assert.deepEqual(new Set(docs.map(d=>d.route)),new Set(['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/']));
- for(const doc of docs){
-  const full=documentSchema.parse(JSON.parse(await readFile('public/'+doc.file,'utf8')));
-  assert.equal(full.id,doc.id);
-  assert.equal(full.route,doc.route);
-  assert.ok(full.sections.some(s=>s.blocks.some(b=>b.type==='code')),'code is preserved for '+doc.route);
-  assert.ok(full.sections.some(s=>s.blocks.some(b=>b.type==='table')),'comparison table for '+doc.route);
-  assert.ok(full.sections.some(s=>s.blocks.some(b=>b.type==='details')),'review answers for '+doc.route);
+ const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
+ assert.equal(docs.length,13);
+ assert.equal(sourceCatalog.length,13);
+ for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
+  assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
+ const imports=sourceCatalog.filter(x=>/^winapi-|^game-math-/.test(x.path));
+ assert.equal(imports.length,10);
+ for(const entry of sourceCatalog){
+  const meta=docs.find(d=>d.route==='/knowledge/'+entry.path+'/');
+  assert.ok(meta,'catalog misses '+entry.path);
+  const full=documentSchema.parse(JSON.parse(await readFile('public/'+meta.file,'utf8')));
+  assert.equal(full.id,meta.id);
+  assert.equal(full.route,meta.route);
+  assert.equal(full.category,entry.category);
+  assert.ok(full.sections.some(section=>section.blocks.some(b=>b.type==='code')),'code should be preserved for '+entry.path);
+  assert.ok(full.sections.some(section=>section.blocks.some(b=>b.type==='details')),'review answers should be preserved for '+entry.path);
  }
+ for(const entry of imports){
+  const original=await readFile('../knowledge/'+entry.path+'/source-notion.md','utf8');
+  const doc=docs.find(d=>d.route==='/knowledge/'+entry.path+'/')!;
+  const full=documentSchema.parse(JSON.parse(await readFile('public/'+doc.file,'utf8')));
+  assert.ok(original.length>4000,'full original was truncated '+entry.path);
+  assert.ok(original.includes('```mermaid'),'native Mermaid source absent '+entry.path);
+  assert.ok(original.includes('<details>'),'folded answers absent '+entry.path);
+  assert.ok(full.sections.some(s=>s.blocks.some(b=>b.type==='code'&&b.language==='mermaid')),'diagram source lost '+entry.path);
+ }
+});
+
+test('WinAPI04A native CPU sources preserve original Notion byte counts and SHA-256',async()=>{
+ const cpp=await readFile('../knowledge/winapi-04a/main.cpp');
+ const cmake=await readFile('../knowledge/winapi-04a/CMakeLists.txt');
+ assert.equal(cpp.length,4701);
+ assert.equal(cmake.length,543);
+ assert.equal(createHash('sha256').update(cpp).digest('hex'),'5e711d0e1b1685cca876e94c3416dde0e4271c3bb4e9e959fc292f2d7dde15d2');
+ const doc=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--winapi-04a.json','utf8')));
+ const embedded=doc.sections.find(s=>s.id==='github-source')!;
+ assert.ok(embedded.blocks.some(b=>b.type==='code'&&b.language==='cpp'&&b.text.includes('int main()')));
+ assert.ok(embedded.blocks.some(b=>b.type==='code'&&b.language==='cmake'&&b.text.includes('add_test(')));
 });
