@@ -359,6 +359,60 @@
           ]
         }
       ]
+    },
+    {
+      "id": "source-files",
+      "title": "전체 소스·CMake·CPU 검증 및 미검증 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 장에 연결된 기존 Notion의 검증된 소스 보관본을 별도 페이지에 전체 제공하며 파일별 CMake 원본도 GitHub에 저장했습니다. 이번 이관 자체는 Windows/MSVC·D3D9/GPU 실행을 포함하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DX9 06 · 전체 소스·CMake·원본 검증 페이지",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-06a/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "mesh_texture_contract.cpp — 독립 GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-06a/mesh_texture_contract.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CPU 회귀 검사와 실제 Direct3D9 실행은 같은 건가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다릅니다. CPU 데이터·컴포넌트 모형의 컴파일·CTest가 통과하더라도 실제 Win32 창, D3D9 드라이버, GPU 프레임, DX9 Reset은 실행해 본 것이 아닙니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
