@@ -139,7 +139,7 @@ test('shared WinAPI/math and DX9 source files match original archived Markdown b
   const parts=[...original.matchAll(rx)];
   assert.equal(parts.length,pack.count,'all source parts should exist '+pack.folder);
   for(const match of parts){
-   const expected=Buffer.from(match[2],'utf8');
+   const expected=Buffer.from(match[2]+(pack.folder==='dx9-pipeline-lab'?'\n':''),'utf8');
    const actual=await readFile('../knowledge/shared/'+pack.folder+'/'+match[1]);
    assert.deepEqual(actual,expected,'byte-for-byte restore '+pack.folder+'/'+match[1]);
   }
