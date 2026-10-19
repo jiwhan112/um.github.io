@@ -46,7 +46,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "knowledge/dx11-ci-logs/${{ matrix.id }}"
-          for lab in dx11-01 dx11-02 dx11-03 dx11-04 dx11-05-08; do
+          for lab in dx11-01 dx11-02 dx11-03 dx11-04 dx11-05-08 dx11-09 dx11-10 dx11-11-12; do
             output="/tmp/atlas-${{ matrix.id }}-${lab}"
             logdir="knowledge/dx11-ci-logs/${{ matrix.id }}"
             echo "::group::${lab} ${{ matrix.id }}"
@@ -55,6 +55,8 @@ jobs:
             ctest --test-dir "${output}" -V --output-on-failure 2>&1 | tee "${logdir}/${lab}-ctest.log"
             if [ "${lab}" = dx11-05-08 ]; then
               grep -F '100% tests passed, 0 tests failed out of 4' "${logdir}/${lab}-ctest.log"
+            elif [ "${lab}" = dx11-11-12 ]; then
+              grep -F '100% tests passed, 0 tests failed out of 2' "${logdir}/${lab}-ctest.log"
             else
               grep -F '100% tests passed, 0 tests failed out of 1' "${logdir}/${lab}-ctest.log"
             fi
