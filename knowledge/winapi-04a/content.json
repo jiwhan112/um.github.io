@@ -685,6 +685,72 @@
           ]
         }
       ]
+    },
+    {
+      "id": "github-source",
+      "title": "전체 CPU 소스 · C++11/20 · CMake",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Notion의 두 원본 코드 블록을 추가 문자 없이 연결한 main.cpp 전문(4,701바이트)과 CMakeLists.txt(543바이트)입니다. 두 파일의 원본 FNV64가 확인됐습니다. C++11과 C++20은 GitHub CPU CI에서 별도로 빌드·CTest로 검사합니다. Windows GUI는 이 예제에 포함되지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "main.cpp · 4701B"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// WinAPI04A CPU-only fixed timestep model. C++11/C++20 compatible.\n// No Windows headers or operating-system GUI calls are used.\n#include <algorithm>\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n\nstruct TickResult {\n    std::int64_t updates;\n    std::int64_t dropped_ns;\n    std::int64_t remaining_ns;\n    double alpha;\n};\n\nclass FixedStepper {\npublic:\n    FixedStepper(std::int64_t step_ns, std::int64_t max_frame_ns,\n                 std::int64_t max_updates)\n        : step_ns_(step_ns), max_frame_ns_(max_frame_ns),\n          max_updates_(max_updates), pending_ns_(0) {\n        if (step_ns <= 0 || max_frame_ns < step_ns || max_updates <= 0 ||\n            step_ns > std::numeric_limits<std::int64_t>::max() - max_frame_ns) {\n            throw std::invalid_argument(\"invalid timestep configuration\");\n        }\n    }\n\n    TickResult tick(std::int64_t measured_ns) {\n        if (measured_ns < 0) {\n            throw std::invalid_argument(\"negative elapsed time\");\n        }\n        const std::int64_t accepted_ns =\n            std::min(measured_ns, max_frame_ns_);\n        // pending_ns_ is always [0, step_ns_); constructor prevents overflow.\n        const std::int64_t available_ns = pending_ns_ + accepted_ns;\n        const std::int64_t available_updates = available_ns / step_ns_;\n        const std::int64_t updates = std::min(available_updates, max_updates_);\n        const std::int64_t after_updates = available_ns - updates * step_ns_;\n        const std::int64_t dropped_backlog =\n            (after_updates / step_ns_) * step_ns_;\n        pending_ns_ = after_updates - dropped_backlog;\n        const std::int64_t dropped_ns =\n            (measured_ns - accepted_ns) + dropped_backlog;\n        return TickResult{updates, dropped_ns, pending_ns_,\n                          static_cast<double>(pending_ns_) /\n                              static_cast<double>(step_ns_)};\n    }\n\nprivate:\n    std::int64_t step_ns_;\n    std::int64_t max_frame_ns_;\n    std::int64_t max_updates_;\n    std::int64_t pending_ns_;\n};\n\nnamespace {\nint checks = 0;\nvoid check(bool condition, const char* message) {\n    ++checks;\n    if (!condition) {\n        throw std::runtime_error(message);\n    }\n}\n\ntemplate <typename Fn>\nvoid must_reject(Fn fn, const char* message) {\n    bool rejected = false;\n    try {\n        fn();\n    } catch (const std::invalid_argument&) {\n        rejected = true;\n    }\n    check(rejected, message);\n}\n}\n\nint main() {\n    try {\n        must_reject([] { FixedStepper s(0, 30, 3); (void)s; }, \"zero step\");\n        must_reject([] { FixedStepper s(10, 9, 3); (void)s; }, \"short clamp\");\n        must_reject([] { FixedStepper s(10, 30, 0); (void)s; }, \"zero budget\");\n        must_reject([] {\n            FixedStepper s(10, std::numeric_limits<std::int64_t>::max(), 3);\n            (void)s;\n        }, \"overflow configuration\");\n\n        FixedStepper s(10, 30, 3);\n        must_reject([&s] { (void)s.tick(-1); }, \"negative delta\");\n        TickResult r = s.tick(0);\n        check(r.updates == 0 && r.remaining_ns == 0, \"zero delta\");\n        r = s.tick(6);\n        check(r.updates == 0, \"partial step\");\n        check(r.remaining_ns == 6, \"partial preserved\");\n        check(r.alpha == 0.6, \"interpolation ratio\");\n        r = s.tick(7);\n        check(r.updates == 1, \"accumulated full step\");\n        check(r.remaining_ns == 3, \"remainder preserved\");\n        check(r.dropped_ns == 0, \"no skipped time\");\n        r = s.tick(30);\n        check(r.updates == 3, \"update budget exactly used\");\n        check(r.remaining_ns == 3, \"fraction remains after budget\");\n        check(r.dropped_ns == 0, \"no full backlog dropped\");\n\n        FixedStepper limited(10, 30, 2);\n        r = limited.tick(55);\n        check(r.updates == 2, \"max updates\");\n        check(r.dropped_ns == 35, \"25ns clamp plus 10ns backlog\");\n        check(r.remaining_ns == 0, \"discard full backlog\");\n        r = limited.tick(5);\n        check(r.updates == 0 && r.remaining_ns == 5, \"resume after clamp\");\n        r = limited.tick(5);\n        check(r.updates == 1 && r.remaining_ns == 0, \"next update\");\n\n        FixedStepper near_limit(10, 30, 2);\n        r = near_limit.tick(std::numeric_limits<std::int64_t>::max());\n        check(r.updates == 2, \"huge delta budget\");\n        check(r.dropped_ns == std::numeric_limits<std::int64_t>::max() - 20,\n              \"huge delta no signed overflow\");\n        check(r.alpha == 0.0, \"huge delta remainder\");\n        std::cout << \"PASS \" << checks\n                  << \" fixed-step CPU contract checks (C++11/20)\\n\";\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << \"FAIL: \" << e.what() << '\\n';\n        return 1;\n    }\n}"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "CMakeLists.txt · 543B"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cmake",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(winapi04a_cpu_timestep LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nenable_testing()\nadd_executable(winapi04a_cpu main.cpp)\nset_target_properties(winapi04a_cpu PROPERTIES\n    CXX_STANDARD ${LAB_CXX_STANDARD}\n    CXX_STANDARD_REQUIRED YES\n    CXX_EXTENSIONS NO)\nif(MSVC)\n    target_compile_options(winapi04a_cpu PRIVATE /W4 /EHsc)\nelse()\n    target_compile_options(winapi04a_cpu PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nadd_test(NAME winapi04a_cpu COMMAND winapi04a_cpu)"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 코드 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/winapi-04a/main.cpp"
+            },
+            {
+              "text": " 및 "
+            },
+            {
+              "text": "CMake 원본",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/winapi-04a/CMakeLists.txt"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
