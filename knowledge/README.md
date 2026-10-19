@@ -1,12 +1,24 @@
 # ATLAS NOTE — 프로그래밍 지식 라이브러리
 
-- [학습 목차·향후 집필 설계 v2](CURRICULUM.md): **사이트맵과 새 교재 집필 계획**을 기록합니다. Notion 이관 지시·완료 원장이 아닙니다.
-- [현재 공개 교재 색인](data/catalog.json): DX11 Frustum, 알고리즘 LIS, Python BeautifulSoup 총 3개 시범 교재의 실제 페이지·원본 출처만 관리합니다.
+- [장기 학습 목차·집필 설계 v2](CURRICULUM.md): 최종적으로 새로 공부하고 작성할 과정에 대한 설계. **기존 Notion 이관 계획과 구분**.
+- [실제 공개 문서 원장](data/catalog.json): 독립된 학습 문서의 경로·Notion 출처·분류.
+- [WinAPI/게임 수학 첫 이관 감사](MIGRATION_WINAPI_MATH_20261019.md): 원본·표·접기·Mermaid·소스 복원·미이관 자산 상태.
 
-## 기존 프로토타입 보존
+## 원본과 파생물
 
-2026-10-19에 작성한 시범 교재 3개의 독립 원본은 각 폴더 `source-notion.md`, 렌더링 블록은 `content.json`이며, 실행 예제는 `main.cpp` 또는 `main.py`입니다. **이미 게시된 URL과 내용은 이번 목차 개정으로 변경하지 않습니다.** 특히 Python/알고리즘 시범 교재는 새 커리큘럼의 확정 단원으로 집계하지 않습니다.
+2026-10-19 초기 프로토타입 3개(`dx11-frustum`, `algorithm-lis`, `python-html`)는 원본과 공개 URL을 그대로 유지했습니다.
 
-향후 실제 새 콘텐츠를 게시할 때에만 `knowledge/data/catalog.json`에 문서를 등록하고, 동일한 구조의 `content.json`과 전체 소스를 추가합니다. 빌드 어댑터가 `data/atlas` 문서 색인과 `/knowledge/` 진입 경로를 생성합니다.
+후속 작업에서 WinAPI 01–04와 CPU 실습 04A, 게임 수학 01–05의 **기존 Notion 본문 10개**를 이관했습니다. 모든 단원 디렉터리에는 다음 파일을 둡니다.
 
-기존 언어·브리핑·사고력 데이터와 localStorage/Supabase 키는 건드리지 않습니다. 과거 Notion CPU 검증은 그 당시의 기록일 뿐, GitHub 이관본의 새 Windows·GPU 검증을 의미하지 않습니다. Notion 이미지가 누락되었을 때 추측해서 대체하지 않으며, GitHub Pages는 공개 사이트입니다.
+- `source-notion.md`: 원래 Notion enhanced Markdown의 **원본 본문**
+- `content.json`: React Typed Blocks(문단·코드·Mermaid 원본·표·접힌 문답)로 변환한 화면용 문서
+- WinAPI04A 전용 `main.cpp` 및 `CMakeLists.txt`: 원본 네이티브 소스에서 바이트·FNV64를 대조해 복원
+
+추가 학습 문서가 검증되면 `knowledge/data/catalog.json`에 명시적으로 추가합니다. 빌드가 내부 문서 색인과 직접 접근 URL을 생성하며, 기존 언어·브리핑·사고력 자료와 Supabase/localStorage 키는 변경하지 않습니다.
+
+## 현재 한계
+
+- WinAPI/게임 수학의 공통 압축 실습 `game_math_winapi_lab_v1.zip`, 실제 Win32 데모, MFC GUI와 부모 문서에 붙은 텍스트 파일은 독립적 바이트 확보·검증 전이므로 **전체 소스 이관 완료로 기록하지 않습니다**.
+- WinAPI04A의 순수 CPU 소스는 전체를 보존하고 GitHub CI에서 GCC C++20·C++11 및 Clang ASan/UBSan을 별도로 검사합니다. 기존 Notion 검증과 새 CI 결과를 분리합니다.
+- Windows/MSVC·D3D9/11·GPU·Unity 테스트는 이번 저장/CI로 검증된 것이 아닙니다. Mermaid 및 수식은 원본 코드를 보존하며 시각적 렌더링은 후속 UI 개선 대상입니다.
+- 이관 전 Notion 원본 문서, 기존 시범 자료, 다른 자동 발행 작업을 수정하지 않습니다. 이 사이트는 공개 GitHub Pages입니다.
