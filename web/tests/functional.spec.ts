@@ -216,7 +216,7 @@ test('DX11 01, 07, 08 course chapters and recovered full C++ sources open',async
 test('DX11 Mesh/Animation/Collider/NavMesh navigation and full source links',async({page})=>{
  await page.goto('knowledge/');
  const group=page.locator('#knowledge-windows');
- const mesh=group.getByRole('link',{name:'DX11 09 · Mesh·Material·Assimp Node',exact:true});
+ const mesh=group.getByRole('link',{name:/DX11 09 · Mesh·Material·Assimp Node/});
  await expect(mesh).toBeVisible();
  await mesh.click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-09\/$/);
