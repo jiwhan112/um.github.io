@@ -146,7 +146,6 @@ test('WinAPI and game math migrated lessons are usable through the sitemap',asyn
  await expect(page.locator('main .prose code').first()).toBeVisible();
  await expect(page.locator('main .prose details')).toHaveCount(2);
  await page.goto('knowledge/winapi-04a/');
- await page.getByRole('button',{name:/전체 CPU 소스/}).click().catch(()=>{});
  await expect(page.locator('main .code-block').filter({hasText:'int main()'})).toBeVisible();
- await expect(page.locator('main .code-block').filter({hasText:'CMakeLists.txt'})).toBeVisible();
+ await expect(page.locator('main .code-block').filter({hasText:'add_test('})).toBeVisible();
 });
