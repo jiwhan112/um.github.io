@@ -19,7 +19,8 @@
 
 ## 현재 한계
 
-- WinAPI/게임 수학 및 DX9 렌더링 파이프라인의 공통 압축 실습 `game_math_winapi_lab_v1.zip`, `dx9_pipeline_lab_v1.zip`, 실제 Win32 데모, MFC GUI와 부모 문서에 붙은 텍스트 파일은 독립적 바이트 확보·검증 전이므로 **전체 소스 이관 완료로 기록하지 않습니다**.
-- WinAPI04A의 순수 CPU 소스는 전체를 보존하고 GitHub CI에서 GCC C++20·C++11 및 Clang ASan/UBSan을 별도로 검사합니다. 기존 Notion 검증과 새 CI 결과를 분리합니다.
+- [공통 실습 소스·CI 무결성 원장](SOURCE_RESTORE_AND_CPU_20261019.md): 개인 라이브러리의 파일별 원본에서 WinAPI·게임 수학 17개와 DX9 파이프라인 12개, 총 29개 원본 소스·지원 파일을 복원했습니다. **원본 ZIP 바이너리와 Notion 첨부의 원시 파일 바이트는 확보하지 못했습니다.**
+- `knowledge/shared/game-math-winapi-lab/`에 Win32 데모·manifest·CMake·헤더·6개 CPU 실습 전체 텍스트를, `knowledge/shared/dx9-pipeline-lab/`에 5개 CPU 실습·HLSL 참고 예제·CMake 등 전체 텍스트를 저장했습니다. Win32 GUI는 소스 복원만 수행했으며 실제 Windows/MSVC·GUI 실행은 미검증입니다.
+- WinAPI04A의 순수 CPU 소스는 바이트 대조 보관했고 GCC C++20·C++11·Clang ASan/UBSan CTest 각각 1/1 통과했습니다. 두 공통 실습의 GitHub CPU CI 또한 GCC/Clang ASan·UBSan에서 게임 수학 6/6, DX9 파이프라인 5/5 통과했으며 새 CMake·CTest 원시 로그 4개를 GitHub에 보존했습니다.
 - Windows/MSVC·D3D9/11·GPU·Unity 테스트는 이번 저장/CI로 검증된 것이 아닙니다. Mermaid 및 수식은 원본 코드를 보존하며 시각적 렌더링은 후속 UI 개선 대상입니다.
 - 이관 전 Notion 원본 문서, 기존 시범 자료, 다른 자동 발행 작업을 수정하지 않습니다. 이 사이트는 공개 GitHub Pages입니다.

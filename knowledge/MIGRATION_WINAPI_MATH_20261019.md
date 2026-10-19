@@ -3,7 +3,7 @@
 - 범위: WinAPI 01–04·04A, 게임 수학 01–05. 기존 DX11·LIS·Python 3개 시범 교재 원본은 건드리지 않음.
 - 이관 방식: 연결된 Notion 읽기 도구에서 해당 페이지 10개의 원본 본문을 조회하고, GitHub `source-notion.md`에 원문을 보존. React `content.json`에 문단·코드·Mermaid 원본 코드·표·접힌 Q&A를 변환.
 - 각 문서의 원본 URL은 `knowledge/data/catalog.json`과 서두에서 확인. 최종 상태는 GitHub 커밋/CI/라이브 검사에 따라 별도 보고.
-- 제한: WinAPI/게임 수학 설명에 등장하는 공통 `game_math_winapi_lab_v1.zip`의 전체 바이너리·GUI/MFC 소스는 Notion 첨부에서 확보되지 않아 아직 이전 완료라고 표기하지 않음. Win04A CPU `main.cpp` 4701B와 `CMakeLists.txt` 543B는 연결된 개별 네이티브 원본에서 FNV64와 길이를 대조해 저장함.
+- 후속 복구: 사용자 라이브러리의 `game_math_winapi_sources_v1.md`로부터 공통 실습의 **전체 C++/Win32 GUI 소스·헤더·CMake·manifest 등 17개 파일**과 해시 원장을 되살렸습니다. 17/17개 SHA-256과 원본 원장 일치, GitHub blob 무결성 일치. [소스 복원/CPU 증거](SOURCE_RESTORE_AND_CPU_20261019.md)를 보세요. `game_math_winapi_lab_v1.zip` 원본 ZIP 및 Notion 파일 첨부 자체는 다운로드·해시 검증되지 않아 별도 미완료입니다. Win04A CPU `main.cpp` 4701B와 `CMakeLists.txt` 543B 역시 네이티브 원본에서 FNV64와 길이를 대조한 별도 실습입니다. **Windows/MSVC·Win32 GUI·MFC는 실행 미검증**입니다.
 - WinAPI/게임 수학 하위 10개 본문에는 Notion 이미지·파일 블록이 없고, 미해석 블록도 보이지 않았음. 부모 개요 페이지의 텍스트 첨부는 이관 대상 범위로 기록하되 실제 파일 바이트 검증 전까지 미완료.
 - Mermaid 그래프는 현재 React의 code 블록으로 원본을 제공(그림 자체의 자동 렌더링 보장 안 함). LaTeX 원본도 code 블록으로 제공. 향후 표시 기능 개선 가능.
 - 검증 구분: 본문 마이그레이션 ≠ CPU 새 실행 ≠ Windows/MSVC/D3D/GPU 검증. 
