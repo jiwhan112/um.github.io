@@ -1,0 +1,249 @@
+{
+  "id": "knowledge--dx9-impl-source-07b",
+  "route": "/knowledge/dx9-impl-source-07b/",
+  "kind": "knowledge",
+  "title": "DX9 07B · NaN Ray 피킹·지형 전체 소스",
+  "subtitle": "Notion 기존 수정 소스 · 실행 경계·CMake·원시 검증 기록",
+  "date": "2026-10-16",
+  "number": "DX9 07B",
+  "category": "DirectX 9",
+  "topic": "DX9 구현",
+  "tags": [
+    "DirectX 9",
+    "C++",
+    "전체 소스",
+    "CPU"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "원본·학습 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 페이지는 Notion에 보관된 기존 전체 코드 전문을 학습용으로 이전한 자료입니다. GitHub에서 CMake·소스 파일을 각각 독립적으로 다운로드할 수 있습니다. 과거 Notion CPU 결과와 GitHub에서 새로 실행한 결과는 별도로 집계합니다. Windows/MSVC·D3D9·GPU는 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "**수동 검수 13 · 07 확장 실습 전체 보관과 실패 입력 교정**\n\t2026-10-16. 원형의 25조건을 재실행한 뒤 NaN 삼각형을 충돌로 판정하는 반례를 재현했습니다. 기존 교재 <mention-page url=\"https://app.notion.com/p/3f8a99703f4081e3b908de685a551c23\">07 · 카메라·지형·피킹 — 좌표 변환과 Ray 교차</mention-page>는 유지하고 수정된 전체 소스와 33조건 검증을 이 페이지에 보존합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 비교식만으로 NaN을 거부할 수 없는 이유",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원형은 det, u, v, t의 범위 비교만 수행했습니다. NaN은 일반적인 크기 비교를 참으로 만들지 않으므로, 거부 조건을 모두 지나 hit=true와 NaN 거리를 반환할 수 있었습니다. 실제 반례 출력은 다음과 같습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "Baseline: hit_with_nan=1 t_isfinite=0"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "v1.1은 입력 Ray·삼각형·카메라·행렬·높이의 유한성을 먼저 확인하고 교차 계산의 det/u/v/t가 유한한지도 검사합니다. 단순히 결과 색이나 위치가 이상하다고 판단하는 대신, 잘못된 입력을 예외로 분리했습니다. std::isfinite의 의미는 [Microsoft floating-point classification](https://learn.microsoft.com/en-us/cpp/standard-library/cmath-functions)과 대조합니다. 이번 테스트는 모든 수치 조건수·부동소수점 오차의 증명이 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 유지한 좌표 계약과 제한",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "세계 좌표 Ray는 near 점에서 시작하고 단위 방향과 far까지의 maxT를 가집니다. 객체의 아핀 World 역행렬로 옮긴 로컬 방향은 다시 정규화하지 않으므로 같은 t가 유지됩니다. 프로젝트의 일반 World 행렬이 아닌 원근 행렬은 toLocal에서 거부합니다. transform 자체는 아핀 3성분 계산이며 원근 나눗셈을 구현하지 않습니다. [D3DXVec3TransformCoord](https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3transformcoord), [D3DXVec3TransformNormal](https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3transformnormal), [D3DXIntersectTri](https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxintersecttri)는 API 대조 자료이며 아래 코드가 실제로 호출하지 않습니다.\n교차 함수는 양면 피킹이며 작은 허용 오차 때문에 t가 아주 조금 음수인 접촉도 보존할 수 있습니다. eps와 0벡터·역행렬 판정 임계값은 이 double 학습 모델의 정책입니다. 스케일이 극단적인 메시·접선·거대한 좌표의 정확한 선택을 보장하지 않습니다. makeRay는 유한한 대칭 원근 LH와 뷰포트 안 픽셀만 지원하며 jitter·비대칭 투영·DPI 변환은 호출자 책임입니다. Terrain은 네 높이를 확인하고 삼각형 대각선에 맞춰 보간합니다. heightmap 파일 로딩이나 BMP 해석은 하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"유한한 카메라·뷰포트 입력\"] --> B[\"near와 far의 월드 Ray\"]\n B --> C[\"아핀 World 역행렬\"]\n C --> D[\"로컬 방향은 재정규화하지 않음\"]\n D --> E[\"Ray·삼각형 유한성 확인\"]\n E --> F[\"det 및 barycentric u/v/t 검사\"]\n F --> G[\"교차 여부와 같은 월드 거리 파라미터\"]"
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. main.cpp — 전체 수정본",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include <functional>\n#include <algorithm>\n#include <cstddef>\n#include <utility>\n#include <cassert>\n#include <cmath>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nstruct V3 { double x, y, z; };\nbool finite(V3 v){return std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z);}\nV3 operator+(V3 a, V3 b) { return {a.x+b.x,a.y+b.y,a.z+b.z}; }\nV3 operator-(V3 a, V3 b) { return {a.x-b.x,a.y-b.y,a.z-b.z}; }\nV3 operator*(V3 a, double s) { return {a.x*s,a.y*s,a.z*s}; }\ndouble dot(V3 a,V3 b) { return a.x*b.x+a.y*b.y+a.z*b.z; }\nV3 cross(V3 a,V3 b) { return {a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x}; }\ndouble length(V3 a) { return std::sqrt(dot(a,a)); }\nV3 normalized(V3 a) {\n    const double n=length(a);\n    if (!(n>1e-12) || !std::isfinite(n)) throw std::invalid_argument(\"zero/invalid direction\");\n    return a*(1.0/n);\n}\nbool close(double a,double b) { return std::abs(a-b)<1e-8; }\nstruct Ray { V3 origin, dir; double maxT; }; // dir world-unit; near -> far\nstruct Viewport { double x,y,width,height; };\nRay makeRay(double px,double py,Viewport vp,V3 eye,V3 at,V3 up,double fovy,double zn,double zf) {\n    if (!std::isfinite(px)||!std::isfinite(py)||!std::isfinite(vp.x)||!std::isfinite(vp.y)||\n        !std::isfinite(vp.width)||!std::isfinite(vp.height)||!std::isfinite(fovy)||\n        !std::isfinite(zn)||!std::isfinite(zf)||!finite(eye)||!finite(at)||!finite(up))\n        throw std::invalid_argument(\"non-finite camera/viewport\");\n    if (!(vp.width>0 && vp.height>0 && zn>0 && zf>zn && fovy>0 && fovy<3.141592653589793))\n        throw std::invalid_argument(\"invalid camera/viewport\");\n    if (!(px>=vp.x && px<vp.x+vp.width && py>=vp.y && py<vp.y+vp.height))\n        throw std::out_of_range(\"mouse outside viewport\");\n    const V3 f=normalized(at-eye),r=normalized(cross(up,f)),u=cross(f,r);\n    const double nx=2.0*(px-vp.x)/vp.width-1.0;\n    const double ny=1.0-2.0*(py-vp.y)/vp.height;\n    const double h=std::tan(fovy*0.5),aspect=vp.width/vp.height;\n    const V3 nearVec=f+r*(nx*aspect*h)+u*(ny*h);\n    const V3 start=eye+nearVec*zn;\n    const V3 end=eye+nearVec*zf;\n    const double maxT=length(end-start);\n    if(!finite(start)||!finite(end)||!std::isfinite(maxT)||maxT<=0)\n        throw std::invalid_argument(\"ray construction overflow\");\n    return {start, normalized(nearVec), maxT};\n}\nstruct Hit { bool yes; double t,u,v; };\nHit intersect(Ray ray,V3 a,V3 b,V3 c) {\n    const double eps=1e-10;\n    if(!finite(ray.origin)||!finite(ray.dir)||!std::isfinite(ray.maxT)||ray.maxT<0||\n       !finite(a)||!finite(b)||!finite(c)) throw std::invalid_argument(\"non-finite ray/triangle\");\n    const double dirLength=length(ray.dir);\n    if(!std::isfinite(dirLength)||dirLength<=1e-12) throw std::invalid_argument(\"invalid ray direction\");\n    const V3 e1=b-a,e2=c-a,p=cross(ray.dir,e2);\n    const double det=dot(e1,p);\n    if (!std::isfinite(det)) throw std::invalid_argument(\"intersection overflow\");\n    if (std::abs(det)<eps) return {false,0,0,0};\n    const double inv=1.0/det;\n    const V3 s=ray.origin-a;\n    const double u=dot(s,p)*inv;\n    if (!std::isfinite(u)) throw std::invalid_argument(\"barycentric overflow\");\n    if (u<-eps || u>1+eps) return {false,0,0,0};\n    const V3 q=cross(s,e1);\n    const double v=dot(ray.dir,q)*inv;\n    if (!std::isfinite(v)) throw std::invalid_argument(\"barycentric overflow\");\n    if (v<-eps || u+v>1+eps) return {false,0,0,0};\n    const double t=dot(e2,q)*inv;\n    if (!std::isfinite(t)) throw std::invalid_argument(\"distance overflow\");\n    if (t<-eps || t>ray.maxT+eps) return {false,0,0,0};\n    return {true,t,u,v};\n}\nstruct Mat { double m[4][4]; };\nMat identity() { Mat a={}; for(int i=0;i<4;++i) a.m[i][i]=1; return a; }\nMat multiply(Mat a,Mat b) {\n    Mat r={};\n    for(int i=0;i<4;++i) for(int j=0;j<4;++j) for(int k=0;k<4;++k)\n        r.m[i][j]+=a.m[i][k]*b.m[k][j];\n    return r;\n}\nMat scale(double x,double y,double z) { Mat a=identity(); a.m[0][0]=x;a.m[1][1]=y;a.m[2][2]=z;return a; }\nMat translate(double x,double y,double z) { Mat a=identity();a.m[3][0]=x;a.m[3][1]=y;a.m[3][2]=z;return a; }\nMat inverse(Mat a) {\n    for(const auto& row:a.m)for(double v:row)if(!std::isfinite(v))throw std::invalid_argument(\"non-finite matrix\");\n    Mat r=identity();\n    for(int j=0;j<4;++j) {\n        int pivot=j;\n        for(int i=j+1;i<4;++i) if(std::abs(a.m[i][j])>std::abs(a.m[pivot][j])) pivot=i;\n        if(std::abs(a.m[pivot][j])<1e-12) throw std::invalid_argument(\"singular world matrix\");\n        for(int k=0;k<4;++k) { std::swap(a.m[j][k],a.m[pivot][k]); std::swap(r.m[j][k],r.m[pivot][k]); }\n        const double d=a.m[j][j];\n        for(int k=0;k<4;++k) { a.m[j][k]/=d;r.m[j][k]/=d; }\n        for(int i=0;i<4;++i) if(i!=j) {\n            const double f=a.m[i][j];\n            for(int k=0;k<4;++k) { a.m[i][k]-=f*a.m[j][k]; r.m[i][k]-=f*r.m[j][k]; }\n        }\n    }\n    for(const auto& row:r.m)for(double v:row)if(!std::isfinite(v))throw std::invalid_argument(\"inverse overflow\");\n    return r;\n}\nV3 transform(V3 v,Mat m,bool point) {\n    const double w=point?1.0:0.0;\n    return {v.x*m.m[0][0]+v.y*m.m[1][0]+v.z*m.m[2][0]+w*m.m[3][0],\n            v.x*m.m[0][1]+v.y*m.m[1][1]+v.z*m.m[2][1]+w*m.m[3][1],\n            v.x*m.m[0][2]+v.y*m.m[1][2]+v.z*m.m[2][2]+w*m.m[3][2]};\n}\nRay toLocal(Ray r,Mat world) {\n    if(world.m[0][3]!=0||world.m[1][3]!=0||world.m[2][3]!=0||world.m[3][3]!=1)\n        throw std::invalid_argument(\"local ray needs affine world\");\n    Mat inv=inverse(world);\n    // Do not normalize the transformed direction: world-distance t must be preserved.\n    return {transform(r.origin,inv,true),transform(r.dir,inv,false),r.maxT};\n}\nstruct Terrain {\n    int width, depth;\n    std::vector<double> y; // row-major (z*width+x), +z increases with row\n    double sample(double x,double z) const {\n        if(width<2 || depth<2 || static_cast<std::size_t>(width)>std::numeric_limits<std::size_t>::max()/static_cast<std::size_t>(depth) ||\n           y.size()!=static_cast<std::size_t>(width)*static_cast<std::size_t>(depth) ||\n           !std::isfinite(x)||!std::isfinite(z)||x<0||z<0||x>width-1||z>depth-1)\n            throw std::out_of_range(\"invalid terrain/coordinate\");\n        const int ix=std::min(static_cast<int>(x),width-2),iz=std::min(static_cast<int>(z),depth-2);\n        const double fx=x-ix,fz=z-iz;\n        const std::size_t i=static_cast<std::size_t>(iz)*static_cast<std::size_t>(width)+static_cast<std::size_t>(ix);\n        const std::size_t w=static_cast<std::size_t>(width);\n        const double a=y[i],b=y[i+1],c=y[i+w],d=y[i+w+1];\n        if(!std::isfinite(a)||!std::isfinite(b)||!std::isfinite(c)||!std::isfinite(d))\n            throw std::invalid_argument(\"non-finite height\");\n        // Explicit diagonal b -> c; never bilinear interpolation of a triangle mesh.\n        return fx+fz<=1 ? a*(1-fx-fz)+b*fx+c*fz : d*(fx+fz-1)+b*(1-fz)+c*(1-fx);\n    }\n};\nint main() {\n    int checks=0;\n    const auto check=[&](bool yes){ if(!yes) throw std::runtime_error(\"assertion failed\"); ++checks; };\n    const double pi=3.141592653589793;\n    const Viewport vp{100,50,800,600};\n    const Ray r=makeRay(500,350,vp,{0,0,0},{0,0,1},{0,1,0},pi/2,1,100);\n    check(close(r.origin.x,0)&&close(r.origin.y,0)&&close(r.origin.z,1));\n    check(close(r.dir.x,0)&&close(r.dir.y,0)&&close(r.dir.z,1));\n    check(close(r.maxT,99));\n    const Ray corner=makeRay(100,50,vp,{0,0,0},{0,0,1},{0,1,0},pi/2,1,100);\n    check(corner.dir.x<0&&corner.dir.y>0&&corner.dir.z>0);\n    bool rejected=false;\n    try { (void)makeRay(99,350,vp,{0,0,0},{0,0,1},{0,1,0},pi/2,1,100); } catch(const std::out_of_range&) { rejected=true; }\n    check(rejected);\n    rejected=false;\n    try { (void)makeRay(500,350,vp,{0,0,0},{0,0,0},{0,1,0},pi/2,1,100); } catch(const std::invalid_argument&) { rejected=true; }\n    check(rejected);\n    rejected=false;\n    try { (void)makeRay(500,350,vp,{0,0,0},{0,0,1},{0,0,1},pi/2,1,100); } catch(const std::invalid_argument&) { rejected=true; }\n    check(rejected);\n    rejected=false;\n    try { (void)makeRay(500,350,vp,{0,0,0},{0,0,1},{0,1,0},pi/2,0,100); } catch(const std::invalid_argument&) { rejected=true; }\n    check(rejected);\n    const V3 a{-1,-1,5},b{1,-1,5},c{0,1,5};\n    Hit h=intersect(r,a,b,c);\n    check(h.yes&&close(h.t,4));\n    check(close(h.u,.25)&&close(h.v,.5)&&close(1-h.u-h.v,.25));\n    check(!intersect(r,{10,10,5},{12,10,5},{11,12,5}).yes);\n    check(!intersect(r,{0,0,5},{0,0,5},{0,0,5}).yes);\n    check(!intersect(r,{-1,-1,.5},{1,-1,.5},{0,1,.5}).yes);\n    check(!intersect(r,{-1,-1,101},{1,-1,101},{0,1,101}).yes);\n    const Mat world=multiply(scale(2,1,2),translate(0,0,1));\n    const Ray local=toLocal(r,world);\n    check(close(local.origin.z,0)&&close(local.dir.z,.5));\n    h=intersect(local,{-1,-1,2},{1,-1,2},{0,1,2});\n    check(h.yes&&close(h.t,4));\n    const V3 worldHit=transform(local.origin+local.dir*h.t,world,true);\n    check(close(worldHit.x,0)&&close(worldHit.y,0)&&close(worldHit.z,5));\n    rejected=false;\n    try { (void)toLocal(r,scale(0,1,1)); } catch(const std::invalid_argument&) { rejected=true; }\n    check(rejected);\n    const Terrain plane{2,2,{0,10,20,30}};\n    check(close(plane.sample(.25,.25),7.5));\n    check(close(plane.sample(.75,.75),22.5));\n    check(close(plane.sample(1,1),30));\n    const Terrain seam{2,2,{0,0,0,10}};\n    check(close(seam.sample(.25,.25),0));\n    check(close(seam.sample(.75,.75),5));\n    rejected=false;\n    try { (void)seam.sample(-.01,0); } catch(const std::out_of_range&) { rejected=true; }\n    check(rejected);\n    rejected=false;\n    try { (void)Terrain{2,2,{1,2,3}}.sample(.1,.1); } catch(const std::out_of_range&) { rejected=true; }\n    check(rejected);\n    const double nan=std::numeric_limits<double>::quiet_NaN();\n    auto invalid=[&](const std::function<void()>& fn){bool threw=false;try{fn();}catch(const std::invalid_argument&){threw=true;}check(threw);};\n    invalid([&]{intersect(r,{nan,-1,5},b,c);});\n    invalid([&]{Ray bad=r;bad.dir.x=nan;intersect(bad,a,b,c);});\n    invalid([&]{Ray bad=r;bad.dir={0,0,0};intersect(bad,a,b,c);});\n    invalid([&]{makeRay(500,350,vp,{0,0,0},{0,0,1},{0,1,0},pi/2,1,std::numeric_limits<double>::infinity());});\n    invalid([&]{Mat bad=identity();bad.m[0][0]=nan;toLocal(r,bad);});\n    invalid([&]{Mat bad=identity();bad.m[0][3]=0.5;toLocal(r,bad);});\n    invalid([&]{Terrain{2,2,{0,0,0,nan}}.sample(.75,.75);});\n    check(intersect(r,a,c,b).yes);\n    std::cout<<\"PASS \"<<checks<<\" checks\\n\";\n}"
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. CMakeLists.txt·재현·검증",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "text",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx9_picking_recovered LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nadd_executable(picking main.cpp)\nset_target_properties(picking PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(picking PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(picking PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME picking COMMAND picking)"
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build -j 2\nctest --test-dir build --output-on-failure -V\n# C++11: -DLAB_CXX_STANDARD=11\n# sanitizer: clang++ + -fsanitize=address,undefined -fno-sanitize-recover=undefined"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부 입력·에셋 없이 실행하며 정상 출력은 PASS 33 checks와 종료 코드 0입니다. 조건 실패는 예외로 중단되며 CTest가 실패로 처리합니다. C++20이 학습 기본이지만 사용한 문법·라이브러리의 C++11 호환 빌드도 아래와 같이 실제 확인했습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "UTC 2026-10-16T06:06:26.574370+00:00 to 06:06:30.009736+00:00\nGCC 14.2 C++20: PASS 33 checks\nGCC 14.2 C++11: PASS 33 checks\nClang 17 C++20 ASan+UBSan: PASS 33 checks\nExisting mini: PASS 7 CPU checks\nBatch CTest (extended + mini): each 2/2, exit=0\nWindows/MSVC/D3DX/Direct3D9/GPU: NOT RUN"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 독립 CMake에는 확장 실행파일 하나가 등록됩니다. 기존 미니는 [원본 관련 문서](https://app.notion.com/p/3f8a99703f4081da9335faf6d568d1c3)에 보존되어 있으며 수정본의 새 실패 입력 검사를 대체하지 않습니다. 같은 33조건을 반복한 결과를 서로 다른 99조건이라고 세지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. 이해 확인과 변경 이력",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "NaN이면 t&lt;0 또는 t&gt;maxT에서 알아서 거부되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그렇지 않습니다. 유한성 검사가 빠지면 두 거부 조건을 모두 지나갈 수 있습니다. v1.1은 입력과 계산 결과를 따로 검사하고 NaN 입력을 정상적인 충돌 없음과 구별합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "로컬 Ray 방향을 정규화하지 않는 이유는 무엇인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아핀 역변환 전후 O+tD의 t를 유지하기 위해서입니다. 비균일 스케일 후 로컬 방향을 단위화하면 같은 수치의 t가 같은 월드 거리를 뜻하지 않게 됩니다. 이것은 표면 법선의 inverse-transpose 변환과 다른 문제입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-16 v1.1: 원형 25조건 재실행, NaN hit 실제 반례 재현, 유한성·아핀 조건·높이 검사 및 8조건 추가. 큰 지형의 인덱스 산술을 size_t로 옮겼습니다. transform 결과·높이 계산의 모든 극단적인 overflow와 수치 조건수를 완전히 증명한 버전은 아닙니다. 원형 ZIP은 별도로 보존하며 이 페이지를 현재 확장 실습으로 사용합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "raw-source-index",
+      "title": "원본 전체 소스 파일과 빌드",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 코드가 보관된 GitHub 폴더",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/tree/master/knowledge/shared/dx9-impl-07b/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.cpp · 10437문자 · 소스 열기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-07b/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CMakeLists.txt · 490문자 · 소스 열기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-07b/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S knowledge/shared/dx9-impl-07b -B build-dx9-07b -DCMAKE_BUILD_TYPE=Debug\ncmake --build build-dx9-07b\nctest --test-dir build-dx9-07b -V --output-on-failure"
+        },
+        {
+          "type": "details",
+          "title": "이 소스가 실제 Windows/D3D9에서 실행됐나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. Windows SDK/MSVC·D3D9 드라이버·GPU 실행은 이번 이관에서 검증하지 않았습니다. 네이티브 전체 소스를 보존한 사실과 플랫폼 실행 검증을 혼동하지 마세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
