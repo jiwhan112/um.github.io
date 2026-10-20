@@ -3,6 +3,7 @@ on:
   pull_request:
     branches: [master]
     paths:
+      - 'knowledge/dx11-frustum/CMakeLists.txt'
       - 'knowledge/shared/dx11-13/**'
       - 'knowledge/shared/dx11-13b/**'
       - 'knowledge/shared/dx11-14/**'
@@ -13,6 +14,7 @@ on:
   push:
     branches: [master, 'feature/dx11-*']
     paths:
+      - 'knowledge/dx11-frustum/CMakeLists.txt'
       - 'knowledge/shared/dx11-13/**'
       - 'knowledge/shared/dx11-13b/**'
       - 'knowledge/shared/dx11-14/**'
@@ -54,17 +56,19 @@ jobs:
           echo 'ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8  knowledge/shared/dx11-13/main.cpp' | sha256sum -c -
           wc -c knowledge/shared/dx11-13/main.cpp
 
-      - name: Configure, build and execute six independent CPU labs
+      - name: Configure, build and execute seven CPU labs including existing Frustum
         shell: bash
         env:
           ASAN_OPTIONS: detect_leaks=1
           UBSAN_OPTIONS: halt_on_error=1
         run: |
           set -euo pipefail
-          for lab in dx11-13 dx11-13b dx11-14 dx11-16 dx11-17 dx11-18; do
+          for lab in dx11-13 dx11-13b dx11-14 dx11-15 dx11-16 dx11-17 dx11-18; do
             build="/tmp/atlas-${{ matrix.id }}-${lab}"
             echo "::group::${lab} ${{ matrix.id }}"
-            cmake -S "knowledge/shared/${lab}" -B "${build}" -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" -DLAB_CXX_STANDARD="${{ matrix.cpp_standard }}" -DCMAKE_CXX_FLAGS="${{ matrix.flags }}" -DCMAKE_BUILD_TYPE=Debug
+            source="knowledge/shared/${lab}"
+            if [ "${lab}" = "dx11-15" ]; then source="knowledge/dx11-frustum"; fi
+            cmake -S "${source}" -B "${build}" -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" -DLAB_CXX_STANDARD="${{ matrix.cpp_standard }}" -DCMAKE_CXX_FLAGS="${{ matrix.flags }}" -DCMAKE_BUILD_TYPE=Debug
             cmake --build "${build}" --parallel 2
             ctest --test-dir "${build}" -V --output-on-failure
             echo "::endgroup::"
