@@ -75,7 +75,29 @@ async function svgDetails(image: Locator) {
   });
 }
 
-test('existing Mermaid becomes a real diagram while original source stays exact and collapsed', async ({ page }) => {
+async function expectWholeDiagramFits(image: Locator) {
+  const size = await image.evaluate((node: HTMLImageElement) => {
+    const canvas = node.parentElement!;
+    const bounds = canvas.getBoundingClientRect();
+    const box = node.getBoundingClientRect();
+    return {
+      imageWidth: box.width, imageHeight: box.height,
+      canvasWidth: canvas.clientWidth, canvasHeight: canvas.clientHeight,
+      horizontalOverflow: canvas.scrollWidth - canvas.clientWidth,
+      verticalOverflow: canvas.scrollHeight - canvas.clientHeight,
+      contained: box.left >= bounds.left - 1 && box.top >= bounds.top - 1 && box.right <= bounds.right + 1 && box.bottom <= bounds.bottom + 1,
+    };
+  });
+  expect(size.imageWidth).toBeGreaterThan(0);
+  expect(size.imageHeight).toBeGreaterThan(0);
+  expect(size.imageWidth).toBeLessThanOrEqual(size.canvasWidth);
+  expect(size.imageHeight).toBeLessThanOrEqual(size.canvasHeight);
+  expect(size.horizontalOverflow).toBeLessThanOrEqual(1);
+  expect(size.verticalOverflow).toBeLessThanOrEqual(1);
+  expect(size.contained, 'The full diagram image must fit inside its inline canvas without cropping.').toBe(true);
+}
+
+test('existing Mermaid becomes a real diagram while original source stays exact and collapsed', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(`/um.github.io${meta.route}`);
@@ -89,6 +111,7 @@ test('existing Mermaid becomes a real diagram while original source stays exact 
     const image = diagram.locator('.mermaid-canvas img');
     await expect(image).toHaveAttribute('src', /^blob:/);
     await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.naturalWidth)).toBeGreaterThan(0);
+    await expectWholeDiagramFits(image);
     await expect(image).toHaveAttribute('alt', /학습 도식|도식/);
     const original = diagram.locator('.mermaid-source');
     await expect(original).toHaveJSProperty('open', false);
@@ -103,6 +126,15 @@ test('existing Mermaid becomes a real diagram while original source stays exact 
     expect(svg.labels.length).toBeGreaterThan(0);
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  await page.goto('knowledge/dx9-impl-09/');
+  const actualDiagram = page.locator('.mermaid-diagram');
+  await expect(actualDiagram).toHaveAttribute('data-diagram-state', 'ready');
+  const actualImage = actualDiagram.locator('.mermaid-canvas img');
+  await expect.poll(() => actualImage.evaluate((node: HTMLImageElement) => node.naturalWidth)).toBeGreaterThan(0);
+  await expectWholeDiagramFits(actualImage);
+  await actualImage.scrollIntoViewIfNeeded();
+  await expect(actualImage).toBeInViewport({ ratio: 1 });
+  await actualDiagram.screenshot({ path: testInfo.outputPath('dx9-09-mermaid-whole-flow.png') });
   expect(errors).toEqual([]);
 });
 

@@ -1,0 +1,36 @@
+Change Dir: '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+
+Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile -j2
+/usr/local/bin/cmake -S/home/runner/work/um.github.io/um.github.io/knowledge/dx9-impl-09/lab -B/home/runner/work/um.github.io/um.github.io/build-dx9-09 --check-build-system CMakeFiles/Makefile.cmake 0
+/usr/local/bin/cmake -E cmake_progress_start /home/runner/work/um.github.io/um.github.io/build-dx9-09/CMakeFiles /home/runner/work/um.github.io/um.github.io/build-dx9-09//CMakeFiles/progress.marks
+/usr/bin/gmake  -f CMakeFiles/Makefile2 all
+gmake[1]: Entering directory '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+/usr/bin/gmake  -f CMakeFiles/alpha_original.dir/build.make CMakeFiles/alpha_original.dir/depend
+/usr/bin/gmake  -f CMakeFiles/alpha_korean.dir/build.make CMakeFiles/alpha_korean.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+cd /home/runner/work/um.github.io/um.github.io/build-dx9-09 && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/dx9-impl-09/lab /home/runner/work/um.github.io/um.github.io/knowledge/dx9-impl-09/lab /home/runner/work/um.github.io/um.github.io/build-dx9-09 /home/runner/work/um.github.io/um.github.io/build-dx9-09 /home/runner/work/um.github.io/um.github.io/build-dx9-09/CMakeFiles/alpha_original.dir/DependInfo.cmake "--color="
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+cd /home/runner/work/um.github.io/um.github.io/build-dx9-09 && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/dx9-impl-09/lab /home/runner/work/um.github.io/um.github.io/knowledge/dx9-impl-09/lab /home/runner/work/um.github.io/um.github.io/build-dx9-09 /home/runner/work/um.github.io/um.github.io/build-dx9-09 /home/runner/work/um.github.io/um.github.io/build-dx9-09/CMakeFiles/alpha_korean.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+/usr/bin/gmake  -f CMakeFiles/alpha_korean.dir/build.make CMakeFiles/alpha_korean.dir/build
+/usr/bin/gmake  -f CMakeFiles/alpha_original.dir/build.make CMakeFiles/alpha_original.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+[ 25%] Building CXX object CMakeFiles/alpha_korean.dir/main.ko.cpp.o
+/usr/bin/clang++   -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -g -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT CMakeFiles/alpha_korean.dir/main.ko.cpp.o -MF CMakeFiles/alpha_korean.dir/main.ko.cpp.o.d -o CMakeFiles/alpha_korean.dir/main.ko.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/dx9-impl-09/lab/main.ko.cpp
+[ 50%] Building CXX object CMakeFiles/alpha_original.dir/original/main.cpp.o
+/usr/bin/clang++   -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -g -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT CMakeFiles/alpha_original.dir/original/main.cpp.o -MF CMakeFiles/alpha_original.dir/original/main.cpp.o.d -o CMakeFiles/alpha_original.dir/original/main.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/dx9-impl-09/lab/original/main.cpp
+[100%] Linking CXX executable alpha_original
+[100%] Linking CXX executable alpha_korean
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/alpha_original.dir/link.txt --verbose=1
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/alpha_korean.dir/link.txt --verbose=1
+/usr/bin/clang++ -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -g -fsanitize=address,undefined -fno-omit-frame-pointer -Xlinker --dependency-file=CMakeFiles/alpha_korean.dir/link.d CMakeFiles/alpha_korean.dir/main.ko.cpp.o -o alpha_korean
+/usr/bin/clang++ -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -g -fsanitize=address,undefined -fno-omit-frame-pointer -Xlinker --dependency-file=CMakeFiles/alpha_original.dir/link.d CMakeFiles/alpha_original.dir/original/main.cpp.o -o alpha_original
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+[100%] Built target alpha_korean
+[100%] Built target alpha_original
+gmake[1]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build-dx9-09'
+/usr/local/bin/cmake -E cmake_progress_start /home/runner/work/um.github.io/um.github.io/build-dx9-09/CMakeFiles 0
+

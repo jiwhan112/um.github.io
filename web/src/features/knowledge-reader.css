@@ -1,5 +1,5 @@
 .knowledge-reader .document-heading{padding-bottom:28px}
-.knowledge-reader .document-heading h1{line-height:1.5;font-size:clamp(26px,2.5vw,35px)}
+.knowledge-reader .document-heading h1{line-height:1.5;font-size:clamp(26px,2.5vw,35px);word-break:keep-all;overflow-wrap:anywhere}
 .knowledge-reader .page-description{font-size:15px;line-height:1.8;max-width:68ch}
 .knowledge-back{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);margin-bottom:22px}
 .knowledge-back:hover{color:var(--accent)}
@@ -13,6 +13,7 @@
 .knowledge-reader .prose .callout p{font-size:14px}
 .knowledge-reader .prose .table-scroll{margin:24px 0}
 .knowledge-reader .prose table{font-size:13px;line-height:1.85}
+.knowledge-reader .prose table code{white-space:nowrap;word-break:normal;overflow-wrap:normal}
 .knowledge-reader .prose .code-block pre{font-size:13px;line-height:1.85;padding:20px}
 .knowledge-reader .prose .disclosure{margin:18px 0}
 .knowledge-reader .prose .disclosure summary{font-size:14px}

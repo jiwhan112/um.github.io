@@ -39,8 +39,16 @@
         },
         {
           "type": "callout",
-          "title": "이 단원에서 만들 판단 기준",
           "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 단원에서 만들 판단 기준",
+                  "kind": "strong"
+                }
+              ]
+            },
             {
               "type": "paragraph",
               "content": [
@@ -397,12 +405,14 @@
                 ],
                 [
                   {
-                    "text": "SRCBLEND"
+                    "text": "SRCBLEND",
+                    "kind": "code"
                   }
                 ],
                 [
                   {
-                    "text": "DESTBLEND"
+                    "text": "DESTBLEND",
+                    "kind": "code"
                   }
                 ]
               ]
@@ -417,12 +427,14 @@
                 ],
                 [
                   {
-                    "text": "SRCALPHA"
+                    "text": "SRCALPHA",
+                    "kind": "code"
                   }
                 ],
                 [
                   {
-                    "text": "INVSRCALPHA"
+                    "text": "INVSRCALPHA",
+                    "kind": "code"
                   }
                 ]
               ]
@@ -437,12 +449,14 @@
                 ],
                 [
                   {
-                    "text": "ONE"
+                    "text": "ONE",
+                    "kind": "code"
                   }
                 ],
                 [
                   {
-                    "text": "INVSRCALPHA"
+                    "text": "INVSRCALPHA",
+                    "kind": "code"
                   }
                 ]
               ]
@@ -457,12 +471,14 @@
                 ],
                 [
                   {
-                    "text": "SRCALPHA"
+                    "text": "SRCALPHA",
+                    "kind": "code"
                   }
                 ],
                 [
                   {
-                    "text": "ONE"
+                    "text": "ONE",
+                    "kind": "code"
                   }
                 ]
               ]
@@ -471,8 +487,16 @@
         },
         {
           "type": "callout",
-          "title": "텍스처의 표현과 설정은 한 쌍입니다",
           "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "텍스처의 표현과 설정은 한 쌍입니다",
+                  "kind": "strong"
+                }
+              ]
+            },
             {
               "type": "paragraph",
               "content": [
@@ -659,8 +683,16 @@
         },
         {
           "type": "callout",
-          "title": "깊이 검사와 깊이 쓰기를 분리하세요",
           "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "깊이 검사와 깊이 쓰기를 분리하세요",
+                  "kind": "strong"
+                }
+              ]
+            },
             {
               "type": "paragraph",
               "content": [
@@ -1157,8 +1189,16 @@
         },
         {
           "type": "callout",
-          "title": "RenderState는 Draw 뒤에도 남습니다",
           "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "RenderState는 Draw 뒤에도 남습니다",
+                  "kind": "strong"
+                }
+              ]
+            },
             {
               "type": "paragraph",
               "content": [
@@ -1285,6 +1325,35 @@
           "type": "paragraph",
           "content": [
             {
+              "text": "파일 직접 열기: "
+            },
+            {
+              "text": "한국어 주석 C++ 파일",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-09/lab/main.ko.cpp"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "원본 C++ 파일",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-09/lab/original/main.cpp"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "CMake 파일",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-09/lab/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
               "text": "저장소를 내려받은 뒤 다음 명령을 실행합니다. 본문 일부를 이어 붙이는 대신 전체 파일을 사용하세요."
             }
           ]
@@ -1296,8 +1365,16 @@
         },
         {
           "type": "callout",
-          "title": "먼저 이 세 함수를 찾아보세요",
           "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "먼저 이 세 함수를 찾아보세요",
+                  "kind": "strong"
+                }
+              ]
+            },
             {
               "type": "paragraph",
               "content": [
@@ -1479,12 +1556,14 @@
                 ],
                 [
                   {
-                    "text": "OFF"
+                    "text": "OFF",
+                    "kind": "code"
                   }
                 ],
                 [
                   {
-                    "text": "OFF"
+                    "text": "OFF",
+                    "kind": "code"
                   }
                 ]
               ]
@@ -1706,8 +1785,16 @@
         },
         {
           "type": "callout",
-          "title": "화면이 아닌 CPU 계산을 확인합니다",
           "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "화면이 아닌 CPU 계산을 확인합니다",
+                  "kind": "strong"
+                }
+              ]
+            },
             {
               "type": "paragraph",
               "content": [

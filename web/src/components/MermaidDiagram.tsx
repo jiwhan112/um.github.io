@@ -153,10 +153,10 @@ export function MermaidDiagram({ code, children }: { code: string; children: Rea
         <Button type="button" variant="outline" size="sm" onClick={() => setAttempt((value) => value + 1)}><RefreshCw size={14}/>다시 시도</Button>
       </div>}
       {image && <>
-        <div className="mermaid-canvas" tabIndex={0} aria-label="도식 영역 · 큰 도식은 가로와 세로로 스크롤할 수 있습니다">
+        <div className="mermaid-canvas">
           <img src={image.url} alt={`${image.title}. ${image.description}`} width={Math.ceil(image.width)} height={Math.ceil(image.height)} onError={() => setState({ status: 'error', message: '생성된 도식 이미지를 브라우저에서 표시하지 못했습니다.' })}/>
         </div>
-        <figcaption className="mermaid-caption">큰 도식은 스크롤하거나 확대해서 볼 수 있습니다.</figcaption>
+        <figcaption className="mermaid-caption">전체 흐름을 먼저 보고, 글씨가 작으면 확대해서 읽어보세요.</figcaption>
         <details className="mermaid-description"><summary>도식 내용 읽기</summary><p>{image.description}</p></details>
         <DialogContent className="mermaid-dialog">
           <DialogTitle>{image.title} 확대</DialogTitle>

@@ -16,7 +16,15 @@ test('visual lesson separates learning from archives and retains reading state',
   await expect(page.getByText('Educational CPU reference model', { exact: false })).toHaveCount(0);
   await expect(page.locator('#part-16')).toHaveCount(0);
   await expect(page.locator('.mermaid-diagram').first()).toHaveAttribute('data-diagram-state', 'ready');
+  const adjacent = page.getByRole('navigation', { name: '이전 다음 문서' });
+  await expect(adjacent.getByRole('link').nth(0)).toHaveAttribute('href', '/um.github.io/knowledge/dx9-impl-08/');
+  await expect(adjacent.getByRole('link').nth(1)).toHaveAttribute('href', '/um.github.io/knowledge/dx9-impl-10/');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  for (const illustration of await page.locator('.knowledge-illustration img').all()) {
+    await illustration.scrollIntoViewIfNeeded();
+    await expect.poll(() => illustration.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.evaluate(() => document.fonts.ready);
   await page.screenshot({ path: testInfo.outputPath('dx9-09-lesson.png'), fullPage: true });
   await page.screenshot({ path: testInfo.outputPath('dx9-09-first-screen.png') });
@@ -66,8 +74,9 @@ test('table of contents scrolls and old section hashes open their new tab', asyn
 test('Korean teaching source is complete, downloadable and linked beside practice', async ({ page, request }, testInfo) => {
   await page.goto(lesson + '?tab=practice');
   await expect(page.locator('#part-2')).toBeVisible();
-  const sourceLink = page.locator('a[href$="/knowledge/dx9-impl-09/lab/main.ko.cpp"]').first();
+  const sourceLink = page.getByRole('link', { name: '한국어 주석 C++ 파일', exact: true });
   await expect(sourceLink).toBeVisible();
+  await expect(sourceLink).toHaveAttribute('href', '/um.github.io/knowledge/dx9-impl-09/lab/main.ko.cpp');
   const response = await request.get((await sourceLink.getAttribute('href'))!);
   expect(response.status()).toBe(200);
   const code = await response.text();

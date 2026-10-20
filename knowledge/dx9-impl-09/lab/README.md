@@ -72,9 +72,29 @@ g++ -std=c++11 -Wall -Wextra -Wpedantic -Werror knowledge/dx9-impl-09/lab/main.k
 
 ## 실제 확인한 범위와 한계
 
+### 2026-10-20 로컬 GCC 실행
+
 2026-10-20 로컬 Linux에서 GCC 13.3.0으로 원본·주석판을 각각 C++11과 C++20으로 컴파일했습니다. 네 번 모두 `-Wall -Wextra -Wpedantic -Werror`를 통과했고 위의 53조건 성공 출력과 종료 코드 0을 확인했습니다. [로컬 실행 로그·컴파일러 정보·파일 해시](verification/local-gcc-20261020/)를 함께 보존했습니다. 이 로컬 환경에는 CMake·CTest·Clang이 없으므로 해당 실행을 로컬 검증으로 기록하지 않습니다.
 
-GitHub CI의 Configure·Build·CTest 및 sanitizer 결과는 [DX9 09 teaching workflow 실행 목록](https://github.com/jiwhan112/um.github.io/actions/workflows/knowledge-dx9-09-teaching.yml)에서 해당 커밋의 실제 실행으로 확인합니다. 워크플로 파일의 존재만으로 검증 성공을 뜻하지 않습니다. 첨부에 적힌 2026-10-13의 GCC 14.2.0·Clang 17.0.0 기록은 당시의 기록으로 보존하며 이번 실행 결과와 합치지 않습니다.
+### 2026-10-20 GitHub CI 실행과 원시 로그
+
+[소스 커밋 `e7df1e8429169909ed09464ed857346da6a5f4c5`](https://github.com/jiwhan112/um.github.io/commit/e7df1e8429169909ed09464ed857346da6a5f4c5)에 대한 [push 실행 39402591867](https://github.com/jiwhan112/um.github.io/actions/runs/39402591867)과 [PR 실행 39402595902](https://github.com/jiwhan112/um.github.io/actions/runs/39402595902)는 모두 `completed / success`입니다. 아래 보존 파일은 **push 실행의 실제 artifact ZIP**에서 추출했습니다. ZIP 3개의 SHA-256은 GitHub가 제공한 artifact digest와 일치하며, 내부 파일은 바이트를 바꾸지 않았습니다. 각 작업의 전체 job 로그도 GitHub API가 제공한 UTF-8 텍스트로 보존했습니다.
+
+| 실제 실행 구성 | 실제 컴파일러 | Configure / Build | CTest | 원시 로그 |
+|---|---|---|---|---|
+| GCC C++11 | GCC 13.3.0 | 성공, `-std=c++11` 확인 | 2/2 통과, 원본·주석판 각각 53 PASS | [gcc-cxx11](verification/ci-39402591867/gcc-cxx11/) |
+| GCC C++20 | GCC 13.3.0 | 성공, `-std=c++20` 확인 | 2/2 통과, 원본·주석판 각각 53 PASS | [gcc-cxx20](verification/ci-39402591867/gcc-cxx20/) |
+| Clang C++20 + ASan/UBSan | Clang 18.1.3 | 성공, `-std=c++20`, sanitizer 컴파일·링크 플래그 확인 | 2/2 통과, 원본·주석판 각각 53 PASS | [clang-cxx20-asan-ubsan](verification/ci-39402591867/clang-cxx20-asan-ubsan/) |
+
+세 구성의 CMake는 3.31.6입니다. Clang 구성은 `-fsanitize=address,undefined -fno-omit-frame-pointer`, `ASAN_OPTIONS=detect_leaks=1:halt_on_error=1`, `UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1`을 적용해 실행했고 sanitizer 오류 보고가 없었습니다. 각 구성의 `environment-and-integrity.txt`는 같은 소스 해시, 원문 블록 바이트, 전처리 지시문, 2,563개 토큰의 일치를 기록합니다.
+
+각 폴더에는 `configure.txt`, `build.txt`, `ctest.txt`, `environment-and-integrity.txt`, `output-equivalence.txt`, `job.log`가 있습니다. `output-equivalence.txt`는 두 실행 파일의 표준 출력을 `diff`한 결과이므로 **0바이트가 정상적인 일치 결과**입니다. CTest 2/2, 컴파일러 3종 구성, push·PR 실행을 반복해도 확인한 독립 조건은 **같은 53개**입니다. 이를 106개·318개 이상의 새 조건으로 합산하지 않습니다.
+
+[검증 원장과 파일별 SHA-256](verification/ci-39402591867/manifest.json)에 실행 ID, 실제 head, job·artifact ID, ZIP digest, 보존 파일의 크기·해시를 기록했습니다. 임시 서명 다운로드 URL은 게시하지 않았으며, 전체 job 로그의 인증 값은 GitHub가 이미 `***`로 가린 상태를 유지했습니다. 이 원장은 위의 소스 커밋을 검증한 기록이며 이후 커밋의 실행 결과는 [workflow 실행 목록](https://github.com/jiwhan112/um.github.io/actions/workflows/knowledge-dx9-09-teaching.yml)에서 구분해 확인합니다.
+
+첨부에 적힌 2026-10-13의 GCC 14.2.0·Clang 17.0.0 기록은 당시의 기록으로 보존하며 이번 GitHub 실행 결과와 합치지 않습니다.
+
+### CPU 모델의 범위
 
 이 프로그램은 다음 범위의 CPU 모델입니다.
 

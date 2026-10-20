@@ -6,6 +6,7 @@ import { Panel, ReadCheck, NextPrevious } from '@/components/Common';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useData } from '@/lib/data';
 import { cleanTitle, dateLabel } from '@/lib/utils';
+import { compareKnowledgeDocuments } from '@/lib/knowledge-order';
 import type { Document } from '@/lib/types';
 import './knowledge-reader.css';
 
@@ -26,8 +27,8 @@ export function KnowledgeReader({ doc }: { doc: Document }) {
   const selected = doc.sections.find(section => section.id === hash)?.tab || requested || tabs[0];
   const current = tabs.includes(selected) ? selected : tabs[0];
   const visible = doc.sections.filter(section => section.tab === current);
-  const related = catalog.documents.filter(item => item.kind === 'knowledge')
-    .sort((a, b) => String(a.number || a.title).localeCompare(String(b.number || b.title), undefined, { numeric: true }));
+  const related = catalog.documents.filter(item => item.kind === 'knowledge' && item.category === doc.category)
+    .sort(compareKnowledgeDocuments);
 
   useEffect(() => {
     if (!hash) return;

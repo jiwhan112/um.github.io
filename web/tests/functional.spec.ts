@@ -140,15 +140,15 @@ test('WinAPI and game math migrated lessons are usable through the sitemap',asyn
  await expect(page).toHaveURL(/\/knowledge\/winapi-01\/$/);
  await expect(page.locator('main h1')).toContainText('WinAPI 01');
  await expect(page.locator('main .prose table')).toHaveCount(1);
- await expect(page.locator('main .prose details')).toHaveCount(2);
+ await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
  await page.goto('knowledge/dx9-pipeline-03/');
  await expect(page.locator('main h1')).toContainText('DX9 파이프라인 03');
  await expect(page.locator('main .prose table')).toHaveCount(2);
- await expect(page.locator('main .prose details')).toHaveCount(2);
+ await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
  await page.goto('knowledge/game-math-03/');
  await expect(page.locator('main h1')).toContainText('게임 수학 03');
  await expect(page.locator('main .prose code').first()).toBeVisible();
- await expect(page.locator('main .prose details')).toHaveCount(2);
+ await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
  await page.goto('knowledge/winapi-04a/');
  await expect(page.locator('main .code-block').filter({hasText:'int main()'})).toBeVisible();
  await expect(page.locator('main .code-block').filter({hasText:'add_test('})).toBeVisible();
@@ -190,7 +190,7 @@ test('DX11 migrated chapter sitemap and raw diagrams are readable on the website
  await expect(page.locator('main .mermaid-canvas img').first()).toBeVisible();
  await page.goto('knowledge/dx11-06/');
  await expect(page.locator('main h1')).toContainText('DX11 06');
- await expect(page.locator('main details').first()).toBeVisible();
+ await expect(page.locator('main .prose details.disclosure').first()).toBeVisible();
 });
 
 test('DX11 01, 07, 08 course chapters and recovered full C++ sources open',async({page})=>{
