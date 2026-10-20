@@ -3,7 +3,7 @@
 .mermaid-label{font-size:13px;font-weight:650;color:var(--text);overflow-wrap:anywhere}
 .mermaid-canvas,.mermaid-zoom-canvas{background:#111827;max-width:100%}
 .mermaid-canvas{padding:24px}
-.mermaid-canvas img{display:block;width:auto;height:auto;max-width:100%;max-height:30rem;object-fit:contain;margin:0 auto}
+.mermaid-canvas img{display:block;width:auto;height:auto;max-width:100%;max-height:52rem;object-fit:contain;margin:0 auto}
 .mermaid-caption{padding:9px 16px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
 .mermaid-description,.mermaid-source{border-top:1px solid var(--line);font-size:12px}
 .mermaid-description summary,.mermaid-source>summary{padding:10px 16px;cursor:pointer;color:var(--accent);font-weight:550}
@@ -21,4 +21,4 @@
 .mermaid-zoom-canvas{overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;max-height:calc(94dvh - 210px);border:1px solid var(--line);border-radius:8px;padding:22px;min-width:0;min-height:0;flex:1}
 .mermaid-zoom-canvas img{display:block;height:auto;margin:0 auto}
 .mermaid-render-stage{position:fixed;left:0;top:-100000px;visibility:hidden;pointer-events:none;width:1200px;z-index:-1;font-family:Arial,"Noto Sans KR","Malgun Gothic",sans-serif}
-@media(max-width:600px){.mermaid-toolbar{padding:10px 12px;gap:8px}.mermaid-canvas{padding:16px}.mermaid-canvas img{max-height:22rem}.mermaid-caption{padding:8px 12px}.mermaid-description summary,.mermaid-source>summary{padding:10px 12px}.dialog-content.mermaid-dialog{padding:18px 12px;width:calc(100vw - 16px);max-width:calc(100vw - 16px);max-height:96dvh}.mermaid-zoom-canvas{padding:14px;max-height:calc(96dvh - 230px)}.mermaid-zoom-controls{gap:6px}}
+@media(max-width:600px){.mermaid-toolbar{padding:10px 12px;gap:8px}.mermaid-canvas{padding:16px}.mermaid-canvas img{max-height:40rem}.mermaid-caption{padding:8px 12px}.mermaid-description summary,.mermaid-source>summary{padding:10px 12px}.dialog-content.mermaid-dialog{padding:18px 12px;width:calc(100vw - 16px);max-width:calc(100vw - 16px);max-height:96dvh}.mermaid-zoom-canvas{padding:14px;max-height:calc(96dvh - 230px)}.mermaid-zoom-controls{gap:6px}}
