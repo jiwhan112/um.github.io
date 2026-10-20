@@ -262,3 +262,23 @@ test('DX11 Instancing, Geometry, QuadTree, Font and Deferred lessons stay browsa
  await page.goto('knowledge/dx11-sources-18/');
  await expect(page.locator('main .code-block').filter({hasText:'deferred'}).first()).toBeVisible();
 });
+
+test('DX11 knowledge outline follows numeric chapter sequence despite migration history',async({page})=>{
+ await page.goto('knowledge/');
+ const names=await page.locator('#knowledge-windows .knowledge-document-link').allTextContents();
+ const indexOf=(title:string)=>names.findIndex(x=>x.includes(title));
+ const idx13=indexOf('DX11 13 · Instancing —');
+ const idx13Source=indexOf('DX11 13 · Instancing 전체');
+ const idx14=indexOf('DX11 14 · Geometry Shader');
+ const idx15=indexOf('Frustum Culling');
+ const idx16=indexOf('DX11 16 · QuadTree');
+ const idx17=indexOf('DX11 17 · Font');
+ const idx18=indexOf('DX11 18 · Deferred');
+ for(const idx of [idx13,idx13Source,idx14,idx15,idx16,idx17,idx18])expect(idx).toBeGreaterThanOrEqual(0);
+ expect(idx13).toBeLessThan(idx13Source);
+ expect(idx13Source).toBeLessThan(idx14);
+ expect(idx14).toBeLessThan(idx15);
+ expect(idx15).toBeLessThan(idx16);
+ expect(idx16).toBeLessThan(idx17);
+ expect(idx17).toBeLessThan(idx18);
+});
