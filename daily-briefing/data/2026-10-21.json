@@ -1,0 +1,177 @@
+{
+  "date": "2026-10-21",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "10월 21일 한국시간 오전 기준, 지난 20일 공개된 공식 자료 중 의미 있는 소식 9건을 AI·게임 개발·게임 전반의 3영역으로 정리했어. 고정 기사 개수는 폐지했으며 llm-d 분산 추론, Unity Pipeline 에이전트 명령 구조, GitHub Package Firewall의 세 기술을 심층으로 선별했어.",
+  "items": [
+    {
+      "category": "ai",
+      "depth": "deep",
+      "title": "🤖 llm-d 1.0 — KV 캐시 재사용과 분산 추론 라우팅",
+      "source": "Red Hat / llm-d",
+      "published": "2026-10-20",
+      "url": "https://www.redhat.com/en/about/press-releases/llm-d-1-advances-open-cost-efficient-ai-inference-production-scale",
+      "tags": [
+        "llm-d",
+        "KV Cache",
+        "Prefill",
+        "Decode",
+        "Routing",
+        "vLLM"
+      ],
+      "easy_explainer": "LLM 서버 오픈소스 llm-d가 1.0을 발표했어. 언어모델을 새로 학습시키는 것이 아니라 여러 GPU 서버에 추론 요청을 어떻게 배정할지 결정하는 운영 계층이야. LLM의 Prefill은 입력 토큰의 Attention Key·Value를 계산해 KV Cache에 기록하고 Decode는 이를 반복 참조해. 여러 코딩 에이전트가 같은 규칙과 문맥 접두부를 이용할 때, 캐시를 이미 보유한 GPU로 보내면 동일한 Prefill을 반복하지 않아도 돼. 반대로 라운드로빈으로 분산하면 캐시 미스와 전송이 늘어날 수 있지. llm-d는 Prefix Cache·부하 인지 라우팅, KV 오프로드, Prefill/Decode 분리, 테넌트별 QoS, Hot Standby와 무중단 업데이트를 조합해. vLLM·SGLang과 함께 사용할 수 있으며 이들 모델 서버 자체를 대체하는 제품은 아니야. 발표에서 소개된 비용 5~10배 절감과 처리량 3배 향상은 특정 시연 조건의 수치이므로 일반적인 성능 향상률로 취급할 수 없어.",
+      "short_summary": "llm-d 1.0이 KV 캐시와 GPU 부하를 인지하는 분산 추론 운영 구조를 강화했어. 캐시 재사용·Prefill/Decode 분리·장애 복구가 핵심이야. 5~10배 비용 절감 등 수치는 특정 워크로드의 시연 결과야.",
+      "technical_context": "[1] 요청의 시스템 프롬프트·토큰 접두부가 캐시에 있는지 검사. [2] KV 캐시 적중률과 GPU 부하·대기 시간을 비교해 라우팅. [3] Prefill과 Decode를 같거나 다른 서버에 배치. [4] 결과 반환 및 캐시 보존/오프로드. 모델 버전이나 토크나이저가 다르면 같은 문자열에서도 KV를 임의로 공유할 수 없고 테넌트 사이 접근 제어가 필요해. 긴 에이전트 배치가 대화형 요청을 굶기지 않도록 우선순위/공정성 정책도 필요해.",
+      "why_it_matters": "AI 서비스의 병목이 GPU 연산 외에 메모리 지역성, 요청 스케줄링, 장애 관리에도 있음을 보여 줘.",
+      "developer_view": "게임 엔진의 리소스 캐시·Streaming Manager·Job System과 비슷한 문제야. GPU에 남겨둔 텍스처를 재활용하듯 LLM도 이미 계산한 문맥 데이터를 활용해. 캐시 지역성과 실측 P95/P99 지연, 오프로드 비용을 함께 봐야 해."
+    },
+    {
+      "category": "ai",
+      "depth": "brief",
+      "title": "🧬 OpenAI, 생명과학 에이전트 기업 Orchestra Bio 인수",
+      "source": "OpenAI",
+      "published": "2026-10-20",
+      "url": "https://openai.com/index/openai-to-acquire-orchestra-bio/",
+      "tags": [
+        "OpenAI",
+        "Orchestra Bio",
+        "Agent Workflow"
+      ],
+      "easy_explainer": "OpenAI가 Orchestra Bio 인수를 발표했어. 신약 개발에서 실험·생산·협업 일정을 추적하는 업무용 플랫폼을 자체 Rosalind 생명과학 도구와 결합하려는 계획이야. 연구 성과나 치료제의 임상 효능이 이미 검증됐다는 의미는 아니야.",
+      "short_summary": "OpenAI가 Orchestra Bio를 인수하고 Rosalind의 생명과학 연구 도구와 업무 에이전트를 통합할 계획이야. 실제 연구 성과는 향후 확인이 필요해.",
+      "technical_context": "LLM 추론과 별개로 장기 실행 작업의 의존관계·일정·승인·사람의 판단을 오케스트레이션하는 영역이야.",
+      "why_it_matters": "에이전트가 대답을 생성하는 것에서 실제 장기 업무 흐름을 추적하는 방향으로 확대되고 있어.",
+      "developer_view": "게임 자산 제작·검수에서도 도구 실행뿐 아니라 상태 기록과 승인 경계가 중요해."
+    },
+    {
+      "category": "ai",
+      "depth": "brief",
+      "title": "🚗 Google Gemini Personal Intelligence, 차량용 Android Auto로 확대",
+      "source": "Google",
+      "published": "2026-10-20",
+      "url": "https://blog.google/products-and-platforms/platforms/android/android-auto-cars-with-google-built-in-gemini-personal-intelligence/",
+      "tags": [
+        "Gemini",
+        "Android Auto",
+        "Privacy"
+      ],
+      "easy_explainer": "Google은 동의 기반 개인화 AI인 Gemini Personal Intelligence를 Android Auto와 Google built-in 차량으로 점차 확대한다고 발표했어. 연결된 개인 서비스의 문맥을 차량 내 음성 요청에 활용하는 방향이지. 출시 지역과 대상 차량은 단계적으로 달라지고 서비스 데이터 접근에는 사용자의 선택이 필요해.",
+      "short_summary": "Google이 Gemini 개인화 기능을 차량 플랫폼으로 확대한다고 발표했어. Gmail·Calendar 등 연결 정보 활용은 동의 기반이며 전 차량에 즉시 적용되는 것은 아니야.",
+      "technical_context": "차량 음성 UI는 사용자 계정 권한과 개인정보 접근 범위를 별도로 관리해야 해.",
+      "why_it_matters": "에이전트가 사용자의 일상 플랫폼에 통합되는 추세야.",
+      "developer_view": "AI가 장치 기능을 호출할 때 개인 데이터 권한과 실행 제약을 구분해야 한다는 사례야."
+    },
+    {
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "🛠️ Unity Pipeline 0.9.0-exp.1 — 에이전트가 Unity Editor를 조작하는 CLI",
+      "source": "Unity Discussions",
+      "published": "2026-10-20",
+      "url": "https://discussions.unity.com/t/unity-pipeline-package-0-9-0-exp-1-is-available-now/1739888",
+      "tags": [
+        "Unity",
+        "Pipeline",
+        "CLI",
+        "Editor",
+        "AI Agent",
+        "Build Profile"
+      ],
+      "easy_explainer": "Unity가 10월 20일 Pipeline 0.9.0-exp.1 패키지를 발표했어. Editor 내부에서 사람이 클릭하던 Build Profile, Play Mode, 명령 실행 상태 등을 외부 CLI로 제어하는 기반이야. 공식 설치 명령은 `unity pipeline install --package-version 0.9.0-exp.1`, 명령은 `unity command <group> <name>` 형식이야. 예를 들어 `unity command build status`로 빌드 상태를 확인할 수 있어. CLI에서 빌드 프로필을 생성하고 씬·스크립팅 정의를 바꾸며, 에디터가 비활성 창이더라도 Play Mode 루프를 유지하도록 설정할 수 있어. 명령별 Timeout과 CLI/에디터 실행 이력 연결 기능도 추가됐지. 이전 버전과 호환되지 않는 변경은 여섯 가지이며 Method Reload 관련 API 이름도 바뀌었어. exp.1은 실험적인 패키지로 상용 안정 버전이라고 단정하면 안 돼.",
+      "short_summary": "Unity Pipeline 0.9.0-exp.1이 에디터 작업의 CLI 호출, 빌드 프로필 편집, 백그라운드 Play Mode와 명령별 Timeout을 지원해. 에이전트 자동화에 유용하지만 실험 버전이고 비호환 변경 6개가 있어.",
+      "technical_context": "Agent → Unity CLI → Command Registry/Editor Server → Build Profile·Scene·PlayMode → 상태/결과 반환의 명령 파이프라인으로 이해하면 돼. 커맨드는 현재 Editor 상태에 따라 Busy/Failure/Timeout이 발생할 수 있고, 병렬 명령이 공유 Scene과 AssetDatabase를 건드리면 일관성이 깨질 수 있어. 공식 릴리스 노트는 인스턴스 설명자의 15초 Heartbeat와 원자적 갱신을 언급해. 명령을 실행했다는 응답과 실제 빌드·테스트의 성공은 다른 단계야.",
+      "why_it_matters": "게임 엔진 개발 도구가 GUI 중심에서 외부 명령 기반의 자동화 서비스로 변화하는 사례야.",
+      "developer_view": "자체 C++ 엔진에서도 EditorCommand API를 도입해 BuildAssets·LoadScene·RunTest·CaptureFrame을 타입이 있는 독립 명령으로 만들면 AI와 CI가 같은 검증 경로를 사용할 수 있어. 모델에 엔진 내부 포인터나 임의 시스템 명령을 직접 노출하지 않는 게 중요해."
+    },
+    {
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "🛡️ GitHub Package Firewall — 패키지 설치 전 공급망 공격 차단",
+      "source": "GitHub Changelog",
+      "published": "2026-10-20",
+      "url": "https://github.blog/changelog/2026-10-20-github-package-firewall-in-public-preview/",
+      "tags": [
+        "GitHub",
+        "Supply Chain",
+        "npm",
+        "Package Firewall",
+        "CI"
+      ],
+      "easy_explainer": "GitHub가 10월 20일 Package Firewall의 Public Preview를 공개했어. 패키지를 설치하는 순간 악성 설치 스크립트가 작동할 수 있으므로 설치가 끝난 후 소스를 분석하는 방식만으로는 충분하지 않을 수 있어. 이 기능은 CI Runner나 코딩 에이전트가 npm 저장소에 바로 접근하지 않고 정책이 설정된 중간 프록시를 통과하도록 해. 관리자는 신규 게시물에 일정 시간 대기하는 Cooldown, GitHub Advisory Database의 알려진 악성·취약점 정보, 서명/Attestation 강도 약화 여부를 검사할 수 있어. 차단이 오탐인 경우 관리되는 예외 절차를 제공해. 중요한 제약: 현재 GitHub Enterprise Cloud 이용자 대상 무료 미리보기이며 npm만 지원해. vcpkg·NuGet·일반적인 C++ SDK까지 보호하는 범용 제품은 아니고 알려지지 않은 모든 공격을 막을 수도 없어.",
+      "short_summary": "Package Firewall 공개 미리보기가 기업 CI·코딩 에이전트의 npm 패키지 다운로드를 정책 검사해. 신규 패키지 대기기간, 보안 경고, Attestation 등을 확인할 수 있어. 현재 Enterprise Cloud의 npm 패키지만 지원해.",
+      "technical_context": "npm install → 지정 프록시 → 패키지 메타데이터/아카이브 정책 검사 → 차단 또는 설치 진행. 보호 지점은 설치 직전의 패키지 수급 경로이고, CodeQL 같은 설치 후 코드 분석과는 다른 계층이야. 의존성 버전 고정·최소 권한 실행·잠금 파일 검증·격리된 설치 환경과 조합해야 효과적이야.",
+      "why_it_matters": "AI가 자동으로 외부 코드를 설치하는 시대에는 실행 환경 이전 단계의 정책 경계가 중요해졌어.",
+      "developer_view": "게임 클라이언트 빌드에 사용하는 외부 라이브러리에도 해시 검증, 버전 고정, 승인된 사내 패키지 미러, CI 최소 권한이 필요해."
+    },
+    {
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "🔍 GitHub Dependabot 경고 API에 의존성 버전 메타데이터 추가",
+      "source": "GitHub Changelog",
+      "published": "2026-10-20",
+      "url": "https://github.blog/changelog/2026-10-20-dependabot-alerts-rest-api-now-includes-dependency-versions/",
+      "tags": [
+        "Dependabot",
+        "REST API",
+        "Version"
+      ],
+      "easy_explainer": "Dependabot Alerts REST API에서 의존성 버전 및 버전 제약 정보를 더 자세히 확인할 수 있게 됐어. 취약점 경고가 어느 실제 설치 버전이나 버전 범위에 영향을 주는지 자동화 도구가 판단하는 데 도움이 돼. 하지만 선언된 버전 범위와 잠금 파일의 설치 버전은 서로 다를 수 있어.",
+      "short_summary": "Dependabot REST API에 버전 관련 정보가 추가됐어. 취약 의존성 식별과 자동 보안 리포트 정밀도를 높이는 업데이트야.",
+      "technical_context": "Manifest 버전 제약과 Lockfile에 고정된 해석 버전은 다를 수 있어.",
+      "why_it_matters": "패키지 취약성 대응 자동화의 판단 정보를 늘려 줘.",
+      "developer_view": "패키지 검사 시 실제 빌드에 사용한 종속성 그래프를 함께 기록하면 좋아."
+    },
+    {
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🌃 Cyberpunk 2077 무료 업데이트 2.5, 10월 22일 공개 예고",
+      "source": "CD PROJEKT RED",
+      "published": "2026-10-20",
+      "url": "https://www.cyberpunk.net/en/news/52098/redstreams-cyberpunk-2077-edgerunners-2-update-2-5-is-coming",
+      "tags": [
+        "Cyberpunk 2077",
+        "Update 2.5",
+        "CDPR"
+      ],
+      "easy_explainer": "CD PROJEKT RED가 10월 20일 무료 'Edgerunners 2' 업데이트 2.5를 10월 22일 배포한다고 예고했어. 사이버웨어 커스터마이징과 쌍수 플레이 등 신규 요소를 소개할 예정이며 REDstreams 해설 방송은 한국시간 10월 22일 0시에 예정돼 있어. 21일 아침 현재 배포가 완료된 것은 아니야.",
+      "short_summary": "《Cyberpunk 2077》 무료 업데이트 2.5가 10월 22일 예정돼 있어. 사이버웨어 커스터마이징과 쌍수 플레이를 예고했지만 실제 배포·세부 구현은 아직 확인 전이야.",
+      "technical_context": "무기 시스템과 애니메이션의 복잡성은 커질 수 있으나 개발사의 실제 내부 코드는 발표만으로 확인할 수 없어.",
+      "why_it_matters": "장기 서비스 중인 대형 싱글플레이 게임의 확장 사례야.",
+      "developer_view": "저장 데이터·애니메이션 블렌딩 호환성 검증 포인트를 생각해 볼 수 있어."
+    },
+    {
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🎟️ Xbox Game Pass 10월 하순 신작 — FFVII Remake Intergrade 등",
+      "source": "Xbox Wire",
+      "published": "2026-10-20",
+      "url": "https://news.xbox.com/en-us/2026/10/20/xbox-game-pass-october-2026-wave-2/",
+      "tags": [
+        "Xbox",
+        "Game Pass",
+        "Final Fantasy VII"
+      ],
+      "easy_explainer": "Xbox는 10월 20일 구독 서비스의 10월 하순 추가 라인업을 발표했어. 《Final Fantasy VII Remake Intergrade》는 10월 29일, 《The Séance of Blake Manor》는 10월 27일 서비스 추가 일정으로 소개됐어. 지역·플랜·플랫폼별 제공 조건은 공식 스토어에서 별도로 확인할 필요가 있어.",
+      "short_summary": "Xbox가 10월 후반 Game Pass 라인업을 발표했어. 《FFVII Remake Intergrade》는 29일, 《The Séance of Blake Manor》는 27일 합류 예정이야.",
+      "technical_context": "플랫폼과 구독 등급에 따라 게임 사용 권한을 분리해야 해.",
+      "why_it_matters": "대형 일본 RPG의 구독 서비스 유통 확대가 주목할 부분이야.",
+      "developer_view": "게임 배포에서는 상점·구독별 접근 권한을 일관된 클라이언트 인터페이스로 검사하는 것이 좋아."
+    },
+    {
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🕹️ ID@Xbox × IGN 쇼케이스 — 인디 게임 출시 일정 공개",
+      "source": "Xbox Wire",
+      "published": "2026-10-20",
+      "url": "https://news.xbox.com/en-us/2026/10/20/id-xbox-ign-showcase-october-2026/",
+      "tags": [
+        "ID@Xbox",
+        "Indie Games",
+        "Game Pass"
+      ],
+      "easy_explainer": "10월 20일 ID@Xbox와 IGN의 공동 발표회에서 다수의 인디 게임을 공개했어. 《A Game About Digging a Hole Together》는 12월 4일 Xbox/PC 출시와 Game Pass 편입이 예정됐고, 《Arctic Eggs》는 10월 20일 Xbox 출시로 발표됐어. 일부 소개작만 Game Pass·Play Anywhere를 지원하므로 모두가 해당하는 것은 아니야.",
+      "short_summary": "ID@Xbox × IGN 쇼케이스에서 인디 게임 신작·플랫폼 출시가 발표됐어. 《A Game About Digging a Hole Together》는 12월 4일 Game Pass 출시 예정이야.",
+      "technical_context": "콘솔과 PC 출시권, 지원 기능, 스토어 권한을 타이틀 단위로 다르게 처리해야 해.",
+      "why_it_matters": "신작 인디 게임의 출시·발견 경로를 살펴보는 발표야.",
+      "developer_view": "플랫폼 출시를 준비하는 작은 개발팀의 빌드·권한·QA 분기에 주목할 만해."
+    }
+  ]
+}
