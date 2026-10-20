@@ -8,6 +8,14 @@
 - [DX9 원본 CPU 소스 8종·21개 실제 CI 실행 로그](DX9_IMPLEMENTATION_CPU_VERIFICATION_20261019.md): GCC C++11/20 및 Clang ASan/UBSan; 플랫폼 검증 한계 포함.
 - [DX9 구현 01–12 이관 원장](MIGRATION_DX9_IMPLEMENTATION_20261019.md): 개정 03/04 섹션·원본 하위 페이지·미회수 첨부 등 남은 검증.
 
+## 2026-10-20 · DX11 13–18 이관 및 기존 15 검수
+
+- [이번 이관 원장](MIGRATION_DX11_13_18_20261020.md), [소스 복원 원장](shared/DX11_13_18_NATIVE_LEDGER_20261020.md), [독립 CPU 재검증 원시 로그](verification/dx11-13-18/README.md).
+- DX11 13 Instancing, 추가 13B InputLayout, 14 Geometry Shader, 16 QuadTree, 17 Font, 18 Deferred Rendering의 **기존 Notion 본문 6개**와 **전체 소스 교재 6개**를 추가했습니다. 총 학습 문서 **72개**.
+- 기존 15 Frustum 교재와 CPU 소스/원문을 재조회하고 별도 중복 게시하지 않았습니다.
+- DX11 13A 현재 6,043B 소스는 37조건 새 CPU CTest가 가능하지만 **역사적 2026-10-16 SHA 원본 바이트가 없어 동일성 미검증**입니다. 최신 v2 Font/Deferred 원본만 사용했습니다.
+- **Windows/MSVC·실제 D3D11 GPU·HLSL GPU 컴파일/이미지/성능 미검증**. 이관은 새 교재 집필 작업이 아닙니다.
+
 ## 원본과 파생물
 
 2026-10-19 초기 프로토타입 3개(`dx11-frustum`, `algorithm-lis`, `python-html`)는 원본과 공개 URL을 그대로 유지했습니다.

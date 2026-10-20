@@ -1,0 +1,389 @@
+﻿2026-10-20T01:09:53.7668164Z Current runner version: '2.337.0'
+2026-10-20T01:09:53.7688495Z ##[group]Runner Image Provisioner
+2026-10-20T01:09:53.7689351Z Hosted Compute Agent
+2026-10-20T01:09:53.7689883Z Version: 20261015.610
+2026-10-20T01:09:53.7690413Z Commit: 267fdb4e8bbec4ab5ea31367f3a00d5c480c7656
+2026-10-20T01:09:53.7691074Z Build Date: 2026-10-14T17:06:54Z
+2026-10-20T01:09:53.7691639Z Worker ID: {fa0e5768-8906-47a2-ae27-e70f68249f85}
+2026-10-20T01:09:53.7692239Z Region: westus3
+2026-10-20T01:09:53.7692797Z Cloud: Azure
+2026-10-20T01:09:53.7693254Z ##[endgroup]
+2026-10-20T01:09:53.7694457Z ##[group]Operating System
+2026-10-20T01:09:53.7694980Z Ubuntu
+2026-10-20T01:09:53.7695445Z 24.04.5
+2026-10-20T01:09:53.7695937Z LTS
+2026-10-20T01:09:53.7696383Z ##[endgroup]
+2026-10-20T01:09:53.7697130Z ##[group]Runner Image
+2026-10-20T01:09:53.7697736Z Image: ubuntu-24.04
+2026-10-20T01:09:53.7698257Z Version: 20261018.339.1
+2026-10-20T01:09:53.7699372Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261018.339/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-20T01:09:53.7701005Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261018.339
+2026-10-20T01:09:53.7701846Z ##[endgroup]
+2026-10-20T01:09:53.7702815Z ##[group]GITHUB_TOKEN Permissions
+2026-10-20T01:09:53.7704519Z Contents: read
+2026-10-20T01:09:53.7705083Z Metadata: read
+2026-10-20T01:09:53.7705568Z ##[endgroup]
+2026-10-20T01:09:53.7707738Z Secret source: Actions
+2026-10-20T01:09:53.7708522Z Cache mode: write
+2026-10-20T01:09:53.7709080Z Prepare workflow directory
+2026-10-20T01:09:53.8500870Z Prepare all required actions
+2026-10-20T01:09:53.8543124Z Getting action download info
+2026-10-20T01:09:54.1588875Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-20T01:09:54.4828152Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-20T01:09:54.6980311Z Complete job name: cpu-contract (gcc11, g++, 11)
+2026-10-20T01:09:54.7603536Z ##[group]Run actions/checkout@v4
+2026-10-20T01:09:54.7604270Z with:
+2026-10-20T01:09:54.7604676Z   repository: jiwhan112/um.github.io
+2026-10-20T01:09:54.7608140Z   token: ***
+2026-10-20T01:09:54.7608530Z   ssh-strict: true
+2026-10-20T01:09:54.7608925Z   ssh-user: git
+2026-10-20T01:09:54.7609321Z   persist-credentials: true
+2026-10-20T01:09:54.7609754Z   clean: true
+2026-10-20T01:09:54.7610142Z   sparse-checkout-cone-mode: true
+2026-10-20T01:09:54.7610597Z   fetch-depth: 1
+2026-10-20T01:09:54.7610976Z   fetch-tags: false
+2026-10-20T01:09:54.7611362Z   show-progress: true
+2026-10-20T01:09:54.7611757Z   lfs: false
+2026-10-20T01:09:54.7612124Z   submodules: false
+2026-10-20T01:09:54.7612514Z   set-safe-directory: true
+2026-10-20T01:09:54.7612956Z   allow-unsafe-pr-checkout: false
+2026-10-20T01:09:54.7613622Z ##[endgroup]
+2026-10-20T01:09:54.8459897Z Syncing repository: jiwhan112/um.github.io
+2026-10-20T01:09:54.8462296Z ##[group]Getting Git version info
+2026-10-20T01:09:54.8463533Z Working directory is '/home/runner/work/um.github.io/um.github.io'
+2026-10-20T01:09:54.8465204Z [command]/usr/bin/git version
+2026-10-20T01:09:54.8509807Z git version 2.55.0
+2026-10-20T01:09:54.8525217Z ##[endgroup]
+2026-10-20T01:09:54.8536362Z Temporarily overriding HOME='/home/runner/work/_temp/91e0941f-00a1-49be-8346-d0e12e0390c7' before making global git config changes
+2026-10-20T01:09:54.8538903Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-20T01:09:54.8541179Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/um.github.io/um.github.io
+2026-10-20T01:09:54.8584177Z Deleting the contents of '/home/runner/work/um.github.io/um.github.io'
+2026-10-20T01:09:54.8587680Z ##[group]Initializing the repository
+2026-10-20T01:09:54.8590793Z [command]/usr/bin/git init /home/runner/work/um.github.io/um.github.io
+2026-10-20T01:09:54.8690104Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-20T01:09:54.8691150Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-20T01:09:54.8692198Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-20T01:09:54.8692830Z hint: call:
+2026-10-20T01:09:54.8693179Z hint:
+2026-10-20T01:09:54.8693631Z hint: 	git config --global init.defaultBranch <name>
+2026-10-20T01:09:54.8694163Z hint:
+2026-10-20T01:09:54.8694664Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-20T01:09:54.8695442Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-20T01:09:54.8696071Z hint:
+2026-10-20T01:09:54.8696447Z hint: 	git branch -m <name>
+2026-10-20T01:09:54.8697036Z hint:
+2026-10-20T01:09:54.8697594Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-20T01:09:54.8702146Z Initialized empty Git repository in /home/runner/work/um.github.io/um.github.io/.git/
+2026-10-20T01:09:54.8708305Z [command]/usr/bin/git remote add origin https://github.com/jiwhan112/um.github.io
+2026-10-20T01:09:54.8908059Z ##[endgroup]
+2026-10-20T01:09:54.8908741Z ##[group]Disabling automatic garbage collection
+2026-10-20T01:09:54.8910927Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-20T01:09:54.8937533Z ##[endgroup]
+2026-10-20T01:09:54.8938156Z ##[group]Setting up auth
+2026-10-20T01:09:54.8942369Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T01:09:54.8969721Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T01:09:54.9270802Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T01:09:54.9296548Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T01:09:54.9485889Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T01:09:54.9513214Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-20T01:09:54.9702777Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-20T01:09:54.9781631Z ##[endgroup]
+2026-10-20T01:09:54.9782298Z ##[group]Fetching the repository
+2026-10-20T01:09:54.9788794Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d9601e9fc3d71aab249d10e090c8c9be028226bf:refs/remotes/origin/feature/dx11-13-18-knowledge-20261020
+2026-10-20T01:09:56.1610427Z From https://github.com/jiwhan112/um.github.io
+2026-10-20T01:09:56.1612444Z  * [new ref]         d9601e9fc3d71aab249d10e090c8c9be028226bf -> origin/feature/dx11-13-18-knowledge-20261020
+2026-10-20T01:09:56.1614783Z ##[endgroup]
+2026-10-20T01:09:56.1615608Z ##[group]Determining the checkout info
+2026-10-20T01:09:56.1616538Z ##[endgroup]
+2026-10-20T01:09:56.1622280Z [command]/usr/bin/git sparse-checkout disable
+2026-10-20T01:09:56.1666951Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-20T01:09:56.1694906Z ##[group]Checking out the ref
+2026-10-20T01:09:56.1695553Z [command]/usr/bin/git checkout --progress --force -B feature/dx11-13-18-knowledge-20261020 refs/remotes/origin/feature/dx11-13-18-knowledge-20261020
+2026-10-20T01:09:56.2496223Z Switched to a new branch 'feature/dx11-13-18-knowledge-20261020'
+2026-10-20T01:09:56.2500232Z branch 'feature/dx11-13-18-knowledge-20261020' set up to track 'origin/feature/dx11-13-18-knowledge-20261020'.
+2026-10-20T01:09:56.2509411Z ##[endgroup]
+2026-10-20T01:09:56.2547797Z [command]/usr/bin/git log -1 --format=%H
+2026-10-20T01:09:56.2569003Z d9601e9fc3d71aab249d10e090c8c9be028226bf
+2026-10-20T01:09:56.2787310Z ##[group]Run set -euo pipefail
+2026-10-20T01:09:56.2787734Z [36;1mset -euo pipefail[0m
+2026-10-20T01:09:56.2788336Z [36;1mfor lab in dx11-13 dx11-13b dx11-14 dx11-16 dx11-17 dx11-18; do[0m
+2026-10-20T01:09:56.2788746Z [36;1m  build="/tmp/atlas-gcc11-${lab}"[0m
+2026-10-20T01:09:56.2789064Z [36;1m  echo "::group::${lab} gcc11"[0m
+2026-10-20T01:09:56.2789673Z [36;1m  cmake -S "knowledge/shared/${lab}" -B "${build}" -DCMAKE_CXX_COMPILER="g++" -DLAB_CXX_STANDARD="11" -DCMAKE_CXX_FLAGS="" -DCMAKE_BUILD_TYPE=Debug[0m
+2026-10-20T01:09:56.2790296Z [36;1m  cmake --build "${build}" --parallel 2[0m
+2026-10-20T01:09:56.2790680Z [36;1m  ctest --test-dir "${build}" -V --output-on-failure[0m
+2026-10-20T01:09:56.2791034Z [36;1m  echo "::endgroup::"[0m
+2026-10-20T01:09:56.2791305Z [36;1mdone[0m
+2026-10-20T01:09:56.2939839Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-20T01:09:56.2940221Z env:
+2026-10-20T01:09:56.2940470Z   ASAN_OPTIONS: detect_leaks=1
+2026-10-20T01:09:56.2940805Z   UBSAN_OPTIONS: halt_on_error=1
+2026-10-20T01:09:56.2941092Z ##[endgroup]
+2026-10-20T01:09:56.3023125Z ##[group]dx11-13 gcc11
+2026-10-20T01:10:02.7344516Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-20T01:10:03.1561951Z -- Detecting CXX compiler ABI info
+2026-10-20T01:10:03.9240125Z -- Detecting CXX compiler ABI info - done
+2026-10-20T01:10:03.9375634Z -- Check for working CXX compiler: /usr/bin/g++ - skipped
+2026-10-20T01:10:03.9547839Z -- Detecting CXX compile features
+2026-10-20T01:10:03.9817321Z -- Detecting CXX compile features - done
+2026-10-20T01:10:04.0267419Z -- Configuring done (5.9s)
+2026-10-20T01:10:04.0293377Z -- Generating done (0.0s)
+2026-10-20T01:10:04.0295761Z -- Build files have been written to: /tmp/atlas-gcc11-dx11-13
+2026-10-20T01:10:04.0627958Z [ 50%] Building CXX object CMakeFiles/dx11_13_cpu.dir/main.cpp.o
+2026-10-20T01:10:07.1510211Z [100%] Linking CXX executable dx11_13_cpu
+2026-10-20T01:10:07.1981449Z [100%] Built target dx11_13_cpu
+2026-10-20T01:10:08.5940505Z Internal ctest changing into directory: /tmp/atlas-gcc11-dx11-13
+2026-10-20T01:10:08.5940976Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-13/DartConfiguration.tcl
+2026-10-20T01:10:08.8403893Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-13/DartConfiguration.tcl
+2026-10-20T01:10:08.8578434Z Test project /tmp/atlas-gcc11-dx11-13
+2026-10-20T01:10:08.8584675Z Constructing a list of tests
+2026-10-20T01:10:08.9130000Z Done constructing a list of tests
+2026-10-20T01:10:08.9130318Z Updating test list for fixtures
+2026-10-20T01:10:08.9130594Z Added 0 tests to meet fixture requirements
+2026-10-20T01:10:08.9805570Z Checking test dependency graph...
+2026-10-20T01:10:08.9805870Z Checking test dependency graph end
+2026-10-20T01:10:09.0329354Z test 1
+2026-10-20T01:10:09.0329575Z     Start 1: dx11_13_cpu
+2026-10-20T01:10:09.0329730Z 
+2026-10-20T01:10:09.0329868Z 1: Test command: /tmp/atlas-gcc11-dx11-13/dx11_13_cpu
+2026-10-20T01:10:09.0330164Z 1: Working Directory: /tmp/atlas-gcc11-dx11-13
+2026-10-20T01:10:09.0535912Z 1: Test timeout computed to be: 10000000
+2026-10-20T01:10:09.0552671Z 1: PASS 37 DX11 instancing CPU contract checks
+2026-10-20T01:10:09.0554859Z 1/1 Test #1: dx11_13_cpu ......................   Passed    0.00 sec
+2026-10-20T01:10:09.0770243Z 
+2026-10-20T01:10:09.0770589Z 100% tests passed, 0 tests failed out of 1
+2026-10-20T01:10:09.0770861Z 
+2026-10-20T01:10:09.0770992Z Total Test time (real) =   0.22 sec
+2026-10-20T01:10:09.2427784Z ##[endgroup]
+2026-10-20T01:10:09.2428168Z ##[group]dx11-13b gcc11
+2026-10-20T01:10:09.2899183Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-20T01:10:09.2965151Z -- Detecting CXX compiler ABI info
+2026-10-20T01:10:09.3485259Z -- Detecting CXX compiler ABI info - done
+2026-10-20T01:10:09.3618938Z -- Check for working CXX compiler: /usr/bin/g++ - skipped
+2026-10-20T01:10:09.3621626Z -- Detecting CXX compile features
+2026-10-20T01:10:09.3626410Z -- Detecting CXX compile features - done
+2026-10-20T01:10:09.3688631Z -- Configuring done (0.1s)
+2026-10-20T01:10:09.3709257Z -- Generating done (0.0s)
+2026-10-20T01:10:09.3710737Z -- Build files have been written to: /tmp/atlas-gcc11-dx11-13b
+2026-10-20T01:10:09.3850434Z [ 50%] Building CXX object CMakeFiles/layout_contract.dir/main.cpp.o
+2026-10-20T01:10:09.5903323Z [100%] Linking CXX executable layout_contract
+2026-10-20T01:10:09.6368355Z [100%] Built target layout_contract
+2026-10-20T01:10:09.6415979Z Internal ctest changing into directory: /tmp/atlas-gcc11-dx11-13b
+2026-10-20T01:10:09.6416742Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-13b/DartConfiguration.tcl
+2026-10-20T01:10:09.6417789Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-13b/DartConfiguration.tcl
+2026-10-20T01:10:09.6418401Z Test project /tmp/atlas-gcc11-dx11-13b
+2026-10-20T01:10:09.6419058Z Constructing a list of tests
+2026-10-20T01:10:09.6420741Z Done constructing a list of tests
+2026-10-20T01:10:09.6421164Z Updating test list for fixtures
+2026-10-20T01:10:09.6421559Z Added 0 tests to meet fixture requirements
+2026-10-20T01:10:09.6422019Z Checking test dependency graph...
+2026-10-20T01:10:09.6422399Z Checking test dependency graph end
+2026-10-20T01:10:09.6422763Z test 1
+2026-10-20T01:10:09.6423023Z     Start 1: two_pass_layout_validation
+2026-10-20T01:10:09.6423307Z 
+2026-10-20T01:10:09.6423829Z 1: Test command: /tmp/atlas-gcc11-dx11-13b/layout_contract
+2026-10-20T01:10:09.6424332Z 1: Working Directory: /tmp/atlas-gcc11-dx11-13b
+2026-10-20T01:10:09.6425937Z 1: Test timeout computed to be: 10000000
+2026-10-20T01:10:09.6438829Z 1: PASS 21 unique layout contract checks
+2026-10-20T01:10:09.6449585Z 1/1 Test #1: two_pass_layout_validation .......   Passed    0.00 sec
+2026-10-20T01:10:09.6449976Z 
+2026-10-20T01:10:09.6450125Z 100% tests passed, 0 tests failed out of 1
+2026-10-20T01:10:09.6450393Z 
+2026-10-20T01:10:09.6450517Z Total Test time (real) =   0.00 sec
+2026-10-20T01:10:09.6454537Z ##[endgroup]
+2026-10-20T01:10:09.6455084Z ##[group]dx11-14 gcc11
+2026-10-20T01:10:09.6925475Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-20T01:10:09.6991607Z -- Detecting CXX compiler ABI info
+2026-10-20T01:10:09.7508650Z -- Detecting CXX compiler ABI info - done
+2026-10-20T01:10:09.7642337Z -- Check for working CXX compiler: /usr/bin/g++ - skipped
+2026-10-20T01:10:09.7645174Z -- Detecting CXX compile features
+2026-10-20T01:10:09.7650303Z -- Detecting CXX compile features - done
+2026-10-20T01:10:09.7711332Z -- Configuring done (0.1s)
+2026-10-20T01:10:09.7731394Z -- Generating done (0.0s)
+2026-10-20T01:10:09.7733941Z -- Build files have been written to: /tmp/atlas-gcc11-dx11-14
+2026-10-20T01:10:09.7874017Z [ 50%] Building CXX object CMakeFiles/dx11_14_cpu.dir/main.cpp.o
+2026-10-20T01:10:10.1916616Z [100%] Linking CXX executable dx11_14_cpu
+2026-10-20T01:10:10.2377157Z [100%] Built target dx11_14_cpu
+2026-10-20T01:10:10.2420789Z Internal ctest changing into directory: /tmp/atlas-gcc11-dx11-14
+2026-10-20T01:10:10.2421399Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-14/DartConfiguration.tcl
+2026-10-20T01:10:10.2422421Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-14/DartConfiguration.tcl
+2026-10-20T01:10:10.2422949Z Test project /tmp/atlas-gcc11-dx11-14
+2026-10-20T01:10:10.2423420Z Constructing a list of tests
+2026-10-20T01:10:10.2424944Z Done constructing a list of tests
+2026-10-20T01:10:10.2425275Z Updating test list for fixtures
+2026-10-20T01:10:10.2425618Z Added 0 tests to meet fixture requirements
+2026-10-20T01:10:10.2425982Z Checking test dependency graph...
+2026-10-20T01:10:10.2426311Z Checking test dependency graph end
+2026-10-20T01:10:10.2426624Z test 1
+2026-10-20T01:10:10.2426998Z     Start 1: geometry_contract
+2026-10-20T01:10:10.2427202Z 
+2026-10-20T01:10:10.2427367Z 1: Test command: /tmp/atlas-gcc11-dx11-14/dx11_14_cpu
+2026-10-20T01:10:10.2427709Z 1: Working Directory: /tmp/atlas-gcc11-dx11-14
+2026-10-20T01:10:10.2427969Z 1: Test timeout computed to be: 10000000
+2026-10-20T01:10:10.2441525Z 1: PASS 31 geometry shader CPU contracts
+2026-10-20T01:10:10.2443510Z 1/1 Test #1: geometry_contract ................   Passed    0.00 sec
+2026-10-20T01:10:10.2445982Z 
+2026-10-20T01:10:10.2446156Z 100% tests passed, 0 tests failed out of 1
+2026-10-20T01:10:10.2446592Z 
+2026-10-20T01:10:10.2446719Z Total Test time (real) =   0.00 sec
+2026-10-20T01:10:10.2452264Z ##[endgroup]
+2026-10-20T01:10:10.2517905Z ##[group]dx11-16 gcc11
+2026-10-20T01:10:10.2926788Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-20T01:10:10.2993518Z -- Detecting CXX compiler ABI info
+2026-10-20T01:10:10.3515629Z -- Detecting CXX compiler ABI info - done
+2026-10-20T01:10:10.3648608Z -- Check for working CXX compiler: /usr/bin/g++ - skipped
+2026-10-20T01:10:10.3651500Z -- Detecting CXX compile features
+2026-10-20T01:10:10.3656371Z -- Detecting CXX compile features - done
+2026-10-20T01:10:10.3717413Z -- Configuring done (0.1s)
+2026-10-20T01:10:10.3737311Z -- Generating done (0.0s)
+2026-10-20T01:10:10.3739510Z -- Build files have been written to: /tmp/atlas-gcc11-dx11-16
+2026-10-20T01:10:10.3879199Z [ 50%] Building CXX object CMakeFiles/dx11_16_cpu.dir/main.cpp.o
+2026-10-20T01:10:11.1754913Z [100%] Linking CXX executable dx11_16_cpu
+2026-10-20T01:10:11.2247757Z [100%] Built target dx11_16_cpu
+2026-10-20T01:10:11.2291382Z Internal ctest changing into directory: /tmp/atlas-gcc11-dx11-16
+2026-10-20T01:10:11.2291839Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-16/DartConfiguration.tcl
+2026-10-20T01:10:11.2293240Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-16/DartConfiguration.tcl
+2026-10-20T01:10:11.2293596Z Test project /tmp/atlas-gcc11-dx11-16
+2026-10-20T01:10:11.2294311Z Constructing a list of tests
+2026-10-20T01:10:11.2295905Z Done constructing a list of tests
+2026-10-20T01:10:11.2296148Z Updating test list for fixtures
+2026-10-20T01:10:11.2296438Z Added 0 tests to meet fixture requirements
+2026-10-20T01:10:11.2296997Z Checking test dependency graph...
+2026-10-20T01:10:11.2297343Z Checking test dependency graph end
+2026-10-20T01:10:11.2297654Z test 1
+2026-10-20T01:10:11.2297904Z     Start 1: quadtree_contract
+2026-10-20T01:10:11.2298115Z 
+2026-10-20T01:10:11.2298290Z 1: Test command: /tmp/atlas-gcc11-dx11-16/dx11_16_cpu
+2026-10-20T01:10:11.2298706Z 1: Working Directory: /tmp/atlas-gcc11-dx11-16
+2026-10-20T01:10:11.2299075Z 1: Test timeout computed to be: 10000000
+2026-10-20T01:10:11.2314139Z 1: PASS 124 quadtree CPU broadphase checks
+2026-10-20T01:10:11.2315231Z 1/1 Test #1: quadtree_contract ................   Passed    0.00 sec
+2026-10-20T01:10:11.2322931Z 
+2026-10-20T01:10:11.2323219Z 100% tests passed, 0 tests failed out of 1
+2026-10-20T01:10:11.2323409Z 
+2026-10-20T01:10:11.2323496Z Total Test time (real) =   0.00 sec
+2026-10-20T01:10:11.2324939Z ##[endgroup]
+2026-10-20T01:10:11.2325420Z ##[group]dx11-17 gcc11
+2026-10-20T01:10:11.2797251Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-20T01:10:11.2863873Z -- Detecting CXX compiler ABI info
+2026-10-20T01:10:11.3382899Z -- Detecting CXX compiler ABI info - done
+2026-10-20T01:10:11.3518412Z -- Check for working CXX compiler: /usr/bin/g++ - skipped
+2026-10-20T01:10:11.3521370Z -- Detecting CXX compile features
+2026-10-20T01:10:11.3526559Z -- Detecting CXX compile features - done
+2026-10-20T01:10:11.3588721Z -- Configuring done (0.1s)
+2026-10-20T01:10:11.3609767Z -- Generating done (0.0s)
+2026-10-20T01:10:11.3610360Z CMake Warning:
+2026-10-20T01:10:11.3610647Z   Manually-specified variables were not used by the project:
+2026-10-20T01:10:11.3610863Z 
+2026-10-20T01:10:11.3610937Z     LAB_CXX_STANDARD
+2026-10-20T01:10:11.3611053Z 
+2026-10-20T01:10:11.3611055Z 
+2026-10-20T01:10:11.3612086Z -- Build files have been written to: /tmp/atlas-gcc11-dx11-17
+2026-10-20T01:10:11.3754073Z [ 50%] Building CXX object CMakeFiles/font_cpu.dir/main.cpp.o
+2026-10-20T01:10:12.8401700Z [100%] Linking CXX executable font_cpu
+2026-10-20T01:10:12.8899724Z [100%] Built target font_cpu
+2026-10-20T01:10:12.8943945Z Internal ctest changing into directory: /tmp/atlas-gcc11-dx11-17
+2026-10-20T01:10:12.8944603Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-17/DartConfiguration.tcl
+2026-10-20T01:10:12.8946209Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-17/DartConfiguration.tcl
+2026-10-20T01:10:12.8946764Z Test project /tmp/atlas-gcc11-dx11-17
+2026-10-20T01:10:12.8947466Z Constructing a list of tests
+2026-10-20T01:10:12.8948809Z Done constructing a list of tests
+2026-10-20T01:10:12.8949160Z Updating test list for fixtures
+2026-10-20T01:10:12.8949507Z Added 0 tests to meet fixture requirements
+2026-10-20T01:10:12.8949857Z Checking test dependency graph...
+2026-10-20T01:10:12.8950181Z Checking test dependency graph end
+2026-10-20T01:10:12.8950477Z test 1
+2026-10-20T01:10:12.8950722Z     Start 1: font_cpu_contract
+2026-10-20T01:10:12.8950922Z 
+2026-10-20T01:10:12.8951074Z 1: Test command: /tmp/atlas-gcc11-dx11-17/font_cpu
+2026-10-20T01:10:12.8951497Z 1: Working Directory: /tmp/atlas-gcc11-dx11-17
+2026-10-20T01:10:12.8951877Z 1: Test timeout computed to be: 10000000
+2026-10-20T01:10:12.8968618Z 1: PASS 49 Font UTF-8 atlas layout CPU contract checks
+2026-10-20T01:10:12.8970255Z 1/1 Test #1: font_cpu_contract ................   Passed    0.00 sec
+2026-10-20T01:10:12.8973007Z 
+2026-10-20T01:10:12.8973507Z 100% tests passed, 0 tests failed out of 1
+2026-10-20T01:10:12.8973693Z 
+2026-10-20T01:10:12.8973791Z Total Test time (real) =   0.00 sec
+2026-10-20T01:10:12.8979320Z ##[endgroup]
+2026-10-20T01:10:12.8979835Z ##[group]dx11-18 gcc11
+2026-10-20T01:10:12.9447354Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-20T01:10:12.9513170Z -- Detecting CXX compiler ABI info
+2026-10-20T01:10:13.0031141Z -- Detecting CXX compiler ABI info - done
+2026-10-20T01:10:13.0163635Z -- Check for working CXX compiler: /usr/bin/g++ - skipped
+2026-10-20T01:10:13.0166420Z -- Detecting CXX compile features
+2026-10-20T01:10:13.0171450Z -- Detecting CXX compile features - done
+2026-10-20T01:10:13.0233682Z -- Configuring done (0.1s)
+2026-10-20T01:10:13.0254002Z -- Generating done (0.0s)
+2026-10-20T01:10:13.0254412Z CMake Warning:
+2026-10-20T01:10:13.0254845Z   Manually-specified variables were not used by the project:
+2026-10-20T01:10:13.0255088Z 
+2026-10-20T01:10:13.0255170Z     LAB_CXX_STANDARD
+2026-10-20T01:10:13.0255281Z 
+2026-10-20T01:10:13.0255284Z 
+2026-10-20T01:10:13.0256682Z -- Build files have been written to: /tmp/atlas-gcc11-dx11-18
+2026-10-20T01:10:13.0398889Z [ 50%] Building CXX object CMakeFiles/deferred_cpu.dir/main.cpp.o
+2026-10-20T01:10:13.8203767Z [100%] Linking CXX executable deferred_cpu
+2026-10-20T01:10:13.8693992Z [100%] Built target deferred_cpu
+2026-10-20T01:10:13.8738168Z Internal ctest changing into directory: /tmp/atlas-gcc11-dx11-18
+2026-10-20T01:10:13.8738656Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-18/DartConfiguration.tcl
+2026-10-20T01:10:13.8740120Z UpdateCTestConfiguration  from :/tmp/atlas-gcc11-dx11-18/DartConfiguration.tcl
+2026-10-20T01:10:13.8740474Z Test project /tmp/atlas-gcc11-dx11-18
+2026-10-20T01:10:13.8741201Z Constructing a list of tests
+2026-10-20T01:10:13.8742817Z Done constructing a list of tests
+2026-10-20T01:10:13.8743147Z Updating test list for fixtures
+2026-10-20T01:10:13.8743513Z Added 0 tests to meet fixture requirements
+2026-10-20T01:10:13.8743884Z Checking test dependency graph...
+2026-10-20T01:10:13.8746351Z Checking test dependency graph end
+2026-10-20T01:10:13.8746616Z test 1
+2026-10-20T01:10:13.8746799Z     Start 1: deferred_cpu_contract
+2026-10-20T01:10:13.8747091Z 
+2026-10-20T01:10:13.8747219Z 1: Test command: /tmp/atlas-gcc11-dx11-18/deferred_cpu
+2026-10-20T01:10:13.8747505Z 1: Working Directory: /tmp/atlas-gcc11-dx11-18
+2026-10-20T01:10:13.8747757Z 1: Test timeout computed to be: 10000000
+2026-10-20T01:10:13.8759808Z 1: PASS 41 Deferred MRT SRV hazard CPU contract checks
+2026-10-20T01:10:13.8761152Z 1/1 Test #1: deferred_cpu_contract ............   Passed    0.00 sec
+2026-10-20T01:10:13.8763671Z 
+2026-10-20T01:10:13.8763813Z 100% tests passed, 0 tests failed out of 1
+2026-10-20T01:10:13.8764057Z 
+2026-10-20T01:10:13.8764183Z Total Test time (real) =   0.00 sec
+2026-10-20T01:10:13.8770014Z ##[endgroup]
+2026-10-20T01:10:13.8826719Z ##[group]Run actions/upload-artifact@v4
+2026-10-20T01:10:13.8827187Z with:
+2026-10-20T01:10:13.8827364Z   name: dx11-13-18-gcc11-metadata
+2026-10-20T01:10:13.8827623Z   path: knowledge/shared/DX11_13_18_NATIVE_LEDGER_20261020.md
+2026-10-20T01:10:13.8828050Z   retention-days: 14
+2026-10-20T01:10:13.8828246Z   if-no-files-found: warn
+2026-10-20T01:10:13.8828440Z   compression-level: 6
+2026-10-20T01:10:13.8828626Z   overwrite: false
+2026-10-20T01:10:13.8828808Z   include-hidden-files: false
+2026-10-20T01:10:13.8829008Z ##[endgroup]
+2026-10-20T01:10:14.0210749Z (node:2414) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-20T01:10:14.0211666Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-20T01:10:14.0255541Z With the provided path, there will be 1 file uploaded
+2026-10-20T01:10:14.0259979Z Artifact name is valid!
+2026-10-20T01:10:14.0260379Z Root directory input is valid!
+2026-10-20T01:10:14.3827767Z Beginning upload of artifact content to blob storage
+2026-10-20T01:10:14.3967459Z (node:2414) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-20T01:10:14.6202942Z Uploaded bytes 1495
+2026-10-20T01:10:14.6858447Z Finished uploading artifact content to blob storage!
+2026-10-20T01:10:14.6859030Z SHA256 digest of uploaded artifact zip is 0e365a211fd4eecec84f5e2ee170daa9653e9bcd59ea8f0edb2553db7f62fe34
+2026-10-20T01:10:14.6860503Z Finalizing artifact upload
+2026-10-20T01:10:14.9327949Z Artifact dx11-13-18-gcc11-metadata.zip successfully finalized. Artifact ID 12233920465
+2026-10-20T01:10:14.9328924Z Artifact dx11-13-18-gcc11-metadata has been successfully uploaded! Final size is 1495 bytes. Artifact ID is 12233920465
+2026-10-20T01:10:14.9332718Z Artifact download URL: https://github.com/jiwhan112/um.github.io/actions/runs/39351876445/artifacts/12233920465
+2026-10-20T01:10:14.9921879Z Post job cleanup.
+2026-10-20T01:10:15.0583908Z [command]/usr/bin/git version
+2026-10-20T01:10:15.0617075Z git version 2.55.0
+2026-10-20T01:10:15.0644107Z Temporarily overriding HOME='/home/runner/work/_temp/d97b3391-bb2c-4dc5-8056-d418717af166' before making global git config changes
+2026-10-20T01:10:15.0645042Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-20T01:10:15.0648869Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/um.github.io/um.github.io
+2026-10-20T01:10:15.1130051Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T01:10:15.1171311Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T01:10:15.1382609Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T01:10:15.1410890Z http.https://github.com/.extraheader
+2026-10-20T01:10:15.1419590Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-20T01:10:15.1450379Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T01:10:15.1652534Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T01:10:15.1679998Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-20T01:10:15.2015953Z Cleaning up orphan processes
+2026-10-20T01:10:15.2239465Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
