@@ -728,6 +728,63 @@
           ]
         }
       ]
+    },
+    {
+      "id": "notion-mermaid-original",
+      "title": "원본 Mermaid 도식·공통 CMake 보존 감사",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2026-10-20 검수: 기존 GitHub source-notion.md 마지막 9,941문자와 Notion 15 최신 전체 본문이 문자 단위로 일치합니다. 기존 15 교재·CPU 소스는 덮어쓰지 않았고 누락됐던 원본 Mermaid 코드만 별도로 표시했습니다. Windows/MSVC·D3D11 GPU 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n W[\"World AABB\"] --> C[\"World View Projection\"]\n C --> P[\"6 clip half-space planes\"]\n P --> T{\"AABB positive support outside?\"}\n T -->|Yes| D[\"Cull: 제출하지 않음\"]\n T -->|No| Q[\"Draw 후보에 유지\"]\n Q --> O[\"추가 오클루전/LOD 선택 (별도)\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "14–16 공용 원본 CMakeLists.txt",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-14/CMakeLists.notionshared.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "14 Geometry Shader 전체 소스",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-14/"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Mermaid가 코드로 보이면 그림이 복구되지 않은 건가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Notion Mermaid 소스 텍스트는 완전 보존됐습니다. ATLAS NOTE의 현재 코드 블록 표시가 원본 다이어그램을 이미지로 렌더링한다고 주장하지 않으며, 기존 설명용 다이어그램은 그대로 남아 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }

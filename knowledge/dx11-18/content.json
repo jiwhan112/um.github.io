@@ -1,0 +1,690 @@
+{
+  "id": "knowledge--dx11-18",
+  "route": "/knowledge/dx11-18/",
+  "kind": "knowledge",
+  "title": "DX11 18 · Deferred Rendering — MRT·GBuffer·View Hazard",
+  "subtitle": "RTV/SRV·OMSetRenderTargets·Render Pass 분리·상태 수명",
+  "date": "2026-10-20",
+  "number": "18",
+  "category": "DirectX 11",
+  "topic": "DirectX 11",
+  "tags": [
+    "DirectX 11",
+    "C++",
+    "그래픽스"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "원본·학습 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기존 Notion 원문 이관 교재입니다. 전체 C++/CMake 소스와 CPU 검증은 별도 GitHub 소스 페이지에서 확인하세요. Windows/MSVC·GPU·HLSL 실기기 실행은 미검증입니다. "
+                },
+                {
+                  "text": "원본 Notion",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3fba99703f4081539f63e9fab7f9bc18"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "DX11 개정 18 — Deferred Rendering / MRT / G-Buffer / View Hazard",
+                  "kind": "strong"
+                },
+                {
+                  "text": " 2026-10-16. 기존 렌더 타깃 매니저의 Add/Find·리스트 삭제 중심 메모를, "
+                },
+                {
+                  "text": "D3D11 Output-Merger와 Resource/View 수명·패스 전환",
+                  "kind": "strong"
+                },
+                {
+                  "text": " 규칙으로 독립 재작성합니다. 완성한 코드 테스트는 CPU 상태 모델입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "1. 정의: Deferred는 Rendering Pass 분리",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Forward에서는 표면별 셰이더가 조명 계산을 같이 수행할 수 있습니다. Deferred의 대표 구조는 Geometry Pass에서 Surface Data(예: Albedo, Normal, Depth)를 G-Buffer에 기록하고, Lighting Pass가 그 텍스처들을 SRV로 읽어 조명을 계산합니다. Light를 화면 공간에서 처리하는 방식에 따라 조명 횟수 비용을 조절할 수 있지만 반투명 물체·MSAA·복잡한 Material 모델 등은 별도 처리/트레이드오프가 필요합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n A[\"Mesh Draw\"] --> B[\"Geometry Pass: MRT / DSV\"]\n B --> C[\"GBuffer Albedo / Normal / Depth\"]\n C --> D[\"Unbind RTV/DSV\"]\n D --> E[\"Lighting Pass: SRV + fullscreen\"]\n E --> F[\"HDR / Backbuffer RTV\"]\n F --> G[\"Postprocessing / UI\"]"
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. D3D11 리소스와 View의 실제 계약",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "D3D11에는 고정 파이프라인 Deferred Renderer가 따로 있는 것이 아닙니다. "
+            },
+            {
+              "text": "ID3D11Texture2D",
+              "kind": "code"
+            },
+            {
+              "text": "와 그에 맞는 "
+            },
+            {
+              "text": "ID3D11RenderTargetView",
+              "kind": "code"
+            },
+            {
+              "text": "·"
+            },
+            {
+              "text": "ID3D11ShaderResourceView",
+              "kind": "code"
+            },
+            {
+              "text": "·"
+            },
+            {
+              "text": "ID3D11DepthStencilView",
+              "kind": "code"
+            },
+            {
+              "text": "를 만들고 "
+            },
+            {
+              "text": "OMSetRenderTargets",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "PSSetShaderResources",
+              "kind": "code"
+            },
+            {
+              "text": ", VS/PS와 Draw 호출을 설계합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "패스"
+                  }
+                ],
+                [
+                  {
+                    "text": "쓰기"
+                  }
+                ],
+                [
+                  {
+                    "text": "읽기"
+                  }
+                ],
+                [
+                  {
+                    "text": "필수 조치"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Geometry"
+                  }
+                ],
+                [
+                  {
+                    "text": "GBuffer RTV 1~N, Depth DSV"
+                  }
+                ],
+                [
+                  {
+                    "text": "Mesh Texture SRV"
+                  }
+                ],
+                [
+                  {
+                    "text": "같은 subresource가 읽기/쓰기로 충돌하지 않게 함"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Lighting"
+                  }
+                ],
+                [
+                  {
+                    "text": "별도 HDR/Backbuffer RTV"
+                  }
+                ],
+                [
+                  {
+                    "text": "GBuffer SRVs"
+                  }
+                ],
+                [
+                  {
+                    "text": "GBuffer를 OM에서 먼저 해제"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Postprocess"
+                  }
+                ],
+                [
+                  {
+                    "text": "서로 다른 결과 RTV"
+                  }
+                ],
+                [
+                  {
+                    "text": "앞 패스 결과 SRV"
+                  }
+                ],
+                [
+                  {
+                    "text": "Ping-pong, Copy/Resolve, 상충 View 해제"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Resize"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 폭·높이의 View"
+                  }
+                ],
+                [
+                  {
+                    "text": "구 View는 무효화"
+                  }
+                ],
+                [
+                  {
+                    "text": "참조·바인딩 해제, DXGI ResizeBuffers 수명 준수"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "OMSetRenderTargets",
+              "kind": "code"
+            },
+            {
+              "text": "는 출력 RTV 최대 8개를 지정할 수 있습니다. 같이 바인딩하는 모든 RTV와 DSV의 너비·높이·MSAA Sample Count 등이 서로 맞아야 합니다. 각 RTV의 Format은 동일할 필요가 없습니다. 다중 렌더 타깃은 Pixel Shader에서 "
+            },
+            {
+              "text": "SV_Target0",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "SV_Target1",
+              "kind": "code"
+            },
+            {
+              "text": " 등으로 작성합니다. 같은 subresource를 서로 다른 출력 슬롯에 중복 바인딩할 수 없습니다. "
+            },
+            {
+              "text": "중요한 API 구분:",
+              "kind": "strong"
+            },
+            {
+              "text": " D3D11 Runtime은 "
+            },
+            {
+              "text": "OMSetRenderTargets",
+              "kind": "code"
+            },
+            {
+              "text": "를 호출할 때 겹치는 읽기/쓰기 바인딩을 자동 "
+            },
+            {
+              "text": "NULL",
+              "kind": "code"
+            },
+            {
+              "text": " 처리할 수 있습니다. 이는 호출자의 리소스 관리 계약이 안전하다는 뜻이 아닙니다. 이 실습의 CPU 상태 모델은 실수를 조기에 드러내기 위해 겹침을 "
+            },
+            {
+              "text": "명시적 오류로 거부",
+              "kind": "strong"
+            },
+            {
+              "text": "합니다. 따라서 모델의 오류와 실제 D3D11 API 오류 동작을 혼동하지 마세요."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "3. D3D11 Shader 간단 예시 — GPU 미컴파일",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "struct VSOut { float4 pos : SV_POSITION; float3 normal : NORMAL; float2 uv : TEXCOORD0; };\nstruct GBOut { float4 albedo : SV_Target0; float4 normal : SV_Target1; };\nTexture2D DiffuseMap : register(t0);\nSamplerState LinearSampler : register(s0);\nGBOut PSGeometry(VSOut i) {\n    GBOut o;\n    o.albedo = DiffuseMap.Sample(LinearSampler, i.uv);\n    o.normal = float4(normalize(i.normal)*0.5f+0.5f, 1.f);\n    return o;\n}\n// Lighting pass의 Pixel Shader는 GBuffer를 t0/t1 등 SRV로 읽어 조명 처리."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "법선은 계산한 공간(World/View)에 대해 Pass 전체가 합의해야 하고 encode/decode도 일치해야 합니다. sRGB albedo 해석, HDR format, Depth reconstruct의 projection convention도 별도 계약입니다. 위 샘플은 교육용 경로이며 실행 가능한 완성 Deferred Renderer가 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. 상태 전환의 수명과 Resize",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "sequenceDiagram\n participant Game\n participant Context as D3D11 Context\n participant G as GBuffer Texture\n Game->>Context: OMSetRenderTargets(GBuffer RTVs, DSV)\n Game->>Context: ClearRenderTargetView / ClearDepthStencilView\n Game->>Context: DrawIndexed\n Game->>Context: OMSetRenderTargets(0,nullptr,nullptr)\n Game->>Context: PSSetShaderResources(t0.., GBuffer SRVs)\n Game->>Context: OMSetRenderTargets(1,OutputRTV,nullptr)\n Game->>Context: DrawFullscreen\n Note over Context,G: Check subresource aliasing and explicit state transitions"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DX9의 Render Target Surface를 보관하던 매니저 구조를 그대로 붙여넣기보다, DX11에서는 "
+            },
+            {
+              "text": "Resource ID + View ID + Format + subresource + width/height + sample count + lifetime/resize generation",
+              "kind": "strong"
+            },
+            {
+              "text": "을 기록합니다. 다중 RTV를 사용할 때 배열 포인터는 호출 범위 동안 유효해야 하며, COM 수명과 Pipeline 레퍼런스는 별도로 검토합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. 독립 CPU 계약 실습",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "18A의 완전한 CPU 구현은 Texture/View descriptor를 축소 표현하고 "
+            },
+            {
+              "text": "MRT 크기·샘플 수/Format·BindFlags·미프/배열 slice 겹침·DSV/RTV 동시 기록·SRV/RTV Hazard·Depth 부호·Resize generation",
+              "kind": "strong"
+            },
+            {
+              "text": "을 검사합니다. "
+            },
+            {
+              "text": "unbindTargets()",
+              "kind": "code"
+            },
+            {
+              "text": " 뒤 SRV로 읽는 정책을 구현합니다. 실제 "
+            },
+            {
+              "text": "OMSetRenderTargets",
+              "kind": "code"
+            },
+            {
+              "text": "의 자동 Nulling, Driver Feature Query, typeless depth SRV format, MSAA resolve, UAV, Deferred Context, Resource Barrier 등은 모델에 포함하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "GCC14.2 C++20: "
+                  },
+                  {
+                    "text": "39 CPU 조건",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": ", CTest 1/1."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "GCC14.2 C++11 동일 39조건, CTest 1/1."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Clang17 C++20 + ASan/UBSan 동일 39조건, CTest 1/1."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Windows/MSVC·D3D11/GPU·HLSL 컴파일은 "
+                  },
+                  {
+                    "text": "미실행",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": "입니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "6. 실무 실수·이해 확인",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "Q. Geometry Pass의 Normal RTV를 Lighting PS SRV로 바로 동시에 바인딩하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 subresource에서 읽고 쓰는 Hazard를 피해야 합니다. Geometry Output-Merger 바인딩을 종료하고 SRV로 전환하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. MRT의 색상 Format은 서로 같아야 하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다를 수 있지만 가로·세로 크기와 Sample Count 등의 동시 바인딩 조건을 일치시켜야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. ClearRenderTargetView는 Viewport 내부만 Clear하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. View 전체를 Clear합니다. Viewport·Scissor 설정은 이 Clear 범위에 적용되지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. CPU 상태 모델 통과는 실제 GPU Deferred Render의 정상 동작을 증명하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. CPU 모델은 드라이버 상태를 정확히 재현하지 않습니다. GPU 셰이더·MRT 포맷·메모리 대역폭·성능은 별도 검증해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "공식 출처·검증·변경 기록",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft · OMSetRenderTargets",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-omsetrendertargets"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft · ClearRenderTargetView",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-clearrendertargetview"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft · Depth/Stencil + MRT",
+                    "kind": "link",
+                    "href": "https://github.com/MicrosoftDocs/win32/blob/docs/desktop-src/direct3d11/d3d10-graphics-programming-guide-depth-stencil.md"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-16 v1.0. RenderTarget Manager 원문을 MRT/RTV/SRV/DSV의 실제 쓰기·읽기/수명 규칙으로 교정했습니다. CPU 모델과 실제 D3D11 자동 상태 변경을 명확히 분리합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "18A · Deferred MRT CPU 구현·CTest·소스 보관 상태",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f408152b84bf279803f3e98"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "18B · Deferred MRT CPU v2 전체 main.cpp · 41조건",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-18/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-8",
+      "title": "최신 소스 (v2)",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 CPU "
+            },
+            {
+              "text": "main.cpp",
+              "kind": "code"
+            },
+            {
+              "text": ": "
+            },
+            {
+              "text": "18B · Deferred MRT CPU v2 전체 main.cpp · 41조건",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-18/"
+            },
+            {
+              "text": ". GCC C++20·C++11 및 Clang ASan/UBSan에서 41조건. 실제 GPU 미검증."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "18C · Deferred CPU v2 CMake·실행 검증 원장 · 2026-10-17",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fca99703f4081cda923c214901bed45"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "github-source",
+      "title": "전체 C++ 소스 · 빌드 · 검증 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 실행 코드·CMake·원본 복구본: "
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "18 · GitHub 전체 소스 교재",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-18/"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Linux CPU 테스트가 GPU 사용 가능성을 보장하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "보장하지 않습니다. CPU의 수치·입력·리소스 상태 계약에 대한 예제이며 Windows D3D11 파이프라인과 GPU 이미지·컴파일러/드라이버 동작은 별도로 검증해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

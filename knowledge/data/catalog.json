@@ -788,5 +788,167 @@
       "그래픽스"
     ],
     "notion_url": "https://app.notion.com/p/3fba99703f408107ba7cf3679dbe98d8"
+  },
+  {
+    "path": "dx11-13",
+    "title": "DX11 13 · Instancing — IA Slot·StepRate·DrawIndexedInstanced",
+    "subtitle": "Per-instance Input · Dynamic Buffer · DrawIndexedInstanced 계약",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081c6b435d946bcb40dc2"
+  },
+  {
+    "path": "dx11-13b",
+    "title": "DX11 13B · InputLayout 경계·Overflow·StepRate 검증",
+    "subtitle": "Offset/Format/Stride·정수 Overflow·슬롯 중첩 두 단계 검증",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fda99703f4081ef8863c783ed5a6e8f"
+  },
+  {
+    "path": "dx11-14",
+    "title": "DX11 14 · Geometry Shader — Primitive·Point Sprite",
+    "subtitle": "TriangleStream·Sprite Expansion·RestartStrip·성능 계약",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f"
+  },
+  {
+    "path": "dx11-16",
+    "title": "DX11 16 · QuadTree — XZ Spatial Index·Broad-phase",
+    "subtitle": "사분면 경계·부모 보관·Query 중복·공간분할",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081f3a517e4028f940425"
+  },
+  {
+    "path": "dx11-17",
+    "title": "DX11 17 · Font — UTF-8·Glyph Atlas·SpriteFont",
+    "subtitle": "Unicode·Glyph·Text Layout·SpriteBatch CPU 계약",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f40811493aae2a5a2532bea"
+  },
+  {
+    "path": "dx11-18",
+    "title": "DX11 18 · Deferred Rendering — MRT·GBuffer·View Hazard",
+    "subtitle": "RTV/SRV·OMSetRenderTargets·Render Pass 분리·상태 수명",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081539f63e9fab7f9bc18"
+  },
+  {
+    "path": "dx11-sources-13",
+    "title": "DX11 13 · Instancing 전체 C++·CMake",
+    "subtitle": "IA Slot·Instance StepRate·DrawIndexedInstanced·Dynamic Buffer CPU 계약",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f40810b826cc7eec5b1f039"
+  },
+  {
+    "path": "dx11-sources-13b",
+    "title": "DX11 13B · InputLayout 경계검사 전체 소스",
+    "subtitle": "Offset·Stride·StepRate·Slot 오버플로 및 2-pass CPU 검증",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fda99703f408150bcb6ceb1602850a9"
+  },
+  {
+    "path": "dx11-sources-14",
+    "title": "DX11 14 · Geometry Shader CPU·HLSL 전체 소스",
+    "subtitle": "Point Sprite·TriangleStream·RestartStrip CPU 모델",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f"
+  },
+  {
+    "path": "dx11-sources-16",
+    "title": "DX11 16 · QuadTree Broad-phase 전체 소스",
+    "subtitle": "XZ Rect·부모 보관·Spatial Query 공간 분할",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081f3a517e4028f940425"
+  },
+  {
+    "path": "dx11-sources-17",
+    "title": "DX11 17 · Font UTF-8·Glyph Atlas CPU v2 전체 소스",
+    "subtitle": "UTF-8 Decode·Glyph Atlas·UV·Quad C++11/20",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f408105a5c8c1d371e2c8cb"
+  },
+  {
+    "path": "dx11-sources-18",
+    "title": "DX11 18 · Deferred MRT·GBuffer CPU v2 전체 소스",
+    "subtitle": "Resource/View Hazard·Render Pass State·RTV/SRV 수명",
+    "date": "2026-10-20",
+    "category": "DirectX 11",
+    "tags": [
+      "DirectX 11",
+      "C++",
+      "그래픽스",
+      "전체 소스"
+    ],
+    "notion_url": "https://app.notion.com/p/3fba99703f4081c68669c3d4a2d5eb89"
   }
 ]
