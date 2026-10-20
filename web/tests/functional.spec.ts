@@ -265,6 +265,7 @@ test('DX11 Instancing, Geometry, QuadTree, Font and Deferred lessons stay browsa
 
 test('DX11 knowledge outline follows numeric chapter sequence despite migration history',async({page})=>{
  await page.goto('knowledge/');
+ await expect(page.locator('#knowledge-windows .knowledge-document-link')).toHaveCount(70);
  const names=await page.locator('#knowledge-windows .knowledge-document-link').allTextContents();
  const indexOf=(title:string)=>names.findIndex(x=>x.includes(title));
  const idx13=indexOf('DX11 13 · Instancing —');
