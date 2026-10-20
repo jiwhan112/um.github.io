@@ -355,5 +355,5 @@ test('DX11 source reconstruction preserves actual Notion code block bytes and cu
  assert.equal(createHash('sha256').update(current).digest('hex'),'ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8');
  const ledger=await readFile('../knowledge/MIGRATION_DX11_13_18_20261020.md','utf8');
  assert.ok(ledger.includes('fd3839f7c350d1e573cab36a8c3f942f55a8e6c9d4e94b45033e7d3b3b4472ae'));
- assert.ok(ledger.includes('원본 바이트를 확보하지 못했습니다'));
+ assert.ok(ledger.includes('파일 바이트를 확보하지 못했습니다'));
 });
