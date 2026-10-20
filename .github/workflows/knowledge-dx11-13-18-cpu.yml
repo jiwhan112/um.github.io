@@ -3,24 +3,48 @@ on:
   pull_request:
     branches: [master]
     paths:
-      - 'knowledge/dx11-frustum/CMakeLists.txt'
-      - 'knowledge/shared/dx11-13/**'
-      - 'knowledge/shared/dx11-13b/**'
+      - 'knowledge/dx11-frustum/**'
+      - 'knowledge/dx11-13*/**'
+      - 'knowledge/dx11-14/**'
+      - 'knowledge/dx11-16/**'
+      - 'knowledge/dx11-17/**'
+      - 'knowledge/dx11-18/**'
+      - 'knowledge/shared/dx11-13*/**'
       - 'knowledge/shared/dx11-14/**'
       - 'knowledge/shared/dx11-16/**'
       - 'knowledge/shared/dx11-17/**'
       - 'knowledge/shared/dx11-18/**'
+      - 'knowledge/shared/dx11-13*-notion-source.md'
+      - 'knowledge/shared/dx11-14*-notion-source.md'
+      - 'knowledge/shared/dx11-16*-notion-source.md'
+      - 'knowledge/shared/dx11-17*-notion-source.md'
+      - 'knowledge/shared/dx11-18*-notion-source.md'
+      - 'knowledge/verification/dx11-13-18/**'
+      - 'knowledge/scripts/verify-dx11-13-18.py'
+      - 'web/tests/content.test.ts'
       - '.github/workflows/knowledge-dx11-13-18-cpu.yml'
   push:
     branches: [master, 'feature/dx11-*']
     paths:
-      - 'knowledge/dx11-frustum/CMakeLists.txt'
-      - 'knowledge/shared/dx11-13/**'
-      - 'knowledge/shared/dx11-13b/**'
+      - 'knowledge/dx11-frustum/**'
+      - 'knowledge/dx11-13*/**'
+      - 'knowledge/dx11-14/**'
+      - 'knowledge/dx11-16/**'
+      - 'knowledge/dx11-17/**'
+      - 'knowledge/dx11-18/**'
+      - 'knowledge/shared/dx11-13*/**'
       - 'knowledge/shared/dx11-14/**'
       - 'knowledge/shared/dx11-16/**'
       - 'knowledge/shared/dx11-17/**'
       - 'knowledge/shared/dx11-18/**'
+      - 'knowledge/shared/dx11-13*-notion-source.md'
+      - 'knowledge/shared/dx11-14*-notion-source.md'
+      - 'knowledge/shared/dx11-16*-notion-source.md'
+      - 'knowledge/shared/dx11-17*-notion-source.md'
+      - 'knowledge/shared/dx11-18*-notion-source.md'
+      - 'knowledge/verification/dx11-13-18/**'
+      - 'knowledge/scripts/verify-dx11-13-18.py'
+      - 'web/tests/content.test.ts'
       - '.github/workflows/knowledge-dx11-13-18-cpu.yml'
   workflow_dispatch:
 permissions:
@@ -48,35 +72,95 @@ jobs:
             compiler: clang++
             cpp_standard: 20
             flags: '-fsanitize=address,undefined -fno-omit-frame-pointer'
+    env:
+      ATLAS_ENV_ID: ${{ matrix.id }}
+      ATLAS_COMPILER: ${{ matrix.compiler }}
+      ATLAS_CPP_STANDARD: ${{ matrix.cpp_standard }}
+      ATLAS_COMPILER_FLAGS: ${{ matrix.flags }}
     steps:
       - uses: actions/checkout@v4
-      - name: Check current 13A instancing source byte identity
+      - name: Record audited revision and actual tool versions
         shell: bash
         run: |
-          echo 'ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8  knowledge/shared/dx11-13/main.cpp' | sha256sum -c -
-          wc -c knowledge/shared/dx11-13/main.cpp
-
-      - name: Configure, build and execute seven CPU labs including existing Frustum
+          set -euo pipefail
+          logs="${RUNNER_TEMP}/dx11-13-18/${ATLAS_ENV_ID}"
+          mkdir -p "${logs}"
+          {
+            printf 'source_commit=%s\n' "$(git rev-parse HEAD)"
+            printf 'workflow_sha=%s\nevent=%s\nrun_id=%s\nrun_attempt=%s\n' "${GITHUB_SHA}" "${GITHUB_EVENT_NAME}" "${GITHUB_RUN_ID}" "${GITHUB_RUN_ATTEMPT}"
+            printf 'environment=%s\ncompiler=%s\nrequested_cpp_standard=%s\nflags=%s\n' "${ATLAS_ENV_ID}" "${ATLAS_COMPILER}" "${ATLAS_CPP_STANDARD}" "${ATLAS_COMPILER_FLAGS}"
+            date -u '+started_at=%Y-%m-%dT%H:%M:%SZ'
+            cmake --version
+            ctest --version
+            "${ATLAS_COMPILER}" --version
+            python3 --version
+            sha256sum knowledge/verification/dx11-13-18/source-integrity.json
+          } > "${logs}/metadata.log" 2>&1
+          cp knowledge/verification/dx11-13-18/source-integrity.json "${logs}/source-integrity.json"
+      - name: Verify current Notion bytes and unresolved historical 13A boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          logs="${RUNNER_TEMP}/dx11-13-18/${ATLAS_ENV_ID}"
+          printf '%s\n' 'ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8  knowledge/shared/dx11-13/main.cpp' | sha256sum -c - | tee "${logs}/current-13a-sha256.log"
+          python3 knowledge/scripts/verify-dx11-13-18.py 2>&1 | tee "${logs}/source-integrity-check.log"
+      - name: Configure, build and execute eight CPU labs with raw stage output
         shell: bash
         env:
           ASAN_OPTIONS: detect_leaks=1
           UBSAN_OPTIONS: halt_on_error=1
         run: |
           set -euo pipefail
-          for lab in dx11-13 dx11-13b dx11-14 dx11-15 dx11-16 dx11-17 dx11-18; do
-            build="/tmp/atlas-${{ matrix.id }}-${lab}"
-            echo "::group::${lab} ${{ matrix.id }}"
+          for lab in dx11-13 dx11-13b dx11-13b-compact dx11-14 dx11-15 dx11-16 dx11-17 dx11-18; do
+            build="${RUNNER_TEMP}/atlas-${ATLAS_ENV_ID}-${lab}"
+            lab_logs="${RUNNER_TEMP}/dx11-13-18/${ATLAS_ENV_ID}/${lab}"
+            mkdir -p "${lab_logs}"
+            echo "::group::${lab} ${ATLAS_ENV_ID}"
             source="knowledge/shared/${lab}"
-            if [ "${lab}" = "dx11-15" ]; then source="knowledge/dx11-frustum"; fi
-            cmake -S "${source}" -B "${build}" -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" -DLAB_CXX_STANDARD="${{ matrix.cpp_standard }}" -DCMAKE_CXX_FLAGS="${{ matrix.flags }}" -DCMAKE_BUILD_TYPE=Debug
-            cmake --build "${build}" --parallel 2
-            ctest --test-dir "${build}" -V --output-on-failure
+            standard_option=LAB_CXX_STANDARD
+            case "${lab}" in
+              dx11-15) source=knowledge/dx11-frustum ;;
+              dx11-13b-compact) standard_option=LAB_STD ;;
+              dx11-17|dx11-18) standard_option=CMAKE_CXX_STANDARD ;;
+            esac
+            configure=(cmake -S "${source}" -B "${build}" "-DCMAKE_CXX_COMPILER=${ATLAS_COMPILER}" "-D${standard_option}=${ATLAS_CPP_STANDARD}" "-DCMAKE_CXX_FLAGS=${ATLAS_COMPILER_FLAGS}" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON)
+            build_command=(cmake --build "${build}" --parallel 2 --verbose)
+            test_command=(ctest --test-dir "${build}" -V --output-on-failure)
+            {
+              printf 'source_directory=%s\nstandard_option=%s\n' "${source}" "${standard_option}"
+              printf 'configure: '; printf '%q ' "${configure[@]}"; printf '\n'
+              printf 'build: '; printf '%q ' "${build_command[@]}"; printf '\n'
+              printf 'ctest: '; printf '%q ' "${test_command[@]}"; printf '\n'
+            } > "${lab_logs}/commands.log"
+            "${configure[@]}" 2>&1 | tee "${lab_logs}/configure.log"
+            cp "${build}/compile_commands.json" "${lab_logs}/compile_commands.json"
+            python3 - "${build}/compile_commands.json" "${ATLAS_CPP_STANDARD}" <<'PY_CHECK' 2>&1 | tee "${lab_logs}/standard-check.log"
+          import json, os, shlex, sys
+          commands = json.load(open(sys.argv[1], encoding='utf-8'))
+          expected = '-std=c++' + sys.argv[2]
+          if not commands:
+              raise SystemExit('FAIL: no C++ compile commands were generated')
+          for entry in commands:
+              arguments = entry.get('arguments') or shlex.split(entry['command'])
+              standards = [arg for arg in arguments if arg.startswith('-std=')]
+              if not standards or standards[-1] != expected:
+                  raise SystemExit(f"FAIL: {entry['file']}: expected {expected}, got {standards}")
+              print(f"PASS actual compile command: {entry['file']} {standards[-1]}")
+              if os.environ['ATLAS_ENV_ID'] == 'clangsan':
+                  for flag in ('-fsanitize=address,undefined', '-fno-omit-frame-pointer'):
+                      if flag not in arguments:
+                          raise SystemExit(f"FAIL: {entry['file']}: sanitizer flag missing: {flag}")
+                  print(f"PASS actual sanitizer flags: {entry['file']} ASan+UBSan, frame pointers retained")
+          PY_CHECK
+            "${build_command[@]}" 2>&1 | tee "${lab_logs}/build.log"
+            "${test_command[@]}" 2>&1 | tee "${lab_logs}/ctest.log"
             echo "::endgroup::"
           done
-      - name: Save entire original GitHub Actions runner output
+      - name: Upload raw configure, build and CTest output with separate provenance
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: dx11-13-18-${{ matrix.id }}-metadata
-          path: knowledge/shared/DX11_13_18_NATIVE_LEDGER_20261020.md
-          retention-days: 14
+          name: dx11-13-18-${{ matrix.id }}-raw-logs
+          path: ${{ runner.temp }}/dx11-13-18/${{ matrix.id }}/
+          if-no-files-found: error
+          retention-days: 30

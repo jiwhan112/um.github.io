@@ -37,7 +37,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "17B v2 header, 17C v2 main.cpp, 17D CMake. 원본 17A의 불완전 분할 코드를 최신 버전으로 혼동하지 않습니다."
+              "text": "현행 v2는 17B fontlab.hpp, 17C main.cpp, 17D CMake의 전체 소스이며 49개 CPU 계약 조건을 다룹니다. 과거 17A의 38조건 버전은 분할 원본이 불완전한 별도 역사자료입니다."
             }
           ]
         },
@@ -123,7 +123,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "QuadTree는 분할 원문을 재조립했고, Font/Deferred는 구버전 조각이 아닌 17B·17C 및 18B의 최신 v2 전체 원본을 사용했습니다."
+                  "text": "현행 v2 헤더·main·CMake는 모두 독립 파일로 복원했습니다. 17A에는 최종 main.cpp의 29개 분할 중 1~3번만 남아 있어 구버전 전체 소스는 복원하지 못했습니다. 누락된 코드 조각을 추측해 보충하지 않고 원문을 그대로 보존합니다."
                 }
               ]
             }
@@ -140,7 +140,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 파일 · 3776 문자 · "
+              "text": "전체 파일 · UTF-8 3,777바이트 · "
             },
             {
               "text": "GitHub 소스 보기",
@@ -152,7 +152,7 @@
         {
           "type": "code",
           "language": "cpp",
-          "text": "#pragma once\n#include <algorithm>\n#include <cmath>\n#include <cstdint>\n#include <functional>\n#include <iostream>\n#include <map>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\n// Portable C++11 CPU reference model, not DirectXTK or a GPU renderer.\nnamespace fontlab {\nstruct Rect { int x, y, w, h; };\nstruct Glyph { char32_t codepoint; Rect atlas; float bearingX, bearingY, advance; };\nstruct Quad { char32_t codepoint; float x0,y0,x1,y1,u0,v0,u1,v1; };\nstruct Layout { std::vector<Quad> quads; float maxAdvance; unsigned lines; };\nbool scalar(uint32_t cp) { return cp<=0x10ffffu && !(cp>=0xd800u&&cp<=0xdfffu); }\nbool good(float v) { return std::isfinite(v)!=0; }\nstd::vector<char32_t> decode(const std::string& s) {\n  std::vector<char32_t> result;\n  for(size_t i=0;i<s.size();) {\n    const uint8_t b=(uint8_t)s[i];\n    unsigned n=0; uint32_t cp=0; uint32_t mincp=0;\n    if(b<0x80) { n=1; cp=b; mincp=0; }\n    else if(b>=0xc2&&b<=0xdf) { n=2; cp=b&0x1f; mincp=0x80; }\n    else if(b>=0xe0&&b<=0xef) { n=3; cp=b&0x0f; mincp=0x800; }\n    else if(b>=0xf0&&b<=0xf4) { n=4; cp=b&7; mincp=0x10000; }\n    else throw std::invalid_argument(\"illegal UTF-8 leading byte\");\n    if(s.size()-i<n) throw std::invalid_argument(\"truncated UTF-8\");\n    for(unsigned j=1;j<n;++j) {\n      uint8_t tail=(uint8_t)s[i+j];\n      if((tail&0xc0)!=0x80) throw std::invalid_argument(\"illegal UTF-8 continuation\");\n      cp=(cp<<6)|(tail&0x3f);\n    }\n    if(cp<mincp||!scalar(cp)) throw std::invalid_argument(\"invalid UTF-8 scalar\");\n    result.push_back(static_cast<char32_t>(cp)); i+=n;\n  }\n  return result;\n}\nbool inside(Rect r,int w,int h) {\n  return w>0&&h>0&&r.x>=0&&r.y>=0&&r.w>0&&\n         r.x<w&&r.y<h&&r.w<=w-r.x&&r.h<=h-r.y;\n}\nbool overlap(Rect a,Rect b) {\n  return a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h&&b.y<a.y+a.h;\n}\nclass Atlas {\n  int width_,height_; float lineHeight_;\n  std::map<char32_t,Glyph> glyphs_;\npublic:\n  Atlas(int w,int h,float line):width_(w),height_(h),lineHeight_(line) {\n    if(w<=0||h<=0||!good(line)||line<=0) throw std::invalid_argument(\"invalid atlas\");\n  }\n  void add(const Glyph& g) {\n    if(!scalar((uint32_t)g.codepoint)||!inside(g.atlas,width_,height_)||\n       !good(g.advance)||g.advance<=0||!good(g.bearingX)||!good(g.bearingY)||\n       glyphs_.count(g.codepoint)) throw std::invalid_argument(\"invalid glyph\");\n    for(std::map<char32_t,Glyph>::const_iterator it=glyphs_.begin();it!=glyphs_.end();++it)\n      if(overlap(g.atlas,it->second.atlas)) throw std::invalid_argument(\"overlapping atlas rectangles\");\n    glyphs_.insert(std::make_pair(g.codepoint,g));\n  }\n  Layout draw(const std::string& utf8,float size) const {\n    if(!good(size)||size<=0) throw std::invalid_argument(\"invalid text size\");\n    const std::vector<char32_t> cp=decode(utf8);\n    Layout out;out.maxAdvance=0;out.lines=1;\n    float penX=0,penY=0;\n    for(size_t i=0;i<cp.size();++i) {\n      if(cp[i]==U'\\n') {out.maxAdvance=std::max(out.maxAdvance,penX);penX=0;penY+=lineHeight_*size;++out.lines;continue;}\n      if(cp[i]==U'\\r') throw std::invalid_argument(\"CR must be normalized before layout\");\n      std::map<char32_t,Glyph>::const_iterator it=glyphs_.find(cp[i]);\n      if(it==glyphs_.end()) it=glyphs_.find(U'?');\n      if(it==glyphs_.end()) throw std::invalid_argument(\"missing glyph and fallback\");\n      const Glyph& g=it->second;\n      Quad q={cp[i],penX+g.bearingX*size,penY+g.bearingY*size,\n              penX+(g.bearingX+g.atlas.w)*size,penY+(g.bearingY+g.atlas.h)*size,\n              float(g.atlas.x)/width_,float(g.atlas.y)/height_,\n              float(g.atlas.x+g.atlas.w)/width_,float(g.atlas.y+g.atlas.h)/height_};\n      out.quads.push_back(q);penX+=g.advance*size;\n    }\n    out.maxAdvance=std::max(out.maxAdvance,penX);return out;\n  }\n};\n} // namespace fontlab"
+          "text": "#pragma once\n#include <algorithm>\n#include <cmath>\n#include <cstdint>\n#include <functional>\n#include <iostream>\n#include <map>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\n// Portable C++11 CPU reference model, not DirectXTK or a GPU renderer.\nnamespace fontlab {\nstruct Rect { int x, y, w, h; };\nstruct Glyph { char32_t codepoint; Rect atlas; float bearingX, bearingY, advance; };\nstruct Quad { char32_t codepoint; float x0,y0,x1,y1,u0,v0,u1,v1; };\nstruct Layout { std::vector<Quad> quads; float maxAdvance; unsigned lines; };\nbool scalar(uint32_t cp) { return cp<=0x10ffffu && !(cp>=0xd800u&&cp<=0xdfffu); }\nbool good(float v) { return std::isfinite(v)!=0; }\nstd::vector<char32_t> decode(const std::string& s) {\n  std::vector<char32_t> result;\n  for(size_t i=0;i<s.size();) {\n    const uint8_t b=(uint8_t)s[i];\n    unsigned n=0; uint32_t cp=0; uint32_t mincp=0;\n    if(b<0x80) { n=1; cp=b; mincp=0; }\n    else if(b>=0xc2&&b<=0xdf) { n=2; cp=b&0x1f; mincp=0x80; }\n    else if(b>=0xe0&&b<=0xef) { n=3; cp=b&0x0f; mincp=0x800; }\n    else if(b>=0xf0&&b<=0xf4) { n=4; cp=b&7; mincp=0x10000; }\n    else throw std::invalid_argument(\"illegal UTF-8 leading byte\");\n    if(s.size()-i<n) throw std::invalid_argument(\"truncated UTF-8\");\n    for(unsigned j=1;j<n;++j) {\n      uint8_t tail=(uint8_t)s[i+j];\n      if((tail&0xc0)!=0x80) throw std::invalid_argument(\"illegal UTF-8 continuation\");\n      cp=(cp<<6)|(tail&0x3f);\n    }\n    if(cp<mincp||!scalar(cp)) throw std::invalid_argument(\"invalid UTF-8 scalar\");\n    result.push_back(static_cast<char32_t>(cp)); i+=n;\n  }\n  return result;\n}\nbool inside(Rect r,int w,int h) {\n  return w>0&&h>0&&r.x>=0&&r.y>=0&&r.w>0&&\n         r.x<w&&r.y<h&&r.w<=w-r.x&&r.h<=h-r.y;\n}\nbool overlap(Rect a,Rect b) {\n  return a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h&&b.y<a.y+a.h;\n}\nclass Atlas {\n  int width_,height_; float lineHeight_;\n  std::map<char32_t,Glyph> glyphs_;\npublic:\n  Atlas(int w,int h,float line):width_(w),height_(h),lineHeight_(line) {\n    if(w<=0||h<=0||!good(line)||line<=0) throw std::invalid_argument(\"invalid atlas\");\n  }\n  void add(const Glyph& g) {\n    if(!scalar((uint32_t)g.codepoint)||!inside(g.atlas,width_,height_)||\n       !good(g.advance)||g.advance<=0||!good(g.bearingX)||!good(g.bearingY)||\n       glyphs_.count(g.codepoint)) throw std::invalid_argument(\"invalid glyph\");\n    for(std::map<char32_t,Glyph>::const_iterator it=glyphs_.begin();it!=glyphs_.end();++it)\n      if(overlap(g.atlas,it->second.atlas)) throw std::invalid_argument(\"overlapping atlas rectangles\");\n    glyphs_.insert(std::make_pair(g.codepoint,g));\n  }\n  Layout draw(const std::string& utf8,float size) const {\n    if(!good(size)||size<=0) throw std::invalid_argument(\"invalid text size\");\n    const std::vector<char32_t> cp=decode(utf8);\n    Layout out;out.maxAdvance=0;out.lines=1;\n    float penX=0,penY=0;\n    for(size_t i=0;i<cp.size();++i) {\n      if(cp[i]==U'\\n') {out.maxAdvance=std::max(out.maxAdvance,penX);penX=0;penY+=lineHeight_*size;++out.lines;continue;}\n      if(cp[i]==U'\\r') throw std::invalid_argument(\"CR must be normalized before layout\");\n      std::map<char32_t,Glyph>::const_iterator it=glyphs_.find(cp[i]);\n      if(it==glyphs_.end()) it=glyphs_.find(U'?');\n      if(it==glyphs_.end()) throw std::invalid_argument(\"missing glyph and fallback\");\n      const Glyph& g=it->second;\n      Quad q={cp[i],penX+g.bearingX*size,penY+g.bearingY*size,\n              penX+(g.bearingX+g.atlas.w)*size,penY+(g.bearingY+g.atlas.h)*size,\n              float(g.atlas.x)/width_,float(g.atlas.y)/height_,\n              float(g.atlas.x+g.atlas.w)/width_,float(g.atlas.y+g.atlas.h)/height_};\n      out.quads.push_back(q);penX+=g.advance*size;\n    }\n    out.maxAdvance=std::max(out.maxAdvance,penX);return out;\n  }\n};\n} // namespace fontlab\n"
         }
       ]
     },
@@ -165,7 +165,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 파일 · 3735 문자 · "
+              "text": "전체 파일 · UTF-8 3,736바이트 · "
             },
             {
               "text": "GitHub 소스 보기",
@@ -177,7 +177,7 @@
         {
           "type": "code",
           "language": "cpp",
-          "text": "#include \"fontlab.hpp\"\n\nstatic std::string bytes(std::initializer_list<int> seq) {\n  std::string s;\n  for(std::initializer_list<int>::const_iterator it=seq.begin();it!=seq.end();++it) s.push_back(static_cast<char>(*it));\n  return s;\n}\n\nint main() {\n  using namespace fontlab;\n  unsigned n=0;\n  const auto ck=[&](bool b,const char* why) {if(!b) throw std::runtime_error(why);++n;};\n  const auto throws=[&](const std::function<void()>& fn) {try {fn();return false;}catch(const std::invalid_argument&){return true;}};\n  ck(decode(\"\").empty(),\"utf8 empty\");\n  ck(decode(\"ABC\").size()==3,\"ascii\");\n  ck(decode(\"A\")[0]==U'A',\"ascii cp\");\n  ck(decode(bytes({0xc2,0xa2}))[0]==0xa2,\"utf8 2 bytes\");\n  ck(decode(bytes({0xe2,0x82,0xac}))[0]==0x20ac,\"utf8 3 bytes\");\n  ck(decode(bytes({0xf0,0x9f,0x98,0x80}))[0]==0x1f600,\"utf8 4 bytes\");\n  ck(throws([]{decode(bytes({0x80}));}),\"orphan continuation\");\n  ck(throws([]{decode(bytes({0xc0,0xaf}));}),\"overlong 2\");\n  ck(throws([]{decode(bytes({0xe0,0x80,0x80}));}),\"overlong 3\");\n  ck(throws([]{decode(bytes({0xf0,0x80,0x80,0x80}));}),\"overlong 4\");\n  ck(throws([]{decode(bytes({0xed,0xa0,0x80}));}),\"surrogate\");\n  ck(throws([]{decode(bytes({0xf4,0x90,0x80,0x80}));}),\"above max\");\n  ck(throws([]{decode(bytes({0xf5,0x80,0x80,0x80}));}),\"illegal head 5\");\n  ck(throws([]{decode(bytes({0xe2,0x82}));}),\"truncated\");\n  ck(throws([]{decode(bytes({0xc2})+\"A\");}),\"invalid continuation\");\n  ck(throws([]{decode(bytes({0xff}));}),\"invalid FF\");\n  ck(scalar(0)&&scalar(0x10ffff),\"scalar boundaries\");\n  ck(!scalar(0xd800)&&!scalar(0xdfff),\"surrogate range\");\n  ck(!scalar(0x110000),\"scalar upper\");\n  ck(inside({0,0,1,1},8,8),\"inside origin\");\n  ck(inside({7,7,1,1},8,8),\"inside edge\");\n  ck(!inside({7,7,2,1},8,8),\"outside right\");\n  ck(!inside({0,0,0,1},8,8),\"empty rect\");\n  ck(!overlap({0,0,2,2},{2,0,2,2}),\"touching atlas border\");\n  ck(overlap({0,0,2,2},{1,1,2,2}),\"overlap test\");\n  ck(throws([]{Atlas a(0,8,10);}),\"invalid width\");\n  ck(throws([]{Atlas a(8,8,0);}),\"invalid line\");\n  Atlas a(64,64,16);\n  const Glyph ga={U'A',{0,0,8,10},0,2,9},gb={U'B',{8,0,8,10},0,2,9},gq={U'?',{16,0,8,10},0,2,9};\n  a.add(ga);a.add(gb);a.add(gq);\n  ck(throws([&]{a.add(ga);}),\"duplicate glyph\");\n  ck(throws([&]{a.add({U'C',{7,0,2,10},0,2,9});}),\"atlas overlap\");\n  ck(throws([&]{a.add({U'C',{63,0,2,2},0,2,9});}),\"glyph out of atlas\");\n  ck(throws([&]{a.add({U'C',{32,0,8,10},0,2,0});}),\"glyph zero advance\");\n  ck(throws([&]{a.add({U'C',{32,0,8,10},0,2,INFINITY});}),\"glyph infinite advance\");\n  const Layout empty=a.draw(\"\",1);\n  ck(empty.lines==1&&empty.quads.empty()&&empty.maxAdvance==0,\"empty layout\");\n  const Layout one=a.draw(\"A\",1);\n  ck(one.quads.size()==1&&one.lines==1,\"one quad\");\n  ck(one.quads[0].x0==0&&one.quads[0].y0==2,\"bearing\");\n  ck(one.quads[0].x1==8&&one.quads[0].y1==12,\"pixel dimensions\");\n  ck(std::abs(one.quads[0].u1-0.125f)<0.0001f,\"normalized UV\");\n  ck(one.maxAdvance==9,\"advance\");\n  const Layout many=a.draw(\"AB\",2);\n  ck(many.quads.size()==2&&many.maxAdvance==36,\"scaled advance\");\n  ck(many.quads[1].x0==18&&many.quads[1].y0==4,\"second glyph pen\");\n  const Layout rows=a.draw(\"A\\nB\",1);\n  ck(rows.lines==2&&rows.quads.size()==2,\"line break\");\n  ck(rows.quads[1].y0==18&&rows.maxAdvance==9,\"line height\");\n  ck(a.draw(\"Z\",1).quads[0].u0==0.25f,\"fallback atlas\");\n  ck(throws([&]{a.draw(\"A\",0);}),\"scale 0\");\n  ck(throws([&]{a.draw(\"A\",INFINITY);}),\"scale inf\");\n  ck(throws([&]{a.draw(\"A\\rB\",1);}),\"CR normalization\");\n  ck(throws([&]{a.draw(bytes({0xc0,0xaf}),1);}),\"UTF8 checked at layout\");\n  ck(a.draw(\"A\\n\",1).lines==2,\"trailing newline\");\n  ck(a.draw(\"\\n\",1).quads.empty(),\"newline no quad\");\n  std::cout<<\"PASS \"<<n<<\" Font UTF-8 atlas layout CPU contract checks\\n\";\n}"
+          "text": "#include \"fontlab.hpp\"\n\nstatic std::string bytes(std::initializer_list<int> seq) {\n  std::string s;\n  for(std::initializer_list<int>::const_iterator it=seq.begin();it!=seq.end();++it) s.push_back(static_cast<char>(*it));\n  return s;\n}\n\nint main() {\n  using namespace fontlab;\n  unsigned n=0;\n  const auto ck=[&](bool b,const char* why) {if(!b) throw std::runtime_error(why);++n;};\n  const auto throws=[&](const std::function<void()>& fn) {try {fn();return false;}catch(const std::invalid_argument&){return true;}};\n  ck(decode(\"\").empty(),\"utf8 empty\");\n  ck(decode(\"ABC\").size()==3,\"ascii\");\n  ck(decode(\"A\")[0]==U'A',\"ascii cp\");\n  ck(decode(bytes({0xc2,0xa2}))[0]==0xa2,\"utf8 2 bytes\");\n  ck(decode(bytes({0xe2,0x82,0xac}))[0]==0x20ac,\"utf8 3 bytes\");\n  ck(decode(bytes({0xf0,0x9f,0x98,0x80}))[0]==0x1f600,\"utf8 4 bytes\");\n  ck(throws([]{decode(bytes({0x80}));}),\"orphan continuation\");\n  ck(throws([]{decode(bytes({0xc0,0xaf}));}),\"overlong 2\");\n  ck(throws([]{decode(bytes({0xe0,0x80,0x80}));}),\"overlong 3\");\n  ck(throws([]{decode(bytes({0xf0,0x80,0x80,0x80}));}),\"overlong 4\");\n  ck(throws([]{decode(bytes({0xed,0xa0,0x80}));}),\"surrogate\");\n  ck(throws([]{decode(bytes({0xf4,0x90,0x80,0x80}));}),\"above max\");\n  ck(throws([]{decode(bytes({0xf5,0x80,0x80,0x80}));}),\"illegal head 5\");\n  ck(throws([]{decode(bytes({0xe2,0x82}));}),\"truncated\");\n  ck(throws([]{decode(bytes({0xc2})+\"A\");}),\"invalid continuation\");\n  ck(throws([]{decode(bytes({0xff}));}),\"invalid FF\");\n  ck(scalar(0)&&scalar(0x10ffff),\"scalar boundaries\");\n  ck(!scalar(0xd800)&&!scalar(0xdfff),\"surrogate range\");\n  ck(!scalar(0x110000),\"scalar upper\");\n  ck(inside({0,0,1,1},8,8),\"inside origin\");\n  ck(inside({7,7,1,1},8,8),\"inside edge\");\n  ck(!inside({7,7,2,1},8,8),\"outside right\");\n  ck(!inside({0,0,0,1},8,8),\"empty rect\");\n  ck(!overlap({0,0,2,2},{2,0,2,2}),\"touching atlas border\");\n  ck(overlap({0,0,2,2},{1,1,2,2}),\"overlap test\");\n  ck(throws([]{Atlas a(0,8,10);}),\"invalid width\");\n  ck(throws([]{Atlas a(8,8,0);}),\"invalid line\");\n  Atlas a(64,64,16);\n  const Glyph ga={U'A',{0,0,8,10},0,2,9},gb={U'B',{8,0,8,10},0,2,9},gq={U'?',{16,0,8,10},0,2,9};\n  a.add(ga);a.add(gb);a.add(gq);\n  ck(throws([&]{a.add(ga);}),\"duplicate glyph\");\n  ck(throws([&]{a.add({U'C',{7,0,2,10},0,2,9});}),\"atlas overlap\");\n  ck(throws([&]{a.add({U'C',{63,0,2,2},0,2,9});}),\"glyph out of atlas\");\n  ck(throws([&]{a.add({U'C',{32,0,8,10},0,2,0});}),\"glyph zero advance\");\n  ck(throws([&]{a.add({U'C',{32,0,8,10},0,2,INFINITY});}),\"glyph infinite advance\");\n  const Layout empty=a.draw(\"\",1);\n  ck(empty.lines==1&&empty.quads.empty()&&empty.maxAdvance==0,\"empty layout\");\n  const Layout one=a.draw(\"A\",1);\n  ck(one.quads.size()==1&&one.lines==1,\"one quad\");\n  ck(one.quads[0].x0==0&&one.quads[0].y0==2,\"bearing\");\n  ck(one.quads[0].x1==8&&one.quads[0].y1==12,\"pixel dimensions\");\n  ck(std::abs(one.quads[0].u1-0.125f)<0.0001f,\"normalized UV\");\n  ck(one.maxAdvance==9,\"advance\");\n  const Layout many=a.draw(\"AB\",2);\n  ck(many.quads.size()==2&&many.maxAdvance==36,\"scaled advance\");\n  ck(many.quads[1].x0==18&&many.quads[1].y0==4,\"second glyph pen\");\n  const Layout rows=a.draw(\"A\\nB\",1);\n  ck(rows.lines==2&&rows.quads.size()==2,\"line break\");\n  ck(rows.quads[1].y0==18&&rows.maxAdvance==9,\"line height\");\n  ck(a.draw(\"Z\",1).quads[0].u0==0.25f,\"fallback atlas\");\n  ck(throws([&]{a.draw(\"A\",0);}),\"scale 0\");\n  ck(throws([&]{a.draw(\"A\",INFINITY);}),\"scale inf\");\n  ck(throws([&]{a.draw(\"A\\rB\",1);}),\"CR normalization\");\n  ck(throws([&]{a.draw(bytes({0xc0,0xaf}),1);}),\"UTF8 checked at layout\");\n  ck(a.draw(\"A\\n\",1).lines==2,\"trailing newline\");\n  ck(a.draw(\"\\n\",1).quads.empty(),\"newline no quad\");\n  std::cout<<\"PASS \"<<n<<\" Font UTF-8 atlas layout CPU contract checks\\n\";\n}\n"
         }
       ]
     },
@@ -190,7 +190,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 파일 · 432 문자 · "
+              "text": "전체 파일 · UTF-8 433바이트 · "
             },
             {
               "text": "GitHub 소스 보기",
@@ -202,7 +202,340 @@
         {
           "type": "code",
           "language": "cmake",
-          "text": "cmake_minimum_required(VERSION 3.16)\nproject(Font_CPU_v2 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20 CACHE STRING \"C++ standard\")\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(font_cpu main.cpp)\nif(MSVC)\n  target_compile_options(font_cpu PRIVATE /W4)\nelse()\n  target_compile_options(font_cpu PRIVATE -Wall -Wextra -Wpedantic)\nendif()\nenable_testing()\nadd_test(NAME font_cpu_contract COMMAND font_cpu)"
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(Font_CPU_v2 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20 CACHE STRING \"C++ standard\")\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(font_cpu main.cpp)\nif(MSVC)\n  target_compile_options(font_cpu PRIVATE /W4)\nelse()\n  target_compile_options(font_cpu PRIVATE -Wall -Wextra -Wpedantic)\nendif()\nenable_testing()\nadd_test(NAME font_cpu_contract COMMAND font_cpu)\n"
+        }
+      ]
+    },
+    {
+      "id": "source-archives",
+      "title": "원문 보관본 · 현행 v2와 과거 버전",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Notion 원문은 수정하지 않았습니다. 아래 GitHub 보관본은 현재 학습 소스와 과거 불완전 소스의 상태를 함께 기록합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "자료"
+                  }
+                ],
+                [
+                  {
+                    "text": "보관·복원 상태"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "17A · 과거 Font 소스 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-17a-notion-source.md"
+                  }
+                ],
+                [
+                  {
+                    "text": "38조건 구버전. 최종 29조각 중 1~3번만 보관되어 전체 소스 미복원."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "17B · v2 헤더 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-17b-notion-source.md"
+                  }
+                ],
+                [
+                  {
+                    "text": "현행 fontlab.hpp의 전체 코드."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "17C · v2 테스트 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-17c-notion-source.md"
+                  }
+                ],
+                [
+                  {
+                    "text": "현행 main.cpp, 49조건."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "17D · v2 검증 원장",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-17d-notion-source.md"
+                  }
+                ],
+                [
+                  {
+                    "text": "CMake와 GCC20·Clang Configure/CTest 과거 원시 로그."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "17E · GCC11 원시 로그 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-17e-notion-source.md"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure·Build·CTest 3종."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "17F · Clang Build 로그 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-17f-notion-source.md"
+                  }
+                ],
+                [
+                  {
+                    "text": "17D와 연결되는 과거 Build 출력."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "17·18 과거 공통 CMake",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-17-18-legacy/CMakeLists.notionshared.txt"
+                  }
+                ],
+                [
+                  {
+                    "text": "865바이트. 과거 원문 SHA-256과 일치. 38/39조건 구버전 전용이며 현행 v2 CI에는 사용하지 않음."
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "historical-logs",
+      "title": "2026-10-17 Notion 과거 실행 로그",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 9개 파일은 Notion 원시 코드 블록에서 그대로 복구한 과거 실행 출력입니다. 각 환경에서 같은 49개 조건을 반복했으므로 독립 조건 수를 세 배로 합산하지 않습니다. 이번 GitHub CI 실행 결과와 구분해 보관합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "과거 실행 환경"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure"
+                  }
+                ],
+                [
+                  {
+                    "text": "Build"
+                  }
+                ],
+                [
+                  {
+                    "text": "CTest"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "GCC 14.2 · C++20"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc20-configure.log"
+                  }
+                ],
+                [
+                  {
+                    "text": "Build",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc20-build.log"
+                  }
+                ],
+                [
+                  {
+                    "text": "CTest",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc20-ctest.log"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "GCC 14.2 · C++11"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc11-configure.log"
+                  }
+                ],
+                [
+                  {
+                    "text": "Build",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc11-build.log"
+                  }
+                ],
+                [
+                  {
+                    "text": "CTest",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc11-ctest.log"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Clang 17 · C++20 ASan/UBSan"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/notion-historical/dx11-17/clangsan-configure.log"
+                  }
+                ],
+                [
+                  {
+                    "text": "Build",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/notion-historical/dx11-17/clangsan-build.log"
+                  }
+                ],
+                [
+                  {
+                    "text": "CTest",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/notion-historical/dx11-17/clangsan-ctest.log"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source-integrity",
+      "title": "원본 바이트 무결성 · GitHub 검증 기록",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현행 소스와 CMake의 누락된 마지막 LF 1바이트를 복원했습니다. 위 코드 블록은 실제 파일의 마지막 LF까지 포함하며, 복원 파일의 UTF-8 바이트 수와 FNV64는 Notion 원장의 기록과 일치합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·소스·로그 무결성 명세",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/source-integrity.json"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "GitHub 검증 원장·실행 로그",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CPU 모델의 CMake/CTest 통과는 실제 Windows/MSVC·D3D11/GPU·HLSL 실행 검증을 대체하지 않습니다."
+            }
+          ]
         }
       ]
     }

@@ -27,7 +27,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "Notion 네이티브 소스 복구본입니다. 새 Linux CPU 검증은 GitHub Actions에서 진행합니다. Windows/MSVC·D3D11/GPU/HLSL 실기기 실행은 수행하지 않았습니다."
+                  "text": "Notion 네이티브 소스 복구본입니다. 현재 CPU 실행 결과는 GitHub 검증 원장에 기록하며, Notion 과거 로그와 구분합니다. Windows/MSVC·D3D11/GPU·HLSL 컴파일은 미검증입니다."
                 }
               ]
             }
@@ -37,7 +37,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "13A와 별도 독립 실습. 13B1 최신 main.cpp와 13B2 CMakeLists.txt."
+              "text": "13B1 최신 두 단계 검증 main.cpp 5,681바이트·CMake 681바이트를 보존합니다. 13B 본문의 compact main.cpp 2,840바이트·CMake 616바이트도 별도 파일로 복원했습니다. 두 구현의 목적과 StepRate 정책을 구분해서 학습합니다."
             }
           ]
         },
@@ -69,7 +69,7 @@
                 ],
                 [
                   {
-                    "text": "신규 GitHub CI로 검사"
+                    "text": "실제 Configure·Build·CTest 결과는 검증 원장 참조"
                   }
                 ]
               ]
@@ -117,15 +117,130 @@
         },
         {
           "type": "details",
-          "title": "원본과 분리한 CMake가 바뀌었나요?",
+          "title": "compact 13조건과 두 단계 검증 21조건을 합산해도 되나요?",
           "blocks": [
             {
               "type": "paragraph",
               "content": [
                 {
-                  "text": "14의 독립 실행용 CMake는 신규로 추가했습니다. 원래 14/15/16 통합 CMake 코드는 별도 파일로 보관했습니다."
+                  "text": "두 프로그램은 InputLayout 경계 조건을 일부 공유합니다. 따라서 13+21을 모두 서로 다른 독립 조건이라고 주장하지 않습니다. 각각의 프로그램이 보고하는 검사 수를 구분하며, 같은 검사를 세 컴파일 환경에서 반복한 수도 독립 조건에 더하지 않습니다. 13A의 과거 SHA 불일치는 이 실습과 별개로 미해결입니다."
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation-variants",
+      "title": "두 구현의 범위와 StepRate 정책",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구현"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본·파일"
+                  }
+                ],
+                [
+                  {
+                    "text": "보고하는 검사 수"
+                  }
+                ],
+                [
+                  {
+                    "text": "instance StepRate 정책"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "compact"
+                  }
+                ],
+                [
+                  {
+                    "text": "13B 본문 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/dx11-13b/source-notion.md"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "별도 CPU 소스 폴더",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/tree/master/knowledge/shared/dx11-13b-compact"
+                  }
+                ],
+                [
+                  {
+                    "text": "13개"
+                  }
+                ],
+                [
+                  {
+                    "text": "양수 StepRate를 허용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "두 단계 검증"
+                  }
+                ],
+                [
+                  {
+                    "text": "13B1 전체 소스",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b/main.cpp"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "설명 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-two-pass-notion-source.md"
+                  }
+                ],
+                [
+                  {
+                    "text": "21개"
+                  }
+                ],
+                [
+                  {
+                    "text": "교육용 모델에서 정확히 1로 제한"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 숫자는 각 프로그램이 출력하는 조건 수입니다. 두 프로그램 간 의미 중복을 제거한 총 독립 조건 수는 산정하지 않았습니다. 실제 D3D11 API 전체의 StepRate 규칙과 교육용 모델의 제한을 구분합니다."
             }
           ]
         }
@@ -140,7 +255,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 소스 파일 · "
+              "text": "전체 소스 파일 · 5,681바이트 · "
             },
             {
               "text": "GitHub 원본 열기",
@@ -165,7 +280,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 소스 파일 · "
+              "text": "전체 소스 파일 · 681바이트 · "
             },
             {
               "text": "GitHub 원본 열기",
@@ -178,6 +293,1061 @@
           "type": "code",
           "language": "cmake",
           "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13b_cpu LANGUAGES CXX)\nset(LAB_CXX_STANDARD \"20\" CACHE STRING \"11 or 20\")\nif(NOT LAB_CXX_STANDARD STREQUAL \"11\" AND NOT LAB_CXX_STANDARD STREQUAL \"20\")\n  message(FATAL_ERROR \"LAB_CXX_STANDARD must be 11 or 20\")\nendif()\nadd_executable(layout_contract main.cpp)\nset_target_properties(layout_contract PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(layout_contract PRIVATE /W4)\nelse()\n  target_compile_options(layout_contract PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME two_pass_layout_validation COMMAND layout_contract)\n"
+        }
+      ]
+    },
+    {
+      "id": "two-pass-explanation",
+      "title": "2-pass 검증 순서 · 원본 보충 설명",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음은 원본 하위 페이지 전체 본문을 사이트의 문단·표·Mermaid 원문·접힌 문답으로 옮긴 내용입니다. 원문에 적힌 실행 결과는 당시 Notion 기록이며 새 GitHub CI 결과는 아래 검증 원장에서 구분합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보충 설명의 원본 Markdown",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-two-pass-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 정의 — 입력 요소 범위와 검증 순서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "InputLayout의 CPU 모델",
+              "kind": "strong"
+            },
+            {
+              "text": "은 인스턴싱 렌더링에서 각 입력 요소의 슬롯, 바이트 오프셋, 길이, 업데이트 간격을 검사하는 실습입니다. 실제 Direct3D11의 "
+            },
+            {
+              "text": "ID3D11InputLayout",
+              "kind": "code"
+            },
+            {
+              "text": " 구현 또는 CreateInputLayout 호출이 아닙니다. DX9의 FVF/VertexDeclaration을 기억한다면, D3D11에서는 "
+            },
+            {
+              "text": "D3D11_INPUT_ELEMENT_DESC",
+              "kind": "code"
+            },
+            {
+              "text": "와 정점/인스턴스 스트림의 분류를 분리해 생각하면 됩니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "반열린 구간",
+              "kind": "strong"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "[offset, offset+bytes)",
+              "kind": "code"
+            },
+            {
+              "text": "를 사용해 동일 슬롯 요소 사이의 겹침을 판단합니다. 핵심은 "
+            },
+            {
+              "text": "요소 전체의 경계를 먼저 검증한 뒤",
+              "kind": "em"
+            },
+            {
+              "text": " 합과 비교를 수행하는 2-pass 방식입니다. 1-pass의 후속 요소 "
+            },
+            {
+              "text": "b",
+              "kind": "code"
+            },
+            {
+              "text": "를 검증하지 않은 상태로 "
+            },
+            {
+              "text": "b.offset+b.bytes",
+              "kind": "code"
+            },
+            {
+              "text": "를 먼저 더하면 "
+            },
+            {
+              "text": "uint32_t",
+              "kind": "code"
+            },
+            {
+              "text": " 래핑 때문에 오류 원인을 "
+            },
+            {
+              "text": "InvalidElement",
+              "kind": "code"
+            },
+            {
+              "text": "가 아닌 "
+            },
+            {
+              "text": "Overlap",
+              "kind": "code"
+            },
+            {
+              "text": "으로 잘못 분류할 수 있습니다. "
+            },
+            {
+              "text": "Unsigned overflow는 C++에서 정의된 모듈러 연산",
+              "kind": "strong"
+            },
+            {
+              "text": "이며 이것 자체가 UB라는 뜻은 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 전제와 동작 원리"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "학습 전제: C++11 이상, 32비트 "
+                  },
+                  {
+                    "text": "uint32_t",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "와 64비트 "
+                  },
+                  {
+                    "text": "uint64_t",
+                    "kind": "code"
+                  },
+                  {
+                    "text": ", "
+                  },
+                  {
+                    "text": "std::vector",
+                    "kind": "code"
+                  },
+                  {
+                    "text": ", CMake 3.16 이상. "
+                  },
+                  {
+                    "text": "main.cpp",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "는 C++20과 C++11에서 동일하게 컴파일됩니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "첫 단계: stride 양수/요소 목록 비어 있지 않은지 검사합니다. 모델의 슬롯은 0=vertex, 1=instance로 제한합니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "둘째 단계: 각 요소의 "
+                  },
+                  {
+                    "text": "offset <= stride",
+                    "kind": "code"
+                  },
+                  {
+                    "text": " 및 "
+                  },
+                  {
+                    "text": "bytes <= stride-offset",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "를 먼저 검사해 오버플로 없이 범위를 제한합니다. "
+                  },
+                  {
+                    "text": "perInstance",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "와 "
+                  },
+                  {
+                    "text": "stepRate",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "도 검증합니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "셋째 단계: 같은 슬롯 요소에 한해 "
+                  },
+                  {
+                    "text": "uint64_t",
+                    "kind": "code"
+                  },
+                  {
+                    "text": " 끝점을 구해 "
+                  },
+                  {
+                    "text": "a.start < b.end && b.start < a.end",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "이면 겹침으로 판단합니다. 빈 구간은 허용하지 않습니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "주의: 학습 모델은 instance stepRate를 "
+                  },
+                  {
+                    "text": "정확히 1로 제한",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": "하지만 실제 D3D11의 "
+                  },
+                  {
+                    "text": "InstanceDataStepRate",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "에는 1 외의 값도 존재합니다. 이 모델의 제한을 D3D11 API 전체 규칙으로 일반화하면 안 됩니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"Layout 입력\"] --> B{\"Stride 양수·요소 있음?\"}\n B -->|아니오| E[\"InvalidLayout\"]\n B -->|예| C[\"모든 요소 경계·슬롯·Class·StepRate 선검증\"]\n C --> D{\"잘못된 요소?\"}\n D -->|예| F[\"InvalidElement\"]\n D -->|아니오| G[\"같은 슬롯끼리 64bit 구간 비교\"]\n G --> H{\"겹침?\"}\n H -->|예| I[\"Overlap\"]\n H -->|아니오| J[\"Ok\"]\n"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. DX9 경험과 비교"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구분"
+                  }
+                ],
+                [
+                  {
+                    "text": "1-pass 사례"
+                  }
+                ],
+                [
+                  {
+                    "text": "2-pass 개선"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "검사 순서"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 요소 검사 도중 미검증 후속 요소와 교차 비교"
+                  }
+                ],
+                [
+                  {
+                    "text": "전체 요소 경계·분류를 먼저 검사"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "정수 산술"
+                  }
+                ],
+                [
+                  {
+                    "text": "32bit unsigned 덧셈이 래핑 가능"
+                  }
+                ],
+                [
+                  {
+                    "text": "검증 뒤 64bit 끝점 계산"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "극단 반례"
+                  }
+                ],
+                [
+                  {
+                    "text": "잘못된 뒤 요소를 Overlap으로 분류 가능"
+                  }
+                ],
+                [
+                  {
+                    "text": "InvalidElement로 먼저 분류"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "게임 적용"
+                  }
+                ],
+                [
+                  {
+                    "text": "버텍스/인스턴스 선언 오류 진단 불명확"
+                  }
+                ],
+                [
+                  {
+                    "text": "에셋 로딩 시 잘못된 선언과 실제 겹침을 분리"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 전체 실습 소스 · 테스트 증거"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "전체 main.cpp 5,681바이트:",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": " "
+                  },
+                  {
+                    "text": "13B1 전체 main.cpp 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b1-notion-source.md"
+                  },
+                  {
+                    "text": ". SHA-256 "
+                  },
+                  {
+                    "text": "e8e0cab9c77fda85b0d7da6a08240b71334eb9e27a1a80679aea0695d4c54610",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "; FNV64 "
+                  },
+                  {
+                    "text": "ac4c8c2816989f9f",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "전체 CMakeLists.txt 681바이트·실제 빌드 명령:",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": " "
+                  },
+                  {
+                    "text": "13B2 CMake·빌드 명령 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b2-notion-source.md"
+                  },
+                  {
+                    "text": ". SHA-256 "
+                  },
+                  {
+                    "text": "699e52c8ebc0ab3dedb48554df11cffc97655568bf631cbe7c79326db574e126",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "실제 GCC14.2 C++20 "
+                  },
+                  {
+                    "text": "13B3 GCC C++20 과거 로그 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-gcc20-logs-notion-source.md"
+                  },
+                  {
+                    "text": ", GCC14.2 C++11 "
+                  },
+                  {
+                    "text": "13B3 GCC C++11 과거 로그 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-gcc11-logs-notion-source.md"
+                  },
+                  {
+                    "text": ", Clang17 C++20 ASan/UBSan "
+                  },
+                  {
+                    "text": "13B3 ClangSan 과거 로그 원문",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-clangsan-logs-notion-source.md"
+                  },
+                  {
+                    "text": ": 3환경 각각 Configure/Build/CTest 원시 stdout과 0바이트 stderr의 길이·FNV64 기록 보관. "
+                  },
+                  {
+                    "text": "각 CTest 1/1 PASS",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": ", 동일 "
+                  },
+                  {
+                    "text": "고유 논리 조건 21개",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": "를 반복 실행했으므로 독립 조건 63개라고 집계하지 않습니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "극단 반례: stride="
+                  },
+                  {
+                    "text": "UINT32_MAX",
+                    "kind": "code"
+                  },
+                  {
+                    "text": ", 첫 요소 "
+                  },
+                  {
+                    "text": "offset=0,bytes=UINT32_MAX",
+                    "kind": "code"
+                  },
+                  {
+                    "text": ", 뒤 요소 "
+                  },
+                  {
+                    "text": "offset=UINT32_MAX-2,bytes=10",
+                    "kind": "code"
+                  },
+                  {
+                    "text": ". 기존 비교 분기에서는 "
+                  },
+                  {
+                    "text": "bytes+offset",
+                    "kind": "code"
+                  },
+                  {
+                    "text": " 래핑에 의해 "
+                  },
+                  {
+                    "text": "Overlap",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "으로 분류되지만 전체 선검증 방식은 "
+                  },
+                  {
+                    "text": "InvalidElement",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "를 정확히 반환합니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "이 실습은 CPU-only 모델. Windows/MSVC·실제 D3D11/HLSL 컴파일·GPU InputLayout·Unity Editor는 이번에 "
+                  },
+                  {
+                    "text": "실행하지 않아 미검증",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": "입니다. "
+                  },
+                  {
+                    "text": "-fsanitize=address,undefined",
+                    "kind": "code"
+                  },
+                  {
+                    "text": "가 산술 오류 분류의 논리적 정확성을 대신하지도 않습니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "5. 게임 개발 적용과 실수"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정적 메시/인스턴스 렌더링 데이터 로딩 앞단의 "
+            },
+            {
+              "text": "입력 레이아웃 계약 검사",
+              "kind": "strong"
+            },
+            {
+              "text": ", 잘못된 메타데이터의 진단, 렌더러 초기화 전 CPU 테스트에 활용합니다. 이것은 "
+            },
+            {
+              "text": "IASetVertexBuffers",
+              "kind": "code"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "CreateInputLayout",
+              "kind": "code"
+            },
+            {
+              "text": " 또는 실제 셰이더 시그니처의 유효성을 확인하지 않습니다. 입력 슬롯·시맨틱·DXGI_FORMAT의 실제 제한은 API 문서와 GPU 실측으로 별도 점검해야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "6. 접힌 이해 확인"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q1. `unsigned` 덧셈이 wrap되면 항상 Undefined Behavior인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. unsigned 산술은 범위의 모듈러 연산으로 정의됩니다. 다만 래핑된 값으로 구간 겹침을 검사하면 논리 결과가 잘못될 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q2. 다른 슬롯의 요소 범위가 겹쳐도 Overlap인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 이 모델에서는 서로 다른 Vertex Buffer 스트림의 구간이므로 동일 슬롯에 대해서만 겹침을 비교합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q3. D3D11의 InstanceDataStepRate는 반드시 1인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 여기서는 간단한 모델을 위해 1로 제한했을 뿐이며 실제 API는 다른 인스턴스 증가 간격을 허용합니다. per-vertex 요소는 0이어야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "7. 공식 출처·변경 내역"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft: D3D11_INPUT_ELEMENT_DESC",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc"
+                  },
+                  {
+                    "text": " — InputSlot, AlignedByteOffset, InputSlotClass, InstanceDataStepRate 정의."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft: D3D11_MAP",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_map"
+                  },
+                  {
+                    "text": " — WRITE_DISCARD/NO_OVERWRITE는 별도 동적 버퍼 관리 계약."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "원래 13A 보존 문서는 "
+                  },
+                  {
+                    "text": "13A · Instancing CPU 구현·검증 색인과 전체 소스 보관",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13a-notion-source.md"
+                  },
+                  {
+                    "text": ". 이 실습은 기존 13A 코드를 수정하지 않는 독립 보완본이며 "
+                  },
+                  {
+                    "text": "역사적 main.cpp SHA-256 불일치를 해결했다고 주장하지 않습니다.",
+                    "kind": "strong"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "2026-10-19"
+                  },
+                  {
+                    "text": " v1.0: 극단 오프셋 경계·검증 순서 반례를 재현하는 전체 CPU-only C++11/20 모델과 CMake, 3환경 원시 CTest 로그를 저장했습니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compact-main",
+      "title": "compact · 전체 main.cpp",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13B 본문에 포함된 별도 CPU 모델입니다. 기존 13B1 두 단계 검증 소스를 대체하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 2,840바이트 · "
+            },
+            {
+              "text": "GitHub 전체 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-compact/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "SHA-256 9002375bbb188e31aa02d999739b66ada0dd74e0a87aeb82be703b04978b5324"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// DX11 13B: educational CPU-only InputLayout contract; not GPU/API execution.\n// C++11 source, tested with C++11 and C++20.\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nstruct Element {\n    std::uint32_t slot, offset, bytes, step;\n    bool per_instance;\n};\nstruct Layout {\n    std::uint32_t vertex_stride, instance_stride;\n    std::vector<Element> elements;\n};\n\nvoid validate(const Layout& l) {\n    if (!l.vertex_stride || !l.instance_stride || l.elements.empty())\n        throw std::invalid_argument(\"missing stream\");\n    // Stage 1: validate ALL elements before calculating any end offsets.\n    for (std::size_t i = 0; i < l.elements.size(); ++i) {\n        const Element& e = l.elements[i];\n        if (e.slot > 1 || !e.bytes || e.per_instance != (e.slot == 1) ||\n            (e.per_instance ? e.step == 0 : e.step != 0))\n            throw std::invalid_argument(\"slot or class\");\n        const std::uint32_t stride = e.slot == 0 ? l.vertex_stride : l.instance_stride;\n        if (e.offset > stride || e.bytes > stride - e.offset)\n            throw std::out_of_range(\"element beyond stride\");\n    }\n    // Stage 2: safe sums, because Stage 1 proved offset+bytes <= stride.\n    for (std::size_t i = 0; i < l.elements.size(); ++i)\n        for (std::size_t j = i + 1; j < l.elements.size(); ++j) {\n            const Element& a = l.elements[i];\n            const Element& b = l.elements[j];\n            if (a.slot == b.slot && a.offset < b.offset + b.bytes &&\n                b.offset < a.offset + a.bytes)\n                throw std::invalid_argument(\"overlapping elements\");\n        }\n}\n\nbool valid(const Layout& l) {\n    try { validate(l); return true; }\n    catch (const std::invalid_argument&) { return false; }\n    catch (const std::out_of_range&) { return false; }\n}\nint main() {\n    unsigned checks = 0;\n    const auto expect = [&](bool result) {\n        ++checks;\n        if (!result) throw std::runtime_error(\"layout assertion failed\");\n    };\n    expect(valid({20,64,{{0,0,12,0,false},{0,12,8,0,false},\n         {1,0,16,2,true},{1,16,16,2,true},{1,32,16,2,true},{1,48,16,2,true}}}));\n    expect(!valid({0,64,{{0,0,4,0,false}}}));\n    expect(!valid({20,64,{}}));\n    expect(!valid({20,64,{{2,0,4,0,false}}}));\n    expect(!valid({20,64,{{0,0,0,0,false}}}));\n    expect(!valid({20,64,{{0,0,4,1,false}}}));\n    expect(!valid({20,64,{{1,0,4,0,true}}}));\n    expect(!valid({20,64,{{0,20,1,0,false}}}));\n    expect(!valid({20,64,{{0,4294967292U,16,0,false}}}));\n    expect(!valid({20,64,{{0,0,12,0,false},{0,8,8,0,false}}}));\n    expect(valid({20,64,{{0,0,12,0,false},{0,12,8,0,false}}}));\n    expect(valid({20,64,{{0,0,12,0,false},{1,0,12,1,true}}}));\n    expect(!valid({20,64,{{0,0,12,0,false},{1,63,2,1,true}}}));\n    std::cout << \"PASS \" << checks << \" CPU InputLayout checks\\n\";\n}\n"
+        }
+      ]
+    },
+    {
+      "id": "compact-cmake",
+      "title": "compact · 전체 CMakeLists.txt",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "compact main.cpp와 같은 디렉터리에 두고 빌드합니다. 이 파일의 표준 선택 옵션은 LAB_STD이며, 두 단계 검증 CMake의 LAB_CXX_STANDARD와 다릅니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 616바이트 · "
+            },
+            {
+              "text": "GitHub 전체 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-compact/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "SHA-256 ad7635f631dcdc11955a100a48f10d2abc4f033000350a466cad848b194f40bd"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cmake",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13b_layout LANGUAGES CXX)\nset(LAB_STD 20 CACHE STRING \"C++ standard, 11 or 20\")\nif(NOT LAB_STD STREQUAL \"11\" AND NOT LAB_STD STREQUAL \"20\")\n  message(FATAL_ERROR \"LAB_STD must be 11 or 20\")\nendif()\nadd_executable(dx11_13b_layout main.cpp)\nset_target_properties(dx11_13b_layout PROPERTIES CXX_STANDARD ${LAB_STD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(CMAKE_CXX_COMPILER_ID MATCHES \"GNU|Clang\")\n  target_compile_options(dx11_13b_layout PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME dx11_13b_layout COMMAND dx11_13b_layout)\n"
+        }
+      ]
+    },
+    {
+      "id": "source-archive",
+      "title": "Notion 원문과 구현별 과거 로그",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 Notion 로그는 원본에 보관되어 있던 과거 실행 기록입니다. 이번 GitHub CI의 Configure·Build·CTest 실행 결과와 별도로 보존합니다. GCC C++20·GCC C++11·Clang C++20 ASan/UBSan에서 같은 조건을 반복한 횟수를 독립 조건 수로 합산하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 원장 · 새 GitHub CI와 과거 Notion 기록의 구분",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "소스·원문·로그 바이트 무결성 명세",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/source-integrity.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13B compact 본문 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/dx11-13b/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13B1 두 단계 검증 전체 소스 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b1-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13B2 CMake와 빌드 명령 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b2-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 단계 검증 순서 보충 설명 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-two-pass-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "compact 3환경·원시 로그 9개 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-compact-logs-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 단계 검증 GCC C++20 과거 로그 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-gcc20-logs-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 단계 검증 GCC C++11 과거 로그 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-gcc11-logs-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 단계 검증 ClangSan 과거 로그 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-clangsan-logs-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "과거 기록"
+                  }
+                ],
+                [
+                  {
+                    "text": "보관 범위"
+                  }
+                ],
+                [
+                  {
+                    "text": "파일"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "compact · 13조건"
+                  }
+                ],
+                [
+                  {
+                    "text": "3환경별 Configure·Build·CTest, 총 9개 stdout"
+                  }
+                ],
+                [
+                  {
+                    "text": "compact 과거 로그 폴더",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/tree/master/knowledge/verification/dx11-13-18/notion-history/13b-compact"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "두 단계 검증 · 21조건"
+                  }
+                ],
+                [
+                  {
+                    "text": "3환경별 Configure·Build·CTest, 총 9개 stdout"
+                  }
+                ],
+                [
+                  {
+                    "text": "두 단계 검증 과거 로그 폴더",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/tree/master/knowledge/verification/dx11-13-18/notion-history/13b-two-pass"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원문 지문 대조"
+                  }
+                ],
+                [
+                  {
+                    "text": "각 로그의 바이트 길이·FNV64가 원문 기록과 일치"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 CI의 성공 여부와는 별도 증거"
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     }

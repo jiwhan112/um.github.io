@@ -212,7 +212,17 @@
         {
           "type": "code",
           "language": "cpp",
-          "text": "// DX11 13B: educational CPU-only InputLayout contract; not GPU/API execution.\n// C++11 source, tested with C++11 and C++20.\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nstruct Element {\n    std::uint32_t slot, offset, bytes, step;\n    bool per_instance;\n};\nstruct Layout {\n    std::uint32_t vertex_stride, instance_stride;\n    std::vector<Element> elements;\n};\n\nvoid validate(const Layout& l) {\n    if (!l.vertex_stride || !l.instance_stride || l.elements.empty())\n        throw std::invalid_argument(\"missing stream\");\n    // Stage 1: validate ALL elements before calculating any end offsets.\n    for (std::size_t i = 0; i < l.elements.size(); ++i) {\n        const Element& e = l.elements[i];\n        if (e.slot > 1 || !e.bytes || e.per_instance != (e.slot == 1) ||\n            (e.per_instance ? e.step == 0 : e.step != 0))\n            throw std::invalid_argument(\"slot or class\");\n        const std::uint32_t stride = e.slot == 0 ? l.vertex_stride : l.instance_stride;\n        if (e.offset > stride || e.bytes > stride - e.offset)\n            throw std::out_of_range(\"element beyond stride\");\n    }\n    // Stage 2: safe sums, because Stage 1 proved offset+bytes <= stride.\n    for (std::size_t i = 0; i < l.elements.size(); ++i)\n        for (std::size_t j = i + 1; j < l.elements.size(); ++j) {\n            const Element& a = l.elements[i];\n            const Element& b = l.elements[j];\n            if (a.slot == b.slot && a.offset < b.offset + b.bytes &&\n                b.offset < a.offset + a.bytes)\n                throw std::invalid_argument(\"overlapping elements\");\n        }\n}\n\nbool valid(const Layout& l) {\n    try { validate(l); return true; }\n    catch (const std::invalid_argument&) { return false; }\n    catch (const std::out_of_range&) { return false; }\n}\nint main() {\n    unsigned checks = 0;\n    const auto expect = [&](bool result) {\n        ++checks;\n        if (!result) throw std::runtime_error(\"layout assertion failed\");\n    };\n    expect(valid({20,64,{{0,0,12,0,false},{0,12,8,0,false},\n         {1,0,16,2,true},{1,16,16,2,true},{1,32,16,2,true},{1,48,16,2,true}}}));\n    expect(!valid({0,64,{{0,0,4,0,false}}}));\n    expect(!valid({20,64,{}}));\n    expect(!valid({20,64,{{2,0,4,0,false}}}));\n    expect(!valid({20,64,{{0,0,0,0,false}}}));\n    expect(!valid({20,64,{{0,0,4,1,false}}}));\n    expect(!valid({20,64,{{1,0,4,0,true}}}));\n    expect(!valid({20,64,{{0,20,1,0,false}}}));\n    expect(!valid({20,64,{{0,4294967292U,16,0,false}}}));\n    expect(!valid({20,64,{{0,0,12,0,false},{0,8,8,0,false}}}));\n    expect(valid({20,64,{{0,0,12,0,false},{0,12,8,0,false}}}));\n    expect(valid({20,64,{{0,0,12,0,false},{1,0,12,1,true}}}));\n    expect(!valid({20,64,{{0,0,12,0,false},{1,63,2,1,true}}}));\n    std::cout << \"PASS \" << checks << \" CPU InputLayout checks\\n\";\n}"
+          "text": "// DX11 13B: educational CPU-only InputLayout contract; not GPU/API execution.\n// C++11 source, tested with C++11 and C++20.\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nstruct Element {\n    std::uint32_t slot, offset, bytes, step;\n    bool per_instance;\n};\nstruct Layout {\n    std::uint32_t vertex_stride, instance_stride;\n    std::vector<Element> elements;\n};\n\nvoid validate(const Layout& l) {\n    if (!l.vertex_stride || !l.instance_stride || l.elements.empty())\n        throw std::invalid_argument(\"missing stream\");\n    // Stage 1: validate ALL elements before calculating any end offsets.\n    for (std::size_t i = 0; i < l.elements.size(); ++i) {\n        const Element& e = l.elements[i];\n        if (e.slot > 1 || !e.bytes || e.per_instance != (e.slot == 1) ||\n            (e.per_instance ? e.step == 0 : e.step != 0))\n            throw std::invalid_argument(\"slot or class\");\n        const std::uint32_t stride = e.slot == 0 ? l.vertex_stride : l.instance_stride;\n        if (e.offset > stride || e.bytes > stride - e.offset)\n            throw std::out_of_range(\"element beyond stride\");\n    }\n    // Stage 2: safe sums, because Stage 1 proved offset+bytes <= stride.\n    for (std::size_t i = 0; i < l.elements.size(); ++i)\n        for (std::size_t j = i + 1; j < l.elements.size(); ++j) {\n            const Element& a = l.elements[i];\n            const Element& b = l.elements[j];\n            if (a.slot == b.slot && a.offset < b.offset + b.bytes &&\n                b.offset < a.offset + a.bytes)\n                throw std::invalid_argument(\"overlapping elements\");\n        }\n}\n\nbool valid(const Layout& l) {\n    try { validate(l); return true; }\n    catch (const std::invalid_argument&) { return false; }\n    catch (const std::out_of_range&) { return false; }\n}\nint main() {\n    unsigned checks = 0;\n    const auto expect = [&](bool result) {\n        ++checks;\n        if (!result) throw std::runtime_error(\"layout assertion failed\");\n    };\n    expect(valid({20,64,{{0,0,12,0,false},{0,12,8,0,false},\n         {1,0,16,2,true},{1,16,16,2,true},{1,32,16,2,true},{1,48,16,2,true}}}));\n    expect(!valid({0,64,{{0,0,4,0,false}}}));\n    expect(!valid({20,64,{}}));\n    expect(!valid({20,64,{{2,0,4,0,false}}}));\n    expect(!valid({20,64,{{0,0,0,0,false}}}));\n    expect(!valid({20,64,{{0,0,4,1,false}}}));\n    expect(!valid({20,64,{{1,0,4,0,true}}}));\n    expect(!valid({20,64,{{0,20,1,0,false}}}));\n    expect(!valid({20,64,{{0,4294967292U,16,0,false}}}));\n    expect(!valid({20,64,{{0,0,12,0,false},{0,8,8,0,false}}}));\n    expect(valid({20,64,{{0,0,12,0,false},{0,12,8,0,false}}}));\n    expect(valid({20,64,{{0,0,12,0,false},{1,0,12,1,true}}}));\n    expect(!valid({20,64,{{0,0,12,0,false},{1,63,2,1,true}}}));\n    std::cout << \"PASS \" << checks << \" CPU InputLayout checks\\n\";\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 본문에 대응하는 compact 전체 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-compact/main.cpp"
+            }
+          ]
         }
       ]
     },
@@ -224,13 +234,23 @@
         {
           "type": "code",
           "language": "text",
-          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13b_layout LANGUAGES CXX)\nset(LAB_STD 20 CACHE STRING \"C++ standard, 11 or 20\")\nif(NOT LAB_STD STREQUAL \"11\" AND NOT LAB_STD STREQUAL \"20\")\n  message(FATAL_ERROR \"LAB_STD must be 11 or 20\")\nendif()\nadd_executable(dx11_13b_layout main.cpp)\nset_target_properties(dx11_13b_layout PROPERTIES CXX_STANDARD ${LAB_STD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(CMAKE_CXX_COMPILER_ID MATCHES \"GNU|Clang\")\n  target_compile_options(dx11_13b_layout PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME dx11_13b_layout COMMAND dx11_13b_layout)"
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13b_layout LANGUAGES CXX)\nset(LAB_STD 20 CACHE STRING \"C++ standard, 11 or 20\")\nif(NOT LAB_STD STREQUAL \"11\" AND NOT LAB_STD STREQUAL \"20\")\n  message(FATAL_ERROR \"LAB_STD must be 11 or 20\")\nendif()\nadd_executable(dx11_13b_layout main.cpp)\nset_target_properties(dx11_13b_layout PROPERTIES CXX_STANDARD ${LAB_STD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(CMAKE_CXX_COMPILER_ID MATCHES \"GNU|Clang\")\n  target_compile_options(dx11_13b_layout PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME dx11_13b_layout COMMAND dx11_13b_layout)\n"
         },
         {
           "type": "paragraph",
           "content": [
             {
               "text": "CMakeLists.txt 616바이트, SHA256 ad7635f631dcdc11955a100a48f10d2abc4f033000350a466cad848b194f40bd, FNV64 7ad4bb35e2621f80."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 본문에 대응하는 compact 전체 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-compact/CMakeLists.txt"
             }
           ]
         }
@@ -452,6 +472,19 @@
       "title": "전체 C++ 소스 · 빌드 · 검증 경계",
       "tab": "document",
       "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 본문의 코드는 compact 13조건 모델입니다. 전체 소스 교재에는 이 구현과 최신 두 단계 검증 21조건 구현을 모두 보존하며, 각자의 StepRate 정책·소스 파일·CMake·과거 로그를 구분합니다."
+                }
+              ]
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [

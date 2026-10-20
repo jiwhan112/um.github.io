@@ -1,0 +1,1492 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-10-20",
+  "baselineCommit": "f966cd4becfd73d050a01f052a7579bff26392b2",
+  "scope": "DX11 13–18 current Notion body, native code, CMake, HLSL examples and archived historical stdout",
+  "bodyExtraction": "UTF-8 text between <content> LF and LF </content>, followed by exactly one LF; Frustum retains its existing provenance prefix.",
+  "codeExtraction": "Concatenate selected fenced block payloads in source order, retaining each terminal LF; no trimming, padding, newline conversion or invented source.",
+  "completenessLimit": "The connector did not return truncated or unknown_block_count fields. All 26 retrieved pages ended with closing content/page tags; no unknown/image/file placeholders were observed. This does not certify unattested attachment history.",
+  "historical13a": {
+    "status": "unverified-original-bytes-unavailable",
+    "recordedSha256": "fd3839f7c350d1e573cab36a8c3f942f55a8e6c9d4e94b45033e7d3b3b4472ae",
+    "currentPath": "knowledge/shared/dx11-13/main.cpp",
+    "currentSha256": "ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8",
+    "note": "Successful current compilation does not establish historical byte identity. The eight repaired terminal LFs do not resolve the unrelated historical 13A source discrepancy."
+  },
+  "legacyIncomplete": [
+    "17A retains only available fragments, not the declared complete 29-part program.",
+    "18A explicitly lacks the historical complete main.cpp; its original shared CMake is available and preserved."
+  ],
+  "executionLimits": [
+    "Windows/MSVC not executed",
+    "Direct3D11 runtime/GPU not executed",
+    "HLSL compilation not executed",
+    "Historical Notion stdout is not a new GitHub CI execution"
+  ],
+  "pages": [
+    {
+      "id": "3fba99703f4081c6b435d946bcb40dc2",
+      "url": "https://app.notion.com/p/3fba99703f4081c6b435d946bcb40dc2",
+      "title": "🧬 13 · Instancing — IA Slot·StepRate·DrawIndexedInstanced·Dynamic VB",
+      "lastEditedAt": "2026-10-18T08:04:11.290Z",
+      "path": "knowledge/dx11-13/source-notion.md",
+      "bodyBytes": 10666,
+      "bodySha256": "ff9d494b23e65ce2d56c372291b3e73785584a3b907b0328fc52978ed3f31fef",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fda99703f4081ef8863c783ed5a6e8f",
+      "url": "https://app.notion.com/p/3fda99703f4081ef8863c783ed5a6e8f",
+      "title": "13B · Instancing InputLayout 오버플로·StepRate 경계 CPU 실습",
+      "lastEditedAt": "2026-10-18T07:18:26.456Z",
+      "path": "knowledge/dx11-13b/source-notion.md",
+      "bodyBytes": 8481,
+      "bodySha256": "aa6ce0ae597147a119f528931a36a446ba7f52a0c3d685206de906c91cce3d97",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f4081238d99e7872c068e3f",
+      "url": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f",
+      "title": "🔺 14 · Geometry Shader — Primitive 입력·TriangleStream·Point Sprite",
+      "lastEditedAt": "2026-10-18T03:06:19.125Z",
+      "path": "knowledge/dx11-14/source-notion.md",
+      "bodyBytes": 17435,
+      "bodySha256": "3d56267f03d13bda43fd8e68da4e2cb07a19393d6bfef70c3dff0ac8f378624d",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f4081f3a517e4028f940425",
+      "url": "https://app.notion.com/p/3fba99703f4081f3a517e4028f940425",
+      "title": "🌲 16 · QuadTree — XZ 공간분할·부모 보관·Broad-phase 검색",
+      "lastEditedAt": "2026-10-17T12:07:00.243Z",
+      "path": "knowledge/dx11-16/source-notion.md",
+      "bodyBytes": 10064,
+      "bodySha256": "b2b16b9dad38c50211905d536a3e67fcf5ae25084d7692ea8da5d319adb1b724",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f40811493aae2a5a2532bea",
+      "url": "https://app.notion.com/p/3fba99703f40811493aae2a5a2532bea",
+      "title": "🔤 17 · Font Rendering — UTF-8·Glyph Atlas·SpriteFont·SpriteBatch",
+      "lastEditedAt": "2026-10-17T11:12:05.087Z",
+      "path": "knowledge/dx11-17/source-notion.md",
+      "bodyBytes": 8674,
+      "bodySha256": "c80deb20c515cb3ad2f8e17277902b5849cd063cac73790f46cf0c07099c30c7",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f4081539f63e9fab7f9bc18",
+      "url": "https://app.notion.com/p/3fba99703f4081539f63e9fab7f9bc18",
+      "title": "🧪 18 · Deferred Rendering — MRT·GBuffer·RTV/SRV 수명·Hazard",
+      "lastEditedAt": "2026-10-16T12:17:57.172Z",
+      "path": "knowledge/dx11-18/source-notion.md",
+      "bodyBytes": 8287,
+      "bodySha256": "f44cebaae0951da67fb4156905cc152373adac3961b1fbf622af412359cb4fab",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f40812682f6df8327550441",
+      "url": "https://app.notion.com/p/3fba99703f40812682f6df8327550441",
+      "title": "📐 15 · Frustum Culling — Clip Space·6 Plane·AABB 분류",
+      "lastEditedAt": "2026-10-19T02:06:48.269Z",
+      "path": "knowledge/dx11-frustum/source-notion.md",
+      "bodyBytes": 11990,
+      "bodySha256": "11bd947dd58c24ec97a87a6c7a5fd11f95c8b7d6634d4d230d0811a1b1031ab0",
+      "preservedPrefixBytes": 227,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f40810b826cc7eec5b1f039",
+      "url": "https://app.notion.com/p/3fba99703f40810b826cc7eec5b1f039",
+      "title": "📦 13A · Instancing CPU 구현·검증 색인과 전체 소스 보관",
+      "lastEditedAt": "2026-10-18T05:09:11.696Z",
+      "path": "knowledge/shared/dx11-13a-notion-source.md",
+      "bodyBytes": 13035,
+      "bodySha256": "0cc9a77db90531299ac3311804868dafd53d01d75c5ba9151dede8aec757fd21",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fda99703f4081d5ae1ac37e1b558bd0",
+      "url": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0",
+      "title": "13A 재현 가능 CPU 검증 · 현재 6043B 소스·GCC11/20·ClangSan 원시 로그 9개 · 2026-10-18",
+      "lastEditedAt": "2026-10-18T18:03:57.494Z",
+      "path": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "bodyBytes": 9421,
+      "bodySha256": "05f8da43d6f440f6ca3a4d6152d02842c92912f9da3764690f6912786c96fae8",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fda99703f408129bdf8f87a5765a45b",
+      "url": "https://app.notion.com/p/3fda99703f408129bdf8f87a5765a45b",
+      "title": "13A 과거 SHA-256 불일치 — 현행 코드와 역사적 동일성 분리 감사 · 2026-10-19",
+      "lastEditedAt": "2026-10-18T23:35:08.360Z",
+      "path": "knowledge/shared/dx11-13audit-notion-source.md",
+      "bodyBytes": 2244,
+      "bodySha256": "2406f95be16ee4546426100e62ad601d539bd2a0e7c78ff055fad28e13e39d6a",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fda99703f408182b510f65f37811759",
+      "url": "https://app.notion.com/p/3fda99703f408182b510f65f37811759",
+      "title": "13B3 · clangsan 실제 Configure·Build·CTest 원시 로그 · CTest 1/1",
+      "lastEditedAt": "2026-10-18T23:23:05.072Z",
+      "path": "knowledge/shared/dx11-13b-clangsan-logs-notion-source.md",
+      "bodyBytes": 2362,
+      "bodySha256": "2aec70d6a3bdbcd29fcab62d2282c81f7de214e0445c44f7a0ae4ca068234ba9",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fda99703f40817dbe67d998687b1c6d",
+      "url": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d",
+      "title": "13B · Linux CPU 3환경 Configure·Build·CTest -V 원시 로그 9개",
+      "lastEditedAt": "2026-10-18T07:17:31.748Z",
+      "path": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "bodyBytes": 6645,
+      "bodySha256": "0fa82e9e2aa8ec408257479af29739c9d85c7f2ed18e21309c02c343db8ec24c",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fda99703f408135b96ac0a0bae7334b",
+      "url": "https://app.notion.com/p/3fda99703f408135b96ac0a0bae7334b",
+      "title": "13B3 · gcc11 실제 Configure·Build·CTest 원시 로그 · CTest 1/1",
+      "lastEditedAt": "2026-10-18T23:23:03.204Z",
+      "path": "knowledge/shared/dx11-13b-gcc11-logs-notion-source.md",
+      "bodyBytes": 2319,
+      "bodySha256": "ec121d894f2cc92d68d7a43c961326e5a543c6b4d6a32ff2d497ae93e5b70469",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fda99703f4081fa822bf7fa2923c702",
+      "url": "https://app.notion.com/p/3fda99703f4081fa822bf7fa2923c702",
+      "title": "13B3 · gcc20 실제 Configure·Build·CTest 원시 로그 · CTest 1/1",
+      "lastEditedAt": "2026-10-18T23:23:01.462Z",
+      "path": "knowledge/shared/dx11-13b-gcc20-logs-notion-source.md",
+      "bodyBytes": 2319,
+      "bodySha256": "fea2a0af1dad4f107869c550bb8727bb8ff3c894a9df14fd8af2ad23721dce38",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fda99703f4081acaea2cdd358c5e39e",
+      "url": "https://app.notion.com/p/3fda99703f4081acaea2cdd358c5e39e",
+      "title": "13B · Instancing InputLayout 요소 경계 검증 순서 · 2-pass CPU 실습",
+      "lastEditedAt": "2026-10-18T23:24:24.581Z",
+      "path": "knowledge/shared/dx11-13b-two-pass-notion-source.md",
+      "bodyBytes": 7142,
+      "bodySha256": "c88858145afed200827dee374108469945af186a9894eacc49b77c0ffaa4b726",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fda99703f408150bcb6ceb1602850a9",
+      "url": "https://app.notion.com/p/3fda99703f408150bcb6ceb1602850a9",
+      "title": "13B1 · InputLayout 정수 경계·2-pass 검증 CPU 전체 main.cpp · 5681B",
+      "lastEditedAt": "2026-10-18T23:20:23.861Z",
+      "path": "knowledge/shared/dx11-13b1-notion-source.md",
+      "bodyBytes": 5822,
+      "bodySha256": "eda899d6373c77b99da039783da13a927cd5a5ca4db63bb12dbd992f5a3d786c",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fda99703f4081cf9e53d91efafce3b1",
+      "url": "https://app.notion.com/p/3fda99703f4081cf9e53d91efafce3b1",
+      "title": "13B2 · InputLayout CMakeLists 전체 · C++11/20 빌드 지침",
+      "lastEditedAt": "2026-10-18T23:25:20.332Z",
+      "path": "knowledge/shared/dx11-13b2-notion-source.md",
+      "bodyBytes": 1480,
+      "bodySha256": "670b6a0482ef8ee2097747371d8283fb3c761e13db73a9ad07b1ac829537d0d0",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f4081fca31dc9ac2748a4a6",
+      "url": "https://app.notion.com/p/3fba99703f4081fca31dc9ac2748a4a6",
+      "title": "📦 17A · Font CPU 원본 소스·CMake·검증",
+      "lastEditedAt": "2026-10-16T12:16:19.583Z",
+      "path": "knowledge/shared/dx11-17a-notion-source.md",
+      "bodyBytes": 2798,
+      "bodySha256": "19a172ef9210f5d90bdc1f0858e6429264003afe62a8a3ab6f3608667befc36c",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f408105a5c8c1d371e2c8cb",
+      "url": "https://app.notion.com/p/3fba99703f408105a5c8c1d371e2c8cb",
+      "title": "📦 17B · Font UTF-8·Glyph Atlas CPU v2 헤더 전체 소스",
+      "lastEditedAt": "2026-10-16T12:11:27.368Z",
+      "path": "knowledge/shared/dx11-17b-notion-source.md",
+      "bodyBytes": 3964,
+      "bodySha256": "2830eed1b100dfd533e11b34f61abf56600e08948edcb3f3133e32ab9b1fef92",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f4081aeb641e5b540bf2848",
+      "url": "https://app.notion.com/p/3fba99703f4081aeb641e5b540bf2848",
+      "title": "🧪 17C · Font CPU v2 전체 main.cpp · 49조건 테스트",
+      "lastEditedAt": "2026-10-16T12:13:16.936Z",
+      "path": "knowledge/shared/dx11-17c-notion-source.md",
+      "bodyBytes": 3939,
+      "bodySha256": "66d0c7531daa71bd1a8244dedc856fa67e7c0bbef2d4816f198fe31fa183cee7",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fca99703f4081e7bf33f80f5bb1ed47",
+      "url": "https://app.notion.com/p/3fca99703f4081e7bf33f80f5bb1ed47",
+      "title": "17D · Font CPU v2 빌드·검증 원장 · 2026-10-17",
+      "lastEditedAt": "2026-10-18T03:57:56.198Z",
+      "path": "knowledge/shared/dx11-17d-notion-source.md",
+      "bodyBytes": 5055,
+      "bodySha256": "d0d7b81d97c6d966da6d7d40fbe17b3f8967a51eb03ca27d257a8567709191e4",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fca99703f408196bfa1e7f44bde7677",
+      "url": "https://app.notion.com/p/3fca99703f408196bfa1e7f44bde7677",
+      "title": "17E · Font GCC C++11 실제 원시 로그 3종",
+      "lastEditedAt": "2026-10-17T11:10:40.372Z",
+      "path": "knowledge/shared/dx11-17e-notion-source.md",
+      "bodyBytes": 1773,
+      "bodySha256": "38369452f4911d9a4f4d9f5334e1510e94b67b74985cd527c143bc655c97230c",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fca99703f4081f397a3db46cf8b8273",
+      "url": "https://app.notion.com/p/3fca99703f4081f397a3db46cf8b8273",
+      "title": "17F · Font Clang ASan/UBSan 원시 Build 로그",
+      "lastEditedAt": "2026-10-17T11:14:12.140Z",
+      "path": "knowledge/shared/dx11-17f-notion-source.md",
+      "bodyBytes": 497,
+      "bodySha256": "7285d7d58b21a9455403d26c9bc739b207eeb4bc0dd36cd6c78ddd0488ade3e1",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f408152b84bf279803f3e98",
+      "url": "https://app.notion.com/p/3fba99703f408152b84bf279803f3e98",
+      "title": "📦 18A · Deferred MRT CPU 구현·CTest·소스 보관 상태",
+      "lastEditedAt": "2026-10-18T03:06:32.071Z",
+      "path": "knowledge/shared/dx11-18a-notion-source.md",
+      "bodyBytes": 2607,
+      "bodySha256": "fd50615376bc197df0eb19c93e10fcd8cccef5605d6610445cbcd5a4ec265667",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fba99703f4081c68669c3d4a2d5eb89",
+      "url": "https://app.notion.com/p/3fba99703f4081c68669c3d4a2d5eb89",
+      "title": "📦 18B · Deferred MRT CPU v2 전체 main.cpp · 41조건",
+      "lastEditedAt": "2026-10-16T12:09:00.160Z",
+      "path": "knowledge/shared/dx11-18b-notion-source.md",
+      "bodyBytes": 7165,
+      "bodySha256": "4e9fde6489fa2cf50c2306d4daa505d98e5b17d894e427cb54ac8ab1eeb1cc9d",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    },
+    {
+      "id": "3fca99703f4081cda923c214901bed45",
+      "url": "https://app.notion.com/p/3fca99703f4081cda923c214901bed45",
+      "title": "18C · Deferred CPU v2 CMake·실행 검증 원장 · 2026-10-17",
+      "lastEditedAt": "2026-10-17T11:15:58.192Z",
+      "path": "knowledge/shared/dx11-18c-notion-source.md",
+      "bodyBytes": 8475,
+      "bodySha256": "d6ba964fe6b5f20099adee12bad51173e01f46129a29f7cca47c97888947b50b",
+      "preservedPrefixBytes": 0,
+      "truncatedReported": null,
+      "unknownBlockCountReported": null,
+      "unknownBlockMarkersObserved": false,
+      "imageOrFileBlocksObserved": false
+    }
+  ],
+  "files": [
+    {
+      "path": "knowledge/dx11-13/source-notion.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 10666,
+      "sha256": "ff9d494b23e65ce2d56c372291b3e73785584a3b907b0328fc52978ed3f31fef",
+      "fnv64": "605e49b9dcb7e5e8",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081c6b435d946bcb40dc2"
+    },
+    {
+      "path": "knowledge/dx11-13b/source-notion.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 8481,
+      "sha256": "aa6ce0ae597147a119f528931a36a446ba7f52a0c3d685206de906c91cce3d97",
+      "fnv64": "2499db46a0b551fe",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081ef8863c783ed5a6e8f"
+    },
+    {
+      "path": "knowledge/dx11-14/source-notion.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 17435,
+      "sha256": "3d56267f03d13bda43fd8e68da4e2cb07a19393d6bfef70c3dff0ac8f378624d",
+      "fnv64": "6e073d19fe1d0846",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f"
+    },
+    {
+      "path": "knowledge/dx11-16/source-notion.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 10064,
+      "sha256": "b2b16b9dad38c50211905d536a3e67fcf5ae25084d7692ea8da5d319adb1b724",
+      "fnv64": "cc8eb263efb0ad64",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081f3a517e4028f940425"
+    },
+    {
+      "path": "knowledge/dx11-17/source-notion.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 8674,
+      "sha256": "c80deb20c515cb3ad2f8e17277902b5849cd063cac73790f46cf0c07099c30c7",
+      "fnv64": "5a16335b0fd2b53a",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f40811493aae2a5a2532bea"
+    },
+    {
+      "path": "knowledge/dx11-18/source-notion.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 8287,
+      "sha256": "f44cebaae0951da67fb4156905cc152373adac3961b1fbf622af412359cb4fab",
+      "fnv64": "38eee15e88a912c5",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081539f63e9fab7f9bc18"
+    },
+    {
+      "path": "knowledge/dx11-frustum/CMakeLists.txt",
+      "kind": "derived-standalone-cmake",
+      "bytes": 566,
+      "sha256": "349b67f5c2030f56a7f13400ab6dc2d22e63dcb7e031b8a9003b487a8ff1929e",
+      "fnv64": "a50ed6ff91878a7a",
+      "notes": "Derived GitHub CMake wrapper; existing Frustum C++ source is unchanged."
+    },
+    {
+      "path": "knowledge/dx11-frustum/main.cpp",
+      "kind": "native-cpu-source",
+      "bytes": 5381,
+      "sha256": "82d202367f037a5ff8c830a5b9693790614947aeba8830638fdc531d0e10cde3",
+      "fnv64": "d87261032f06fec2",
+      "sourcePath": "knowledge/dx11-frustum/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "knowledge/dx11-frustum/source-notion.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 12217,
+      "sha256": "a67a06b6c003d2bc7dcafd8da6d0a159dcedabc1c204fcbef38a6e189cfdd2ad",
+      "fnv64": "278b0427a54c4b67",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f40812682f6df8327550441"
+    },
+    {
+      "path": "knowledge/shared/dx11-13/CMakeLists.txt",
+      "kind": "byte-restoration",
+      "bytes": 513,
+      "sha256": "1ba7395b7b9201cf982fa1059a41a70edef99fbd4aa93743088b4dc43a3c3ed2",
+      "fnv64": "80da5cf5ccf44830",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f40810b826cc7eec5b1f039",
+      "sourcePath": "knowledge/shared/dx11-13a-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        4
+      ],
+      "notes": "Restore exactly one final LF omitted in the previous migration; source logic unchanged."
+    },
+    {
+      "path": "knowledge/shared/dx11-13/instancing_example.hlsl",
+      "kind": "hlsl-example",
+      "bytes": 548,
+      "sha256": "fec9915ac640ed949a4bc1760bd81149c5bafd8b6ea67c79c3123098cf29566f",
+      "fnv64": "f48359510a3af241",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081c6b435d946bcb40dc2",
+      "sourcePath": "knowledge/dx11-13/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        3
+      ],
+      "notes": "Source example only; HLSL compilation and GPU execution remain unverified."
+    },
+    {
+      "path": "knowledge/shared/dx11-13/main.cpp",
+      "kind": "native-cpu-source",
+      "bytes": 6043,
+      "sha256": "ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8",
+      "fnv64": "4c27d09435055a79",
+      "sourcePath": "knowledge/shared/dx11-13a-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "path": "knowledge/shared/dx11-13a-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 13035,
+      "sha256": "0cc9a77db90531299ac3311804868dafd53d01d75c5ba9151dede8aec757fd21",
+      "fnv64": "0f5294c782853adf",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f40810b826cc7eec5b1f039"
+    },
+    {
+      "path": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 9421,
+      "sha256": "05f8da43d6f440f6ca3a4d6152d02842c92912f9da3764690f6912786c96fae8",
+      "fnv64": "71f87dd0eb040a34",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0"
+    },
+    {
+      "path": "knowledge/shared/dx11-13audit-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 2244,
+      "sha256": "2406f95be16ee4546426100e62ad601d539bd2a0e7c78ff055fad28e13e39d6a",
+      "fnv64": "97d34c95f17dee3e",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f408129bdf8f87a5765a45b"
+    },
+    {
+      "path": "knowledge/shared/dx11-13b-clangsan-logs-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 2362,
+      "sha256": "2aec70d6a3bdbcd29fcab62d2282c81f7de214e0445c44f7a0ae4ca068234ba9",
+      "fnv64": "844566dfd28a5627",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f408182b510f65f37811759"
+    },
+    {
+      "path": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 6645,
+      "sha256": "0fa82e9e2aa8ec408257479af29739c9d85c7f2ed18e21309c02c343db8ec24c",
+      "fnv64": "0b86b3a93871c77d",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d"
+    },
+    {
+      "path": "knowledge/shared/dx11-13b-compact/CMakeLists.txt",
+      "kind": "cmake-source",
+      "bytes": 616,
+      "sha256": "ad7635f631dcdc11955a100a48f10d2abc4f033000350a466cad848b194f40bd",
+      "fnv64": "7ad4bb35e2621f80",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081ef8863c783ed5a6e8f",
+      "sourcePath": "knowledge/dx11-13b/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        2
+      ]
+    },
+    {
+      "path": "knowledge/shared/dx11-13b-compact/main.cpp",
+      "kind": "cpu-source",
+      "bytes": 2840,
+      "sha256": "9002375bbb188e31aa02d999739b66ada0dd74e0a87aeb82be703b04978b5324",
+      "fnv64": "02218c40adef928a",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081ef8863c783ed5a6e8f",
+      "sourcePath": "knowledge/dx11-13b/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ],
+      "notes": "Compact 13-condition educational model; separate from the 21-condition two-pass model in dx11-13b."
+    },
+    {
+      "path": "knowledge/shared/dx11-13b-gcc11-logs-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 2319,
+      "sha256": "ec121d894f2cc92d68d7a43c961326e5a543c6b4d6a32ff2d497ae93e5b70469",
+      "fnv64": "15a497edd54c7e45",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f408135b96ac0a0bae7334b"
+    },
+    {
+      "path": "knowledge/shared/dx11-13b-gcc20-logs-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 2319,
+      "sha256": "fea2a0af1dad4f107869c550bb8727bb8ff3c894a9df14fd8af2ad23721dce38",
+      "fnv64": "03b7d50fafc857ad",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081fa822bf7fa2923c702"
+    },
+    {
+      "path": "knowledge/shared/dx11-13b-notion-source.md",
+      "kind": "notion-page-alias",
+      "bytes": 8481,
+      "sha256": "aa6ce0ae597147a119f528931a36a446ba7f52a0c3d685206de906c91cce3d97",
+      "fnv64": "2499db46a0b551fe",
+      "notes": "Existing duplicate archival path retained for backward links."
+    },
+    {
+      "path": "knowledge/shared/dx11-13b-two-pass-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 7142,
+      "sha256": "c88858145afed200827dee374108469945af186a9894eacc49b77c0ffaa4b726",
+      "fnv64": "34455a93a2045923",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081acaea2cdd358c5e39e"
+    },
+    {
+      "path": "knowledge/shared/dx11-13b/CMakeLists.txt",
+      "kind": "native-cpu-source",
+      "bytes": 681,
+      "sha256": "699e52c8ebc0ab3dedb48554df11cffc97655568bf631cbe7c79326db574e126",
+      "fnv64": "6f043841ecb69350",
+      "sourcePath": "knowledge/shared/dx11-13b2-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ]
+    },
+    {
+      "path": "knowledge/shared/dx11-13b/main.cpp",
+      "kind": "native-cpu-source",
+      "bytes": 5681,
+      "sha256": "e8e0cab9c77fda85b0d7da6a08240b71334eb9e27a1a80679aea0695d4c54610",
+      "fnv64": "ac4c8c2816989f9f",
+      "sourcePath": "knowledge/shared/dx11-13b1-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ]
+    },
+    {
+      "path": "knowledge/shared/dx11-13b1-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 5822,
+      "sha256": "eda899d6373c77b99da039783da13a927cd5a5ca4db63bb12dbd992f5a3d786c",
+      "fnv64": "e3dfd51bc53e8bc4",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f408150bcb6ceb1602850a9"
+    },
+    {
+      "path": "knowledge/shared/dx11-13b2-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 1480,
+      "sha256": "670b6a0482ef8ee2097747371d8283fb3c761e13db73a9ad07b1ac829537d0d0",
+      "fnv64": "fbc31ac9867e2c73",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081cf9e53d91efafce3b1"
+    },
+    {
+      "path": "knowledge/shared/dx11-14-notion-source.md",
+      "kind": "notion-page-alias",
+      "bytes": 17435,
+      "sha256": "3d56267f03d13bda43fd8e68da4e2cb07a19393d6bfef70c3dff0ac8f378624d",
+      "fnv64": "6e073d19fe1d0846",
+      "notes": "Existing duplicate archival path retained for backward links."
+    },
+    {
+      "path": "knowledge/shared/dx11-14/CMakeLists.notionshared.txt",
+      "kind": "byte-restoration",
+      "bytes": 627,
+      "sha256": "e537ab2ad496b579804e62ce14c25e6e752825e7e3b1d5f447141faf37dfd360",
+      "fnv64": "32af8fa208917e5e",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f",
+      "sourcePath": "knowledge/dx11-14/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        7
+      ],
+      "notes": "Restore exactly one final LF omitted in the previous migration; source logic unchanged."
+    },
+    {
+      "path": "knowledge/shared/dx11-14/CMakeLists.txt",
+      "kind": "derived-standalone-cmake",
+      "bytes": 527,
+      "sha256": "096fefc1ffdc125efc8304f2005a1919231f7cb4d39aca35d2c65db3c875b17a",
+      "fnv64": "746982ee1f83e297",
+      "notes": "Derived in the original GitHub migration. Original shared CMake is archived separately."
+    },
+    {
+      "path": "knowledge/shared/dx11-14/geometry_sprite.hlsl",
+      "kind": "byte-restoration",
+      "bytes": 699,
+      "sha256": "a9fd8a26aca70a9d863254025ca841d194dc09b74f301023fe4d04291132c265",
+      "fnv64": "a4665e1749949e39",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f",
+      "sourcePath": "knowledge/dx11-14/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ],
+      "notes": "Restore exactly one final LF omitted in the previous migration; source logic unchanged."
+    },
+    {
+      "path": "knowledge/shared/dx11-14/main.cpp",
+      "kind": "native-cpu-source",
+      "bytes": 4613,
+      "sha256": "a30b0def0178a6fde1db76e3c98fba44a0e20fcb1cb7bcc274c384ec0a710e79",
+      "fnv64": "0012af949c4b3d03",
+      "sourcePath": "knowledge/dx11-14/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "path": "knowledge/shared/dx11-16-notion-source.md",
+      "kind": "notion-page-alias",
+      "bytes": 10064,
+      "sha256": "b2b16b9dad38c50211905d536a3e67fcf5ae25084d7692ea8da5d319adb1b724",
+      "fnv64": "cc8eb263efb0ad64",
+      "notes": "Existing duplicate archival path retained for backward links."
+    },
+    {
+      "path": "knowledge/shared/dx11-16/CMakeLists.txt",
+      "kind": "derived-standalone-cmake",
+      "bytes": 533,
+      "sha256": "ddb1c8da7118421e1c6a02e9d39c43d22f879a9e68e0fd970e5e5c8a4d6060e1",
+      "fnv64": "f08e760bd8f59aff",
+      "notes": "Derived in the original GitHub migration. Original shared CMake is archived separately."
+    },
+    {
+      "path": "knowledge/shared/dx11-16/main.cpp",
+      "kind": "native-cpu-source",
+      "bytes": 5845,
+      "sha256": "115ffdb56c92f91118aac906ada689bb05318d32344735a87cbe6b547386fbcc",
+      "fnv64": "8a66d7686b17bd04",
+      "sourcePath": "knowledge/dx11-16/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "path": "knowledge/shared/dx11-17-18-legacy/CMakeLists.notionshared.txt",
+      "kind": "legacy-native-cmake",
+      "bytes": 865,
+      "sha256": "e391797c6268c0ec3a6ea954d8cacd3d93df175063258ef46bb0ae2e1f0df8c1",
+      "fnv64": "fc78d0d3adf78a7b",
+      "sourcePath": "knowledge/shared/dx11-18a-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ],
+      "note": "Original shared root CMake for historical 38/39-condition versions. Required historical complete main.cpp files are not available in Notion; not used by the current v2 CI.",
+      "historical_sha256": "e391797c6268c0ec3a6ea954d8cacd3d93df175063258ef46bb0ae2e1f0df8c1"
+    },
+    {
+      "path": "knowledge/shared/dx11-17/CMakeLists.txt",
+      "kind": "native-code",
+      "bytes": 433,
+      "sha256": "eca337b6f062d39a7f87a69392981b47f68c73b27fe2aebf435bcc00a7b7a82c",
+      "fnv64": "2538e08efd2fbfce",
+      "sourcePath": "knowledge/shared/dx11-17d-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ],
+      "note": "Trailing LF is supported by the original ledger byte count and FNV64, not an inferred algorithm change.",
+      "historical_fnv64": "2538e08efd2fbfce"
+    },
+    {
+      "path": "knowledge/shared/dx11-17/fontlab.hpp",
+      "kind": "native-code",
+      "bytes": 3777,
+      "sha256": "d6d99e7f792a5238123a09f300b3d2783f0e76368dc3e40a968eb841cd6f94c9",
+      "fnv64": "df9977f4b72878d6",
+      "sourcePath": "knowledge/shared/dx11-17b-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ],
+      "note": "Trailing LF is supported by the original ledger byte count and FNV64, not an inferred algorithm change.",
+      "historical_fnv64": "df9977f4b72878d6"
+    },
+    {
+      "path": "knowledge/shared/dx11-17/main.cpp",
+      "kind": "native-code",
+      "bytes": 3736,
+      "sha256": "409e7fbefc2b343712c793bce39b172e48cce8396315b1066fe24add8cd647cd",
+      "fnv64": "0c6e6785dee070f8",
+      "sourcePath": "knowledge/shared/dx11-17c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ],
+      "note": "Trailing LF is supported by the original ledger byte count and FNV64, not an inferred algorithm change.",
+      "historical_fnv64": "0c6e6785dee070f8"
+    },
+    {
+      "path": "knowledge/shared/dx11-17a-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 2798,
+      "sha256": "19a172ef9210f5d90bdc1f0858e6429264003afe62a8a3ab6f3608667befc36c",
+      "fnv64": "f6619cbe58c3ddb4",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081fca31dc9ac2748a4a6"
+    },
+    {
+      "path": "knowledge/shared/dx11-17b-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 3964,
+      "sha256": "2830eed1b100dfd533e11b34f61abf56600e08948edcb3f3133e32ab9b1fef92",
+      "fnv64": "2333c3f30f12d1c0",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f408105a5c8c1d371e2c8cb"
+    },
+    {
+      "path": "knowledge/shared/dx11-17c-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 3939,
+      "sha256": "66d0c7531daa71bd1a8244dedc856fa67e7c0bbef2d4816f198fe31fa183cee7",
+      "fnv64": "49ec08c1b4d929a5",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081aeb641e5b540bf2848"
+    },
+    {
+      "path": "knowledge/shared/dx11-17d-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 5055,
+      "sha256": "d0d7b81d97c6d966da6d7d40fbe17b3f8967a51eb03ca27d257a8567709191e4",
+      "fnv64": "c4401571481b8e9e",
+      "sourceUrl": "https://app.notion.com/p/3fca99703f4081e7bf33f80f5bb1ed47"
+    },
+    {
+      "path": "knowledge/shared/dx11-17e-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 1773,
+      "sha256": "38369452f4911d9a4f4d9f5334e1510e94b67b74985cd527c143bc655c97230c",
+      "fnv64": "aa664e43a6121b26",
+      "sourceUrl": "https://app.notion.com/p/3fca99703f408196bfa1e7f44bde7677"
+    },
+    {
+      "path": "knowledge/shared/dx11-17f-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 497,
+      "sha256": "7285d7d58b21a9455403d26c9bc739b207eeb4bc0dd36cd6c78ddd0488ade3e1",
+      "fnv64": "6527833affc6f101",
+      "sourceUrl": "https://app.notion.com/p/3fca99703f4081f397a3db46cf8b8273"
+    },
+    {
+      "path": "knowledge/shared/dx11-18/CMakeLists.txt",
+      "kind": "native-code",
+      "bytes": 457,
+      "sha256": "4b8a553ede73fd9b4b1870fa66c0e196c8d7e971e689998ce57991069ed2d6e2",
+      "fnv64": "b759ff16885f7496",
+      "sourcePath": "knowledge/shared/dx11-18c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ],
+      "note": "Trailing LF is supported by the original ledger byte count and FNV64, not an inferred algorithm change.",
+      "historical_fnv64": "b759ff16885f7496"
+    },
+    {
+      "path": "knowledge/shared/dx11-18/geometry_pass.example.hlsl",
+      "kind": "uncompiled-hlsl-example",
+      "bytes": 502,
+      "sha256": "aa3eb0ce374fd6000a651e3efe9a963035bdbd9eab91413872c41815c5ce225c",
+      "fnv64": "f4122ffe3ee364c0",
+      "sourcePath": "knowledge/dx11-18/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ],
+      "note": "Exact educational pixel shader example from chapter 18. Not a complete renderer; Windows/D3D11/GPU/HLSL compilation has not been performed."
+    },
+    {
+      "path": "knowledge/shared/dx11-18/main.cpp",
+      "kind": "native-code",
+      "bytes": 6550,
+      "sha256": "625f850cc0a7c0bd33dc6e09154d6418b1bff04bc8da2109ec161c7f13aaa431",
+      "fnv64": "c06dab334f839884",
+      "sourcePath": "knowledge/shared/dx11-18b-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ],
+      "note": "Trailing LF is supported by the original ledger byte count and FNV64, not an inferred algorithm change.",
+      "historical_fnv64": "c06dab334f839884"
+    },
+    {
+      "path": "knowledge/shared/dx11-18a-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 2607,
+      "sha256": "fd50615376bc197df0eb19c93e10fcd8cccef5605d6610445cbcd5a4ec265667",
+      "fnv64": "60a1a92a6e37e256",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f408152b84bf279803f3e98"
+    },
+    {
+      "path": "knowledge/shared/dx11-18b-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 7165,
+      "sha256": "4e9fde6489fa2cf50c2306d4daa505d98e5b17d894e427cb54ac8ab1eeb1cc9d",
+      "fnv64": "0b4583e24098e8ef",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081c68669c3d4a2d5eb89"
+    },
+    {
+      "path": "knowledge/shared/dx11-18c-notion-source.md",
+      "kind": "notion-page-snapshot",
+      "bytes": 8475,
+      "sha256": "d6ba964fe6b5f20099adee12bad51173e01f46129a29f7cca47c97888947b50b",
+      "fnv64": "038c1df21f229027",
+      "sourceUrl": "https://app.notion.com/p/3fca99703f4081cda923c214901bed45"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-17/clangsan-build.log",
+      "kind": "historical-notion-log",
+      "bytes": 130,
+      "sha256": "a3816ba0d0a20c48a5675fa8c9bdaa23954ae239663ba69c5d942ca712966f92",
+      "fnv64": "21a33200174b2f85",
+      "sourcePath": "knowledge/shared/dx11-17f-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "21a33200174b2f85"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-17/clangsan-configure.log",
+      "kind": "historical-notion-log",
+      "bytes": 425,
+      "sha256": "49551a47d077fb89256679a7f49d9108e977f697401dd5622428ee23e7a4fc29",
+      "fnv64": "a97e7bf4049da895",
+      "sourcePath": "knowledge/shared/dx11-17d-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        4
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "a97e7bf4049da895"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-17/clangsan-ctest.log",
+      "kind": "historical-notion-log",
+      "bytes": 1025,
+      "sha256": "4555b3985d8f3b632bb7ee1a072aabda8c452b2f4f4534c5f253a1869fa6e933",
+      "fnv64": "b930400969eef57b",
+      "sourcePath": "knowledge/shared/dx11-17d-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        5
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "b930400969eef57b"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc11-build.log",
+      "kind": "historical-notion-log",
+      "bytes": 130,
+      "sha256": "a3816ba0d0a20c48a5675fa8c9bdaa23954ae239663ba69c5d942ca712966f92",
+      "fnv64": "21a33200174b2f85",
+      "sourcePath": "knowledge/shared/dx11-17e-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition."
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc11-configure.log",
+      "kind": "historical-notion-log",
+      "bytes": 400,
+      "sha256": "e99746f374466083707d12e2cb06737037f5f0c65998f69a434dc25cf5c0aacc",
+      "fnv64": "9625ee012c503c6b",
+      "sourcePath": "knowledge/shared/dx11-17e-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition."
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc11-ctest.log",
+      "kind": "historical-notion-log",
+      "bytes": 1007,
+      "sha256": "7b7b7b5de12c4d7b8fa762ef1ba8a5801ca2a2f450ac02e53755f303d1b64081",
+      "fnv64": "3aacf4e3ce66bac1",
+      "sourcePath": "knowledge/shared/dx11-17e-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        2
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition."
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc20-build.log",
+      "kind": "historical-notion-log",
+      "bytes": 130,
+      "sha256": "a3816ba0d0a20c48a5675fa8c9bdaa23954ae239663ba69c5d942ca712966f92",
+      "fnv64": "21a33200174b2f85",
+      "sourcePath": "knowledge/shared/dx11-17d-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        2
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition."
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc20-configure.log",
+      "kind": "historical-notion-log",
+      "bytes": 400,
+      "sha256": "c3d7517cf0321b240ed583811f8ddb25fae5a757573fdec60e9a94ed6a271ab8",
+      "fnv64": "61ff9de947b4bd82",
+      "sourcePath": "knowledge/shared/dx11-17d-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition."
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-17/gcc20-ctest.log",
+      "kind": "historical-notion-log",
+      "bytes": 1007,
+      "sha256": "9ae6bc2a18002dfc7233d1fc86dfc9632bd588826a49418eb4c0c2a69eeb7a70",
+      "fnv64": "a7043da9097cdea9",
+      "sourcePath": "knowledge/shared/dx11-17d-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        3
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition."
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-18/clangsan-build.log",
+      "kind": "historical-notion-log",
+      "bytes": 142,
+      "sha256": "f87cf913e3cc6f932adb1b57673085f5760f3bd85c6359789a155859b3378811",
+      "fnv64": "faca72c4eb6142eb",
+      "sourcePath": "knowledge/shared/dx11-18c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        5
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "faca72c4eb6142eb"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-18/clangsan-configure.log",
+      "kind": "historical-notion-log",
+      "bytes": 429,
+      "sha256": "45a83c012a4d63bffbaaf4f5fdd8f7ab7cbe0b1385f844e022647a85552bec37",
+      "fnv64": "66d0725ae0570c0e",
+      "sourcePath": "knowledge/shared/dx11-18c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        4
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "66d0725ae0570c0e"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-18/clangsan-ctest.log",
+      "kind": "historical-notion-log",
+      "bytes": 1057,
+      "sha256": "d41de2e9292b9a34cc3f1d150df8d890981c8b0906ce394542ec0d5077fcad7c",
+      "fnv64": "075c2c7a15b61dfa",
+      "sourcePath": "knowledge/shared/dx11-18c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        6
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "075c2c7a15b61dfa"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-18/gcc11-build.log",
+      "kind": "historical-notion-log",
+      "bytes": 142,
+      "sha256": "f87cf913e3cc6f932adb1b57673085f5760f3bd85c6359789a155859b3378811",
+      "fnv64": "faca72c4eb6142eb",
+      "sourcePath": "knowledge/shared/dx11-18c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        2
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "faca72c4eb6142eb"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-18/gcc11-configure.log",
+      "kind": "historical-notion-log",
+      "bytes": 404,
+      "sha256": "2c4f3bd317927bcb0b0be2b4547a945ae4e211c294aff2da84ffa491ad0ab201",
+      "fnv64": "9bf969f94ad06e15",
+      "sourcePath": "knowledge/shared/dx11-18c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "9bf969f94ad06e15"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-18/gcc11-ctest.log",
+      "kind": "historical-notion-log",
+      "bytes": 1039,
+      "sha256": "19ee7d0bbd9b77bb3f678c44e1118a917e9defbed0d53ba3ec14b6d8281003fa",
+      "fnv64": "acdcda334d32663c",
+      "sourcePath": "knowledge/shared/dx11-18c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        3
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "acdcda334d32663c"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-18/gcc20-build.log",
+      "kind": "historical-notion-log",
+      "bytes": 142,
+      "sha256": "f87cf913e3cc6f932adb1b57673085f5760f3bd85c6359789a155859b3378811",
+      "fnv64": "faca72c4eb6142eb",
+      "sourcePath": "knowledge/shared/dx11-18c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        8
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "faca72c4eb6142eb"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-18/gcc20-configure.log",
+      "kind": "historical-notion-log",
+      "bytes": 404,
+      "sha256": "7aaaff9076df78d02679860a338f9057f6f1707ae1d114a23b844e8905630746",
+      "fnv64": "92dfd8f945894251",
+      "sourcePath": "knowledge/shared/dx11-18c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        7
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "92dfd8f945894251"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-historical/dx11-18/gcc20-ctest.log",
+      "kind": "historical-notion-log",
+      "bytes": 1039,
+      "sha256": "6c631f617be3b4d41ea5bb2a85ee4d11195292bd687c5a77ba578fbca66f3700",
+      "fnv64": "e908ab10db0c918c",
+      "sourcePath": "knowledge/shared/dx11-18c-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        9
+      ],
+      "note": "Historical 2026-10-17 execution output copied from Notion; not a new execution or new independent test condition.",
+      "historical_fnv64": "e908ab10db0c918c"
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13a-current/clangsan-build.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 139,
+      "sha256": "c7f924b05d751efeff9e739ea17a51c3ec8a125874bbf3df4288d86ddfb111d4",
+      "fnv64": "65ed3512460ddc55",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0",
+      "sourcePath": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        8
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13a-current/clangsan-configure.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 426,
+      "sha256": "79f87460db6b12035c79b4dd4c6cf12461a92551c0ce4845997b4bc2c3776866",
+      "fnv64": "5e410513310d952b",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0",
+      "sourcePath": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        7
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13a-current/clangsan-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 1020,
+      "sha256": "f8bdd39e2c3e9982f0bc2df66e7fa1b390c702b36c3d693c3cae4d6cc3422770",
+      "fnv64": "b9f926f696d8394e",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0",
+      "sourcePath": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        9
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13a-current/gcc11-build.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 139,
+      "sha256": "c7f924b05d751efeff9e739ea17a51c3ec8a125874bbf3df4288d86ddfb111d4",
+      "fnv64": "65ed3512460ddc55",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0",
+      "sourcePath": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        5
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13a-current/gcc11-configure.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 401,
+      "sha256": "99d0d2b2841a2695752d8c2535d34243cd033156f2ff0bb0a2579a7e3d825986",
+      "fnv64": "f7efbe31c380d967",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0",
+      "sourcePath": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        4
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13a-current/gcc11-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 1002,
+      "sha256": "ba57931cce978aa55dd585a2be88627510b5f530b40688a69b21209e93691756",
+      "fnv64": "d8b509b05b5a6948",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0",
+      "sourcePath": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        6
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13a-current/gcc20-build.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 139,
+      "sha256": "c7f924b05d751efeff9e739ea17a51c3ec8a125874bbf3df4288d86ddfb111d4",
+      "fnv64": "65ed3512460ddc55",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0",
+      "sourcePath": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        2
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13a-current/gcc20-configure.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 401,
+      "sha256": "6344b6e3237197d16323825f063a4001cff4049632a5c498f9588a555427cba0",
+      "fnv64": "110f3931d17d0ccf",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0",
+      "sourcePath": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13a-current/gcc20-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 1002,
+      "sha256": "ee03134e66b622f517c42c1c7b29ffa776d6b25a8ba556dbd30ccc2d67964cd5",
+      "fnv64": "8b11cbc773c42a28",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081d5ae1ac37e1b558bd0",
+      "sourcePath": "knowledge/shared/dx11-13a-verification-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        3
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-compact/clangsan-build.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 151,
+      "sha256": "4afc96477f41f9f4efd2a90beedb581684b32191baccec7157e32b00eefad1e1",
+      "fnv64": "8a7b90a81c99dab1",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d",
+      "sourcePath": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        7
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-compact/clangsan-configure.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 413,
+      "sha256": "86a353e671aa80ec221ecfbf95ac6f36409603cad882dcc0501da2eee80ab908",
+      "fnv64": "846c4d8dc7012069",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d",
+      "sourcePath": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        6
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-compact/clangsan-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 937,
+      "sha256": "da1a943bd94d8bc1316ea59b218989f020965610930f8d43be7aad084ee01c9d",
+      "fnv64": "0cdecc480fae7636",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d",
+      "sourcePath": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        8
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-compact/gcc11-build.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 151,
+      "sha256": "4afc96477f41f9f4efd2a90beedb581684b32191baccec7157e32b00eefad1e1",
+      "fnv64": "8a7b90a81c99dab1",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d",
+      "sourcePath": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        4
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-compact/gcc11-configure.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 388,
+      "sha256": "7c8d85b108fd70c86e6735c058af4ea38e1bf9d5d275c321b0a01fddff2c2045",
+      "fnv64": "f3032928458c0121",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d",
+      "sourcePath": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        3
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-compact/gcc11-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 919,
+      "sha256": "e21976a61b7b6fdf7ce38facf4e8c5bcc3c054a1ddc257ffbd19045260007dfc",
+      "fnv64": "1d9bb55bd192b428",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d",
+      "sourcePath": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        5
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-compact/gcc20-build.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 151,
+      "sha256": "4afc96477f41f9f4efd2a90beedb581684b32191baccec7157e32b00eefad1e1",
+      "fnv64": "8a7b90a81c99dab1",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d",
+      "sourcePath": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-compact/gcc20-configure.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 388,
+      "sha256": "7fe657f1f25869c0025fb7a3f895faaecbfc4711f04b85e69fa76ba243765ef1",
+      "fnv64": "e9e988284044ba2d",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d",
+      "sourcePath": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-compact/gcc20-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 919,
+      "sha256": "aad7adcb1ecd1c7e3b7dd2fca4c05c1bfc97cc33f6f9c992e4b39c17b89661d0",
+      "fnv64": "f5674828cc4d594c",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d",
+      "sourcePath": "knowledge/shared/dx11-13b-compact-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        2
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-two-pass/clangsan-build.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 151,
+      "sha256": "7558a1ead9dcb7b4c19a671b357d144e98cd403e1e88689f2d3a448f5c1af00e",
+      "fnv64": "07e4ca854d8e0716",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f408182b510f65f37811759",
+      "sourcePath": "knowledge/shared/dx11-13b-clangsan-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-two-pass/clangsan-configure.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 417,
+      "sha256": "c50d338a6fb070fd6fd0f812c39bf383b5304fabca6fbeb7638da6047d888b56",
+      "fnv64": "a1dc987ca51cb0bc",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f408182b510f65f37811759",
+      "sourcePath": "knowledge/shared/dx11-13b-clangsan-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-two-pass/clangsan-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 979,
+      "sha256": "56d634c4289b9e1ce6053c142608d6c5f472577d3bd79abc1aa8c8f8b6d919b3",
+      "fnv64": "108526f3c515ca79",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f408182b510f65f37811759",
+      "sourcePath": "knowledge/shared/dx11-13b-clangsan-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        2
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-two-pass/gcc11-build.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 151,
+      "sha256": "7558a1ead9dcb7b4c19a671b357d144e98cd403e1e88689f2d3a448f5c1af00e",
+      "fnv64": "07e4ca854d8e0716",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f408135b96ac0a0bae7334b",
+      "sourcePath": "knowledge/shared/dx11-13b-gcc11-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-two-pass/gcc11-configure.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 392,
+      "sha256": "2ed63b37287f10393dfab766e857219228d5db6832b7533b12130c81939f7adc",
+      "fnv64": "39bdaac7304d49ff",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f408135b96ac0a0bae7334b",
+      "sourcePath": "knowledge/shared/dx11-13b-gcc11-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-two-pass/gcc11-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 961,
+      "sha256": "dc80e916f420f9c37a8b1696033181515afd674807192338d5a294fb2c03bae3",
+      "fnv64": "124c77eb883c9ab9",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f408135b96ac0a0bae7334b",
+      "sourcePath": "knowledge/shared/dx11-13b-gcc11-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        2
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-two-pass/gcc20-build.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 151,
+      "sha256": "7558a1ead9dcb7b4c19a671b357d144e98cd403e1e88689f2d3a448f5c1af00e",
+      "fnv64": "07e4ca854d8e0716",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081fa822bf7fa2923c702",
+      "sourcePath": "knowledge/shared/dx11-13b-gcc20-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        1
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-two-pass/gcc20-configure.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 392,
+      "sha256": "55542185e1ca38b5970a9aa703e1563e3959d7389da0e0fc10e864559f115464",
+      "fnv64": "4c79eee175eb6f75",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081fa822bf7fa2923c702",
+      "sourcePath": "knowledge/shared/dx11-13b-gcc20-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        0
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/13b-two-pass/gcc20-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 961,
+      "sha256": "ba9e3f52c369370ded620c2ead261e89934887e4b29487f8ef31b0eabc38db16",
+      "fnv64": "226ff280dcb40918",
+      "sourceUrl": "https://app.notion.com/p/3fda99703f4081fa822bf7fa2923c702",
+      "sourcePath": "knowledge/shared/dx11-13b-gcc20-logs-notion-source.md",
+      "codeBlockIndexesZeroBased": [
+        2
+      ]
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/14-16-shared/clangsan-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 1650,
+      "sha256": "a0e3a57d0659f646c198cdc5dd19b1a8752127fc86388fec5e362397e2e931ec",
+      "fnv64": "576006604953d357",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f",
+      "sourcePath": "knowledge/dx11-14/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        10,
+        11
+      ],
+      "notes": "Shared 14/15/16 historical run; not a newly executed CI log."
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/14-16-shared/gcc11-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 1620,
+      "sha256": "1da82f54107a026646d89297c305072bd8962eaae8da2806e144c02f6d8f8f0f",
+      "fnv64": "4df3e02aa3938b9c",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f",
+      "sourcePath": "knowledge/dx11-14/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        9
+      ],
+      "notes": "Shared 14/15/16 historical run; not a newly executed CI log."
+    },
+    {
+      "path": "knowledge/verification/dx11-13-18/notion-history/14-16-shared/gcc20-ctest.log",
+      "kind": "notion-historical-stdout",
+      "bytes": 1620,
+      "sha256": "12979f3918dae2017b279b79cbd6f306150ec8052027e5b39e017a5b87ec4e22",
+      "fnv64": "a21f48ddf39fb2e8",
+      "sourceUrl": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f",
+      "sourcePath": "knowledge/dx11-14/source-notion.md",
+      "codeBlockIndexesZeroBased": [
+        8
+      ],
+      "notes": "Shared 14/15/16 historical run; not a newly executed CI log."
+    }
+  ]
+}

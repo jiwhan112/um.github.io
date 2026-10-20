@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
 import {load} from 'cheerio';
 import {buildContent,compileBlocks,compileNews,safeLink} from '../scripts/content';
 import {parseStored,briefingState,objectBooleans} from '../src/lib/storage';
@@ -335,20 +336,24 @@ test('DX11 13 through 18 migration preserves original diagram/table/review and i
 });
 test('DX11 source reconstruction preserves actual Notion code block bytes and current 13A SHA',async()=>{
  const plans=[
-  {original:'dx11-13a-notion-source.md',parts:[0,1,2,3],file:'dx11-13/main.cpp',newline:true},
-  {original:'dx11-13b1-notion-source.md',parts:[0],file:'dx11-13b/main.cpp',newline:true},
-  {original:'dx11-14-notion-source.md',parts:[0,1,2,3,4],file:'dx11-14/main.cpp',newline:true},
-  {original:'dx11-16-notion-source.md',parts:[1,2,3,4,5,6,7,8],file:'dx11-16/main.cpp',newline:true},
-  {original:'dx11-17b-notion-source.md',parts:[0],file:'dx11-17/fontlab.hpp',newline:false},
-  {original:'dx11-17c-notion-source.md',parts:[0],file:'dx11-17/main.cpp',newline:false},
-  {original:'dx11-18b-notion-source.md',parts:[0],file:'dx11-18/main.cpp',newline:false}
+  {original:'shared/dx11-13a-notion-source.md',parts:[0,1,2,3],file:'shared/dx11-13/main.cpp'},
+  {original:'shared/dx11-13b1-notion-source.md',parts:[0],file:'shared/dx11-13b/main.cpp'},
+  {original:'shared/dx11-13b-notion-source.md',parts:[0],file:'shared/dx11-13b-compact/main.cpp'},
+  {original:'shared/dx11-14-notion-source.md',parts:[0,1,2,3,4],file:'shared/dx11-14/main.cpp'},
+  {original:'dx11-frustum/source-notion.md',parts:[1,2,3,4],file:'dx11-frustum/main.cpp'},
+  {original:'shared/dx11-16-notion-source.md',parts:[1,2,3,4,5,6,7,8],file:'shared/dx11-16/main.cpp'},
+  {original:'shared/dx11-17b-notion-source.md',parts:[0],file:'shared/dx11-17/fontlab.hpp'},
+  {original:'shared/dx11-17c-notion-source.md',parts:[0],file:'shared/dx11-17/main.cpp'},
+  {original:'shared/dx11-18b-notion-source.md',parts:[0],file:'shared/dx11-18/main.cpp'}
  ];
  for(const plan of plans){
-  const original=await readFile('../knowledge/shared/'+plan.original,'utf8');
-  const parts=[...original.matchAll(/```c\+\+\n([\s\S]*?)\n```/g)].map(m=>m[1]);
-  const reconstructed=plan.parts.map(n=>parts[n]).join('\n')+(plan.newline?'\n':'');
-  const saved=await readFile('../knowledge/shared/'+plan.file,'utf8');
-  assert.equal(saved,reconstructed,'Notion-native CPU source mismatch '+plan.file);
+  const original=await readFile('../knowledge/'+plan.original,'utf8');
+  // The capture ends at the closing fence, so the original terminal LF stays inside it.
+  const parts=[...original.matchAll(/^```c\+\+\r?\n([\s\S]*?)^```[ \t]*\r?$/gm)].map(m=>m[1]);
+  for(const index of plan.parts)assert.ok(index<parts.length,'missing C++ source block '+plan.original+':'+index);
+  const reconstructed=Buffer.from(plan.parts.map(n=>parts[n]).join(''),'utf8');
+  const saved=await readFile('../knowledge/'+plan.file);
+  assert.deepEqual(saved,reconstructed,'Notion-native CPU source mismatch including terminal LF '+plan.file);
  }
  const current=await readFile('../knowledge/shared/dx11-13/main.cpp');
  assert.equal(current.length,6043);
@@ -356,4 +361,31 @@ test('DX11 source reconstruction preserves actual Notion code block bytes and cu
  const ledger=await readFile('../knowledge/MIGRATION_DX11_13_18_20261020.md','utf8');
  assert.ok(ledger.includes('fd3839f7c350d1e573cab36a8c3f942f55a8e6c9d4e94b45033e7d3b3b4472ae'));
  assert.ok(ledger.includes('파일 바이트를 확보하지 못했습니다'));
+});
+
+test('DX11 integrity manifest verifies page bodies, native CMake and raw historical logs',async()=>{
+ const manifest=JSON.parse(await readFile('../knowledge/verification/dx11-13-18/source-integrity.json','utf8')) as {
+  schemaVersion:number;
+  files:{path:string;kind:string;sourcePath?:string;codeBlockIndexesZeroBased?:number[]}[];
+  pages:{path:string}[];
+ };
+ assert.equal(manifest.schemaVersion,1);
+ const entries=new Map(manifest.files.map(entry=>[entry.path,entry]));
+ for(const folder of ['dx11-13','dx11-13b','dx11-13b-compact','dx11-14','dx11-16','dx11-17','dx11-18']){
+  assert.ok(entries.has('knowledge/shared/'+folder+'/main.cpp'),'CPU source missing from manifest '+folder);
+  assert.ok(entries.has('knowledge/shared/'+folder+'/CMakeLists.txt'),'CMake missing from manifest '+folder);
+ }
+ for(const path of ['knowledge/dx11-frustum/main.cpp','knowledge/dx11-frustum/CMakeLists.txt','knowledge/shared/dx11-17/fontlab.hpp','knowledge/shared/dx11-14/CMakeLists.notionshared.txt'])
+  assert.ok(entries.has(path),'required preserved file missing '+path);
+ const logs=manifest.files.filter(entry=>entry.path.endsWith('.log'));
+ assert.ok(logs.length>=48,'all 48 recovered historical output files must remain recorded');
+ for(const entry of logs){
+  assert.ok(entry.sourcePath&&entries.has(entry.sourcePath),'historical stdout must have a pinned Notion snapshot '+entry.path);
+  assert.ok(entry.codeBlockIndexesZeroBased?.length,'historical stdout must identify the exact original code block '+entry.path);
+ }
+ for(const page of manifest.pages)assert.ok(entries.has(page.path),'page body must be hash-pinned '+page.path);
+ const result=spawnSync('python3',['../knowledge/scripts/verify-dx11-13-18.py'],{encoding:'utf8'});
+ assert.ifError(result.error);
+ assert.equal(result.status,0,result.stdout+'\n'+result.stderr);
+ assert.match(result.stdout,/PASS source-integrity:/);
 });
