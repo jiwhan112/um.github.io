@@ -1,0 +1,95 @@
+{
+  "runId": 39380255011,
+  "url": "https://github.com/jiwhan112/um.github.io/actions/runs/39380255011",
+  "event": "pull_request",
+  "pr": 11,
+  "prHeadCommit": "a7315350da8a566c9f43f24965112f8f73a0e8bf",
+  "checkedOutPullRequestMergeCommit": "ba62f41edd00a0bdb1ff15e885c96a3a9539cfd6",
+  "sourceIntegritySha256": "848a32f61a23b4f33223f4cab6f6259c190efc771837ebefe1d0eccc910365d2",
+  "status": "completed",
+  "conclusion": "success",
+  "rawLogEncoding": "UTF-8 text returned by GitHub log API, including original BOM/timestamps/ANSI sequences; no normalization",
+  "primaryConditions": 336,
+  "supplementaryCompactConditions": 13,
+  "supplementaryCoverageOverlap": "Do not add compact conditions to the independently unique primary count.",
+  "environments": [
+    {
+      "environment": "gcc20",
+      "jobId": 118487509027,
+      "jobUrl": "https://github.com/jiwhan112/um.github.io/actions/runs/39380255011/job/118487509027",
+      "compiler": "GNU 13.3.0",
+      "cppStandard": 20,
+      "standardCommandChecks": 8,
+      "sanitizerCommandChecks": 0,
+      "ctestProgramsPassed": 8,
+      "ctestProgramsFailed": 0,
+      "rawLog": "gcc20.raw.log",
+      "rawLogBytes": 66053,
+      "rawLogSha256": "312bbf432c525411a72e14b3e68520b5a9d6ca5ffd6f55741444d54ff565426f",
+      "programOutput": [
+        "PASS 37 DX11 instancing CPU contract checks",
+        "PASS 21 unique layout contract checks",
+        "PASS 13 CPU InputLayout checks",
+        "PASS 31 geometry shader CPU contracts",
+        "PASS 33 frustum plane and AABB CPU checks",
+        "PASS 124 quadtree CPU broadphase checks",
+        "PASS 49 Font UTF-8 atlas layout CPU contract checks",
+        "PASS 41 Deferred MRT SRV hazard CPU contract checks"
+      ]
+    },
+    {
+      "environment": "gcc11",
+      "jobId": 118487509003,
+      "jobUrl": "https://github.com/jiwhan112/um.github.io/actions/runs/39380255011/job/118487509003",
+      "compiler": "GNU 13.3.0",
+      "cppStandard": 11,
+      "standardCommandChecks": 8,
+      "sanitizerCommandChecks": 0,
+      "ctestProgramsPassed": 8,
+      "ctestProgramsFailed": 0,
+      "rawLog": "gcc11.raw.log",
+      "rawLogBytes": 66051,
+      "rawLogSha256": "45e2688850f77f9d1e49e72451e8c07b586f38a18591296ca8ad62861fe01044",
+      "programOutput": [
+        "PASS 37 DX11 instancing CPU contract checks",
+        "PASS 21 unique layout contract checks",
+        "PASS 13 CPU InputLayout checks",
+        "PASS 31 geometry shader CPU contracts",
+        "PASS 33 frustum plane and AABB CPU checks",
+        "PASS 124 quadtree CPU broadphase checks",
+        "PASS 49 Font UTF-8 atlas layout CPU contract checks",
+        "PASS 41 Deferred MRT SRV hazard CPU contract checks"
+      ]
+    },
+    {
+      "environment": "clangsan",
+      "jobId": 118487508728,
+      "jobUrl": "https://github.com/jiwhan112/um.github.io/actions/runs/39380255011/job/118487508728",
+      "compiler": "Clang 18.1.3",
+      "cppStandard": 20,
+      "standardCommandChecks": 8,
+      "sanitizerCommandChecks": 8,
+      "ctestProgramsPassed": 8,
+      "ctestProgramsFailed": 0,
+      "rawLog": "clangsan.raw.log",
+      "rawLogBytes": 69357,
+      "rawLogSha256": "e544890dc02c3864fe14a8c9859ba0cf338aa9c0842081c7aef1f6fd22a62ae8",
+      "programOutput": [
+        "PASS 37 DX11 instancing CPU contract checks",
+        "PASS 21 unique layout contract checks",
+        "PASS 13 CPU InputLayout checks",
+        "PASS 31 geometry shader CPU contracts",
+        "PASS 33 frustum plane and AABB CPU checks",
+        "PASS 124 quadtree CPU broadphase checks",
+        "PASS 49 Font UTF-8 atlas layout CPU contract checks",
+        "PASS 41 Deferred MRT SRV hazard CPU contract checks"
+      ]
+    }
+  ],
+  "unverified": [
+    "Windows/MSVC",
+    "Direct3D11 runtime/GPU",
+    "HLSL compilation",
+    "historical 13A main.cpp original byte identity"
+  ]
+}

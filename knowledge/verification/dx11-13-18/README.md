@@ -65,3 +65,17 @@
 - 주 실습 336조건과 compact 13조건을 구분합니다. compact에는 2-pass와 겹치는 조건이 있으므로 349개 독립 조건이라고 보고하지 않습니다.
 - 로컬 GCC 13.3 직접 빌드에서는 `-std=c++20`과 `-std=c++11` 각각 8개 프로그램 실행에 성공했습니다. 이는 CMake/CTest·Clang 실행을 대체하지 않습니다.
 - 새 GitHub 실행 결과는 검증한 run/commit ID와 함께 아래에 추가합니다.
+
+## 재감사 실제 GitHub 실행 — #39380255011
+
+[CPU CI #39380255011](https://github.com/jiwhan112/um.github.io/actions/runs/39380255011), PR #11의 소스 HEAD `a7315350da8a566c9f43f24965112f8f73a0e8bf`를 대상으로 **세 job 모두 성공**했습니다. Actions가 checkout한 PR 합성 병합 커밋은 `ba62f41edd00a0bdb1ff15e885c96a3a9539cfd6`입니다.
+
+| 실제 환경 | Configure / Build / CTest | 실제 컴파일 인자 확인 | 영구 보관 전체 Job 출력 |
+|---|---|---|---|
+| GCC 13.3.0 · C++20 | 8개 모두 성공, CTest 8/8 | 8개 모두 `-std=c++20` | [gcc20.raw.log](github-audit-39380255011/gcc20.raw.log) |
+| GCC 13.3.0 · C++11 | 8개 모두 성공, CTest 8/8 | 8개 모두 `-std=c++11`, Font/Deferred 포함 | [gcc11.raw.log](github-audit-39380255011/gcc11.raw.log) |
+| Clang 18.1.3 · C++20 + ASan/UBSan | 8개 모두 성공, CTest 8/8 | 8개 모두 C++20·두 sanitizer 옵션 확인 | [clangsan.raw.log](github-audit-39380255011/clangsan.raw.log) |
+
+[실행 지문·환경별 출력 명세](github-audit-39380255011/execution.json)에 Job ID, 검사 대상 소스와 무결성 명세 SHA-256, 원시 로그 바이트/SHA-256을 기록했습니다. 원본 Job 출력은 BOM·타임스탬프·ANSI 제어 문자를 포함해 API 응답 그대로 보관합니다. 개별 단계 출력·명령·도구 버전·compile_commands.json도 해당 run의 `dx11-13-18-*-raw-logs` 아티팩트에 있으며 보존 기간은 30일입니다.
+
+이후 로그·문서만 추가한 최종 PR HEAD에서도 병합 전에 필수 CI 전체를 다시 확인합니다. 이 영구 로그가 기록한 커밋과 최종 병합 커밋을 혼동하지 않습니다.
