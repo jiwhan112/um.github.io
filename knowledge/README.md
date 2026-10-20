@@ -57,3 +57,7 @@ DX9 구현의 전체 소스는 `knowledge/shared/dx9-impl-*/`에 독립 보관�
 - WinAPI04A의 순수 CPU 소스는 바이트 대조 보관했고 GCC C++20·C++11·Clang ASan/UBSan CTest 각각 1/1 통과했습니다. 두 공통 실습의 GitHub CPU CI 또한 GCC/Clang ASan·UBSan에서 게임 수학 6/6, DX9 파이프라인 5/5 통과했으며 새 CMake·CTest 원시 로그 4개를 GitHub에 보존했습니다.
 - Windows/MSVC·D3D9/11·GPU·Unity 테스트는 이번 저장/CI로 검증된 것이 아닙니다. Mermaid 및 수식은 원본 코드를 보존하며 시각적 렌더링은 후속 UI 개선 대상입니다.
 - 이관 전 Notion 원본 문서, 기존 시범 자료, 다른 자동 발행 작업을 수정하지 않습니다. 이 사이트는 공개 GitHub Pages입니다.
+
+## DX11 13–18 재감사 보완 (2026-10-20)
+
+[추가 이관·정정 원장](MIGRATION_DX11_13_18_AUDIT_20261020.md)에서 누락 하위 Notion 원문 10개·과거 로그 48개·13B compact 소스, 8개 파일의 마지막 LF 복원, 기존 Font/Deferred C++11 CI 설정 정정을 추적합니다. 카탈로그는 72개이며 기존 단원·소스 탐색 페이지에 자료를 연결했습니다. [파일별 SHA-256과 원문 블록 명세](verification/dx11-13-18/source-integrity.json), [실제 실행 로그 원장](verification/dx11-13-18/README.md)을 함께 확인하세요.

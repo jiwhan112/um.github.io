@@ -27,7 +27,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "Notion 네이티브 소스 복구본입니다. 새 Linux CPU 검증은 GitHub Actions에서 진행합니다. Windows/MSVC·D3D11/GPU/HLSL 실기기 실행은 수행하지 않았습니다."
+                  "text": "Notion 네이티브 소스 복구본입니다. 현재 CPU 실행 결과는 GitHub 검증 원장에 기록하며, Notion 과거 로그와 구분합니다. Windows/MSVC·D3D11/GPU·HLSL 컴파일은 미검증입니다."
                 }
               ]
             }
@@ -37,7 +37,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "CPU main.cpp는 Notion 부록 조합. 독립 CMake는 GitHub 신규 제작, 14/15/16 공통 원형을 별도로 보존. HLSL 미컴파일."
+              "text": "CPU main.cpp는 Notion 부록 5개 블록을 조합한 4,613바이트입니다. 독립 CMake는 이관 때 작성한 파일이며 원래 14/15/16 공통 CMake 627바이트를 별도로 보존합니다. HLSL 예제 699바이트는 미컴파일 상태입니다."
             }
           ]
         },
@@ -69,7 +69,7 @@
                 ],
                 [
                   {
-                    "text": "신규 GitHub CI로 검사"
+                    "text": "실제 Configure·Build·CTest 결과는 검증 원장 참조"
                   }
                 ]
               ]
@@ -140,7 +140,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 소스 파일 · "
+              "text": "전체 소스 파일 · 4,613바이트 · "
             },
             {
               "text": "GitHub 원본 열기",
@@ -165,7 +165,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 소스 파일 · "
+              "text": "전체 소스 파일 · 527바이트 · "
             },
             {
               "text": "GitHub 원본 열기",
@@ -190,7 +190,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 소스 파일 · "
+              "text": "전체 소스 파일 · 699바이트 · "
             },
             {
               "text": "GitHub 원본 열기",
@@ -202,7 +202,7 @@
         {
           "type": "code",
           "language": "hlsl",
-          "text": "struct VSOut {\n    float4 pos : SV_POSITION;\n    float2 halfExtentNdc : TEXCOORD0;\n};\nstruct GSOut {\n    float4 pos : SV_POSITION;\n    float2 uv : TEXCOORD0;\n};\n[maxvertexcount(4)]\nvoid GS(point VSOut src[1], inout TriangleStream<GSOut> stream) {\n    float2 offsets[4] = {\n        float2(-1,-1), float2(-1,1),\n        float2( 1,-1), float2( 1,1)\n    };\n    float2 uv[4] = {\n        float2(0,1), float2(0,0),\n        float2(1,1), float2(1,0)\n    };\n    [unroll] for (uint i=0; i<4; ++i) {\n        GSOut outV;\n        outV.pos = src[0].pos;\n        outV.pos.xy += offsets[i] * src[0].halfExtentNdc * outV.pos.w;\n        outV.uv = uv[i];\n        stream.Append(outV);\n    }\n    stream.RestartStrip();\n}"
+          "text": "struct VSOut {\n    float4 pos : SV_POSITION;\n    float2 halfExtentNdc : TEXCOORD0;\n};\nstruct GSOut {\n    float4 pos : SV_POSITION;\n    float2 uv : TEXCOORD0;\n};\n[maxvertexcount(4)]\nvoid GS(point VSOut src[1], inout TriangleStream<GSOut> stream) {\n    float2 offsets[4] = {\n        float2(-1,-1), float2(-1,1),\n        float2( 1,-1), float2( 1,1)\n    };\n    float2 uv[4] = {\n        float2(0,1), float2(0,0),\n        float2(1,1), float2(1,0)\n    };\n    [unroll] for (uint i=0; i<4; ++i) {\n        GSOut outV;\n        outV.pos = src[0].pos;\n        outV.pos.xy += offsets[i] * src[0].halfExtentNdc * outV.pos.w;\n        outV.uv = uv[i];\n        stream.Append(outV);\n    }\n    stream.RestartStrip();\n}\n"
         }
       ]
     },
@@ -215,7 +215,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 소스 파일 · "
+              "text": "전체 소스 파일 · 627바이트 · "
             },
             {
               "text": "GitHub 원본 열기",
@@ -227,7 +227,137 @@
         {
           "type": "code",
           "language": "cmake",
-          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_14_16_contracts LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"C++ language version\")\nenable_testing()\nforeach(SAMPLE 14_geometry 15_frustum 16_quadtree)\n    add_executable(${SAMPLE} ${SAMPLE}/main.cpp)\n    set_target_properties(${SAMPLE} PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\n    if(MSVC)\n        target_compile_options(${SAMPLE} PRIVATE /W4 /EHsc)\n    else()\n        target_compile_options(${SAMPLE} PRIVATE -Wall -Wextra -Wpedantic -Werror)\n    endif()\n    add_test(NAME ${SAMPLE}_cpu COMMAND ${SAMPLE})\nendforeach()"
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_14_16_contracts LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"C++ language version\")\nenable_testing()\nforeach(SAMPLE 14_geometry 15_frustum 16_quadtree)\n    add_executable(${SAMPLE} ${SAMPLE}/main.cpp)\n    set_target_properties(${SAMPLE} PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\n    if(MSVC)\n        target_compile_options(${SAMPLE} PRIVATE /W4 /EHsc)\n    else()\n        target_compile_options(${SAMPLE} PRIVATE -Wall -Wextra -Wpedantic -Werror)\n    endif()\n    add_test(NAME ${SAMPLE}_cpu COMMAND ${SAMPLE})\nendforeach()\n"
+        }
+      ]
+    },
+    {
+      "id": "source-archive",
+      "title": "Notion 원문과 공통 과거 로그",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 Notion 로그는 원본에 보관되어 있던 과거 실행 기록입니다. 이번 GitHub CI의 Configure·Build·CTest 실행 결과와 별도로 보존합니다. GCC C++20·GCC C++11·Clang C++20 ASan/UBSan에서 같은 조건을 반복한 횟수를 독립 조건 수로 합산하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 원장 · 새 GitHub CI와 과거 Notion 기록의 구분",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "소스·원문·로그 바이트 무결성 명세",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/source-integrity.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Geometry Shader 본문·분할 코드·공통 CMake·과거 로그 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/dx11-14/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "14·15·16 공통 CMake 원문 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-14/CMakeLists.notionshared.txt"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "기록"
+                  }
+                ],
+                [
+                  {
+                    "text": "보관 범위"
+                  }
+                ],
+                [
+                  {
+                    "text": "파일"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "14/15/16 공통 과거 CTest"
+                  }
+                ],
+                [
+                  {
+                    "text": "GCC C++20·GCC C++11·ClangSan 각 1개, 총 3개 stdout"
+                  }
+                ],
+                [
+                  {
+                    "text": "공통 과거 CTest 로그 폴더",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/tree/master/knowledge/verification/dx11-13-18/notion-history/14-16-shared"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Clang 로그 분할 경계"
+                  }
+                ],
+                [
+                  {
+                    "text": "원문 2개 블록을 표시 순서대로 연결"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 CI 로그와 구분하여 보관"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "HLSL과 공통 CMake는 이전 이관에서 생략된 마지막 LF 1바이트를 복구했습니다. 코드 논리는 변경하지 않았습니다."
+            }
+          ]
         }
       ]
     }

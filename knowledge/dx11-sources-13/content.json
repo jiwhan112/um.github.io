@@ -27,7 +27,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "Notion 네이티브 소스 복구본입니다. 새 Linux CPU 검증은 GitHub Actions에서 진행합니다. Windows/MSVC·D3D11/GPU/HLSL 실기기 실행은 수행하지 않았습니다."
+                  "text": "Notion 네이티브 소스 복구본입니다. 현재 CPU 실행 결과는 GitHub 검증 원장에 기록하며, Notion 과거 로그와 구분합니다. Windows/MSVC·D3D11/GPU·HLSL 컴파일은 미검증입니다."
                 }
               ]
             }
@@ -37,7 +37,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "현행 6,043바이트. 과거 2026-10-16 SHA-256과 역사적 동일성은 미검증."
+              "text": "현행 main.cpp 6,043바이트는 Notion의 분할 C++ 블록 4개를 순서대로 복원한 자료입니다. 과거 2026-10-16 SHA-256과 역사적 동일성은 미검증이며, 현재 코드의 컴파일 성공으로 해소되지 않습니다. CMakeLists.txt는 원문 최종 LF까지 포함한 513바이트입니다."
             }
           ]
         },
@@ -69,7 +69,7 @@
                 ],
                 [
                   {
-                    "text": "신규 GitHub CI로 검사"
+                    "text": "실제 Configure·Build·CTest 결과는 검증 원장 참조"
                   }
                 ]
               ]
@@ -117,13 +117,23 @@
         },
         {
           "type": "details",
-          "title": "원본과 분리한 CMake가 바뀌었나요?",
+          "title": "13A 과거 소스의 SHA-256 불일치는 해결됐나요?",
           "blocks": [
             {
               "type": "paragraph",
               "content": [
                 {
-                  "text": "14의 독립 실행용 CMake는 신규로 추가했습니다. 원래 14/15/16 통합 CMake 코드는 별도 파일로 보관했습니다."
+                  "text": "아직 해결되지 않았습니다. 과거 fd3839f7c350d1e573cab36a8c3f942f55a8e6c9d4e94b45033e7d3b3b4472ae에 해당하는 원본 바이트를 확보하지 못했습니다. 현재 6,043바이트 소스의 SHA-256은 ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8이며 별도 버전으로 취급합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "과거 SHA 불일치 감사 원문",
+                  "kind": "link",
+                  "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13audit-notion-source.md"
                 }
               ]
             }
@@ -140,7 +150,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 소스 파일 · "
+              "text": "전체 소스 파일 · 6,043바이트 · "
             },
             {
               "text": "GitHub 원본 열기",
@@ -165,7 +175,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 소스 파일 · "
+              "text": "전체 소스 파일 · 513바이트 · "
             },
             {
               "text": "GitHub 원본 열기",
@@ -177,7 +187,190 @@
         {
           "type": "code",
           "language": "cmake",
-          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13_instancing_cpu LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nenable_testing()\nadd_executable(dx11_13_cpu main.cpp)\nset_target_properties(dx11_13_cpu PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n target_compile_options(dx11_13_cpu PRIVATE /W4 /EHsc)\nelse()\n target_compile_options(dx11_13_cpu PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nadd_test(NAME dx11_13_cpu COMMAND dx11_13_cpu)"
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13_instancing_cpu LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nenable_testing()\nadd_executable(dx11_13_cpu main.cpp)\nset_target_properties(dx11_13_cpu PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n target_compile_options(dx11_13_cpu PRIVATE /W4 /EHsc)\nelse()\n target_compile_options(dx11_13_cpu PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nadd_test(NAME dx11_13_cpu COMMAND dx11_13_cpu)\n"
+        }
+      ]
+    },
+    {
+      "id": "instancing-hlsl",
+      "title": "Instancing HLSL 예제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13 본문에 있던 HLSL 예제입니다. 셰이더 컴파일·Direct3D11 런타임·GPU 출력은 실행하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 548바이트 · "
+            },
+            {
+              "text": "GitHub 전체 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13/instancing_example.hlsl"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "SHA-256 fec9915ac640ed949a4bc1760bd81149c5bafd8b6ea67c79c3123098cf29566f"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "hlsl",
+          "text": "cbuffer Frame : register(b0) { row_major float4x4 ViewProj; };\nstruct VSIn {\n float3 position : POSITION; float2 uv : TEXCOORD0;\n float4 r0 : INSTANCEWORLD0; float4 r1 : INSTANCEWORLD1;\n float4 r2 : INSTANCEWORLD2; float4 r3 : INSTANCEWORLD3;\n};\nstruct VSOut { float4 position : SV_POSITION; float2 uv : TEXCOORD0; };\nVSOut VSMain(VSIn i) {\n float4x4 world = float4x4(i.r0,i.r1,i.r2,i.r3);\n VSOut o;\n o.position = mul(mul(float4(i.position,1),world),ViewProj);\n o.uv=i.uv; return o;\n}\nfloat4 PSMain(VSOut i): SV_Target { return float4(i.uv,0,1); }\n"
+        }
+      ]
+    },
+    {
+      "id": "source-archive",
+      "title": "Notion 원문과 검증 기록",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 Notion 로그는 원본에 보관되어 있던 과거 실행 기록입니다. 이번 GitHub CI의 Configure·Build·CTest 실행 결과와 별도로 보존합니다. GCC C++20·GCC C++11·Clang C++20 ASan/UBSan에서 같은 조건을 반복한 횟수를 독립 조건 수로 합산하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 원장 · 새 GitHub CI와 과거 Notion 기록의 구분",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "소스·원문·로그 바이트 무결성 명세",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/verification/dx11-13-18/source-integrity.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13 본문 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/dx11-13/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13A 전체 소스·이전 CTest 기록 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13a-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13A 현행 소스 재현 원장 · 원시 로그 9개 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13a-verification-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13A 과거 SHA-256 불일치 감사 원문",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13audit-notion-source.md"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "기록"
+                  }
+                ],
+                [
+                  {
+                    "text": "보관 범위"
+                  }
+                ],
+                [
+                  {
+                    "text": "파일"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "현재 Notion 6,043바이트 소스의 과거 실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "GCC C++20·GCC C++11·ClangSan 각 Configure·Build·CTest, 총 9개 stdout"
+                  }
+                ],
+                [
+                  {
+                    "text": "13A 과거 원시 로그 폴더",
+                    "kind": "link",
+                    "href": "https://github.com/jiwhan112/um.github.io/tree/master/knowledge/verification/dx11-13-18/notion-history/13a-current"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원문 로그 지문"
+                  }
+                ],
+                [
+                  {
+                    "text": "9개 stdout의 길이와 FNV64가 원문 기록과 일치"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 GitHub CI 실행 결과와 구분"
+                  }
+                ]
+              ]
+            }
+          ]
         }
       ]
     }
