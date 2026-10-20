@@ -86,8 +86,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,60);
- assert.equal(sourceCatalog.length,60);
+ assert.equal(docs.length,72);
+ assert.equal(sourceCatalog.length,72);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -305,4 +305,55 @@ test('DX11 09-12 GitHub C++ sources match native Notion original code fences',as
  const rebuilt=sourceFrom(native12,'main.cpp Part 1/2')+'\n'+sourceFrom(native12,'main.cpp Part 2/2');
  const code12=await readFile('../knowledge/shared/dx11-11-12/12_navmesh/main.cpp','utf8');
  assert.equal(code12,rebuilt,'navmesh two-part exact join mismatch');
+});
+
+test('DX11 13 through 18 migration preserves original diagram/table/review and independent sources',async()=>{
+ const originals=['dx11-13','dx11-13b','dx11-14','dx11-16','dx11-17','dx11-18'];
+ const explorers=['dx11-sources-13','dx11-sources-13b','dx11-sources-14','dx11-sources-16','dx11-sources-17','dx11-sources-18'];
+ for(const slug of originals){
+  const original=await readFile('../knowledge/'+slug+'/source-notion.md','utf8');
+  const page=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--'+slug+'.json','utf8')));
+  assert.ok(original.length>3800,'original incomplete '+slug);
+  assert.ok(original.includes('```mermaid'),'original Mermaid missing '+slug);
+  const blocks=page.sections.flatMap(s=>s.blocks);
+  assert.equal(blocks.filter(b=>b.type==='code'&&b.language==='mermaid').length,(original.match(/```mermaid/g)||[]).length,'diagram count '+slug);
+  assert.equal(blocks.filter(b=>b.type==='table').length,(original.match(/<table\b/g)||[]).length,'table count '+slug);
+  assert.equal(blocks.filter(b=>b.type==='details').length,(original.match(/<details>/g)||[]).length+1,'answer count + verification '+slug);
+  assert.ok(page.sections.some(s=>s.id==='github-source'&&s.blocks.some(b=>b.type==='paragraph'&&b.content.some(n=>n.kind==='link'&&n.href?.startsWith('/knowledge/dx11-sources-')))),'source link '+slug);
+ }
+ for(const slug of explorers){
+  const doc=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--'+slug+'.json','utf8')));
+  const fileBlocks=doc.sections.flatMap(s=>s.blocks).filter(b=>b.type==='code');
+  assert.ok(fileBlocks.some(b=>b.language==='cpp'&&b.text.length>3000),'full CPU C++ missing '+slug);
+  assert.ok(fileBlocks.some(b=>b.language==='cmake'&&b.text.includes('project(')),'full CMake missing '+slug);
+ }
+ const sample=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--dx11-13.json','utf8')));
+ assert.ok(sample.sections.some(s=>s.id==='github-source'&&s.blocks.some(b=>b.type==='callout')),'historic SHA mismatch warning missing');
+ const frustum=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--dx11-frustum.json','utf8')));
+ assert.ok(frustum.title.includes('Frustum'),'preserve original chapter 15');
+ assert.ok((await readFile('../knowledge/dx11-frustum/main.cpp','utf8')).length>5000,'existing 15 CPU source missing');
+});
+test('DX11 source reconstruction preserves actual Notion code block bytes and current 13A SHA',async()=>{
+ const plans=[
+  {original:'dx11-13a-notion-source.md',parts:[0,1,2,3],file:'dx11-13/main.cpp',newline:true},
+  {original:'dx11-13b1-notion-source.md',parts:[0],file:'dx11-13b/main.cpp',newline:true},
+  {original:'dx11-14-notion-source.md',parts:[0,1,2,3,4],file:'dx11-14/main.cpp',newline:true},
+  {original:'dx11-16-notion-source.md',parts:[1,2,3,4,5,6,7,8],file:'dx11-16/main.cpp',newline:true},
+  {original:'dx11-17b-notion-source.md',parts:[0],file:'dx11-17/fontlab.hpp',newline:false},
+  {original:'dx11-17c-notion-source.md',parts:[0],file:'dx11-17/main.cpp',newline:false},
+  {original:'dx11-18b-notion-source.md',parts:[0],file:'dx11-18/main.cpp',newline:false}
+ ];
+ for(const plan of plans){
+  const original=await readFile('../knowledge/shared/'+plan.original,'utf8');
+  const parts=[...original.matchAll(/```c\+\+\n([\s\S]*?)\n```/g)].map(m=>m[1]);
+  const reconstructed=plan.parts.map(n=>parts[n]).join('\n')+(plan.newline?'\n':'');
+  const saved=await readFile('../knowledge/shared/'+plan.file,'utf8');
+  assert.equal(saved,reconstructed,'Notion-native CPU source mismatch '+plan.file);
+ }
+ const current=await readFile('../knowledge/shared/dx11-13/main.cpp');
+ assert.equal(current.length,6043);
+ assert.equal(createHash('sha256').update(current).digest('hex'),'ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8');
+ const ledger=await readFile('../knowledge/MIGRATION_DX11_13_18_20261020.md','utf8');
+ assert.ok(ledger.includes('fd3839f7c350d1e573cab36a8c3f942f55a8e6c9d4e94b45033e7d3b3b4472ae'));
+ assert.ok(ledger.includes('원본 바이트를 확보하지 못했습니다'));
 });
