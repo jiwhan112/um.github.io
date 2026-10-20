@@ -51,7 +51,7 @@ jobs:
       - name: Check current 13A instancing source byte identity
         shell: bash
         run: |
-          printf '%s  %s\\n' 'ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8' 'knowledge/shared/dx11-13/main.cpp' | sha256sum -c -
+          echo 'ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8  knowledge/shared/dx11-13/main.cpp' | sha256sum -c -
           wc -c knowledge/shared/dx11-13/main.cpp
 
       - name: Configure, build and execute six independent CPU labs
