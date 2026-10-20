@@ -1,0 +1,490 @@
+{
+  "id": "knowledge--dx11-13b",
+  "route": "/knowledge/dx11-13b/",
+  "kind": "knowledge",
+  "title": "DX11 13B · InputLayout 경계·Overflow·StepRate 검증",
+  "subtitle": "Offset/Format/Stride·정수 Overflow·슬롯 중첩 두 단계 검증",
+  "date": "2026-10-20",
+  "number": "13b",
+  "category": "DirectX 11",
+  "topic": "DirectX 11",
+  "tags": [
+    "DirectX 11",
+    "C++",
+    "그래픽스"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "원본·학습 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기존 Notion 원문 이관 교재입니다. 전체 C++/CMake 소스와 CPU 검증은 별도 GitHub 소스 페이지에서 확인하세요. Windows/MSVC·GPU·HLSL 실기기 실행은 미검증입니다. "
+                },
+                {
+                  "text": "원본 Notion",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3fda99703f4081ef8863c783ed5a6e8f"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "DX11 13B InputLayout 경계조건을 보완하는 독립 CPU 실습.",
+                  "kind": "strong"
+                },
+                {
+                  "text": " 기존 13A의 소스와 SHA 이력은 변경하지 않습니다. 실제 Windows/D3D11/GPU 실행을 대신하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-1",
+      "title": "정의·작동 원리·전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "D3D11 Input Assembler는 바인딩된 Vertex Buffer의 Slot·Stride를 Input Layout의 Attribute Offset·Format에 맞춰 읽습니다. Slot 0을 정점, Slot 1을 인스턴스로 제한한 교육용 모델입니다. 다른 유효한 DX11 슬롯 배치는 이 모델 밖입니다. Per-vertex StepRate는 0이며 per-instance StepRate는 양수일 수 있고 "
+            },
+            {
+              "text": "1로만 고정되지는 않습니다",
+              "kind": "strong"
+            },
+            {
+              "text": ". 검사는 개별 요소의 Offset·Width를 검증한 후 같은 Slot끼리 영역이 겹치는지 검사합니다. 부호 없는 정수에 대한 Offset+Width를 먼저 계산하면 wrap 가능성이 있으므로 Offset\\<=Stride, Width\\<=Stride-Offset 순으로 검증합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"Layout Elements\"] --> B[\"Slot·Class·StepRate 검사\"]\n B --> C[\"offset <= stride\"]\n C --> D[\"width <= stride - offset\"]\n D --> E[\"모든 요소 검수\"]\n E --> F[\"동일 슬롯 구간 겹침 검사\"]"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "항목"
+                  }
+                ],
+                [
+                  {
+                    "text": "반례/실수"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 예제의 처리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Offset 4,294,967,292 + Width 16"
+                  }
+                ],
+                [
+                  {
+                    "text": "32비트 overflow"
+                  }
+                ],
+                [
+                  {
+                    "text": "뺄셈 검사로 거부"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "20바이트 Stride에서 Offset 20 Width 1"
+                  }
+                ],
+                [
+                  {
+                    "text": "끝을 1바이트 넘어감"
+                  }
+                ],
+                [
+                  {
+                    "text": "거부"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Offset 0 Width 12와 Offset 12 Width 8"
+                  }
+                ],
+                [
+                  {
+                    "text": "맞닿음을 겹침으로 판단"
+                  }
+                ],
+                [
+                  {
+                    "text": "허용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "StepRate 2"
+                  }
+                ],
+                [
+                  {
+                    "text": "무조건 1이어야 한다는 오해"
+                  }
+                ],
+                [
+                  {
+                    "text": "교육용 정책에서 허용"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "게임 엔진에서는 공유 메시와 per-instance World Matrix를 별도 스트림으로 공급하기 전에 Attribute의 바이트 범위와 IA Slot 설정을 확인할 수 있습니다. 다만 HLSL Semantic, DXGI_FORMAT별 크기, 실제 버퍼 바인딩, GPU 동기화까지 검증하는 것은 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "C++20 전체 실행 소스 · C++11 호환",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.cpp 2,840바이트, SHA256 9002375bbb188e31aa02d999739b66ada0dd74e0a87aeb82be703b04978b5324, FNV64 02218c40adef928a. C++11 문법 부분집합만 사용하며 두 표준을 실제 컴파일했습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// DX11 13B: educational CPU-only InputLayout contract; not GPU/API execution.\n// C++11 source, tested with C++11 and C++20.\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nstruct Element {\n    std::uint32_t slot, offset, bytes, step;\n    bool per_instance;\n};\nstruct Layout {\n    std::uint32_t vertex_stride, instance_stride;\n    std::vector<Element> elements;\n};\n\nvoid validate(const Layout& l) {\n    if (!l.vertex_stride || !l.instance_stride || l.elements.empty())\n        throw std::invalid_argument(\"missing stream\");\n    // Stage 1: validate ALL elements before calculating any end offsets.\n    for (std::size_t i = 0; i < l.elements.size(); ++i) {\n        const Element& e = l.elements[i];\n        if (e.slot > 1 || !e.bytes || e.per_instance != (e.slot == 1) ||\n            (e.per_instance ? e.step == 0 : e.step != 0))\n            throw std::invalid_argument(\"slot or class\");\n        const std::uint32_t stride = e.slot == 0 ? l.vertex_stride : l.instance_stride;\n        if (e.offset > stride || e.bytes > stride - e.offset)\n            throw std::out_of_range(\"element beyond stride\");\n    }\n    // Stage 2: safe sums, because Stage 1 proved offset+bytes <= stride.\n    for (std::size_t i = 0; i < l.elements.size(); ++i)\n        for (std::size_t j = i + 1; j < l.elements.size(); ++j) {\n            const Element& a = l.elements[i];\n            const Element& b = l.elements[j];\n            if (a.slot == b.slot && a.offset < b.offset + b.bytes &&\n                b.offset < a.offset + a.bytes)\n                throw std::invalid_argument(\"overlapping elements\");\n        }\n}\n\nbool valid(const Layout& l) {\n    try { validate(l); return true; }\n    catch (const std::invalid_argument&) { return false; }\n    catch (const std::out_of_range&) { return false; }\n}\nint main() {\n    unsigned checks = 0;\n    const auto expect = [&](bool result) {\n        ++checks;\n        if (!result) throw std::runtime_error(\"layout assertion failed\");\n    };\n    expect(valid({20,64,{{0,0,12,0,false},{0,12,8,0,false},\n         {1,0,16,2,true},{1,16,16,2,true},{1,32,16,2,true},{1,48,16,2,true}}}));\n    expect(!valid({0,64,{{0,0,4,0,false}}}));\n    expect(!valid({20,64,{}}));\n    expect(!valid({20,64,{{2,0,4,0,false}}}));\n    expect(!valid({20,64,{{0,0,0,0,false}}}));\n    expect(!valid({20,64,{{0,0,4,1,false}}}));\n    expect(!valid({20,64,{{1,0,4,0,true}}}));\n    expect(!valid({20,64,{{0,20,1,0,false}}}));\n    expect(!valid({20,64,{{0,4294967292U,16,0,false}}}));\n    expect(!valid({20,64,{{0,0,12,0,false},{0,8,8,0,false}}}));\n    expect(valid({20,64,{{0,0,12,0,false},{0,12,8,0,false}}}));\n    expect(valid({20,64,{{0,0,12,0,false},{1,0,12,1,true}}}));\n    expect(!valid({20,64,{{0,0,12,0,false},{1,63,2,1,true}}}));\n    std::cout << \"PASS \" << checks << \" CPU InputLayout checks\\n\";\n}"
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "전체 CMakeLists.txt",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "text",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13b_layout LANGUAGES CXX)\nset(LAB_STD 20 CACHE STRING \"C++ standard, 11 or 20\")\nif(NOT LAB_STD STREQUAL \"11\" AND NOT LAB_STD STREQUAL \"20\")\n  message(FATAL_ERROR \"LAB_STD must be 11 or 20\")\nendif()\nadd_executable(dx11_13b_layout main.cpp)\nset_target_properties(dx11_13b_layout PROPERTIES CXX_STANDARD ${LAB_STD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(CMAKE_CXX_COMPILER_ID MATCHES \"GNU|Clang\")\n  target_compile_options(dx11_13b_layout PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME dx11_13b_layout COMMAND dx11_13b_layout)"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CMakeLists.txt 616바이트, SHA256 ad7635f631dcdc11955a100a48f10d2abc4f033000350a466cad848b194f40bd, FNV64 7ad4bb35e2621f80."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "로컬 빌드·검증 명령",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "CXX=g++ cmake -S . -B build-gcc20 -DLAB_STD=20\ncmake --build build-gcc20\nctest --test-dir build-gcc20 -V\nCXX=g++ cmake -S . -B build-gcc11 -DLAB_STD=11\ncmake --build build-gcc11\nctest --test-dir build-gcc11 -V\nCXX=clang++ CXXFLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer' LDFLAGS='-fsanitize=address,undefined' cmake -S . -B build-clangsan -DLAB_STD=20\ncmake --build build-clangsan\nctest --test-dir build-clangsan -V"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "환경"
+                  }
+                ],
+                [
+                  {
+                    "text": "CTest"
+                  }
+                ],
+                [
+                  {
+                    "text": "기본 검사"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "GCC 14.2 C++20"
+                  }
+                ],
+                [
+                  {
+                    "text": "1/1 PASS"
+                  }
+                ],
+                [
+                  {
+                    "text": "13조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "GCC 14.2 C++11"
+                  }
+                ],
+                [
+                  {
+                    "text": "1/1 PASS"
+                  }
+                ],
+                [
+                  {
+                    "text": "동일 13조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Clang 17 C++20 ASan/UBSan"
+                  }
+                ],
+                [
+                  {
+                    "text": "1/1 PASS"
+                  }
+                ],
+                [
+                  {
+                    "text": "동일 13조건"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "동일한 13조건을 세 환경에서 반복한 결과이며 "
+            },
+            {
+              "text": "독립된 39개 테스트로 집계하지 않습니다",
+              "kind": "strong"
+            },
+            {
+              "text": ". Configure·Build·CTest의 원시 로그 9개를 하위 페이지 3fda99703f40817dbe67d998687b1c6d에 저장하고 fetch로 바이트·FNV64 9/9 일치를 검증했습니다. Windows/MSVC·D3D11/GPU·FXC/DXC·Unity 실행은 미검증입니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q1. 왜 Offset+Width를 처음부터 비교하지 않나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Unsigned overflow를 배제할 수 없기 때문입니다. 모든 요소를 뺄셈 기반으로 먼저 검증하면 이후 범위 끝 계산은 stride 이하입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q2. StepRate=2는 틀린 값인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 인스턴스별 데이터 진행 간격을 바꿀 수 있습니다. 단 이 예제는 별도 2슬롯 정책을 둡니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q3. CPU 13조건을 모두 통과하면 GPU Draw도 안전한가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. GPU InputLayout 생성·Shader 입력 서명·드라이버 실행은 별도로 검증해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "공식 자료·변경 내역",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft D3D11_INPUT_ELEMENT_DESC",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft IASetVertexBuffers",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-iasetvertexbuffers"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "2026-10-18: 기존 13A를 유지하고 InputLayout overflow·중첩·StepRate 경계 실습을 독립적으로 보강했습니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13B · Linux CPU 3환경 Configure·Build·CTest -V 원시 로그 9개",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fda99703f40817dbe67d998687b1c6d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "github-source",
+      "title": "전체 C++ 소스 · 빌드 · 검증 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 실행 코드·CMake·원본 복구본: "
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13b · GitHub 전체 소스 교재",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-13b/"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Linux CPU 테스트가 GPU 사용 가능성을 보장하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "보장하지 않습니다. CPU의 수치·입력·리소스 상태 계약에 대한 예제이며 Windows D3D11 파이프라인과 GPU 이미지·컴파일러/드라이버 동작은 별도로 검증해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
