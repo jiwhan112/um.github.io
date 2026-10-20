@@ -248,7 +248,7 @@ test('DX11 Instancing, Geometry, QuadTree, Font and Deferred lessons stay browsa
  await expect(page.getByRole('link',{name:/13 · GitHub 전체 소스 교재/})).toBeVisible();
  await page.goto('knowledge/dx11-sources-13/');
  await expect(page.locator('main h1')).toContainText('Instancing');
- await expect(page.locator('main .code-block').filter({hasText:'DrawIndexedInstanced'}).first()).toBeVisible();
+ await expect(page.locator('main .code-block').filter({hasText:'DynamicInstances'}).first()).toBeVisible();
  await page.goto('knowledge/dx11-14/');
  await expect(page.locator('main h1')).toContainText('Geometry Shader');
  await page.goto('knowledge/dx11-sources-14/');
