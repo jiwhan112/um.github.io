@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { PageHeader, Panel, Empty, Loading, ErrorView, ReadCheck, NextPrevious } from '@/components/Common';
 import { DocumentLibrary } from '@/components/DocumentLibrary';
+import { KnowledgeReader } from './KnowledgeReader';
 import type { Document } from '@/lib/types';
 const tabNames:Record<string,string>={problem:'문제',hints:'힌트',solution:'풀이·검증',more:'확장·다음',results:'결과물',compare:'크기 비교',process:'실험 과정',evaluation:'평가',files:'자료',document:'본문',overview:'상세 해설',summary:'핵심 요약',implementation:'구현 관점',practice:'실습',sources:'출처'};
 export function DocumentIndex({kind}:{kind:'thinking'|'opensource'}){
@@ -28,7 +29,7 @@ export default function DocumentPage(){
  const {catalog}=useData(),location=useLocation();const route=location.pathname.replace(/\/?$/,'/');const meta=catalog.documents.find(d=>d.route===route);const resource=useResource(meta?.file||null,documentSchema);
  if(!meta)return <div className="page"><Empty title="문서를 찾을 수 없습니다." description="왼쪽 목록에서 다른 문서를 선택해 주세요."/></div>;
  if(resource.error)return <ErrorView message={resource.error}/>;if(!resource.data)return <Loading/>;
- return <DocumentView key={meta.id} doc={resource.data}/>;
+ return resource.data.kind==='knowledge'?<KnowledgeReader key={meta.id} doc={resource.data}/>:<DocumentView key={meta.id} doc={resource.data}/>;
 }
 function DocumentView({doc}:{doc:Document}){
  const {catalog}=useData(),location=useLocation(),[params,setParams]=useSearchParams();const tabs=[...new Set(doc.sections.map(s=>s.tab))];const hash=decodeURIComponent(location.hash.slice(1));const selected=params.get('tab')||doc.sections.find(s=>s.id===hash)?.tab||tabs[0];const current=tabs.includes(selected)?selected:tabs[0];

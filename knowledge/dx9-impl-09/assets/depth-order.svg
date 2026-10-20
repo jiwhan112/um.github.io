@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="870" viewBox="0 0 640 870" role="img" aria-labelledby="title desc">
+<title id="title">색이 보이지 않아도 깊이를 기록하면 뒤의 픽셀이 탈락하는 이유</title>
+<desc id="desc">깊이 검사 LESSEQUAL과 초기 깊이 0.9를 가정한다. 알파 0인 앞 픽셀이 깊이 0.2를 기록하면 뒤 픽셀 0.4는 탈락한다. 깊이 쓰기를 끄면 기존 0.9가 유지되어 뒤 픽셀이 통과한다. 일반 알파 혼합에서는 그리는 순서를 바꾸면 결과 RGB도 달라진다.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#93aeca"/></marker></defs>
+<rect width="640" height="870" rx="18" fill="#101b2a"/>
+<g font-family="'Noto Sans CJK KR','Noto Sans KR',sans-serif" fill="#edf4ff">
+<text x="34" y="46" font-size="15" letter-spacing="2" fill="#94c7ff">02 / DEPTH WRITE · DRAW ORDER</text>
+<text x="34" y="89" font-size="29" font-weight="700">투명해도 깊이는 남을 수 있다</text>
+<text x="34" y="124" font-size="20" fill="#b4c4d9">알파 테스트 OFF · 직선 알파 혼합</text>
+<text x="34" y="151" font-size="20" fill="#b4c4d9">깊이 검사 ≤ · 초기 Z = 0.9</text>
+<g transform="translate(0 20)">
+<rect x="26" y="151" width="588" height="213" rx="12" fill="#211e2b" stroke="#775265"/>
+<text x="48" y="188" font-size="24" fill="#ffb0b7" font-weight="700">깊이 쓰기 ON</text>
+<rect x="49" y="214" width="142" height="85" rx="8" fill="none" stroke="#e0b5c1" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="120" y="246" font-size="22" text-anchor="middle">앞 픽셀</text><text x="120" y="278" font-size="21" text-anchor="middle">α = 0</text>
+<path d="M204 256H264" stroke="#93aeca" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="294" y="242" font-size="23">색은 그대로</text><text x="294" y="278" font-size="25" font-weight="700" fill="#ffb0b7">Z는 0.2로 갱신</text>
+<text x="49" y="337" font-size="22">뒤 픽셀 Z = 0.4 → 0.4 ≤ 0.2 실패</text>
+<rect x="26" y="384" width="588" height="213" rx="12" fill="#142b2e" stroke="#456e70"/>
+<text x="48" y="421" font-size="24" fill="#9be3cf" font-weight="700">깊이 쓰기 OFF</text>
+<rect x="49" y="447" width="142" height="85" rx="8" fill="none" stroke="#a3d8ce" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="120" y="479" font-size="22" text-anchor="middle">앞 픽셀</text><text x="120" y="511" font-size="21" text-anchor="middle">α = 0</text>
+<path d="M204 489H264" stroke="#93aeca" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="294" y="475" font-size="23">색도 그대로</text><text x="294" y="511" font-size="25" font-weight="700" fill="#9be3cf">Z도 0.9 유지</text>
+<text x="49" y="570" font-size="22">뒤 픽셀 Z = 0.4 → 0.4 ≤ 0.9 통과</text>
+<text x="34" y="641" font-size="24" font-weight="700">겹친 반투명 색은 순서도 중요</text>
+<text x="34" y="674" font-size="18" fill="#b4c4d9">배경 (0.2, 0.4, 0.6) · 빨강/파랑 α = 0.5</text>
+<rect x="34" y="697" width="55" height="46" rx="6" fill="#9559d3"/><text x="109" y="717" font-size="20">먼 빨강 → 가까운 파랑</text><text x="109" y="744" font-size="20" fill="#b9cce3">RGB = (0.30, 0.10, 0.65)</text>
+<rect x="34" y="769" width="55" height="46" rx="6" fill="#c459aa"/><text x="109" y="789" font-size="20">가까운 파랑 → 먼 빨강</text><text x="109" y="816" font-size="20" fill="#b9cce3">RGB = (0.55, 0.10, 0.40)</text>
+</g></g></svg>

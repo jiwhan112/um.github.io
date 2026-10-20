@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="780" viewBox="0 0 640 780" role="img" aria-labelledby="title desc">
+<title id="title">빌보드 중심과 right, up 축으로 네 꼭짓점 만들기</title>
+<desc id="desc">카메라를 향한 사각형을 정면에서 본 그림이다. 중심 C에서 right와 up으로 반 너비와 반 높이만큼 이동해 네 꼭짓점을 만든다. facing은 그림을 보는 카메라 쪽이다. 구면 빌보드는 카메라 위치를 향하고 원통형은 월드 Y축을 유지한다.</desc>
+<defs><marker id="right-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9" fill="#8de1c7"/></marker><marker id="up-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9" fill="#9ac9ff"/></marker></defs>
+<rect width="640" height="780" rx="18" fill="#101b2a"/>
+<g font-family="'Noto Sans CJK KR','Noto Sans KR',sans-serif" fill="#edf4ff">
+<text x="34" y="47" font-size="15" letter-spacing="2" fill="#94c7ff">03 / BILLBOARD BASIS</text>
+<text x="34" y="92" font-size="29" font-weight="700">중심에서 네 꼭짓점까지</text>
+<text x="34" y="129" font-size="20" fill="#b4c4d9">카메라를 향한 면을 정면에서 본 모식도</text>
+<rect x="142" y="221" width="356" height="236" fill="#193d4a" stroke="#6aa3b6" stroke-width="2"/>
+<path d="M142 339H498M320 221V457" stroke="#567789" stroke-dasharray="6 6"/>
+<path d="M320 339H464" stroke="#8de1c7" stroke-width="4" marker-end="url(#right-arrow)"/><path d="M320 339V248" stroke="#9ac9ff" stroke-width="4" marker-end="url(#up-arrow)"/>
+<g fill="#c6ecf5"><circle cx="142" cy="221" r="6"/><circle cx="498" cy="221" r="6"/><circle cx="142" cy="457" r="6"/><circle cx="498" cy="457" r="6"/></g>
+<g font-size="22" text-anchor="middle"><text x="142" y="198">C − r + u</text><text x="498" y="198">C + r + u</text><text x="142" y="492">C − r − u</text><text x="498" y="492">C + r − u</text></g>
+<text x="374" y="321" fill="#8de1c7" font-size="24">right</text><text x="338" y="274" fill="#9ac9ff" font-size="24">up</text>
+<circle cx="320" cy="339" r="13" fill="#101b2a" stroke="#efb584" stroke-width="2"/><circle cx="320" cy="339" r="4" fill="#efb584"/>
+<text x="289" y="384" font-size="24" font-weight="700">C</text>
+<text x="320" y="420" text-anchor="middle" fill="#efc49e" font-size="19">⊙ facing : 카메라 쪽</text>
+<rect x="34" y="528" width="572" height="95" rx="10" fill="#172b3f"/>
+<text x="58" y="566" fill="#8de1c7" font-size="23">r = right × 반 너비</text><text x="58" y="601" fill="#9ac9ff" font-size="23">u = up × 반 높이</text>
+<text x="34" y="669" font-size="22" font-weight="700">이 실습에서 축을 정하는 방법</text>
+<text x="34" y="706" font-size="20" fill="#c1d0e0">구면형 : 면의 법선이 카메라 위치를 향함</text><text x="34" y="740" font-size="20" fill="#c1d0e0">원통형 : 월드 Y축 유지, 수평 방향만 회전</text>
+</g></svg>

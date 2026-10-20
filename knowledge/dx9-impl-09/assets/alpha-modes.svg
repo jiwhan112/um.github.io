@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="690" viewBox="0 0 640 690" role="img" aria-labelledby="title desc">
+<title id="title">같은 알파 입력을 알파 테스트와 알파 블렌딩으로 처리한 차이</title>
+<desc id="desc">알파 0, 64, 128, 192, 255 중 임계값 128 이상만 통과시키면 앞의 두 픽셀은 폐기된다. 블렌딩에서는 알파에 따라 소스와 배경의 기여가 연속적으로 달라진다.</desc>
+<defs><pattern id="checker" width="20" height="20" patternUnits="userSpaceOnUse"><rect width="20" height="20" fill="#202c3d"/><path d="M0 0h10v10H0zM10 10h10v10H10z" fill="#354358"/></pattern></defs>
+<rect width="640" height="690" rx="18" fill="#101b2a"/>
+<g font-family="'Noto Sans CJK KR','Noto Sans KR',sans-serif" fill="#edf4ff">
+<text x="34" y="48" font-size="15" letter-spacing="2" fill="#94c7ff">01 / ALPHA TEST · ALPHA BLEND</text>
+<text x="34" y="94" font-size="30" font-weight="700">같은 알파, 다른 결과</text>
+<text x="34" y="132" font-size="21" fill="#b4c4d9">입력 알파는 같아도 처리하는 질문이 다릅니다.</text>
+<text x="34" y="182" font-size="23" font-weight="600">8비트 알파 입력</text>
+<g text-anchor="middle" font-size="25" fill="#9ed7ff"><text x="88" y="228">0</text><text x="204" y="228">64</text><text x="320" y="228">128</text><text x="436" y="228">192</text><text x="552" y="228">255</text></g>
+<path d="M34 249H606" stroke="#364d66"/>
+<text x="34" y="292" font-size="25" font-weight="700">알파 테스트</text><text x="34" y="325" font-size="21" fill="#b4c4d9">α ≥ 128이면 통과, 그보다 작으면 폐기</text>
+<g stroke="#4d6681" stroke-width="2"><rect x="42" y="346" width="92" height="66" rx="8" fill="url(#checker)"/><rect x="158" y="346" width="92" height="66" rx="8" fill="url(#checker)"/><rect x="274" y="346" width="92" height="66" rx="8" fill="#ef8653"/><rect x="390" y="346" width="92" height="66" rx="8" fill="#ef8653"/><rect x="506" y="346" width="92" height="66" rx="8" fill="#ef8653"/></g>
+<g text-anchor="middle" font-size="20"><text x="88" y="443" fill="#c0cddd">폐기</text><text x="204" y="443" fill="#c0cddd">폐기</text><text x="320" y="443">통과</text><text x="436" y="443">통과</text><text x="552" y="443">통과</text></g>
+<text x="34" y="501" font-size="25" font-weight="700">알파 블렌딩</text><text x="34" y="535" font-size="21" fill="#b4c4d9">알파에 따라 배경과 소스의 기여를 섞기</text>
+<g stroke="#4d6681" stroke-width="2"><rect x="42" y="554" width="92" height="66" rx="8" fill="#344d76"/><rect x="158" y="554" width="92" height="66" rx="8" fill="#635b6d"/><rect x="274" y="554" width="92" height="66" rx="8" fill="#926a64"/><rect x="390" y="554" width="92" height="66" rx="8" fill="#c0785c"/><rect x="506" y="554" width="92" height="66" rx="8" fill="#ef8653"/></g>
+<text x="42" y="656" font-size="19" fill="#b4c4d9">배경 유지</text><text x="598" y="656" font-size="19" text-anchor="end" fill="#b4c4d9">소스 색</text>
+</g></svg>
