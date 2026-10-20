@@ -1,0 +1,474 @@
+{
+  "schema_version": 1,
+  "collected_at_utc": "2026-10-20T09:47:16.425451+00:00",
+  "repository": "jiwhan112/um.github.io",
+  "pull_request": 12,
+  "workflow": ".github/workflows/knowledge-dx9-09-teaching.yml",
+  "verified_source_head": "e7df1e8429169909ed09464ed857346da6a5f4c5",
+  "primary_run": {
+    "id": 39402591867,
+    "name": "DX9 09 Korean teaching source validation",
+    "head_sha": "e7df1e8429169909ed09464ed857346da6a5f4c5",
+    "head_branch": "feature/knowledge-visual-dx9-09-20261020",
+    "path": ".github/workflows/knowledge-dx9-09-teaching.yml",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "created_at": "2026-10-20T09:42:01Z",
+    "updated_at": "2026-10-20T09:42:19Z",
+    "html_url": "https://github.com/jiwhan112/um.github.io/actions/runs/39402591867"
+  },
+  "additional_run": {
+    "id": 39402595902,
+    "name": "DX9 09 Korean teaching source validation",
+    "head_sha": "e7df1e8429169909ed09464ed857346da6a5f4c5",
+    "head_branch": "feature/knowledge-visual-dx9-09-20261020",
+    "path": ".github/workflows/knowledge-dx9-09-teaching.yml",
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "created_at": "2026-10-20T09:42:03Z",
+    "updated_at": "2026-10-20T09:42:25Z",
+    "html_url": "https://github.com/jiwhan112/um.github.io/actions/runs/39402595902"
+  },
+  "additional_run_jobs": [
+    {
+      "id": 118560710543,
+      "name": "gcc-cxx11",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 39402595902,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Verify source fidelity and collect raw compiler logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        }
+      ]
+    },
+    {
+      "id": 118560710808,
+      "name": "gcc-cxx20",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 39402595902,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Verify source fidelity and collect raw compiler logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        }
+      ]
+    },
+    {
+      "id": 118560711053,
+      "name": "clang-cxx20-asan-ubsan",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 39402595902,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Verify source fidelity and collect raw compiler logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        }
+      ]
+    }
+  ],
+  "independent_check_conditions": 53,
+  "counting_note": "Each executable and compiler configuration repeats the same 53 explicit assertions. Do not sum them as additional independent conditions.",
+  "records": [
+    {
+      "configuration": "clang-cxx20-asan-ubsan",
+      "compiler_version": "Clang 18.1.3",
+      "cmake_version": "3.31.6",
+      "cpp_standard_observed": 20,
+      "sanitizers": [
+        "address",
+        "undefined"
+      ],
+      "job_id": 118560696971,
+      "job_url": "https://github.com/jiwhan112/um.github.io/actions/runs/39402591867/job/118560696971",
+      "job_status": "completed",
+      "job_conclusion": "success",
+      "artifact": {
+        "id": 12256460776,
+        "name": "dx9-09-clang-cxx20-asan-ubsan-raw-logs",
+        "size_in_bytes": 2696,
+        "digest": "sha256:d28674b4339dc7a58aca2b63f97100adc876a18392be7115333083609895af10",
+        "created_at": "2026-10-20T09:42:17Z",
+        "expires_at": "2026-11-19T09:42:16Z"
+      },
+      "downloaded_archive_sha256": "d28674b4339dc7a58aca2b63f97100adc876a18392be7115333083609895af10",
+      "archive_matches_github_digest": true,
+      "artifact_entries_preserved_byte_for_byte": true,
+      "job_log_preserved_as_decoded_utf8": true,
+      "ctest_passed": 2,
+      "ctest_total": 2,
+      "assertions_per_executable": 53,
+      "original_and_annotated_stdout_diff_bytes": 0,
+      "source_integrity": {
+        "status": "pass",
+        "attachment_exact": true,
+        "original_code_blocks_exact": true,
+        "preprocessing_directives_exact": true,
+        "cpp_tokens_equal_before_macro_expansion": true,
+        "cpp_token_count": 2563,
+        "check_invocations_per_executable": 53,
+        "independent_check_conditions": 53,
+        "files": {
+          "source-09c.md": {
+            "bytes": 7911,
+            "sha256": "056fd682246d8f18a7bf599b2d8f165796959e98cbb43b4dce48aa258d42c668"
+          },
+          "original/main.cpp": {
+            "bytes": 6361,
+            "sha256": "65414be51c51a6b9fb22f0cf07c296c392b024913f83b241234dc266c53ea12a"
+          },
+          "original/CMakeLists.txt": {
+            "bytes": 261,
+            "sha256": "3099695963c1324d57aeea455f884927785ab89bdfefbfa97f323307e1242c6c"
+          },
+          "main.ko.cpp": {
+            "bytes": 11918,
+            "sha256": "d4a6e8319c704c28a4ba5c4cae3d1e95d9d17e8ecebbfc68bedbedf8f3d455a3"
+          }
+        },
+        "limitation": "__LINE__ expands to each file's actual line. Compilation and execution are separate checks."
+      },
+      "files": [
+        {
+          "path": "clang-cxx20-asan-ubsan/build.txt",
+          "bytes": 4792,
+          "sha256": "1e1061e6d972ba513b165ecd92ee04d05e58d7064055b01710340dd5a60296ed",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/configure.txt",
+          "bytes": 412,
+          "sha256": "269f506538e64fb582ca6e63daf05b4d45e5137badffa35b44c197570833a71f",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/ctest.txt",
+          "bytes": 1407,
+          "sha256": "d3e86f67ae76b5709f696c8f0e07f1a7aada0687f3150895daca37a81239ea28",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/environment-and-integrity.txt",
+          "bytes": 1236,
+          "sha256": "d025b47ef2e011aed00f5195d6f8c6d84e545a2a81504b9803b5f1a8d6b345ba",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/job.log",
+          "bytes": 26903,
+          "sha256": "ad6f1b3c1312d2c96677bcc07064332a2de33351be5d4f8908fc15a61c55b024",
+          "source": "github_job_log_api"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/output-equivalence.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source": "github_artifact_zip_entry"
+        }
+      ]
+    },
+    {
+      "configuration": "gcc-cxx11",
+      "compiler_version": "GCC 13.3.0",
+      "cmake_version": "3.31.6",
+      "cpp_standard_observed": 11,
+      "sanitizers": [],
+      "job_id": 118560697390,
+      "job_url": "https://github.com/jiwhan112/um.github.io/actions/runs/39402591867/job/118560697390",
+      "job_status": "completed",
+      "job_conclusion": "success",
+      "artifact": {
+        "id": 12255815668,
+        "name": "dx9-09-gcc-cxx11-raw-logs",
+        "size_in_bytes": 2755,
+        "digest": "sha256:8d466a85741be67e84e09f3a0fcb9640581f92e9aea40d05f5c040592efbee12",
+        "created_at": "2026-10-20T09:42:09Z",
+        "expires_at": "2026-11-19T09:42:09Z"
+      },
+      "downloaded_archive_sha256": "8d466a85741be67e84e09f3a0fcb9640581f92e9aea40d05f5c040592efbee12",
+      "archive_matches_github_digest": true,
+      "artifact_entries_preserved_byte_for_byte": true,
+      "job_log_preserved_as_decoded_utf8": true,
+      "ctest_passed": 2,
+      "ctest_total": 2,
+      "assertions_per_executable": 53,
+      "original_and_annotated_stdout_diff_bytes": 0,
+      "source_integrity": {
+        "status": "pass",
+        "attachment_exact": true,
+        "original_code_blocks_exact": true,
+        "preprocessing_directives_exact": true,
+        "cpp_tokens_equal_before_macro_expansion": true,
+        "cpp_token_count": 2563,
+        "check_invocations_per_executable": 53,
+        "independent_check_conditions": 53,
+        "files": {
+          "source-09c.md": {
+            "bytes": 7911,
+            "sha256": "056fd682246d8f18a7bf599b2d8f165796959e98cbb43b4dce48aa258d42c668"
+          },
+          "original/main.cpp": {
+            "bytes": 6361,
+            "sha256": "65414be51c51a6b9fb22f0cf07c296c392b024913f83b241234dc266c53ea12a"
+          },
+          "original/CMakeLists.txt": {
+            "bytes": 261,
+            "sha256": "3099695963c1324d57aeea455f884927785ab89bdfefbfa97f323307e1242c6c"
+          },
+          "main.ko.cpp": {
+            "bytes": 11918,
+            "sha256": "d4a6e8319c704c28a4ba5c4cae3d1e95d9d17e8ecebbfc68bedbedf8f3d455a3"
+          }
+        },
+        "limitation": "__LINE__ expands to each file's actual line. Compilation and execution are separate checks."
+      },
+      "files": [
+        {
+          "path": "gcc-cxx11/build.txt",
+          "bytes": 4448,
+          "sha256": "dc29edacd4b35250f18c78e6de376578e5060c6b50df289ce895091eb6a31b4e",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "gcc-cxx11/configure.txt",
+          "bytes": 406,
+          "sha256": "605e55401de20c3dd6ad1dc13d46bcbe1f0990145dbe3f797a57b3d39dff6278",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "gcc-cxx11/ctest.txt",
+          "bytes": 1407,
+          "sha256": "e3a91fe21e74de937fdf272bf5c9238441b8e61812f25bc8e748b6c8fa87573b",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "gcc-cxx11/environment-and-integrity.txt",
+          "bytes": 1372,
+          "sha256": "1a3a986e9a762d815cf55535a245b7be0d7ea962025a050ec741b61eadd39807",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "gcc-cxx11/job.log",
+          "bytes": 26556,
+          "sha256": "3cbbcea499a389fd79f97e530bfad1405b7636564656c79b05fa3107d0cd4206",
+          "source": "github_job_log_api"
+        },
+        {
+          "path": "gcc-cxx11/output-equivalence.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source": "github_artifact_zip_entry"
+        }
+      ]
+    },
+    {
+      "configuration": "gcc-cxx20",
+      "compiler_version": "GCC 13.3.0",
+      "cmake_version": "3.31.6",
+      "cpp_standard_observed": 20,
+      "sanitizers": [],
+      "job_id": 118560697471,
+      "job_url": "https://github.com/jiwhan112/um.github.io/actions/runs/39402591867/job/118560697471",
+      "job_status": "completed",
+      "job_conclusion": "success",
+      "artifact": {
+        "id": 12256160905,
+        "name": "dx9-09-gcc-cxx20-raw-logs",
+        "size_in_bytes": 2752,
+        "digest": "sha256:d7ee4eb30b06f27cc9c4e72d1bc637aacb33368a3c03c873c32d2d88766fd7c6",
+        "created_at": "2026-10-20T09:42:10Z",
+        "expires_at": "2026-11-19T09:42:10Z"
+      },
+      "downloaded_archive_sha256": "d7ee4eb30b06f27cc9c4e72d1bc637aacb33368a3c03c873c32d2d88766fd7c6",
+      "archive_matches_github_digest": true,
+      "artifact_entries_preserved_byte_for_byte": true,
+      "job_log_preserved_as_decoded_utf8": true,
+      "ctest_passed": 2,
+      "ctest_total": 2,
+      "assertions_per_executable": 53,
+      "original_and_annotated_stdout_diff_bytes": 0,
+      "source_integrity": {
+        "status": "pass",
+        "attachment_exact": true,
+        "original_code_blocks_exact": true,
+        "preprocessing_directives_exact": true,
+        "cpp_tokens_equal_before_macro_expansion": true,
+        "cpp_token_count": 2563,
+        "check_invocations_per_executable": 53,
+        "independent_check_conditions": 53,
+        "files": {
+          "source-09c.md": {
+            "bytes": 7911,
+            "sha256": "056fd682246d8f18a7bf599b2d8f165796959e98cbb43b4dce48aa258d42c668"
+          },
+          "original/main.cpp": {
+            "bytes": 6361,
+            "sha256": "65414be51c51a6b9fb22f0cf07c296c392b024913f83b241234dc266c53ea12a"
+          },
+          "original/CMakeLists.txt": {
+            "bytes": 261,
+            "sha256": "3099695963c1324d57aeea455f884927785ab89bdfefbfa97f323307e1242c6c"
+          },
+          "main.ko.cpp": {
+            "bytes": 11918,
+            "sha256": "d4a6e8319c704c28a4ba5c4cae3d1e95d9d17e8ecebbfc68bedbedf8f3d455a3"
+          }
+        },
+        "limitation": "__LINE__ expands to each file's actual line. Compilation and execution are separate checks."
+      },
+      "files": [
+        {
+          "path": "gcc-cxx20/build.txt",
+          "bytes": 4448,
+          "sha256": "d150664e7b5622a48d6e8f4d681107385b8b96aa9ef1191abd1b08bf88886915",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "gcc-cxx20/configure.txt",
+          "bytes": 406,
+          "sha256": "605e55401de20c3dd6ad1dc13d46bcbe1f0990145dbe3f797a57b3d39dff6278",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "gcc-cxx20/ctest.txt",
+          "bytes": 1407,
+          "sha256": "57e9dc8a91c8b22379dba91573a2edddd94d02028fe489170f527cea2e37aa5d",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "gcc-cxx20/environment-and-integrity.txt",
+          "bytes": 1372,
+          "sha256": "1a3a986e9a762d815cf55535a245b7be0d7ea962025a050ec741b61eadd39807",
+          "source": "github_artifact_zip_entry"
+        },
+        {
+          "path": "gcc-cxx20/job.log",
+          "bytes": 26554,
+          "sha256": "0ca81ba4a402ee75da4fcdeaded115f2e82a261a2055bb0b9efba17013b7e7a6",
+          "source": "github_job_log_api"
+        },
+        {
+          "path": "gcc-cxx20/output-equivalence.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source": "github_artifact_zip_entry"
+        }
+      ]
+    }
+  ],
+  "publication_review": {
+    "unmasked_credential_patterns_found": false,
+    "temporary_download_urls_published": false,
+    "raw_log_url_hosts": [
+      "github.com",
+      "github.blog"
+    ],
+    "note": "GitHub already masks the checkout token and authorization header as ***. These masks are retained in the raw job logs."
+  }
+}

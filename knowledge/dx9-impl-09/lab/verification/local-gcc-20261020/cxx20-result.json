@@ -1,0 +1,27 @@
+{
+  "executed_at_utc": "2026-10-20T08:15:30.974474+00:00",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "results": [
+    {
+      "source": "knowledge/dx9-impl-09/lab/original/main.cpp",
+      "source_sha256": "65414be51c51a6b9fb22f0cf07c296c392b024913f83b241234dc266c53ea12a",
+      "cpp_standard": "20",
+      "compile_exit": 0,
+      "run_exit": 0,
+      "stdout": "PASS: 53 explicit assertions (single CPU run)\n",
+      "assertions": 53
+    },
+    {
+      "source": "knowledge/dx9-impl-09/lab/main.ko.cpp",
+      "source_sha256": "d4a6e8319c704c28a4ba5c4cae3d1e95d9d17e8ecebbfc68bedbedf8f3d455a3",
+      "cpp_standard": "20",
+      "compile_exit": 0,
+      "run_exit": 0,
+      "stdout": "PASS: 53 explicit assertions (single CPU run)\n",
+      "assertions": 53
+    }
+  ],
+  "independent_conditions": 53,
+  "cmake_ctest_executed": false,
+  "clang_sanitizers_executed": false
+}

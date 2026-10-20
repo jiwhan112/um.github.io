@@ -140,15 +140,15 @@ test('WinAPI and game math migrated lessons are usable through the sitemap',asyn
  await expect(page).toHaveURL(/\/knowledge\/winapi-01\/$/);
  await expect(page.locator('main h1')).toContainText('WinAPI 01');
  await expect(page.locator('main .prose table')).toHaveCount(1);
- await expect(page.locator('main .prose details')).toHaveCount(2);
+ await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
  await page.goto('knowledge/dx9-pipeline-03/');
  await expect(page.locator('main h1')).toContainText('DX9 파이프라인 03');
  await expect(page.locator('main .prose table')).toHaveCount(2);
- await expect(page.locator('main .prose details')).toHaveCount(2);
+ await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
  await page.goto('knowledge/game-math-03/');
  await expect(page.locator('main h1')).toContainText('게임 수학 03');
  await expect(page.locator('main .prose code').first()).toBeVisible();
- await expect(page.locator('main .prose details')).toHaveCount(2);
+ await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
  await page.goto('knowledge/winapi-04a/');
  await expect(page.locator('main .code-block').filter({hasText:'int main()'})).toBeVisible();
  await expect(page.locator('main .code-block').filter({hasText:'add_test('})).toBeVisible();
@@ -186,10 +186,11 @@ test('DX11 migrated chapter sitemap and raw diagrams are readable on the website
  await dx.getByRole('link',{name:/DX11 02 · Resource·View·Usage·Map/}).click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-02\/$/);
  await expect(page.locator('main h1')).toContainText('DX11 02');
- await expect(page.locator('main .code-block').filter({hasText:'flowchart'}).first()).toBeVisible();
+ await expect(page.locator('main .mermaid-diagram').first()).toHaveAttribute('data-diagram-state','ready');
+ await expect(page.locator('main .mermaid-canvas img').first()).toBeVisible();
  await page.goto('knowledge/dx11-06/');
  await expect(page.locator('main h1')).toContainText('DX11 06');
- await expect(page.locator('main details').first()).toBeVisible();
+ await expect(page.locator('main .prose details.disclosure').first()).toBeVisible();
 });
 
 test('DX11 01, 07, 08 course chapters and recovered full C++ sources open',async({page})=>{
@@ -199,7 +200,8 @@ test('DX11 01, 07, 08 course chapters and recovered full C++ sources open',async
  await win.getByRole('link',{name:/DX11 01/}).first().click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-01\/$/);
  await expect(page.locator('main h1')).toContainText('DX11 01');
- await expect(page.locator('main .code-block').filter({hasText:'flowchart'}).first()).toBeVisible();
+ await expect(page.locator('main .mermaid-diagram').first()).toHaveAttribute('data-diagram-state','ready');
+ await expect(page.locator('main .mermaid-canvas img').first()).toBeVisible();
  await expect(page.getByRole('link',{name:/GitHub Pages 전체 소스 교재에서 보기/})).toBeVisible();
  await page.goto('knowledge/dx11-sources-01/');
  await expect(page.locator('main h1')).toContainText('Device 초기화');
@@ -221,7 +223,8 @@ test('DX11 Mesh/Animation/Collider/NavMesh navigation and full source links',asy
  await mesh.click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-09\/$/);
  await expect(page.locator('main h1')).toContainText('DX11 09');
- await expect(page.locator('main .code-block').filter({hasText:'flowchart'}).first()).toBeVisible();
+ await expect(page.locator('main .mermaid-diagram').first()).toHaveAttribute('data-diagram-state','ready');
+ await expect(page.locator('main .mermaid-canvas img').first()).toBeVisible();
  await page.getByRole('link',{name:'전체 C++ 및 CMake 파일 열기'}).click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-sources-09\/$/);
  await expect(page.locator('main .code-block').filter({hasText:'int main()'}).first()).toBeVisible();

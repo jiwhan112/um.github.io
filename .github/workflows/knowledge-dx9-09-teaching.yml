@@ -1,0 +1,67 @@
+name: DX9 09 Korean teaching source validation
+on:
+  pull_request:
+    branches: [master]
+    paths: ['knowledge/dx9-impl-09/**', '.github/workflows/knowledge-dx9-09-teaching.yml']
+  push:
+    branches: [master, 'feature/knowledge-visual-*']
+    paths: ['knowledge/dx9-impl-09/**', '.github/workflows/knowledge-dx9-09-teaching.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cpu:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: gcc-cxx20
+            compiler: g++
+            standard: 20
+            sanitizers: ''
+          - name: gcc-cxx11
+            compiler: g++
+            standard: 11
+            sanitizers: ''
+          - name: clang-cxx20-asan-ubsan
+            compiler: clang++
+            standard: 20
+            sanitizers: '-fsanitize=address,undefined -fno-omit-frame-pointer'
+    env:
+      ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify source fidelity and collect raw compiler logs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification-logs
+          {
+            date -u
+            git rev-parse HEAD
+            ${{ matrix.compiler }} --version
+            cmake --version
+            python3 knowledge/dx9-impl-09/lab/verify_comments.py --json
+          } | tee verification-logs/environment-and-integrity.txt
+          cmake -S knowledge/dx9-impl-09/lab -B build-dx9-09 \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
+            -DLAB_CXX_STANDARD=${{ matrix.standard }} \
+            -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wpedantic -Werror ${{ matrix.sanitizers }}" \
+            -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.sanitizers }}" \
+            2>&1 | tee verification-logs/configure.txt
+          cmake --build build-dx9-09 --verbose --parallel 2 2>&1 | tee verification-logs/build.txt
+          ctest --test-dir build-dx9-09 --output-on-failure --verbose 2>&1 | tee verification-logs/ctest.txt
+          diff <(build-dx9-09/alpha_original) <(build-dx9-09/alpha_korean) | tee verification-logs/output-equivalence.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dx9-09-${{ matrix.name }}-raw-logs
+          path: verification-logs
+          retention-days: 30
