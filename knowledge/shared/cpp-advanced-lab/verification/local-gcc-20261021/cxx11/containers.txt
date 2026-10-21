@@ -1,0 +1,58 @@
+In file included from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:1:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In member function ‘void Checks::Throws(F&&, const char*)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: error: ‘invoke’ is not a member of ‘std’
+   17 |         try { std::invoke(std::forward<F>(f)); }
+      |                    ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: note: ‘std::invoke’ is only available from C++17 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In function ‘int Run(const char*, F&&)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: error: ‘invoke’ is not a member of ‘std’
+   26 |         std::invoke(std::forward<F>(test), checks);
+      |              ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: note: ‘std::invoke’ is only available from C++17 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp: In lambda function:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:21:10: error: ‘erase_if’ is not a member of ‘std’; did you mean ‘enable_if’?
+   21 |     std::erase_if(v, [](int n) { return n % 2 == 0; });
+      |          ^~~~~~~~
+      |          enable_if
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:32:41: error: wrong number of template arguments (0, should be 1)
+   32 |     std::map<std::string, int, std::less<>> counts{{"potion",3}};
+      |                                         ^
+In file included from /usr/include/c++/13/functional:49,
+                 from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:4:
+/usr/include/c++/13/bits/stl_function.h:403:12: note: provided for ‘template<class _Tp> struct std::less’
+  403 |     struct less : public binary_function<_Tp, _Tp, bool>
+      |            ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:32:42: error: template argument 3 is invalid
+   32 |     std::map<std::string, int, std::less<>> counts{{"potion",3}};
+      |                                          ^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:32:64: error: too many braces around scalar initializer for type ‘int’
+   32 |     std::map<std::string, int, std::less<>> counts{{"potion",3}};
+      |                                                                ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:33:21: error: request for member ‘find’ in ‘counts’, which is of non-class type ‘int’
+   33 |     c.Expect(counts.find("absent") == counts.end() && counts.size() == 1, "find no insert");
+      |                     ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:33:46: error: request for member ‘end’ in ‘counts’, which is of non-class type ‘int’
+   33 |     c.Expect(counts.find("absent") == counts.end() && counts.size() == 1, "find no insert");
+      |                                              ^~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:33:62: error: request for member ‘size’ in ‘counts’, which is of non-class type ‘int’
+   33 |     c.Expect(counts.find("absent") == counts.end() && counts.size() == 1, "find no insert");
+      |                                                              ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:34:46: error: request for member ‘size’ in ‘counts’, which is of non-class type ‘int’
+   34 |     c.Expect(counts["absent"] == 0 && counts.size() == 2, "brackets insert");
+      |                                              ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:36:21: error: request for member ‘at’ in ‘counts’, which is of non-class type ‘int’
+   36 |     c.Expect(counts.at(a) == counts.at(b), "string content keys");
+      |                     ^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:36:37: error: request for member ‘at’ in ‘counts’, which is of non-class type ‘int’
+   36 |     c.Expect(counts.at(a) == counts.at(b), "string content keys");
+      |                                     ^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:40:54: error: ‘std::ranges’ has not been declared
+   40 |     std::vector<Item> items{{2,3},{1,8},{2,1}}; std::ranges::sort(items, Less{});
+      |                                                      ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:43:69: error: ‘make_unique’ is not a member of ‘std’
+   43 |     std::vector<std::unique_ptr<int>> owners; owners.push_back(std::make_unique<int>(7));
+      |                                                                     ^~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:43:69: note: ‘std::make_unique’ is only available from C++14 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp:43:81: error: expected primary-expression before ‘int’
+   43 |     std::vector<std::unique_ptr<int>> owners; owners.push_back(std::make_unique<int>(7));
+      |                                                                                 ^~~

@@ -1,0 +1,98 @@
+In file included from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:1:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In member function ‘void Checks::Throws(F&&, const char*)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: error: ‘invoke’ is not a member of ‘std’
+   17 |         try { std::invoke(std::forward<F>(f)); }
+      |                    ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: note: ‘std::invoke’ is only available from C++17 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In function ‘int Run(const char*, F&&)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: error: ‘invoke’ is not a member of ‘std’
+   26 |         std::invoke(std::forward<F>(test), checks);
+      |              ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: note: ‘std::invoke’ is only available from C++17 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp: At global scope:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:9:19: error: ‘concept’ does not name a type; did you mean ‘const’?
+    9 | template<class T> concept Sized = requires(const T& value) {
+      |                   ^~~~~~~
+      |                   const
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:9:19: note: ‘concept’ only available with ‘-std=c++20’ or ‘-fconcepts’
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:12:10: error: ‘Sized’ has not been declared
+   12 | template<Sized T> std::size_t SizeOf(const T& value) { return static_cast<std::size_t>(value.size()); }
+      |          ^~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:12:44: error: ‘T’ does not name a type
+   12 | template<Sized T> std::size_t SizeOf(const T& value) { return static_cast<std::size_t>(value.size()); }
+      |                                            ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp: In function ‘std::size_t SizeOf(const int&)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:12:94: error: request for member ‘size’ in ‘value’, which is of non-class type ‘const int’
+   12 | template<Sized T> std::size_t SizeOf(const T& value) { return static_cast<std::size_t>(value.size()); }
+      |                                                                                              ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp: At global scope:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:26:23: error: ‘requires’ does not name a type
+   26 |     template<class U> requires std::convertible_to<U*, T*>
+      |                       ^~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:26:23: note: ‘requires’ only available with ‘-std=c++20’ or ‘-fconcepts’
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp: In function ‘constexpr unsigned int PowerOfTwo(unsigned int)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:34:1: error: body of ‘constexpr’ function ‘constexpr unsigned int PowerOfTwo(unsigned int)’ not a return-statement
+   34 | }
+      | ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp: At global scope:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:35:33: error: ‘static_assert’ without a message only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+   35 | static_assert(PowerOfTwo(10) == 1024);
+      |                                 ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:35:30: error: non-constant condition for static assertion
+   35 | static_assert(PowerOfTwo(10) == 1024);
+      |               ~~~~~~~~~~~~~~~^~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:35:25: error: ‘constexpr unsigned int PowerOfTwo(unsigned int)’ called in a constant expression
+   35 | static_assert(PowerOfTwo(10) == 1024);
+      |               ~~~~~~~~~~^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:31:20: note: ‘constexpr unsigned int PowerOfTwo(unsigned int)’ declared here
+   31 | constexpr unsigned PowerOfTwo(unsigned exponent) {
+      |                    ^~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:36:20: error: ‘constructible_from’ is not a member of ‘std’
+   36 | static_assert(std::constructible_from<Borrow<const Animal>, Borrow<Cat>>);
+      |                    ^~~~~~~~~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:36:59: error: expected primary-expression before ‘,’ token
+   36 | static_assert(std::constructible_from<Borrow<const Animal>, Borrow<Cat>>);
+      |                                                           ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:36:61: error: expected string-literal before ‘Borrow’
+   36 | static_assert(std::constructible_from<Borrow<const Animal>, Borrow<Cat>>);
+      |                                                             ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:36:60: error: expected ‘)’ before ‘Borrow’
+   36 | static_assert(std::constructible_from<Borrow<const Animal>, Borrow<Cat>>);
+      |              ~                                             ^~~~~~~
+      |                                                            )
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:37:21: error: ‘constructible_from’ is not a member of ‘std’
+   37 | static_assert(!std::constructible_from<Borrow<Cat>, Borrow<Animal>>);
+      |                     ^~~~~~~~~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:37:51: error: expected primary-expression before ‘,’ token
+   37 | static_assert(!std::constructible_from<Borrow<Cat>, Borrow<Animal>>);
+      |                                                   ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:37:53: error: expected string-literal before ‘Borrow’
+   37 | static_assert(!std::constructible_from<Borrow<Cat>, Borrow<Animal>>);
+      |                                                     ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:37:52: error: expected ‘)’ before ‘Borrow’
+   37 | static_assert(!std::constructible_from<Borrow<Cat>, Borrow<Animal>>);
+      |              ~                                     ^~~~~~~
+      |                                                    )
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp: In lambda function:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:39:52: error: no matching function for call to ‘SizeOf(std::vector<int>&)’
+   39 |     std::vector<int> values{7,8,9}; c.Expect(SizeOf(values) == 3, "concept");
+      |                                              ~~~~~~^~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:12:31: note: candidate: ‘template<<declaration error> > std::size_t SizeOf(const int&)’
+   12 | template<Sized T> std::size_t SizeOf(const T& value) { return static_cast<std::size_t>(value.size()); }
+      |                               ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:12:31: note:   template argument deduction/substitution failed:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:48:72: error: no matching function for call to ‘Borrow<const Animal>::Borrow(Borrow<Cat>&)’
+   48 |     Cat cat; Borrow<Cat> child(&cat); Borrow<const Animal> parent(child);
+      |                                                                        ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:25:14: note: candidate: ‘Borrow<T>::Borrow(T*) [with T = const Animal]’
+   25 |     explicit Borrow(T* p) : pointer(p) {}
+      |              ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:25:24: note:   no known conversion for argument 1 from ‘Borrow<Cat>’ to ‘const Animal*’
+   25 |     explicit Borrow(T* p) : pointer(p) {}
+      |                     ~~~^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:23:26: note: candidate: ‘constexpr Borrow<const Animal>::Borrow(const Borrow<const Animal>&)’
+   23 | template<class T> struct Borrow {
+      |                          ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:23:26: note:   no known conversion for argument 1 from ‘Borrow<Cat>’ to ‘const Borrow<const Animal>&’
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:23:26: note: candidate: ‘constexpr Borrow<const Animal>::Borrow(Borrow<const Animal>&&)’
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp:23:26: note:   no known conversion for argument 1 from ‘Borrow<Cat>’ to ‘Borrow<const Animal>&&’

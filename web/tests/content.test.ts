@@ -9,6 +9,7 @@ import {parseStored,briefingState,objectBooleans} from '../src/lib/storage';
 import {lessonProgress,reviewId} from '../src/lib/language-progress';
 import {canSyncKey} from '../src/lib/cloud';
 import {filterDocuments,readLibraryFilter,matchesDocument} from '../src/lib/document-library';
+import {compareKnowledgeDocuments} from '../src/lib/knowledge-order';
 import {catalogSchema, documentSchema, type Block} from '../src/lib/types';
 const catalog=await buildContent();
 test('all source lessons and documents are compiled',()=>{assert.equal(catalog.version,2);assert.ok(catalog.documents.length>=9);assert.ok(catalog.languages.english.length>=9);assert.ok(catalog.languages.japanese.length>=9);assert.ok(catalog.articleCount>=135);});
@@ -87,8 +88,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,77);
- assert.equal(sourceCatalog.length,77);
+ assert.equal(docs.length,79);
+ assert.equal(sourceCatalog.length,79);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -397,7 +398,7 @@ test('C++ foundation lessons publish visual assets, full Korean sources and pres
   if(Array.isArray(value))return value.some(item=>hasHref(item,href));
   return ('href'in value&&value.href===href)||Object.values(value).some(item=>hasHref(item,href));
  }
- const docs=catalog.documents.filter(d=>d.kind==='knowledge'&&d.category==='C++ 기초·심화');
+ const docs=catalog.documents.filter(d=>d.kind==='knowledge'&&d.route.startsWith('/knowledge/cpp-basics-'));
  assert.deepEqual(docs.map(d=>d.route),['/knowledge/cpp-basics-01/','/knowledge/cpp-basics-02/','/knowledge/cpp-basics-03/','/knowledge/cpp-basics-04/','/knowledge/cpp-basics-05/']);
  const sources=[['types.cpp'],['flow.cpp'],['memory.cpp'],['containers.cpp','buffer.cpp'],['inventory.hpp','inventory.cpp','inventory_main.cpp']];
  for(const [index,files] of sources.entries()){
@@ -431,4 +432,59 @@ test('C++ foundation lessons publish visual assets, full Korean sources and pres
  assert.ifError(integrity.error);
  assert.equal(integrity.status,0,integrity.stdout+'\n'+integrity.stderr);
  assert.match(integrity.stdout,/16 exact original code blocks/);
+});
+
+test('C++ course order keeps foundations before advanced lessons in both navigation consumers',()=>{
+ const docs=catalog.documents.filter(d=>d.kind==='knowledge'&&d.category==='C++ 기초·심화');
+ const ordered=[...docs].reverse().sort(compareKnowledgeDocuments);
+ assert.deepEqual(ordered.map(d=>d.route),[
+  '/knowledge/cpp-basics-01/','/knowledge/cpp-basics-02/','/knowledge/cpp-basics-03/',
+  '/knowledge/cpp-basics-04/','/knowledge/cpp-basics-05/','/knowledge/cpp-advanced-01/','/knowledge/cpp-advanced-02/',
+ ]);
+});
+
+test('advanced lessons preserve ZIP bytes, historical evidence, complete annotated code and visual assets',async()=>{
+ function allBlocks(blocks:Block[]):Block[]{return blocks.flatMap(block=>[block,...('blocks'in block?allBlocks(block.blocks):block.type==='list'?block.items.flatMap(allBlocks):[])]);}
+ function hasHref(value:unknown,href:string):boolean{
+  if(!value||typeof value!=='object')return false;
+  if(Array.isArray(value))return value.some(item=>hasHref(item,href));
+  return ('href'in value&&value.href===href)||Object.values(value).some(item=>hasHref(item,href));
+ }
+ const base='knowledge/shared/cpp-advanced-lab/';
+ const manifest=JSON.parse(await readFile('../'+base+'source-integrity.json','utf8'));
+ const preserved=[...Object.keys(manifest.artifacts),...Object.values(manifest.zip_files).map((file:any)=>file.path),...Object.keys(manifest.annotated_files)];
+ for(const path of preserved){
+  assert.deepEqual(await readFile('public/'+base+path),await readFile('../'+base+path),'published original bytes '+path);
+ }
+ assert.equal(createHash('sha256').update(await readFile('public/'+base+'archive/cpp_advanced_effective_lab_v1.zip')).digest('hex'),'a97a4927e5d3472ad055dbffbad0e14ab72c4c81f6ea13a1d72b771d64d339ba');
+ for(const [number,files]of [['01',['lifetime.cpp','check.hpp']],['02',['ownership.cpp','transaction.cpp']]]as const){
+  const slug='cpp-advanced-'+number;
+  const meta=catalog.documents.find(d=>d.route==='/knowledge/'+slug+'/');
+  assert.ok(meta);
+  const doc=documentSchema.parse(JSON.parse(await readFile('public/'+meta.file,'utf8')));
+  assert.deepEqual([...new Set(doc.sections.map(s=>s.tab))],['document','practice','sources','history']);
+  const blocks=allBlocks(doc.sections.flatMap(s=>s.blocks));
+  const images=blocks.filter(b=>b.type==='image');
+  assert.equal(images.length,3,'three concept illustrations '+slug);
+  assert.ok(blocks.some(b=>b.type==='code'&&b.language==='mermaid'),'rendered diagram input '+slug);
+  for(const image of images){
+   assert.ok(image.type==='image');
+   assert.ok(image.alt&&image.caption,'accessible visual explanation '+image.src);
+   assert.deepEqual(await readFile('public'+image.src),await readFile('..'+image.src));
+  }
+  for(const file of files){
+   const href='/'+base+'ko/'+file;
+   assert.ok(hasHref(blocks,href),'complete source link '+slug+': '+file);
+   const text=await readFile('..'+href,'utf8');
+   assert.ok(blocks.some(b=>b.type==='code'&&b.language==='cpp'&&b.text===text),'complete annotated code equals source '+file);
+  }
+  const source=await readFile('../knowledge/'+slug+'/source-notion.md');
+  const capture=JSON.parse(await readFile('../knowledge/'+slug+'/source-notion-capture.json','utf8'));
+  assert.equal(source.length,capture.source_bytes);
+  assert.equal(createHash('sha256').update(source).digest('hex'),capture.sha256);
+  assert.deepEqual(await readFile('public/knowledge/'+slug+'/source-notion.md'),source);
+ }
+ const integrity=spawnSync('python3',['../'+base+'verify_sources.py'],{encoding:'utf8'});
+ assert.ifError(integrity.error);
+ assert.equal(integrity.status,0,integrity.stdout+'\n'+integrity.stderr);
 });

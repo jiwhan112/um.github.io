@@ -1,0 +1,13 @@
+$ g++ -std=c++20 -Wall -Wextra -pedantic-errors -c /mnt/data/programmer_rewrite_batch2/negative/copy_unique.cpp -o /mnt/data/programmer_rewrite_batch2/logs/gcc-copy_unique.o
+/mnt/data/programmer_rewrite_batch2/negative/copy_unique.cpp: In function ‘void F()’:
+/mnt/data/programmer_rewrite_batch2/negative/copy_unique.cpp:2:56: error: use of deleted function ‘std::unique_ptr<_Tp, _Dp>::unique_ptr(const std::unique_ptr<_Tp, _Dp>&) [with _Tp = int; _Dp = std::default_delete<int>]’
+    2 | void F() { auto a = std::make_unique<int>(1); auto b = a; }
+      |                                                        ^
+In file included from /usr/include/c++/14/memory:78,
+                 from /mnt/data/programmer_rewrite_batch2/negative/copy_unique.cpp:1:
+/usr/include/c++/14/bits/unique_ptr.h:517:7: note: declared here
+  517 |       unique_ptr(const unique_ptr&) = delete;
+      |       ^~~~~~~~~~
+/mnt/data/programmer_rewrite_batch2/negative/copy_unique.cpp:2:56: note: use ‘-fdiagnostics-all-candidates’ to display considered candidates
+    2 | void F() { auto a = std::make_unique<int>(1); auto b = a; }
+      |                                                        ^

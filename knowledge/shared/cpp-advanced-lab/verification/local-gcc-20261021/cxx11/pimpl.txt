@@ -1,0 +1,47 @@
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp: In constructor ‘Settings::Settings(std::string)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp:5:51: error: ‘make_unique’ is not a member of ‘std’
+    5 | Settings::Settings(std::string name) : impl_(std::make_unique<Impl>(Impl{std::move(name)})) {}
+      |                                                   ^~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp:5:51: note: ‘std::make_unique’ is only available from C++14 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp:5:67: error: expected primary-expression before ‘>’ token
+    5 | Settings::Settings(std::string name) : impl_(std::make_unique<Impl>(Impl{std::move(name)})) {}
+      |                                                                   ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp: In copy constructor ‘Settings::Settings(const Settings&)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp:9:70: error: ‘make_unique’ is not a member of ‘std’
+    9 | Settings::Settings(const Settings& other) : impl_(other.impl_ ? std::make_unique<Impl>(*other.impl_) : nullptr) {}
+      |                                                                      ^~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp:9:70: note: ‘std::make_unique’ is only available from C++14 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp:9:86: error: expected primary-expression before ‘>’ token
+    9 | Settings::Settings(const Settings& other) : impl_(other.impl_ ? std::make_unique<Impl>(*other.impl_) : nullptr) {}
+      |                                                                                      ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp: In member function ‘void Settings::Rename(std::string)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp:15:27: error: ‘make_unique’ is not a member of ‘std’
+   15 |     auto candidate = std::make_unique<Impl>(Impl{std::move(name)});
+      |                           ^~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp:15:27: note: ‘std::make_unique’ is only available from C++14 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp:15:43: error: expected primary-expression before ‘>’ token
+   15 |     auto candidate = std::make_unique<Impl>(Impl{std::move(name)});
+      |                                           ^
+In file included from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl_main.cpp:1:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In member function ‘void Checks::Throws(F&&, const char*)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: error: ‘invoke’ is not a member of ‘std’
+   17 |         try { std::invoke(std::forward<F>(f)); }
+      |                    ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: note: ‘std::invoke’ is only available from C++17 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In function ‘int Run(const char*, F&&)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: error: ‘invoke’ is not a member of ‘std’
+   26 |         std::invoke(std::forward<F>(test), checks);
+      |              ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: note: ‘std::invoke’ is only available from C++17 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl_main.cpp: At global scope:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl_main.cpp:4:20: error: ‘is_nothrow_move_constructible_v’ is not a member of ‘std’; did you mean ‘is_nothrow_move_constructible’?
+    4 | static_assert(std::is_nothrow_move_constructible_v<Settings>);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                    is_nothrow_move_constructible
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl_main.cpp:4:60: error: expected primary-expression before ‘>’ token
+    4 | static_assert(std::is_nothrow_move_constructible_v<Settings>);
+      |                                                            ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl_main.cpp:4:61: error: expected primary-expression before ‘)’ token
+    4 | static_assert(std::is_nothrow_move_constructible_v<Settings>);
+      |                                                             ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl_main.cpp:4:61: error: ‘static_assert’ without a message only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]

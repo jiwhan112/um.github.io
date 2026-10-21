@@ -10,7 +10,16 @@ function dx11ChapterSortKey(doc: DocumentMeta): number {
   return Number(match[2])*100+(match[3]?20:0)+(match[1]?10:0);
 }
 export function compareKnowledgeDocuments(a: DocumentMeta,b: DocumentMeta):number {
-  if(a.category!=='DirectX 11'||b.category!=='DirectX 11')return 0;
-  return dx11ChapterSortKey(a)-dx11ChapterSortKey(b);
+  if(a.category!==b.category)return 0;
+  if(a.category==='DirectX 11')return dx11ChapterSortKey(a)-dx11ChapterSortKey(b);
+  if(a.category==='C++ 기초·심화')return cppChapterSortKey(a)-cppChapterSortKey(b);
+  return 0;
+}
+
+function cppChapterSortKey(doc: DocumentMeta): number {
+  const match=doc.route.match(/^\/knowledge\/cpp-(basics|advanced)-(\d+)\/$/);
+  if(!match)return Number.MAX_SAFE_INTEGER;
+  // 기본 개념을 학습한 뒤 심화로 이어 간다. URL의 알파벳 순서를 사용하지 않는다.
+  return (match[1]==='advanced'?10000:0)+Number(match[2]);
 }
 
