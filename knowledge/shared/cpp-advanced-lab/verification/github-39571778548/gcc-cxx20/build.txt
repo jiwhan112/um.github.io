@@ -1,0 +1,248 @@
+Change Dir: '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+
+Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile -j2
+/usr/local/bin/cmake -S/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab -B/home/runner/work/um.github.io/um.github.io/build/cpp-advanced --check-build-system CMakeFiles/Makefile.cmake 0
+/usr/local/bin/cmake -E cmake_progress_start /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles /home/runner/work/um.github.io/um.github.io/build/cpp-advanced//CMakeFiles/progress.marks
+/usr/bin/gmake  -f CMakeFiles/Makefile2 all
+gmake[1]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f CMakeFiles/lifetime_ko.dir/build.make CMakeFiles/lifetime_ko.dir/depend
+/usr/bin/gmake  -f CMakeFiles/ownership_ko.dir/build.make CMakeFiles/ownership_ko.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles/lifetime_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles/ownership_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f CMakeFiles/lifetime_ko.dir/build.make CMakeFiles/lifetime_ko.dir/build
+/usr/bin/gmake  -f CMakeFiles/ownership_ko.dir/build.make CMakeFiles/ownership_ko.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[  2%] Building CXX object CMakeFiles/lifetime_ko.dir/ko/lifetime.cpp.o
+[  5%] Building CXX object CMakeFiles/ownership_ko.dir/ko/ownership.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/lifetime_ko.dir/ko/lifetime.cpp.o -MF CMakeFiles/lifetime_ko.dir/ko/lifetime.cpp.o.d -o CMakeFiles/lifetime_ko.dir/ko/lifetime.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko/lifetime.cpp
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/ownership_ko.dir/ko/ownership.cpp.o -MF CMakeFiles/ownership_ko.dir/ko/ownership.cpp.o.d -o CMakeFiles/ownership_ko.dir/ko/ownership.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko/ownership.cpp
+[  7%] Linking CXX executable lifetime_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/lifetime_ko.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/lifetime_ko.dir/link.d CMakeFiles/lifetime_ko.dir/ko/lifetime.cpp.o -o lifetime_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[  7%] Built target lifetime_ko
+/usr/bin/gmake  -f CMakeFiles/transaction_ko.dir/build.make CMakeFiles/transaction_ko.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles/transaction_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f CMakeFiles/transaction_ko.dir/build.make CMakeFiles/transaction_ko.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 10%] Building CXX object CMakeFiles/transaction_ko.dir/ko/transaction.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/transaction_ko.dir/ko/transaction.cpp.o -MF CMakeFiles/transaction_ko.dir/ko/transaction.cpp.o.d -o CMakeFiles/transaction_ko.dir/ko/transaction.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko/transaction.cpp
+[ 13%] Linking CXX executable ownership_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/ownership_ko.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/ownership_ko.dir/link.d CMakeFiles/ownership_ko.dir/ko/ownership.cpp.o -o ownership_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 13%] Built target ownership_ko
+/usr/bin/gmake  -f CMakeFiles/polymorphism_ko.dir/build.make CMakeFiles/polymorphism_ko.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles/polymorphism_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f CMakeFiles/polymorphism_ko.dir/build.make CMakeFiles/polymorphism_ko.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 15%] Building CXX object CMakeFiles/polymorphism_ko.dir/ko/polymorphism.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/polymorphism_ko.dir/ko/polymorphism.cpp.o -MF CMakeFiles/polymorphism_ko.dir/ko/polymorphism.cpp.o.d -o CMakeFiles/polymorphism_ko.dir/ko/polymorphism.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko/polymorphism.cpp
+[ 18%] Linking CXX executable polymorphism_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/polymorphism_ko.dir/link.txt --verbose=1
+[ 21%] Linking CXX executable transaction_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/transaction_ko.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/polymorphism_ko.dir/link.d CMakeFiles/polymorphism_ko.dir/ko/polymorphism.cpp.o -o polymorphism_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 21%] Built target polymorphism_ko
+/usr/bin/gmake  -f CMakeFiles/templates_ko.dir/build.make CMakeFiles/templates_ko.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles/templates_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f CMakeFiles/templates_ko.dir/build.make CMakeFiles/templates_ko.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 23%] Building CXX object CMakeFiles/templates_ko.dir/ko/templates.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/templates_ko.dir/ko/templates.cpp.o -MF CMakeFiles/templates_ko.dir/ko/templates.cpp.o.d -o CMakeFiles/templates_ko.dir/ko/templates.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko/templates.cpp
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/transaction_ko.dir/link.d CMakeFiles/transaction_ko.dir/ko/transaction.cpp.o -o transaction_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 23%] Built target transaction_ko
+/usr/bin/gmake  -f CMakeFiles/interfaces_ko.dir/build.make CMakeFiles/interfaces_ko.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles/interfaces_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f CMakeFiles/interfaces_ko.dir/build.make CMakeFiles/interfaces_ko.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 26%] Building CXX object CMakeFiles/interfaces_ko.dir/ko/interfaces.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/interfaces_ko.dir/ko/interfaces.cpp.o -MF CMakeFiles/interfaces_ko.dir/ko/interfaces.cpp.o.d -o CMakeFiles/interfaces_ko.dir/ko/interfaces.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko/interfaces.cpp
+[ 28%] Linking CXX executable interfaces_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/interfaces_ko.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/interfaces_ko.dir/link.d CMakeFiles/interfaces_ko.dir/ko/interfaces.cpp.o -o interfaces_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 28%] Built target interfaces_ko
+/usr/bin/gmake  -f CMakeFiles/containers_ko.dir/build.make CMakeFiles/containers_ko.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles/containers_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f CMakeFiles/containers_ko.dir/build.make CMakeFiles/containers_ko.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 31%] Building CXX object CMakeFiles/containers_ko.dir/ko/containers.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/containers_ko.dir/ko/containers.cpp.o -MF CMakeFiles/containers_ko.dir/ko/containers.cpp.o.d -o CMakeFiles/containers_ko.dir/ko/containers.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko/containers.cpp
+[ 34%] Linking CXX executable templates_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/templates_ko.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/templates_ko.dir/link.d CMakeFiles/templates_ko.dir/ko/templates.cpp.o -o templates_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 34%] Built target templates_ko
+/usr/bin/gmake  -f CMakeFiles/allocation_ko.dir/build.make CMakeFiles/allocation_ko.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles/allocation_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f CMakeFiles/allocation_ko.dir/build.make CMakeFiles/allocation_ko.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 36%] Building CXX object CMakeFiles/allocation_ko.dir/ko/allocation.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/allocation_ko.dir/ko/allocation.cpp.o -MF CMakeFiles/allocation_ko.dir/ko/allocation.cpp.o.d -o CMakeFiles/allocation_ko.dir/ko/allocation.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko/allocation.cpp
+[ 39%] Linking CXX executable allocation_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/allocation_ko.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/allocation_ko.dir/link.d CMakeFiles/allocation_ko.dir/ko/allocation.cpp.o -o allocation_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 39%] Built target allocation_ko
+/usr/bin/gmake  -f CMakeFiles/pimpl_ko.dir/build.make CMakeFiles/pimpl_ko.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles/pimpl_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f CMakeFiles/pimpl_ko.dir/build.make CMakeFiles/pimpl_ko.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 42%] Building CXX object CMakeFiles/pimpl_ko.dir/ko/pimpl.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/pimpl_ko.dir/ko/pimpl.cpp.o -MF CMakeFiles/pimpl_ko.dir/ko/pimpl.cpp.o.d -o CMakeFiles/pimpl_ko.dir/ko/pimpl.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko/pimpl.cpp
+[ 44%] Building CXX object CMakeFiles/pimpl_ko.dir/ko/pimpl_main.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/pimpl_ko.dir/ko/pimpl_main.cpp.o -MF CMakeFiles/pimpl_ko.dir/ko/pimpl_main.cpp.o.d -o CMakeFiles/pimpl_ko.dir/ko/pimpl_main.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/ko/pimpl_main.cpp
+[ 47%] Linking CXX executable containers_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/containers_ko.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/containers_ko.dir/link.d CMakeFiles/containers_ko.dir/ko/containers.cpp.o -o containers_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 47%] Built target containers_ko
+/usr/bin/gmake  -f original/CMakeFiles/lifetime.dir/build.make original/CMakeFiles/lifetime.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/CMakeFiles/lifetime.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f original/CMakeFiles/lifetime.dir/build.make original/CMakeFiles/lifetime.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 50%] Building CXX object original/CMakeFiles/lifetime.dir/src/lifetime.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/lifetime.dir/src/lifetime.cpp.o -MF CMakeFiles/lifetime.dir/src/lifetime.cpp.o.d -o CMakeFiles/lifetime.dir/src/lifetime.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/lifetime.cpp
+[ 52%] Linking CXX executable pimpl_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/pimpl_ko.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/pimpl_ko.dir/link.d CMakeFiles/pimpl_ko.dir/ko/pimpl.cpp.o CMakeFiles/pimpl_ko.dir/ko/pimpl_main.cpp.o -o pimpl_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 52%] Built target pimpl_ko
+/usr/bin/gmake  -f original/CMakeFiles/ownership.dir/build.make original/CMakeFiles/ownership.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/CMakeFiles/ownership.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f original/CMakeFiles/ownership.dir/build.make original/CMakeFiles/ownership.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 55%] Building CXX object original/CMakeFiles/ownership.dir/src/ownership.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/ownership.dir/src/ownership.cpp.o -MF CMakeFiles/ownership.dir/src/ownership.cpp.o.d -o CMakeFiles/ownership.dir/src/ownership.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp
+[ 57%] Linking CXX executable lifetime
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/lifetime.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/lifetime.dir/link.d CMakeFiles/lifetime.dir/src/lifetime.cpp.o -o lifetime
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 57%] Built target lifetime
+/usr/bin/gmake  -f original/CMakeFiles/polymorphism.dir/build.make original/CMakeFiles/polymorphism.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/CMakeFiles/polymorphism.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f original/CMakeFiles/polymorphism.dir/build.make original/CMakeFiles/polymorphism.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 60%] Building CXX object original/CMakeFiles/polymorphism.dir/src/polymorphism.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/polymorphism.dir/src/polymorphism.cpp.o -MF CMakeFiles/polymorphism.dir/src/polymorphism.cpp.o.d -o CMakeFiles/polymorphism.dir/src/polymorphism.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp
+[ 63%] Linking CXX executable ownership
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/ownership.dir/link.txt --verbose=1
+[ 65%] Linking CXX executable polymorphism
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/polymorphism.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/ownership.dir/link.d CMakeFiles/ownership.dir/src/ownership.cpp.o -o ownership
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 65%] Built target ownership
+/usr/bin/gmake  -f original/CMakeFiles/templates.dir/build.make original/CMakeFiles/templates.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/CMakeFiles/templates.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f original/CMakeFiles/templates.dir/build.make original/CMakeFiles/templates.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 68%] Building CXX object original/CMakeFiles/templates.dir/src/templates.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/templates.dir/src/templates.cpp.o -MF CMakeFiles/templates.dir/src/templates.cpp.o.d -o CMakeFiles/templates.dir/src/templates.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/polymorphism.dir/link.d CMakeFiles/polymorphism.dir/src/polymorphism.cpp.o -o polymorphism
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 68%] Built target polymorphism
+/usr/bin/gmake  -f original/CMakeFiles/containers.dir/build.make original/CMakeFiles/containers.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/CMakeFiles/containers.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f original/CMakeFiles/containers.dir/build.make original/CMakeFiles/containers.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 71%] Building CXX object original/CMakeFiles/containers.dir/src/containers.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/containers.dir/src/containers.cpp.o -MF CMakeFiles/containers.dir/src/containers.cpp.o.d -o CMakeFiles/containers.dir/src/containers.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp
+[ 73%] Linking CXX executable templates
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/templates.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/templates.dir/link.d CMakeFiles/templates.dir/src/templates.cpp.o -o templates
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 73%] Built target templates
+/usr/bin/gmake  -f original/CMakeFiles/interfaces.dir/build.make original/CMakeFiles/interfaces.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/CMakeFiles/interfaces.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f original/CMakeFiles/interfaces.dir/build.make original/CMakeFiles/interfaces.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 76%] Building CXX object original/CMakeFiles/interfaces.dir/src/interfaces.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/interfaces.dir/src/interfaces.cpp.o -MF CMakeFiles/interfaces.dir/src/interfaces.cpp.o.d -o CMakeFiles/interfaces.dir/src/interfaces.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp
+[ 78%] Linking CXX executable interfaces
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/interfaces.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/interfaces.dir/link.d CMakeFiles/interfaces.dir/src/interfaces.cpp.o -o interfaces
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 78%] Built target interfaces
+/usr/bin/gmake  -f original/CMakeFiles/transaction.dir/build.make original/CMakeFiles/transaction.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/CMakeFiles/transaction.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f original/CMakeFiles/transaction.dir/build.make original/CMakeFiles/transaction.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 81%] Building CXX object original/CMakeFiles/transaction.dir/src/transaction.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/transaction.dir/src/transaction.cpp.o -MF CMakeFiles/transaction.dir/src/transaction.cpp.o.d -o CMakeFiles/transaction.dir/src/transaction.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp
+[ 84%] Linking CXX executable containers
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/containers.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/containers.dir/link.d CMakeFiles/containers.dir/src/containers.cpp.o -o containers
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 84%] Built target containers
+/usr/bin/gmake  -f original/CMakeFiles/allocation.dir/build.make original/CMakeFiles/allocation.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/CMakeFiles/allocation.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f original/CMakeFiles/allocation.dir/build.make original/CMakeFiles/allocation.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 86%] Building CXX object original/CMakeFiles/allocation.dir/src/allocation.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/allocation.dir/src/allocation.cpp.o -MF CMakeFiles/allocation.dir/src/allocation.cpp.o.d -o CMakeFiles/allocation.dir/src/allocation.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp
+[ 89%] Linking CXX executable transaction
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/transaction.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/transaction.dir/link.d CMakeFiles/transaction.dir/src/transaction.cpp.o -o transaction
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 89%] Built target transaction
+/usr/bin/gmake  -f original/CMakeFiles/pimpl.dir/build.make original/CMakeFiles/pimpl.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/CMakeFiles/pimpl.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/bin/gmake  -f original/CMakeFiles/pimpl.dir/build.make original/CMakeFiles/pimpl.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 92%] Building CXX object original/CMakeFiles/pimpl.dir/src/pimpl.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/pimpl.dir/src/pimpl.cpp.o -MF CMakeFiles/pimpl.dir/src/pimpl.cpp.o.d -o CMakeFiles/pimpl.dir/src/pimpl.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp
+[ 94%] Linking CXX executable allocation
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/allocation.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/allocation.dir/link.d CMakeFiles/allocation.dir/src/allocation.cpp.o -o allocation
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[ 94%] Built target allocation
+[ 97%] Building CXX object original/CMakeFiles/pimpl.dir/src/pimpl_main.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/pimpl.dir/src/pimpl_main.cpp.o -MF CMakeFiles/pimpl.dir/src/pimpl_main.cpp.o.d -o CMakeFiles/pimpl.dir/src/pimpl_main.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/pimpl_main.cpp
+[100%] Linking CXX executable pimpl
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/pimpl.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/pimpl.dir/link.d CMakeFiles/pimpl.dir/src/pimpl.cpp.o CMakeFiles/pimpl.dir/src/pimpl_main.cpp.o -o pimpl
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+[100%] Built target pimpl
+gmake[1]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-advanced'
+/usr/local/bin/cmake -E cmake_progress_start /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/CMakeFiles 0
+

@@ -1,0 +1,27 @@
+In file included from /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp:1:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In member function ‘void Checks::Throws(F&&, const char*)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: error: ‘invoke’ is not a member of ‘std’
+   17 |         try { std::invoke(std::forward<F>(f)); }
+      |                    ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: note: ‘std::invoke’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In function ‘int Run(const char*, F&&)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: error: ‘invoke’ is not a member of ‘std’
+   26 |         std::invoke(std::forward<F>(test), checks);
+      |              ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: note: ‘std::invoke’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp: In member function ‘virtual std::unique_ptr<Cloneable> Number::Clone() const’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp:53:69: error: ‘make_unique’ is not a member of ‘std’
+   53 |     std::unique_ptr<Cloneable> Clone() const override { return std::make_unique<Number>(*this); }
+      |                                                                     ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp:53:69: note: ‘std::make_unique’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp:53:87: error: expected primary-expression before ‘>’ token
+   53 |     std::unique_ptr<Cloneable> Clone() const override { return std::make_unique<Number>(*this); }
+      |                                                                                       ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp: In lambda function:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp:59:30: error: ‘make_unique’ is not a member of ‘std’
+   59 |         auto concrete = std::make_unique<Fire>(events);
+      |                              ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp:59:30: note: ‘std::make_unique’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp:59:46: error: expected primary-expression before ‘>’ token
+   59 |         auto concrete = std::make_unique<Fire>(events);
+      |                                              ^

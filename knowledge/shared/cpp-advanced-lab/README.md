@@ -2,7 +2,7 @@
 
 웹 교재 **심화 01–06**의 실행 가능한 소스 묶음입니다. 기존 01–04의 여섯 프로그램에 이어 이번 **05–06 배치**는 `containers`, `allocation`, `pimpl`을 한국어 주석판으로 추가했습니다. 원본 실습 팩 전체를 보존하며 원본 9개 프로그램 모두에 대응하는 주석판을 제공합니다. Pimpl은 헤더와 구현·진입점 두 번역 단위를 나누어 보존합니다.
 
-현재 05–06 배치는 **GCC 13.3.0 직접 빌드·실행 18개와 출력 9쌍 비교를 완료**했습니다. 원본 9개 + 주석판 9개를 구성하는 새 CMake·CTest 18개와 Clang ASan·UBSan 결과는 **GitHub CI 실행·원시 로그 확인 전**입니다. 이전 [GitHub CI 39565624710](https://github.com/jiwhan112/um.github.io/actions/runs/39565624710)의 CTest 15/15 및 01–02 배치의 12/12 성공은 각 과거 구성의 기록으로 구분합니다.
+현재 05–06 배치는 GCC 13.3.0 직접 빌드·실행과 [새 GitHub CI 39571778548](https://github.com/jiwhan112/um.github.io/actions/runs/39571778548)의 원시 로그 확인을 완료했습니다. **원본 9개 + 주석판 9개, 총 18개 CTest가 GCC와 Clang ASan·UBSan에서 각각 통과했으며 출력 9쌍이 바이트 단위로 일치합니다.** 이전 [GitHub CI 39565624710](https://github.com/jiwhan112/um.github.io/actions/runs/39565624710)의 CTest 15/15 및 01–02 배치의 12/12 성공은 각 과거 구성의 기록으로 구분합니다.
 
 ## 무엇을 보존했는가
 
@@ -64,9 +64,11 @@ Notion 검증 첨부 SHA-256: `e9f9b5dbba6f631e9a95f4ac426647603eefcfe7d758d85a3
 | 2026-10-21 · 03–04 배치 GitHub CI | GCC13.3 / Clang18.1.3 ASan·UBSan, C++20, CMake3.31.6 | 각 Configure·Build 성공, **CTest15/15**, 출력 **6쌍** 바이트 동일. 각 컴파일러의 거부 예제6개, GCC C++11 원본9개 미지원 확인 | [실행39565624710](https://github.com/jiwhan112/um.github.io/actions/runs/39565624710), [새 원시73파일](verification/github-39565624710/README.md) |
 | 2026-10-21 · 05–06 배치 로컬 실행 | GCC 13.3.0, C++20, 경고를 오류로 취급 | 원본 9개 + 주석판 9개 **18개 성공**, 출력 **9쌍** 바이트 동일. 원본과 주석판 Pimpl 각각 두 CPP를 함께 링크 | [05–06 로컬 기록](verification/local-gcc-advanced56-20261021/README.md) |
 | 2026-10-21 · 05–06 배치 실패·호환성 조사 | GCC 13.3.0, 엄격한 컴파일 설정 | C++20 실패 예제 **6/6 거부**, C++11 원본 **9/9 미지원·미실행** | [실패 예제](verification/local-gcc-advanced56-20261021/negative/results.json), [C++11 진단](verification/local-gcc-advanced56-20261021/cxx11/results.json) |
-| 05–06 배치 GitHub CI | 원본 9개 + 주석판 9개를 위한 GCC·Clang CMake·CTest 구성 | **실행·원시 로그 확인 전**. 과거 15/15를 현재 18개 구성의 성공으로 대체하지 않음 | [워크플로](https://github.com/jiwhan112/um.github.io/blob/master/.github/workflows/knowledge-cpp-advanced.yml) |
+| 2026-10-21 · 05–06 배치 GitHub CI | GCC 13.3.0 / Clang 18.1.3 ASan·UBSan, C++20, CMake 3.31.6 | 각 Configure·Build 성공, **CTest 18/18**, 출력 **9쌍** 바이트 동일. 각 컴파일러의 거부 예제 6개, GCC C++11 원본 9개 미지원 확인 | [실행 39571778548](https://github.com/jiwhan112/um.github.io/actions/runs/39571778548), [새 원시 85파일](verification/github-39571778548/README.md), [워크플로](https://github.com/jiwhan112/um.github.io/blob/master/.github/workflows/knowledge-cpp-advanced.yml) |
 
-로컬 환경에 Clang·CMake·CTest가 없어 이번 로컬 기록도 GCC 직접 빌드입니다. 위 **01–02 배치의** CMake·CTest와 Clang sanitizer 성공은 소스 커밋 `4cbd10710d0bfce8cb93fae89a9545369c797985`에서 실행한 12개 구성의 기록이며, **03–04 배치의** 15개 구성 및 현재 18개 구성과 구분합니다. 당시 네 artifact ZIP의 GitHub digest와 추출된 **55파일 / 261,873바이트**를 독립 대조한 증거는 그대로 보존했습니다. 이전 03–04 실행은 소스 커밋 `cfce833acbd970e7bdbd675efd8e18e3f9f5e61c`을 사용했으며, artifact 4개의 GitHub digest와 원시 **73파일 / 296,016바이트**를 대조해 별도로 보존했습니다. 현재 05–06의 새 로컬 기록은 별도 폴더에 보관하고, 새 GitHub C++ CI 결과와 웹 UI·공개 배포 결과는 각각 실제 확인 뒤 기록합니다.
+로컬 환경에 Clang·CMake·CTest가 없어 이번 로컬 기록도 GCC 직접 빌드입니다. 위 **01–02 배치의** CMake·CTest와 Clang sanitizer 성공은 소스 커밋 `4cbd10710d0bfce8cb93fae89a9545369c797985`에서 실행한 12개 구성의 기록이며, **03–04 배치의** 15개 구성 및 현재 18개 구성과 구분합니다. 당시 네 artifact ZIP의 GitHub digest와 추출된 **55파일 / 261,873바이트**를 독립 대조한 증거는 그대로 보존했습니다. 이전 03–04 실행은 소스 커밋 `cfce833acbd970e7bdbd675efd8e18e3f9f5e61c`을 사용했으며, artifact 4개의 GitHub digest와 원시 **73파일 / 296,016바이트**를 대조해 별도로 보존했습니다.
+
+이번 **05–06 GitHub 실행의 소스 커밋은 `f4ad911d6407d0b9740ad8c75dd40ef45b6929dc`**입니다. 새 artifact 4개의 GitHub digest와 원시 **85파일 / 330,326바이트**를 독립적으로 대조했습니다. 각 빌드는 원본·주석판의 Pimpl 두 CPP를 포함한 **20개 번역 단위와 18개 실행 파일 링크**이며, Clang의 모든 컴파일·링크에 ASan/UBSan이 적용되었습니다. 현재 로컬 기록·새 GitHub 증거·과거 기록은 별도 폴더에 보존하고, 로그를 보관하는 후속 커밋과 실제 검증 대상 소스 커밋을 구분합니다. C++ CI 성공과 웹 UI·공개 배포 결과도 별개입니다.
 
 **미검증:** Windows/MSVC, Direct3D·GPU·HLSL, 실제 게임 통합, 동시 실행과 경쟁 조건, ABI 호환성, 성능 측정, 모든 예외 지점과 입력을 망라한 커버리지. ASan·UBSan 실행도 해당 실행 경로의 검출 결과이며 전체 프로그램의 안전성 증명이 아닙니다.
 

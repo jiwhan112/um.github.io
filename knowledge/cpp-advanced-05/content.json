@@ -3967,7 +3967,7 @@
                 ],
                 [
                   {
-                    "text": "로컬 GCC13.3 C++20 원본9 + 한국어9 실행 성공 · stdout9쌍 동일 · 새 Clang/CMake/CTest CI 대기"
+                    "text": "GitHub 39571778548 · GCC13.3 / Clang18.1.3 ASan·UBSan · CMake3.31.6 · 각각 CTest18/18, stdout9쌍 바이트 동일"
                   }
                 ]
               ]
@@ -4093,6 +4093,132 @@
               "text": "명령·출력 파일 해시",
               "kind": "link",
               "href": "/knowledge/shared/cpp-advanced-lab/verification/local-gcc-advanced56-20261021/file-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 실행은 소스 커밋 f4ad911d6407d0b9740ad8c75dd40ef45b6929dc를 검증했습니다. 원본9개와 한국어판9개의 Configure·Build·CTest가 두 환경에서 통과했고, GCC와 Clang의 컴파일 거부 예제는 각각6개였습니다. artifact ZIP4개의 digest와 원시85파일·330,326바이트를 SHA-256으로 대조했습니다. 반복 실행을 새 독립 조건으로 합산하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 GitHub CPU 실행",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "이번 원시 로그 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "artifact·파일 해시",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/artifact-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "새 실제 환경"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure"
+                  }
+                ],
+                [
+                  {
+                    "text": "Build"
+                  }
+                ],
+                [
+                  {
+                    "text": "CTest"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "GCC C++20"
+                  }
+                ],
+                [
+                  {
+                    "text": "configure",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/gcc-cxx20/configure.txt"
+                  }
+                ],
+                [
+                  {
+                    "text": "build",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/gcc-cxx20/build.txt"
+                  }
+                ],
+                [
+                  {
+                    "text": "ctest",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/gcc-cxx20/ctest.txt"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Clang C++20 ASan·UBSan"
+                  }
+                ],
+                [
+                  {
+                    "text": "configure",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/clang-cxx20-asan-ubsan/configure.txt"
+                  }
+                ],
+                [
+                  {
+                    "text": "build",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/clang-cxx20-asan-ubsan/build.txt"
+                  }
+                ],
+                [
+                  {
+                    "text": "ctest",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/clang-cxx20-asan-ubsan/ctest.txt"
+                  }
+                ]
+              ]
             }
           ]
         }
