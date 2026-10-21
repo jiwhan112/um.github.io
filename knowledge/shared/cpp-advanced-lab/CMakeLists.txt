@@ -17,8 +17,12 @@ enable_testing()
 # ZIP의 원본 CMake와 정상 프로그램 9개를 수정 없이 구성한다.
 add_subdirectory(original)
 
-foreach(name IN ITEMS lifetime ownership transaction polymorphism templates interfaces)
+foreach(name IN ITEMS lifetime ownership transaction polymorphism templates interfaces containers allocation pimpl)
     add_executable(${name}_ko ko/${name}.cpp)
+    # Pimpl은 구현과 공개 헤더를 사용하는 main을 별도 번역 단위로 컴파일·링크한다.
+    if(name STREQUAL "pimpl")
+        target_sources(${name}_ko PRIVATE ko/pimpl_main.cpp)
+    endif()
     target_include_directories(${name}_ko PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ko")
     if(MSVC)
         target_compile_options(${name}_ko PRIVATE /W4 /permissive- /EHsc /utf-8)

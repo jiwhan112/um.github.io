@@ -1,0 +1,158 @@
+Internal ctest changing into directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+UpdateCTestConfiguration  from :/home/runner/work/um.github.io/um.github.io/build/cpp-advanced/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/home/runner/work/um.github.io/um.github.io/build/cpp-advanced/DartConfiguration.tcl
+Test project /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+      Start  1: lifetime_ko
+
+1: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/lifetime_ko
+1: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+1: Test timeout computed to be: 10000000
+1: PASS lifetime: 10 checks
+ 1/18 Test  #1: lifetime_ko ......................   Passed    0.00 sec
+test 2
+      Start  2: ownership_ko
+
+2: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/ownership_ko
+2: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+2: Test timeout computed to be: 10000000
+2: PASS ownership: 13 checks
+ 2/18 Test  #2: ownership_ko .....................   Passed    0.00 sec
+test 3
+      Start  3: transaction_ko
+
+3: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/transaction_ko
+3: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+3: Test timeout computed to be: 10000000
+3: PASS transaction: 8 checks
+ 3/18 Test  #3: transaction_ko ...................   Passed    0.00 sec
+test 4
+      Start  4: polymorphism_ko
+
+4: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/polymorphism_ko
+4: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+4: Test timeout computed to be: 10000000
+4: PASS polymorphism: 12 checks
+ 4/18 Test  #4: polymorphism_ko ..................   Passed    0.00 sec
+test 5
+      Start  5: templates_ko
+
+5: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/templates_ko
+5: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+5: Test timeout computed to be: 10000000
+5: PASS templates: 10 checks
+ 5/18 Test  #5: templates_ko .....................   Passed    0.00 sec
+test 6
+      Start  6: interfaces_ko
+
+6: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/interfaces_ko
+6: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+6: Test timeout computed to be: 10000000
+6: PASS interfaces: 7 checks
+ 6/18 Test  #6: interfaces_ko ....................   Passed    0.00 sec
+test 7
+      Start  7: containers_ko
+
+7: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/containers_ko
+7: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+7: Test timeout computed to be: 10000000
+7: PASS containers: 16 checks
+ 7/18 Test  #7: containers_ko ....................   Passed    0.00 sec
+test 8
+      Start  8: allocation_ko
+
+8: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/allocation_ko
+8: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+8: Test timeout computed to be: 10000000
+8: PASS allocation: 7 checks
+ 8/18 Test  #8: allocation_ko ....................   Passed    0.00 sec
+test 9
+      Start  9: pimpl_ko
+
+9: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/pimpl_ko
+9: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced
+9: Test timeout computed to be: 10000000
+9: PASS pimpl: 6 checks
+ 9/18 Test  #9: pimpl_ko .........................   Passed    0.00 sec
+test 10
+      Start 10: lifetime
+
+10: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/lifetime
+10: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original
+10: Test timeout computed to be: 10000000
+10: PASS lifetime: 10 checks
+10/18 Test #10: lifetime .........................   Passed    0.00 sec
+test 11
+      Start 11: ownership
+
+11: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/ownership
+11: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original
+11: Test timeout computed to be: 10000000
+11: PASS ownership: 13 checks
+11/18 Test #11: ownership ........................   Passed    0.00 sec
+test 12
+      Start 12: polymorphism
+
+12: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/polymorphism
+12: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original
+12: Test timeout computed to be: 10000000
+12: PASS polymorphism: 12 checks
+12/18 Test #12: polymorphism .....................   Passed    0.00 sec
+test 13
+      Start 13: templates
+
+13: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/templates
+13: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original
+13: Test timeout computed to be: 10000000
+13: PASS templates: 10 checks
+13/18 Test #13: templates ........................   Passed    0.00 sec
+test 14
+      Start 14: containers
+
+14: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/containers
+14: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original
+14: Test timeout computed to be: 10000000
+14: PASS containers: 16 checks
+14/18 Test #14: containers .......................   Passed    0.00 sec
+test 15
+      Start 15: interfaces
+
+15: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/interfaces
+15: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original
+15: Test timeout computed to be: 10000000
+15: PASS interfaces: 7 checks
+15/18 Test #15: interfaces .......................   Passed    0.00 sec
+test 16
+      Start 16: transaction
+
+16: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/transaction
+16: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original
+16: Test timeout computed to be: 10000000
+16: PASS transaction: 8 checks
+16/18 Test #16: transaction ......................   Passed    0.00 sec
+test 17
+      Start 17: allocation
+
+17: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/allocation
+17: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original
+17: Test timeout computed to be: 10000000
+17: PASS allocation: 7 checks
+17/18 Test #17: allocation .......................   Passed    0.00 sec
+test 18
+      Start 18: pimpl
+
+18: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/pimpl
+18: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original
+18: Test timeout computed to be: 10000000
+18: PASS pimpl: 6 checks
+18/18 Test #18: pimpl ............................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 18
+
+Total Test time (real) =   0.14 sec

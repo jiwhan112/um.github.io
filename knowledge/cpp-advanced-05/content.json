@@ -1,0 +1,4581 @@
+{
+  "id": "knowledge--cpp-advanced-05",
+  "route": "/knowledge/cpp-advanced-05/",
+  "kind": "knowledge",
+  "title": "C++ 심화 05 · STL·반복자·알고리즘·컨테이너 선택",
+  "subtitle": "저장 방식·무효화·알고리즘의 전제를 함께 읽습니다",
+  "date": "2026-10-21",
+  "number": "05",
+  "category": "C++ 기초·심화",
+  "topic": "C++ 심화",
+  "tags": [
+    "C++",
+    "C++20",
+    "STL",
+    "반복자",
+    "컨테이너",
+    "알고리즘",
+    "무효화",
+    "비교자"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "변경 이후에도 안전한가요?",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "변경 이후에도 안전한가요?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "게임의 아이템 목록을 정리한 뒤, UI가 보관하던 원소 주소를 다시 읽어도 될까요? 답은 컨테이너 이름 하나로 정해지지 않습니다. 어떤 연산을 했고 어떤 관찰자를 보관했는지 함께 봐야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 단원은 "
+            },
+            {
+              "text": "저장 구조 → 유효한 범위 → 변경 후 계약 → 알고리즘의 전제",
+              "kind": "strong"
+            },
+            {
+              "text": "를 연결합니다. 함수 이름을 외우는 대신 실제 containers.cpp의 작은 상태 변화를 따라갑니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "이번에 답할 질문"
+                  }
+                ],
+                [
+                  {
+                    "text": "읽을 실제 실습"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원소를 지우면 용량도 사라질까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "vector · erase_if · size와 capacity"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "재배치 뒤에도 같은 것을 가리킬까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "list의 keep · unordered_map의 value"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "조회가 원소를 만들 수도 있을까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "map의 find · operator[] · at"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "정렬 함수가 받아 주면 충분할까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "반복자 범주 · Less · 비교자의 법칙"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C++20 · 전체 프로그램 하나",
+                  "kind": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "containers.cpp는 정상 실행에서 검사 호출 16회를 수행합니다. 본문의 짧은 코드는 발췌 또는 규칙 설명이며, 한국어 주석 전체 코드와 복원 원본은 출처·검증 탭에서 확인할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전: "
+            },
+            {
+              "text": "심화04 · 연산자·템플릿·람다·제약 조건",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-04/"
+            },
+            {
+              "text": " · 기초 복습: "
+            },
+            {
+              "text": "기초04 · 배열과 컨테이너",
+              "kind": "link",
+              "href": "/knowledge/cpp-basics-04/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "library",
+      "title": "1. 저장·이동·작업의 역할",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "1. 저장·이동·작업의 역할"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "표준 라이브러리는 문자열·입출력·시간·스레드 등도 포함합니다. STL은 그중 제네릭 컨테이너·반복자·알고리즘 체계를 설명할 때 사용하는 이름입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "역할"
+                  }
+                ],
+                [
+                  {
+                    "text": "이번 코드에서 하는 일"
+                  }
+                ],
+                [
+                  {
+                    "text": "직접 포함할 헤더"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "컨테이너"
+                  }
+                ],
+                [
+                  {
+                    "text": "vector가 Item들을 저장"
+                  }
+                ],
+                [
+                  {
+                    "text": "<vector>"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "반복자"
+                  }
+                ],
+                [
+                  {
+                    "text": "begin·end로 범위를 표현"
+                  }
+                ],
+                [
+                  {
+                    "text": "컨테이너 헤더 · 이동 도구는 <iterator>"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "알고리즘"
+                  }
+                ],
+                [
+                  {
+                    "text": "ranges::sort가 범위를 정렬"
+                  }
+                ],
+                [
+                  {
+                    "text": "<algorithm>"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "비교 정책"
+                  }
+                ],
+                [
+                  {
+                    "text": "Less가 priority·id 순서를 지정"
+                  }
+                ],
+                [
+                  {
+                    "text": "참조 튜플 std::tie는 <tuple>"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// containers.cpp에서 사용하는 헤더와 호출의 발췌입니다.\n#include <vector>\n#include <algorithm>\n#include <tuple>\n\n// Item과 Less의 정의는 뒤의 비교자 절과 전체 소스에 있습니다.\n// std::ranges::sort(items, Less{});\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "using namespace std;",
+              "kind": "code"
+            },
+            {
+              "text": "는 표준 라이브러리 사용의 필수 조건이 아닙니다. std::vector처럼 이름을 한정할 수 있습니다. 특히 공개 헤더의 전역 using 지시문은 포함한 파일의 이름 탐색에 영향을 줍니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다른 헤더가 우연히 필요한 선언을 포함해 주는 데 기대지 않고, 쓰는 기능의 헤더를 직접 포함합니다. 이 원칙은 분할 빌드에서도 동일합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "Core Guidelines · SF.7/SF.10/SF.11",
+              "kind": "link",
+              "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rs-using-directive"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "N4861 · 반복자의 역할",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/iterator.requirements"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "container-choice",
+      "title": "2. 작업에서 컨테이너로",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "2. 작업에서 컨테이너로"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 순회·조회·추가·삭제의 빈도와 원소 수를 적습니다. 외부에서 주소를 보관하는지, 키의 순서가 필요한지, 프레임 중 할당을 허용하는지도 선택 조건입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "후보"
+                  }
+                ],
+                [
+                  {
+                    "text": "먼저 볼 장점"
+                  }
+                ],
+                [
+                  {
+                    "text": "함께 볼 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "array"
+                  }
+                ],
+                [
+                  {
+                    "text": "크기가 타입에 포함된 연속 원소"
+                  }
+                ],
+                [
+                  {
+                    "text": "개수 고정 · 포함된 객체와 함께 수명 관리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "vector"
+                  }
+                ],
+                [
+                  {
+                    "text": "연속 원소·인덱스 접근·끝 추가"
+                  }
+                ],
+                [
+                  {
+                    "text": "재할당 · 중간 원소 이동 · 관찰자 무효화"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "deque"
+                  }
+                ],
+                [
+                  {
+                    "text": "양끝 작업·임의 접근"
+                  }
+                ],
+                [
+                  {
+                    "text": "전체 원소가 하나의 연속 버퍼라는 보장은 없음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "list"
+                  }
+                ],
+                [
+                  {
+                    "text": "위치를 알 때의 연결 변경"
+                  }
+                ],
+                [
+                  {
+                    "text": "위치 탐색·개별 노드·메모리 접근 비용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "map·set"
+                  }
+                ],
+                [
+                  {
+                    "text": "키의 순서·범위 조회"
+                  }
+                ],
+                [
+                  {
+                    "text": "비교 규칙 · 조회의 로그 복잡도"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "unordered_map·set"
+                  }
+                ],
+                [
+                  {
+                    "text": "해시 기반 조회"
+                  }
+                ],
+                [
+                  {
+                    "text": "평균·최악 복잡도 · 충돌 · rehash · 순서 비보장"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n    A[\"작업 빈도와 수명 기록\"] --> B{\"연속 저장이 핵심인가?\"}\n    B -->|\"예\"| C[\"vector와 무효화 계획\"]\n    B -->|\"아니오\"| D{\"키 조회가 핵심인가?\"}\n    D -->|\"예\"| E[\"map과 해시 조회 비교\"]\n    D -->|\"아니오\"| F[\"deque와 list의 조건 비교\"]\n    C --> G[\"실제 작업량으로 측정\"]\n    E --> G\n    F --> G\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 흐름은 후보를 고르는 출발점입니다. 고정 개수의 연속 데이터라면 array도 검토합니다. list의 한 원소 삽입이 상수 시간이어도 그 위치까지 이동하는 비용은 별도입니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "어댑터와 실제 구현을 구별하기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "stack·queue·priority_queue는 제공하는 연산을 제한한 컨테이너 어댑터입니다. 내부 컨테이너와 알고리즘의 요구사항을 확인합니다. 단순히 이름을 바꾼 list로 보지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "표준은 map의 인터페이스·순서·복잡도를 요구하며, 특정 모양의 레드블랙트리를 강제하지 않습니다. 실제 구현 구조는 사용하는 표준 라이브러리의 코드를 따로 확인합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "실습의 queue는 deque 변수입니다",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "std::deque<int> queue;\nqueue.push_front(2);\nqueue.push_back(3);\nqueue.push_front(1);\n// 확인: queue[1] == 2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "queue는 이 코드가 붙인 변수 이름이고 타입은 std::deque<int>입니다. std::queue 어댑터의 인터페이스와 혼동하지 않습니다. 이 검사는 양끝 삽입 후 인덱스로 얻은 값만 확인합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 교재의 vector 그림은 vector<int>와 일반적인 원소 타입을 기준으로 합니다. vector<bool> 특수화의 표현 방식은 다루지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · array",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/array.overview"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "deque",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/deque.overview"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "list",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/list"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "어댑터",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/container.adaptors"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Core Guidelines · 기본 후보",
+              "kind": "link",
+              "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rsl-vector"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-capacity",
+      "title": "3. 원소 수와 저장 공간",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "3. 원소 수와 저장 공간"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/cpp-advanced-05/assets/vector-size-capacity.svg",
+          "alt": "vector의 원소 1,2,3,4에서 짝수를 지우면 1,3이 남고 size는 2가 되며 capacity는 이전 c와 같습니다. end 뒤는 접근할 원소가 아닙니다.",
+          "caption": "앞 4칸을 그린 개념도입니다. 초기 capacity를 4로 고정하지 않았으며 실습은 삭제 전후의 용량이 같은지 비교합니다."
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "관찰·연산"
+                  }
+                ],
+                [
+                  {
+                    "text": "바뀌는 것과 유지할 구분"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "size()"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 원소 수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "capacity()"
+                  }
+                ],
+                [
+                  {
+                    "text": "재할당 없이 담을 수 있는 원소 수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "reserve(n)"
+                  }
+                ],
+                [
+                  {
+                    "text": "필요한 저장 공간을 준비 · 원소 수는 바꾸지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "resize(n)"
+                  }
+                ],
+                [
+                  {
+                    "text": "원소 수를 n으로 변경 · 줄이면 파괴, 늘리면 원소 추가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "clear()"
+                  }
+                ],
+                [
+                  {
+                    "text": "모든 원소를 파괴 · size는 0 · 저장 공간 반환과는 별개"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "shrink_to_fit()"
+                  }
+                ],
+                [
+                  {
+                    "text": "capacity를 줄이려는 비강제 요청"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// 실제 실습의 시작 부분입니다.\nstd::vector<int> v{1,2,3,4};\nconst auto capacity = v.capacity();\nstd::erase_if(v, [](int n) { return n % 2 == 0; });\n// 확인: v == {1,3}, v.capacity() == capacity\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "capacity가 충분하다는 말은 그 범위에 원소를 이미 만들었다는 뜻이 아닙니다. 인덱스 접근은 size 안에서 해야 합니다. reserve로 100칸을 준비해도 size가 0이면 v[0]을 읽을 수 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "성장 배수와 reserve 호출 시점",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "vector의 용량 증가를 항상 1.5배나 2배라고 정하지 않습니다. 예상 크기를 안다면 적절한 reserve를 검토하되 매 push_back마다 reserve(size()+1)을 호출하면 기존 성장 전략을 방해할 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이번 실습은 reserve·resize·shrink_to_fit을 따로 실행하지 않습니다. 그림과 표는 표준 계약의 설명이며, 실제 두 검사는 erase_if 결과와 삭제 전후 용량을 확인합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · vector 용량",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/vector.capacity"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "vector 삭제",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/vector.erasure"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "clear의 원소 파괴",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/sequence.reqmts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iterator-range",
+      "title": "4. 반복자는 범위를 읽는 도구",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "4. 반복자는 범위를 읽는 도구"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "반복자는 원소에 접근하고 이동하는 인터페이스입니다. 모든 반복자가 포인터와 같은 연산을 제공하지는 않습니다. 알고리즘은 가능한 연산뿐 아니라 그 의미와 비용도 요구합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "이번 컨테이너"
+                  }
+                ],
+                [
+                  {
+                    "text": "보장되는 이동 능력"
+                  }
+                ],
+                [
+                  {
+                    "text": "주의할 점"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "unordered_map"
+                  }
+                ],
+                [
+                  {
+                    "text": "앞으로 이동하는 반복자"
+                  }
+                ],
+                [
+                  {
+                    "text": "순회 순서를 키 정렬 순서로 해석하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "list·map"
+                  }
+                ],
+                [
+                  {
+                    "text": "앞뒤 이동 가능한 반복자"
+                  }
+                ],
+                [
+                  {
+                    "text": "it + 3 같은 임의 이동을 전제하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "vector·deque"
+                  }
+                ],
+                [
+                  {
+                    "text": "임의 접근 반복자"
+                  }
+                ],
+                [
+                  {
+                    "text": "빠른 위치 이동이 전체 연속 저장을 뜻하지는 않음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "일반적인 범위 "
+            },
+            {
+              "text": "[begin, end)",
+              "kind": "code"
+            },
+            {
+              "text": "는 begin부터 end 직전까지입니다. end는 마지막 원소를 가리키지 않으며 역참조하지 않습니다. 빈 범위는 begin과 end가 같고, 서로 무관한 컨테이너의 반복자를 섞지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// containers.cpp: 두 번째 노드의 위치를 얻습니다.\nstd::list<int> nodes{3,1,2};\nauto keep = std::next(nodes.begin()); // 값 1을 가리킴\n// list에서 std::next는 필요한 만큼 순차 이동합니다.\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "std::advance나 std::next가 여러 반복자 범주를 지원해도 이동 비용이 같아지지는 않습니다. 임의 접근 반복자의 거리 이동은 상수 시간이고 list의 여러 칸 이동은 거리만큼 순차 진행합니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "const 반복자 객체와 const_iterator",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// 심화04 interfaces.cpp의 발췌입니다.\nstd::vector<int> data{1,2};\nconst auto fixed = data.begin();\n*fixed = 7; // 반복자 위치는 고정, 원소 int는 변경 가능\nauto readonly = data.cbegin();\n++readonly; // 위치는 이동 가능, 이 반복자로 원소 수정은 불가\n"
+            },
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "선언"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "반복자 위치 변경"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "int 원소 변경"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "const auto fixed = data.begin()"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "불가"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "*fixed로 가능"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "auto readonly = data.cbegin()"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "가능"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "*readonly로 불가"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 관찰은 "
+                },
+                {
+                  "text": "심화04의 interfaces.cpp",
+                  "kind": "link",
+                  "href": "/knowledge/cpp-advanced-04/"
+                },
+                {
+                  "text": "에 이미 포함되어 있습니다. 관련 코드를 연결하지만 05의 16회 검사에 다시 더하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · 유효 범위",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/iterator.requirements"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "advance·next의 비용",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/iterator.operations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "invalidation",
+      "title": "5. 연산별로 달라지는 유효성",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "5. 연산별로 달라지는 유효성"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "무엇이 무효화되는지는 컨테이너와 연산의 조합으로 읽습니다. “주소가 아직 같아 보인다”거나 “방금 실행해도 값이 나왔다”는 관찰로 유효성을 판단하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "연산"
+                  }
+                ],
+                [
+                  {
+                    "text": "유효성의 핵심"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "vector 재할당"
+                  }
+                ],
+                [
+                  {
+                    "text": "기존 원소 포인터·참조·반복자와 이전 end 무효"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "vector 삽입 · 재할당 없음"
+                  }
+                ],
+                [
+                  {
+                    "text": "삽입 위치 앞은 유지 · 그 위치와 뒤, 이전 end는 무효"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "vector erase"
+                  }
+                ],
+                [
+                  {
+                    "text": "지운 위치와 그 뒤의 반복자·참조 무효"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "list 삽입·list::sort"
+                  }
+                ],
+                [
+                  {
+                    "text": "기존 원소의 반복자·참조 유지"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "list erase"
+                  }
+                ],
+                [
+                  {
+                    "text": "지운 원소의 반복자·참조 무효"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "deque 양끝 삽입"
+                  }
+                ],
+                [
+                  {
+                    "text": "기존 반복자 무효 · 기존 원소 참조 유지"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "deque 중간 삽입"
+                  }
+                ],
+                [
+                  {
+                    "text": "기존 반복자·원소 참조 무효"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "unordered 컨테이너 rehash"
+                  }
+                ],
+                [
+                  {
+                    "text": "반복자 무효 · 원소 포인터·참조 유지"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// 같은 keep으로 값 1을 계속 읽는 실제 실습입니다.\nnodes.push_front(9);\n// 확인: *keep == 1\nnodes.sort();\n// 확인: *keep == 1 && nodes.front() == 1\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "list에서는 순서가 바뀌어도 keep이 같은 원소를 가리킵니다. 반면 vector의 위치나 인덱스는 삭제·정렬 후 다른 게임 객체의 값에 대응할 수 있습니다. 메모리 접근의 유효성과 게임 객체의 정체성은 별도 문제입니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "deque 삭제와 이전 end는 따로 확인하기",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "삭제 위치"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "반복자·참조에 미치는 영향"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "마지막 원소를 포함해 삭제"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "지운 원소의 반복자·참조와 이전 end 무효"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "첫 원소를 지우되 마지막은 유지"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "지운 원소의 반복자·참조만 무효"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "처음도 마지막도 아닌 중간 삭제"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "모든 원소의 반복자·참조와 이전 end 무효"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "표는 C++20 deque의 해당 삭제 규칙입니다. containers.cpp는 양끝 삽입 뒤 queue[1] 값만 확인하며, 이 무효화 조건을 각각 실행하지는 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "UI·이벤트가 오래 보관할 식별자는 별도의 수명 설계가 필요합니다. ID·세대 번호를 가진 핸들은 그 설계의 한 방법이지만 포인터를 정수로 바꾸는 것만으로 안전해지지는 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · vector 변경",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/vector.modifiers"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "list 변경·정렬",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/list"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "deque 변경",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/deque.modifiers"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "unordered 요구사항",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/unord.req"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "erase-loop",
+      "title": "6. 지운 뒤의 다음 위치",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "6. 지운 뒤의 다음 위치"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "vector에서 현재 원소를 지웠다면 그 반복자를 증가시키지 않습니다. erase가 반환한 다음 위치로 교체하고, 원소를 유지한 경우에만 ++it를 수행합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// 앞의 insert 이후 v는 {1,2,3}입니다.\nfor (auto it = v.begin(); it != v.end();) {\n    if (*it >= 2)\n        it = v.erase(it); // 새로 반환된 다음 위치를 사용\n    else\n        ++it;            // 유지한 원소만 한 칸 진행\n}\n// 확인: v == {1}\n"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "살펴보는 값"
+                  }
+                ],
+                [
+                  {
+                    "text": "이번 동작"
+                  }
+                ],
+                [
+                  {
+                    "text": "다음에 살펴볼 위치"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "유지 후 ++it"
+                  }
+                ],
+                [
+                  {
+                    "text": "값 2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "erase 반환값으로 it 교체"
+                  }
+                ],
+                [
+                  {
+                    "text": "당겨진 값 3"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "3"
+                  }
+                ],
+                [
+                  {
+                    "text": "erase 반환값으로 it 교체"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 end · 반복 종료"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "반복 조건도 매번 현재 end를 얻습니다. 이전 end를 따로 보관해 계속 비교하거나, 지운 it를 다시 ++하는 방식과 혼동하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "단순한 조건 삭제는 C++20 std::erase_if로 표현할 수 있습니다. vector에서는 남길 원소를 모은 뒤 꼬리 구간을 지우는 형태로 정의되어, remove_if만 호출할 때와 달리 컨테이너 크기도 줄어듭니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "erase의 반환값을 모든 타입에 일반화하지 않기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 설명은 vector의 iterator를 받는 erase를 기준으로 합니다. 컨테이너 종류와 erase의 인수 형태에 따라 반환 타입은 다를 수 있으므로 사용하는 오버로드를 확인합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · erase 반환 위치",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/sequence.reqmts"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "vector의 erase_if",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/vector.erasure"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rehash",
+      "title": "7. rehash 뒤에도 남는 원소",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "7. rehash 뒤에도 남는 원소"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/cpp-advanced-05/assets/rehash-observers.svg",
+          "alt": "unordered_map의 key 1에 해당하는 string을 value 포인터로 관찰합니다. rehash 뒤 반복자는 무효화되지만 value는 같은 one 원소를 가리킵니다.",
+          "caption": "실습이 보관하는 것은 반복자가 아닌 mapped value의 주소입니다. 이전 반복자의 재사용은 검사하지 않습니다."
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "std::unordered_map<int, std::string> lookup{{1,\"one\"}};\nconst std::string* value = &lookup.at(1);\nlookup.rehash(100);\n// 확인: value == &lookup.at(1) && *value == \"one\"\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "rehash는 버킷 구성을 조정하는 연산입니다. 원소 포인터·참조의 보존과 순회를 위한 반복자의 유효성은 다른 계약입니다. 원소를 삭제하거나 컨테이너가 파괴된 뒤까지 포인터가 유효하다는 뜻은 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "표현"
+                  }
+                ],
+                [
+                  {
+                    "text": "읽어야 할 계약"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "rehash(100)"
+                  }
+                ],
+                [
+                  {
+                    "text": "버킷 수의 하한 요청 · 정확히 100개라는 뜻이 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "find의 복잡도"
+                  }
+                ],
+                [
+                  {
+                    "text": "평균 상수 · 최악 선형, 해시·동등 비교 비용도 고려"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "순회 순서"
+                  }
+                ],
+                [
+                  {
+                    "text": "키의 정렬 순서나 삽입 순서로 의존하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "동등한 키와 해시"
+                  }
+                ],
+                [
+                  {
+                    "text": "동등하다고 판단한 키는 같은 해시 값을 가져야 함"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 실습은 주소와 문자열 값의 보존을 확인합니다. 버킷 배치, 충돌 빈도, 실제 조회 시간이나 전체 무효화 조합을 측정한 결과는 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · unordered의 동등성·rehash",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/unord.req"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "key-lookup",
+      "title": "8. 조회와 삽입을 구별하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "8. 조회와 삽입을 구별하기"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "std::map<std::string, int, std::less<>> counts{{\"potion\",3}};\n// find(\"absent\")는 end를 반환하고 크기는 1입니다.\n// counts[\"absent\"]는 값 0인 원소를 만들고 크기는 2입니다.\n"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "의도"
+                  }
+                ],
+                [
+                  {
+                    "text": "연산"
+                  }
+                ],
+                [
+                  {
+                    "text": "키가 없을 때"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "있으면 값 사용"
+                  }
+                ],
+                [
+                  {
+                    "text": "find(key)"
+                  }
+                ],
+                [
+                  {
+                    "text": "end 반환 · 삽입 안 함"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "존재 여부 확인"
+                  }
+                ],
+                [
+                  {
+                    "text": "contains(key) · C++20"
+                  }
+                ],
+                [
+                  {
+                    "text": "false · 삽입 안 함"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "반드시 있어야 함"
+                  }
+                ],
+                [
+                  {
+                    "text": "at(key)"
+                  }
+                ],
+                [
+                  {
+                    "text": "out_of_range · 호출부에서 계약 처리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "없으면 기본값으로 생성"
+                  }
+                ],
+                [
+                  {
+                    "text": "operator[](key)"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 원소 삽입 · 이번 int 값은 0"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "map[i]의 i는 원소의 순번이 아니라 키입니다. 읽기 경로에서 []를 사용하면 조회처럼 보이는 코드가 컨테이너를 변경할 수 있습니다. 이번 코드가 직접 확인한 것은 find·[]·기존 키의 at입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "map·set은 비교자로 키의 동등성을 정합니다. "
+            },
+            {
+              "text": "!comp(a,b) && !comp(b,a)",
+              "kind": "code"
+            },
+            {
+              "text": "이면 같은 키로 취급하는 기준이며 operator==와 일치할 필요는 없습니다. 저장 중인 키의 정렬 관계를 외부에서 바꾸지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "문자열 내용과 주소, 그리고 C++20 at",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// 실제 실습은 서로 다른 두 문자 배열을 사용합니다.\nconst char a[] = \"potion\";\nconst char b[] = \"potion\";\n// 확인: counts.at(a) == counts.at(b)\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "키 타입은 std::string입니다. C++20의 이 at 호출은 std::string 변환으로 같은 내용을 조회합니다. 투명 비교자 std::less<>를 쓴 find의 이종 키 조회와 같은 오버로드라고 해석하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "raw const char*를 키로 저장하면 기본 비교·해시를 문자열 내용 비교로 가정할 수 없습니다. 내용 비교자를 따로 마련하더라도 문자 버퍼의 수명과 변경 가능성을 별도로 관리해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · map의 []와 at",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/map.access"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "연관 컨테이너의 동등성",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/associative.reqmts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "algorithm-contract",
+      "title": "9. 알고리즘의 전제 확인하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "9. 알고리즘의 전제 확인하기"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "작업"
+                  }
+                ],
+                [
+                  {
+                    "text": "반복자·데이터의 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "std::sort · ranges::sort"
+                  }
+                ],
+                [
+                  {
+                    "text": "임의 접근 · 이동/교환 등의 원소 요구사항 · 올바른 비교 관계"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "list::sort"
+                  }
+                ],
+                [
+                  {
+                    "text": "list가 제공하는 정렬 · 같은 원소의 반복자 유지"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "lower_bound"
+                  }
+                ],
+                [
+                  {
+                    "text": "앞으로 재방문 가능한 범위 · 검색 키 기준의 분할"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "binary_search"
+                  }
+                ],
+                [
+                  {
+                    "text": "검색 키에 대한 양방향 비교의 분할·일관성"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// containers.cpp에서 list에 사용하는 실제 정렬입니다.\nnodes.sort();\n\n// negative/list_sort.cpp는 아래 호출을 컴파일 거부 예제로 보존합니다.\n// std::sort(values.begin(), values.end()); // values는 std::list<int>\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "list 반복자는 임의 접근을 제공하지 않으므로 일반 std::sort의 요구를 만족하지 않습니다. ranges::sort의 제약도 데이터의 정렬 전제나 비교자의 모든 의미 법칙을 실행 전에 증명해 주지는 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이진 검색은 범위의 모양에 전제가 있습니다. 같은 엄격 약순서 비교자로 정렬한 범위는 흔한 준비 방법입니다. 한 번 우연히 원하는 결과가 나왔다고 미정렬 범위에 그대로 적용하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "분할 조건과 비교 횟수는 정확히 읽기",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "std 알고리즘"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검색 키 value에 대한 조건"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "lower_bound"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "comp(e, value)가 true인 구간 뒤에 false인 구간"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "binary_search"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "comp(e, value)와 !comp(value, e) 각각에 대해 분할"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "binary_search의 추가 일관성"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "comp(e, value)이면 !comp(value, e)"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비임의접근 반복자로도 이진 검색 계열을 사용할 수 있지만, 비교 횟수가 로그여도 반복자 이동 횟수는 선형일 수 있습니다. map처럼 전용 검색 멤버가 있는 경우 그 인터페이스와 비용도 확인합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "lower_bound·binary_search는 이번 containers.cpp에서 실행하지 않습니다. 이 표는 C++20 std 오버로드의 계약 설명이며 ranges 오버로드의 추가 제약도 해당 선언에서 확인합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · sort의 요구사항",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/sort"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "이진 검색의 전제·이동 비용",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/alg.binary.search"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "list::sort",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "comparator",
+      "title": "10. 비교자는 순서를 약속합니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "10. 비교자는 순서를 약속합니다"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/cpp-advanced-05/assets/lexicographic-order.svg",
+          "alt": "priority가 작은 Item을 먼저 두고 같으면 id로 정렬합니다. 입력의 id 3,8,1이 정렬 후 8,1,3 순서가 되며 직접 비교한 결과는 앞 두 id입니다.",
+          "caption": "정렬 결과는 실제 입력과 Less의 규칙을 해석한 것입니다. 실행 코드는 선두 두 id와 세 원소의 비반사성 표본을 검사합니다."
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "struct Item { int priority; int id; };\nstruct Less {\n    bool operator()(const Item& a, const Item& b) const noexcept {\n        // priority가 같을 때 id로 순서를 결정합니다.\n        return std::tie(a.priority, a.id) < std::tie(b.priority, b.id);\n    }\n};\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Less는 정수 멤버 두 개를 사전식으로 비교합니다. std::tie는 참조 튜플을 만들며, 이 함수에서는 살아 있는 a·b의 멤버를 즉시 비교합니다. 멤버 복사본이나 소유 객체를 만드는 코드가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "엄격 약순서에서 볼 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "의미"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "비반사성"
+                  }
+                ],
+                [
+                  {
+                    "text": "comp(x,x)는 false"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "비교 관계의 전이성"
+                  }
+                ],
+                [
+                  {
+                    "text": "a가 b보다 앞이고 b가 c보다 앞이면 a가 c보다 앞"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "비교 동등성"
+                  }
+                ],
+                [
+                  {
+                    "text": "두 방향 비교가 모두 false"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "동등성의 전이성"
+                  }
+                ],
+                [
+                  {
+                    "text": "a~b, b~c라면 a~c"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 표본이 모든 법칙의 증명은 아닙니다",
+                  "kind": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실습의 !Less(x,x)는 세 Item에 대해 검사 호출 3회를 만듭니다. 이 관찰로 임의 비교자의 전이성이나 모든 입력의 엄격 약순서를 자동 증명했다고 하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "<=를 정렬 비교로 사용하면 같은 값도 자기보다 앞이라고 판단할 수 있습니다. 비교 도중 외부 상태가 바뀌어 결과가 달라지는 설계도 피합니다. key 동등성 역시 이 비교 관계와 함께 설명해야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · 엄격 약순서",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/alg.sorting"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "연관 컨테이너의 키 동등성",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/associative.reqmts"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "std::tie의 참조 튜플",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/tuple.creation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clear-ownership",
+      "title": "11. clear와 소유 대상의 수명",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "11. clear와 소유 대상의 수명"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// containers.cpp의 마지막 부분입니다.\nstd::vector<std::unique_ptr<int>> owners;\nowners.push_back(std::make_unique<int>(7));\nowners.clear();\n// 직접 확인하는 값: owners.empty()\n"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구분"
+                  }
+                ],
+                [
+                  {
+                    "text": "clear가 하는 일"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "vector의 원소"
+                  }
+                ],
+                [
+                  {
+                    "text": "모든 원소를 파괴하고 빈 컨테이너로 만듦"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "unique_ptr<T> 원소"
+                  }
+                ],
+                [
+                  {
+                    "text": "원소의 소멸이 소유한 대상의 deleter 호출로 이어짐"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "T* 원소"
+                  }
+                ],
+                [
+                  {
+                    "text": "포인터 원소가 없어질 뿐 대상 T를 자동 delete하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "vector의 저장 공간"
+                  }
+                ],
+                [
+                  {
+                    "text": "원소 파괴와 용량 반환을 같은 일로 보지 않음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "용량이 남았다는 사실만으로 누수를 판단하지 않습니다. 원소 저장 공간, 포인터 객체, 포인터가 가리키는 대상의 수명을 분리합니다. 실제 코드는 unique_ptr의 소유권 계약에 따라 int를 정리합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검사 이름은 owning elements released이지만 직접 관찰한 조건은 owners.empty()입니다. 별도의 소멸·해제 카운터를 측정한 것처럼 보고하지 않습니다. 자원 정리의 설명은 clear와 unique_ptr의 표준 계약에 근거합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · 원소 파괴",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/sequence.reqmts"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "unique_ptr 소멸",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/unique.ptr.single.dtor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "performance",
+      "title": "12. emplace와 성능을 읽는 기준",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "12. emplace와 성능을 읽는 기준"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "선택"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제로 확인할 질문"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "push_back(value)"
+                  }
+                ],
+                [
+                  {
+                    "text": "이미 가진 값을 어떤 복사·이동 생성자로 저장하는가?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "emplace_back(args...)"
+                  }
+                ],
+                [
+                  {
+                    "text": "전달한 인수로 어떤 생성자를 선택하는가?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "공통 조건"
+                  }
+                ],
+                [
+                  {
+                    "text": "재할당·예외·소유권이 성립하는 시점은 언제인가?"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "emplace라는 이름만으로 항상 빠르거나 더 안전해지는 것은 아닙니다. 원소를 만드는 방식이 달라질 수 있으므로 생성자 선택과 예외 경계를 읽습니다. 이번 프로그램은 make_unique로 소유권을 먼저 만든 뒤 push_back합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "raw 자원 포인터를 생성해 emplace에 바로 전달할 때에는 컨테이너가 원소를 소유하기 전의 예외를 고려해야 합니다. 먼저 소유 객체에 담는 RAII 설계는 "
+            },
+            {
+              "text": "심화02의 자원·예외 안전성",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-02/"
+            },
+            {
+              "text": "과 이어집니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "보고 싶은 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "관찰 방법의 역할"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "잘못된 접근·누수"
+                  }
+                ],
+                [
+                  {
+                    "text": "sanitizer·자원 소멸 기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "시간 비용"
+                  }
+                ],
+                [
+                  {
+                    "text": "동일 작업량과 빌드 조건의 프로파일링"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "프레임별 비용"
+                  }
+                ],
+                [
+                  {
+                    "text": "할당 횟수·데이터 크기·분기·메모리 접근 조사"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Debug 실행 한 번과 정상 검사 통과는 Release 성능의 결론이 아닙니다. 데이터·작업량·컴파일 옵션을 맞춰 측정합니다. 이번 실습은 컨테이너의 성능 순위를 만들거나 실제 게임의 최적 구조를 결정하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · emplace 구성",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/sequence.reqmts"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Core Guidelines · 측정과 성능",
+              "kind": "link",
+              "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rper-measure"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Core Guidelines · R.12의 즉시 소유",
+              "kind": "link",
+              "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rr-immediate-alloc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lab",
+      "title": "실습 · 변경 전후를 따라가기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "실습 · 변경 전후를 따라가기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "저장소 루트에서 공통 CMake를 사용합니다. containers와 containers_ko는 같은 실행 코드를 원본·한국어 주석판으로 각각 빌드하는 두 타깃입니다. 아래 명령 자체를 새 실행 성공 기록으로 해석하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S knowledge/shared/cpp-advanced-lab -B build/cpp-advanced05-gcc \\\n  -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CXX_STANDARD=20 -DCMAKE_BUILD_TYPE=Debug\ncmake --build build/cpp-advanced05-gcc --target containers containers_ko --parallel 2\nctest --test-dir build/cpp-advanced05-gcc --output-on-failure --verbose \\\n  -R \"^containers(_ko)?$\"\n"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "읽는 순서"
+                  }
+                ],
+                [
+                  {
+                    "text": "멈추어 확인할 값"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "vector 삭제 → 삽입 → 삭제"
+                  }
+                ],
+                [
+                  {
+                    "text": "{1,3} → {1,2,3} → {1}"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "list의 삽입 → 정렬"
+                  }
+                ],
+                [
+                  {
+                    "text": "keep은 계속 값 1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "map의 조회 → []"
+                  }
+                ],
+                [
+                  {
+                    "text": "크기 1 유지 → 크기 2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "unordered_map rehash"
+                  }
+                ],
+                [
+                  {
+                    "text": "value의 주소와 문자열 one"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Item 정렬 → 자기 비교"
+                  }
+                ],
+                [
+                  {
+                    "text": "선두 두 id 8,1 · 세 번 false"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "소유 원소 clear"
+                  }
+                ],
+                [
+                  {
+                    "text": "owners.empty()"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Clang + ASan/UBSan으로 같은 경로 실행하기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "bash",
+              "text": "cmake -S knowledge/shared/cpp-advanced-lab -B build/cpp-advanced05-clang \\\n  -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_STANDARD=20 \\\n  -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON\ncmake --build build/cpp-advanced05-clang --target containers containers_ko --parallel 2\nASAN_OPTIONS=detect_leaks=1:halt_on_error=1 \\\nUBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 \\\n  ctest --test-dir build/cpp-advanced05-clang --output-on-failure --verbose \\\n  -R \"^containers(_ko)?$\"\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "무효화된 반복자를 일부러 역참조하지 않습니다. 이 실습은 유효성이 보장된 경로를 검사합니다. sanitizer 성공도 실행한 경로의 결과로 읽습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "별도의 컴파일 거부 예제: list + std::sort",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// 원본 negative/list_sort.cpp의 전체 짧은 예제입니다.\n#include <algorithm>\n#include <list>\nvoid F() { std::list<int> values{3,1,2}; std::sort(values.begin(), values.end()); }\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 파일은 컴파일 거부를 기대하며 링크·실행하지 않습니다. 정상 containers 프로그램의 16회에 더하지 않습니다. 공통 negative 검사기는 이 예제를 포함한 거부 예제 6개를 별도로 검사합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본 list_sort.cpp",
+                  "kind": "link",
+                  "href": "/knowledge/shared/cpp-advanced-lab/original/negative/list_sort.cpp"
+                },
+                {
+                  "text": " · "
+                },
+                {
+                  "text": "전체 재실행 안내",
+                  "kind": "link",
+                  "href": "/knowledge/shared/cpp-advanced-lab/README.md"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "checks",
+      "title": "16회 검사가 확인한 범위",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "16회 검사가 확인한 범위"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "검사 코드의 관찰"
+                  }
+                ],
+                [
+                  {
+                    "text": "실행 횟수"
+                  }
+                ],
+                [
+                  {
+                    "text": "직접 확인한 내용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "erase_if"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "짝수 삭제 후 {1,3}"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "erase retains capacity"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "삭제 전후 capacity 동일"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "middle insert"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "중간에 2를 넣어 {1,2,3}"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "erase return iterator"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "반환된 반복자로 삭제를 끝내 {1}"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "list iterator stable on insert"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "앞 삽입 후 *keep == 1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "list member sort"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "정렬 후 *keep == 1, front == 1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "deque random access"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "양끝 삽입 뒤 queue[1] == 2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "find no insert"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "없는 키 조회 뒤 크기 1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "brackets insert"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "[]로 값 0 생성, 크기 2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "string content keys"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "두 문자 배열로 같은 문자열 키 조회"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "rehash preserves reference, not iterator"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "mapped value 포인터 주소·값 유지"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "strict comparator"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "정렬 후 앞 두 id가 8과 1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "irreflexivity sample"
+                  }
+                ],
+                [
+                  {
+                    "text": "3"
+                  }
+                ],
+                [
+                  {
+                    "text": "세 원소 각각에 !Less(x,x)"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "owning elements released"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "clear 후 owners.empty()"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Expect 호출 위치는 14개이고, 한 위치가 세 원소를 순회하므로 실제 호출은 "
+            },
+            {
+              "text": "16회",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다. 예외 검사 Throws와 static_assert는 이 파일에 없습니다. 같은 경로를 주석판·여러 컴파일러로 다시 실행해도 별도 독립 조건으로 더하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "이 숫자에 포함하지 않은 주장",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "전체 엄격 약순서 법칙의 시험 증명, 모든 무효화 조합, 해제 카운터 측정, rehash의 정확한 버킷 수, 비교자 성능, 실제 게임 통합은 이번 16회의 결론이 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "contains·없는 키의 at 예외·lower_bound·binary_search·reserve·resize·shrink_to_fit·emplace는 설명에 등장하지만 이 프로그램의 독립 실행 검사가 아닙니다. interfaces의 const 반복자 검사는 심화04 범위입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 유효한 범위 설명하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "복습 · 유효한 범위 설명하기"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "1. reserve(100) 후 size가 0이면 v[0]을 읽어도 될까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 됩니다. capacity는 원소를 추가할 수 있는 저장 공간이고 size는 현재 원소 수입니다. reserve는 원소를 만들지 않습니다. 유효한 인덱스는 size 안에서 판단합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "2. clear 뒤 capacity가 남으면 대상 객체가 누수된 것일까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그 사실만으로 누수라고 할 수 없습니다. 원소 파괴와 컨테이너 저장 공간 반환은 다릅니다. unique_ptr 원소는 소유 대상을 정리하지만 raw 포인터 원소는 대상 소유권을 표현하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이번 실습의 직접 관측값은 owners.empty()이며 별도의 대상 소멸 카운터는 없습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "3. 재할당 없는 vector 삽입이면 모든 반복자가 유지될까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 삽입 위치 앞은 유지되지만 그 위치와 뒤의 반복자·참조·포인터, 이전 end는 무효화됩니다. 용량이 충분한지와 삽입 위치의 영향은 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "4. 반복문에서 지운 뒤에도 ++it를 해야 할까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "erase가 반환한 다음 위치를 it에 넣습니다. 지운 이전 it를 증가시키지 않습니다. 유지한 원소에서만 ++it를 하고 반복 조건에서 현재 end와 비교합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "5. list에 삽입이 많으면 항상 더 빠를까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "위치를 이미 알고 있을 때의 한 원소 삽입 비용과 위치 탐색 비용은 다릅니다. 노드 할당·메모리 접근·실제 원소 수·작업 빈도를 함께 측정해야 합니다. 이 실습은 성능 순위를 측정하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "6. rehash 뒤 원소 포인터가 유효하면 반복자도 유효할까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. rehash는 반복자를 무효화하지만 원소 포인터·참조는 보존합니다. 실습은 미리 얻은 mapped value 포인터의 주소와 값만 확인합니다. 이전 반복자를 다시 쓰지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "7. map의 없는 키를 []로 읽으면 어떻게 될까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "새 원소가 생길 수 있습니다. 이번 string→int map에서는 absent 키와 값 0이 생겨 크기가 2가 됩니다. 조회만 필요하면 find나 contains를, 존재를 요구하는 접근에는 오류 처리와 함께 at을 선택합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "8. const auto it와 cbegin에서 얻은 반복자는 같을까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "vector<int>에서 const auto it = begin()은 반복자 위치를 고정하지만 원소 수정은 허용합니다. auto it = cbegin()은 위치를 이동할 수 있지만 그 반복자를 통한 int 원소 수정은 허용하지 않습니다. 이 실습 연결은 심화04에 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "9. 세 원소에서 Less(x,x)가 false이면 정렬 계약을 증명했나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 표본의 비반사성을 확인한 것입니다. 엄격 약순서는 비교와 비교 동등성의 전이성도 요구합니다. 비교자 정의를 읽고 입력 영역의 의미를 따로 검토해야 합니다. <=는 같은 값에서부터 비반사성을 깨뜨릴 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "10. lower_bound의 비교가 로그 횟수면 이동도 로그인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비임의접근 반복자에서는 이동이 선형일 수 있습니다. 검색 키 기준의 분할 전제도 충족해야 합니다. 같은 비교자로 정렬된 범위는 흔한 준비 방법이고, 전용 검색 멤버가 있으면 그 요구와 비용도 검토합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source-files",
+      "title": "원본과 한국어 전체 소스",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "원본과 한국어 전체 소스"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석판은 원본의 실행 토큰과 전처리 지시문을 유지합니다. 주석은 변경 연산·무효화·비교자·직접 관측한 검사 범위를 설명합니다. 원본 바이트와 설명을 더한 파일은 별도로 보존합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "파일"
+                  }
+                ],
+                [
+                  {
+                    "text": "한국어 주석판"
+                  }
+                ],
+                [
+                  {
+                    "text": "복원 원본"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "containers.cpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "전체 containers.cpp",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/ko/containers.cpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 containers.cpp",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "check.hpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "전체 check.hpp",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/ko/check.hpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 check.hpp",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/original/src/check.hpp"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/CMakeLists.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "원본 CMake",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/original/CMakeLists.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "공유 실습 README",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "파일 무결성 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/source-integrity.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "const 반복자 비교의 "
+            },
+            {
+              "text": "interfaces.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/interfaces.cpp"
+            },
+            {
+              "text": "는 "
+            },
+            {
+              "text": "심화04",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-04/"
+            },
+            {
+              "text": "에 귀속합니다. 컴파일 거부 예제 "
+            },
+            {
+              "text": "list_sort.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/original/negative/list_sort.cpp"
+            },
+            {
+              "text": "는 정상 실행 검사와 구분합니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 주석 전체 containers.cpp 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"check.hpp\"\n#include <algorithm>\n#include <deque>\n#include <iterator>\n#include <list>\n#include <map>\n#include <memory>\n#include <ranges>\n#include <string>\n#include <tuple>\n#include <unordered_map>\n#include <vector>\n\n// 원본과 동일한 실행 코드에 한국어 설명만 더했다.\n// 컨테이너마다 삽입·삭제·재해시가 반복자와 참조에 미치는 영향이 다르다.\n// 무효화된 반복자를 실제로 사용해 보지 않고, 유효성이 보장된 접근만 수행한다.\nstruct Item { int priority; int id; };\n\nstruct Less {\n    bool operator()(const Item& a, const Item& b) const noexcept {\n        // priority를 먼저 비교하고, 같으면 id를 비교하는 사전식 순서다.\n        // tie는 멤버를 복사하지 않는 참조 튜플이다. <=를 비교자로 쓰지 않는다.\n        // 아래의 세 표본 검사는 비반사성을 관찰하며, 모든 입력에 대한\n        // 엄격 약순서의 추이성·동치 관계 법칙을 자동 증명하지는 않는다.\n        return std::tie(a.priority, a.id) < std::tie(b.priority, b.id);\n    }\n};\n\nint main() { return Run(\"containers\", [](Checks& c) {\n    // vector의 size는 현재 원소 수이고 capacity는 재할당 없이 담을 수 있는 수다.\n    // 실제 초기 capacity 값이나 메모리 주소를 특정 값으로 가정하지 않는다.\n    std::vector<int> v{1,2,3,4};\n    const auto capacity = v.capacity();\n    std::erase_if(v, [](int n) { return n % 2 == 0; });\n    c.Expect(v == std::vector<int>({1,3}), \"erase_if\");\n    c.Expect(v.capacity() == capacity, \"erase retains capacity\");\n\n    // 삭제 후 새 begin()을 얻어 가운데에 삽입한다. 여기서는 기존 용량이 충분하다.\n    // 재할당이 없어도 vector의 삽입 위치와 그 뒤의 반복자는 무효화되므로,\n    // 삽입 전에 얻은 반복자가 있다고 해서 계속 사용할 수 있는 것은 아니다.\n    v.insert(v.begin()+1, 2);\n    c.Expect(v == std::vector<int>({1,2,3}), \"middle insert\");\n\n    // erase는 삭제한 원소의 다음 원소를 가리키는 새 반복자를 돌려준다.\n    // 삭제한 경우에는 그 반환값을 사용하고, 유지한 경우에만 ++it 한다.\n    // 이전 end()를 저장하지 않고 조건 검사마다 현재 end()를 구한다.\n    for (auto it = v.begin(); it != v.end();) {\n        if (*it >= 2) it = v.erase(it);\n        else ++it;\n    }\n    c.Expect(v == std::vector<int>({1}), \"erase return iterator\");\n\n    // list의 keep은 처음에 값 1을 가진 노드를 가리킨다.\n    // 다른 노드의 삽입과 list::sort는 이 반복자를 무효화하지 않는다.\n    // list 반복자는 임의 접근 반복자가 아니므로 일반 std::sort를 쓰지 않는다.\n    std::list<int> nodes{3,1,2};\n    auto keep = std::next(nodes.begin());\n    nodes.push_front(9);\n    c.Expect(*keep == 1, \"list iterator stable on insert\");\n    nodes.sort();\n    c.Expect(*keep == 1 && nodes.front() == 1, \"list member sort\");\n\n    // deque는 양쪽 끝 삽입과 인덱스 접근을 제공한다.\n    // 이 검사는 값의 위치만 확인한다. 연속 메모리나 반복자 안정성의 검사가 아니다.\n    std::deque<int> queue;\n    queue.push_front(2);\n    queue.push_back(3);\n    queue.push_front(1);\n    c.Expect(queue[1] == 2, \"deque random access\");\n\n    // map의 find는 없는 키를 만들지 않는다. 투명 비교자 less<>는\n    // 이 find 호출에서 문자열 리터럴을 조회 키로 비교할 수 있게 한다.\n    std::map<std::string, int, std::less<>> counts{{\"potion\",3}};\n    c.Expect(counts.find(\"absent\") == counts.end() && counts.size() == 1, \"find no insert\");\n    // 반면 operator[]는 키가 없으면 삽입하고 int를 값 초기화하여 0을 돌려준다.\n    c.Expect(counts[\"absent\"] == 0 && counts.size() == 2, \"brackets insert\");\n\n    // 서로 다른 문자 배열도 std::string 키로 변환되면 같은 내용의 키다.\n    // C++20의 이 at 호출은 std::string 변환을 사용하며, find처럼\n    // 이종 키 조회가 제공된다는 뜻이 아니다. char* 주소를 키로 저장하지도 않는다.\n    const char a[] = \"potion\";\n    const char b[] = \"potion\";\n    c.Expect(counts.at(a) == counts.at(b), \"string content keys\");\n\n    // rehash는 반복자를 무효화하지만, 원소의 포인터·참조는 유지한다.\n    // 미리 보관하는 것은 반복자가 아니라 mapped value의 주소다.\n    // 100은 요청하는 최소 버킷 수이며 실제 버킷 수가 정확히 100이라는 검사는 없다.\n    std::unordered_map<int, std::string> lookup{{1,\"one\"}};\n    const std::string* value = &lookup.at(1);\n    lookup.rehash(100);\n    c.Expect(value == &lookup.at(1) && *value == \"one\", \"rehash preserves reference, not iterator\");\n\n    std::vector<Item> items{{2,3},{1,8},{2,1}};\n    std::ranges::sort(items, Less{});\n    // 정렬 결과의 선두 두 id를 확인한다. 세 번째 id는 이 조건에서 직접 비교하지 않는다.\n    c.Expect(items[0].id == 8 && items[1].id == 1, \"strict comparator\");\n    // 호출 위치는 하나지만 원소가 세 개이므로 Expect가 세 번 실행된다.\n    for (const auto& x : items) c.Expect(!Less{}(x,x), \"irreflexivity sample\");\n\n    // vector가 소유하는 것은 unique_ptr 원소이고, 각 원소는 int를 소유한다.\n    // clear는 원소를 소멸시켜 unique_ptr의 정리를 수행한다.\n    // 아래의 관측값은 empty()이며 별도 소멸·해제 카운터를 측정하지는 않는다.\n    std::vector<std::unique_ptr<int>> owners;\n    owners.push_back(std::make_unique<int>(7));\n    owners.clear();\n    c.Expect(owners.empty(), \"owning elements released\");\n}); }\n"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 공통 check.hpp 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#ifndef STUDY_CHECK_HPP\n#define STUDY_CHECK_HPP\n#include <exception>\n#include <functional>\n#include <iostream>\n#include <stdexcept>\n#include <utility>\n\n// 한 프로그램에서 실제로 확인한 조건의 수를 센다.\n// 이 카운터는 경로 커버리지나 독립 기능 수를 측정하지 않는다.\nclass Checks {\n    int count_{};\npublic:\n    void Expect(bool condition, const char* label) {\n        ++count_;\n        if (!condition) throw std::runtime_error(label);\n    }\n    template<class E, class F> void Throws(F&& f, const char* label) {\n        bool matched = false;\n        try { std::invoke(std::forward<F>(f)); }\n        catch (const E&) { matched = true; }\n        // 예외를 예상하는 실험도 Expect를 한 번 호출한다.\n        // E와 무관한 예외는 여기서 잡지 않고 바깥 실행 경계로 전달한다.\n        Expect(matched, label);\n    }\n    int Count() const noexcept { return count_; }\n};\n\ntemplate<class F> int Run(const char* name, F&& test) {\n    try {\n        Checks checks;\n        std::invoke(std::forward<F>(test), checks);\n        std::cout << \"PASS \" << name << \": \" << checks.Count() << \" checks\\n\";\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << \"FAIL \" << name << \": \" << e.what() << '\\n';\n        return 1;\n    }\n}\n#endif\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "소스 토큰의 동일성, 실제 컴파일·실행, 브라우저 렌더링, 공개 배포는 각각 다른 확인 단계입니다. 주석을 더한 파일은 원본과 줄 번호가 달라질 수 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "references",
+      "title": "계약과 설계 지침의 출처",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "계약과 설계 지침의 출처"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "언어·라이브러리 계약은 C++20 작업 초안 N4861을 확인했고, 설계 선택은 Core Guidelines의 조언과 구분했습니다. 표준 본문의 HTML 열람본과 공식 WG21 문서를 함께 연결합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "확인한 내용"
+                  }
+                ],
+                [
+                  {
+                    "text": "일차 자료"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "용량·재할당·삽입·삭제"
+                  }
+                ],
+                [
+                  {
+                    "text": "vector.capacity",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/vector.capacity"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "vector.modifiers",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/vector.modifiers"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "vector.erasure",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/vector.erasure"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원소 파괴·erase 반환"
+                  }
+                ],
+                [
+                  {
+                    "text": "sequence.reqmts",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/sequence.reqmts"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "unique_ptr 소멸",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/unique.ptr.single.dtor"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "컨테이너 구조와 연산"
+                  }
+                ],
+                [
+                  {
+                    "text": "array",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/array.overview"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "list",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/list"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "deque",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/deque.modifiers"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "어댑터",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/container.adaptors"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "반복자 능력·유효 범위"
+                  }
+                ],
+                [
+                  {
+                    "text": "iterator.requirements",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/iterator.requirements"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "iterator.operations",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/iterator.operations"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "키 동등성·조회·rehash"
+                  }
+                ],
+                [
+                  {
+                    "text": "associative.reqmts",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/associative.reqmts"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "map.access",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/map.access"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "unord.req",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/unord.req"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "정렬·비교자·이진 검색"
+                  }
+                ],
+                [
+                  {
+                    "text": "sort",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/sort"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "alg.sorting",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/alg.sorting"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "alg.binary.search",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/alg.binary.search"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "참조 튜플의 생성"
+                  }
+                ],
+                [
+                  {
+                    "text": "tuple.creation",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/tuple.creation"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "헤더·기본 컨테이너·성능 측정"
+                  }
+                ],
+                [
+                  {
+                    "text": "Core Guidelines · SF.7/SF.10/SF.11, SL.con.2, Per.6",
+                    "kind": "link",
+                    "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "WG21 공식 N4861 PDF",
+              "kind": "link",
+              "href": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/n4861.pdf"
+            },
+            {
+              "text": " · 규칙 확인일 2026-10-21"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 교재의 그림은 원문과 실제 소스의 관계를 설명하려고 새로 만든 개념도입니다. 실제 메모리 주소·버킷 구조·성능 측정 이미지를 사용한 것이 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "기존 원본 기록과 이번 확장",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "기존 원본 기록과 이번 확장"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이번 한국어판의 새 CI 결과는 확인 대기 중입니다",
+                  "kind": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "containers.cpp 한국어 주석판과 교재를 추가한 상태입니다. 이번 구성의 GCC·Clang·Configure·Build·CTest와 출력 비교는 실제 실행이 끝난 뒤 새 원시 로그로 기록합니다. 과거 15개 구성의 성공과 구분합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "기록"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인된 범위"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Notion05 보존"
+                  }
+                ],
+                [
+                  {
+                    "text": "12,502바이트 · capture의 SHA-256과 별도 대조"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원본 실습 팩"
+                  }
+                ],
+                [
+                  {
+                    "text": "Notion 검증 첨부의 SHA와 일치하는 ZIP에서 복원"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "한국어 containers.cpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 C++ 토큰 761개·전처리 지시문 동일"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "과거 2026-10-13"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 containers 16회 · GCC14.2/Clang17/Clang sanitizer 기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이전 GitHub 39565624710"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본9 + 당시 한국어6 · GCC/Clang CTest15/15 · 출력6쌍 동일"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이번 05–06의 새 실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "GitHub 39571778548 · GCC13.3 / Clang18.1.3 ASan·UBSan · CMake3.31.6 · 각각 CTest18/18, stdout9쌍 바이트 동일"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "C++11"
+                  }
+                ],
+                [
+                  {
+                    "text": "이번 엄격 GCC C++11 조사에서 원본9개 모두 컴파일 거부 · C++20 팩이며 C++11 실행 미지원"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Windows/MSVC·Direct3D·GPU·HLSL"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 실행 미검증"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전 GitHub 구성은 원본 containers를 실제로 실행했지만 이번에 더한 한국어판의 실행 증거는 아닙니다. 이전 기록과 이번 기록을 별도로 보존하며 같은 16회를 환경 수만큼 더하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 공유 검증 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "파일별 무결성",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/source-integrity.json"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "과거 원시 로그",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/historical-20261013/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "이전 GitHub 원시 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전 GitHub 실행",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39565624710"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "원본 과거 요약",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/original/VALIDATION.md"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "검증으로 주장하지 않는 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실제 게임의 성능 순위, allocator별 예외 조합, 동시 변경과 경쟁 조건, 모든 반복자 무효화 경우, 임의 비교자의 전체 법칙과 모든 입력은 확인하지 않았습니다. 정상 실행·sanitizer 통과를 이 범위의 증명으로 확대하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 로컬 GCC 원시 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/local-gcc-advanced56-20261021/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "명령·출력 파일 해시",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/local-gcc-advanced56-20261021/file-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 실행은 소스 커밋 f4ad911d6407d0b9740ad8c75dd40ef45b6929dc를 검증했습니다. 원본9개와 한국어판9개의 Configure·Build·CTest가 두 환경에서 통과했고, GCC와 Clang의 컴파일 거부 예제는 각각6개였습니다. artifact ZIP4개의 digest와 원시85파일·330,326바이트를 SHA-256으로 대조했습니다. 반복 실행을 새 독립 조건으로 합산하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 GitHub CPU 실행",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "이번 원시 로그 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "artifact·파일 해시",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/artifact-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "새 실제 환경"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure"
+                  }
+                ],
+                [
+                  {
+                    "text": "Build"
+                  }
+                ],
+                [
+                  {
+                    "text": "CTest"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "GCC C++20"
+                  }
+                ],
+                [
+                  {
+                    "text": "configure",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/gcc-cxx20/configure.txt"
+                  }
+                ],
+                [
+                  {
+                    "text": "build",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/gcc-cxx20/build.txt"
+                  }
+                ],
+                [
+                  {
+                    "text": "ctest",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/gcc-cxx20/ctest.txt"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Clang C++20 ASan·UBSan"
+                  }
+                ],
+                [
+                  {
+                    "text": "configure",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/clang-cxx20-asan-ubsan/configure.txt"
+                  }
+                ],
+                [
+                  {
+                    "text": "build",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/clang-cxx20-asan-ubsan/build.txt"
+                  }
+                ],
+                [
+                  {
+                    "text": "ctest",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/clang-cxx20-asan-ubsan/ctest.txt"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "보존 원문과 교재 재구성",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "보존 원문과 교재 재구성"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Notion05 원문",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f8a99703f408180b127fe99defa9d16"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "source-notion.md",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-05/source-notion.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "수집 메타데이터",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-05/source-notion-capture.json"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구분"
+                  }
+                ],
+                [
+                  {
+                    "text": "기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원문 내부 개정일"
+                  }
+                ],
+                [
+                  {
+                    "text": "2026-10-13"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "도구가 제공한 마지막 수정"
+                  }
+                ],
+                [
+                  {
+                    "text": "2026-10-18T04:05:20.210Z"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이번 수집"
+                  }
+                ],
+                [
+                  {
+                    "text": "2026-10-21T08:31:23Z · <content> 내부 enhanced Markdown"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원문 보존"
+                  }
+                ],
+                [
+                  {
+                    "text": "UTF-8 12,502바이트 · 마지막 LF 1개"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "도구 미제공 정보"
+                  }
+                ],
+                [
+                  {
+                    "text": "truncated / unknown_block_count는 null"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "웹 교재 재구성"
+                  }
+                ],
+                [
+                  {
+                    "text": "2026-10-21 · SVG3개 · Mermaid1개 · 한국어 설명 · 복습10문항"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원문의 주제와 교재 연결",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "원문 주제"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "웹 교재의 위치"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "1. 표준 라이브러리와 STL"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서1 · 헤더와 역할"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "2. 저장 구조와 선택 흐름"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서2 · 비교표와 실제 Mermaid"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "3. 크기·용량·객체 소멸"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서3·11 · vector 그림과 소유 원소"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "4. 반복자·const"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서4 · 심화04 소스 연결"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "5. 무효화·삭제 반복"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서5~7 · 유효성 표·삭제 추적·rehash 그림"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "6. 키 조회·동등성"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서8 · 조회와 삽입·문자열 키"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "7. 알고리즘 전제·비교자"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서9~10 · 거부 예제·정렬 그림"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "8. emplace·성능"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서12 · 생성과 측정의 구분"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "이해 확인 2문항"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "복습2·6에 반영 · 추가8문항"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원문 본문·원본 소스·과거 로그를 보존하고, 읽기 흐름·SVG·비교표·복습은 GitHub Pages 교재용으로 새로 작성했습니다. 소스 복원·새 집필·실제 실행·공개 배포는 각각 구분합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원문 SHA-256",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "text",
+              "text": "304f64124be026e368f0bad6521b0ad170ddc23230ed505a7bb04ae6d2f4d4fa"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전: "
+            },
+            {
+              "text": "C++ 심화04",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-04/"
+            },
+            {
+              "text": " · 다음: "
+            },
+            {
+              "text": "C++ 심화06 교재",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-06/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

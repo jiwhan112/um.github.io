@@ -1,0 +1,84 @@
+In file included from /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:1:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In member function ‘void Checks::Throws(F&&, const char*)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: error: ‘invoke’ is not a member of ‘std’
+   17 |         try { std::invoke(std::forward<F>(f)); }
+      |                    ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: note: ‘std::invoke’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In function ‘int Run(const char*, F&&)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: error: ‘invoke’ is not a member of ‘std’
+   26 |         std::invoke(std::forward<F>(test), checks);
+      |              ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: note: ‘std::invoke’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp: At global scope:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:9:20: error: inline variables are only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+    9 | struct FailPoint { inline static bool next_copy = false; };
+      |                    ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp: In static member function ‘static std::unique_ptr<int []> IntBuffer::Copy(const IntBuffer&)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:15:18: error: ‘exchange’ is not a member of ‘std’
+   15 |         if (std::exchange(FailPoint::next_copy, false)) throw std::bad_alloc{};
+      |                  ^~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:15:18: note: ‘std::exchange’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:17:28: error: ‘make_unique’ is not a member of ‘std’
+   17 |         auto result = std::make_unique<int[]>(source.size_);
+      |                            ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:17:28: note: ‘std::make_unique’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:17:40: error: expected primary-expression before ‘int’
+   17 |         auto result = std::make_unique<int[]>(source.size_);
+      |                                        ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp: In constructor ‘IntBuffer::IntBuffer(std::initializer_list<int>)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:24:52: error: ‘make_unique’ is not a member of ‘std’
+   24 |         : size_(values.size()), data_(size_ ? std::make_unique<int[]>(size_) : nullptr) {
+      |                                                    ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:24:52: note: ‘std::make_unique’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:24:64: error: expected primary-expression before ‘int’
+   24 |         : size_(values.size()), data_(size_ ? std::make_unique<int[]>(size_) : nullptr) {
+      |                                                                ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:24:64: error: expected ‘:’ before ‘int’
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:24:64: error: expected primary-expression before ‘int’
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp: In constructor ‘IntBuffer::IntBuffer(IntBuffer&&)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:34:22: error: ‘exchange’ is not a member of ‘std’
+   34 |         : size_(std::exchange(other.size_, 0)), data_(std::move(other.data_)) {}
+      |                      ^~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:34:22: note: ‘std::exchange’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp: In member function ‘IntBuffer& IntBuffer::operator=(IntBuffer&&)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:36:76: error: ‘exchange’ is not a member of ‘std’
+   36 |         if (this != &other) { data_ = std::move(other.data_); size_ = std::exchange(other.size_, 0); }
+      |                                                                            ^~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:36:76: note: ‘std::exchange’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp: In function ‘Immovable Make()’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:57:27: error: use of deleted function ‘Immovable::Immovable(Immovable&&)’
+   57 | Immovable Make() { return Immovable{}; }
+      |                           ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:55:5: note: declared here
+   55 |     Immovable(Immovable&&) = delete;
+      |     ^~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp: At global scope:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:58:20: error: ‘is_nothrow_move_constructible_v’ is not a member of ‘std’; did you mean ‘is_nothrow_move_constructible’?
+   58 | static_assert(std::is_nothrow_move_constructible_v<IntBuffer>);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                    is_nothrow_move_constructible
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:58:61: error: expected primary-expression before ‘>’ token
+   58 | static_assert(std::is_nothrow_move_constructible_v<IntBuffer>);
+      |                                                             ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:58:62: error: expected primary-expression before ‘)’ token
+   58 | static_assert(std::is_nothrow_move_constructible_v<IntBuffer>);
+      |                                                              ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:58:62: error: ‘static_assert’ without a message only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:59:20: error: ‘is_nothrow_move_assignable_v’ is not a member of ‘std’; did you mean ‘is_nothrow_move_assignable’?
+   59 | static_assert(std::is_nothrow_move_assignable_v<IntBuffer>);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                    is_nothrow_move_assignable
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:59:58: error: expected primary-expression before ‘>’ token
+   59 | static_assert(std::is_nothrow_move_assignable_v<IntBuffer>);
+      |                                                          ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:59:59: error: expected primary-expression before ‘)’ token
+   59 | static_assert(std::is_nothrow_move_assignable_v<IntBuffer>);
+      |                                                           ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:59:59: error: ‘static_assert’ without a message only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp: In lambda function:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:80:24: error: use of deleted function ‘Immovable::Immovable(Immovable&&)’
+   80 |     auto elided = Make(); (void)elided;
+      |                        ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp:55:5: note: declared here
+   55 |     Immovable(Immovable&&) = delete;
+      |     ^~~~~~~~~

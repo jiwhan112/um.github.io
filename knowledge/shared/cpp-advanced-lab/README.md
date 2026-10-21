@@ -1,8 +1,8 @@
 # C++ 심화 · 보존 원본과 한국어 주석 실습
 
-웹 교재 **심화 01–04**의 실행 가능한 소스 묶음입니다. 기존 01–02의 `lifetime`, `ownership`, `transaction`에 이어 이번 **03–04 배치**는 `polymorphism`, `templates`, `interfaces`를 한국어 주석판으로 추가했습니다. 원본 실습 팩 전체를 보존하며 나머지 `containers`, `allocation`, `pimpl`의 보존·실행을 후속 교재 집필 완료로 집계하지 않습니다.
+웹 교재 **심화 01–06**의 실행 가능한 소스 묶음입니다. 기존 01–04의 여섯 프로그램에 이어 이번 **05–06 배치**는 `containers`, `allocation`, `pimpl`을 한국어 주석판으로 추가했습니다. 원본 실습 팩 전체를 보존하며 원본 9개 프로그램 모두에 대응하는 주석판을 제공합니다. Pimpl은 헤더와 구현·진입점 두 번역 단위를 나누어 보존합니다.
 
-현재 03–04 배치는 GCC 13.3.0 직접 빌드·실행과 [새 GitHub CI 39565624710](https://github.com/jiwhan112/um.github.io/actions/runs/39565624710)를 완료했습니다. **원본 9개 + 주석판 6개, 총 15개 CTest가 GCC와 Clang ASan·UBSan에서 각각 통과했습니다.** 아래에 남긴 01–02 배치의 CTest 12/12 성공은 해당 과거 구성의 결과입니다.
+현재 05–06 배치는 GCC 13.3.0 직접 빌드·실행과 [새 GitHub CI 39571778548](https://github.com/jiwhan112/um.github.io/actions/runs/39571778548)의 원시 로그 확인을 완료했습니다. **원본 9개 + 주석판 9개, 총 18개 CTest가 GCC와 Clang ASan·UBSan에서 각각 통과했으며 출력 9쌍이 바이트 단위로 일치합니다.** 이전 [GitHub CI 39565624710](https://github.com/jiwhan112/um.github.io/actions/runs/39565624710)의 CTest 15/15 및 01–02 배치의 12/12 성공은 각 과거 구성의 기록으로 구분합니다.
 
 ## 무엇을 보존했는가
 
@@ -14,7 +14,7 @@
 | [original/](original/) | ZIP의 소스·헤더·CMake·README·검증 요약·실행 스크립트 22파일 | ZIP 항목과 바이트 단위 일치 |
 | [verification/historical-20261013/logs/](verification/historical-20261013/logs/) | ZIP의 과거 원시 로그 22파일 | ZIP의 `logs/` 항목을 바이트 변경 없이 분리 |
 | [source-notion-index.md](source-notion-index.md) | C++ 심화 Notion 상위 목차의 전체 본문 | [capture](source-notion-index-capture.json)에 바이트 수·해시·확인 가능한 메타데이터 기록 |
-| [ko/](ko/) | 한국어 해설 주석을 더한 헤더 1개·프로그램 6개 | 주석·공백 외 C++ 토큰 및 전처리 지시문 동일 |
+| [ko/](ko/) | 한국어 해설 주석을 더한 헤더 2개·구현 및 진입점 10개, 프로그램 9개 | 주석·공백 외 C++ 토큰 및 전처리 지시문 동일 |
 | [source-integrity.json](source-integrity.json) | 파일별 무결성 목록 | [verify_sources.py](verify_sources.py)로 재계산·대조 |
 
 ZIP SHA-256: `a97a4927e5d3472ad055dbffbad0e14ab72c4c81f6ea13a1d72b771d64d339ba`.
@@ -39,11 +39,16 @@ Notion 검증 첨부 SHA-256: `e9f9b5dbba6f631e9a95f4ac426647603eefcfe7d758d85a3
 | [심화 03](../../cpp-advanced-03/) | 가상 호출, 생성·소멸, 기본 인자, RTTI, NVI, Clone | [polymorphism.cpp](original/src/polymorphism.cpp) | [polymorphism.cpp](ko/polymorphism.cpp) | 12 |
 | [심화 04](../../cpp-advanced-04/) | concept, forwarding, 종속 이름, 변환 제약, constexpr | [templates.cpp](original/src/templates.cpp) | [templates.cpp](ko/templates.cpp) | 10 |
 | [심화 04](../../cpp-advanced-04/) | explicit, 뷰 수명, iterator const, 비멤버 연산자 | [interfaces.cpp](original/src/interfaces.cpp) | [interfaces.cpp](ko/interfaces.cpp) | 7 |
-| 네 단원 공통 | 검사 도우미 | [check.hpp](original/src/check.hpp) | [check.hpp](ko/check.hpp) | 별도 실행 파일 없음 |
+| [심화 05](../../cpp-advanced-05/) | 컨테이너 선택, 무효화, 조회·삽입, 비교자 | [containers.cpp](original/src/containers.cpp) | [containers.cpp](ko/containers.cpp) | 16 |
+| [심화 06](../../cpp-advanced-06/) | 생성 실패 정리, 저장소·객체 수명, PMR | [allocation.cpp](original/src/allocation.cpp) | [allocation.cpp](ko/allocation.cpp) | 7 |
+| [심화 06](../../cpp-advanced-06/) | 불완전 타입 경계, Pimpl 복사·이동·swap | [pimpl.hpp](original/src/pimpl.hpp), [pimpl.cpp](original/src/pimpl.cpp), [pimpl_main.cpp](original/src/pimpl_main.cpp) | [pimpl.hpp](ko/pimpl.hpp), [pimpl.cpp](ko/pimpl.cpp), [pimpl_main.cpp](ko/pimpl_main.cpp) | 6 |
+| 여섯 단원 공통 | 검사 도우미 | [check.hpp](original/src/check.hpp) | [check.hpp](ko/check.hpp) | 별도 실행 파일 없음 |
 
 `ownership`의 13회에는 복사·이동이 삭제된 타입의 prvalue 반환 예제 뒤에 놓인 `Expect(true)` 1회가 포함됩니다. 그 예제의 핵심 근거는 프로그램이 컴파일되었다는 사실입니다. 검사 호출 수를 모두 서로 다른 비자명한 논리 조건으로 표현하지 않습니다. 같은 파일의 이동 특성 `static_assert` 2개도 런타임 13회와 분리합니다.
 
-전체 원본의 호출 수는 `lifetime` 10 + `ownership` 13 + `polymorphism` 12 + `templates` 10 + `containers` 16 + `interfaces` 7 + `transaction` 8 + `allocation` 7 + `pimpl` 6 = **89회**입니다. 기존 01–02는 **31회**, 이번 03–04는 **29회(12+10+7)**이며 한국어 주석판에 대응하는 누적 범위는 **60회**입니다. 주석판에서 같은 60회를 다시 실행한 값, 다른 컴파일러에서의 재실행, 출력 비교 재실행은 독립 조건으로 더하지 않습니다. `templates`의 `static_assert` 3개와 `interfaces`의 1개는 이번 런타임 29회와 별도입니다.
+전체 원본의 호출 수는 `lifetime` 10 + `ownership` 13 + `polymorphism` 12 + `templates` 10 + `containers` 16 + `interfaces` 7 + `transaction` 8 + `allocation` 7 + `pimpl` 6 = **89회**입니다. 기존 01–02는 **31회**, 03–04는 **29회(12+10+7)**, 이번 05–06은 **29회(16+7+6)**이며 한국어 주석판에 대응하는 누적 범위는 **89회**입니다. 주석판에서 같은 89회를 다시 실행한 값, 다른 컴파일러에서의 재실행, 출력 비교 재실행은 독립 조건으로 더하지 않습니다.
+
+`containers`의 `Expect` 호출 위치는 **14개**지만 비교자 비반사성 루프의 한 위치가 세 원소에 대해 실행되어 정상 호출 수는 **16회**입니다. `templates`의 `static_assert` 3개, `interfaces`의 1개, `ownership`의 2개, 이번 `pimpl_main`의 1개는 런타임 호출과 별도입니다.
 
 ## 실제로 확인한 범위
 
@@ -57,8 +62,13 @@ Notion 검증 첨부 SHA-256: `e9f9b5dbba6f631e9a95f4ac426647603eefcfe7d758d85a3
 | 2026-10-21 · 03–04 배치 로컬 실행 | GCC 13.3.0, C++20, 경고를 오류로 취급 | 원본 9개 + 주석판 6개 **15개 성공**, 출력 **6쌍** 바이트 동일. 별도 환경 조회의 unsigned 값 비트 수 **32** | [03–04 로컬 기록](verification/local-gcc-advanced34-20261021/README.md) |
 | 2026-10-21 · 03–04 배치 실패·호환성 조사 | GCC 13.3.0, 엄격한 컴파일 설정 | C++20 실패 예제 **6/6 거부**, C++11 원본 **9/9 미지원·미실행** | [실패 예제](verification/local-gcc-advanced34-20261021/negative/results.json), [C++11 진단](verification/local-gcc-advanced34-20261021/cxx11/results.json) |
 | 2026-10-21 · 03–04 배치 GitHub CI | GCC13.3 / Clang18.1.3 ASan·UBSan, C++20, CMake3.31.6 | 각 Configure·Build 성공, **CTest15/15**, 출력 **6쌍** 바이트 동일. 각 컴파일러의 거부 예제6개, GCC C++11 원본9개 미지원 확인 | [실행39565624710](https://github.com/jiwhan112/um.github.io/actions/runs/39565624710), [새 원시73파일](verification/github-39565624710/README.md) |
+| 2026-10-21 · 05–06 배치 로컬 실행 | GCC 13.3.0, C++20, 경고를 오류로 취급 | 원본 9개 + 주석판 9개 **18개 성공**, 출력 **9쌍** 바이트 동일. 원본과 주석판 Pimpl 각각 두 CPP를 함께 링크 | [05–06 로컬 기록](verification/local-gcc-advanced56-20261021/README.md) |
+| 2026-10-21 · 05–06 배치 실패·호환성 조사 | GCC 13.3.0, 엄격한 컴파일 설정 | C++20 실패 예제 **6/6 거부**, C++11 원본 **9/9 미지원·미실행** | [실패 예제](verification/local-gcc-advanced56-20261021/negative/results.json), [C++11 진단](verification/local-gcc-advanced56-20261021/cxx11/results.json) |
+| 2026-10-21 · 05–06 배치 GitHub CI | GCC 13.3.0 / Clang 18.1.3 ASan·UBSan, C++20, CMake 3.31.6 | 각 Configure·Build 성공, **CTest 18/18**, 출력 **9쌍** 바이트 동일. 각 컴파일러의 거부 예제 6개, GCC C++11 원본 9개 미지원 확인 | [실행 39571778548](https://github.com/jiwhan112/um.github.io/actions/runs/39571778548), [새 원시 85파일](verification/github-39571778548/README.md), [워크플로](https://github.com/jiwhan112/um.github.io/blob/master/.github/workflows/knowledge-cpp-advanced.yml) |
 
-로컬 환경에 Clang·CMake·CTest가 없어 이번 로컬 기록도 GCC 직접 빌드입니다. 위 **01–02 배치의** CMake·CTest와 Clang sanitizer 성공은 소스 커밋 `4cbd10710d0bfce8cb93fae89a9545369c797985`에서 실행한 12개 구성의 기록이며, 이번 15개 구성의 결과와 구분합니다. 당시 네 artifact ZIP의 GitHub digest와 추출된 **55파일 / 261,873바이트**를 독립 대조한 증거는 그대로 보존했습니다. 이번 03–04 실행은 소스 커밋 `cfce833acbd970e7bdbd675efd8e18e3f9f5e61c`을 사용했으며, 새 artifact4개의 GitHub digest와 원시 **73파일 / 296,016바이트**를 대조해 별도로 보존했습니다. C++ CI 결과와 웹 UI·공개 배포 결과는 별도로 관리합니다.
+로컬 환경에 Clang·CMake·CTest가 없어 이번 로컬 기록도 GCC 직접 빌드입니다. 위 **01–02 배치의** CMake·CTest와 Clang sanitizer 성공은 소스 커밋 `4cbd10710d0bfce8cb93fae89a9545369c797985`에서 실행한 12개 구성의 기록이며, **03–04 배치의** 15개 구성 및 현재 18개 구성과 구분합니다. 당시 네 artifact ZIP의 GitHub digest와 추출된 **55파일 / 261,873바이트**를 독립 대조한 증거는 그대로 보존했습니다. 이전 03–04 실행은 소스 커밋 `cfce833acbd970e7bdbd675efd8e18e3f9f5e61c`을 사용했으며, artifact 4개의 GitHub digest와 원시 **73파일 / 296,016바이트**를 대조해 별도로 보존했습니다.
+
+이번 **05–06 GitHub 실행의 소스 커밋은 `f4ad911d6407d0b9740ad8c75dd40ef45b6929dc`**입니다. 새 artifact 4개의 GitHub digest와 원시 **85파일 / 330,326바이트**를 독립적으로 대조했습니다. 각 빌드는 원본·주석판의 Pimpl 두 CPP를 포함한 **20개 번역 단위와 18개 실행 파일 링크**이며, Clang의 모든 컴파일·링크에 ASan/UBSan이 적용되었습니다. 현재 로컬 기록·새 GitHub 증거·과거 기록은 별도 폴더에 보존하고, 로그를 보관하는 후속 커밋과 실제 검증 대상 소스 커밋을 구분합니다. C++ CI 성공과 웹 UI·공개 배포 결과도 별개입니다.
 
 **미검증:** Windows/MSVC, Direct3D·GPU·HLSL, 실제 게임 통합, 동시 실행과 경쟁 조건, ABI 호환성, 성능 측정, 모든 예외 지점과 입력을 망라한 커버리지. ASan·UBSan 실행도 해당 실행 경로의 검출 결과이며 전체 프로그램의 안전성 증명이 아닙니다.
 
@@ -74,13 +84,15 @@ cmake --build build/cpp-advanced-gcc --parallel 2
 ctest --test-dir build/cpp-advanced-gcc --output-on-failure --verbose
 ```
 
-현재 정상 CTest 구성은 원본 9개와 한국어 주석판 6개, 총 15개입니다. 단원별로 좁혀 실행하려면 다음과 같이 이름을 지정합니다.
+현재 정상 CTest 구성은 원본 9개와 한국어 주석판 9개, 총 18개입니다. `pimpl`과 `pimpl_ko`는 각각 구현 CPP와 진입점 CPP를 함께 링크하며 헤더를 별도 프로그램으로 세지 않습니다. 단원별로 좁혀 실행하려면 다음과 같이 이름을 지정합니다.
 
 ```sh
 ctest --test-dir build/cpp-advanced-gcc --output-on-failure -R '^lifetime(_ko)?$'
 ctest --test-dir build/cpp-advanced-gcc --output-on-failure -R '^(ownership|transaction)(_ko)?$'
 ctest --test-dir build/cpp-advanced-gcc --output-on-failure -R '^polymorphism(_ko)?$'
 ctest --test-dir build/cpp-advanced-gcc --output-on-failure -R '^(templates|interfaces)(_ko)?$'
+ctest --test-dir build/cpp-advanced-gcc --output-on-failure -R '^containers(_ko)?$'
+ctest --test-dir build/cpp-advanced-gcc --output-on-failure -R '^(allocation|pimpl)(_ko)?$'
 python3 knowledge/shared/cpp-advanced-lab/verify_experiments.py compare \
   --compiler g++ --build build/cpp-advanced-gcc --out build/cpp-advanced-logs/output-equivalence
 ```
@@ -120,3 +132,6 @@ python3 knowledge/shared/cpp-advanced-lab/verify_experiments.py cxx11 \
 - `PowerOfTwo`의 제한값 31은 unsigned 비트 폭을 구한 결과가 아닙니다. 이번 GCC 환경에서 `std::numeric_limits<unsigned>::digits`는 32였고, 원본의 컴파일 시점 입력 10과 런타임 거부 입력 31을 확인했습니다. 임의의 플랫폼과 모든 입력에 대한 안전성을 주장하지 않으며, 16비트 unsigned 환경에서 원본 제한을 일반화할 수 없습니다. 별도 폭 조회는 환경 기록으로서 CTest·논리 검사 수에 포함하지 않습니다.
 - `polymorphism`의 `Events`는 16개를 넘는 기록을 버리며, `ValueBase`의 슬라이싱 예시는 비가상 함수와 파생 데이터가 없는 최소 예입니다. NVI는 허용 상한 1000을 구현하지만 실제 거부 테스트는 -1만 실행합니다. 기본 인자 실험의 곱셈과 `Counter`·`Quantity`의 합산은 작은 테스트 값의 범위입니다.
 - `Label::View()`의 rvalue 오버로드 삭제는 임시 객체에서 직접 뷰를 얻는 호출을 막습니다. 이미 받은 뷰의 소유자 수명을 자동 관리하지 않으며, 댕글링 뷰를 실제로 역참조하는 실험은 하지 않습니다. Notion 03의 소스 목록에 있던 `interfaces.cpp`와 달리 NVI·Clone 구현은 실제 `polymorphism.cpp`에 있습니다.
+- `containers`는 vector 삭제·삽입 후 새로운 반복자를 얻고, 재해시 뒤에는 유지되는 원소 포인터만 사용합니다. 무효화된 반복자를 역참조하지 않습니다. 비교자의 세 비반사성 표본은 모든 입력에 대한 엄격 약순서 증명이 아니며, `owners.clear()` 뒤의 직접 관측값은 `empty()`이지 별도 해제 카운터가 아닙니다.
+- `allocation`의 `Pool`은 전역 `operator new/delete`를 호출하는 카운터 예제이며 재사용 풀·확장 정렬 allocator·동시성을 구현하지 않습니다. 생성 실패 시 matching placement delete와 정상 생성 시 사용자 정의 deleter를 구분합니다. PMR의 4096바이트 요청은 고정 1024바이트 arena보다 크고 upstream이 `null_memory_resource`인 조건의 실패이며, 실제 시스템 메모리 고갈이나 정확한 vector 할당 바이트를 측정한 결과가 아닙니다.
+- `pimpl`의 복사 생성자가 별도 `Impl`을 만드는 근거는 `make_unique` 코드입니다. `Rename` 뒤 두 이름을 확인하는 첫 조건만으로 최초 포인터 분리를 입증하지 않습니다. 후보 생성 후 swap하는 복사 대입·Rename의 예외 보장은 코드 구조에서 읽는 계약이며, 이 프로그램의 6회 검사에 할당 실패 주입은 없습니다. 자기 대입·이동 대입·빈 원본 복사·ABI 호환성도 이 여섯 회의 실행 범위에 포함하지 않습니다.

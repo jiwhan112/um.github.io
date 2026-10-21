@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="690" viewBox="0 0 640 690" role="img" aria-labelledby="title desc">
+  <title id="title">Pimpl의 컴파일 의존성과 실행 중 소유</title>
+  <desc id="desc">위는 컴파일 관계다. pimpl.hpp의 공개 Settings 선언을 pimpl_main.cpp와 pimpl.cpp가 사용한다. Impl의 완전한 정의는 pimpl.cpp에만 있다. 아래는 실행 중 관계다. Settings 객체는 unique_ptr를 통해 별도 Impl을 소유한다. 파일 포함 화살표와 객체 소유 화살표는 다른 의미다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker></defs>
+  <rect width="640" height="690" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="48" font-size="28" font-weight="700">구현 정의는 cpp에 둡니다</text>
+    <text x="32" y="86" font-size="24" fill="#b8c7dd">컴파일할 때 · 공개 선언을 함께 사용</text>
+    <rect x="32" y="114" width="576" height="100" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <text x="320" y="153" text-anchor="middle" font-size="27" font-weight="700">pimpl.hpp</text>
+    <text x="320" y="190" text-anchor="middle" font-size="24">Settings 선언 · Impl은 전방 선언</text>
+    <path d="M170 216V253" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M470 216V253" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="32" y="265" width="276" height="123" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <rect x="332" y="265" width="276" height="123" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="170" y="304" text-anchor="middle" font-size="25" font-weight="700">pimpl_main.cpp</text>
+    <text x="170" y="344" text-anchor="middle" font-size="24">Settings 사용</text>
+    <text x="170" y="375" text-anchor="middle" font-size="22" fill="#b8c7dd">Impl 정의는 보지 않음</text>
+    <text x="470" y="304" text-anchor="middle" font-size="25" font-weight="700">pimpl.cpp</text>
+    <text x="470" y="344" text-anchor="middle" font-size="24">Impl 전체 정의</text>
+    <text x="470" y="375" text-anchor="middle" font-size="22" fill="#b8c7dd">생성·복사·삭제 구현</text>
+    <path d="M32 430H608" stroke="#475569" stroke-width="2" stroke-dasharray="7 5"/>
+    <text x="32" y="475" font-size="24" font-weight="700">실행 중에는 · 별도 객체를 소유</text>
+    <rect x="32" y="507" width="250" height="100" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <rect x="378" y="507" width="230" height="100" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="157" y="546" text-anchor="middle" font-size="27" font-weight="700">Settings a</text>
+    <text x="157" y="582" text-anchor="middle" font-size="23">impl_ · unique_ptr</text>
+    <path d="M286 566H366" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="330" y="539" text-anchor="middle" font-size="22" fill="#6ee7b7">소유</text>
+    <text x="493" y="546" text-anchor="middle" font-size="27" font-weight="700">Impl</text>
+    <text x="493" y="582" text-anchor="middle" font-size="24">name: old</text>
+    <text x="32" y="651" font-size="23" fill="#b8c7dd">파일 의존성과 객체 소유는 다른 관계입니다.</text>
+  </g>
+</svg>

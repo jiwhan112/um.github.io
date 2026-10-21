@@ -50,6 +50,18 @@
       "sha256": "b3acf306602488836c3e25c182c76b610949b1f3ebfcdf5a9b6dfa58e5e93e02",
       "capture": "knowledge/cpp-advanced-04/source-notion-capture.json",
       "matches_capture": true
+    },
+    "knowledge/cpp-advanced-05/source-notion.md": {
+      "bytes": 12502,
+      "sha256": "304f64124be026e368f0bad6521b0ad170ddc23230ed505a7bb04ae6d2f4d4fa",
+      "capture": "knowledge/cpp-advanced-05/source-notion-capture.json",
+      "matches_capture": true
+    },
+    "knowledge/cpp-advanced-06/source-notion.md": {
+      "bytes": 11184,
+      "sha256": "893423aa17fc68c75d0de0ba6ffb96e3fdb70871fbdf35a04acab5dc7379e690",
+      "capture": "knowledge/cpp-advanced-06/source-notion-capture.json",
+      "matches_capture": true
     }
   },
   "zip_file_count": 44,
@@ -704,6 +716,66 @@
       "throws_call_sites": 1,
       "unconditional_expect_true_sites": 0,
       "static_assert_call_sites": 1
+    },
+    "ko/containers.cpp": {
+      "bytes": 5729,
+      "sha256": "53829b7414b36902b80cc3118acf338c22e0468ca3e6695d10619a83a7519510",
+      "original": "original/src/containers.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 761,
+      "directives_exact": true,
+      "expect_call_sites": 14,
+      "throws_call_sites": 0,
+      "unconditional_expect_true_sites": 0,
+      "static_assert_call_sites": 0
+    },
+    "ko/allocation.cpp": {
+      "bytes": 5024,
+      "sha256": "0da2100cd3151f74bbe4e5267f57d27e392a5c4848e26274ed58cda404ebb93e",
+      "original": "original/src/allocation.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 559,
+      "directives_exact": true,
+      "expect_call_sites": 5,
+      "throws_call_sites": 2,
+      "unconditional_expect_true_sites": 0,
+      "static_assert_call_sites": 0
+    },
+    "ko/pimpl.hpp": {
+      "bytes": 1677,
+      "sha256": "b258a3cc2e85205fc7ffc9331b4976b80f7a63ef5cb2f381c2a25445a3ce03be",
+      "original": "original/src/pimpl.hpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 120,
+      "directives_exact": true,
+      "expect_call_sites": 0,
+      "throws_call_sites": 0,
+      "unconditional_expect_true_sites": 0,
+      "static_assert_call_sites": 0
+    },
+    "ko/pimpl.cpp": {
+      "bytes": 2533,
+      "sha256": "86d498321bf8996d4ebb34ade1850a24446f307a454e62bf9b734e38585d82a0",
+      "original": "original/src/pimpl.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 273,
+      "directives_exact": true,
+      "expect_call_sites": 0,
+      "throws_call_sites": 0,
+      "unconditional_expect_true_sites": 0,
+      "static_assert_call_sites": 0
+    },
+    "ko/pimpl_main.cpp": {
+      "bytes": 1957,
+      "sha256": "1d44a91f95ef0a9af961d9a5d5faacdb33618ac1c5a99dce6fe44ce60c35d1b0",
+      "original": "original/src/pimpl_main.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 218,
+      "directives_exact": true,
+      "expect_call_sites": 5,
+      "throws_call_sites": 1,
+      "unconditional_expect_true_sites": 0,
+      "static_assert_call_sites": 1
     }
   },
   "original_runtime_check_invocations": {
@@ -718,16 +790,17 @@
     "pimpl": 6
   },
   "original_runtime_check_invocations_total": 89,
-  "selected_lessons_runtime_check_invocations": 60,
-  "selected_lessons": "01-04",
-  "current_batch": "03-04",
+  "selected_lessons_runtime_check_invocations": 89,
+  "selected_lessons": "01-06",
+  "current_batch": "05-06",
   "runtime_check_invocations_by_lesson_batch": {
     "01-02": 31,
-    "03-04": 29
+    "03-04": 29,
+    "05-06": 29
   },
   "current_batch_runtime_check_invocations": 29,
-  "annotation_check_invocations_repeat_original": 60,
-  "counting_note": "89 counts calls in nine original programs. Lessons 01-02 account for 31 (10+13+8), and current lessons 03-04 for 29 (12+10+7), totaling 60 across annotated programs. ownership includes one Expect(true) following a compile-time guaranteed-elision example. templates has three static_assert sites, interfaces one, and ownership two; these are separate from runtime calls. Compiler/annotation reruns add no independent conditions.",
+  "annotation_check_invocations_repeat_original": 89,
+  "counting_note": "89 counts calls in nine original programs. Lessons 01-02 account for 31 (10+13+8), lessons 03-04 for 29 (12+10+7), and current lessons 05-06 for 29 (16+7+6), totaling 89 across annotated programs. containers has 14 Expect call sites but executes 16 calls because its three-item irreflexivity loop invokes one site three times. ownership includes one Expect(true) following a compile-time guaranteed-elision example. templates has three static_assert sites, interfaces one, ownership two, and pimpl_main one; these are separate from runtime calls. Compiler/annotation reruns add no independent conditions.",
   "limitations": [
     "Source fidelity and historical logs do not replace a new compile/run.",
     "Recovered historical ZIP identity is confirmed against the Notion-recorded SHA-256.",

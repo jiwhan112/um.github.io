@@ -1,0 +1,13 @@
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/constraint.cpp:3:21: error: no matching function for call to 'F'
+    3 | int main() { return F(1.5); }
+      |                     ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/constraint.cpp:2:29: note: candidate template ignored: constraints not satisfied [with T = double]
+    2 | template<std::integral T> T F(T value) { return value; }
+      |                             ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/constraint.cpp:2:10: note: because 'double' does not satisfy 'integral'
+    2 | template<std::integral T> T F(T value) { return value; }
+      |          ^
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/concepts:107:24: note: because 'is_integral_v<double>' evaluated to false
+  107 |     concept integral = is_integral_v<_Tp>;
+      |                        ^
+1 error generated.

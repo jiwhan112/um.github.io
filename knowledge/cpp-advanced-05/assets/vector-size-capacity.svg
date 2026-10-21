@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="816" viewBox="0 0 640 816" role="img" aria-labelledby="title desc">
+<title id="title">vector 삭제 전후의 원소 범위와 용량</title><desc id="desc">원소 1,2,3,4에서 짝수를 지운 뒤 원소는 1,3이고 size는 2다. capacity는 처음 측정한 c와 같고 c는 4 이상이다. 그림은 앞 네 칸만 표시하며 end 이후 저장 공간을 원소로 접근해서는 안 된다.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#93c5fd"/></marker></defs>
+<rect x="1" y="1" width="638" height="814" rx="20" fill="#0f172a" stroke="#2c394d" stroke-width="2"/>
+<g font-family="Noto Sans KR, Malgun Gothic, sans-serif">
+<text x="32" y="48" fill="#e5edff" font-size="28" font-weight="700" text-anchor="start">삭제해도 용량은 남습니다</text>
+<text x="32" y="87" fill="#b9c7dc" font-size="21" font-weight="400" text-anchor="start">capacity의 수치를 4로 가정하지 않습니다.</text>
+<rect x="32" y="114" width="576" height="208" rx="14" fill="#1d2b41" stroke="none" stroke-width="2"/>
+<text x="52" y="151" fill="#93c5fd" font-size="24" font-weight="700" text-anchor="start">삭제 전</text>
+<text x="420" y="151" fill="#e5edff" font-size="23" font-weight="400" text-anchor="start">size = 4</text>
+<text x="52" y="285" fill="#b9c7dc" font-size="22" font-weight="400" text-anchor="start">capacity = c · c는 4 이상</text>
+<rect x="52" y="174" width="94" height="72" rx="10" fill="#263b56" stroke="#93c5fd" stroke-width="2"/>
+<text x="99" y="222" fill="#e5edff" font-size="30" font-weight="400" text-anchor="middle">1</text>
+<rect x="160" y="174" width="94" height="72" rx="10" fill="#263b56" stroke="#93c5fd" stroke-width="2"/>
+<text x="207" y="222" fill="#e5edff" font-size="30" font-weight="400" text-anchor="middle">2</text>
+<rect x="268" y="174" width="94" height="72" rx="10" fill="#263b56" stroke="#93c5fd" stroke-width="2"/>
+<text x="315" y="222" fill="#e5edff" font-size="30" font-weight="400" text-anchor="middle">3</text>
+<rect x="376" y="174" width="94" height="72" rx="10" fill="#263b56" stroke="#93c5fd" stroke-width="2"/>
+<text x="423" y="222" fill="#e5edff" font-size="30" font-weight="400" text-anchor="middle">4</text>
+<text x="530" y="220" fill="#b9c7dc" font-size="32" font-weight="400" text-anchor="middle">…</text>
+<text x="32" y="369" fill="#e5edff" font-size="23" font-weight="700" text-anchor="start">std::erase_if · 짝수 삭제</text>
+<path d="M558 335 L558 386" stroke="#93c5fd" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="32" y="402" width="576" height="224" rx="14" fill="#1d2b41" stroke="none" stroke-width="2"/>
+<text x="52" y="440" fill="#6ee7b7" font-size="24" font-weight="700" text-anchor="start">삭제 후</text>
+<text x="420" y="440" fill="#e5edff" font-size="23" font-weight="400" text-anchor="start">size = 2</text>
+<rect x="52" y="463" width="94" height="72" rx="10" fill="#173c39" stroke="#6ee7b7" stroke-width="2"/>
+<text x="99" y="510" fill="#e5edff" font-size="30" font-weight="400" text-anchor="middle">1</text>
+<rect x="160" y="463" width="94" height="72" rx="10" fill="#173c39" stroke="#6ee7b7" stroke-width="2"/>
+<text x="207" y="510" fill="#e5edff" font-size="30" font-weight="400" text-anchor="middle">3</text>
+<rect x="268" y="463" width="94" height="72" rx="10" fill="#172235" stroke="#516781" stroke-width="2"/>
+<text x="315" y="510" fill="#b9c7dc" font-size="19" font-weight="400" text-anchor="middle">범위 밖</text>
+<rect x="376" y="463" width="94" height="72" rx="10" fill="#172235" stroke="#516781" stroke-width="2"/>
+<text x="423" y="510" fill="#b9c7dc" font-size="19" font-weight="400" text-anchor="middle">범위 밖</text>
+<text x="530" y="508" fill="#b9c7dc" font-size="32" font-weight="400" text-anchor="middle">…</text>
+<path d="M261 452 L261 546" stroke="#fde68a" stroke-width="3"/>
+<text x="261" y="571" fill="#fde68a" font-size="20" font-weight="400" text-anchor="middle">end</text>
+<text x="52" y="606" fill="#b9c7dc" font-size="20" font-weight="400" text-anchor="start">capacity = c · 실습에서 이전 값과 비교</text>
+<rect x="32" y="654" width="576" height="98" rx="14" fill="#173c39" stroke="#6ee7b7" stroke-width="2"/>
+<text x="52" y="691" fill="#6ee7b7" font-size="23" font-weight="700" text-anchor="start">size 밖은 원소 접근 범위가 아닙니다.</text>
+<text x="52" y="728" fill="#e5edff" font-size="21" font-weight="400" text-anchor="start">실습 확인: 값은 {1, 3} · 용량은 그대로</text>
+<text x="32" y="790" fill="#b9c7dc" font-size="20" font-weight="400" text-anchor="start">앞 4칸만 표시 · 그 뒤의 추가 용량은 있을 수 있음</text>
+</g>
+</svg>
