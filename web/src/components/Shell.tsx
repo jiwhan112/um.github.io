@@ -7,15 +7,20 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dial
 import { cleanTitle, dateLabel } from '@/lib/utils';
 import { keys, useStored, objectBooleans } from '@/lib/storage';
 import { lessonProgress } from '@/lib/language-progress';
+import { compareKnowledgeDocuments } from '@/lib/knowledge-order';
 import { startCloud } from '@/lib/cloud';
 import { SyncSettings } from './SyncSettings';
 const navigation=[{to:'/',name:'홈',icon:Home},{to:'/daily-briefing/',name:'데일리 브리핑',icon:Newspaper},{to:'/language-study/',name:'언어 학습',icon:BookOpen},{to:'/knowledge/',name:'프로그래밍 학습',icon:LibraryBig},{to:'/thinking-lab/',name:'사고력 훈련',icon:Braces},{to:'/game-design/',name:'게임 기획 연구실',icon:Gamepad2},{to:'/ai-asset-lab/',name:'AI 리소스 실험실',icon:FlaskConical},{to:'/opensource-lab/',name:'오픈소스 보관함',icon:Archive}];
 export function Sidebar({onNavigate}:{onNavigate?:()=>void}){
  const {catalog}=useData(),{pathname,search}=useLocation(),[langStored]=useStored<unknown>(keys.language,{}),[readStored]=useStored<unknown>(keys.reading,{}),read=objectBooleans(readStored);
  const section=pathname.split('/')[1];const docs=catalog.documents.filter(d=>d.route.startsWith('/'+section+'/')&&d.kind!=='report');
+ // 다른 회차의 위치를 유지하면서 C++ 과정은 기초 다음에 심화가 오게 한다.
+ const cppCourse=docs.filter(d=>d.kind==='knowledge'&&d.category==='C++ 기초·심화').sort(compareKnowledgeDocuments);
+ let cppIndex=0;
+ const orderedDocs=docs.map(d=>d.kind==='knowledge'&&d.category==='C++ 기초·심화'?cppCourse[cppIndex++]:d);
  const language=pathname.includes('/japanese/')||(!pathname.includes('/english/')&&new URLSearchParams(search).get('language')==='japanese')?'japanese':'english';
  return <><Link className="brand" to="/" onClick={onNavigate}><Sparkles/><span>ATLAS NOTE<small>LEARN · BUILD · EXPLORE</small></span></Link><div className="nav-label">WORKSPACE</div><nav aria-label="사이트 메뉴" className="site-nav">{navigation.map(({to,name,icon:Icon})=><NavLink key={to} to={to} end={to==='/'} onClick={onNavigate}><Icon size={17}/>{name}</NavLink>)}</nav><div className="nav-divider"/><nav className="site-nav" aria-label="개인 자료"><NavLink to="/bookmarks/" onClick={onNavigate}><Bookmark size={17}/>북마크</NavLink><NavLink to="/archive/" onClick={onNavigate}><Archive size={17}/>전체 아카이브</NavLink></nav>
- {docs.length>0&&<><div className="nav-label">{section==='thinking-lab'?'PROBLEMS':'DOCUMENTS'}</div><nav className="chapter-nav" aria-label="회차 목록">{docs.map(d=><NavLink key={d.id} to={d.route} onClick={onNavigate}>{d.number&&<span className="chapter-number">{d.number}</span>}<span>{cleanTitle(d.title)}</span>{read[d.route.replace(/^\//,'')]&&<Check className="chapter-complete" size={13} aria-label="학습 완료"/>}</NavLink>)}</nav></>}
+ {orderedDocs.length>0&&<><div className="nav-label">{section==='thinking-lab'?'PROBLEMS':'DOCUMENTS'}</div><nav className="chapter-nav" aria-label="회차 목록">{orderedDocs.map(d=><NavLink key={d.id} to={d.route} onClick={onNavigate}>{d.number&&<span className="chapter-number">{d.number}</span>}<span>{cleanTitle(d.title)}</span>{read[d.route.replace(/^\//,'')]&&<Check className="chapter-complete" size={13} aria-label="학습 완료"/>}</NavLink>)}</nav></>}
  {section==='language-study'&&<><div className="nav-label">LANGUAGE</div><div className="language-switch"><Link to="/language-study/?language=english" onClick={onNavigate}>English</Link><Link to="/language-study/?language=japanese" onClick={onNavigate}>日本語</Link><Link to="/language-study/?view=review" onClick={onNavigate}>복습</Link></div><nav className="chapter-nav" aria-label="레슨 목록">{catalog.languages[language].map(m=>{const p=lessonProgress(langStored,language,m);return <NavLink key={m.id} to={`/language-study/${language}/${m.id}/`} onClick={onNavigate}><span className="chapter-number">{m.id}</span><span>{m.title}</span>{p.done&&<Check size={13} className="chapter-complete" aria-label="학습 완료"/>}</NavLink>;})}</nav></>}
  <div className="side-foot"><span className="avatar">A</span><span>나의 학습 공간<small>ATLAS NOTE · React</small></span></div></>;
 }

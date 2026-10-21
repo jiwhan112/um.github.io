@@ -456,6 +456,18 @@ test('advanced lessons preserve ZIP bytes, historical evidence, complete annotat
  for(const path of preserved){
   assert.deepEqual(await readFile('public/'+base+path),await readFile('../'+base+path),'published original bytes '+path);
  }
+ for(const directory of (await readdir('../'+base+'verification')).filter(name=>name.startsWith('github-'))){
+  const prefix=base+'verification/'+directory+'/';
+  const evidence=JSON.parse(await readFile('../'+prefix+'artifact-manifest.json','utf8'));
+  assert.equal(evidence.files.length,evidence.raw_file_count);
+  assert.match(evidence.source_commit,/^[a-f0-9]{40}$/);
+  for(const file of evidence.files){
+   const raw=await readFile('../'+prefix+file.path);
+   assert.equal(raw.length,file.bytes,'raw CI output length '+file.path);
+   assert.equal(createHash('sha256').update(raw).digest('hex'),file.sha256,'raw CI output hash '+file.path);
+   assert.deepEqual(await readFile('public/'+prefix+file.path),raw,'published raw CI output '+file.path);
+  }
+ }
  assert.equal(createHash('sha256').update(await readFile('public/'+base+'archive/cpp_advanced_effective_lab_v1.zip')).digest('hex'),'a97a4927e5d3472ad055dbffbad0e14ab72c4c81f6ea13a1d72b771d64d339ba');
  for(const [number,files]of [['01',['lifetime.cpp','check.hpp']],['02',['ownership.cpp','transaction.cpp']]]as const){
   const slug='cpp-advanced-'+number;

@@ -1,0 +1,52 @@
+In file included from /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:1:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In member function ‘void Checks::Throws(F&&, const char*)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: error: ‘invoke’ is not a member of ‘std’
+   17 |         try { std::invoke(std::forward<F>(f)); }
+      |                    ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: note: ‘std::invoke’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In function ‘int Run(const char*, F&&)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: error: ‘invoke’ is not a member of ‘std’
+   26 |         std::invoke(std::forward<F>(test), checks);
+      |              ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: note: ‘std::invoke’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp: At global scope:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:14:21: error: ‘is_convertible_v’ is not a member of ‘std’; did you mean ‘is_convertible’?
+   14 | static_assert(!std::is_convertible_v<double, Seconds>);
+      |                     ^~~~~~~~~~~~~~~~
+      |                     is_convertible
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:14:38: error: expected primary-expression before ‘double’
+   14 | static_assert(!std::is_convertible_v<double, Seconds>);
+      |                                      ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:14:38: error: expected ‘,’ before ‘double’
+   14 | static_assert(!std::is_convertible_v<double, Seconds>);
+      |                                      ^~~~~~
+      |                                      ,
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:14:38: error: expected string-literal before ‘double’
+   14 | static_assert(!std::is_convertible_v<double, Seconds>);
+      |                                      ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:14:38: error: expected ‘)’ before ‘double’
+   14 | static_assert(!std::is_convertible_v<double, Seconds>);
+      |              ~                       ^~~~~~
+      |                                      )
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:19:10: error: ‘string_view’ in namespace ‘std’ does not name a type
+   19 |     std::string_view View() const & noexcept { return text_; }
+      |          ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:19:5: note: ‘std::string_view’ is only available from C++17 onwards
+   19 |     std::string_view View() const & noexcept { return text_; }
+      |     ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:20:10: error: ‘string_view’ in namespace ‘std’ does not name a type
+   20 |     std::string_view View() && = delete;
+      |          ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:20:5: note: ‘std::string_view’ is only available from C++17 onwards
+   20 |     std::string_view View() && = delete;
+      |     ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:21:10: error: ‘string_view’ in namespace ‘std’ does not name a type
+   21 |     std::string_view View() const && = delete;
+      |          ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:21:5: note: ‘std::string_view’ is only available from C++17 onwards
+   21 |     std::string_view View() const && = delete;
+      |     ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp: In lambda function:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp:46:43: error: ‘class Label’ has no member named ‘View’
+   46 |     Label label("player"); c.Expect(label.View() == "player", "borrow lvalue");
+      |                                           ^~~~

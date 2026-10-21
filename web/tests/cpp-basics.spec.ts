@@ -132,12 +132,21 @@ test('bitmask operations distinguish clearing from toggling and preserve existin
   expect(saved.other).toBe('keep-me');
 });
 
-test('C++ curriculum follows foundations 01–05 with advanced 01–02', async ({ page }) => {
+test('C++ curriculum follows foundations 01–05 with advanced 01–02', async ({ page, isMobile }) => {
   await page.goto('knowledge/');
   const cpp = page.locator('#knowledge-cpp');
   const order=[...chapters.map(chapter=>chapter.slug),'cpp-advanced-01','cpp-advanced-02'];
   await expect(cpp.locator('.knowledge-document-link')).toHaveCount(7);
   expect(await cpp.locator('.knowledge-document-link').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')))).toEqual(order.map(slug => `/um.github.io/knowledge/${slug}/`));
+  const expected=order.map(slug=>`/um.github.io/knowledge/${slug}/`);
+  expect(await page.locator('.sidebar .chapter-nav a[href*="/knowledge/cpp-"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(expected);
+  if(isMobile){
+    await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
+    const drawer=page.getByRole('dialog',{name:'사이트 메뉴',exact:true});
+    expect(await drawer.locator('.chapter-nav a[href*="/knowledge/cpp-"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(expected);
+    await page.keyboard.press('Escape');
+    await expect(drawer).toHaveCount(0);
+  }
   await cpp.locator('.knowledge-document-link').first().click();
   await expect(page).toHaveURL(/\/knowledge\/cpp-basics-01\/$/);
 });

@@ -1,0 +1,438 @@
+{
+  "schema_version": 1,
+  "run_id": 39557286731,
+  "run_url": "https://github.com/jiwhan112/um.github.io/actions/runs/39557286731",
+  "source_commit": "4cbd10710d0bfce8cb93fae89a9545369c797985",
+  "run_conclusion": "success",
+  "archives": [
+    {
+      "id": 12325958067,
+      "name": "cpp-advanced-compile-rejections-g++-raw-logs",
+      "zip_bytes": 21353,
+      "zip_sha256": "a7835a96ba6ec1365b85b3ea5804fab822ec5537aa3f52ea90b3e916072d5804",
+      "github_digest_matches": true,
+      "directory": "compile-rejections-gcc",
+      "files": [
+        "compile-rejections-gcc/cxx11-unsupported/allocation.txt",
+        "compile-rejections-gcc/cxx11-unsupported/containers.txt",
+        "compile-rejections-gcc/cxx11-unsupported/compiler-version.txt",
+        "compile-rejections-gcc/cxx11-unsupported/interfaces.txt",
+        "compile-rejections-gcc/cxx11-unsupported/lifetime.txt",
+        "compile-rejections-gcc/cxx11-unsupported/ownership.txt",
+        "compile-rejections-gcc/cxx11-unsupported/pimpl.txt",
+        "compile-rejections-gcc/cxx11-unsupported/polymorphism.txt",
+        "compile-rejections-gcc/cxx11-unsupported/results.json",
+        "compile-rejections-gcc/cxx11-unsupported/templates.txt",
+        "compile-rejections-gcc/cxx11-unsupported/transaction.txt",
+        "compile-rejections-gcc/environment-and-integrity.txt",
+        "compile-rejections-gcc/negative/compiler-version.txt",
+        "compile-rejections-gcc/negative/constraint.txt",
+        "compile-rejections-gcc/negative/copy_by_value.txt",
+        "compile-rejections-gcc/negative/copy_unique.txt",
+        "compile-rejections-gcc/negative/list_sort.txt",
+        "compile-rejections-gcc/negative/results.json",
+        "compile-rejections-gcc/negative/temporary_view.txt",
+        "compile-rejections-gcc/negative/wrong_override.txt"
+      ]
+    },
+    {
+      "id": 12325649740,
+      "name": "cpp-advanced-compile-rejections-clang++-raw-logs",
+      "zip_bytes": 10086,
+      "zip_sha256": "f0745f751a7bb9fb80402d002566b3de4d99f80eef639a756c3106ca5bd711bc",
+      "github_digest_matches": true,
+      "directory": "compile-rejections-clang",
+      "files": [
+        "compile-rejections-clang/environment-and-integrity.txt",
+        "compile-rejections-clang/negative/compiler-version.txt",
+        "compile-rejections-clang/negative/constraint.txt",
+        "compile-rejections-clang/negative/copy_by_value.txt",
+        "compile-rejections-clang/negative/copy_unique.txt",
+        "compile-rejections-clang/negative/list_sort.txt",
+        "compile-rejections-clang/negative/results.json",
+        "compile-rejections-clang/negative/temporary_view.txt",
+        "compile-rejections-clang/negative/wrong_override.txt"
+      ]
+    },
+    {
+      "id": 12325623543,
+      "name": "cpp-advanced-positive-gcc-cxx20-raw-logs",
+      "zip_bytes": 12052,
+      "zip_sha256": "1b95f7603bc747b83904cf0ffa08e056744bb129db31c56d7ccbc4079f6856a8",
+      "github_digest_matches": true,
+      "directory": "positive-gcc",
+      "files": [
+        "positive-gcc/build.txt",
+        "positive-gcc/configure.txt",
+        "positive-gcc/ctest.txt",
+        "positive-gcc/environment-and-integrity.txt",
+        "positive-gcc/output-equivalence/compiler-version.txt",
+        "positive-gcc/output-equivalence/lifetime-korean.txt",
+        "positive-gcc/output-equivalence/lifetime-original.txt",
+        "positive-gcc/output-equivalence/ownership-korean.txt",
+        "positive-gcc/output-equivalence/ownership-original.txt",
+        "positive-gcc/output-equivalence/results.json",
+        "positive-gcc/output-equivalence/transaction-korean.txt",
+        "positive-gcc/output-equivalence/transaction-original.txt",
+        "positive-gcc/output-equivalence-summary.txt"
+      ]
+    },
+    {
+      "id": 12325149366,
+      "name": "cpp-advanced-positive-clang-cxx20-asan-ubsan-raw-logs",
+      "zip_bytes": 11897,
+      "zip_sha256": "8155f9d46aa1bf7a0b1506efea962485fad1e2afeec4c207af83f485224a8dc0",
+      "github_digest_matches": true,
+      "directory": "positive-clang-sanitized",
+      "files": [
+        "positive-clang-sanitized/configure.txt",
+        "positive-clang-sanitized/build.txt",
+        "positive-clang-sanitized/ctest.txt",
+        "positive-clang-sanitized/environment-and-integrity.txt",
+        "positive-clang-sanitized/output-equivalence/compiler-version.txt",
+        "positive-clang-sanitized/output-equivalence/lifetime-korean.txt",
+        "positive-clang-sanitized/output-equivalence/lifetime-original.txt",
+        "positive-clang-sanitized/output-equivalence/ownership-korean.txt",
+        "positive-clang-sanitized/output-equivalence/ownership-original.txt",
+        "positive-clang-sanitized/output-equivalence/results.json",
+        "positive-clang-sanitized/output-equivalence/transaction-korean.txt",
+        "positive-clang-sanitized/output-equivalence/transaction-original.txt",
+        "positive-clang-sanitized/output-equivalence-summary.txt"
+      ]
+    }
+  ],
+  "raw_file_count": 55,
+  "files": [
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/allocation.txt",
+      "bytes": 6867,
+      "sha256": "0eb7cc0cc8d92d97cbd8a4230907712f9ca1f995966f968f5f9a5835410c1913",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/containers.txt",
+      "bytes": 6260,
+      "sha256": "44944fa2cf74d70c1a8a3ab2b61488399f2100688dad06b8373a121511bffb22",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/compiler-version.txt",
+      "bytes": 246,
+      "sha256": "59d1cbef41d4ae78d5063d525b7aa13d18dc0493ea00537efc19b2ee398cb5a8",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/interfaces.txt",
+      "bytes": 4967,
+      "sha256": "ff4b8ed82469ac32ebc2c461ed9b8212d277de0d7d9d9db1f952a1d2e19b4924",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/lifetime.txt",
+      "bytes": 1273,
+      "sha256": "e748ee537d59e9aa1179536f87d1ea6977858a1693af058823423df03051e5f3",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/ownership.txt",
+      "bytes": 9683,
+      "sha256": "c9120a8d08f353bf2e637df2cd54254e036693d9ce2a6f493d53c6bf93a38cbc",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/pimpl.txt",
+      "bytes": 5687,
+      "sha256": "b02d71ceb48fef06da6154a4b6b23795a7ea4f08d59d0d8f7afe6c3fd8897622",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/polymorphism.txt",
+      "bytes": 3268,
+      "sha256": "792d91d227b4804ccd2445ab0c0979f4f0b5396043d795b9c584581737263390",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/results.json",
+      "bytes": 7041,
+      "sha256": "2b4905d0604f07c765defa14a5b7077fb45252ab123310ba7ced2a71197f6b5d",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/templates.txt",
+      "bytes": 10758,
+      "sha256": "8c12662a5fe3fb9ba1d7c008fb1da32b7b97eb0d45a52ec3ce0cc65aab1bcb70",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/cxx11-unsupported/transaction.txt",
+      "bytes": 5073,
+      "sha256": "b1adbc81fc48bf71489b8054ce848c8455830b147fc5b9beabd0522562c01239",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/environment-and-integrity.txt",
+      "bytes": 25708,
+      "sha256": "3073aec24723d080182312d2d4ea0b1b0554c79b96b4bf2bd19ec0ec987b5cbf",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/negative/compiler-version.txt",
+      "bytes": 246,
+      "sha256": "59d1cbef41d4ae78d5063d525b7aa13d18dc0493ea00537efc19b2ee398cb5a8",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/negative/constraint.txt",
+      "bytes": 1735,
+      "sha256": "d0a039319346d054eb7fb75feaa3dcc53666db8313da814d15aeb06def38e821",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/negative/copy_by_value.txt",
+      "bytes": 249,
+      "sha256": "50cd9e52f1e518869cd863c131911da5c40dcb6c2625fe509505dbf351653121",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/negative/copy_unique.txt",
+      "bytes": 884,
+      "sha256": "5cfb0db16cf5c6a1db6272d8568753fcdbf7e8ead1a7dc66fd6308453433a159",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/negative/list_sort.txt",
+      "bytes": 2596,
+      "sha256": "afb60ffe31a4d7c6692b864ccdeee83a691a6fd78656c939a0fabf52a07c958c",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/negative/results.json",
+      "bytes": 4563,
+      "sha256": "64b22a49ff91c7ac7279fb483355246361c8f24a7da84ce621541bdaf22a9aaa",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/negative/temporary_view.txt",
+      "bytes": 721,
+      "sha256": "2ca300a64dcf50dc8d31a2ce75dc948fddb24878a171241afcbcea838e3bf6e7",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-gcc/negative/wrong_override.txt",
+      "bytes": 309,
+      "sha256": "d00922d7cbcee5e64e228e7eda094a9540ee10a93256309184435065ab56199e",
+      "artifact_id": 12325958067
+    },
+    {
+      "path": "compile-rejections-clang/environment-and-integrity.txt",
+      "bytes": 25708,
+      "sha256": "1f27da46ba9d2c11893f52ed2ab91cda3b9ea0281d4785a8ad507116cd2ab17d",
+      "artifact_id": 12325649740
+    },
+    {
+      "path": "compile-rejections-clang/negative/compiler-version.txt",
+      "bytes": 110,
+      "sha256": "3635b8631d4ebcd8ed7586f4e01e7a6b44407de9d38db6e01daca9c242ed7a53",
+      "artifact_id": 12325649740
+    },
+    {
+      "path": "compile-rejections-clang/negative/constraint.txt",
+      "bytes": 1023,
+      "sha256": "52b644f6841e2c2adc1314f62a17dfe88ace9109f355e979e6b14157bc7db6ec",
+      "artifact_id": 12325649740
+    },
+    {
+      "path": "compile-rejections-clang/negative/copy_by_value.txt",
+      "bytes": 306,
+      "sha256": "1d09a088a58e02781169cf299c2bd09c7beddddbef20ed66ce50d79fccce972b",
+      "artifact_id": 12325649740
+    },
+    {
+      "path": "compile-rejections-clang/negative/copy_unique.txt",
+      "bytes": 585,
+      "sha256": "4fc43bd4a541f75252372ab68272ae2c65bfd61b8328dd3d3807932d0e62cd93",
+      "artifact_id": 12325649740
+    },
+    {
+      "path": "compile-rejections-clang/negative/list_sort.txt",
+      "bytes": 3964,
+      "sha256": "31801042fa3896df8141b2ca240e04b6edc0d14a1b6e63454bfe8600ab107a80",
+      "artifact_id": 12325649740
+    },
+    {
+      "path": "compile-rejections-clang/negative/results.json",
+      "bytes": 4587,
+      "sha256": "831c11e10316451233aff604da7b24115e8f231bbd062b2a4166353dba7fff1a",
+      "artifact_id": 12325649740
+    },
+    {
+      "path": "compile-rejections-clang/negative/temporary_view.txt",
+      "bytes": 835,
+      "sha256": "14ec082a2e448953960104509bf2fb23adc0634cec50696fb6671dd8f43f7d9c",
+      "artifact_id": 12325649740
+    },
+    {
+      "path": "compile-rejections-clang/negative/wrong_override.txt",
+      "bytes": 664,
+      "sha256": "ce0195689e4530a6d9e584c47a63d5594264b5b0c357bc8519e39c23b23485dc",
+      "artifact_id": 12325649740
+    },
+    {
+      "path": "positive-gcc/build.txt",
+      "bytes": 26214,
+      "sha256": "29840d1dd08f26b4d87596c950984ee1937cc3b90c6e5fd110631a1f918db042",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/configure.txt",
+      "bytes": 412,
+      "sha256": "7de6d7c766afb60d316b5a52c0df449bc40f176d7b44ee3c56ce03e6a6669b0d",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/ctest.txt",
+      "bytes": 5116,
+      "sha256": "941d868d9ade9aa280eea63b52c11b7b68206024800a143c557bf0dacd326e0f",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/environment-and-integrity.txt",
+      "bytes": 26045,
+      "sha256": "5e357be07235bf002ea8e2f2b4795a606af0911a4ee4b1cbe37f07f139bed2f7",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/output-equivalence/compiler-version.txt",
+      "bytes": 246,
+      "sha256": "59d1cbef41d4ae78d5063d525b7aa13d18dc0493ea00537efc19b2ee398cb5a8",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/output-equivalence/lifetime-korean.txt",
+      "bytes": 25,
+      "sha256": "af7f57f4817199c50be6805445f0299b23e81228dc9298626723dc5c55f9f9de",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/output-equivalence/lifetime-original.txt",
+      "bytes": 25,
+      "sha256": "af7f57f4817199c50be6805445f0299b23e81228dc9298626723dc5c55f9f9de",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/output-equivalence/ownership-korean.txt",
+      "bytes": 26,
+      "sha256": "13eb7b435aa4c720428479c80ba437028323a9955f0c185c078407dc1fa629d8",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/output-equivalence/ownership-original.txt",
+      "bytes": 26,
+      "sha256": "13eb7b435aa4c720428479c80ba437028323a9955f0c185c078407dc1fa629d8",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/output-equivalence/results.json",
+      "bytes": 3575,
+      "sha256": "4ca961c05030145870308d41b6cfe35b9f046120b2c6a74dfaa1c6e2729e8744",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/output-equivalence/transaction-korean.txt",
+      "bytes": 27,
+      "sha256": "6b66f8995c31607f66557662702a67fa00c3c7d753b01b1700a76b243aaaaf58",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/output-equivalence/transaction-original.txt",
+      "bytes": 27,
+      "sha256": "6b66f8995c31607f66557662702a67fa00c3c7d753b01b1700a76b243aaaaf58",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-gcc/output-equivalence-summary.txt",
+      "bytes": 749,
+      "sha256": "a49be0a674f4461384ae2568e915bc819de3ed121976a5b7f6150d2f1825086c",
+      "artifact_id": 12325623543
+    },
+    {
+      "path": "positive-clang-sanitized/configure.txt",
+      "bytes": 418,
+      "sha256": "9458b01be6e762015d7b1f920f643d1488a6f41a4149a86d9afd879975437932",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/build.txt",
+      "bytes": 27411,
+      "sha256": "e1f3326153e6534866eb55cfecdcf06b346f587729a7aba02bc38f75f805a64c",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/ctest.txt",
+      "bytes": 5116,
+      "sha256": "0b8acd82d75a830fbb676bf1b8035d1ed5df9d13d65a91a7df18e9804fdab7a3",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/environment-and-integrity.txt",
+      "bytes": 25909,
+      "sha256": "16872872a642da5f1e27296864f5d78eb179325cb341564b0a944a4d8b0234ab",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/output-equivalence/compiler-version.txt",
+      "bytes": 110,
+      "sha256": "3635b8631d4ebcd8ed7586f4e01e7a6b44407de9d38db6e01daca9c242ed7a53",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/output-equivalence/lifetime-korean.txt",
+      "bytes": 25,
+      "sha256": "af7f57f4817199c50be6805445f0299b23e81228dc9298626723dc5c55f9f9de",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/output-equivalence/lifetime-original.txt",
+      "bytes": 25,
+      "sha256": "af7f57f4817199c50be6805445f0299b23e81228dc9298626723dc5c55f9f9de",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/output-equivalence/ownership-korean.txt",
+      "bytes": 26,
+      "sha256": "13eb7b435aa4c720428479c80ba437028323a9955f0c185c078407dc1fa629d8",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/output-equivalence/ownership-original.txt",
+      "bytes": 26,
+      "sha256": "13eb7b435aa4c720428479c80ba437028323a9955f0c185c078407dc1fa629d8",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/output-equivalence/results.json",
+      "bytes": 3575,
+      "sha256": "59e291db0b4f711f188961b7a9f8782ad39b95c1d1f6cd127339fb3cf5db1e45",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/output-equivalence/transaction-korean.txt",
+      "bytes": 27,
+      "sha256": "6b66f8995c31607f66557662702a67fa00c3c7d753b01b1700a76b243aaaaf58",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/output-equivalence/transaction-original.txt",
+      "bytes": 27,
+      "sha256": "6b66f8995c31607f66557662702a67fa00c3c7d753b01b1700a76b243aaaaf58",
+      "artifact_id": 12325149366
+    },
+    {
+      "path": "positive-clang-sanitized/output-equivalence-summary.txt",
+      "bytes": 749,
+      "sha256": "a49be0a674f4461384ae2568e915bc819de3ed121976a5b7f6150d2f1825086c",
+      "artifact_id": 12325149366
+    }
+  ],
+  "method": "GitHub artifact ZIP SHA-256 matched the API digest before extraction; extracted UTF-8 file bytes were written unchanged."
+}

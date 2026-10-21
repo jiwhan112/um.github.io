@@ -13,17 +13,27 @@ for(const chapter of chapters)test(`${chapter.slug} renders lifetime or ownershi
   await expect(page.getByRole('heading',{level:1})).toContainText('C++ 심화');
   await expect(page.getByRole('tab')).toHaveText(['개념과 원리','실습·복습','출처·검증','원문·변경기록']);
   await expect(page.locator('.knowledge-illustration')).toHaveCount(3);
-  for(const illustration of await page.locator('.knowledge-illustration img').all()){
-    await illustration.scrollIntoViewIfNeeded();
-    await expect.poll(()=>illustration.evaluate((node:HTMLImageElement)=>node.complete&&node.naturalWidth>0)).toBe(true);
+  for(const [index,figure] of (await page.locator('.knowledge-illustration').all()).entries()){
+    await figure.scrollIntoViewIfNeeded();
+    await expect.poll(()=>figure.locator('img').evaluate((node:HTMLImageElement)=>node.complete&&node.naturalWidth>0)).toBe(true);
+    await figure.screenshot({path:testInfo.outputPath(`${chapter.slug}-figure-${index+1}.png`)});
   }
   const diagrams=page.locator('.mermaid-diagram');
   expect(await diagrams.count()).toBeGreaterThan(0);
-  for(const diagram of await diagrams.all()){
+  for(const [index,diagram] of (await diagrams.all()).entries()){
     await diagram.scrollIntoViewIfNeeded();
     await expect(diagram).toHaveAttribute('data-diagram-state','ready');
     await expect(diagram.locator('.mermaid-source')).toHaveJSProperty('open',false);
     await expect.poll(()=>diagram.locator('.mermaid-canvas img').evaluate((node:HTMLImageElement)=>node.complete&&node.naturalWidth>0)).toBe(true);
+    if(chapter.slug==='cpp-advanced-01'){
+      const labels=await diagram.locator('.mermaid-canvas img').evaluate(async(node:HTMLImageElement)=>{
+        const svg=new DOMParser().parseFromString(await fetch(node.src).then(response=>response.text()),'image/svg+xml');
+        return [...svg.querySelectorAll('text')].map(label=>label.textContent).join(' ');
+      });
+      expect(labels).toContain('피해량이 음수인가?');
+      expect(labels).toContain('피해량이 현재 체력 이상?');
+    }
+    await diagram.screenshot({path:testInfo.outputPath(`${chapter.slug}-mermaid-${index+1}.png`)});
   }
   const adjacent=page.getByRole('navigation',{name:'이전 다음 문서'});
   expect(await adjacent.getByRole('link').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(

@@ -1,0 +1,38 @@
+In file included from /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/list_sort.cpp:1:
+In file included from /usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/algorithm:61:
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/stl_algo.h:1906:22: error: invalid operands to binary expression ('std::_List_iterator<int>' and 'std::_List_iterator<int>')
+ 1906 |                                 std::__lg(__last - __first) * 2,
+      |                                           ~~~~~~ ^ ~~~~~~~
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/stl_algo.h:4771:12: note: in instantiation of function template specialization 'std::__sort<std::_List_iterator<int>, __gnu_cxx::__ops::_Iter_less_iter>' requested here
+ 4771 |       std::__sort(__first, __last, __gnu_cxx::__ops::__iter_less_iter());
+      |            ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/list_sort.cpp:3:47: note: in instantiation of function template specialization 'std::sort<std::_List_iterator<int>>' requested here
+    3 | void F() { std::list<int> values{3,1,2}; std::sort(values.begin(), values.end()); }
+      |                                               ^
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/stl_iterator.h:618:5: note: candidate template ignored: could not match 'reverse_iterator' against '_List_iterator'
+  618 |     operator-(const reverse_iterator<_IteratorL>& __x,
+      |     ^
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/stl_iterator.h:1789:5: note: candidate template ignored: could not match 'move_iterator' against '_List_iterator'
+ 1789 |     operator-(const move_iterator<_IteratorL>& __x,
+      |     ^
+In file included from /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/list_sort.cpp:1:
+In file included from /usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/algorithm:61:
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/stl_algo.h:1815:18: error: invalid operands to binary expression ('std::_List_iterator<int>' and 'std::_List_iterator<int>')
+ 1815 |       if (__last - __first > int(_S_threshold))
+      |           ~~~~~~ ^ ~~~~~~~
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/stl_algo.h:1908:9: note: in instantiation of function template specialization 'std::__final_insertion_sort<std::_List_iterator<int>, __gnu_cxx::__ops::_Iter_less_iter>' requested here
+ 1908 |           std::__final_insertion_sort(__first, __last, __comp);
+      |                ^
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/stl_algo.h:4771:12: note: in instantiation of function template specialization 'std::__sort<std::_List_iterator<int>, __gnu_cxx::__ops::_Iter_less_iter>' requested here
+ 4771 |       std::__sort(__first, __last, __gnu_cxx::__ops::__iter_less_iter());
+      |            ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/list_sort.cpp:3:47: note: in instantiation of function template specialization 'std::sort<std::_List_iterator<int>>' requested here
+    3 | void F() { std::list<int> values{3,1,2}; std::sort(values.begin(), values.end()); }
+      |                                               ^
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/stl_iterator.h:618:5: note: candidate template ignored: could not match 'reverse_iterator' against '_List_iterator'
+  618 |     operator-(const reverse_iterator<_IteratorL>& __x,
+      |     ^
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/stl_iterator.h:1789:5: note: candidate template ignored: could not match 'move_iterator' against '_List_iterator'
+ 1789 |     operator-(const move_iterator<_IteratorL>& __x,
+      |     ^
+2 errors generated.

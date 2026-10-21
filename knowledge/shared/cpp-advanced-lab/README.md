@@ -48,9 +48,9 @@ Notion 검증 첨부 SHA-256: `e9f9b5dbba6f631e9a95f4ac426647603eefcfe7d758d85a3
 | 2026-10-21 새 로컬 실행 | GCC 13.3.0, C++20, 경고를 오류로 취급 | 원본 9개 + 주석판 3개 빌드·실행 성공. 출력 3쌍 바이트 일치 | [로컬 원시 로그](verification/local-gcc-20261021/README.md) |
 | 2026-10-21 새 로컬 실패 예제 | GCC 13.3.0, C++20, `-pedantic-errors -c` | 6/6 예상 컴파일 거부. 정상 테스트 통과 수와 별도 | [실패 예제 결과](verification/local-gcc-20261021/negative/results.json) |
 | 2026-10-21 새 로컬 C++11 호환성 조사 | GCC 13.3.0, `-std=c++11 -pedantic-errors -fsyntax-only` | 원본 9/9 컴파일 거부. **C++11 미지원**, 실행하지 않음 | [C++11 진단](verification/local-gcc-20261021/cxx11/results.json) |
-| 새 GitHub Actions CMake·CTest 검증 | GCC C++20 / Clang C++20 + ASan·UBSan | 워크플로 작성 완료. 아직 실행 결과를 이 문서에 반영하지 않음 | [워크플로](../../../.github/workflows/knowledge-cpp-advanced.yml) |
+| 2026-10-21 새 GitHub Actions CMake·CTest 검증 | GCC 13.3.0 / Clang 18.1.3 + ASan·UBSan, C++20, CMake 3.31.6 | 각 Configure·Build 성공, **CTest 12/12**. 출력 3쌍씩 일치. 각 컴파일러에서 실패 예제 6개 거부, GCC C++11 원본 9개 미지원 확인 | [실행 39557286731](https://github.com/jiwhan112/um.github.io/actions/runs/39557286731), [원시 기록 55파일](verification/github-39557286731/README.md) |
 
-로컬 환경에 Clang·CMake·CTest가 없어 새 로컬 기록은 GCC 직접 빌드입니다. 과거 원시 로그의 성공을 이번 CMake 실행 결과로 취급하지 않습니다. GitHub CI 결과와 공개 배포 결과는 각각 확인 후 별도 기록합니다.
+로컬 환경에 Clang·CMake·CTest가 없어 새 로컬 기록은 GCC 직접 빌드입니다. 새 CMake·CTest와 Clang sanitizer 결과는 위 GitHub 실행에서 확인했습니다. 검증 대상 소스 커밋은 `4cbd10710d0bfce8cb93fae89a9545369c797985`이며 원시 로그를 추가하는 후속 커밋과 구분합니다. 네 artifact ZIP의 GitHub digest와 추출된 **55파일 / 261,873바이트**를 독립 대조했습니다. C++ CI 결과와 웹 UI·공개 배포 결과는 별도로 관리합니다.
 
 **미검증:** Windows/MSVC, Direct3D·GPU·HLSL, 실제 게임 통합, 동시 실행과 경쟁 조건, ABI 호환성, 성능 측정, 모든 예외 지점과 입력을 망라한 커버리지. ASan·UBSan 실행도 해당 실행 경로의 검출 결과이며 전체 프로그램의 안전성 증명이 아닙니다.
 
