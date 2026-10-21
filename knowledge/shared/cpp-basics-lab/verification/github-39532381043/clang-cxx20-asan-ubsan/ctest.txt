@@ -1,0 +1,90 @@
+Internal ctest changing into directory: /home/runner/work/um.github.io/um.github.io/build/cpp-basics
+UpdateCTestConfiguration  from :/home/runner/work/um.github.io/um.github.io/build/cpp-basics/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/home/runner/work/um.github.io/um.github.io/build/cpp-basics/DartConfiguration.tcl
+Test project /home/runner/work/um.github.io/um.github.io/build/cpp-basics
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: types_ko
+
+1: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/types_ko
+1: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-basics
+1: Test timeout computed to be: 10000000
+1: CHAR_BIT=8 sizeof(int)=4 sizeof(long)=8 sizeof(void*)=8 sizeof(wchar_t)=4
+1: PASS 15 checks
+1/9 Test #1: types_ko .........................   Passed    0.01 sec
+test 2
+    Start 2: flow_ko
+
+2: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/flow_ko
+2: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-basics
+2: Test timeout computed to be: 10000000
+2: PASS 15 checks
+2/9 Test #2: flow_ko ..........................   Passed    0.01 sec
+test 3
+    Start 3: memory_ko
+
+3: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/memory_ko
+3: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-basics
+3: Test timeout computed to be: 10000000
+3: PASS 19 checks
+3/9 Test #3: memory_ko ........................   Passed    0.01 sec
+test 4
+    Start 4: types
+
+4: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/types
+4: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original
+4: Test timeout computed to be: 10000000
+4: CHAR_BIT=8 sizeof(int)=4 sizeof(long)=8 sizeof(void*)=8 sizeof(wchar_t)=4
+4: PASS 15 checks
+4/9 Test #4: types ............................   Passed    0.01 sec
+test 5
+    Start 5: flow
+
+5: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/flow
+5: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original
+5: Test timeout computed to be: 10000000
+5: PASS 15 checks
+5/9 Test #5: flow .............................   Passed    0.01 sec
+test 6
+    Start 6: memory
+
+6: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/memory
+6: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original
+6: Test timeout computed to be: 10000000
+6: PASS 19 checks
+6/9 Test #6: memory ...........................   Passed    0.01 sec
+test 7
+    Start 7: containers
+
+7: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/containers
+7: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original
+7: Test timeout computed to be: 10000000
+7: sizeof(Item)=48 alignof(Item)=8
+7: PASS 49 checks
+7/9 Test #7: containers .......................   Passed    0.01 sec
+test 8
+    Start 8: buffer
+
+8: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/buffer
+8: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original
+8: Test timeout computed to be: 10000000
+8: PASS 104 checks
+8/9 Test #8: buffer ...........................   Passed    0.01 sec
+test 9
+    Start 9: inventory
+
+9: Test command: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/inventory
+9: Working Directory: /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original
+9: Test timeout computed to be: 10000000
+9: cwd=/home/runner/work/um.github.io/um.github.io/build/cpp-basics/original
+9: PASS 19 checks
+9/9 Test #9: inventory ........................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 9
+
+Total Test time (real) =   0.13 sec

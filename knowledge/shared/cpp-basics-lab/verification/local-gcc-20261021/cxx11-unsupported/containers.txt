@@ -1,0 +1,67 @@
+In file included from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:1:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:5:1: error: inline variables are only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+    5 | inline int checks = 0;
+      | ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:13:14: error: ‘span’ is not a member of ‘std’
+   13 | int Sum(std::span<const int> values) { int result{}; for (int value : values) result += value; return result; }
+      |              ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:13:14: note: ‘std::span’ is only available from C++20 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:13:19: error: expected primary-expression before ‘const’
+   13 | int Sum(std::span<const int> values) { int result{}; for (int value : values) result += value; return result; }
+      |                   ^~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp: In function ‘int main()’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:16:48: error: ‘Sum’ cannot be used as a function
+   16 |     std::array<int, 3> a{10, 20, 30}; CHECK(Sum(a) == 60);
+      |                                             ~~~^~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:20:24: error: ‘Sum’ cannot be used as a function
+   20 |     v[1] = 8; CHECK(Sum(v) == 8);
+      |                     ~~~^~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:31:44: error: ‘string_view’ in namespace ‘std’ does not name a type
+   31 |     std::string name{"Potion"}; const std::string_view view{name}; CHECK(view == "Potion");
+      |                                            ^~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:31:39: note: ‘std::string_view’ is only available from C++17 onwards
+   31 |     std::string name{"Potion"}; const std::string_view view{name}; CHECK(view == "Potion");
+      |                                       ^~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:31:74: error: ‘view’ was not declared in this scope
+   31 |     std::string name{"Potion"}; const std::string_view view{name}; CHECK(view == "Potion");
+      |                                                                          ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:38:10: error: ‘variant’ is not a member of ‘std’
+   38 |     std::variant<int, std::string> data{7}; CHECK(std::get<int>(data) == 7);
+      |          ^~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:38:10: note: ‘std::variant’ is only available from C++17 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:38:18: error: expected primary-expression before ‘int’
+   38 |     std::variant<int, std::string> data{7}; CHECK(std::get<int>(data) == 7);
+      |                  ^~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:38:65: error: ‘data’ was not declared in this scope
+   38 |     std::variant<int, std::string> data{7}; CHECK(std::get<int>(data) == 7);
+      |                                                                 ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:39:44: error: ‘holds_alternative’ is not a member of ‘std’
+   39 |     data = std::string{"text"}; CHECK(std::holds_alternative<std::string>(data));
+      |                                            ^~~~~~~~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:39:44: note: ‘std::holds_alternative’ is only available from C++17 onwards
+   39 |     data = std::string{"text"}; CHECK(std::holds_alternative<std::string>(data));
+      |                                            ^~~~~~~~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp:39:73: error: expected primary-expression before ‘>’ token
+   39 |     data = std::string{"text"}; CHECK(std::holds_alternative<std::string>(data));
+      |                                                                         ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~

@@ -1,0 +1,11 @@
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/negative/narrowing.cpp:1:24: error: type 'double' cannot be narrowed to 'int' in initializer list [-Wc++11-narrowing]
+    1 | int main() { int count{3.5}; return count; }
+      |                        ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/negative/narrowing.cpp:1:24: note: insert an explicit cast to silence this issue
+    1 | int main() { int count{3.5}; return count; }
+      |                        ^~~
+      |                        static_cast<int>( )
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/negative/narrowing.cpp:1:24: warning: implicit conversion from 'double' to 'int' changes value from 3.5 to 3 [-Wliteral-conversion]
+    1 | int main() { int count{3.5}; return count; }
+      |                       ~^~~
+1 warning and 1 error generated.

@@ -1,0 +1,80 @@
+# C++ 기초 01~03 · 시각 교재와 원본 보존 원장
+
+작성 기준일: 2026-10-21
+
+## 작업 범위
+
+사용자가 승인한 DX9 09의 교재 형식을 C++ 과정에 적용했다. 상위 목차는 유지하고, Notion 기초 목차의 01~05 중 처음 세 단원을 작성한다.
+
+| 단원 | 공개 경로 | 연결되는 전체 프로그램 |
+| --- | --- | --- |
+| 01 빌드·타입·초기화·표현식 | [/knowledge/cpp-basics-01/](https://jiwhan112.github.io/um.github.io/knowledge/cpp-basics-01/) | `types` / `types_ko` |
+| 02 제어 흐름·함수·콜백 | [/knowledge/cpp-basics-02/](https://jiwhan112.github.io/um.github.io/knowledge/cpp-basics-02/) | `flow` / `flow_ko` |
+| 03 포인터·참조·수명·소유권 | [/knowledge/cpp-basics-03/](https://jiwhan112.github.io/um.github.io/knowledge/cpp-basics-03/) | `memory` / `memory_ko` |
+
+개념·실습·출처·과거 기록을 네 탭으로 나누고, 개념 그림과 실제 렌더링되는 Mermaid를 배치했다. 01에는 비트 설정·해제·반전을 비교하는 조작 실습을 추가했다. 이 실습은 하위 8비트의 설명용 브라우저 모형이며 C++ 컴파일·실행을 대신하지 않는다.
+
+교재는 3개다. 기존 72개 문서를 유지한 카탈로그는 75개이며, 기초 04~05나 심화 과정, 다른 신규 집필 트랙은 이 숫자에 추가하지 않았다. 공통 소스 팩의 다른 프로그램 복원과 그 단원 본문 완료를 구분한다.
+
+## 원본 본문과 소스
+
+Notion은 읽기 전용으로 조회했다. 각 `source-notion.md`에는 fetch로 받은 전체 enhanced Markdown 본문을 보존하고, wrapper를 제외한 범위·마지막 개행·원본 수정 시각·응답 기준 시각을 capture JSON에 기록했다. 도구가 제공하지 않은 truncated/unknown block 필드는 `null`로 남겨 확인했다고 주장하지 않았다.
+
+| 보존 대상 | UTF-8 바이트 | SHA-256 |
+| --- | ---: | --- |
+| 기초 목차 본문 | 9,643 | `23f9a09f0b37e1ec9147119b752ea94a31f272e4c2540e468f5d5142e32fa3a3` |
+| 01 전체 본문 | 15,254 | `a6a61400d6a27670e11daacc47d49631ac8e1855182c834e756b3c89b97c7a33` |
+| 02 전체 본문 | 13,971 | `9df6bf92c84fc102b51d1238e745890fbbd2ccb2b6e0c54478d0c7709b74191f` |
+| 03 전체 본문 | 15,759 | `2f48b54d2578f67b641553d180d078eb6d5fe0c0cf0fe70c0f7eaf68fe7e3091` |
+| 원본 첨부 Markdown | 19,602 | `c48d34d0e978b43f3e1b81d86e1e902052e6c5f8536c6b372c2fae8a4d2ed761` |
+
+첨부에서 16개 파일 블록을 복원했다. 원래 CMake, 공통 검사 헤더, 정상 실행 프로그램 6개에 필요한 소스, 컴파일 거부 예제 4개, 의도적인 진단 예제 2개를 포함한다. `original/` 파일은 원문 코드 블록의 바이트와 마지막 LF까지 비교한다.
+
+`ko/types.cpp`, `ko/flow.cpp`, `ko/memory.cpp`는 한국어 설명 주석을 추가한 파생판이다. 전처리 지시문과 매크로 확장 전 C++ 토큰을 원본과 비교한다. 토큰 수는 360 / 471 / 549개다. 주석 줄이 늘어났으므로 `__LINE__`에 의한 실패 위치는 각 파일의 실제 줄 번호를 따른다. 이 비교를 임의의 C++ 코드에 대한 의미 동등성 증명으로 확대하지 않는다.
+
+세부 파일 바이트·해시는 [공통 소스 무결성 원장](./shared/cpp-basics-lab/source-integrity.json), 검사 명령과 현재 실행 근거는 [실습 팩 README](./shared/cpp-basics-lab/README.md)에 있다.
+
+## 검증을 읽는 기준
+
+| 종류 | 판정 기준 |
+| --- | --- |
+| 본문 보존 | 캡처 정보와 UTF-8 길이·SHA-256 일치 |
+| 원본 소스 | 첨부의 16개 코드 블록과 각 파일의 바이트 일치 |
+| 한국어 주석판 | 전처리 지시문·C++ 토큰 비교 및 실제 빌드·실행 |
+| GCC C++20 | Configure / Build / CTest 원시 출력 |
+| Clang C++20 | ASan/UBSan을 켠 Configure / Build / CTest 원시 출력 |
+| GCC C++11 | `-std=c++11 -pedantic-errors`의 실제 거부 출력 · 호환 성공이 아님 |
+| 부정 예제 | 정상 CTest와 분리해 예상한 컴파일 거부 확인 |
+| 의도적 미정의 동작 | 정상 실행 코드와 분리해 sanitizer 진단 확인 |
+| 사이트 | 스키마·React 빌드·기존 회귀·새 단원·PC/모바일 화면 검사 |
+| 공개 배포 | master 병합 후 Pages 워크플로 성공과 실제 URL/JSON 확인 |
+
+실행 결과와 해당 커밋은 공통 팩의 현재 검증 기록을 따른다. 과거 Notion의 GCC 14.2.0·Clang 17.0.0 기록을 새 CI 실행으로 재사용하지 않는다. 이 원장의 문서 경로가 존재한다는 사실만으로 라이브 배포 성공을 판정하지 않는다.
+
+## 이번 배치의 실제 실행 근거
+
+첫 구현 커밋은 [`d6065fee0468d0f0447b826a608363632f36bc0e`](https://github.com/jiwhan112/um.github.io/commit/d6065fee0468d0f0447b826a608363632f36bc0e)이며, [PR #13](https://github.com/jiwhan112/um.github.io/pull/13)에서 검토·병합 상태와 후속 커밋을 확인할 수 있다.
+
+- 로컬 GCC 13.3.0 C++20 직접 빌드·실행: 원본 6개와 한국어판 3개 통과, 첫 세 프로그램의 원본·주석판 stdout 일치. [로컬 기록](./shared/cpp-basics-lab/verification/local-gcc-20261021/).
+- GitHub [실행 39532381043](https://github.com/jiwhan112/um.github.io/actions/runs/39532381043): 위 커밋에서 다섯 작업 모두 성공. GCC 13.3.0 / Clang 18.1.3 / CMake 3.31.6.
+- GCC C++20 및 Clang C++20 + ASan/UBSan: Configure·Build 성공, 각 정상 CTest **9/9**, 각 첫 세 stdout 쌍 일치.
+- 정상 CTest와 분리한 컴파일 거부 4개를 GCC·Clang에서 확인했다. GCC의 C++11 엄격 검사 6개는 모두 거부했으며 C++11 실행은 하지 않았다. Clang의 두 의도적 오류 실험은 예상 sanitizer 진단과 종료 코드 1을 확인했다.
+- GitHub artifact 5개의 ZIP SHA-256을 대조한 뒤 원시 파일 **55개**를 그대로 저장했다. [검증 원장](./shared/cpp-basics-lab/verification/github-39532381043/README.md)과 [파일별 hash manifest](./shared/cpp-basics-lab/verification/github-39532381043/artifact-manifest.json)에서 추적한다.
+- 로컬 웹 검증: 단위 검사 **28/28**, TypeScript·React production build, 문서·카탈로그 스키마, 저장소·발행 계약, **150개 직접 진입 경로**와 내부 문서 링크 검사 통과.
+
+첫 웹 CI의 02단원 복습 검사는 전체 코드 접기를 잘못 선택해 실패했다. 복습 섹션 ID를 명시하도록 테스트를 고쳤다. 검사를 제거하거나 기대 조건·스크린샷 허용 오차를 낮추지 않았다. 후속 웹 CI와 최종 Pages 배포 상태는 PR 및 병합 커밋의 실제 Actions 결과로 확인한다.
+
+## 검사 수와 한계
+
+- 01~03의 런타임 CHECK는 **15 + 15 + 19 = 49개**다.
+- 원본 팩 전체는 반복문에서 같은 CHECK가 실행되는 횟수를 포함해 **221회**다. 이를 221개의 서로 독립적인 조건이라고 부르지 않는다.
+- 원본·한국어판·컴파일러별 반복 실행으로 조건 수를 늘리지 않는다. `static_assert`는 런타임 CHECK와 별도다.
+- 원본 팩은 C++20 기준이다. C++11 호환판을 새로 만들거나 C++11 검사 거부를 성공적인 C++11 빌드로 기록하지 않는다.
+- Windows/MSVC 실행은 미검증이다. 이 배치는 Direct3D·GPU·HLSL 실행 증거를 추가하지 않는다.
+- 원래 ZIP과 과거 원시 로그는 현재 첨부 텍스트에서 회수하지 못했다. 새 CI 원시 로그와 복원한 소스만 구분해 보관한다.
+
+## 기존 기능과 다음 단원
+
+변경된 공통 UI는 새 typed 실습 블록과 C++ 목차 연결이다. 브리핑·언어·사고력·게임 기획·Supabase 동기화 코드를 변경하지 않았다. 기존 저장 키와 공개 URL을 보존하고 회귀 검사에서 다시 확인한다. Notion과 예약 작업은 수정하지 않았다.
+
+다음은 **C++ 기초 04 · 배열·문자열·사용자 정의 타입·도구**다. 원본 URL: <https://app.notion.com/p/3f7a99703f4081979bf0c9aa376a5774>.

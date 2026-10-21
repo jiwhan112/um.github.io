@@ -87,8 +87,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,72);
- assert.equal(sourceCatalog.length,72);
+ assert.equal(docs.length,75);
+ assert.equal(sourceCatalog.length,75);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -388,4 +388,39 @@ test('DX11 integrity manifest verifies page bodies, native CMake and raw histori
  assert.ifError(result.error);
  assert.equal(result.status,0,result.stdout+'\n'+result.stderr);
  assert.match(result.stdout,/PASS source-integrity:/);
+});
+
+test('C++ foundation lessons publish visual assets, full Korean sources and preserved Notion captures',async()=>{
+ function allBlocks(blocks:Block[]):Block[]{return blocks.flatMap(block=>[block,...('blocks'in block?allBlocks(block.blocks):block.type==='list'?block.items.flatMap(allBlocks):[])]);}
+ const docs=catalog.documents.filter(d=>d.kind==='knowledge'&&d.category==='C++ 기초·심화');
+ assert.deepEqual(docs.map(d=>d.route),['/knowledge/cpp-basics-01/','/knowledge/cpp-basics-02/','/knowledge/cpp-basics-03/']);
+ for(const [index,name] of ['types','flow','memory'].entries()){
+  const slug='cpp-basics-'+String(index+1).padStart(2,'0');
+  const doc=documentSchema.parse(JSON.parse(await readFile('public/'+docs[index].file,'utf8')));
+  assert.deepEqual([...new Set(doc.sections.map(s=>s.tab))],['document','practice','sources','history']);
+  const blocks=allBlocks(doc.sections.flatMap(s=>s.blocks));
+  const images=blocks.filter(b=>b.type==='image');
+  assert.ok(images.length>=2,'visual explanations missing '+slug);
+  for(const image of images){
+   assert.ok(image.type==='image');
+   const source=await readFile('../'+image.src.slice(1));
+   assert.deepEqual(await readFile('public/'+image.src.slice(1)),source,'asset bytes '+image.src);
+  }
+  const koPath='/knowledge/shared/cpp-basics-lab/ko/'+name+'.cpp';
+  assert.ok(blocks.some(b=>b.type==='paragraph'&&b.content.some(n=>n.href===koPath)),'whole Korean source link '+slug);
+  const koText=await readFile('..'+koPath,'utf8');
+  assert.ok(blocks.some(b=>b.type==='code'&&b.language==='cpp'&&b.text===koText),'embedded complete Korean code matches actual file '+slug);
+  const original=await readFile('../knowledge/'+slug+'/source-notion.md');
+  const capture=JSON.parse(await readFile('../knowledge/'+slug+'/source-notion-capture.json','utf8'));
+  assert.equal(original.length,capture.source_bytes);
+  assert.equal(createHash('sha256').update(original).digest('hex'),capture.sha256);
+  assert.deepEqual(await readFile('public/knowledge/'+slug+'/source-notion.md'),original);
+  assert.deepEqual(await readFile('public'+koPath),await readFile('..'+koPath));
+ }
+ const first=documentSchema.parse(JSON.parse(await readFile('public/'+docs[0].file,'utf8')));
+ assert.ok(allBlocks(first.sections.flatMap(s=>s.blocks)).some(b=>b.type==='cpp-bitmask-lab'));
+ const integrity=spawnSync('python3',['../knowledge/shared/cpp-basics-lab/verify_sources.py'],{encoding:'utf8'});
+ assert.ifError(integrity.error);
+ assert.equal(integrity.status,0,integrity.stdout+'\n'+integrity.stderr);
+ assert.match(integrity.stdout,/16 exact original code blocks/);
 });

@@ -1,0 +1,65 @@
+In file included from /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:1:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:15:11: error: binary constants are a C++14 feature or GCC extension
+   15 |     CHECK(0b00000010 == 2); CHECK((0b0100 ^ 0b0011) == 7); CHECK(0132 == 90);
+      |           ^~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:15:36: error: binary constants are a C++14 feature or GCC extension
+   15 |     CHECK(0b00000010 == 2); CHECK((0b0100 ^ 0b0011) == 7); CHECK(0132 == 90);
+      |                                    ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:15:45: error: binary constants are a C++14 feature or GCC extension
+   15 |     CHECK(0b00000010 == 2); CHECK((0b0100 ^ 0b0011) == 7); CHECK(0132 == 90);
+      |                                             ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/check.hpp:5:1: error: inline variables are only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+    5 | inline int checks = 0;
+      | ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp: In function ‘int main()’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:8:35: error: ‘static_assert’ without a message only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+    8 |     static_assert(sizeof(char) == 1);
+      |                                   ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:9:31: error: ‘static_assert’ without a message only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+    9 |     static_assert(CHAR_BIT >= 8);
+      |                               ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:10:24: error: ‘is_same_v’ is not a member of ‘std’; did you mean ‘is_same’?
+   10 |     static_assert(std::is_same_v<decltype(10.0), double>);
+      |                        ^~~~~~~~~
+      |                        is_same
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:10:34: error: expected primary-expression before ‘decltype’
+   10 |     static_assert(std::is_same_v<decltype(10.0), double>);
+      |                                  ^~~~~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:10:34: error: expected ‘,’ before ‘decltype’
+   10 |     static_assert(std::is_same_v<decltype(10.0), double>);
+      |                                  ^~~~~~~~~~~~~~
+      |                                  ,
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:10:34: error: expected string-literal before ‘decltype’
+   10 |     static_assert(std::is_same_v<decltype(10.0), double>);
+      |                                  ^~~~~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:10:34: error: expected ‘)’ before ‘decltype’
+   10 |     static_assert(std::is_same_v<decltype(10.0), double>);
+      |                  ~               ^~~~~~~~~~~~~~
+      |                                  )
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:11:24: error: ‘is_same_v’ is not a member of ‘std’; did you mean ‘is_same’?
+   11 |     static_assert(std::is_same_v<decltype(10.0f), float>);
+      |                        ^~~~~~~~~
+      |                        is_same
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:11:34: error: expected primary-expression before ‘decltype’
+   11 |     static_assert(std::is_same_v<decltype(10.0f), float>);
+      |                                  ^~~~~~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:11:34: error: expected ‘,’ before ‘decltype’
+   11 |     static_assert(std::is_same_v<decltype(10.0f), float>);
+      |                                  ^~~~~~~~~~~~~~~
+      |                                  ,
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:11:34: error: expected string-literal before ‘decltype’
+   11 |     static_assert(std::is_same_v<decltype(10.0f), float>);
+      |                                  ^~~~~~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp:11:34: error: expected ‘)’ before ‘decltype’
+   11 |     static_assert(std::is_same_v<decltype(10.0f), float>);
+      |                  ~               ^~~~~~~~~~~~~~~
+      |                                  )

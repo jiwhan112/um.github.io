@@ -1,0 +1,128 @@
+name: C++ basics preserved sources validation
+on:
+  pull_request:
+    branches: [master]
+    paths: ['knowledge/cpp-basics-*/**', 'knowledge/shared/cpp-basics-lab/**', '.github/workflows/knowledge-cpp-basics.yml']
+  push:
+    branches: [master, 'feature/cpp-foundations-*']
+    paths: ['knowledge/cpp-basics-*/**', 'knowledge/shared/cpp-basics-lab/**', '.github/workflows/knowledge-cpp-basics.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+  UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+jobs:
+  positive:
+    name: positive-${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: gcc-cxx20
+            compiler: g++
+            sanitizers: 'OFF'
+          - name: clang-cxx20-asan-ubsan
+            compiler: clang++
+            sanitizers: 'ON'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Preserve environment and verify source fidelity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification-logs
+          {
+            date -u
+            git rev-parse HEAD
+            ${{ matrix.compiler }} --version
+            cmake --version
+            python3 knowledge/shared/cpp-basics-lab/verify_sources.py --json
+          } | tee verification-logs/environment-and-integrity.txt
+      - name: Configure C++20 positive programs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S knowledge/shared/cpp-basics-lab -B build/cpp-basics \
+            -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=20 \
+            -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
+            -DCPP_BASICS_SANITIZERS=${{ matrix.sanitizers }} \
+            2>&1 | tee verification-logs/configure.txt
+      - name: Build original six and annotated three programs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake --build build/cpp-basics --verbose --parallel 2 2>&1 | tee verification-logs/build.txt
+      - name: Run only normal CTest programs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ctest --test-dir build/cpp-basics --output-on-failure --verbose 2>&1 | tee verification-logs/ctest.txt
+      - name: Compare three original and annotated stdout pairs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 knowledge/shared/cpp-basics-lab/verify_experiments.py compare \
+            --compiler ${{ matrix.compiler }} --build build/cpp-basics \
+            --out verification-logs/output-equivalence 2>&1 | tee verification-logs/output-equivalence-summary.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cpp-basics-positive-${{ matrix.name }}-raw-logs
+          path: verification-logs
+          retention-days: 30
+  compile-rejections:
+    name: expected-compile-rejections-${{ matrix.compiler }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: ['g++', 'clang++']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Record source identity and fidelity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification-logs
+          { date -u; git rev-parse HEAD; python3 knowledge/shared/cpp-basics-lab/verify_sources.py --json; } | tee verification-logs/environment-and-integrity.txt
+      - name: Expect four C++20 compilation errors
+        run: python3 knowledge/shared/cpp-basics-lab/verify_experiments.py negative --compiler '${{ matrix.compiler }}' --out verification-logs/negative
+      - name: Record unsupported C++11 diagnostics without running them
+        if: matrix.compiler == 'g++'
+        run: python3 knowledge/shared/cpp-basics-lab/verify_experiments.py cxx11 --compiler g++ --out verification-logs/cxx11-unsupported
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cpp-basics-compile-rejections-${{ matrix.compiler }}-raw-logs
+          path: verification-logs
+          retention-days: 30
+  intentional-diagnostics:
+    name: expected-UB-diagnostics-clang
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Record source identity and fidelity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification-logs
+          { date -u; git rev-parse HEAD; python3 knowledge/shared/cpp-basics-lab/verify_sources.py --json; } | tee verification-logs/environment-and-integrity.txt
+      - name: Require intentional overflow and use-after-free diagnostics
+        run: python3 knowledge/shared/cpp-basics-lab/verify_experiments.py diagnostics --compiler clang++ --out verification-logs/intentional-diagnostics
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cpp-basics-expected-UB-diagnostics-clang-raw-logs
+          path: verification-logs
+          retention-days: 30

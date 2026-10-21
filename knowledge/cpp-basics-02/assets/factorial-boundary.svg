@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="718" viewBox="0 0 640 718" role="img" aria-labelledby="title desc">
+<title id="title">범위를 제한한 팩토리얼의 호출과 반환</title>
+<desc id="desc">0부터 20까지만 허용한다. Factorial 3은 2, 1, 0을 호출하고, 0에서 반환한 1에 1, 2, 3을 곱하여 6을 반환한다.</desc>
+<style>
+text { font-family: "Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", sans-serif; fill: #e7eef7; }
+.title { font-size: 28px; font-weight: 700; }
+.label { font-size: 24px; font-weight: 700; }
+.body { font-size: 22px; }
+.muted { fill: #b6c6d9; font-size: 21px; }
+.cyan { fill: #79d9e8; }
+.gold { fill: #ffd07a; }
+.pink { fill: #ffabb8; }
+</style>
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="#79d9e8" stroke-width="2"/></marker>
+  <marker id="gold-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="#ffd07a" stroke-width="2"/></marker>
+</defs>
+<rect width="640" height="718" rx="22" fill="#101c2d"/>
+
+<text x="32" y="48" class="title">재귀는 입구의 범위 검사부터</text>
+<rect x="28" y="76" width="584" height="104" rx="14" fill="#332c22" stroke="#8c7040"/>
+<text x="320" y="115" class="label gold" text-anchor="middle">허용 범위: 0 ≤ n ≤ 20</text>
+<text x="320" y="151" class="body" text-anchor="middle">음수·21 이상은 재귀 전에 거부</text>
+<text x="168" y="224" class="label cyan" text-anchor="middle">호출 · 아래로</text>
+<text x="474" y="224" class="label gold" text-anchor="middle">반환 · 위로</text>
+<rect x="44" y="250" width="246" height="64" rx="12" fill="#172e40"/>
+<rect x="350" y="250" width="246" height="64" rx="12" fill="#332c22"/>
+<text x="167" y="292" class="label" text-anchor="middle">Factorial(3)</text>
+<text x="473" y="292" class="label" text-anchor="middle">2 × 3 = 6</text>
+<path d="M167 322 V347" stroke="#79d9e8" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M473 347 V322" stroke="#ffd07a" stroke-width="3" marker-end="url(#gold-arrow)"/>
+<rect x="44" y="362" width="246" height="64" rx="12" fill="#172e40"/>
+<rect x="350" y="362" width="246" height="64" rx="12" fill="#332c22"/>
+<text x="167" y="404" class="label" text-anchor="middle">Factorial(2)</text>
+<text x="473" y="404" class="label" text-anchor="middle">1 × 2 = 2</text>
+<path d="M167 434 V459" stroke="#79d9e8" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M473 459 V434" stroke="#ffd07a" stroke-width="3" marker-end="url(#gold-arrow)"/>
+<rect x="44" y="474" width="246" height="64" rx="12" fill="#172e40"/>
+<rect x="350" y="474" width="246" height="64" rx="12" fill="#332c22"/>
+<text x="167" y="516" class="label" text-anchor="middle">Factorial(1)</text>
+<text x="473" y="516" class="label" text-anchor="middle">1 × 1 = 1</text>
+<path d="M167 546 V571" stroke="#79d9e8" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M473 571 V546" stroke="#ffd07a" stroke-width="3" marker-end="url(#gold-arrow)"/>
+<rect x="44" y="586" width="552" height="70" rx="12" fill="#25384c" stroke="#668aaa"/>
+<text x="320" y="630" class="label" text-anchor="middle">Factorial(0) → 1 반환</text>
+<text x="320" y="694" class="muted" text-anchor="middle">곱셈 전에 결과 범위도 확인합니다.</text>
+
+</svg>

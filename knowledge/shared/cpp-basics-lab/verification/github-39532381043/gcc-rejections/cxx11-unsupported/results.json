@@ -1,0 +1,144 @@
+{
+  "mode": "cxx11",
+  "executed_at_utc": "2026-10-21T02:19:39.293311+00:00",
+  "status": "pass",
+  "commands": [
+    {
+      "label": "compiler-version",
+      "argv": [
+        "/usr/bin/g++",
+        "--version"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "compiler-version.txt"
+    },
+    {
+      "label": "types",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 1,
+      "raw_output": "types.txt"
+    },
+    {
+      "label": "flow",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/flow.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 1,
+      "raw_output": "flow.txt"
+    },
+    {
+      "label": "memory",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 1,
+      "raw_output": "memory.txt"
+    },
+    {
+      "label": "containers",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/containers.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 1,
+      "raw_output": "containers.txt"
+    },
+    {
+      "label": "buffer",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/buffer.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 1,
+      "raw_output": "buffer.txt"
+    },
+    {
+      "label": "inventory",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/inventory.cpp",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 1,
+      "raw_output": "inventory.txt"
+    }
+  ],
+  "results": [
+    {
+      "name": "types",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "flow",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "memory",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "containers",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "buffer",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "inventory",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    }
+  ],
+  "counting_note": "Compiler and annotated-source reruns repeat the original checks; do not add them as independent conditions.",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "cxx11_supported": false,
+  "cxx11_programs_executed": false
+}

@@ -1,0 +1,31 @@
+In file included from /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp:1:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/check.hpp:5:1: error: inline variables are only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+    5 | inline int checks = 0;
+      | ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp: In function ‘int main()’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp:27:23: error: ‘make_unique’ is not a member of ‘std’
+   27 |     auto owner = std::make_unique<int>(42);
+      |                       ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp:27:23: note: ‘std::make_unique’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp:27:35: error: expected primary-expression before ‘int’
+   27 |     auto owner = std::make_unique<int>(42);
+      |                                   ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp:39:38: error: ‘bit_cast’ is not a member of ‘std’; did you mean ‘bad_cast’?
+   39 |     const auto representation = std::bit_cast<std::array<unsigned char, sizeof(source)>>(source);
+      |                                      ^~~~~~~~
+      |                                      bad_cast
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp:39:87: error: expected primary-expression before ‘>’ token
+   39 |     const auto representation = std::bit_cast<std::array<unsigned char, sizeof(source)>>(source);
+      |                                                                                       ^~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp:40:16: error: ‘bit_cast’ is not a member of ‘std’; did you mean ‘bad_cast’?
+   40 |     CHECK(std::bit_cast<std::uint32_t>(representation) == source);
+      |                ^~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp:40:38: error: expected primary-expression before ‘>’ token
+   40 |     CHECK(std::bit_cast<std::uint32_t>(representation) == source);
+      |                                      ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~

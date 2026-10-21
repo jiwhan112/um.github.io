@@ -1,0 +1,159 @@
+Wed Oct 21 02:19:39 UTC 2026
+d6065fee0468d0f0447b826a608363632f36bc0e
+{
+  "schema_version": 1,
+  "status": "pass",
+  "source_reference": "notion-file-block://5fb8e4e7-6ccb-4edd-889f-bba260b4392b/2d74b3e5-ff5f-4dd0-9fff-4d3559528daf?space_id=815d1335-3b56-43a7-903b-d7addf097c9f&name=cpp_basics_lab_sources_v1.md",
+  "notion_page_captures": {
+    "knowledge/cpp-basics-01/source-notion.md": {
+      "bytes": 15254,
+      "sha256": "a6a61400d6a27670e11daacc47d49631ac8e1855182c834e756b3c89b97c7a33",
+      "capture": "knowledge/cpp-basics-01/source-notion-capture.json",
+      "matches_capture": true
+    },
+    "knowledge/cpp-basics-02/source-notion.md": {
+      "bytes": 13971,
+      "sha256": "9df6bf92c84fc102b51d1238e745890fbbd2ccb2b6e0c54478d0c7709b74191f",
+      "capture": "knowledge/cpp-basics-02/source-notion-capture.json",
+      "matches_capture": true
+    },
+    "knowledge/cpp-basics-03/source-notion.md": {
+      "bytes": 15759,
+      "sha256": "2f48b54d2578f67b641553d180d078eb6d5fe0c0cf0fe70c0f7eaf68fe7e3091",
+      "capture": "knowledge/cpp-basics-03/source-notion-capture.json",
+      "matches_capture": true
+    },
+    "knowledge/shared/cpp-basics-lab/source-notion-index.md": {
+      "bytes": 9643,
+      "sha256": "23f9a09f0b37e1ec9147119b752ea94a31f272e4c2540e468f5d5142e32fa3a3",
+      "capture": "knowledge/shared/cpp-basics-lab/source-notion-index-capture.json",
+      "matches_capture": true
+    }
+  },
+  "attachment": {
+    "path": "source-attachment.md",
+    "bytes": 19602,
+    "sha256": "c48d34d0e978b43f3e1b81d86e1e902052e6c5f8536c6b372c2fae8a4d2ed761"
+  },
+  "original_code_blocks_exact": true,
+  "original_file_count": 16,
+  "original_files": {
+    "CMakeLists.txt": {
+      "bytes": 751,
+      "sha256": "c851097a2639f13d9c707fbf4fd52d7d2da82927a81bc37c4679c7a96a13aa7c"
+    },
+    "src/check.hpp": {
+      "bytes": 474,
+      "sha256": "ace9946ec79909f535bbd6d3a0b4267c022443fbe0448e1aefe922b53f2b793f"
+    },
+    "src/types.cpp": {
+      "bytes": 1366,
+      "sha256": "bde78dc83298d5bd32594451892283d638bed26600d584ee0c8cc90bfd2d4704"
+    },
+    "src/flow.cpp": {
+      "bytes": 1590,
+      "sha256": "6ba26d45b48a778526450f1684f352eb063dc4a02e7a4908021f90030541d32a"
+    },
+    "src/memory.cpp": {
+      "bytes": 1881,
+      "sha256": "3cbf23e8f2419bb4c6cbe7faa1eb33cab6a8f93b03cd09c985d3ddc30944de71"
+    },
+    "src/containers.cpp": {
+      "bytes": 2247,
+      "sha256": "b4d2782fded50722521ca2bc0773d4b8812152e0c51e874742295d82cfa9267d"
+    },
+    "src/buffer.cpp": {
+      "bytes": 1844,
+      "sha256": "491706611bb88d2177a5ef1e02b061e8c0464bf64512de910283bddbbafb59d7"
+    },
+    "src/inventory.hpp": {
+      "bytes": 440,
+      "sha256": "dbaf1ac6aad4cb6aaa9a4aa5bcfc5c2d4001e5e60112bc83015ae5f4f431d987"
+    },
+    "src/inventory.cpp": {
+      "bytes": 2295,
+      "sha256": "97666c69b8f677ed9f33fd19b29009002af16fdc321d943a0a0f7bbb00e152bf"
+    },
+    "src/inventory_main.cpp": {
+      "bytes": 2920,
+      "sha256": "d0dedb746278a7405a553c105370ef45d7cb364d74027cdbfb67fd4515d6d3c6"
+    },
+    "negative/const_write.cpp": {
+      "bytes": 43,
+      "sha256": "7e287b26e632d8b2cb070d83cf6dbcf912d9c59dd1cb0b6a26b894bf4f0e62d9"
+    },
+    "negative/narrowing.cpp": {
+      "bytes": 45,
+      "sha256": "5e6ec5ab15841d40a6f5b0e56bed39d6cbaa609afdc9d8e3fa29da393db89656"
+    },
+    "negative/array_pointer.cpp": {
+      "bytes": 66,
+      "sha256": "9b70f4fa2162b05f2cc7033dc2f207bd773252aec6d214d45159b2f061957e4f"
+    },
+    "negative/reference_temporary.cpp": {
+      "bytes": 45,
+      "sha256": "92cf38dd7213001d9e6cc180b17f70c087f55c38745a679d7479b4b3e920bc58"
+    },
+    "diagnostics/signed_overflow.cpp": {
+      "bytes": 178,
+      "sha256": "3a27ac15273b705c5f743f2d19bb4d31242dc5fdbf1c1e577adcd1a24fbe55e7"
+    },
+    "diagnostics/use_after_free.cpp": {
+      "bytes": 175,
+      "sha256": "6368c567c33adc72fb5388e4514b8de401bf576250251bc0bd8736e077d054d8"
+    }
+  },
+  "annotated_files": {
+    "ko/types.cpp": {
+      "bytes": 2957,
+      "sha256": "622e815ec1e6681836a1ac22033f289b8f420c84b302a5a23857cfe932e3e364",
+      "original": "original/src/types.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 360,
+      "directives_exact": true,
+      "check_call_sites": 15,
+      "static_assert_call_sites": 4
+    },
+    "ko/flow.cpp": {
+      "bytes": 3473,
+      "sha256": "52aa0739ca72878b3590e3a2116e4ed396ebe2e758e40b6f7b725cfdc998a778",
+      "original": "original/src/flow.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 471,
+      "directives_exact": true,
+      "check_call_sites": 15,
+      "static_assert_call_sites": 0
+    },
+    "ko/memory.cpp": {
+      "bytes": 4046,
+      "sha256": "f02a84b31b0bb216bbc84eeea9b1ef1653b8b7d6792b4cb621859f39dbeb2fd7",
+      "original": "original/src/memory.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 549,
+      "directives_exact": true,
+      "check_call_sites": 19,
+      "static_assert_call_sites": 0
+    }
+  },
+  "original_runtime_checks_recorded_in_attachment": {
+    "types": 15,
+    "flow": 15,
+    "memory": 19,
+    "containers": 49,
+    "buffer": 104,
+    "inventory": 19
+  },
+  "original_runtime_check_invocations_total_including_loop_iterations": 221,
+  "first_three_lessons_check_invocations": 49,
+  "annotation_checks_repeat_original_conditions": true,
+  "counting_note": "221 is the original pack's runtime check count including loop iterations. The first three lessons account for 49 of those checks. Annotated and compiler reruns do not add independent conditions.",
+  "not_recovered": [
+    "historical ZIP attachment",
+    "historical raw build and execution logs"
+  ],
+  "limitations": [
+    "This is source fidelity verification, not a fresh compile/run result.",
+    "__LINE__ diagnostics follow each source file's actual lines.",
+    "The preserved pack requires C++20; no C++11 compatibility claim."
+  ]
+}

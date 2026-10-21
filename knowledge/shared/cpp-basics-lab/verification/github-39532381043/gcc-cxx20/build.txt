@@ -1,0 +1,129 @@
+Change Dir: '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+
+Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile -j2
+/usr/local/bin/cmake -S/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab -B/home/runner/work/um.github.io/um.github.io/build/cpp-basics --check-build-system CMakeFiles/Makefile.cmake 0
+/usr/local/bin/cmake -E cmake_progress_start /home/runner/work/um.github.io/um.github.io/build/cpp-basics/CMakeFiles /home/runner/work/um.github.io/um.github.io/build/cpp-basics//CMakeFiles/progress.marks
+/usr/bin/gmake  -f CMakeFiles/Makefile2 all
+gmake[1]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+/usr/bin/gmake  -f CMakeFiles/types_ko.dir/build.make CMakeFiles/types_ko.dir/depend
+/usr/bin/gmake  -f CMakeFiles/flow_ko.dir/build.make CMakeFiles/flow_ko.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics/CMakeFiles/types_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics/CMakeFiles/flow_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+/usr/bin/gmake  -f CMakeFiles/types_ko.dir/build.make CMakeFiles/types_ko.dir/build
+/usr/bin/gmake  -f CMakeFiles/flow_ko.dir/build.make CMakeFiles/flow_ko.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[  5%] Building CXX object CMakeFiles/types_ko.dir/ko/types.cpp.o
+[ 10%] Building CXX object CMakeFiles/flow_ko.dir/ko/flow.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/types_ko.dir/ko/types.cpp.o -MF CMakeFiles/types_ko.dir/ko/types.cpp.o.d -o CMakeFiles/types_ko.dir/ko/types.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/ko/types.cpp
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/flow_ko.dir/ko/flow.cpp.o -MF CMakeFiles/flow_ko.dir/ko/flow.cpp.o.d -o CMakeFiles/flow_ko.dir/ko/flow.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/ko/flow.cpp
+[ 15%] Linking CXX executable types_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/types_ko.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/types_ko.dir/link.d CMakeFiles/types_ko.dir/ko/types.cpp.o -o types_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 15%] Built target types_ko
+/usr/bin/gmake  -f CMakeFiles/memory_ko.dir/build.make CMakeFiles/memory_ko.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics/CMakeFiles/memory_ko.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+/usr/bin/gmake  -f CMakeFiles/memory_ko.dir/build.make CMakeFiles/memory_ko.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 21%] Building CXX object CMakeFiles/memory_ko.dir/ko/memory.cpp.o
+/usr/bin/g++  -I/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT CMakeFiles/memory_ko.dir/ko/memory.cpp.o -MF CMakeFiles/memory_ko.dir/ko/memory.cpp.o.d -o CMakeFiles/memory_ko.dir/ko/memory.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/ko/memory.cpp
+[ 26%] Linking CXX executable flow_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/flow_ko.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/flow_ko.dir/link.d CMakeFiles/flow_ko.dir/ko/flow.cpp.o -o flow_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 26%] Built target flow_ko
+/usr/bin/gmake  -f original/CMakeFiles/types.dir/build.make original/CMakeFiles/types.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/CMakeFiles/types.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+/usr/bin/gmake  -f original/CMakeFiles/types.dir/build.make original/CMakeFiles/types.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 31%] Building CXX object original/CMakeFiles/types.dir/src/types.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/bin/g++   -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/types.dir/src/types.cpp.o -MF CMakeFiles/types.dir/src/types.cpp.o.d -o CMakeFiles/types.dir/src/types.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/types.cpp
+[ 36%] Linking CXX executable memory_ko
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/memory_ko.dir/link.txt --verbose=1
+[ 42%] Linking CXX executable types
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/types.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/memory_ko.dir/link.d CMakeFiles/memory_ko.dir/ko/memory.cpp.o -o memory_ko
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 42%] Built target memory_ko
+/usr/bin/gmake  -f original/CMakeFiles/flow.dir/build.make original/CMakeFiles/flow.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/CMakeFiles/flow.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+/usr/bin/gmake  -f original/CMakeFiles/flow.dir/build.make original/CMakeFiles/flow.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 47%] Building CXX object original/CMakeFiles/flow.dir/src/flow.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/bin/g++   -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/flow.dir/src/flow.cpp.o -MF CMakeFiles/flow.dir/src/flow.cpp.o.d -o CMakeFiles/flow.dir/src/flow.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/flow.cpp
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/types.dir/link.d CMakeFiles/types.dir/src/types.cpp.o -o types
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 47%] Built target types
+/usr/bin/gmake  -f original/CMakeFiles/memory.dir/build.make original/CMakeFiles/memory.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/CMakeFiles/memory.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+/usr/bin/gmake  -f original/CMakeFiles/memory.dir/build.make original/CMakeFiles/memory.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 52%] Building CXX object original/CMakeFiles/memory.dir/src/memory.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/bin/g++   -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/memory.dir/src/memory.cpp.o -MF CMakeFiles/memory.dir/src/memory.cpp.o.d -o CMakeFiles/memory.dir/src/memory.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/memory.cpp
+[ 57%] Linking CXX executable flow
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/flow.dir/link.txt --verbose=1
+[ 63%] Linking CXX executable memory
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/memory.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/flow.dir/link.d CMakeFiles/flow.dir/src/flow.cpp.o -o flow
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 63%] Built target flow
+/usr/bin/gmake  -f original/CMakeFiles/containers.dir/build.make original/CMakeFiles/containers.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/CMakeFiles/containers.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+/usr/bin/gmake  -f original/CMakeFiles/containers.dir/build.make original/CMakeFiles/containers.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 68%] Building CXX object original/CMakeFiles/containers.dir/src/containers.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/bin/g++   -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/containers.dir/src/containers.cpp.o -MF CMakeFiles/containers.dir/src/containers.cpp.o.d -o CMakeFiles/containers.dir/src/containers.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/containers.cpp
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/memory.dir/link.d CMakeFiles/memory.dir/src/memory.cpp.o -o memory
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 68%] Built target memory
+/usr/bin/gmake  -f original/CMakeFiles/buffer.dir/build.make original/CMakeFiles/buffer.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/CMakeFiles/buffer.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+/usr/bin/gmake  -f original/CMakeFiles/buffer.dir/build.make original/CMakeFiles/buffer.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 73%] Building CXX object original/CMakeFiles/buffer.dir/src/buffer.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/bin/g++   -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/buffer.dir/src/buffer.cpp.o -MF CMakeFiles/buffer.dir/src/buffer.cpp.o.d -o CMakeFiles/buffer.dir/src/buffer.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/buffer.cpp
+[ 78%] Linking CXX executable buffer
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/buffer.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/buffer.dir/link.d CMakeFiles/buffer.dir/src/buffer.cpp.o -o buffer
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 78%] Built target buffer
+/usr/bin/gmake  -f original/CMakeFiles/inventory.dir/build.make original/CMakeFiles/inventory.dir/depend
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics && /usr/local/bin/cmake -E cmake_depends "Unix Makefiles" /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/CMakeFiles/inventory.dir/DependInfo.cmake "--color="
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+/usr/bin/gmake  -f original/CMakeFiles/inventory.dir/build.make original/CMakeFiles/inventory.dir/build
+gmake[2]: Entering directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 84%] Building CXX object original/CMakeFiles/inventory.dir/src/inventory.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/bin/g++   -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/inventory.dir/src/inventory.cpp.o -MF CMakeFiles/inventory.dir/src/inventory.cpp.o.d -o CMakeFiles/inventory.dir/src/inventory.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/inventory.cpp
+[ 89%] Linking CXX executable containers
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/containers.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/containers.dir/link.d CMakeFiles/containers.dir/src/containers.cpp.o -o containers
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[ 89%] Built target containers
+[ 94%] Building CXX object original/CMakeFiles/inventory.dir/src/inventory_main.cpp.o
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/bin/g++   -g -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -MD -MT original/CMakeFiles/inventory.dir/src/inventory_main.cpp.o -MF CMakeFiles/inventory.dir/src/inventory_main.cpp.o.d -o CMakeFiles/inventory.dir/src/inventory_main.cpp.o -c /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp
+[100%] Linking CXX executable inventory
+cd /home/runner/work/um.github.io/um.github.io/build/cpp-basics/original && /usr/local/bin/cmake -E cmake_link_script CMakeFiles/inventory.dir/link.txt --verbose=1
+/usr/bin/g++ -g -Wl,--dependency-file=CMakeFiles/inventory.dir/link.d CMakeFiles/inventory.dir/src/inventory.cpp.o CMakeFiles/inventory.dir/src/inventory_main.cpp.o -o inventory
+gmake[2]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+[100%] Built target inventory
+gmake[1]: Leaving directory '/home/runner/work/um.github.io/um.github.io/build/cpp-basics'
+/usr/local/bin/cmake -E cmake_progress_start /home/runner/work/um.github.io/um.github.io/build/cpp-basics/CMakeFiles 0
+

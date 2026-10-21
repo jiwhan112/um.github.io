@@ -1,0 +1,4 @@
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/negative/reference_temporary.cpp: In function ‘int main()’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/negative/reference_temporary.cpp:1:27: error: cannot bind non-const lvalue reference of type ‘int&’ to an rvalue of type ‘int’
+    1 | int main() { int& wrong = 10; (void)wrong; }
+      |                           ^~
