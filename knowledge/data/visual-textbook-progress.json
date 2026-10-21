@@ -1,0 +1,1453 @@
+{
+  "schema_version": 1,
+  "scope": "Approved existing-source programming textbook visual redesign",
+  "scope_recorded_at_utc": "2026-10-21T08:34:19Z",
+  "baseline_master": "59209c9674786f84fd0e9e50e01c9b269ea72e81",
+  "automation": {
+    "id": "6ad87837d4688191818e709038a6c0c4",
+    "title": "프로그래밍 교재 시각 개편",
+    "timezone": "Asia/Seoul",
+    "schedule": "BEGIN:VEVENT\nDTSTART;TZID=Asia/Seoul:20261021T180000\nRRULE:FREQ=HOURLY;INTERVAL=1;BYMINUTE=0;BYSECOND=0\nEND:VEVENT",
+    "timing_mode": "exact_schedule",
+    "registration_confirmed": true,
+    "future_run_success_confirmed": false
+  },
+  "inventory_finalized": false,
+  "baseline_catalog_documents": 81,
+  "source_collections": [
+    {
+      "id": "c-language",
+      "notion_url": null,
+      "state": "needs_source",
+      "note": "Find an actual C-language source under approved scope; do not confuse C01 development-common notes with the C language."
+    },
+    {
+      "id": "effective-cpp",
+      "notion_url": "https://app.notion.com/p/8178c17f593b4f4e83a0b42544b8fe2b",
+      "state": "inventory_pending",
+      "note": "Existing 55-item revised notes; preserve shared code, use independently written explanations without mass copying the book."
+    },
+    {
+      "id": "computer-science",
+      "notion_root": "https://app.notion.com/p/4cf20d103df6423093adae6b54ed3157",
+      "candidate_notion_urls": [
+        "https://app.notion.com/p/31546e87512044d2822d9e97e751ae01",
+        "https://app.notion.com/p/6786680dd23f4741bfa8378ea735f978",
+        "https://app.notion.com/p/cdc2e4075c184e048fb594529a3b97f7",
+        "https://app.notion.com/p/f1009f7441e8490194fceea19b6b9eea"
+      ],
+      "state": "inventory_pending",
+      "note": "Confirm titles and map actual existing architecture/OS/network learning notes to CURRICULUM; avoid unrelated personal/book notes."
+    }
+  ],
+  "active_batch": {
+    "worker": "interactive-chat",
+    "status": "active",
+    "branch": "feature/cpp-advanced-05-06-20261021",
+    "unit_ids": [
+      "cpp-advanced-05",
+      "cpp-advanced-06"
+    ],
+    "lease_until_utc": "2026-10-21T10:30:00Z",
+    "pr_url": null,
+    "instruction": "Read open PR and branch progress before editing; skip concurrent changes while this lease is valid."
+  },
+  "next_unit": "cpp-advanced-05",
+  "units": [
+    {
+      "id": "dx11-frustum",
+      "title": "15. Frustum Culling — 6 Plane·AABB 판정",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40812682f6df8327550441",
+      "route": "/knowledge/dx11-frustum/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "algorithm-lis",
+      "title": "AL03. LIS — 엄격 증가 부분수열 복원",
+      "category": "알고리즘",
+      "notion_url": "https://app.notion.com/p/3fba99703f40810c9932c71907fd5cc4",
+      "route": "/knowledge/algorithm-lis/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "python-html",
+      "title": "PY03. BeautifulSoup 오프라인 HTML 파싱",
+      "category": "Python",
+      "notion_url": "https://app.notion.com/p/3fda99703f408164a6f6f6006e6be923",
+      "route": "/knowledge/python-html/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "winapi-01",
+      "title": "WinAPI 01 · 창·핸들·메시지·호출 규약",
+      "category": "WinAPI",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408108847ded19eeeed81f",
+      "route": "/knowledge/winapi-01/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "winapi-02",
+      "title": "WinAPI 02 · 게임 루프·입력·시간·DPI",
+      "category": "WinAPI",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408137ac5ed11df7858a5f",
+      "route": "/knowledge/winapi-02/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "winapi-03",
+      "title": "WinAPI 03 · GDI·더블 버퍼링·애니메이션",
+      "category": "WinAPI",
+      "notion_url": "https://app.notion.com/p/3f8a99703f4081a59040d64ecde49946",
+      "route": "/knowledge/winapi-03/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "winapi-04",
+      "title": "WinAPI 04 · Win32 앱 구성·검증 경계",
+      "category": "WinAPI",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40812fbfd4e2c48de2e58b",
+      "route": "/knowledge/winapi-04/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "winapi-04a",
+      "title": "WinAPI 04A · 고정 시간 단계 CPU 실습",
+      "category": "WinAPI",
+      "notion_url": "https://app.notion.com/p/3fda99703f4081b18c16d94ceb844473",
+      "route": "/knowledge/winapi-04a/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "game-math-01",
+      "title": "게임 수학 01 · 벡터·이동·회전",
+      "category": "게임 수학",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40815c894affc335c2e205",
+      "route": "/knowledge/game-math-01/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "game-math-02",
+      "title": "게임 수학 02 · 행렬·좌표계·역변환",
+      "category": "게임 수학",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40811686bfe7d95d9bd027",
+      "route": "/knowledge/game-math-02/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "game-math-03",
+      "title": "게임 수학 03 · 충돌·카메라·타일 피킹",
+      "category": "게임 수학",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40814e905fe501f75cddc9",
+      "route": "/knowledge/game-math-03/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "game-math-04",
+      "title": "게임 수학 04 · MFC 문서/뷰·툴 데이터",
+      "category": "게임 수학",
+      "notion_url": "https://app.notion.com/p/3f8a99703f4081b1b3adeacf535ee6da",
+      "route": "/knowledge/game-math-04/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "game-math-05",
+      "title": "게임 수학 05 · 타일맵·A*·비동기 로딩",
+      "category": "게임 수학",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40814bb111e208530bf6b7",
+      "route": "/knowledge/game-math-05/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-pipeline-01",
+      "title": "DX9 파이프라인 01 · 정점 입력·드로우·셰이더",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408146bf8fd6f6f9024a0d",
+      "route": "/knowledge/dx9-pipeline-01/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-pipeline-02",
+      "title": "DX9 파이프라인 02 · 좌표·투영·클리핑",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40817a8aabd25d7443f2ba",
+      "route": "/knowledge/dx9-pipeline-02/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-pipeline-03",
+      "title": "DX9 파이프라인 03 · 래스터화·UV 보간",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f4081b98c00f5601b7d0c54",
+      "route": "/knowledge/dx9-pipeline-03/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-pipeline-04",
+      "title": "DX9 파이프라인 04 · 깊이·스텐실·블렌딩",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408106aba0d3b6a9b101b0",
+      "route": "/knowledge/dx9-pipeline-04/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-pipeline-05",
+      "title": "DX9 파이프라인 05 · 추적·디버깅·검증",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408105948ddf79d5139bb1",
+      "route": "/knowledge/dx9-pipeline-05/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "winapi-math-lab",
+      "title": "WinAPI·게임 수학 — 공통 실습 전체 소스",
+      "category": "WinAPI",
+      "notion_url": "https://app.notion.com/p/fffca9a4ce864ac7bade7efe90186be7",
+      "route": "/knowledge/winapi-math-lab/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-pipeline-lab",
+      "title": "DX9 렌더링 파이프라인 — 공통 실습 전체 소스",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3e66577f53a549fe99a94ac26f68a685",
+      "route": "/knowledge/dx9-pipeline-lab/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-01",
+      "title": "DX9 01 · 장치 생성·COM 참조 수명",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408135a849f7c66e4d54ad",
+      "route": "/knowledge/dx9-impl-01/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-02",
+      "title": "DX9 02 · 엔진 DLL·클라이언트 ABI",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408172837fe0d04c131e68",
+      "route": "/knowledge/dx9-impl-02/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-03",
+      "title": "DX9 03 · VB/IB·자원 풀·Lost Device",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/bdcccf3ce6d34930827bf0a519b4fa78",
+      "route": "/knowledge/dx9-impl-03/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-04",
+      "title": "DX9 04 · Renderer·Transform·컴포넌트 수명",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/bdcccf3ce6d34930827bf0a519b4fa78",
+      "route": "/knowledge/dx9-impl-04/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-05",
+      "title": "DX9 05 · 씬·게임 오브젝트·프레임 루프",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408171ab68e3ed5b265f01",
+      "route": "/knowledge/dx9-impl-05/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-06",
+      "title": "DX9 06 · VIBuffer·Texture API 계약",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40817cbe12e85790420aab",
+      "route": "/knowledge/dx9-impl-06/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-07",
+      "title": "DX9 07 · 카메라·지형·Ray 피킹",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f4081e3b908de685a551c23",
+      "route": "/knowledge/dx9-impl-07/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-08",
+      "title": "DX9 08 · Skybox·UI 좌표·렌더 상태",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40811ca79ae3e8a74806d7",
+      "route": "/knowledge/dx9-impl-08/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-09",
+      "title": "DX9 09 · 월드 알파·빌보드·이펙트",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f4081ba8b8ae2fc6650bde2",
+      "route": "/knowledge/dx9-impl-09/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-10",
+      "title": "DX9 10 · Shader/Effect·Fog 계약",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408155a685d66590c67b7a",
+      "route": "/knowledge/dx9-impl-10/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-11",
+      "title": "DX9 11 · Frustum 컬링·Sphere·AABB",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3fba99703f40816eb333f270aad46a46",
+      "route": "/knowledge/dx9-impl-11/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-12",
+      "title": "DX9 12 · 삼각형·텍스처·Reset 통합 실습",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081bfbad0d047f8a8d58f",
+      "route": "/knowledge/dx9-impl-12/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-source-01a",
+      "title": "DX9 01A · COM 소유권·장치 전체 소스",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3fba99703f40818aaa64e05944ea69a6",
+      "route": "/knowledge/dx9-impl-source-01a/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-source-02a",
+      "title": "DX9 02A · DLL·클라이언트 전체 소스",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081c38a5cce69f6b0542f",
+      "route": "/knowledge/dx9-impl-source-02a/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-source-03a",
+      "title": "DX9 03A · VB/IB·자원 풀 검증 전체 소스",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3fba99703f408129bd94deff3cc1c807",
+      "route": "/knowledge/dx9-impl-source-03a/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-source-04a",
+      "title": "DX9 04A · Renderer·Transform 전체 소스",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3fba99703f40816db73cf3e6c93d0b56",
+      "route": "/knowledge/dx9-impl-source-04a/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-source-05a",
+      "title": "DX9 05A · Scene Loop 교정·전체 소스",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081a3bfbec249986a6a3e",
+      "route": "/knowledge/dx9-impl-source-05a/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-source-06a",
+      "title": "DX9 06A · Pitch·인덱스 안전성 전체 소스",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3fba99703f40814ba45ec3bbbc84ec1e",
+      "route": "/knowledge/dx9-impl-source-06a/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-source-07b",
+      "title": "DX9 07B · NaN Ray 피킹·지형 전체 소스",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081979e96cb9345976cce",
+      "route": "/knowledge/dx9-impl-source-07b/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx9-impl-source-11a",
+      "title": "DX9 11A · Frustum 컬링 CPU·CMake 전체 소스",
+      "category": "DirectX 9",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081129b47e72ac0c3fb0e",
+      "route": "/knowledge/dx9-impl-source-11a/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-02",
+      "title": "DX11 02 · Resource·View·Usage·Map",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081c6a57dc836e3b50283",
+      "route": "/knowledge/dx11-02/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-03",
+      "title": "DX11 03 · Input Assembler·Shader·DrawIndexed",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40817ba1b2cceecf06ce59",
+      "route": "/knowledge/dx11-03/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-04",
+      "title": "DX11 04 · Shader·Texture2D·SRV·Sampler",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081ce9f78f1e73ad4eab8",
+      "route": "/knowledge/dx11-04/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-05",
+      "title": "DX11 05 · Texture Rect 통합",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081b0bc1fffbdeb3e343f",
+      "route": "/knowledge/dx11-05/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-06",
+      "title": "DX11 06 · Transform·Camera",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40811cb128c95a739f0a74",
+      "route": "/knowledge/dx11-06/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-01",
+      "title": "DX11 01 · Device 초기화·Resize 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081958997f12e2fc5a8ab",
+      "route": "/knowledge/dx11-sources-01/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-02",
+      "title": "DX11 02 · Resource/View 전체 CPU 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40814ebc7fe5250ad8d967",
+      "route": "/knowledge/dx11-sources-02/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-03",
+      "title": "DX11 03 · IA·DrawIndexed 전체 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40819b8a86dd4ff0295fd1",
+      "route": "/knowledge/dx11-sources-03/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-04",
+      "title": "DX11 04 · Texture/SRV/Sampler 전체 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081c89295c3aed7177611",
+      "route": "/knowledge/dx11-sources-04/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-05-08",
+      "title": "DX11 05–08 · Texture Rect·Camera·Lighting·Terrain 전체 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40812ab087df6acc9270f6",
+      "route": "/knowledge/dx11-sources-05-08/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-01",
+      "title": "DX11 01 · 초기화 — Device·Context·SwapChain",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f408124a6ecdb9870be9ddd",
+      "route": "/knowledge/dx11-01/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-07",
+      "title": "DX11 07 · Skybox·DepthStencil·Lighting",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081e2910bf2e8eb87cbc3",
+      "route": "/knowledge/dx11-07/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-08",
+      "title": "DX11 08 · Terrain·HeightMap·Splatting",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081af8399c1b39bbd4124",
+      "route": "/knowledge/dx11-08/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-09",
+      "title": "DX11 09 · Mesh·Assimp Scene CPU 전체 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081c5afd4d0dba8aef10f",
+      "route": "/knowledge/dx11-sources-09/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-10",
+      "title": "DX11 10 · Skeletal Animation CPU 전체 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081488103f693dcda42a5",
+      "route": "/knowledge/dx11-sources-10/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-11-12",
+      "title": "DX11 11–12 · Collider·Navigation Mesh 전체 CPU 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40810fa644ef6c5351b3bf",
+      "route": "/knowledge/dx11-sources-11-12/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-09",
+      "title": "DX11 09 · Mesh·Material·Assimp Node",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40812aa8f2cf192408feac",
+      "route": "/knowledge/dx11-09/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-10",
+      "title": "DX11 10 · Skeletal Animation",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081708fc4cf6599204e3a",
+      "route": "/knowledge/dx11-10/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-11",
+      "title": "DX11 11 · Collider",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40817da5aed4a0ebfb22d1",
+      "route": "/knowledge/dx11-11/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-12",
+      "title": "DX11 12 · Navigation Mesh",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f408107ba7cf3679dbe98d8",
+      "route": "/knowledge/dx11-12/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-13",
+      "title": "DX11 13 · Instancing — IA Slot·StepRate·DrawIndexedInstanced",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081c6b435d946bcb40dc2",
+      "route": "/knowledge/dx11-13/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-13b",
+      "title": "DX11 13B · InputLayout 경계·Overflow·StepRate 검증",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fda99703f4081ef8863c783ed5a6e8f",
+      "route": "/knowledge/dx11-13b/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-14",
+      "title": "DX11 14 · Geometry Shader — Primitive·Point Sprite",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f",
+      "route": "/knowledge/dx11-14/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-16",
+      "title": "DX11 16 · QuadTree — XZ Spatial Index·Broad-phase",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081f3a517e4028f940425",
+      "route": "/knowledge/dx11-16/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-17",
+      "title": "DX11 17 · Font — UTF-8·Glyph Atlas·SpriteFont",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40811493aae2a5a2532bea",
+      "route": "/knowledge/dx11-17/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-18",
+      "title": "DX11 18 · Deferred Rendering — MRT·GBuffer·View Hazard",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081539f63e9fab7f9bc18",
+      "route": "/knowledge/dx11-18/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-13",
+      "title": "DX11 13 · Instancing 전체 C++·CMake",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f40810b826cc7eec5b1f039",
+      "route": "/knowledge/dx11-sources-13/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-13b",
+      "title": "DX11 13B · InputLayout 경계검사 전체 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fda99703f408150bcb6ceb1602850a9",
+      "route": "/knowledge/dx11-sources-13b/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-14",
+      "title": "DX11 14 · Geometry Shader CPU·HLSL 전체 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081238d99e7872c068e3f",
+      "route": "/knowledge/dx11-sources-14/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-16",
+      "title": "DX11 16 · QuadTree Broad-phase 전체 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081f3a517e4028f940425",
+      "route": "/knowledge/dx11-sources-16/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-17",
+      "title": "DX11 17 · Font UTF-8·Glyph Atlas CPU v2 전체 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f408105a5c8c1d371e2c8cb",
+      "route": "/knowledge/dx11-sources-17/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "dx11-sources-18",
+      "title": "DX11 18 · Deferred MRT·GBuffer CPU v2 전체 소스",
+      "category": "DirectX 11",
+      "notion_url": "https://app.notion.com/p/3fba99703f4081c68669c3d4a2d5eb89",
+      "route": "/knowledge/dx11-sources-18/",
+      "state": "review_required",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": null
+      },
+      "remaining": [
+        "Assess current visual textbook quality; preserve completed work",
+        "Confirm exact source, full code and current verification",
+        "Complete missing approved presentation and publication checks"
+      ]
+    },
+    {
+      "id": "cpp-basics-01",
+      "title": "C++ 기초 01 · 빌드·타입·초기화·표현식",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f7a99703f4081ea8b09f52fe80babc2",
+      "route": "/knowledge/cpp-basics-01/",
+      "state": "published_verified",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": "approved C++ textbook; PR16 public verification"
+      },
+      "remaining": []
+    },
+    {
+      "id": "cpp-basics-02",
+      "title": "C++ 기초 02 · 제어 흐름·함수·콜백",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f7a99703f408140a211e4afe6030e31",
+      "route": "/knowledge/cpp-basics-02/",
+      "state": "published_verified",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": "approved C++ textbook; PR16 public verification"
+      },
+      "remaining": []
+    },
+    {
+      "id": "cpp-basics-03",
+      "title": "C++ 기초 03 · 포인터·참조·수명·소유권",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f7a99703f40810599abdb7dfdea1598",
+      "route": "/knowledge/cpp-basics-03/",
+      "state": "published_verified",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": "approved C++ textbook; PR16 public verification"
+      },
+      "remaining": []
+    },
+    {
+      "id": "cpp-basics-04",
+      "title": "C++ 기초 04 · 배열·문자열·사용자 타입·표준 도구",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f7a99703f4081979bf0c9aa376a5774",
+      "route": "/knowledge/cpp-basics-04/",
+      "state": "published_verified",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": "approved C++ textbook; PR16 public verification"
+      },
+      "remaining": []
+    },
+    {
+      "id": "cpp-basics-05",
+      "title": "C++ 기초 05 · 파일·분할 빌드·디버깅·통합 실습",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f7a99703f4081edaa44c74d0430d2cc",
+      "route": "/knowledge/cpp-basics-05/",
+      "state": "published_verified",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": "approved C++ textbook; PR16 public verification"
+      },
+      "remaining": []
+    },
+    {
+      "id": "cpp-advanced-01",
+      "title": "C++ 심화 01 · 클래스·불변식·생성·소멸",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f8a99703f4081e19a90c9b9c7e38f7e",
+      "route": "/knowledge/cpp-advanced-01/",
+      "state": "published_verified",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": "approved C++ textbook; PR16 public verification"
+      },
+      "remaining": []
+    },
+    {
+      "id": "cpp-advanced-02",
+      "title": "C++ 심화 02 · 복사·이동·소유권·예외 안전성",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40817a8e60d1004a59c357",
+      "route": "/knowledge/cpp-advanced-02/",
+      "state": "published_verified",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": "approved C++ textbook; PR16 public verification"
+      },
+      "remaining": []
+    },
+    {
+      "id": "cpp-advanced-03",
+      "title": "C++ 심화 03 · 상속·다형성·캐스팅·인터페이스",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40811ca5d2d6c7112fe161",
+      "route": "/knowledge/cpp-advanced-03/",
+      "state": "published_verified",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": "approved C++ textbook; PR16 public verification"
+      },
+      "remaining": []
+    },
+    {
+      "id": "cpp-advanced-04",
+      "title": "C++ 심화 04 · 연산자·템플릿·람다·제약 조건",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f8a99703f4081468fe0f7cf9f60680a",
+      "route": "/knowledge/cpp-advanced-04/",
+      "state": "published_verified",
+      "evidence": {
+        "baseline_publication": "https://github.com/jiwhan112/um.github.io/actions/runs/39567577410",
+        "visual_style_review": "approved C++ textbook; PR16 public verification"
+      },
+      "remaining": []
+    },
+    {
+      "id": "cpp-advanced-05",
+      "title": "C++ 심화 05 · STL·반복자·알고리즘·컨테이너 선택",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408180b127fe99defa9d16",
+      "route": "/knowledge/cpp-advanced-05/",
+      "state": "in_progress",
+      "stages": {
+        "source_capture": "complete",
+        "textbook": "in_progress",
+        "annotated_source": "in_progress",
+        "cpu_ci": "pending",
+        "web_ci": "pending",
+        "merged": "pending",
+        "public_verified": "pending"
+      },
+      "evidence": {
+        "source_capture": "knowledge/cpp-advanced-05/source-notion-capture.json"
+      }
+    },
+    {
+      "id": "cpp-advanced-06",
+      "title": "C++ 심화 06 · 빌드 경계·Pimpl·할당·검증",
+      "category": "C++ 기초·심화",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408186b6f6e6196b1be1a6",
+      "route": "/knowledge/cpp-advanced-06/",
+      "state": "in_progress",
+      "stages": {
+        "source_capture": "complete",
+        "textbook": "in_progress",
+        "annotated_source": "in_progress",
+        "cpu_ci": "pending",
+        "web_ci": "pending",
+        "merged": "pending",
+        "public_verified": "pending"
+      },
+      "evidence": {
+        "source_capture": "knowledge/cpp-advanced-06/source-notion-capture.json"
+      }
+    }
+  ],
+  "deferred_new_design": [
+    "Modern C++",
+    "Effective Modern C++",
+    "DirectX 12",
+    "new graphics techniques curriculum",
+    "new data structures/algorithm curriculum",
+    "new game-engine curriculum",
+    "new Python/developer-tools curriculum"
+  ],
+  "completion": {
+    "final_audit": "pending",
+    "all_approved_units_published": false,
+    "automation_stop_confirmed": false
+  }
+}
