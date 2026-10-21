@@ -3,10 +3,12 @@ import { createHash } from 'node:crypto';
 
 const chapters=[
   {slug:'cpp-advanced-01',sources:['lifetime.cpp','check.hpp'],entry:'lifetime.cpp',previous:'cpp-basics-05',next:'cpp-advanced-02'},
-  {slug:'cpp-advanced-02',sources:['ownership.cpp','transaction.cpp'],entry:'ownership.cpp',previous:'cpp-advanced-01',next:null},
+  {slug:'cpp-advanced-02',sources:['ownership.cpp','transaction.cpp'],entry:'ownership.cpp',previous:'cpp-advanced-01',next:'cpp-advanced-03'},
+  {slug:'cpp-advanced-03',sources:['polymorphism.cpp'],entry:'polymorphism.cpp',previous:'cpp-advanced-02',next:'cpp-advanced-04'},
+  {slug:'cpp-advanced-04',sources:['templates.cpp','interfaces.cpp'],entry:'templates.cpp',previous:'cpp-advanced-03',next:null},
 ];
 
-for(const chapter of chapters)test(`${chapter.slug} renders lifetime or ownership visuals and connects exact full sources`,async({page,request},testInfo)=>{
+for(const chapter of chapters)test(`${chapter.slug} renders concept visuals and connects exact full sources`,async({page,request},testInfo)=>{
   const errors:string[]=[];
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto(`knowledge/${chapter.slug}/`);

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="680" viewBox="0 0 640 680" role="img" aria-labelledby="title desc">
+  <title id="title">함수 매개변수와 값 캡처의 서로 다른 수명</title>
+  <desc id="desc">AddLater5 안에서 매개변수 offset5를 호출 객체에 값으로 복사한다. 함수가 반환되면 매개변수 수명은 끝나지만 반환된 std function의 캡처 사본은 남는다. callback7이 그 사본5를 더해12를 만든다. 참조 캡처였다면 반환 뒤 매개변수를 가리키는 참조만 남아 사용이 잘못된다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker></defs>
+  <rect width="640" height="680" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="48" font-size="28" font-weight="700">값 캡처는 함수 밖에도 남습니다</text>
+    <text x="32" y="86" font-size="24" fill="#b8c7dd">AddLater(5) → callback(7)</text>
+    <text x="32" y="132" font-size="24" font-weight="700">함수 안 · 서로 다른 두 값</text>
+    <rect x="32" y="156" width="250" height="110" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <rect x="358" y="156" width="250" height="110" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="157" y="197" text-anchor="middle" font-size="25">매개변수 offset</text>
+    <text x="157" y="240" text-anchor="middle" font-size="32" font-weight="700">5</text>
+    <text x="483" y="197" text-anchor="middle" font-size="25">캡처한 offset</text>
+    <text x="483" y="240" text-anchor="middle" font-size="32" font-weight="700" fill="#6ee7b7">5</text>
+    <path d="M286 216H346" fill="none" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="320" y="186" text-anchor="middle" font-size="22" fill="#6ee7b7">복사</text>
+    <path d="M32 309H608" stroke="#64748b" stroke-width="2" stroke-dasharray="8 6"/>
+    <rect x="215" y="292" width="210" height="34" rx="6" fill="#0f172a"/>
+    <text x="320" y="317" text-anchor="middle" font-size="24" fill="#b8c7dd">AddLater 반환</text>
+    <rect x="32" y="354" width="250" height="90" rx="14" fill="#342232" stroke="#fda4af" stroke-width="2"/>
+    <rect x="358" y="354" width="250" height="90" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="157" y="391" text-anchor="middle" font-size="25" fill="#fda4af">매개변수 소멸</text>
+    <text x="157" y="423" text-anchor="middle" font-size="23">수명 종료</text>
+    <text x="483" y="391" text-anchor="middle" font-size="25" fill="#6ee7b7">캡처 사본 유지</text>
+    <text x="483" y="423" text-anchor="middle" font-size="23">callback이 보관</text>
+    <path d="M483 446V482" fill="none" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="32" y="494" width="576" height="70" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="320" y="539" text-anchor="middle" font-size="28" font-weight="700">callback(7) → 7 + 5 = 12</text>
+    <text x="32" y="612" font-size="24" fill="#fda4af">[&amp;offset]이면 사본 대신 참조가 남음</text>
+    <text x="32" y="650" font-size="23" fill="#b8c7dd">반환 뒤 사용하면 수명 종료 대상을 참조합니다.</text>
+  </g>
+</svg>

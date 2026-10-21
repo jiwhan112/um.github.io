@@ -21,7 +21,11 @@ VALIDATION_REFERENCE = "notion-file-block://73d8331f-f637-4b17-9d72-49af281d846a
 COUNTS = {"lifetime": 10, "ownership": 13, "polymorphism": 12, "templates": 10,
           "containers": 16, "interfaces": 7, "transaction": 8, "allocation": 7, "pimpl": 6}
 ANNOTATED = {"check.hpp": (0, 0), "lifetime.cpp": (7, 3),
-             "ownership.cpp": (11, 2), "transaction.cpp": (6, 2)}
+             "ownership.cpp": (11, 2), "transaction.cpp": (6, 2),
+             "polymorphism.cpp": (10, 2), "templates.cpp": (8, 2),
+             "interfaces.cpp": (6, 1)}
+LESSON_GROUPS = {"01-02": ("lifetime", "ownership", "transaction"),
+                "03-04": ("polymorphism", "templates", "interfaces")}
 
 IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z_0-9]*")
 
@@ -152,7 +156,7 @@ def verify():
     captures = {}
     pairs = [(ROOT / "source-notion-index.md", ROOT / "source-notion-index-capture.json")]
     pairs += [(repo / ("knowledge/cpp-advanced-" + number + "/source-notion.md"),
-               repo / ("knowledge/cpp-advanced-" + number + "/source-notion-capture.json")) for number in ("01", "02")]
+               repo / ("knowledge/cpp-advanced-" + number + "/source-notion-capture.json")) for number in ("01", "02", "03", "04")]
     for source, capture in pairs:
         data = source.read_bytes()
         record = json.loads(capture.read_text(encoding="utf-8"))
@@ -238,9 +242,13 @@ def verify():
         "historical_log_file_count": 22, "markdown_code_block_count": 21, "markdown_zip_boundaries": boundaries,
         "validation_negative_blocks_exact": 6, "annotated_files": annotations,
         "original_runtime_check_invocations": COUNTS,
-        "original_runtime_check_invocations_total": 89, "selected_lessons_runtime_check_invocations": 31,
-        "annotation_check_invocations_repeat_original": 31,
-        "counting_note": "89 counts calls in nine original programs. The selected 01-02 programs account for 31 (10+13+8). ownership includes one Expect(true) following a compile-time guaranteed-elision example. Compiler/annotation reruns add no independent conditions.",
+        "original_runtime_check_invocations_total": 89, "selected_lessons_runtime_check_invocations": 60,
+        "selected_lessons": "01-04", "current_batch": "03-04",
+        "runtime_check_invocations_by_lesson_batch": {
+            batch: sum(COUNTS[name] for name in names) for batch, names in LESSON_GROUPS.items()},
+        "current_batch_runtime_check_invocations": 29,
+        "annotation_check_invocations_repeat_original": 60,
+        "counting_note": "89 counts calls in nine original programs. Lessons 01-02 account for 31 (10+13+8), and current lessons 03-04 for 29 (12+10+7), totaling 60 across annotated programs. ownership includes one Expect(true) following a compile-time guaranteed-elision example. templates has three static_assert sites, interfaces one, and ownership two; these are separate from runtime calls. Compiler/annotation reruns add no independent conditions.",
         "limitations": ["Source fidelity and historical logs do not replace a new compile/run.",
                        "Recovered historical ZIP identity is confirmed against the Notion-recorded SHA-256.",
                        "Windows/MSVC, GPU, concurrency, ABI and performance were not validated by this script.",
@@ -269,7 +277,7 @@ def main():
         print("PASS: 21 Markdown blocks equal ZIP files plus one LF; six Notion negative blocks exact")
         for name, data in result["annotated_files"].items():
             print("PASS: {}: {} identical C++ tokens".format(name, data["cpp_token_count"]))
-        print("NOTE: fresh compilation/execution recorded separately; 89 whole-pack checks, selected lessons 31")
+        print("NOTE: fresh execution recorded separately; 89 whole-pack calls; lessons 01-02: 31, current 03-04: 29, annotated total: 60")
     return 0
 
 

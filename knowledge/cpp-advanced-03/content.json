@@ -1,0 +1,3143 @@
+{
+  "id": "knowledge--cpp-advanced-03",
+  "route": "/knowledge/cpp-advanced-03/",
+  "kind": "knowledge",
+  "title": "C++ 심화 03 · 상속·다형성·캐스팅·인터페이스",
+  "subtitle": "가상 호출·삭제·복제를 따라 정적 타입과 동적 타입의 역할을 구분합니다",
+  "date": "2026-10-21",
+  "number": "03",
+  "category": "C++ 기초·심화",
+  "topic": "C++ 심화",
+  "tags": [
+    "C++",
+    "C++20",
+    "상속",
+    "다형성",
+    "가상 함수",
+    "캐스팅",
+    "NVI",
+    "Clone"
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "같은 객체, 달라지는 호출",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "같은 객체, 달라지는 호출"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "하나의 Fire 객체에 같은 이름의 함수를 호출했는데 한쪽은 20, 다른 쪽은 30을 돌려줍니다. 어떤 타입으로 접근했는지와 실제 객체의 타입이 서로 다른 일을 맡기 때문입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 단원에서는 "
+            },
+            {
+              "text": "호출할 구현, 생략한 인수, 삭제 책임, 복제 방식",
+              "kind": "strong"
+            },
+            {
+              "text": "을 나누어 읽습니다. 상속 관계를 그린 뒤에는 각 경계에서 무엇을 보장하는지도 함께 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "이번에 답할 질문"
+                  }
+                ],
+                [
+                  {
+                    "text": "읽을 실제 코드"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "기본 참조로 Fire를 부르면 어떤 함수가 실행될까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "Effect · Fire · 기본 인수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "생성·소멸 중에도 Fire로 호출이 전달될까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "Events의 네 기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "기반 타입으로 삭제·복사해도 괜찮을까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "virtual 소멸자 · 값 복사 · Clone"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "검증은 공통으로, 계산은 다르게 둘 수 있을까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "Damage::Apply · private virtual"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기준은 "
+            },
+            {
+              "text": "C++20",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다. 실행 가능한 전체 소스는 polymorphism.cpp 한 개이며 정상 실행은 12회 검사를 수행합니다. 한국어 주석판과 복원 원본은 출처·검증 탭에서 함께 읽을 수 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "inheritance-contract",
+      "title": "1. public 상속의 계약",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "1. public 상속의 계약"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "public 상속은 파생 객체를 기반 타입으로 사용하는 호출자의 약속이 유지될 때 적합합니다. 공통 코드를 재사용하고 싶다는 이유만으로 상속시키면, 기반 연산의 전제와 파생 타입의 규칙이 충돌할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "설계 질문"
+                  }
+                ],
+                [
+                  {
+                    "text": "먼저 검토할 관계"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "모든 Effect가 같은 업데이트·그리기 계약을 지킬까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "그 계약을 공통 인터페이스로 제공하는 public 상속"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "위치·아이템 데이터만 포함하면 될까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "Transform·ItemData를 멤버로 갖는 합성"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "외부 대체 관계 없이 구현의 확장 지점만 쓸까?"
+                  }
+                ],
+                [
+                  {
+                    "text": "합성 또는 제한적으로 private 상속"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위의 업데이트·그리기는 게임 설계의 가정입니다. 실제 작은 실습의 Effect는 "
+            },
+            {
+              "text": "Kind",
+              "kind": "code"
+            },
+            {
+              "text": "와 "
+            },
+            {
+              "text": "Strength",
+              "kind": "code"
+            },
+            {
+              "text": "를 사용합니다. 필요한 계약을 좁게 표현하는 방법을 보기 위한 예제입니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "private 상속을 읽는 기준",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "private 상속은 일반적인 외부 호출자에게 공개적인 기반 타입 변환을 제공하지 않습니다. protected 멤버나 가상 확장 지점 등 구현을 이용하는 관계로 검토합니다. 합성보다 항상 좋거나, 언어 차원에서 금지된 방식이라고 일반화하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "Core Guidelines · 클래스 계층 설계",
+              "kind": "link",
+              "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-class"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dispatch",
+      "title": "2. 정적 타입과 동적 타입",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "2. 정적 타입과 동적 타입"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// 아래 타입 정의는 전체 polymorphism.cpp에 있습니다.\nEvents events;\nFire fire(events);           // 동적 할당 없이 만든 지역 객체\nEffect& base = fire;         // 같은 객체를 기반 참조로 관찰\nint kind = base.Kind();      // 완성된 Fire의 Kind(): 2\n"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "무엇을 보고 있나"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 예에서의 의미"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "base의 선언"
+                  }
+                ],
+                [
+                  {
+                    "text": "Effect&인 참조 변수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "표현식 base"
+                  }
+                ],
+                [
+                  {
+                    "text": "Effect 타입의 lvalue · 참조 표현식의 타입에 &를 붙여 혼동하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "참조가 가리키는 완전한 객체"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 동적 타입은 Fire"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "base.Kind()"
+                  }
+                ],
+                [
+                  {
+                    "text": "가상 호출이므로 Fire의 최종 재정의 함수 선택"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가상 호출에 new가 필수인 것은 아닙니다. 위 지역 객체에서도 같은 규칙이 적용됩니다. virtual은 숨겨진 함수를 다시 보이게 하는 표시가 아니라, 가상 호출에서 어떤 최종 구현을 사용할지 정하는 언어 규칙입니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "가상 함수 테이블은 언어 규칙의 구현 방법입니다",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "많은 구현은 가상 함수 테이블과 객체 내부 포인터를 사용합니다. 하지만 테이블 배치·포인터 개수·객체 크기·호출 비용을 모든 컴파일러가 똑같이 갖는다고 단정하지 않습니다. 최적화로 직접 호출이 될 수도 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이번 검사는 반환값과 이벤트 순서를 봅니다. vtable 주소, ABI, 객체 크기, 가상 호출 성능은 측정하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · 가상 함수",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.virtual"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "defaults",
+      "title": "3. 기본 인수와 실제 함수",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "3. 기본 인수와 실제 함수"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/cpp-advanced-03/assets/static-dynamic-defaults.svg",
+          "alt": "동일한 Fire 객체를 Effect 참조로 부르면 기본 인수 2를 선택해 Fire::Strength가 20을 반환한다. 구체 Fire를 통해 부르면 기본 인수 3을 선택해 같은 함수가 30을 반환한다.",
+          "caption": "기본 인수는 호출식에서 보이는 선언을 따르고, 한정하지 않은 가상 호출의 본체는 실제 객체의 최종 재정의를 따릅니다."
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// 두 클래스에서 발췌한 선언·정의입니다.\n// Effect 안:\nvirtual int Strength(int scale = 2) const noexcept { return scale; }\n// Fire 안:\nint Strength(int scale = 3) const noexcept override { return scale * 10; }\n\n// 같은 Fire를 가리키는 base와 concrete를 사용한 실제 검사:\n// base.Strength() == 20, concrete->Strength() == 30\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "base를 통해 부를 때는 Effect 선언의 2가 인수로 채워집니다. 실행되는 본체는 Fire의 함수이므로 2에 10을 곱합니다. 구체 Fire를 통해 부르면 Fire 선언의 3이 채워져 결과가 30입니다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실습이 일부러 드러내는 설계상의 함정",
+                  "kind": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 가상 함수의 기본값을 파생 클래스마다 달리 두면 호출 경로에 따라 결과가 달라집니다. 공통 경계에 기본값을 한 번 정하거나, 필요한 인수를 명시하는 정책을 검토합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "숫자와 호출 형태에 대한 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 실습의 Strength는 작은 기본값 2와 3으로 실행합니다. 임의의 큰 scale에 대한 곱셈 범위 검사는 없으므로 모든 int 입력에 안전한 피해량 계산기로 사용하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Effect::Kind처럼 클래스 이름으로 구현을 명시하는 한정 호출은 가상 호출의 선택을 억제할 수 있습니다. 위 설명은 실습의 base.Kind() 같은 한정하지 않은 호출을 기준으로 읽습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · 기본 인수",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/dcl.fct.default#10"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "N4861 · 가상 함수",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.virtual"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Core Guidelines · 기본값 정책",
+              "kind": "link",
+              "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-class"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "overrides",
+      "title": "4. override와 이름 가림",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "4. override와 이름 가림"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구분"
+                  }
+                ],
+                [
+                  {
+                    "text": "무엇이 달라지는가"
+                  }
+                ],
+                [
+                  {
+                    "text": "실습에서 볼 예"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "오버로딩"
+                  }
+                ],
+                [
+                  {
+                    "text": "같은 이름으로 여러 매개변수 후보 제공"
+                  }
+                ],
+                [
+                  {
+                    "text": "F(int) · F(const string&)"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "오버라이딩"
+                  }
+                ],
+                [
+                  {
+                    "text": "기반 가상 함수의 최종 구현 재정의"
+                  }
+                ],
+                [
+                  {
+                    "text": "Fire::Kind() const override"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이름 가림"
+                  }
+                ],
+                [
+                  {
+                    "text": "파생 범위의 같은 이름이 기반 이름을 가림"
+                  }
+                ],
+                [
+                  {
+                    "text": "using Overloads::F로 후보를 다시 노출"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// <string>이 필요한 선언 예입니다. 함수 정의는 전체 소스에 있습니다.\nstruct Overloads { int F(int) const; };\nstruct AddOverload : Overloads {\n    using Overloads::F;                 // 기반의 int 후보도 함께 노출\n    int F(const std::string&) const;    // 문자열 후보를 추가\n};\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기반의 "
+            },
+            {
+              "text": "Read() const",
+              "kind": "code"
+            },
+            {
+              "text": "에 대응할 때 const를 빼면 같은 재정의가 아닙니다. override를 붙이면 이 실수를 컴파일 단계에서 확인할 수 있습니다. "
+            },
+            {
+              "text": "wrong_override.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/original/negative/wrong_override.cpp"
+            },
+            {
+              "text": "는 이를 관찰하는 거부용 소스입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "비가상 함수를 같은 이름으로 선언하는 것은 가상 재정의와 다릅니다. 실습의 ValueBase·ValueDerived가 이 경우입니다. Fire와 Ice의 "
+            },
+            {
+              "text": "final",
+              "kind": "code"
+            },
+            {
+              "text": "은 이 클래스들을 더 상속하지 않겠다는 선언이며 성능 수치를 보장하는 표시는 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · override·이름 가림·final",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.virtual"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lifetime-dispatch",
+      "title": "5. 생성·소멸 중 가상 호출",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "5. 생성·소멸 중 가상 호출"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/cpp-advanced-03/assets/lifetime-dispatch.svg",
+          "alt": "Effect 생성자에서 Kind는 1, Fire 생성자에서는 2다. 완성 후 base.Kind()도 2를 반환하지만 기록에는 추가하지 않는다. Fire 소멸자에서 2, Effect 소멸자에서 1을 기록하여 Events는 1,2,2,1이 된다.",
+          "caption": "완성 후 Kind 호출은 반환값 검사이고 나머지 네 번만 Events에 기록됩니다. 실습은 owner.reset()에서 객체를 파괴합니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "생성·소멸 중 자신에게 하는 가상 호출은 그 생성자·소멸자 클래스 단계의 최종 구현을 사용합니다. Effect 생성자에서 아직 준비되지 않은 Fire 멤버를 사용할 것이라고 기대하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 규칙은 생성자에서 virtual을 부르면 모두 문법 오류라는 뜻이 아닙니다. 언어가 허용하는 호출과, 생성 중에 확장 가능한 로직을 실행하는 설계가 적절한지는 별도 질문입니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "순수 가상 호출과 기록 버퍼의 한계",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "생성·소멸 중인 객체에 해당 단계의 순수 가상 함수를 가상 호출하는 경우에는 미정의 동작 문제가 있습니다. 기반 생성자에서 파생 초기화를 끝내려 하지 말고, 필요하다면 객체가 유효해진 뒤 명시적인 시작 작업을 설계합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Events는 16칸짜리 고정 배열이고 초과 기록은 조용히 버립니다. 이번에는 네 개의 이벤트를 확인합니다. 심화01 Trace의 overflow 검사와 같은 추적기라고 설명하지 않으며, 일반 이벤트 시스템의 완전성도 검증하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · 생성·소멸 중 객체",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.cdtor"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "N4861 · 순수 가상 호출",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.abstract#6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "destruction",
+      "title": "6. 기반 포인터의 삭제 계약",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "6. 기반 포인터의 삭제 계약"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// concrete는 make_unique<Fire>(events)의 결과입니다.\nstd::unique_ptr<Effect> owner = std::move(concrete);\n// 소유 핸들을 넘겼습니다. Fire 객체를 값으로 복사한 것이 아닙니다.\nowner.reset();  // virtual 소멸자: Fire 본문 다음 Effect 본문\n// 이전의 base 참조는 이제 대상이 없으므로 사용하지 않습니다.\n"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "기반 타입의 계약"
+                  }
+                ],
+                [
+                  {
+                    "text": "소멸자 설계"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "일반적인 기반 포인터 delete를 공개적으로 지원"
+                  }
+                ],
+                [
+                  {
+                    "text": "public virtual 소멸자"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "외부에서 기반 포인터로 삭제하는 것을 막음"
+                  }
+                ],
+                [
+                  {
+                    "text": "protected nonvirtual 소멸자도 선택지"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "평범한 값 타입이며 다형 삭제 계약이 없음"
+                  }
+                ],
+                [
+                  {
+                    "text": "virtual 소멸자를 무조건 추가할 필요 없음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "일반적인 기반 포인터 delete에서 실제 파생 타입과 정적 기반 타입이 다른데 기반 소멸자가 비가상이면 미정의 동작이 될 수 있습니다. 파생 자원 일부만 누수된다는 결과를 보장하지 않으며 delete[]로 해결하는 문제도 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "스마트 포인터에서도 실제 삭제 계약을 봅니다",
+                  "kind": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기본 deleter를 사용하는 unique_ptr<Effect>는 Effect 포인터를 삭제합니다. 이 실습은 Effect에 public virtual 소멸자를 두었습니다. 소유 핸들이 있다는 사실만으로 잘못된 기반 삭제가 모두 안전해지지는 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "순수 가상 소멸자도 정의가 필요한가요?",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// 규칙을 설명하는 별도 선언 예입니다. 원본의 실행 대상은 아닙니다.\nstruct AbstractBoundary {\n    virtual ~AbstractBoundary() = 0; // 이 타입을 추상 타입으로 만듭니다.\n};\ninline AbstractBoundary::~AbstractBoundary() = default;\n// 파생 객체의 소멸 과정에서도 이 기반 소멸자의 정의가 필요합니다.\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "추상 타입을 직접 만들 수 없는 것은 순수 가상 계약 때문입니다. 타입의 크기를 계산할 수 없기 때문은 아닙니다. 위 예는 선언과 정의의 관계를 설명하며, 원본 12회 검사에 포함된 실행 예제로 세지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "이 단원에서 다루지 않는 삭제 방식",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C++20의 destroying delete나 사용자 deleter를 이용한 별도 소유 설계는 이번의 ordinary delete 계층과 구별합니다. 다중 상속·배열 삭제의 모든 조합도 이 작은 프로그램으로 검증하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · delete",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.delete"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "N4861 · 소멸자 정의",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.dtor#12"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Core Guidelines · C.35",
+              "kind": "link",
+              "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rc-dtor-virtual"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "slicing-clone",
+      "title": "7. 값 복사와 다형 복제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "7. 값 복사와 다형 복제"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/cpp-advanced-03/assets/value-copy-clone.svg",
+          "alt": "위는 비가상 ValueDerived를 ValueBase 값으로 복사해 새 기반 값을 만드는 예시다. 파생 데이터 필드는 없다. 아래는 Number의 값7을 가진 별도 Number 객체를 Clone하고 소유권을 받는 예다.",
+          "caption": "두 그림은 서로 다른 타입의 실습입니다. 위 예는 최소 값 복사이며 아래 예는 명시적인 가상 복제입니다. 실제 메모리 주소를 측정한 도식이 아닙니다."
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "ValueDerived derived;\nValueBase sliced = derived; // 별도의 ValueBase 값으로 복사\n// sliced.Kind() == 1, derived.Kind() == 2\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "파생 객체를 기반 타입의 값으로 복사하면 파생 객체 자체를 보존하는 다형 핸들이 되지 않습니다. 다형성을 유지하려면 포인터·참조와 함께 대상의 수명과 소유권을 관리합니다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본의 최소 예제를 과대 해석하지 않습니다",
+                  "kind": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "ValueBase의 Kind는 비가상이며 ValueDerived에는 추가 데이터 멤버가 없습니다. 값 복사 표현과 정적 호출 차이를 보여 줄 뿐, 파생 필드의 손실이나 가상 동작 변화까지 실험한 것은 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "반대로 Number의 Clone은 "
+            },
+            {
+              "text": "make_unique<Number>(*this)",
+              "kind": "code"
+            },
+            {
+              "text": "로 별도의 Number를 만듭니다. 실습은 clone의 대상이 원본과 다르고 Value()가 7인지 확인합니다. 복잡한 객체 그래프를 모두 깊게 복사하는 정책까지 제공하지는 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// Number 클래스 안의 실제 Clone 구현입니다.\nstd::unique_ptr<Cloneable> Clone() const override {\n    return std::make_unique<Number>(*this); // 새 Number의 소유권을 반환\n}\n"
+        },
+        {
+          "type": "details",
+          "title": "값 복사, 참조 호출, 반환형을 더 정확히 구별하기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "ValueBase&로 원래 derived를 참조해 Kind를 불러도 함수가 비가상이므로 기반 구현을 선택합니다. 그래서 반환값 1 하나만으로 슬라이싱이 일어났다고 판정할 수 없습니다. 실제 실습의 Effect는 복사 연산을 삭제해 값 복사를 막습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Cloneable과 Number의 Clone 반환형은 모두 unique_ptr<Cloneable>입니다. 재정의 쪽만 unique_ptr<Number>로 바꾸는 것은 가상 반환형 공변성으로 허용되지 않습니다. 함수 안에서 만든 unique_ptr<Number>를 반환형에 맞게 변환하는 것과 구별합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "새 객체의 값 변경이 원본에 영향을 주지 않는지까지 별도 실행한 검사는 없습니다. Number는 정수 한 개만 복사하지만, 자원·연결 관계를 가진 타입은 무엇을 복제하고 무엇을 공유할지 따로 정해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · 가상 반환형",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.virtual"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Core Guidelines · 다형 복사와 Clone",
+              "kind": "link",
+              "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-class"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "casts",
+      "title": "8. cast가 확인하는 것",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "8. cast가 확인하는 것"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "도구"
+                  }
+                ],
+                [
+                  {
+                    "text": "주로 표현하는 변환"
+                  }
+                ],
+                [
+                  {
+                    "text": "보장하지 않는 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "static_cast"
+                  }
+                ],
+                [
+                  {
+                    "text": "정해진 타입 변환 · 명시적 수치 변환 · 허용된 계층 변환"
+                  }
+                ],
+                [
+                  {
+                    "text": "다운캐스트 대상의 실제 타입을 일반적으로 런타임 검사하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "dynamic_cast"
+                  }
+                ],
+                [
+                  {
+                    "text": "다형 계층에서 필요한 런타임 타입 확인"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본이 이미 수명 종료·무효 상태여도 안전하게 복구해 주는 검사는 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "const_cast"
+                  }
+                ],
+                [
+                  {
+                    "text": "허용된 cv 한정 변경"
+                  }
+                ],
+                [
+                  {
+                    "text": "원래 const인 객체를 수정할 권한을 주지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "reinterpret_cast"
+                  }
+                ],
+                [
+                  {
+                    "text": "일부 저수준 표현·포인터 변환"
+                  }
+                ],
+                [
+                  {
+                    "text": "정렬·수명·타입 접근 규칙을 무시한 역참조를 허용하지 않음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// base가 아직 살아 있는 Fire 객체를 가리킬 때의 실제 검사입니다.\nauto* fire = dynamic_cast<Fire*>(&base); // 원래 Fire를 가리킴\nauto* ice = dynamic_cast<Ice*>(&base);   // nullptr\n// dynamic_cast<Ice&>(base)는 std::bad_cast를 던집니다.\n// 전체 실습은 Throws<std::bad_cast>로 이 경로를 검사합니다.\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 대상은 Fire 하나입니다. Ice 객체를 새로 만들거나 객체의 타입을 Ice로 바꾸는 동작이 아닙니다. 포인터 실패는 nullptr로 분기할 수 있고, 참조 실패는 std::bad_cast로 처리합니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "다운캐스트를 선택하기 전에 확인할 질문",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "필요한 동작을 기반 인터페이스로 표현할 수 있는지 먼저 검토합니다. 런타임 계층 탐색이 필요하다면 dynamic_cast가 검사하는 public·비모호 관계를 확인합니다. 같은 타입 변환이나 기반으로의 변환 등 모든 dynamic_cast가 런타임 하향 검사는 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "검사 없는 잘못된 static_cast 다운캐스트는 미정의 동작으로 이어질 수 있습니다. 다중 상속에서는 기반 부분의 주소가 완전한 객체의 주소와 다를 수 있으므로 reinterpret_cast로 기반 포인터 조정을 대신하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "자주 사용하는 경로의 비용이 문제라면 실제 컴파일러·계층·빌드 옵션으로 측정합니다. 이번 12회 검사에는 RTTI 성능이나 ABI 비교가 들어 있지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · dynamic_cast",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.dynamic.cast"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "N4861 · static_cast",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.static.cast"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "N4861 · const_cast",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.const.cast"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "N4861 · reinterpret_cast",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.reinterpret.cast"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nvi",
+      "title": "9. 공개 검증과 내부 구현 분리",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "9. 공개 검증과 내부 구현 분리"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Damage는 공개된 비가상 "
+            },
+            {
+              "text": "Apply",
+              "kind": "code"
+            },
+            {
+              "text": "에서 입력을 검사하고, 계산만 private virtual "
+            },
+            {
+              "text": "ApplyImpl",
+              "kind": "code"
+            },
+            {
+              "text": "로 넘깁니다. 이처럼 호출 경계와 변경 가능한 구현을 나누는 방식을 NVI, Non-Virtual Interface라고 부릅니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n    A[\"Damage::Apply\"] --> B{\"피해량이 0 이상 1000 이하?\"}\n    B -->|\"아니오\"| X[\"invalid_argument\"]\n    B -->|\"예\"| C[\"HalfDamage::ApplyImpl\"]\n    C --> D[\"amount / 2 반환\"]\n"
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// Damage의 공개 비가상 함수입니다.\nint Apply(int amount) const {\n    if (amount < 0 || amount > 1000)\n        throw std::invalid_argument(\"amount\");\n    return ApplyImpl(amount); // 검증을 통과한 입력만 계산으로 전달\n}\n// Damage: private virtual int ApplyImpl(int) const = 0;\n// HalfDamage의 재정의: amount / 2를 반환합니다.\n"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "역할"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 선택"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "호출자에게 제공한 경계"
+                  }
+                ],
+                [
+                  {
+                    "text": "Damage::Apply · 입력 검증"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "파생 타입마다 달라지는 계산"
+                  }
+                ],
+                [
+                  {
+                    "text": "HalfDamage::ApplyImpl · 정수 나눗셈"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "실행한 정상 입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "10을 전달해 5 반환"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "실행한 거부 입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "-1을 전달해 invalid_argument"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "코드에 있지만 별도 실행하지 않은 경계"
+                  }
+                ],
+                [
+                  {
+                    "text": "1000 초과 거부 · 0/1000과 홀수 입력의 개별 검사"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "private와 override는 서로 다른 규칙입니다",
+                  "kind": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "ApplyImpl이 private이어도 HalfDamage가 이를 재정의할 수 있습니다. 접근 제어는 외부에서 그 이름을 직접 사용할 수 있는지를 다루며, 가상 함수의 재정의 관계를 결정하는 조건과 다릅니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "NVI가 모든 함수를 감싸야 한다는 규칙은 아닙니다. 공통 검증·전후 작업과 달라지는 계산의 경계가 분명한 곳에서 검토합니다. 이번 HalfDamage는 정해진 공개 Apply 경로를 사용합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "근거: "
+            },
+            {
+              "text": "N4861 · 재정의와 접근 제어",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.virtual"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Core Guidelines · 인터페이스와 구현",
+              "kind": "link",
+              "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-class"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lab",
+      "title": "전체 프로그램을 빌드합니다",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "전체 프로그램을 빌드합니다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "저장소를 내려받은 뒤 루트에서 실행합니다. 공통 CMake는 원본과 한국어 주석판을 함께 구성합니다. C++20 컴파일러와 해당 표준 라이브러리, CMake가 필요합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S knowledge/shared/cpp-advanced-lab -B /tmp/atlas-cpp-advanced -DCMAKE_BUILD_TYPE=Debug\ncmake --build /tmp/atlas-cpp-advanced --config Debug\n\n# 이번 단원의 원본과 한국어판만 선택\nctest --test-dir /tmp/atlas-cpp-advanced -C Debug -R '^polymorphism(_ko)?$' --output-on-failure -V\n\n# 공유 팩의 전체 정상 실행 검사\nctest --test-dir /tmp/atlas-cpp-advanced -C Debug --output-on-failure\n"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "확인할 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "읽는 방법"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "PASS polymorphism: 12 checks"
+                  }
+                ],
+                [
+                  {
+                    "text": "정상 경로에서 수행한 12회 검사 호출"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "events.count와 events.data"
+                  }
+                ],
+                [
+                  {
+                    "text": "생성 후 1,2 · owner.reset 후 1,2,2,1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "base.Strength와 concrete->Strength"
+                  }
+                ],
+                [
+                  {
+                    "text": "같은 객체에서 20과 30"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "clone.get()과 clone->Value()"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본과 다른 객체 · 값 7"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "프로그램이 이벤트 배열을 stdout에 직접 나열하는 것은 아닙니다. 전체 main이 배열과 반환값을 검사합니다. 디버거에서는 생성자, 소멸자, Apply 진입 지점에 멈추어 비교할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "잘못된 override는 실행하지 않고 컴파일 거부를 봅니다",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "bash",
+              "text": "# 저장소 루트에서 사용하는 별도 거부 예제 명령입니다.\n# 성공적으로 실행될 프로그램이 아니며 nonzero 컴파일 종료를 예상합니다.\ng++ -std=c++20 -pedantic-errors -c \\\n  knowledge/shared/cpp-advanced-lab/original/negative/wrong_override.cpp \\\n  -o /tmp/atlas-wrong-override.o\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Read() const와 Read()의 불일치를 확인합니다. 정상 CTest 통과 수와 컴파일 거부 확인을 합산하지 않습니다. 현재 CI의 실제 결과는 출처·검증 탭에 별도로 기록합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "checks",
+      "title": "12회 검사의 범위를 읽습니다",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "12회 검사의 범위를 읽습니다"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "번호"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 확인"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "생성 중 가상 호출 기록: 1, 2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "완성된 Fire를 base.Kind()로 호출: 2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "3"
+                  }
+                ],
+                [
+                  {
+                    "text": "기본 인수 선택: 기반 경로20 · 구체 경로30"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "4"
+                  }
+                ],
+                [
+                  {
+                    "text": "dynamic_cast<Fire*>가 기존 Fire 포인터와 같음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "5"
+                  }
+                ],
+                [
+                  {
+                    "text": "dynamic_cast<Ice*> 실패: nullptr"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "6"
+                  }
+                ],
+                [
+                  {
+                    "text": "dynamic_cast<Ice&> 실패: bad_cast"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "7"
+                  }
+                ],
+                [
+                  {
+                    "text": "가상 소멸 후 기록 수4 · 마지막 두 값2,1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "8"
+                  }
+                ],
+                [
+                  {
+                    "text": "비가상 값 복사 예: sliced.Kind()==1 · derived.Kind()==2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "9"
+                  }
+                ],
+                [
+                  {
+                    "text": "using으로 보이는 정수·문자열 오버로드 결과1,2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "10"
+                  }
+                ],
+                [
+                  {
+                    "text": "HalfDamage::Apply(10)==5"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "11"
+                  }
+                ],
+                [
+                  {
+                    "text": "HalfDamage::Apply(-1)의 invalid_argument"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "12"
+                  }
+                ],
+                [
+                  {
+                    "text": "Clone 결과가 다른 객체이며 Value()==7"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "소스의 Expect 10회와 Throws 2회가 총 12회입니다. 한 Expect 안의 여러 비교나 컴파일러별 재실행, 한국어판의 같은 검사를 별도의 독립 조건으로 늘려 세지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "학습용 사본에서 확장할 질문 · 현재 검사 수에 포함하지 않음",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "NVI의 0·1000·1001과 홀수 입력을 표로 정하고 결과를 예상합니다. Clone 결과를 실제로 수정한 뒤 원본의 값을 다시 보는 검사도 추가할 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "생성·소멸 순서도에서 완성 후 Kind() 결과까지 Events에 더했다면 왜 원본과 기록 수가 달라지는지 설명합니다. 관측 코드를 바꾸는 것과 실제 언어 동작이 달라지는 것을 구별합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 어떤 계약이 선택될까요?",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "복습 · 어떤 계약이 선택될까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "1. 같은 Fire인데 Strength 결과가 20과 30인 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실행할 본체는 두 호출 모두 Fire::Strength입니다. 생략한 scale은 기반 경로에서 Effect 선언의2, 구체 경로에서 Fire 선언의3이 선택됩니다. 기본 인수와 가상 구현의 선택을 각각 설명해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "2. Effect 생성자에서 Kind를 부르면 Fire 초기화도 끝낼 수 있을까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그 단계에서는 Effect의 최종 구현을 사용합니다. 아직 준비되지 않은 파생 멤버를 전제로 하지 않습니다. 생성 불변식과 완료 후 시작 작업을 구별합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "3. 가상 함수가 있으니 unique_ptr<Effect> 삭제도 자동으로 안전할까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다른 가상 함수의 존재만으로 소멸자가 가상이 되는 것은 아닙니다. 일반적인 기반 포인터 삭제 계약을 확인해야 합니다. 이 실습의 Effect는 public virtual 소멸자를 제공합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "4. Events에 완성 후 Kind()==2까지 포함해 기록이 다섯 개일까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 완성 후 호출은 결과만 검사합니다. 생성자·소멸자가 넣은 네 개의 기록은 1,2,2,1이며 owner.reset()이 소멸을 시작합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "5. sliced.Kind()==1만 보면 파생 데이터가 사라졌다고 증명할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본 ValueBase는 비가상이며 ValueDerived에는 추가 데이터 필드가 없습니다. 값 복사 표현을 확인할 수는 있지만 파생 필드 손실까지 검사하지는 않습니다. 기반 참조로 비가상 Kind를 불러도1이 나올 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "6. Clone의 반환형을 Number 쪽에서 unique_ptr<Number>로 바꿔도 될까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가상 반환형 공변성은 스마트 포인터 템플릿에 그대로 적용되지 않습니다. 현재 두 선언은 unique_ptr<Cloneable>로 같으며, 함수 내부에서 만든 unique_ptr<Number>를 반환형에 맞게 변환합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "7. dynamic_cast가 nullptr이면 그 포인터의 수명도 검사된 것일까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "유효한 살아 있는 다형 객체에 대한 변환 실패를 알려 주는 것입니다. 이미 무효인 포인터를 안전하게 검증하는 수명 검사기가 아닙니다. 이 실습은 owner.reset() 전에 cast하고, 이후 base를 사용하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "8. private virtual을 HalfDamage가 어떻게 재정의하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이름에 접근하는 규칙과 가상 재정의 관계는 별개입니다. 호출자는 공개 Apply를 사용하고, Apply 내부의 가상 호출은 HalfDamage의 재정의로 이어집니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "9. using Base::F와 override는 같은 문제를 해결하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "using은 기반의 이름을 현재 오버로드 후보에 노출합니다. override는 기반 가상 함수와 정확히 재정의 관계가 되는지 검사합니다. 오버로딩·이름 가림·오버라이딩을 구별합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source-files",
+      "title": "전체 소스와 실제 단원 연결",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "전체 소스와 실제 단원 연결"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석판은 원본의 실행 토큰과 전처리 지시문을 유지합니다. 생성·소멸 기록, 타입별 호출, NVI·Clone의 범위와 실습 한계를 한국어로 설명하고 원본 바이트는 별도로 보존합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "파일"
+                  }
+                ],
+                [
+                  {
+                    "text": "한국어 주석판"
+                  }
+                ],
+                [
+                  {
+                    "text": "복원 원본"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "polymorphism.cpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "전체 polymorphism.cpp",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/ko/polymorphism.cpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 polymorphism.cpp",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "check.hpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "전체 check.hpp",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/ko/check.hpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 check.hpp",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-advanced-lab/original/src/check.hpp"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/CMakeLists.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "원본 CMake",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/original/CMakeLists.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "공유 실습 README",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "파일별 무결성",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/source-integrity.json"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Notion 도입부의 파일 표기와 실제 내용을 구별합니다",
+                  "kind": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Notion03 도입부에는 polymorphism.cpp와 interfaces.cpp가 함께 적혀 있습니다. 실제 NVI·Clone 구현과 이 단원의 12회 검사는 모두 polymorphism.cpp에 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "interfaces.cpp의 Seconds·Label·Counter·Quantity와 7회 검사는 "
+                },
+                {
+                  "text": "심화04 교재",
+                  "kind": "link",
+                  "href": "/knowledge/cpp-advanced-04/"
+                },
+                {
+                  "text": "에서 다룹니다. "
+                },
+                {
+                  "text": "실제 interfaces.cpp",
+                  "kind": "link",
+                  "href": "/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp"
+                },
+                {
+                  "text": "를 연결하되 이 단원의 검증 수에 중복 집계하지 않습니다. 보존한 Notion 원문은 수정하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 주석 전체 polymorphism.cpp 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"check.hpp\"\n#include <array>\n#include <memory>\n#include <string>\n#include <typeinfo>\n// 원본 프로그램의 토큰은 그대로 두고 한국어 설명만 추가한 학습용 주석판이다.\n// 기록 버퍼는 16칸이다. 넘친 이벤트는 조용히 버리므로 일반적인 추적 시스템의 완전성을 보장하지 않는다.\nstruct Events {\n    std::array<int, 16> data{};\n    std::size_t count{};\n    void Add(int value) noexcept { if (count < data.size()) data[count++] = value; }\n};\n// 생성자·소멸자 안의 가상 호출은 현재 생성·소멸 중인 클래스 단계에서 결정된다.\n// Effect 단계의 Kind()는 1이며, 가장 파생된 Fire의 구현까지 호출하지 않는다.\nclass Effect {\n    Events& events_;\npublic:\n    explicit Effect(Events& events) : events_(events) { events_.Add(Kind()); }\n    virtual ~Effect() noexcept { events_.Add(Kind()); }\n    virtual int Kind() const noexcept { return 1; }\n    virtual int Strength(int scale = 2) const noexcept { return scale; }\n    Effect(const Effect&) = delete;\n    Effect& operator=(const Effect&) = delete;\n};\n// Fire 생성자 본문과 소멸자 본문에서는 Kind()가 2를 반환한다.\n// 생성 기록은 1, 2이고 가상 소멸을 마친 기록은 1, 2, 2, 1이 된다.\n// Strength는 기본값 2·3으로만 실행한다. 임의의 큰 scale에 대한 곱셈 범위 검사는 없다.\nclass Fire final : public Effect {\n    Events& events_;\npublic:\n    explicit Fire(Events& events) : Effect(events), events_(events) { events_.Add(Kind()); }\n    ~Fire() noexcept override { events_.Add(Kind()); }\n    int Kind() const noexcept override { return 2; }\n    int Strength(int scale = 3) const noexcept override { return scale * 10; }\n};\n// Ice는 실패하는 RTTI 변환의 목표 타입이다. 이 테스트에서 실제 Ice 객체를 만들지는 않는다.\nclass Ice final : public Effect { public: using Effect::Effect; };\n// 이 최소 예시는 비가상 Kind()와 값 복사를 사용한다. 파생 데이터 멤버는 없다.\n// 기반 부분만 값으로 만드는 표현과 정적 타입에 따른 호출을 보여 주며, 파생 데이터 손실까지 검사하지 않는다.\nstruct ValueBase { int Kind() const { return 1; } };\nstruct ValueDerived : ValueBase { int Kind() const { return 2; } };\n// 파생 클래스에서 같은 이름을 선언하면 기반 이름이 가려진다. using으로 기반 오버로드도 후보에 넣는다.\nstruct Overloads { int F(int) const { return 1; } };\nstruct AddOverload : Overloads { using Overloads::F; int F(const std::string&) const { return 2; } };\n// NVI: 공개 비가상 Apply가 입력 계약을 확인하고, private 가상 훅에 계산을 위임한다.\n// 허용 범위는 0부터 1000까지다. 아래 실행은 정상값 10과 거부값 -1만 검사한다.\nclass Damage {\npublic:\n    int Apply(int amount) const {\n        if (amount < 0 || amount > 1000) throw std::invalid_argument(\"amount\");\n        return ApplyImpl(amount);\n    }\n    virtual ~Damage() = default;\nprivate:\n    virtual int ApplyImpl(int amount) const = 0;\n};\nclass HalfDamage final : public Damage { int ApplyImpl(int amount) const override { return amount / 2; } };\n// 가상 Clone은 소유권을 unique_ptr<Cloneable>로 돌려준다. 기반 소멸자도 가상이다.\n// 스마트 포인터 자체에 가상 반환형 공변성을 적용한 것이 아니라 두 선언의 반환형을 같게 두었다.\nstruct Cloneable {\n    virtual ~Cloneable() = default;\n    virtual std::unique_ptr<Cloneable> Clone() const = 0;\n    virtual int Value() const = 0;\n};\n// 정수 하나를 가진 실제 Number를 새로 만든다. 복잡한 객체 그래프의 깊은 복사까지 다루지는 않는다.\nstruct Number final : Cloneable {\n    int value;\n    explicit Number(int n) : value(n) {}\n    std::unique_ptr<Cloneable> Clone() const override { return std::make_unique<Number>(*this); }\n    int Value() const override { return value; }\n};\n// 정상 경로의 검사 호출은 Expect 10회 + Throws 2회, 총 12회다.\nint main() { return Run(\"polymorphism\", [](Checks& c) {\n    Events events;\n    {\n        auto concrete = std::make_unique<Fire>(events);\n        Effect& base = *concrete;\n        c.Expect(events.count == 2 && events.data[0] == 1 && events.data[1] == 2, \"construction dispatch\");\n        c.Expect(base.Kind() == 2, \"dynamic dispatch\");\n        // 가상 함수 본체는 Fire로 가지만 기본 인자는 호출식의 정적 타입에서 고른다.\n        // Effect&의 기본값 2는 20, Fire*의 기본값 3은 30을 만든다.\n        c.Expect(base.Strength() == 20 && concrete->Strength() == 30, \"static defaults\");\n        // 포인터 dynamic_cast 실패는 nullptr, 참조 dynamic_cast 실패는 bad_cast다.\n        c.Expect(dynamic_cast<Fire*>(&base) == concrete.get(), \"pointer cast success\");\n        c.Expect(dynamic_cast<Ice*>(&base) == nullptr, \"pointer cast failure\");\n        c.Throws<std::bad_cast>([&] { (void)dynamic_cast<Ice&>(base); }, \"reference cast failure\");\n        // unique_ptr의 이동은 소유 핸들을 넘긴다. Fire 객체를 값으로 복사·이동하지 않는다.\n        // 기반 포인터로 삭제해도 가상 소멸자 덕분에 Fire 다음 Effect 순서로 정리된다.\n        std::unique_ptr<Effect> owner = std::move(concrete); owner.reset();\n    }\n    // 위 스코프가 끝나기 전에 owner.reset()이 이미 객체를 파괴했다.\n    c.Expect(events.count == 4 && events.data[2] == 2 && events.data[3] == 1, \"virtual destruction\");\n    ValueDerived derived; ValueBase sliced = derived;\n    c.Expect(sliced.Kind() == 1 && derived.Kind() == 2, \"slicing illustration\");\n    AddOverload over; c.Expect(over.F(1) == 1 && over.F(std::string(\"x\")) == 2, \"using overloads\");\n    HalfDamage half; c.Expect(half.Apply(10) == 5, \"NVI\");\n    c.Throws<std::invalid_argument>([&] { (void)half.Apply(-1); }, \"NVI validation\");\n    // 복제본은 다른 객체이며 값 7을 보존한다. 이후 두 객체를 변경하는 독립성 테스트는 별도로 없다.\n    Number number(7); auto clone = number.Clone();\n    c.Expect(clone.get() != &number && clone->Value() == 7, \"polymorphic clone\");\n}); }\n"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "공통 검사기 check.hpp 전체 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#ifndef STUDY_CHECK_HPP\n#define STUDY_CHECK_HPP\n#include <exception>\n#include <functional>\n#include <iostream>\n#include <stdexcept>\n#include <utility>\n\n// 한 프로그램에서 실제로 확인한 조건의 수를 센다.\n// 이 카운터는 경로 커버리지나 독립 기능 수를 측정하지 않는다.\nclass Checks {\n    int count_{};\npublic:\n    void Expect(bool condition, const char* label) {\n        ++count_;\n        if (!condition) throw std::runtime_error(label);\n    }\n    template<class E, class F> void Throws(F&& f, const char* label) {\n        bool matched = false;\n        try { std::invoke(std::forward<F>(f)); }\n        catch (const E&) { matched = true; }\n        // 예외를 예상하는 실험도 Expect를 한 번 호출한다.\n        // E와 무관한 예외는 여기서 잡지 않고 바깥 실행 경계로 전달한다.\n        Expect(matched, label);\n    }\n    int Count() const noexcept { return count_; }\n};\n\ntemplate<class F> int Run(const char* name, F&& test) {\n    try {\n        Checks checks;\n        std::invoke(std::forward<F>(test), checks);\n        std::cout << \"PASS \" << name << \": \" << checks.Count() << \" checks\\n\";\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << \"FAIL \" << name << \": \" << e.what() << '\\n';\n        return 1;\n    }\n}\n#endif\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 ZIP",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/archive/cpp_advanced_effective_lab_v1.zip"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "전체 소스 Markdown",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/archive/cpp_advanced_effective_sources_v1.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Notion 검증 첨부",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/archive/validation-notion-attachment.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "references",
+      "title": "언어 규칙과 설계 지침",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "언어 규칙과 설계 지침"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "N4861은 공개 C++20 작업 초안이며 HTML 링크는 그 문구의 열람용 미러입니다. 출판된 ISO 표준과 구별합니다. Core Guidelines는 설계 지침으로 읽고 언어가 강제하는 규칙과 구분합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주제"
+                  }
+                ],
+                [
+                  {
+                    "text": "근거"
+                  }
+                ],
+                [
+                  {
+                    "text": "읽을 내용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "공개 초안"
+                  }
+                ],
+                [
+                  {
+                    "text": "WG21 N4861 PDF",
+                    "kind": "link",
+                    "href": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/n4861.pdf"
+                  }
+                ],
+                [
+                  {
+                    "text": "C++20 기준의 원문 조항"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "가상 함수"
+                  }
+                ],
+                [
+                  {
+                    "text": "[class.virtual]",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/class.virtual"
+                  }
+                ],
+                [
+                  {
+                    "text": "최종 재정의 · override · final · 공변 반환형 · 접근 제어"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "기본 인수"
+                  }
+                ],
+                [
+                  {
+                    "text": "[dcl.fct.default]",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/dcl.fct.default"
+                  }
+                ],
+                [
+                  {
+                    "text": "호출식의 정적 타입으로 결정하는 기본값"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "생성·소멸 단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "[class.cdtor]",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/class.cdtor"
+                  }
+                ],
+                [
+                  {
+                    "text": "생성·소멸 중 가상 호출의 범위"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "추상 타입"
+                  }
+                ],
+                [
+                  {
+                    "text": "[class.abstract]",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/class.abstract"
+                  }
+                ],
+                [
+                  {
+                    "text": "순수 가상 함수 · 생성·소멸 중 순수 가상 호출"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "소멸자 정의"
+                  }
+                ],
+                [
+                  {
+                    "text": "[class.dtor]",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/class.dtor"
+                  }
+                ],
+                [
+                  {
+                    "text": "순수 가상 소멸자를 포함한 정의 요구"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "삭제 계약"
+                  }
+                ],
+                [
+                  {
+                    "text": "[expr.delete]",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.delete"
+                  }
+                ],
+                [
+                  {
+                    "text": "일반 delete · 기반의 가상 소멸자 · 배열과 별도 규칙"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "런타임 변환"
+                  }
+                ],
+                [
+                  {
+                    "text": "[expr.dynamic.cast]",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.dynamic.cast"
+                  }
+                ],
+                [
+                  {
+                    "text": "public·비모호 관계 · 포인터/참조 실패"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "검사 없는 변환"
+                  }
+                ],
+                [
+                  {
+                    "text": "[expr.static.cast]",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.static.cast"
+                  }
+                ],
+                [
+                  {
+                    "text": "다운캐스트 전제와 잘못된 대상"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "한정·표현 변환"
+                  }
+                ],
+                [
+                  {
+                    "text": "[expr.const.cast]",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.const.cast"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "[expr.reinterpret.cast]",
+                    "kind": "link",
+                    "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.reinterpret.cast"
+                  }
+                ],
+                [
+                  {
+                    "text": "변환과 유효한 접근의 차이"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "클래스 설계"
+                  }
+                ],
+                [
+                  {
+                    "text": "C++ Core Guidelines",
+                    "kind": "link",
+                    "href": "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-class"
+                  }
+                ],
+                [
+                  {
+                    "text": "C.35 · C.67 · C.82 · C.128 · C.130 · C.138 · C.140"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확인일: 2026-10-21. 이벤트 값과 12회 검사, Strength 기본값, NVI의 입력 범위는 보존한 polymorphism.cpp에서 직접 확인한 학습 계약입니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "기존 원본 검증과 이번 확장",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "기존 원본 검증과 이번 확장"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이번 한국어판의 새 GitHub CI는 확인 대기 중입니다",
+                  "kind": "strong"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "새 로컬 GCC에서 원본 9개와 한국어 주석판 6개를 직접 빌드·실행했고 출력 6쌍이 바이트 단위로 일치했습니다. 이번 배치의 GitHub Configure·Build·CTest와 Clang sanitizer 결과는 완료 후 별도 원시 로그로 기록합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "항목"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 확인 범위"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Notion03 원문"
+                  }
+                ],
+                [
+                  {
+                    "text": "11,117바이트 · capture SHA-256과 대조"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "복원 실습 원본"
+                  }
+                ],
+                [
+                  {
+                    "text": "Notion 검증 첨부의 ZIP 해시와 일치하는 보존본"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "한국어 주석판"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 토큰·전처리 지시문 동일 · 파일 전체를 별도 보존"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "과거 2026-10-13"
+                  }
+                ],
+                [
+                  {
+                    "text": "GCC14.2 · Clang17 · Clang ASan/UBSan에서 polymorphism 12회 기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이전 GitHub 39557286731"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 polymorphism을 포함한 원본9개 + 당시 한국어3개 CTest12/12"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이번 로컬 GCC 13.3.0"
+                  }
+                ],
+                [
+                  {
+                    "text": "C++20 직접 빌드·실행 15개 성공 · 원본/주석판 출력 6쌍 바이트 동일"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이번 GitHub 검증"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 polymorphism_ko를 포함한 구성은 아직 결과 확인 전"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "C++11"
+                  }
+                ],
+                [
+                  {
+                    "text": "엄격한 C++11 모드에서 원본 9개 모두 컴파일 거부 · 호환 미지원"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Windows/MSVC·Direct3D·GPU·HLSL"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 실행 미검증"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 로컬 검증 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/local-gcc-advanced34-20261021/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "15개 실행과 출력 비교 결과",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/local-gcc-advanced34-20261021/positive/results.json"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "C++11 컴파일 진단",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/local-gcc-advanced34-20261021/cxx11/results.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전 GitHub 실행은 원본 polymorphism을 실제로 빌드·실행했지만 이번에 추가한 한국어판의 검증 결과는 아닙니다. 같은 12회를 여러 환경에서 반복해도 독립 검사 조건을 곱해 세지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 공유 검증 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "파일별 무결성",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/source-integrity.json"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "과거 로그 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/historical-20261013/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "이전 GitHub 원시 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39557286731/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전 GitHub 실행",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39557286731"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "과거 report.json",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/historical-20261013/logs/report.json"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "검증 범위에 포함하지 않은 것",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가상 호출·cast 성능, ABI와 실제 객체 배치, 다중 상속의 모든 조합, 임의 scale의 정수 범위, NVI 상한의 별도 실행, 복잡한 자원 그래프의 복제, 실제 게임 통합은 이번 12회 검사의 결론이 아닙니다. sanitizer도 실행한 경로의 검출 결과로 읽습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "보존 원문과 교재 재구성",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "보존 원문과 교재 재구성"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Notion03 원문",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f8a99703f40811ca5d2d6c7112fe161"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "source-notion.md",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-03/source-notion.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "수집 메타데이터",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-03/source-notion-capture.json"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구분"
+                  }
+                ],
+                [
+                  {
+                    "text": "기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원문 마지막 수정"
+                  }
+                ],
+                [
+                  {
+                    "text": "2026-10-13T01:12:58.037Z"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이번 수집"
+                  }
+                ],
+                [
+                  {
+                    "text": "2026-10-21T07:28:53Z · <content> 내부 enhanced Markdown"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "보존 바이트"
+                  }
+                ],
+                [
+                  {
+                    "text": "UTF-8 11,117바이트 · 마지막 LF 1개"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "도구 미제공 정보"
+                  }
+                ],
+                [
+                  {
+                    "text": "truncated / unknown_block_count는 null"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "웹 교재 재구성"
+                  }
+                ],
+                [
+                  {
+                    "text": "2026-10-21 · SVG3개·NVI Mermaid·비교표·한국어 설명·복습9문항"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원문과 웹 교재의 연결",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "원문 주제"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "웹 교재"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "public 상속·정적/동적 타입"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서1~2"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "override·가림"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서4 · wrong_override.cpp"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "생성·소멸 Mermaid"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서5의 수명 단계 그림 · 원본 코드는 source-notion.md에 보존"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "기반 삭제·슬라이싱·Clone"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서6~7 · 전체 polymorphism.cpp"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "캐스팅·기본 인수·NVI"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "문서8·3·9"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "원문의 이해 확인2문항"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "복습2·3에 반영 · 추가7문항"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "interfaces.cpp 도입부 표기"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "출처 탭에서 실제04 단원 귀속과 구별"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그림과 설명은 웹 교재를 위해 새로 작성했습니다. 원본 본문·코드·과거 로그는 보존하며, 새 집필·소스 복원·새 실행 검증·공개 배포를 각각 구분합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원문 SHA-256",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "text",
+              "text": "8d6fa796e736fd151a560051be777055b6571917119347172bcc6a16c620183e"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전: "
+            },
+            {
+              "text": "C++ 심화02 · 복사·이동·소유권·예외 안전성",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-02/"
+            },
+            {
+              "text": " · 다음: "
+            },
+            {
+              "text": "C++ 심화04 교재",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-04/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

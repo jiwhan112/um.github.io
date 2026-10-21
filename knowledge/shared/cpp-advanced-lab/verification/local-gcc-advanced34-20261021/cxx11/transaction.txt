@@ -1,0 +1,42 @@
+In file included from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:1:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In member function ‘void Checks::Throws(F&&, const char*)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: error: ‘invoke’ is not a member of ‘std’
+   17 |         try { std::invoke(std::forward<F>(f)); }
+      |                    ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: note: ‘std::invoke’ is only available from C++17 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In function ‘int Run(const char*, F&&)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: error: ‘invoke’ is not a member of ‘std’
+   26 |         std::invoke(std::forward<F>(test), checks);
+      |              ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: note: ‘std::invoke’ is only available from C++17 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp: At global scope:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:7:42: error: ‘make_unique’ is not a member of ‘std’
+    7 |     std::unique_ptr<State> state_ = std::make_unique<State>(State{{1,2},"old"});
+      |                                          ^~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:7:42: note: ‘std::make_unique’ is only available from C++14 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:7:59: error: expected primary-expression before ‘>’ token
+    7 |     std::unique_ptr<State> state_ = std::make_unique<State>(State{{1,2},"old"});
+      |                                                           ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp: In member function ‘void GameState::Transition(std::string, bool)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:11:31: error: ‘make_unique’ is not a member of ‘std’
+   11 |         auto candidate = std::make_unique<State>(*state_);
+      |                               ^~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:11:31: note: ‘std::make_unique’ is only available from C++14 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:11:48: error: expected primary-expression before ‘>’ token
+   11 |         auto candidate = std::make_unique<State>(*state_);
+      |                                                ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp: At global scope:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:18:19: error: inline variables are only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+   18 | struct Resource { inline static int alive{}; Resource() { ++alive; } ~Resource() { --alive; } };
+      |                   ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp: In lambda function:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:26:52: error: ‘make_unique’ is not a member of ‘std’
+   26 |     c.Throws<std::runtime_error>([] { Consume(std::make_unique<Resource>(), FailPriority()); }, "argument failure");
+      |                                                    ^~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:26:52: note: ‘std::make_unique’ is only available from C++14 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:26:72: error: expected primary-expression before ‘>’ token
+   26 |     c.Throws<std::runtime_error>([] { Consume(std::make_unique<Resource>(), FailPriority()); }, "argument failure");
+      |                                                                        ^
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:26:74: error: expected primary-expression before ‘)’ token
+   26 |     c.Throws<std::runtime_error>([] { Consume(std::make_unique<Resource>(), FailPriority()); }, "argument failure");
+      |                                                                          ^

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="650" viewBox="0 0 640 650" role="img" aria-labelledby="title desc">
+  <title id="title">인수 타입으로 찾는 hidden friend</title>
+  <desc id="desc">실습의 q는 값4인 Quantity int 객체다. q 더하기3과3 더하기q 모두 q의 타입에 대한 ADL로 비멤버 friend를 찾는다. 선택한 함수의 매개변수에 맞추어 정수3을 Quantity int로 변환하고 값7을 반환한다. 두 인수가 모두 int인3 더하기4는 이 friend를 찾지 않고 내장 덧셈을 사용한다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker></defs>
+  <rect width="640" height="650" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="48" font-size="28" font-weight="700">q가 숨은 연산자를 찾습니다</text>
+    <text x="32" y="86" font-size="24" fill="#b8c7dd">q : Quantity&lt;int&gt; · 저장한 값은 4</text>
+    <rect x="32" y="118" width="276" height="78" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <rect x="332" y="118" width="276" height="78" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <text x="170" y="168" text-anchor="middle" font-size="32" font-weight="700">q + 3</text>
+    <text x="470" y="168" text-anchor="middle" font-size="32" font-weight="700">3 + q</text>
+    <path d="M170 198V226H270V244" fill="none" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M470 198V226H370V244" fill="none" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="32" y="254" width="576" height="102" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="320" y="293" text-anchor="middle" font-size="26" font-weight="700">ADL · 인수의 타입에서 탐색</text>
+    <text x="320" y="333" text-anchor="middle" font-size="24">Quantity&lt;int&gt;의 비멤버 friend</text>
+    <path d="M320 358V393" fill="none" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="32" y="404" width="576" height="78" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <text x="320" y="453" text-anchor="middle" font-size="24">int 3을 Quantity&lt;int&gt;로 변환</text>
+    <path d="M320 484V519" fill="none" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="32" y="530" width="576" height="64" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="320" y="571" text-anchor="middle" font-size="26" fill="#6ee7b7">결과 · 값 7인 Quantity&lt;int&gt;</text>
+    <text x="32" y="630" font-size="23" fill="#b8c7dd">3 + 4는 내장 int 덧셈입니다.</text>
+  </g>
+</svg>

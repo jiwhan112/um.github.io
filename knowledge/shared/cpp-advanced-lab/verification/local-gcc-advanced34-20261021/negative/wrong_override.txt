@@ -1,0 +1,3 @@
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/negative/wrong_override.cpp:2:29: error: ‘int Derived::Read()’ marked ‘override’, but does not override
+    2 | struct Derived : Base { int Read() override { return 1; } };
+      |                             ^~~~

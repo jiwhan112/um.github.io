@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="794" viewBox="0 0 640 794" role="img" aria-labelledby="title desc">
+<title id="title">기본 타입의 값 복사와 명시적인 다형 복제</title>
+<desc id="desc">위는 비가상 ValueDerived를 ValueBase 값으로 복사한 최소 예시이며 추가 데이터 필드는 없다. 아래는 정수7을 담은 Number를 Clone하여 같은 값의 별도 Number 객체를 만들고 unique_ptr로 소유하는 예다.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#93c5fd"/></marker></defs>
+<rect width="640" height="794" rx="20" fill="#0f172a"/>
+<g font-family="Noto Sans KR, Malgun Gothic, sans-serif">
+<text x="32" y="48" font-size="28" fill="#e8f0ff" font-weight="700" text-anchor="start">값 복사와 Clone의 결과</text>
+<text x="32" y="89" font-size="23" fill="#b8c7dd" font-weight="400" text-anchor="start">서로 다른 두 학습용 타입을 비교합니다.</text>
+<text x="32" y="139" font-size="25" fill="#93c5fd" font-weight="700" text-anchor="start">① 비가상 값 타입의 복사</text>
+<rect x="32" y="163" width="246" height="127" rx="12" fill="#1c2a41"/>
+<rect x="362" y="163" width="246" height="127" rx="12" fill="#1c2a41"/>
+<text x="50" y="203" font-size="24" fill="#93c5fd" font-weight="700" text-anchor="start">ValueDerived</text>
+<text x="50" y="243" font-size="22" fill="#b8c7dd" font-weight="400" text-anchor="start">원본 · Kind() = 2</text>
+<text x="380" y="203" font-size="24" fill="#93c5fd" font-weight="700" text-anchor="start">ValueBase</text>
+<text x="380" y="243" font-size="22" fill="#b8c7dd" font-weight="400" text-anchor="start">새 값 · Kind() = 1</text>
+<path d="M284 226 L354 226" fill="none" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="320" y="204" font-size="20" fill="#b8c7dd" font-weight="400" text-anchor="middle">복사</text>
+<text x="32" y="328" font-size="21" fill="#b8c7dd" font-weight="400" text-anchor="start">이 최소 예제에는 추가 데이터 필드가 없습니다.</text>
+<path d="M32 359 H608" stroke="#526784" stroke-width="2"/>
+<text x="32" y="409" font-size="25" fill="#6ee7b7" font-weight="700" text-anchor="start">② Number::Clone()</text>
+<rect x="32" y="438" width="246" height="130" rx="12" fill="#173a38"/>
+<rect x="362" y="438" width="246" height="130" rx="12" fill="#173a38"/>
+<text x="50" y="479" font-size="24" fill="#6ee7b7" font-weight="700" text-anchor="start">Number 원본</text>
+<text x="50" y="523" font-size="25" fill="#e8f0ff" font-weight="400" text-anchor="start">Value() = 7</text>
+<text x="380" y="479" font-size="24" fill="#6ee7b7" font-weight="700" text-anchor="start">새 Number</text>
+<text x="380" y="523" font-size="25" fill="#e8f0ff" font-weight="400" text-anchor="start">Value() = 7</text>
+<path d="M284 509 L354 509" fill="none" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="320" y="486" font-size="20" fill="#b8c7dd" font-weight="400" text-anchor="middle">Clone</text>
+<rect x="32" y="602" width="576" height="113" rx="12" fill="#1c2a41"/>
+<text x="52" y="644" font-size="24" fill="#6ee7b7" font-weight="700" text-anchor="start">clone은 새 객체의 소유권을 받습니다.</text>
+<text x="52" y="687" font-size="25" fill="#e8f0ff" font-weight="400" text-anchor="start">확인: 다른 객체 · 같은 값 7</text>
+<text x="32" y="759" font-size="21" fill="#b8c7dd" font-weight="400" text-anchor="start">개념도 · 실제 주소나 객체 크기를 그린 것은 아님</text>
+</g>
+</svg>

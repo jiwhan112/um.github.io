@@ -17,7 +17,7 @@ enable_testing()
 # ZIP의 원본 CMake와 정상 프로그램 9개를 수정 없이 구성한다.
 add_subdirectory(original)
 
-foreach(name IN ITEMS lifetime ownership transaction)
+foreach(name IN ITEMS lifetime ownership transaction polymorphism templates interfaces)
     add_executable(${name}_ko ko/${name}.cpp)
     target_include_directories(${name}_ko PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ko")
     if(MSVC)

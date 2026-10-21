@@ -52,17 +52,17 @@ jobs:
             -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
             -DENABLE_SANITIZERS=${{ matrix.sanitizers }} \
             2>&1 | tee verification-logs/configure.txt
-      - name: Build original nine and annotated three programs
+      - name: Build original nine and annotated six programs
         shell: bash
         run: |
           set -euo pipefail
           cmake --build build/cpp-advanced --verbose --parallel 2 2>&1 | tee verification-logs/build.txt
-      - name: Run twelve normal CTest programs
+      - name: Run fifteen normal CTest programs
         shell: bash
         run: |
           set -euo pipefail
           ctest --test-dir build/cpp-advanced --output-on-failure --verbose 2>&1 | tee verification-logs/ctest.txt
-      - name: Compare three original and annotated stdout pairs
+      - name: Compare six original and annotated stdout pairs and record unsigned width
         shell: bash
         run: |
           set -euo pipefail
