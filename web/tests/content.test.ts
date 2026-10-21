@@ -87,8 +87,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,75);
- assert.equal(sourceCatalog.length,75);
+ assert.equal(docs.length,77);
+ assert.equal(sourceCatalog.length,77);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -392,9 +392,15 @@ test('DX11 integrity manifest verifies page bodies, native CMake and raw histori
 
 test('C++ foundation lessons publish visual assets, full Korean sources and preserved Notion captures',async()=>{
  function allBlocks(blocks:Block[]):Block[]{return blocks.flatMap(block=>[block,...('blocks'in block?allBlocks(block.blocks):block.type==='list'?block.items.flatMap(allBlocks):[])]);}
+ function hasHref(value:unknown,href:string):boolean{
+  if(!value||typeof value!=='object')return false;
+  if(Array.isArray(value))return value.some(item=>hasHref(item,href));
+  return ('href'in value&&value.href===href)||Object.values(value).some(item=>hasHref(item,href));
+ }
  const docs=catalog.documents.filter(d=>d.kind==='knowledge'&&d.category==='C++ 기초·심화');
- assert.deepEqual(docs.map(d=>d.route),['/knowledge/cpp-basics-01/','/knowledge/cpp-basics-02/','/knowledge/cpp-basics-03/']);
- for(const [index,name] of ['types','flow','memory'].entries()){
+ assert.deepEqual(docs.map(d=>d.route),['/knowledge/cpp-basics-01/','/knowledge/cpp-basics-02/','/knowledge/cpp-basics-03/','/knowledge/cpp-basics-04/','/knowledge/cpp-basics-05/']);
+ const sources=[['types.cpp'],['flow.cpp'],['memory.cpp'],['containers.cpp','buffer.cpp'],['inventory.hpp','inventory.cpp','inventory_main.cpp']];
+ for(const [index,files] of sources.entries()){
   const slug='cpp-basics-'+String(index+1).padStart(2,'0');
   const doc=documentSchema.parse(JSON.parse(await readFile('public/'+docs[index].file,'utf8')));
   assert.deepEqual([...new Set(doc.sections.map(s=>s.tab))],['document','practice','sources','history']);
@@ -406,16 +412,18 @@ test('C++ foundation lessons publish visual assets, full Korean sources and pres
    const source=await readFile('../'+image.src.slice(1));
    assert.deepEqual(await readFile('public/'+image.src.slice(1)),source,'asset bytes '+image.src);
   }
-  const koPath='/knowledge/shared/cpp-basics-lab/ko/'+name+'.cpp';
-  assert.ok(blocks.some(b=>b.type==='paragraph'&&b.content.some(n=>n.href===koPath)),'whole Korean source link '+slug);
-  const koText=await readFile('..'+koPath,'utf8');
-  assert.ok(blocks.some(b=>b.type==='code'&&b.language==='cpp'&&b.text===koText),'embedded complete Korean code matches actual file '+slug);
+  for(const file of files){
+   const koPath='/knowledge/shared/cpp-basics-lab/ko/'+file;
+   assert.ok(hasHref(blocks,koPath),'whole Korean source link '+slug+': '+file);
+   const koText=await readFile('..'+koPath,'utf8');
+   assert.ok(blocks.some(b=>b.type==='code'&&b.language==='cpp'&&b.text===koText),'embedded complete Korean code matches actual file '+slug+': '+file);
+   assert.deepEqual(await readFile('public'+koPath),await readFile('..'+koPath));
+  }
   const original=await readFile('../knowledge/'+slug+'/source-notion.md');
   const capture=JSON.parse(await readFile('../knowledge/'+slug+'/source-notion-capture.json','utf8'));
   assert.equal(original.length,capture.source_bytes);
   assert.equal(createHash('sha256').update(original).digest('hex'),capture.sha256);
   assert.deepEqual(await readFile('public/knowledge/'+slug+'/source-notion.md'),original);
-  assert.deepEqual(await readFile('public'+koPath),await readFile('..'+koPath));
  }
  const first=documentSchema.parse(JSON.parse(await readFile('public/'+docs[0].file,'utf8')));
  assert.ok(allBlocks(first.sections.flatMap(s=>s.blocks)).some(b=>b.type==='cpp-bitmask-lab'));

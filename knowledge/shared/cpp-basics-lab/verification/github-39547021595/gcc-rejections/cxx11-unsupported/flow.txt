@@ -1,0 +1,17 @@
+In file included from /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/flow.cpp:1:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/check.hpp:5:1: error: inline variables are only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+    5 | inline int checks = 0;
+      | ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/flow.cpp:6:6: error: ‘optional’ in namespace ‘std’ does not name a template type
+    6 | std::optional<std::uint64_t> Factorial(int n) {
+      |      ^~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/flow.cpp:6:1: note: ‘std::optional’ is only available from C++17 onwards
+    6 | std::optional<std::uint64_t> Factorial(int n) {
+      | ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/flow.cpp: In function ‘int main()’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/flow.cpp:19:11: error: ‘Factorial’ was not declared in this scope
+   19 |     CHECK(Factorial(0) == 1); CHECK(Factorial(5) == 120);
+      |           ^~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~

@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 const chapters = [
-  { slug: 'cpp-basics-01', source: 'types', review: 'review', previous: null, next: 'cpp-basics-02' },
-  { slug: 'cpp-basics-02', source: 'flow', review: 'review', previous: 'cpp-basics-01', next: 'cpp-basics-03' },
-  { slug: 'cpp-basics-03', source: 'memory', review: 'practice-review', previous: 'cpp-basics-02', next: null },
+  { slug: 'cpp-basics-01', sources: ['types.cpp'], entry: 'types.cpp', review: 'review', previous: null, next: 'cpp-basics-02' },
+  { slug: 'cpp-basics-02', sources: ['flow.cpp'], entry: 'flow.cpp', review: 'review', previous: 'cpp-basics-01', next: 'cpp-basics-03' },
+  { slug: 'cpp-basics-03', sources: ['memory.cpp'], entry: 'memory.cpp', review: 'practice-review', previous: 'cpp-basics-02', next: 'cpp-basics-04' },
+  { slug: 'cpp-basics-04', sources: ['containers.cpp', 'buffer.cpp'], entry: 'containers.cpp', review: 'review', previous: 'cpp-basics-03', next: 'cpp-basics-05' },
+  { slug: 'cpp-basics-05', sources: ['inventory.hpp', 'inventory.cpp', 'inventory_main.cpp'], entry: 'inventory_main.cpp', review: 'review', previous: 'cpp-basics-04', next: null },
 ];
 
 for (const chapter of chapters) test(`${chapter.slug} connects visual concepts, practice, exact sources and adjacent lessons`, async ({ page, request }, testInfo) => {
@@ -40,19 +42,36 @@ for (const chapter of chapters) test(`${chapter.slug} connects visual concepts, 
   await expect(question).toHaveJSProperty('open', true);
   await expect(question.locator('p').first()).toBeVisible();
   await page.getByRole('tab', { name: '출처·검증' }).click();
-  const korean = page.locator(`a[href="/um.github.io/knowledge/shared/cpp-basics-lab/ko/${chapter.source}.cpp"]`).first();
-  await expect(korean).toBeVisible();
-  const sourceResponse = await request.get((await korean.getAttribute('href'))!);
-  expect(sourceResponse.ok()).toBe(true);
-  const sourceText = await sourceResponse.text();
-  expect(sourceText).toMatch(/int main\s*\(/);
-  expect(sourceText).toMatch(/[가-힣]/);
-  const original = await request.get(`/um.github.io/knowledge/shared/cpp-basics-lab/original/src/${chapter.source}.cpp`);
-  expect(original.ok()).toBe(true);
-  expect(await original.text()).toContain('Report()');
+  for (const source of chapter.sources) {
+    const korean = page.locator(`a[href="/um.github.io/knowledge/shared/cpp-basics-lab/ko/${source}"]`).first();
+    await expect(korean).toBeVisible();
+    const sourceResponse = await request.get((await korean.getAttribute('href'))!);
+    expect(sourceResponse.ok()).toBe(true);
+    const sourceText = await sourceResponse.text();
+    expect(sourceText).toMatch(/[가-힣]/);
+    const original = await request.get(`/um.github.io/knowledge/shared/cpp-basics-lab/original/src/${source}`);
+    expect(original.ok()).toBe(true);
+    if (source === chapter.entry) {
+      expect(sourceText).toMatch(/int main\s*\(/);
+      expect(await original.text()).toContain('Report()');
+    }
+  }
   const capture = await request.get(`/um.github.io/knowledge/${chapter.slug}/source-notion-capture.json`);
   expect(capture.ok()).toBe(true);
   expect((await capture.json()).sha256).toMatch(/^[a-f0-9]{64}$/);
+  if (chapter.slug === 'cpp-basics-04' || chapter.slug === 'cpp-basics-05') {
+    if (chapter.slug === 'cpp-basics-04') await page.getByRole('tab', { name: '실습·복습' }).click();
+    const fullSource = page.locator('.disclosure').filter({ has: page.locator('summary').filter({ hasText: chapter.entry }) }).first();
+    await expect(fullSource).toHaveJSProperty('open', false);
+    await fullSource.locator('summary').click();
+    await expect(fullSource).toHaveJSProperty('open', true);
+    await expect(fullSource.locator('pre code')).toBeVisible();
+    await expect(fullSource.locator('pre code')).toContainText(/\/\/.*[가-힣]/);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+    await fullSource.locator('summary').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: testInfo.outputPath(`${chapter.slug}-korean-source.png`) });
+    await fullSource.locator('summary').click();
+  }
   await page.getByRole('tab', { name: '원문·변경기록' }).click();
   await expect(page.locator('.prose')).toContainText('Notion');
   await expect(page.locator('.prose')).toContainText('C++11');
@@ -113,10 +132,10 @@ test('bitmask operations distinguish clearing from toggling and preserve existin
   expect(saved.other).toBe('keep-me');
 });
 
-test('C++ curriculum starts at the three authored foundation lessons', async ({ page }) => {
+test('C++ curriculum links the five authored foundation lessons in order', async ({ page }) => {
   await page.goto('knowledge/');
   const cpp = page.locator('#knowledge-cpp');
-  await expect(cpp.locator('.knowledge-document-link')).toHaveCount(3);
+  await expect(cpp.locator('.knowledge-document-link')).toHaveCount(5);
   expect(await cpp.locator('.knowledge-document-link').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')))).toEqual(chapters.map(chapter => `/um.github.io/knowledge/${chapter.slug}/`));
   await cpp.locator('.knowledge-document-link').first().click();
   await expect(page).toHaveURL(/\/knowledge\/cpp-basics-01\/$/);

@@ -52,7 +52,7 @@ jobs:
             -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
             -DCPP_BASICS_SANITIZERS=${{ matrix.sanitizers }} \
             2>&1 | tee verification-logs/configure.txt
-      - name: Build original six and annotated three programs
+      - name: Build original six and annotated six programs
         shell: bash
         run: |
           set -euo pipefail
@@ -62,7 +62,7 @@ jobs:
         run: |
           set -euo pipefail
           ctest --test-dir build/cpp-basics --output-on-failure --verbose 2>&1 | tee verification-logs/ctest.txt
-      - name: Compare three original and annotated stdout pairs
+      - name: Compare six original and annotated stdout pairs
         shell: bash
         run: |
           set -euo pipefail

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="560" viewBox="0 0 640 560" role="img" aria-labelledby="title desc">
+  <title id="title">INV1 헤더와 아이템 한 행 읽기</title>
+  <desc id="desc">첫 행 INV1 2는 버전과 아이템 수 2를 나타낸다. 아이템 행은 양의 ID, 따옴표로 감싼 이름, 수량을 저장한다. 구조체의 메모리 바이트를 복사하지 않는다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker></defs>
+  <rect width="640" height="560" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="48" font-size="28" font-weight="700">메모리 대신 필드를 저장합니다</text>
+    <text x="32" y="86" font-size="22" fill="#b8c7dd">INV1 · 이 실습에서 정한 텍스트 포맷</text>
+    <rect x="32" y="116" width="576" height="113" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="62" y="163" font-size="35" font-family="monospace" font-weight="700" fill="#6ee7b7">INV1</text>
+    <text x="322" y="163" font-size="35" font-family="monospace" font-weight="700" fill="#6ee7b7">2</text>
+    <text x="62" y="201" font-size="23">포맷 버전</text>
+    <text x="322" y="201" font-size="23">뒤따를 아이템 수</text>
+    <rect x="32" y="255" width="576" height="140" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <text x="62" y="306" text-anchor="middle" font-size="28" font-family="monospace">1</text>
+    <text x="288" y="306" text-anchor="middle" font-size="28" font-family="monospace">&quot;Health Potion&quot;</text>
+    <text x="525" y="306" text-anchor="middle" font-size="28" font-family="monospace">3</text>
+    <path d="M62 323V340M288 323V340M525 323V340" stroke="#93c5fd" stroke-width="2"/>
+    <text x="62" y="374" text-anchor="middle" font-size="22" fill="#93c5fd">ID</text>
+    <text x="288" y="374" text-anchor="middle" font-size="22" fill="#93c5fd">이름 · 공백 포함</text>
+    <text x="525" y="374" text-anchor="middle" font-size="22" fill="#93c5fd">수량</text>
+    <rect x="32" y="416" width="576" height="69" rx="12" fill="#1b2640"/>
+    <text x="62" y="461" text-anchor="middle" font-size="28" font-family="monospace">2</text>
+    <text x="288" y="461" text-anchor="middle" font-size="28" font-family="monospace">&quot;Mana&quot;</text>
+    <text x="525" y="461" text-anchor="middle" font-size="28" font-family="monospace">1</text>
+    <text x="32" y="531" font-size="21" fill="#b8c7dd">따옴표·역슬래시는 std::quoted가 이스케이프합니다.</text>
+  </g>
+</svg>
