@@ -58,6 +58,24 @@
       "technical_context": "MoE는 Router가 입력 토큰마다 사용할 Expert를 선택하는 방식이야. 활성화 파라미터가 적어도 전체 가중치를 보관할 메모리는 필요하고 KV Cache 공간도 확보해야 해. 실제 처리량은 양자화, 메모리 대역폭, Attention과 커널 스케줄링의 영향을 받아.",
       "why_it_matters": "GPU 연산 최적화는 더 큰 모델이나 칩을 쓰는 것뿐 아니라 실행 커널과 메모리 사용을 개선하는 문제임을 보여줘.",
       "developer_view": "DX11 Compute Shader에서도 Buffer Layout, Dispatch와 데이터 이동 비용이 성능을 좌우해. 다만 AI 추론과 게임 렌더링의 세부 실행 특성은 별도로 벤치마크해야 해."
+    },
+    {
+      "category": "ai",
+      "depth": "brief",
+      "title": "🔬 OpenAI·Scripps — 수천 AI 에이전트로 대규모 과학 데이터 분석",
+      "source": "OpenAI",
+      "published": "2026-10-21",
+      "url": "https://openai.com/index/scaling-ai-research-for-complex-biological-data/",
+      "tags": [
+        "Multi Agent",
+        "AI Research",
+        "Biology"
+      ],
+      "easy_explainer": "OpenAI와 PerturbAI·Scripps Research가 수백만 뇌세포 규모의 데이터에서 유망한 연구 가설을 탐색하기 위해 수천 AI 에이전트를 병렬 운용한 사례를 공개했어. 연구 단서를 빠르게 찾는 방식이며 새로운 치료법이 임상적으로 검증됐다는 발표는 아니야.",
+      "short_summary": "수천 AI 에이전트를 병렬 실행해 대규모 생물학 데이터의 연구 후보를 탐색했어. 가설 도출과 실제 검증은 별개야.",
+      "technical_context": "병렬 에이전트의 결과에는 중복 제거·실험 데이터 추적·재현성 검증이 중요해.",
+      "why_it_matters": "멀티 에이전트 구조가 구체적인 과학 연구 데이터 분석에 적용되고 있어.",
+      "developer_view": "대규모 자동 테스트의 작업 분할과 병렬 결과 집계에서도 동일한 설계 과제가 존재해."
     }
   ]
 }
