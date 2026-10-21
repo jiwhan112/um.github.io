@@ -51,6 +51,19 @@ Notion은 읽기 전용으로 조회했다. 각 `source-notion.md`에는 fetch�
 
 실행 결과와 해당 커밋은 공통 팩의 현재 검증 기록을 따른다. 과거 Notion의 GCC 14.2.0·Clang 17.0.0 기록을 새 CI 실행으로 재사용하지 않는다. 이 원장의 문서 경로가 존재한다는 사실만으로 라이브 배포 성공을 판정하지 않는다.
 
+## 이번 배치의 실제 실행 근거
+
+첫 구현 커밋은 [`d6065fee0468d0f0447b826a608363632f36bc0e`](https://github.com/jiwhan112/um.github.io/commit/d6065fee0468d0f0447b826a608363632f36bc0e)이며, [PR #13](https://github.com/jiwhan112/um.github.io/pull/13)에서 검토·병합 상태와 후속 커밋을 확인할 수 있다.
+
+- 로컬 GCC 13.3.0 C++20 직접 빌드·실행: 원본 6개와 한국어판 3개 통과, 첫 세 프로그램의 원본·주석판 stdout 일치. [로컬 기록](./shared/cpp-basics-lab/verification/local-gcc-20261021/).
+- GitHub [실행 39532381043](https://github.com/jiwhan112/um.github.io/actions/runs/39532381043): 위 커밋에서 다섯 작업 모두 성공. GCC 13.3.0 / Clang 18.1.3 / CMake 3.31.6.
+- GCC C++20 및 Clang C++20 + ASan/UBSan: Configure·Build 성공, 각 정상 CTest **9/9**, 각 첫 세 stdout 쌍 일치.
+- 정상 CTest와 분리한 컴파일 거부 4개를 GCC·Clang에서 확인했다. GCC의 C++11 엄격 검사 6개는 모두 거부했으며 C++11 실행은 하지 않았다. Clang의 두 의도적 오류 실험은 예상 sanitizer 진단과 종료 코드 1을 확인했다.
+- GitHub artifact 5개의 ZIP SHA-256을 대조한 뒤 원시 파일 **55개**를 그대로 저장했다. [검증 원장](./shared/cpp-basics-lab/verification/github-39532381043/README.md)과 [파일별 hash manifest](./shared/cpp-basics-lab/verification/github-39532381043/artifact-manifest.json)에서 추적한다.
+- 로컬 웹 검증: 단위 검사 **28/28**, TypeScript·React production build, 문서·카탈로그 스키마, 저장소·발행 계약, **150개 직접 진입 경로**와 내부 문서 링크 검사 통과.
+
+첫 웹 CI의 02단원 복습 검사는 전체 코드 접기를 잘못 선택해 실패했다. 복습 섹션 ID를 명시하도록 테스트를 고쳤다. 검사를 제거하거나 기대 조건·스크린샷 허용 오차를 낮추지 않았다. 후속 웹 CI와 최종 Pages 배포 상태는 PR 및 병합 커밋의 실제 Actions 결과로 확인한다.
+
 ## 검사 수와 한계
 
 - 01~03의 런타임 CHECK는 **15 + 15 + 19 = 49개**다.

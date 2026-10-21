@@ -91,7 +91,19 @@ python3 knowledge/shared/cpp-basics-lab/verify_experiments.py cxx11 --compiler g
 - C++11 엄격 모드: 원본 여섯 개 모두 종료 코드 **1**로 거부했습니다. **C++11 미지원**이며 실행 성공 기록이 아닙니다.
 - 원본 첨부·16개 파일, 한국어 토큰, 원문 4개 capture 검사: 통과했습니다.
 
-로컬에는 Clang·CMake·CTest가 없어 이 환경에서 실행하지 않았습니다. [.github/workflows/knowledge-cpp-basics.yml](../../../.github/workflows/knowledge-cpp-basics.yml)에 GCC C++20·Clang C++20 ASan/UBSan 정상 CMake/CTest, 별도 컴파일 거부, 별도 위험 진단 작업을 구성했습니다. **워크플로 작성은 실행 성공과 다릅니다.** 실제 GitHub run과 artifact를 확인한 결과는 [Actions 실행 목록](https://github.com/jiwhan112/um.github.io/actions/workflows/knowledge-cpp-basics.yml) 및 이후 별도 검증 원장으로 구분합니다.
+로컬에는 Clang·CMake·CTest가 없어 이 환경에서 실행하지 않았습니다. 이후 GitHub Actions의 [실행 39532381043](https://github.com/jiwhan112/um.github.io/actions/runs/39532381043)에서 커밋 `d6065fee0468d0f0447b826a608363632f36bc0e`를 실제 검증했고, 다섯 작업이 모두 성공했습니다. 실행 환경은 Ubuntu 24.04, **GCC 13.3.0 / Clang 18.1.3 / CMake 3.31.6**입니다.
+
+| GitHub CI 작업 | 실제 결과 | 보존한 원시 기록 |
+|---|---|---|
+| GCC C++20 | Configure·Build 성공, 정상 CTest **9/9**, 첫 세 원본·한국어판 stdout 일치 | [Configure](verification/github-39532381043/gcc-cxx20/configure.txt) · [Build](verification/github-39532381043/gcc-cxx20/build.txt) · [CTest](verification/github-39532381043/gcc-cxx20/ctest.txt) |
+| Clang C++20 + ASan/UBSan | Configure·Build 성공, 정상 CTest **9/9**, 첫 세 원본·한국어판 stdout 일치 | [Configure](verification/github-39532381043/clang-cxx20-asan-ubsan/configure.txt) · [Build](verification/github-39532381043/clang-cxx20-asan-ubsan/build.txt) · [CTest](verification/github-39532381043/clang-cxx20-asan-ubsan/ctest.txt) |
+| GCC·Clang 부정 예제 | 같은 네 소스를 각 컴파일러가 모두 종료 코드 1로 거부 | [GCC 결과](verification/github-39532381043/gcc-rejections/negative/results.json) · [Clang 결과](verification/github-39532381043/clang-rejections/negative/results.json) |
+| GCC C++11 엄격 모드 | 원본 여섯 프로그램 모두 종료 코드 1로 거부 · **C++11 미지원** | [명령·종료 코드](verification/github-39532381043/gcc-rejections/cxx11-unsupported/results.json) |
+| Clang 의도적 오류 실험 | signed overflow·해제 후 접근의 예상 진단과 종료 코드 1 확인 | [별도 진단 결과](verification/github-39532381043/clang-intentional-diagnostics/intentional-diagnostics/results.json) |
+
+정상 CTest 9개는 원본 여섯 프로그램과 한국어 주석판 세 프로그램입니다. 다른 환경에서 같은 검사를 다시 통과한 결과를 독립 조건으로 더하지 않습니다. 의도적 오류 실험은 정상 프로그램의 성공에 포함하지 않습니다.
+
+GitHub artifact 다섯 개의 ZIP SHA-256을 확인한 뒤 **원시 파일 55개를 바이트 그대로 보관**했습니다. artifact ID·원본 커밋·파일별 크기와 해시는 [artifact-manifest.json](verification/github-39532381043/artifact-manifest.json), 실행 옵션과 기록을 읽는 순서는 [이 실행의 검증 원장](verification/github-39532381043/README.md)에 있습니다. [.github/workflows/knowledge-cpp-basics.yml](../../../.github/workflows/knowledge-cpp-basics.yml)이 이후 변경에도 같은 검사를 수행합니다.
 
 ## 적용 한계
 

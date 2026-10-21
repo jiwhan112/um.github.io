@@ -2875,7 +2875,7 @@
                 ],
                 [
                   {
-                    "text": "로컬 GCC 13.3.0에서 원본·한국어판 각각 15 PASS 확인"
+                    "text": "로컬 GCC 13.3.0 직접 실행 및 GitHub CMake/CTest 통과 · flow 원본·한국어판 각각 15 PASS와 stdout 일치"
                   }
                 ]
               ]
@@ -2905,7 +2905,7 @@
                 ],
                 [
                   {
-                    "text": "이 본문 작성 시점에는 CI 검증 대기 · 최종 결과는 실습 팩 원장 참조"
+                    "text": "GitHub Clang 18.1.3 + ASan/UBSan, CMake 3.31.6에서 Configure·Build·정상 CTest 9/9 통과 · flow 원본·한국어판 각각 15 PASS와 stdout 일치"
                   }
                 ]
               ]
@@ -2931,7 +2931,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "로컬 GCC는 경고 옵션을 포함한 직접 컴파일 결과입니다. CMake/CTest 성공이나 다른 플랫폼의 성공으로 바꾸어 해석하지 않습니다. 원본과 한국어판은 같은 검사 조건을 사용하므로 서로 독립적인 30개 조건으로 집계하지 않습니다."
+              "text": "2026-10-21 GitHub Actions 실행 39532381043은 커밋 d6065fee를 검사했습니다. 로컬 직접 컴파일과 GitHub CMake/CTest는 별도 기록입니다. 원본과 한국어판은 같은 15개 검사 조건을 사용하므로 서로 독립적인 30개 조건으로 집계하지 않습니다."
             }
           ]
         },
@@ -2948,6 +2948,40 @@
             },
             {
               "text": ". Notion의 기존 15개 검사 설명과 이번 저장소 실행 기록은 별도로 보존합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 GitHub CI 실행",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39532381043"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "보관한 실행 환경·검증 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "GCC CTest 원시 출력",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/gcc-cxx20/ctest.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Clang CTest 원시 출력",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/clang-cxx20-asan-ubsan/ctest.txt"
             }
           ]
         }

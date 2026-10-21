@@ -1,0 +1,4 @@
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/negative/reference_temporary.cpp:1:19: error: non-const lvalue reference to type 'int' cannot bind to a temporary of type 'int'
+    1 | int main() { int& wrong = 10; (void)wrong; }
+      |                   ^       ~~
+1 error generated.

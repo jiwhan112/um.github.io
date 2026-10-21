@@ -2976,6 +2976,101 @@
           ]
         },
         {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "새 실행 · 2026-10-21"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 결과"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "GCC 13.3.0 · C++20"
+                  }
+                ],
+                [
+                  {
+                    "text": "CMake 3.31.6 Configure·Build 성공 · 정상 CTest 9/9 · memory 원본·한국어판 각각 19 PASS"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Clang 18.1.3 · C++20 + ASan/UBSan"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure·Build 성공 · 정상 CTest 9/9 · memory 원본·한국어판 각각 19 PASS"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원본·한국어 주석판"
+                  }
+                ],
+                [
+                  {
+                    "text": "두 컴파일러에서 memory의 stdout 일치 · 같은 조건을 다시 실행한 결과"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "GCC C++11"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 팩 미지원 · 엄격 컴파일에서 원본 여섯 프로그램 모두 거부"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "의도적 해제 후 접근"
+                  }
+                ],
+                [
+                  {
+                    "text": "별도 ASan 실험에서 heap-use-after-free와 종료 코드 1 확인 · 정상 memory 테스트와 분리"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
           "type": "paragraph",
           "content": [
             {
@@ -3009,7 +3104,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "소스와 설명을 함께 제공하되, 새 CI의 성공 여부는 실제 실행 원장을 기준으로 확인합니다. Windows/MSVC 실행, Direct3D·GPU 동작은 이 CPU 교재의 검증 결과로 포함하지 않습니다."
+                  "text": "새 GitHub 실행은 커밋 d6065fee의 Linux CPU 소스를 검사한 결과입니다. 원시 Configure·Build·CTest 출력을 별도 보관했습니다. Windows/MSVC 실행, Direct3D·GPU 동작은 이 CPU 교재의 검증 결과로 포함하지 않습니다."
                 }
               ]
             }
@@ -3023,7 +3118,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "원문은 diagnostics/use_after_free.cpp에서 AddressSanitizer가 heap-use-after-free를 보고했다고 기록합니다. 이 파일은 의도적인 미정의 동작 예제이며 정상 memory 테스트가 아닙니다."
+                  "text": "원문의 과거 기록과 별도로, 새 GitHub Clang 실행에서도 diagnostics/use_after_free.cpp의 heap-use-after-free 진단과 비정상 종료를 확인했습니다. 이 파일은 의도적인 미정의 동작 예제이며 정상 memory 테스트가 아닙니다."
                 }
               ]
             },
@@ -3034,6 +3129,40 @@
                   "text": "정상 학습 경로에서는 이미 해제된 대상이나 끝 다음 위치를 역참조하지 않습니다. 진단 도구가 조용하다는 사실만으로 모든 수명 오류가 없다고 증명할 수도 없습니다."
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 GitHub CI 실행",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39532381043"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "보관한 실행 환경·검증 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "GCC CTest 원시 출력",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/gcc-cxx20/ctest.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Clang CTest 원시 출력",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/clang-cxx20-asan-ubsan/ctest.txt"
             }
           ]
         }

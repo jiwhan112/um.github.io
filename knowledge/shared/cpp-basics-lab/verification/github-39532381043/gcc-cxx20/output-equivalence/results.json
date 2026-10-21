@@ -1,0 +1,106 @@
+{
+  "mode": "compare",
+  "executed_at_utc": "2026-10-21T02:19:47.576325+00:00",
+  "status": "pass",
+  "commands": [
+    {
+      "label": "compiler-version",
+      "argv": [
+        "/usr/bin/g++",
+        "--version"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "compiler-version.txt"
+    },
+    {
+      "label": "types-original",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/types"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "types-original.txt"
+    },
+    {
+      "label": "types-korean",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-basics/types_ko"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "types-korean.txt"
+    },
+    {
+      "label": "flow-original",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/flow"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "flow-original.txt"
+    },
+    {
+      "label": "flow-korean",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-basics/flow_ko"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "flow-korean.txt"
+    },
+    {
+      "label": "memory-original",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-basics/original/memory"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "memory-original.txt"
+    },
+    {
+      "label": "memory-korean",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-basics/memory_ko"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "memory-korean.txt"
+    }
+  ],
+  "results": [
+    {
+      "name": "types",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 15
+    },
+    {
+      "name": "types_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 15
+    },
+    {
+      "name": "flow",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 15
+    },
+    {
+      "name": "flow_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 15
+    },
+    {
+      "name": "memory",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 19
+    },
+    {
+      "name": "memory_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 19
+    }
+  ],
+  "counting_note": "Compiler and annotated-source reruns repeat the original checks; do not add them as independent conditions.",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "all_three_stdout_pairs_equal": true
+}

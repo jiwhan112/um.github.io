@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 const chapters = [
-  { slug: 'cpp-basics-01', source: 'types', previous: null, next: 'cpp-basics-02' },
-  { slug: 'cpp-basics-02', source: 'flow', previous: 'cpp-basics-01', next: 'cpp-basics-03' },
-  { slug: 'cpp-basics-03', source: 'memory', previous: 'cpp-basics-02', next: null },
+  { slug: 'cpp-basics-01', source: 'types', review: 'review', previous: null, next: 'cpp-basics-02' },
+  { slug: 'cpp-basics-02', source: 'flow', review: 'review', previous: 'cpp-basics-01', next: 'cpp-basics-03' },
+  { slug: 'cpp-basics-03', source: 'memory', review: 'practice-review', previous: 'cpp-basics-02', next: null },
 ];
 
 for (const chapter of chapters) test(`${chapter.slug} connects visual concepts, practice, exact sources and adjacent lessons`, async ({ page, request }, testInfo) => {
@@ -34,7 +34,7 @@ for (const chapter of chapters) test(`${chapter.slug} connects visual concepts, 
   await page.screenshot({ path: testInfo.outputPath(`${chapter.slug}-lesson.png`), fullPage: true });
 
   await page.getByRole('tab', { name: '실습·복습' }).click();
-  const question = page.locator('.disclosure').first();
+  const question = page.locator(`#${chapter.review} .disclosure`).first();
   await expect(question).toHaveJSProperty('open', false);
   await question.locator('summary').click();
   await expect(question).toHaveJSProperty('open', true);

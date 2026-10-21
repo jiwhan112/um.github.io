@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "run_id": 39532381043,
+  "run_url": "https://github.com/jiwhan112/um.github.io/actions/runs/39532381043",
+  "event": "push",
+  "source_commit": "d6065fee0468d0f0447b826a608363632f36bc0e",
+  "retrieved_date": "2026-10-21",
+  "artifacts": [
+    {
+      "id": 12315717554,
+      "name": "cpp-basics-compile-rejections-g++-raw-logs",
+      "artifact_zip_bytes": 13203,
+      "artifact_zip_sha256": "a5235974a5ad54a7e98e9ec1521bb3ef855b854a0ba07f3af92ba4c7adb01133",
+      "created_at": "2026-10-21T02:19:41Z",
+      "files": [
+        {
+          "path": "gcc-rejections/cxx11-unsupported/buffer.txt",
+          "bytes": 1279,
+          "sha256": "b2d9cab8a04be11722ec2d6cbfc8729782b1d7725557c6d968f1e7845c2b5bd5"
+        },
+        {
+          "path": "gcc-rejections/cxx11-unsupported/compiler-version.txt",
+          "bytes": 246,
+          "sha256": "59d1cbef41d4ae78d5063d525b7aa13d18dc0493ea00537efc19b2ee398cb5a8"
+        },
+        {
+          "path": "gcc-rejections/cxx11-unsupported/containers.txt",
+          "bytes": 7070,
+          "sha256": "913f11247ed7614447b927716d0429cef6feb919d15a290165419df212d37387"
+        },
+        {
+          "path": "gcc-rejections/cxx11-unsupported/flow.txt",
+          "bytes": 1563,
+          "sha256": "0504af44bd6d706f9cb7608143b2c4eab95cc0e0e7330dc9be2e2acc16d46609"
+        },
+        {
+          "path": "gcc-rejections/cxx11-unsupported/inventory.txt",
+          "bytes": 21796,
+          "sha256": "aabe6a8bbd1c61e36ff5849b697838dae95085697863c4b56098b7e557a2c27f"
+        },
+        {
+          "path": "gcc-rejections/cxx11-unsupported/memory.txt",
+          "bytes": 3167,
+          "sha256": "04f61ff1938775de074b7aee9855b005efff18b828e3e5d70f495e0c209c7b6c"
+        },
+        {
+          "path": "gcc-rejections/cxx11-unsupported/results.json",
+          "bytes": 4744,
+          "sha256": "77a2bcd95bfd86ab2c7e11c51e88d5994be195515b487e5a72058ac4b81d1bd3"
+        },
+        {
+          "path": "gcc-rejections/cxx11-unsupported/types.txt",
+          "bytes": 6051,
+          "sha256": "684b1973049b2f9d2cc6e72d40bbec1c3bd5b1080d14d2fb73272212676894d8"
+        },
+        {
+          "path": "gcc-rejections/environment-and-integrity.txt",
+          "bytes": 5948,
+          "sha256": "1a32d0b61665cd393d1f07e73053dce7954ac6e005505c4bf1339bdf63c49dbc"
+        },
+        {
+          "path": "gcc-rejections/negative/array_pointer.txt",
+          "bytes": 584,
+          "sha256": "8f96334eb788e209befc638168791504d2f8b7a007a85994b62f7835f0b33396"
+        },
+        {
+          "path": "gcc-rejections/negative/compiler-version.txt",
+          "bytes": 246,
+          "sha256": "59d1cbef41d4ae78d5063d525b7aa13d18dc0493ea00537efc19b2ee398cb5a8"
+        },
+        {
+          "path": "gcc-rejections/negative/const_write.txt",
+          "bytes": 405,
+          "sha256": "8423807e308400a0f944d7f19856a1effca1a07c3ebf0664d7f51cf55f0eab0f"
+        },
+        {
+          "path": "gcc-rejections/negative/narrowing.txt",
+          "bytes": 430,
+          "sha256": "d2657d2e7a6b5b53164710f8ba9d5c583f94037ff0418d0c77e5b103bb444542"
+        },
+        {
+          "path": "gcc-rejections/negative/reference_temporary.txt",
+          "bytes": 459,
+          "sha256": "1b59a6ab6f3077fe958c414ce56b1fa2df7df8bc3a9c33264738b2231b65ba4f"
+        },
+        {
+          "path": "gcc-rejections/negative/results.json",
+          "bytes": 3130,
+          "sha256": "e0c6719e4abcabcabd338b1a54cc2dfc88b2530d11724d1e665f7a543c6779b9"
+        }
+      ]
+    },
+    {
+      "id": 12315697593,
+      "name": "cpp-basics-compile-rejections-clang++-raw-logs",
+      "artifact_zip_bytes": 4956,
+      "artifact_zip_sha256": "843541c6291230a6fa48f953a97fe49e848d97a9f6258f5b69a02cc99e1967fe",
+      "created_at": "2026-10-21T02:19:40Z",
+      "files": [
+        {
+          "path": "clang-rejections/environment-and-integrity.txt",
+          "bytes": 5948,
+          "sha256": "9f080c3c249f877e7341dd0e9463282380433c7c2c528696d258bc13322907c4"
+        },
+        {
+          "path": "clang-rejections/negative/array_pointer.txt",
+          "bytes": 357,
+          "sha256": "c87e8ecb48308286a067312d5360914705e0712bc078f310a6bdc2aa9021ba8a"
+        },
+        {
+          "path": "clang-rejections/negative/compiler-version.txt",
+          "bytes": 110,
+          "sha256": "3635b8631d4ebcd8ed7586f4e01e7a6b44407de9d38db6e01daca9c242ed7a53"
+        },
+        {
+          "path": "clang-rejections/negative/const_write.txt",
+          "bytes": 553,
+          "sha256": "51b54f7c555553751ca02b1c256e51e1eae10ce3018aab2ba225310b5005de9f"
+        },
+        {
+          "path": "clang-rejections/negative/narrowing.txt",
+          "bytes": 934,
+          "sha256": "b748aea9c5a5e322ad243b9013c323f433159af6e94c3e45b943ae4b3b057bad"
+        },
+        {
+          "path": "clang-rejections/negative/reference_temporary.txt",
+          "bytes": 322,
+          "sha256": "4525f9f34940da47b969005f462cae07d0fe6e28a8209306f9eeeac8e81b790c"
+        },
+        {
+          "path": "clang-rejections/negative/results.json",
+          "bytes": 3145,
+          "sha256": "7e222922f52ec06fff9817ccc61106cbb18b3cf40101d376d43d6afd739833dd"
+        }
+      ]
+    },
+    {
+      "id": 12315677744,
+      "name": "cpp-basics-positive-clang-cxx20-asan-ubsan-raw-logs",
+      "artifact_zip_bytes": 7805,
+      "artifact_zip_sha256": "ebe57136161d46a1c780a592beec3d0c6fa33b06917fa9e31a31dcff8400ce7d",
+      "created_at": "2026-10-21T02:19:54Z",
+      "files": [
+        {
+          "path": "clang-cxx20-asan-ubsan/build.txt",
+          "bytes": 19594,
+          "sha256": "201c63d3e6c7a9f5ad7909c7e4ab2c428ca5c94f88f31c5923e114057a302d85"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/ctest.txt",
+          "bytes": 4004,
+          "sha256": "7cb41338c0ba59ed0baf5c7a9fce1e38e036b32d38b883c68fe704fe3c318a26"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/configure.txt",
+          "bytes": 416,
+          "sha256": "8bba54c18aa116564177abe82f61b7c2fd411af8a3d38a1ac4f64ec03bb0eb53"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/environment-and-integrity.txt",
+          "bytes": 6149,
+          "sha256": "f04ef94abaf859e3c29ce2d46b5981c61cd661edee855ae79974e2eae6ac3074"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/output-equivalence/compiler-version.txt",
+          "bytes": 110,
+          "sha256": "3635b8631d4ebcd8ed7586f4e01e7a6b44407de9d38db6e01daca9c242ed7a53"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/output-equivalence/flow-korean.txt",
+          "bytes": 15,
+          "sha256": "1a7fbb066e5cb145c3815f67f4ea527cd4106ed7bb9f9ae29f0154e6d2f5d465"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/output-equivalence/flow-original.txt",
+          "bytes": 15,
+          "sha256": "1a7fbb066e5cb145c3815f67f4ea527cd4106ed7bb9f9ae29f0154e6d2f5d465"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/output-equivalence/memory-korean.txt",
+          "bytes": 15,
+          "sha256": "5c1a370a5e86a4c3c17a6bbd7088df69ed2987a91d9475aafb22c710654fa709"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/output-equivalence/memory-original.txt",
+          "bytes": 15,
+          "sha256": "5c1a370a5e86a4c3c17a6bbd7088df69ed2987a91d9475aafb22c710654fa709"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/output-equivalence/results.json",
+          "bytes": 3131,
+          "sha256": "b604a26d626017de0e3ab1db0e22f8f19958d36e8644990865798e3e12c1f5af"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/output-equivalence/types-korean.txt",
+          "bytes": 89,
+          "sha256": "505b2839e43700f72c33e71c35371eaba7aa4afe871e9fa62b34dff5b1c03c88"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/output-equivalence/types-original.txt",
+          "bytes": 89,
+          "sha256": "505b2839e43700f72c33e71c35371eaba7aa4afe871e9fa62b34dff5b1c03c88"
+        },
+        {
+          "path": "clang-cxx20-asan-ubsan/output-equivalence-summary.txt",
+          "bytes": 725,
+          "sha256": "62413cd5de3419efd95ae3c152d732688baa389c7a182b0d24c1f9840ce8d3d2"
+        }
+      ]
+    },
+    {
+      "id": 12315658090,
+      "name": "cpp-basics-expected-UB-diagnostics-clang-raw-logs",
+      "artifact_zip_bytes": 5786,
+      "artifact_zip_sha256": "c56bf1f53fadd64901891c6d4919a1895c1aa8168b6ed5d11417611cc23900ee",
+      "created_at": "2026-10-21T02:19:45Z",
+      "files": [
+        {
+          "path": "clang-intentional-diagnostics/environment-and-integrity.txt",
+          "bytes": 5948,
+          "sha256": "1a32d0b61665cd393d1f07e73053dce7954ac6e005505c4bf1339bdf63c49dbc"
+        },
+        {
+          "path": "clang-intentional-diagnostics/intentional-diagnostics/signed_overflow-build.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "clang-intentional-diagnostics/intentional-diagnostics/compiler-version.txt",
+          "bytes": 110,
+          "sha256": "3635b8631d4ebcd8ed7586f4e01e7a6b44407de9d38db6e01daca9c242ed7a53"
+        },
+        {
+          "path": "clang-intentional-diagnostics/intentional-diagnostics/results.json",
+          "bytes": 3111,
+          "sha256": "e1578f6de43711e847c62b8a321e0fec22dacd350c526fc7910d32df5e78919f"
+        },
+        {
+          "path": "clang-intentional-diagnostics/intentional-diagnostics/signed_overflow-expected-failure.txt",
+          "bytes": 940,
+          "sha256": "18e9f3d94a0d06172a218f6255cb300f643b00197a4b2e3cf4ab4e8710e59276"
+        },
+        {
+          "path": "clang-intentional-diagnostics/intentional-diagnostics/use_after_free-expected-failure.txt",
+          "bytes": 3939,
+          "sha256": "b944f00ad014b13872607d1ffa3dd64151d754407db9de460b303537991cc347"
+        },
+        {
+          "path": "clang-intentional-diagnostics/intentional-diagnostics/use_after_free-build.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "id": 12315477809,
+      "name": "cpp-basics-positive-gcc-cxx20-raw-logs",
+      "artifact_zip_bytes": 7953,
+      "artifact_zip_sha256": "760e9cae8cb2939bb30ea1c40396d3f288e3b60cf29021b4cc5cbbdb0943dbe7",
+      "created_at": "2026-10-21T02:19:48Z",
+      "files": [
+        {
+          "path": "gcc-cxx20/configure.txt",
+          "bytes": 410,
+          "sha256": "bcbf9355783f6d07fbe067c081d4c7fee0a918739719ca2433225956b447f890"
+        },
+        {
+          "path": "gcc-cxx20/ctest.txt",
+          "bytes": 4004,
+          "sha256": "f8892357294698b8b43ed5ceae67fd0122ba568b5559afda6feb6484c653afce"
+        },
+        {
+          "path": "gcc-cxx20/build.txt",
+          "bytes": 18466,
+          "sha256": "eafbb38481684d9c40a8ef96aa6aacc9b751824d81fe1a0adeddc84975b22976"
+        },
+        {
+          "path": "gcc-cxx20/environment-and-integrity.txt",
+          "bytes": 6285,
+          "sha256": "096af149240fd2c725fd3b7bc7a5ee6c671ecd42afc5ffb718d2db504e729bd7"
+        },
+        {
+          "path": "gcc-cxx20/output-equivalence/compiler-version.txt",
+          "bytes": 246,
+          "sha256": "59d1cbef41d4ae78d5063d525b7aa13d18dc0493ea00537efc19b2ee398cb5a8"
+        },
+        {
+          "path": "gcc-cxx20/output-equivalence/flow-korean.txt",
+          "bytes": 15,
+          "sha256": "1a7fbb066e5cb145c3815f67f4ea527cd4106ed7bb9f9ae29f0154e6d2f5d465"
+        },
+        {
+          "path": "gcc-cxx20/output-equivalence/flow-original.txt",
+          "bytes": 15,
+          "sha256": "1a7fbb066e5cb145c3815f67f4ea527cd4106ed7bb9f9ae29f0154e6d2f5d465"
+        },
+        {
+          "path": "gcc-cxx20/output-equivalence/memory-korean.txt",
+          "bytes": 15,
+          "sha256": "5c1a370a5e86a4c3c17a6bbd7088df69ed2987a91d9475aafb22c710654fa709"
+        },
+        {
+          "path": "gcc-cxx20/output-equivalence/memory-original.txt",
+          "bytes": 15,
+          "sha256": "5c1a370a5e86a4c3c17a6bbd7088df69ed2987a91d9475aafb22c710654fa709"
+        },
+        {
+          "path": "gcc-cxx20/output-equivalence/results.json",
+          "bytes": 3132,
+          "sha256": "70c991fa76d4627de75179bc48a190707fc14404cfab7b6db5dd381263ae31d4"
+        },
+        {
+          "path": "gcc-cxx20/output-equivalence/types-korean.txt",
+          "bytes": 89,
+          "sha256": "505b2839e43700f72c33e71c35371eaba7aa4afe871e9fa62b34dff5b1c03c88"
+        },
+        {
+          "path": "gcc-cxx20/output-equivalence/types-original.txt",
+          "bytes": 89,
+          "sha256": "505b2839e43700f72c33e71c35371eaba7aa4afe871e9fa62b34dff5b1c03c88"
+        },
+        {
+          "path": "gcc-cxx20/output-equivalence-summary.txt",
+          "bytes": 725,
+          "sha256": "62413cd5de3419efd95ae3c152d732688baa389c7a182b0d24c1f9840ce8d3d2"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Raw artifact files are preserved byte for byte.",
+    "Artifact ZIP digests were checked before extraction.",
+    "Expected compile rejections and intentional sanitizer diagnostics are separate from successful positive programs."
+  ]
+}

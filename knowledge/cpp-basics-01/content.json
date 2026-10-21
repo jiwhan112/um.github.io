@@ -2003,7 +2003,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "현재 GitHub 검증 결과는 공통 실습 팩의 README와 실행 기록을 기준으로 확인합니다. 과거 Notion 실행 결과와 새 실행 결과는 다른 기록입니다."
+              "text": "2026-10-21 GitHub Actions에서 커밋 d6065fee의 원본·한국어판을 실제 검증했습니다. GCC 13.3.0과 Clang 18.1.3, CMake 3.31.6의 새 실행이며 과거 Notion 기록과 구분합니다."
             }
           ]
         },
@@ -2020,7 +2020,7 @@
                 ],
                 [
                   {
-                    "text": "설명"
+                    "text": "실제 결과"
                   }
                 ]
               ]
@@ -2030,12 +2030,27 @@
               "cells": [
                 [
                   {
-                    "text": "C++20 정상 프로그램"
+                    "text": "GCC C++20"
                   }
                 ],
                 [
                   {
-                    "text": "원본 6개와 한국어판 3개를 실제 빌드·CTest 대상으로 구성"
+                    "text": "Configure·Build 성공 · 정상 CTest 9/9 · types 원본·한국어판 각각 15 PASS와 stdout 일치"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Clang C++20 + ASan/UBSan"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure·Build 성공 · 정상 CTest 9/9 · types 원본·한국어판 각각 15 PASS와 stdout 일치"
                   }
                 ]
               ]
@@ -2050,7 +2065,7 @@
                 ],
                 [
                   {
-                    "text": "원본 팩이 지원하지 않음 · strict 컴파일 거부 기록을 별도 보존"
+                    "text": "원본 팩 미지원 · GCC 엄격 검사에서 원본 여섯 프로그램 모두 컴파일 거부"
                   }
                 ]
               ]
@@ -2092,6 +2107,40 @@
           "content": [
             {
               "text": "원본 여섯 프로그램의 기록은 루프 원소별 반복을 포함한 221회 CHECK 실행이며, 이번 01~03은 그중 49회에 해당합니다. 04~05를 포함한 소스 복원·실행과 해당 교재의 공개 완료는 별개입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 GitHub CI 실행",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39532381043"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "보관한 실행 환경·검증 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "GCC CTest 원시 출력",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/gcc-cxx20/ctest.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Clang CTest 원시 출력",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/clang-cxx20-asan-ubsan/ctest.txt"
             }
           ]
         }

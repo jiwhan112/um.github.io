@@ -1,0 +1,4 @@
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/negative/array_pointer.cpp:1:38: error: cannot initialize a variable of type 'int **' with an lvalue of type 'int[2][3]'
+    1 | int main() { int grid[2][3]{}; int** wrong = grid; (void)wrong; }
+      |                                      ^       ~~~~
+1 error generated.
