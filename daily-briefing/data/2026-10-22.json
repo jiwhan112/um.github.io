@@ -39,6 +39,25 @@
       "technical_context": "모델 추상화 계층을 통합해도 공급자별 사용량 청구·인증 정책·데이터 지역성과 감사를 개별 검증해야 해.",
       "why_it_matters": "AI 기업 간 경쟁과 클라우드 유통 협력이 동시에 확대되고 있어.",
       "developer_view": "게임 개발팀도 모델 평가에서 성능과 함께 데이터 보존·권한·총비용을 측정할 필요가 있어."
+    },
+    {
+      "category": "ai",
+      "depth": "deep",
+      "title": "🧠 NVIDIA GTC Berlin — Recursive Flint MoE와 GPU 커널 최적화",
+      "source": "NVIDIA 공식 블로그",
+      "published": "2026-10-21",
+      "url": "https://blogs.nvidia.com/blog/local-ai-gtc-rtx-dgx-spark-station-sync/",
+      "tags": [
+        "MoE",
+        "GPU Kernel",
+        "RTX Spark",
+        "Inference"
+      ],
+      "easy_explainer": "NVIDIA는 10월 21일 GTC Berlin에서 로컬 코딩 모델 Recursive Flint를 소개했어. 전체 파라미터는 400억 개지만 Mixture-of-Experts(MoE) 구조로 토큰당 약 25억 개만 활성화해. 공식 자료는 64GB RTX Spark에서 초당 220토큰 이상, 별도 GPU 커널 최적화로 모델의 가중치를 바꾸지 않고 55% 생성 속도 향상을 보고했어. 이는 특정 모델·하드웨어·측정 환경의 결과로 모든 GPU에서 달성되는 수치는 아니야. DGX Spark 64GB 제품은 10월 23일 순차 공급 예정이고 Sync Model Launcher는 10월 말 출시 계획이야.",
+      "short_summary": "Recursive Flint는 전체 40B 파라미터 중 토큰당 약 2.5B를 활성화하는 MoE 코딩 모델이야. RTX Spark 시연에서는 220토큰/초 이상과 전용 커널 55% 성능 향상을 제시했어.",
+      "technical_context": "MoE는 Router가 입력 토큰마다 사용할 Expert를 선택하는 방식이야. 활성화 파라미터가 적어도 전체 가중치를 보관할 메모리는 필요하고 KV Cache 공간도 확보해야 해. 실제 처리량은 양자화, 메모리 대역폭, Attention과 커널 스케줄링의 영향을 받아.",
+      "why_it_matters": "GPU 연산 최적화는 더 큰 모델이나 칩을 쓰는 것뿐 아니라 실행 커널과 메모리 사용을 개선하는 문제임을 보여줘.",
+      "developer_view": "DX11 Compute Shader에서도 Buffer Layout, Dispatch와 데이터 이동 비용이 성능을 좌우해. 다만 AI 추론과 게임 렌더링의 세부 실행 특성은 별도로 벤치마크해야 해."
     }
   ]
 }
