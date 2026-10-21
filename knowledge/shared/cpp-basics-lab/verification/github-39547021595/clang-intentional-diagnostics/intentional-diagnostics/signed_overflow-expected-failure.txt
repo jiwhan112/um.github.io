@@ -1,0 +1,7 @@
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/diagnostics/signed_overflow.cpp:3:73: runtime error: signed integer overflow: 2147483647 + 1 cannot be represented in type 'int'
+    #0 0x55a74703870e in main /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/diagnostics/signed_overflow.cpp:3:73
+    #1 0x7fa316c2a1c9  (/lib/x86_64-linux-gnu/libc.so.6+0x2a1c9) (BuildId: a4a7992a8e66555c8141ab2a08a8465ff6e0ea65)
+    #2 0x7fa316c2a28a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2a28a) (BuildId: a4a7992a8e66555c8141ab2a08a8465ff6e0ea65)
+    #3 0x55a74700d3d4 in _start (/tmp/atlas-cpp-basics-h240xk5k/signed_overflow+0x53d4) (BuildId: 2b681169a360a94cecdc47611931331ac10bd2fd)
+
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-basics-lab/original/diagnostics/signed_overflow.cpp:3:73 

@@ -47,9 +47,15 @@
 
 ## 현재 실행 근거
 
-로컬 GCC 13.3.0 C++20 직접 빌드에서 원본 6개와 한국어판 6개가 모두 통과했고, 같은 작업 디렉터리에서 얻은 stdout 6쌍은 정규화 없이 바이트가 일치했다. 컴파일 거부 4개와 엄격한 C++11 원본 6개 거부 진단도 기록했다. [로컬 원시 출력 41개와 해시 원장](shared/cpp-basics-lab/verification/local-gcc-04-05-20261021/README.md)을 보존한다. 로컬에는 Clang·CMake·CTest가 없어 GitHub CI 실행 결과는 별도로 확인해야 한다.
+로컬 GCC 13.3.0 C++20 직접 빌드에서 원본 6개와 한국어판 6개가 모두 통과했고, 같은 작업 디렉터리에서 얻은 stdout 6쌍은 정규화 없이 바이트가 일치했다. 컴파일 거부 4개와 엄격한 C++11 원본 6개 거부 진단도 기록했다. [로컬 원시 출력 41개와 해시 원장](shared/cpp-basics-lab/verification/local-gcc-04-05-20261021/README.md)을 보존한다. 로컬에는 Clang·CMake·CTest가 없어 해당 구성은 아래 GitHub CI에서 별도로 실행했다.
 
-웹 단위 검사 28/28, TypeScript·React production build, 저장소·발행 계약, 152개 직접 진입 경로와 내부 링크 검사가 통과했다. 첫 단위 검사에서 05의 표 안 링크를 문단으로만 찾는 테스트 오류를 발견해, 표 셀을 포함한 콘텐츠 링크를 재귀 검사하도록 수정했다. 전체 코드와 배포 파일의 바이트 대조는 유지했다. PC·모바일 브라우저와 새 CMake/CTest 결과는 실제 CI 실행 뒤 추가한다. 이전 [39532381043 실행](https://github.com/jiwhan112/um.github.io/actions/runs/39532381043)의 9/9 결과는 원본 6개와 당시 한국어판 3개에 대한 과거 근거이며, 이번 한국어판 전체 6개의 새 실행 결과로 재사용하지 않는다.
+웹 단위 검사 28/28, TypeScript·React production build, 저장소·발행 계약, 152개 직접 진입 경로와 내부 링크 검사가 통과했다. 첫 단위 검사에서 05의 표 안 링크를 문단으로만 찾는 테스트 오류를 발견해, 표 셀을 포함한 콘텐츠 링크를 재귀 검사하도록 수정했다. 전체 코드와 배포 파일의 바이트 대조는 유지했다. 새 [C++ CI 실행 39547021595](https://github.com/jiwhan112/um.github.io/actions/runs/39547021595)은 커밋 `10a5e43c015231d326e26a5b16ba39887a64aa84`에서 다섯 작업 모두 성공했다. GCC 13.3.0 및 Clang 18.1.3 + ASan/UBSan, CMake 3.31.6에서 각각 Configure·Build와 **정상 CTest 12/12**, 원본·한국어판 stdout 6쌍 일치를 확인했다. 컴파일 거부 4개를 각 컴파일러에서, GCC C++11 원본 6개 거부를, Clang의 의도적 오류 2개 진단을 정상 CTest와 분리해 확인했다.
+
+GitHub artifact 5개의 ZIP SHA-256을 대조한 뒤 원시 파일 **67개, 185,553바이트**를 보관했다. [새 실행 원장](shared/cpp-basics-lab/verification/github-39547021595/README.md)과 [artifact·파일별 해시 manifest](shared/cpp-basics-lab/verification/github-39547021595/artifact-manifest.json)에서 추적한다. 이전 [39532381043 실행](https://github.com/jiwhan112/um.github.io/actions/runs/39532381043)의 9/9 결과는 원본 6개와 당시 한국어판 3개에 대한 과거 근거이며, 이번 한국어판 전체 6개의 새 실행 결과로 재사용하지 않는다.
+
+같은 소스 커밋의 [웹 CI 실행 39547021478](https://github.com/jiwhan112/um.github.io/actions/runs/39547021478)은 **PC·모바일 421개 통과, 의도적 제외 1개, 실패·불안정 재시도 0개**로 완료됐다. 모든 교재·탭의 Mermaid 86개를 렌더링했으며, 모바일의 전체 Mermaid 중복 검사 1개만 제외하고 모바일의 개별 도식·배치·상호작용 검사는 별도로 수행했다. [PR 웹 검사 39547072660](https://github.com/jiwhan112/um.github.io/actions/runs/39547072660)도 성공했다.
+
+웹 artifact ZIP의 SHA-256(`2c781cdfb09bf896b98be3987b4dfcd54c1e8ad61ac3238f7aaf05ecb63dcc5b`)을 확인하고, 04·05 각각의 PC·모바일 첫 화면·전체 본문·한국어 전체 소스 캡처를 교차 검토했다. SVG 6개와 본문 Mermaid 4개의 라벨·분기·화살표, 표의 줄바꿈, 코드 상자 내부 스크롤을 확인했다. 04 첫 소제목의 모바일 한 글자 줄바꿈은 제목을 줄여 개선했고, 05 번역 단위 SVG의 왼쪽 두 화살촉은 결합 경로를 나눠 수정했다. 이 두 수정과 검증 근거 추가 뒤에는 최종 커밋의 CI 결과를 다시 확인하고 병합한다.
 
 ## 검사 수와 검증 한계
 

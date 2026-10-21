@@ -19,7 +19,7 @@
   "sections": [
     {
       "id": "intro",
-      "title": "같은 대괄호를 써도, 소유권은 다릅니다",
+      "title": "같은 대괄호, 다른 소유권",
       "tab": "document",
       "blocks": [
         {
@@ -27,7 +27,7 @@
           "level": 2,
           "content": [
             {
-              "text": "같은 대괄호를 써도, 소유권은 다릅니다"
+              "text": "같은 대괄호, 다른 소유권"
             }
           ]
         },
@@ -2882,6 +2882,30 @@
           ]
         },
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-21의 새 "
+            },
+            {
+              "text": "GitHub CI 39547021595",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39547021595"
+            },
+            {
+              "text": "에서 커밋 "
+            },
+            {
+              "text": "10a5e43",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/commit/10a5e43c015231d326e26a5b16ba39887a64aa84"
+            },
+            {
+              "text": "를 실제 빌드·실행했습니다. CMake 3.31.6 / Ubuntu 24.04 환경입니다."
+            }
+          ]
+        },
+        {
           "type": "table",
           "rows": [
             {
@@ -2889,12 +2913,17 @@
               "cells": [
                 [
                   {
-                    "text": "항목"
+                    "text": "구성"
                   }
                 ],
                 [
                   {
-                    "text": "확인 상태"
+                    "text": "실제 확인"
+                  }
+                ],
+                [
+                  {
+                    "text": "원시 기록"
                   }
                 ]
               ]
@@ -2904,12 +2933,35 @@
               "cells": [
                 [
                   {
-                    "text": "Notion 본문"
+                    "text": "GCC 13.3.0 · C++20"
                   }
                 ],
                 [
                   {
-                    "text": "전체 enhanced Markdown 19,017 bytes와 수집 메타데이터 보존"
+                    "text": "Configure·Build 성공 · 정상 CTest 12/12"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/gcc-cxx20/configure.txt"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "Build",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/gcc-cxx20/build.txt"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "CTest",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/gcc-cxx20/ctest.txt"
                   }
                 ]
               ]
@@ -2919,12 +2971,35 @@
               "cells": [
                 [
                   {
-                    "text": "원본 2개 프로그램"
+                    "text": "Clang 18.1.3 · C++20 + ASan/UBSan"
                   }
                 ],
                 [
                   {
-                    "text": "원본 첨부 코드 블록에서 복원한 containers.cpp · buffer.cpp"
+                    "text": "Configure·Build 성공 · 정상 CTest 12/12 · 실행 중 오류 진단 없음"
+                  }
+                ],
+                [
+                  {
+                    "text": "Configure",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/clang-cxx20-asan-ubsan/configure.txt"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "Build",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/clang-cxx20-asan-ubsan/build.txt"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "CTest",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/clang-cxx20-asan-ubsan/ctest.txt"
                   }
                 ]
               ]
@@ -2934,12 +3009,27 @@
               "cells": [
                 [
                   {
-                    "text": "기존 GitHub 검증"
+                    "text": "원본과 한국어판"
                   }
                 ],
                 [
                   {
-                    "text": "2026-10-21 실행 39532381043에서 원본 6개 + 01~03 한국어판 3개의 정상 CTest 9/9 통과"
+                    "text": "두 구성 각각 6쌍 stdout 바이트 일치 · 출력 정규화 없음"
+                  }
+                ],
+                [
+                  {
+                    "text": "GCC 결과",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/gcc-cxx20/output-equivalence/results.json"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "Clang 결과",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/clang-cxx20-asan-ubsan/output-equivalence/results.json"
                   }
                 ]
               ]
@@ -2949,12 +3039,27 @@
               "cells": [
                 [
                   {
-                    "text": "04 한국어 주석판 신규 검증"
+                    "text": "컴파일 거부 예제"
                   }
                 ],
                 [
                   {
-                    "text": "이번 04~05 배치의 실제 CI 완료 후 실행 환경·원시 로그를 이 절에 갱신"
+                    "text": "동일한 4개 예제를 GCC·Clang이 각각 거부"
+                  }
+                ],
+                [
+                  {
+                    "text": "GCC",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/gcc-rejections/negative/results.json"
+                  },
+                  {
+                    "text": " · "
+                  },
+                  {
+                    "text": "Clang",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/clang-rejections/negative/results.json"
                   }
                 ]
               ]
@@ -2964,12 +3069,19 @@
               "cells": [
                 [
                   {
-                    "text": "C++11"
+                    "text": "GCC C++11 엄격 모드"
                   }
                 ],
                 [
                   {
-                    "text": "원본 팩은 C++20 고정 · 엄격한 C++11 컴파일은 거부됨"
+                    "text": "원본 6개 모두 거부 · C++11 미지원 · 실행하지 않음"
+                  }
+                ],
+                [
+                  {
+                    "text": "미지원 진단",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/gcc-rejections/cxx11-unsupported/results.json"
                   }
                 ]
               ]
@@ -2979,12 +3091,39 @@
               "cells": [
                 [
                   {
-                    "text": "Windows / MSVC"
+                    "text": "별도 의도적 오류 2개"
                   }
                 ],
                 [
                   {
-                    "text": "실제 빌드·실행 미검증"
+                    "text": "signed overflow·해제 후 접근의 예상 sanitizer 진단 · 정상 CTest에서 제외"
+                  }
+                ],
+                [
+                  {
+                    "text": "진단 결과",
+                    "kind": "link",
+                    "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/clang-intentional-diagnostics/intentional-diagnostics/results.json"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Windows/MSVC·Direct3D·GPU·HLSL"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 실행 미검증"
+                  }
+                ],
+                [
+                  {
+                    "text": "Linux CPU 결과로 해당 환경을 검증했다고 표시하지 않음"
                   }
                 ]
               ]
@@ -2995,7 +3134,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "기존 CI에는 이 단원의 원본 containers 49회와 buffer 104회 CHECK가 포함되어 있습니다. 이번에 추가한 한국어 주석판의 실행 결과를 과거 원본 결과로 대신하지 않습니다."
+              "text": "정상 CTest 12개는 원본 6개와 한국어판 6개입니다. 원본 전체의 221회 CHECK에는 반복문이 포함됩니다. 04의 containers·buffer는 153회, 05의 inventory는 19회이며, 주석판과 컴파일러별 반복을 독립 조건으로 더하지 않습니다."
             }
           ]
         },
@@ -3003,25 +3142,73 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "기존 GitHub Actions 실행",
+              "text": "원문 19,017바이트는 capture의 SHA-256과 대조했습니다. 현재 첨부 19,602바이트와 원본 코드 블록 16개는 바이트가 같고, 한국어 소스·헤더 8개는 전처리 지시문·코드 토큰이 같습니다. 새 CI artifact 5개의 ZIP 해시를 확인한 뒤 원시 파일 67개를 보존했습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 CI 검증 원장",
               "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39532381043"
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/README.md"
             },
             {
               "text": " · "
             },
             {
-              "text": "기존 원시 로그 원장",
+              "text": "원시 파일 해시",
               "kind": "link",
-              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/README.md"
+              "href": "/knowledge/shared/cpp-basics-lab/verification/github-39547021595/artifact-manifest.json"
             },
             {
               "text": " · "
             },
             {
-              "text": "공통 실습 팩 최신 원장",
+              "text": "로컬 GCC 원시 기록",
               "kind": "link",
-              "href": "/knowledge/shared/cpp-basics-lab/README.md"
+              "href": "/knowledge/shared/cpp-basics-lab/verification/local-gcc-04-05-20261021/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "전체 소스 무결성",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-basics-lab/source-integrity.json"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "이전 GitHub 9/9 기록과 이번 12/12의 차이",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이전 실행 39532381043은 원본 6개와 당시 01~03 한국어판 3개의 결과입니다. 이번 39547021595는 04~05 한국어판을 추가한 12개 구성을 새로 실행했습니다. 과거 성공 기록을 새 프로그램의 실행 결과로 대신하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이전 GitHub 실행",
+                  "kind": "link",
+                  "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39532381043"
+                },
+                {
+                  "text": " · "
+                },
+                {
+                  "text": "이전 원시 로그 원장",
+                  "kind": "link",
+                  "href": "/knowledge/shared/cpp-basics-lab/verification/github-39532381043/README.md"
+                }
+              ]
             }
           ]
         },

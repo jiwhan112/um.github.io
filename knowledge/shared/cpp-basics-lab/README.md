@@ -124,7 +124,9 @@ notion-file-block://5fb8e4e7-6ccb-4edd-889f-bba260b4392b/2d74b3e5-ff5f-4dd0-9fff
 
 `compare`는 모든 실행의 작업 디렉터리를 이 팩의 루트로 고정하여 `inventory`의 `cwd=` 출력도 수정 없이 비교합니다. 같은 입력의 반복 실행과 다른 컴파일러의 재실행은 독립 조건을 늘리지 않습니다.
 
-현재 로컬에는 Clang·CMake·CTest가 없습니다. **04~05 한국어 주석판을 포함하는 12개 CTest의 새 GitHub 실행은 별도로 확인해야 합니다.** 위 9/9 기록은 이전 01~03 배치의 성공이며 새 12개 구성을 실행한 증거로 사용하지 않습니다.
+로컬에 없는 Clang·CMake·CTest 구성은 새 [GitHub 실행 39547021595](https://github.com/jiwhan112/um.github.io/actions/runs/39547021595)에서 커밋 `10a5e43c015231d326e26a5b16ba39887a64aa84`를 대상으로 실제 실행했습니다. **GCC 13.3.0 C++20 및 Clang 18.1.3 C++20 + ASan/UBSan에서 각각 Configure·Build와 CTest 12/12가 통과**했고, 각 구성의 6쌍 stdout이 일치했습니다. CMake는 3.31.6입니다.
+
+컴파일 거부 4개를 GCC·Clang에서 확인했고, GCC C++11 원본 6개 거부와 Clang의 의도적 오류 2개 진단도 별도 성공했습니다. [새 실행 원장](verification/github-39547021595/README.md)에 각 Configure·Build·CTest 및 진단 링크가 있습니다. artifact ZIP 5개의 SHA-256을 확인한 뒤 원시 파일 **67개**를 바이트 그대로 저장하고 [파일별 해시](verification/github-39547021595/artifact-manifest.json)를 기록했습니다. 위 9/9는 이전 실행 이력으로 그대로 보존합니다.
 
 ## 적용 한계
 
