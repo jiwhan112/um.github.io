@@ -1,0 +1,110 @@
+{
+  "mode": "compare",
+  "executed_at_utc": "2026-10-21T06:44:35.185945+00:00",
+  "system": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "status": "pass",
+  "commands": [
+    {
+      "label": "compiler-version",
+      "argv": [
+        "/usr/bin/g++",
+        "--version"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "compiler-version.txt"
+    },
+    {
+      "label": "lifetime-original",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/lifetime"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "lifetime-original.txt"
+    },
+    {
+      "label": "lifetime-korean",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-advanced/lifetime_ko"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "lifetime-korean.txt"
+    },
+    {
+      "label": "ownership-original",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/ownership"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "ownership-original.txt"
+    },
+    {
+      "label": "ownership-korean",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-advanced/ownership_ko"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "ownership-korean.txt"
+    },
+    {
+      "label": "transaction-original",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-advanced/original/transaction"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "transaction-original.txt"
+    },
+    {
+      "label": "transaction-korean",
+      "argv": [
+        "/home/runner/work/um.github.io/um.github.io/build/cpp-advanced/transaction_ko"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "transaction-korean.txt"
+    }
+  ],
+  "results": [
+    {
+      "name": "lifetime",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 10
+    },
+    {
+      "name": "lifetime_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 10
+    },
+    {
+      "name": "ownership",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 13
+    },
+    {
+      "name": "ownership_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 13
+    },
+    {
+      "name": "transaction",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 8
+    },
+    {
+      "name": "transaction_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 8
+    }
+  ],
+  "counting_note": "Original nine programs count 89 calls; selected lessons 01-02 count 31 (10+13+8). ownership includes Expect(true) after a compile-time construction example. Annotation/compiler reruns are not independent conditions.",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "all_three_stdout_pairs_equal": true,
+  "stdout_normalization_applied": false,
+  "selected_lessons_runtime_check_invocations": 31,
+  "annotation_check_invocations_repeat_original": 31
+}

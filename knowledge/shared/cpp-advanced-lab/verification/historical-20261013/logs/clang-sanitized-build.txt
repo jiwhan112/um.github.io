@@ -1,0 +1,29 @@
+$ cmake --build /mnt/data/programmer_rewrite_batch2/build-clang-sanitized -j4
+[  5%] Building CXX object CMakeFiles/lifetime.dir/src/lifetime.cpp.o
+[ 10%] Building CXX object CMakeFiles/templates.dir/src/templates.cpp.o
+[ 21%] Building CXX object CMakeFiles/polymorphism.dir/src/polymorphism.cpp.o
+[ 21%] Building CXX object CMakeFiles/ownership.dir/src/ownership.cpp.o
+[ 26%] Linking CXX executable polymorphism
+[ 31%] Linking CXX executable ownership
+[ 36%] Linking CXX executable lifetime
+[ 36%] Built target polymorphism
+[ 36%] Built target ownership
+[ 42%] Building CXX object CMakeFiles/interfaces.dir/src/interfaces.cpp.o
+[ 47%] Building CXX object CMakeFiles/containers.dir/src/containers.cpp.o
+[ 52%] Linking CXX executable templates
+[ 52%] Built target lifetime
+[ 57%] Building CXX object CMakeFiles/transaction.dir/src/transaction.cpp.o
+[ 57%] Built target templates
+[ 63%] Building CXX object CMakeFiles/allocation.dir/src/allocation.cpp.o
+[ 68%] Linking CXX executable transaction
+[ 73%] Linking CXX executable allocation
+[ 78%] Linking CXX executable interfaces
+[ 78%] Built target transaction
+[ 78%] Built target allocation
+[ 84%] Building CXX object CMakeFiles/pimpl.dir/src/pimpl.cpp.o
+[ 84%] Built target interfaces
+[ 89%] Building CXX object CMakeFiles/pimpl.dir/src/pimpl_main.cpp.o
+[ 94%] Linking CXX executable pimpl
+[ 94%] Built target pimpl
+[100%] Linking CXX executable containers
+[100%] Built target containers

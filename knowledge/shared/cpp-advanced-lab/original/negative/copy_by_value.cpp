@@ -1,0 +1,1 @@
+struct Bad { Bad(Bad); };

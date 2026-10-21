@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="680" viewBox="0 0 640 680" role="img" aria-labelledby="title desc">
+  <title id="title">주소의 복사와 독립 자원의 복사</title>
+  <desc id="desc">위 그림에서는 원본 포인터와 복사한 포인터가 같은 자원 A에 접근한다. 아래 그림의 깊은 복사에서는 두 객체가 서로 다른 자원을 소유한다. 공유 접근만으로 공동 소유가 되는 것은 아니다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker></defs>
+  <rect width="640" height="680" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="48" font-size="28" font-weight="700">주소가 같으면 자원도 하나입니다</text>
+    <text x="32" y="85" font-size="22" fill="#b8c7dd">포인터 값 복사 · 접근과 소유는 따로 판단</text>
+    <rect x="32" y="116" width="250" height="71" rx="12" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <rect x="32" y="217" width="250" height="71" rx="12" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <text x="157" y="161" text-anchor="middle" font-size="25">원본 포인터</text>
+    <text x="157" y="262" text-anchor="middle" font-size="25">복사한 포인터</text>
+    <rect x="380" y="165" width="228" height="80" rx="12" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="494" y="214" text-anchor="middle" font-size="27" fill="#6ee7b7">같은 자원 A</text>
+    <path d="M285 151L368 191" stroke="#6ee7b7" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+    <path d="M285 253L368 218" stroke="#6ee7b7" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+    <text x="32" y="326" font-size="22" fill="#fda4af">둘 다 삭제 책임을 갖는 설계라면 중복 해제 위험</text>
+    <path d="M32 357H608" stroke="#3b4b62" stroke-width="2"/>
+    <text x="32" y="398" font-size="24" font-weight="700">깊은 복사 · 각각 독립된 값을 소유</text>
+    <rect x="32" y="428" width="250" height="71" rx="12" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <rect x="32" y="532" width="250" height="71" rx="12" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <text x="157" y="473" text-anchor="middle" font-size="25">원본 객체</text>
+    <text x="157" y="577" text-anchor="middle" font-size="25">깊게 복사한 객체</text>
+    <rect x="380" y="428" width="228" height="71" rx="12" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <rect x="380" y="532" width="228" height="71" rx="12" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="494" y="473" text-anchor="middle" font-size="25" fill="#6ee7b7">자원 A</text>
+    <text x="494" y="577" text-anchor="middle" font-size="25" fill="#6ee7b7">별도 자원 B</text>
+    <path d="M285 464H368" stroke="#6ee7b7" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+    <path d="M285 568H368" stroke="#6ee7b7" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+    <text x="32" y="647" font-size="21" fill="#b8c7dd">개념도 · 같은 대상을 관찰하는 것 자체는 오류가 아닙니다.</text>
+  </g>
+</svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="720" viewBox="0 0 640 720" role="img" aria-labelledby="title desc">
+  <title id="title">IntBuffer 이동 전과 이동 후</title>
+  <desc id="desc">이동 전 target은 크기3의 자원 A를 소유한다. 이동 생성 후 target은 크기0과 null이 되고 moved가 같은 자원 A를 소유한다. 이는 이 학습 타입이 정한 이동 후 계약이다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker></defs>
+  <rect width="640" height="720" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="48" font-size="28" font-weight="700">크기와 소유권을 함께 넘깁니다</text>
+    <text x="32" y="85" font-size="22" fill="#b8c7dd">IntBuffer의 계약 · size가 0이면 data도 null</text>
+    <text x="32" y="127" font-size="23" font-weight="700">이동 전</text>
+    <rect x="32" y="148" width="270" height="128" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <text x="52" y="185" font-size="25" font-weight="700">target</text>
+    <text x="52" y="223" font-size="23">size = 3</text>
+    <text x="52" y="255" font-size="22">data가 소유</text>
+    <rect x="378" y="183" width="230" height="80" rx="12" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="493" y="214" text-anchor="middle" font-size="21" fill="#6ee7b7">자원 A</text>
+    <text x="493" y="247" text-anchor="middle" font-size="25">10 · 20 · 30</text>
+    <path d="M306 240H366" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="32" y="321" font-size="21" fill="#93c5fd">IntBuffer moved(std::move(target));</text>
+    <path d="M32 349H608" stroke="#3b4b62" stroke-width="2"/>
+    <text x="32" y="391" font-size="23" font-weight="700">이동 후</text>
+    <rect x="32" y="412" width="270" height="96" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2" stroke-dasharray="7 5"/>
+    <text x="52" y="449" font-size="25" font-weight="700">target</text>
+    <text x="52" y="484" font-size="22">size = 0 · data = null</text>
+    <rect x="32" y="535" width="270" height="96" rx="14" fill="#1b2640" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="52" y="572" font-size="25" font-weight="700">moved</text>
+    <text x="52" y="608" font-size="22">size = 3 · data가 소유</text>
+    <rect x="378" y="549" width="230" height="80" rx="12" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="493" y="581" text-anchor="middle" font-size="21" fill="#6ee7b7">같은 자원 A</text>
+    <text x="493" y="614" text-anchor="middle" font-size="25">10 · 20 · 30</text>
+    <path d="M306 595H366" stroke="#6ee7b7" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="32" y="679" font-size="21" fill="#b8c7dd">모든 타입이 이동 후 비어야 한다는 규칙은 아닙니다.</text>
+  </g>
+</svg>

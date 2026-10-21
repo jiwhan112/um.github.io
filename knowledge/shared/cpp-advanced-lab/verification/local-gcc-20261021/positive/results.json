@@ -1,0 +1,473 @@
+{
+  "mode": "positive-direct",
+  "executed_at_utc": "2026-10-21T05:56:43.439240+00:00",
+  "system": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "status": "pass",
+  "commands": [
+    {
+      "label": "compiler-version",
+      "argv": [
+        "/usr/bin/g++",
+        "--version"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "compiler-version.txt"
+    },
+    {
+      "label": "lifetime-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/lifetime.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/lifetime"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "lifetime-build.txt"
+    },
+    {
+      "label": "lifetime-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/lifetime"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "lifetime-run.txt"
+    },
+    {
+      "label": "ownership-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/ownership"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "ownership-build.txt"
+    },
+    {
+      "label": "ownership-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/ownership"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "ownership-run.txt"
+    },
+    {
+      "label": "polymorphism-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/polymorphism"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "polymorphism-build.txt"
+    },
+    {
+      "label": "polymorphism-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/polymorphism"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "polymorphism-run.txt"
+    },
+    {
+      "label": "templates-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/templates"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "templates-build.txt"
+    },
+    {
+      "label": "templates-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/templates"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "templates-run.txt"
+    },
+    {
+      "label": "containers-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/containers"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "containers-build.txt"
+    },
+    {
+      "label": "containers-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/containers"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "containers-run.txt"
+    },
+    {
+      "label": "interfaces-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/interfaces"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "interfaces-build.txt"
+    },
+    {
+      "label": "interfaces-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/interfaces"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "interfaces-run.txt"
+    },
+    {
+      "label": "transaction-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/transaction"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "transaction-build.txt"
+    },
+    {
+      "label": "transaction-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/transaction"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "transaction-run.txt"
+    },
+    {
+      "label": "allocation-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/allocation"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "allocation-build.txt"
+    },
+    {
+      "label": "allocation-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/allocation"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "allocation-run.txt"
+    },
+    {
+      "label": "pimpl-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/src/pimpl_main.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/pimpl"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "pimpl-build.txt"
+    },
+    {
+      "label": "pimpl-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/pimpl"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "pimpl-run.txt"
+    },
+    {
+      "label": "lifetime_ko-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/ko",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/ko/lifetime.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/lifetime_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "lifetime_ko-build.txt"
+    },
+    {
+      "label": "lifetime_ko-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/lifetime_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "lifetime_ko-run.txt"
+    },
+    {
+      "label": "ownership_ko-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/ko",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/ko/ownership.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/ownership_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "ownership_ko-build.txt"
+    },
+    {
+      "label": "ownership_ko-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/ownership_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "ownership_ko-run.txt"
+    },
+    {
+      "label": "transaction_ko-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/ko",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/ko/transaction.cpp",
+        "-o",
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/transaction_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "transaction_ko-build.txt"
+    },
+    {
+      "label": "transaction_ko-run",
+      "argv": [
+        "/tmp/atlas-cpp-advanced-jyzlpm3h/transaction_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "transaction_ko-run.txt"
+    }
+  ],
+  "results": [
+    {
+      "name": "lifetime",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 10
+    },
+    {
+      "name": "ownership",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 13
+    },
+    {
+      "name": "polymorphism",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 12
+    },
+    {
+      "name": "templates",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 10
+    },
+    {
+      "name": "containers",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 16
+    },
+    {
+      "name": "interfaces",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 7
+    },
+    {
+      "name": "transaction",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 8
+    },
+    {
+      "name": "allocation",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 7
+    },
+    {
+      "name": "pimpl",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 6
+    },
+    {
+      "name": "lifetime_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 10
+    },
+    {
+      "name": "ownership_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 13
+    },
+    {
+      "name": "transaction_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 8
+    }
+  ],
+  "counting_note": "Original nine programs count 89 calls; selected lessons 01-02 count 31 (10+13+8). ownership includes Expect(true) after a compile-time construction example. Annotation/compiler reruns are not independent conditions.",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "original_runtime_check_invocations": 89,
+  "selected_lessons_runtime_check_invocations": 31,
+  "annotation_check_invocations_repeat_original": 31,
+  "all_three_stdout_pairs_equal": true,
+  "stdout_normalization_applied": false,
+  "cmake_ctest_executed": false
+}

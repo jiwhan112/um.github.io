@@ -1,0 +1,205 @@
+{
+  "mode": "cxx11",
+  "executed_at_utc": "2026-10-21T06:44:25.078440+00:00",
+  "system": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "status": "pass",
+  "commands": [
+    {
+      "label": "compiler-version",
+      "argv": [
+        "/usr/bin/g++",
+        "--version"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 0,
+      "raw_output": "compiler-version.txt"
+    },
+    {
+      "label": "lifetime",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/lifetime.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 1,
+      "raw_output": "lifetime.txt"
+    },
+    {
+      "label": "ownership",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 1,
+      "raw_output": "ownership.txt"
+    },
+    {
+      "label": "polymorphism",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 1,
+      "raw_output": "polymorphism.txt"
+    },
+    {
+      "label": "templates",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/templates.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 1,
+      "raw_output": "templates.txt"
+    },
+    {
+      "label": "containers",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/containers.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 1,
+      "raw_output": "containers.txt"
+    },
+    {
+      "label": "interfaces",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 1,
+      "raw_output": "interfaces.txt"
+    },
+    {
+      "label": "transaction",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 1,
+      "raw_output": "transaction.txt"
+    },
+    {
+      "label": "allocation",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 1,
+      "raw_output": "allocation.txt"
+    },
+    {
+      "label": "pimpl",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++11",
+        "-pedantic-errors",
+        "-fsyntax-only",
+        "-I",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp",
+        "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/pimpl_main.cpp"
+      ],
+      "cwd": "/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab",
+      "exit_code": 1,
+      "raw_output": "pimpl.txt"
+    }
+  ],
+  "results": [
+    {
+      "name": "lifetime",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "ownership",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "polymorphism",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "templates",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "containers",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "interfaces",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "transaction",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "allocation",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    },
+    {
+      "name": "pimpl",
+      "outcome": "cxx11-unsupported-expected-rejection",
+      "compiler_exit_code": 1
+    }
+  ],
+  "counting_note": "Original nine programs count 89 calls; selected lessons 01-02 count 31 (10+13+8). ownership includes Expect(true) after a compile-time construction example. Annotation/compiler reruns are not independent conditions.",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "cxx11_supported": false,
+  "cxx11_programs_executed": false
+}

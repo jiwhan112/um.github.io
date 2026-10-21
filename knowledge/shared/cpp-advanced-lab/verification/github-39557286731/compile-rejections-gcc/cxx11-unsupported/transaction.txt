@@ -1,0 +1,42 @@
+In file included from /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:1:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In member function ‘void Checks::Throws(F&&, const char*)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: error: ‘invoke’ is not a member of ‘std’
+   17 |         try { std::invoke(std::forward<F>(f)); }
+      |                    ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: note: ‘std::invoke’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In function ‘int Run(const char*, F&&)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: error: ‘invoke’ is not a member of ‘std’
+   26 |         std::invoke(std::forward<F>(test), checks);
+      |              ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: note: ‘std::invoke’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp: At global scope:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:7:42: error: ‘make_unique’ is not a member of ‘std’
+    7 |     std::unique_ptr<State> state_ = std::make_unique<State>(State{{1,2},"old"});
+      |                                          ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:7:42: note: ‘std::make_unique’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:7:59: error: expected primary-expression before ‘>’ token
+    7 |     std::unique_ptr<State> state_ = std::make_unique<State>(State{{1,2},"old"});
+      |                                                           ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp: In member function ‘void GameState::Transition(std::string, bool)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:11:31: error: ‘make_unique’ is not a member of ‘std’
+   11 |         auto candidate = std::make_unique<State>(*state_);
+      |                               ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:11:31: note: ‘std::make_unique’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:11:48: error: expected primary-expression before ‘>’ token
+   11 |         auto candidate = std::make_unique<State>(*state_);
+      |                                                ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp: At global scope:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:18:19: error: inline variables are only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+   18 | struct Resource { inline static int alive{}; Resource() { ++alive; } ~Resource() { --alive; } };
+      |                   ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp: In lambda function:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:26:52: error: ‘make_unique’ is not a member of ‘std’
+   26 |     c.Throws<std::runtime_error>([] { Consume(std::make_unique<Resource>(), FailPriority()); }, "argument failure");
+      |                                                    ^~~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:26:52: note: ‘std::make_unique’ is only available from C++14 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:26:72: error: expected primary-expression before ‘>’ token
+   26 |     c.Throws<std::runtime_error>([] { Consume(std::make_unique<Resource>(), FailPriority()); }, "argument failure");
+      |                                                                        ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp:26:74: error: expected primary-expression before ‘)’ token
+   26 |     c.Throws<std::runtime_error>([] { Consume(std::make_unique<Resource>(), FailPriority()); }, "argument failure");
+      |                                                                          ^

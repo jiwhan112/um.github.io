@@ -1,0 +1,19 @@
+$ g++ -std=c++20 -Wall -Wextra -pedantic-errors -c /mnt/data/programmer_rewrite_batch2/negative/constraint.cpp -o /mnt/data/programmer_rewrite_batch2/logs/gcc-constraint.o
+/mnt/data/programmer_rewrite_batch2/negative/constraint.cpp: In function ‘int main()’:
+/mnt/data/programmer_rewrite_batch2/negative/constraint.cpp:3:22: error: no matching function for call to ‘F(double)’
+    3 | int main() { return F(1.5); }
+      |                     ~^~~~~
+/mnt/data/programmer_rewrite_batch2/negative/constraint.cpp:2:29: note: candidate: ‘template<class T>  requires  integral<T> T F(T)’
+    2 | template<std::integral T> T F(T value) { return value; }
+      |                             ^
+/mnt/data/programmer_rewrite_batch2/negative/constraint.cpp:2:29: note:   template argument deduction/substitution failed:
+/mnt/data/programmer_rewrite_batch2/negative/constraint.cpp:2:29: note: constraints not satisfied
+In file included from /mnt/data/programmer_rewrite_batch2/negative/constraint.cpp:1:
+/usr/include/c++/14/concepts: In substitution of ‘template<class T>  requires  integral<T> T F(T) [with T = double]’:
+/mnt/data/programmer_rewrite_batch2/negative/constraint.cpp:3:22:   required from here
+    3 | int main() { return F(1.5); }
+      |                     ~^~~~~
+/usr/include/c++/14/concepts:107:13:   required for the satisfaction of ‘integral<T>’ [with T = double]
+/usr/include/c++/14/concepts:107:24: note: the expression ‘is_integral_v<_Tp> [with _Tp = double]’ evaluated to ‘false’
+  107 |     concept integral = is_integral_v<_Tp>;
+      |                        ^~~~~~~~~~~~~~~~~~

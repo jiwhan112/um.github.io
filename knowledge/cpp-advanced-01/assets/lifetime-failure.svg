@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="793" viewBox="0 0 640 793" role="img" aria-labelledby="title desc">
+  <title id="title">멤버 생성 실패 시 정리되는 범위</title>
+  <desc id="desc">Base와 first는 완성된다. second는 생성자 본문에서 3을 기록하고 예외를 던져 미완성이다. Whole 본문도 실행되지 않는다. first와 Base만 역순 소멸해 최종 기록은 1 2 3 -2 -1이다. 위임하지 않는 생성자의 예다.</desc>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#93c5fd"/></marker></defs>
+  <rect width="640" height="793" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif">
+    <text x="32" y="48" font-size="28" fill="#e8f0ff" font-weight="700" text-anchor="start">실패 경로: 완성된 부분만 정리</text>
+    <text x="32" y="88" font-size="23" fill="#b8c7dd" font-weight="400" text-anchor="start">second 생성자 본문에서 예외가 발생</text>
+    <rect x="32" y="118" width="576" height="82" rx="12" fill="#1c2a41"/>
+    <text x="52" y="152" font-size="25" fill="#6ee7b7" font-weight="700" text-anchor="start">1 · Base</text>
+    <text x="52" y="184" font-size="23" fill="#b8c7dd" font-weight="400" text-anchor="start">생성 완료</text>
+    <path d="M320 202 L320 217" fill="none" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="32" y="220" width="576" height="82" rx="12" fill="#1c2a41"/>
+    <text x="52" y="254" font-size="25" fill="#6ee7b7" font-weight="700" text-anchor="start">2 · first</text>
+    <text x="52" y="286" font-size="23" fill="#b8c7dd" font-weight="400" text-anchor="start">생성 완료</text>
+    <path d="M320 304 L320 319" fill="none" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="32" y="322" width="576" height="82" rx="12" fill="#312435" stroke="#fda4af" stroke-width="2"/>
+    <text x="52" y="356" font-size="25" fill="#fda4af" font-weight="700" text-anchor="start">3 · second</text>
+    <text x="52" y="388" font-size="23" fill="#b8c7dd" font-weight="400" text-anchor="start">본문 진입 뒤 예외 · 미완성</text>
+    <rect x="32" y="424" width="576" height="82" rx="12" fill="#1c2a41" stroke-dasharray="7 5"/>
+    <text x="52" y="458" font-size="25" fill="#b8c7dd" font-weight="700" text-anchor="start">4 · Whole 본문</text>
+    <text x="52" y="490" font-size="23" fill="#b8c7dd" font-weight="400" text-anchor="start">실행되지 않음</text>
+    <rect x="32" y="546" width="576" height="130" rx="12" fill="#173a38" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="52" y="586" font-size="25" fill="#6ee7b7" font-weight="700" text-anchor="start">정리 순서: first → Base</text>
+    <text x="52" y="626" font-size="25" fill="#e8f0ff" font-weight="400" text-anchor="start">실제 기록: 1, 2, 3, −2, −1</text>
+    <text x="52" y="659" font-size="21" fill="#b8c7dd" font-weight="400" text-anchor="start">second·Whole의 소멸자는 호출되지 않음</text>
+    <text x="32" y="721" font-size="23" fill="#fda4af" font-weight="400" text-anchor="start">+3은 생성자에 들어왔다는 기록입니다.</text>
+    <text x="32" y="758" font-size="22" fill="#b8c7dd" font-weight="400" text-anchor="start">이 실습은 위임하지 않는 생성자입니다.</text>
+  </g>
+</svg>

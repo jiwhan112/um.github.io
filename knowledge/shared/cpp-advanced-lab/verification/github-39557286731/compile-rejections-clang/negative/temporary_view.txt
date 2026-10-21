@@ -1,0 +1,10 @@
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/temporary_view.cpp:8:45: error: call to deleted member function 'View'
+    8 | int main() { auto view = Label{"temporary"}.View(); return static_cast<int>(view.size()); }
+      |                          ~~~~~~~~~~~~~~~~~~~^~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/temporary_view.cpp:5:22: note: candidate function
+    5 |     std::string_view View() const & { return data; }
+      |                      ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/temporary_view.cpp:6:22: note: candidate function has been explicitly deleted
+    6 |     std::string_view View() && = delete;
+      |                      ^
+1 error generated.

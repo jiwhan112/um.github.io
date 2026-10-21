@@ -1,0 +1,59 @@
+In file included from /home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:1:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In member function ‘void Checks::Throws(F&&, const char*)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: error: ‘invoke’ is not a member of ‘std’
+   17 |         try { std::invoke(std::forward<F>(f)); }
+      |                    ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:17:20: note: ‘std::invoke’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp: In function ‘int Run(const char*, F&&)’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: error: ‘invoke’ is not a member of ‘std’
+   26 |         std::invoke(std::forward<F>(test), checks);
+      |              ^~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/check.hpp:26:14: note: ‘std::invoke’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp: In member function ‘void ReturnToPool::operator()(Widget*) const’:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:23:63: error: ‘destroy_at’ is not a member of ‘std’
+   23 |     void operator()(Widget* p) const noexcept { if (p) { std::destroy_at(p); pool->Free(p); } }
+      |                                                               ^~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:23:63: note: ‘std::destroy_at’ is only available from C++20 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp: In lambda function:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:34:34: error: ‘byte’ is not a member of ‘std’
+   34 |     alignas(int) std::array<std::byte, sizeof(int)> bytes{};
+      |                                  ^~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:34:34: note: ‘std::byte’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:34:34: error: ‘byte’ is not a member of ‘std’
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:34:34: note: ‘std::byte’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:34:51: error: template argument 1 is invalid
+   34 |     alignas(int) std::array<std::byte, sizeof(int)> bytes{};
+      |                                                   ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:35:49: error: request for member ‘data’ in ‘bytes’, which is of non-class type ‘int’
+   35 |     int* value = ::new(static_cast<void*>(bytes.data())) int(42);
+      |                                                 ^~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:36:65: error: ‘destroy_at’ is not a member of ‘std’
+   36 |     c.Expect(*value == 42, "nonallocating placement new"); std::destroy_at(value);
+      |                                                                 ^~~~~~~~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:36:65: note: ‘std::destroy_at’ is only available from C++20 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:38:47: error: ‘byte’ is not a member of ‘std’
+   38 |     alignas(std::max_align_t) std::array<std::byte, 1024> arena{};
+      |                                               ^~~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:38:47: note: ‘std::byte’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:38:47: error: ‘byte’ is not a member of ‘std’
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:38:47: note: ‘std::byte’ is only available from C++17 onwards
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:38:57: error: template argument 1 is invalid
+   38 |     alignas(std::max_align_t) std::array<std::byte, 1024> arena{};
+      |                                                         ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:39:10: error: ‘std::pmr’ has not been declared
+   39 |     std::pmr::monotonic_buffer_resource resource(arena.data(), arena.size(), std::pmr::null_memory_resource());
+      |          ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:41:14: error: ‘std::pmr’ has not been declared
+   41 |         std::pmr::vector<int> values(&resource); values.reserve(8); values.push_back(7);
+      |              ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:41:26: error: expected primary-expression before ‘int’
+   41 |         std::pmr::vector<int> values(&resource); values.reserve(8); values.push_back(7);
+      |                          ^~~
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:41:50: error: ‘values’ was not declared in this scope; did you mean ‘value’?
+   41 |         std::pmr::vector<int> values(&resource); values.reserve(8); values.push_back(7);
+      |                                                  ^~~~~~
+      |                                                  value
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp: In lambda function:
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp:44:42: error: ‘resource’ was not declared in this scope
+   44 |     c.Throws<std::bad_alloc>([&] { (void)resource.allocate(4096); }, "bounded deterministic failure");
+      |                                          ^~~~~~~~

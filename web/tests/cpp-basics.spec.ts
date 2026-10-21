@@ -5,7 +5,7 @@ const chapters = [
   { slug: 'cpp-basics-02', sources: ['flow.cpp'], entry: 'flow.cpp', review: 'review', previous: 'cpp-basics-01', next: 'cpp-basics-03' },
   { slug: 'cpp-basics-03', sources: ['memory.cpp'], entry: 'memory.cpp', review: 'practice-review', previous: 'cpp-basics-02', next: 'cpp-basics-04' },
   { slug: 'cpp-basics-04', sources: ['containers.cpp', 'buffer.cpp'], entry: 'containers.cpp', review: 'review', previous: 'cpp-basics-03', next: 'cpp-basics-05' },
-  { slug: 'cpp-basics-05', sources: ['inventory.hpp', 'inventory.cpp', 'inventory_main.cpp'], entry: 'inventory_main.cpp', review: 'review', previous: 'cpp-basics-04', next: null },
+  { slug: 'cpp-basics-05', sources: ['inventory.hpp', 'inventory.cpp', 'inventory_main.cpp'], entry: 'inventory_main.cpp', review: 'review', previous: 'cpp-basics-04', next: 'cpp-advanced-01' },
 ];
 
 for (const chapter of chapters) test(`${chapter.slug} connects visual concepts, practice, exact sources and adjacent lessons`, async ({ page, request }, testInfo) => {
@@ -132,11 +132,21 @@ test('bitmask operations distinguish clearing from toggling and preserve existin
   expect(saved.other).toBe('keep-me');
 });
 
-test('C++ curriculum links the five authored foundation lessons in order', async ({ page }) => {
+test('C++ curriculum follows foundations 01–05 with advanced 01–02', async ({ page, isMobile }) => {
   await page.goto('knowledge/');
   const cpp = page.locator('#knowledge-cpp');
-  await expect(cpp.locator('.knowledge-document-link')).toHaveCount(5);
-  expect(await cpp.locator('.knowledge-document-link').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')))).toEqual(chapters.map(chapter => `/um.github.io/knowledge/${chapter.slug}/`));
+  const order=[...chapters.map(chapter=>chapter.slug),'cpp-advanced-01','cpp-advanced-02'];
+  await expect(cpp.locator('.knowledge-document-link')).toHaveCount(7);
+  expect(await cpp.locator('.knowledge-document-link').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')))).toEqual(order.map(slug => `/um.github.io/knowledge/${slug}/`));
+  const expected=order.map(slug=>`/um.github.io/knowledge/${slug}/`);
+  expect(await page.locator('.sidebar .chapter-nav a[href*="/knowledge/cpp-"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(expected);
+  if(isMobile){
+    await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
+    const drawer=page.getByRole('dialog',{name:'사이트 메뉴',exact:true});
+    expect(await drawer.locator('.chapter-nav a[href*="/knowledge/cpp-"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(expected);
+    await page.keyboard.press('Escape');
+    await expect(drawer).toHaveCount(0);
+  }
   await cpp.locator('.knowledge-document-link').first().click();
   await expect(page).toHaveURL(/\/knowledge\/cpp-basics-01\/$/);
 });

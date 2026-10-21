@@ -1,0 +1,106 @@
+name: C++ advanced preserved sources validation
+on:
+  pull_request:
+    branches: [master]
+    paths: ['knowledge/cpp-advanced-*/**', 'knowledge/shared/cpp-advanced-lab/**', '.github/workflows/knowledge-cpp-advanced.yml']
+  push:
+    branches: [master, 'feature/cpp-advanced-*']
+    paths: ['knowledge/cpp-advanced-*/**', 'knowledge/shared/cpp-advanced-lab/**', '.github/workflows/knowledge-cpp-advanced.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+  UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+jobs:
+  positive:
+    name: positive-${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: gcc-cxx20
+            compiler: g++
+            sanitizers: 'OFF'
+          - name: clang-cxx20-asan-ubsan
+            compiler: clang++
+            sanitizers: 'ON'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Record environment and verify preserved artifacts and source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification-logs
+          {
+            date -u
+            git rev-parse HEAD
+            ${{ matrix.compiler }} --version
+            cmake --version
+            python3 knowledge/shared/cpp-advanced-lab/verify_sources.py --json
+          } | tee verification-logs/environment-and-integrity.txt
+      - name: Configure C++20 normal programs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S knowledge/shared/cpp-advanced-lab -B build/cpp-advanced \
+            -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=20 \
+            -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
+            -DENABLE_SANITIZERS=${{ matrix.sanitizers }} \
+            2>&1 | tee verification-logs/configure.txt
+      - name: Build original nine and annotated three programs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake --build build/cpp-advanced --verbose --parallel 2 2>&1 | tee verification-logs/build.txt
+      - name: Run twelve normal CTest programs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ctest --test-dir build/cpp-advanced --output-on-failure --verbose 2>&1 | tee verification-logs/ctest.txt
+      - name: Compare three original and annotated stdout pairs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 knowledge/shared/cpp-advanced-lab/verify_experiments.py compare \
+            --compiler ${{ matrix.compiler }} --build build/cpp-advanced \
+            --out verification-logs/output-equivalence 2>&1 | tee verification-logs/output-equivalence-summary.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cpp-advanced-positive-${{ matrix.name }}-raw-logs
+          path: verification-logs
+          retention-days: 30
+  compile-rejections:
+    name: expected-compile-rejections-${{ matrix.compiler }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: ['g++', 'clang++']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Record source identity and fidelity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification-logs
+          { date -u; git rev-parse HEAD; python3 knowledge/shared/cpp-advanced-lab/verify_sources.py --json; } | tee verification-logs/environment-and-integrity.txt
+      - name: Expect six C++20 compilation errors without linking
+        run: python3 knowledge/shared/cpp-advanced-lab/verify_experiments.py negative --compiler '${{ matrix.compiler }}' --out verification-logs/negative
+      - name: Record strict C++11 incompatibility without running programs
+        if: matrix.compiler == 'g++'
+        run: python3 knowledge/shared/cpp-advanced-lab/verify_experiments.py cxx11 --compiler g++ --out verification-logs/cxx11-unsupported
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cpp-advanced-compile-rejections-${{ matrix.compiler }}-raw-logs
+          path: verification-logs
+          retention-days: 30

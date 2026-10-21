@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="650" viewBox="0 0 640 650" role="img" aria-labelledby="title desc">
+  <title id="title">GameState 검증 실패와 성공의 결과</title>
+  <desc id="desc">기존 상태는 inventory1,2와 sceneold다. 후보는 inventory1,2,3과 scenenew다. 검증 실패 시 후보를 정리하고 기존 상태를 유지한다. 성공 시 소유 포인터를 교체하여 후보를 현재 상태로 만든다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker></defs>
+  <rect width="640" height="650" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="48" font-size="28" font-weight="700">검증 전에는 기존 상태를 유지</text>
+    <text x="32" y="85" font-size="22" fill="#b8c7dd">GameState · 이 실습의 작고 동기적인 상태</text>
+    <rect x="32" y="116" width="276" height="152" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <rect x="332" y="116" width="276" height="152" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2" stroke-dasharray="7 5"/>
+    <text x="52" y="154" font-size="25" font-weight="700">현재 state</text>
+    <text x="52" y="197" font-size="23">inventory: 1 · 2</text>
+    <text x="52" y="237" font-size="23">scene: old</text>
+    <text x="352" y="154" font-size="25" font-weight="700">후보 candidate</text>
+    <text x="352" y="197" font-size="23">inventory: 1 · 2 · 3</text>
+    <text x="352" y="237" font-size="23">scene: new</text>
+    <rect x="32" y="307" width="576" height="117" rx="14" fill="#342232" stroke="#fda4af" stroke-width="2"/>
+    <text x="52" y="347" font-size="25" font-weight="700" fill="#fda4af">실패 · 후보 정리</text>
+    <text x="52" y="392" font-size="25">현재 값: [1, 2] · old 그대로</text>
+    <rect x="32" y="450" width="576" height="117" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="52" y="490" font-size="25" font-weight="700" fill="#6ee7b7">성공 · 소유 포인터 swap</text>
+    <text x="52" y="535" font-size="25">현재 값: [1, 2, 3] · new</text>
+    <text x="32" y="613" font-size="21" fill="#b8c7dd">파일·서버 취소, 동시성 원자성은 별도 범위입니다.</text>
+  </g>
+</svg>
