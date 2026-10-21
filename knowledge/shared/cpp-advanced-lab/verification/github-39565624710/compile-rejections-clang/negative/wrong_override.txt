@@ -1,0 +1,7 @@
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/wrong_override.cpp:2:36: error: non-virtual member function marked 'override' hides virtual member function
+    2 | struct Derived : Base { int Read() override { return 1; } };
+      |                                    ^
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/wrong_override.cpp:1:27: note: hidden overloaded virtual function 'Base::Read' declared here: different qualifiers ('const' vs unqualified)
+    1 | struct Base { virtual int Read() const = 0; };
+      |                           ^
+1 error generated.

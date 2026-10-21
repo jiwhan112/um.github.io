@@ -2559,7 +2559,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "이번 한국어판의 새 GitHub CI는 확인 대기 중입니다",
+                  "text": "이번 한국어판을 포함한 GitHub CPU 검증을 완료했습니다",
                   "kind": "strong"
                 }
               ]
@@ -2568,9 +2568,35 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "새 로컬 GCC에서 원본 9개와 한국어 주석판 6개를 직접 빌드·실행했고 출력 6쌍이 바이트 단위로 일치했습니다. 이번 배치의 GitHub Configure·Build·CTest와 Clang sanitizer 결과는 완료 후 별도 원시 로그로 기록합니다."
+                  "text": "GCC와 Clang ASan·UBSan에서 원본9개와 한국어 주석판6개의 Configure·Build·CTest15/15가 각각 통과했습니다. 출력6쌍이 바이트 단위로 같으며, 새 원시 기록73파일은 과거 로그와 별도로 보존했습니다."
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 GitHub 실행 39565624710",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39565624710"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "원시 로그73파일 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "artifact 해시 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/artifact-manifest.json"
             }
           ]
         },
@@ -2692,7 +2718,7 @@
                 ],
                 [
                   {
-                    "text": "새 polymorphism_ko를 포함한 구성은 아직 결과 확인 전"
+                    "text": "GCC13.3 / Clang18.1.3 ASan·UBSan · CMake3.31.6 · 각각 Configure·Build·CTest15/15 성공, 출력6쌍 바이트 동일"
                   }
                 ]
               ]
@@ -2707,7 +2733,7 @@
                 ],
                 [
                   {
-                    "text": "엄격한 C++11 모드에서 원본 9개 모두 컴파일 거부 · 호환 미지원"
+                    "text": "로컬·GitHub GCC 엄격 C++11에서 원본9개 컴파일 거부 · 미지원·미실행"
                   }
                 ]
               ]
@@ -2826,6 +2852,35 @@
                   "text": "가상 호출·cast 성능, ABI와 실제 객체 배치, 다중 상속의 모든 조합, 임의 scale의 정수 범위, NVI 상한의 별도 실행, 복잡한 자원 그래프의 복제, 실제 게임 통합은 이번 12회 검사의 결론이 아닙니다. sanitizer도 실행한 경로의 검출 결과로 읽습니다."
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 실행의 원시 출력: "
+            },
+            {
+              "text": "GCC CTest",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/gcc-cxx20/ctest.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Clang ASan·UBSan CTest",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/clang-cxx20-asan-ubsan/ctest.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "GCC C++11 진단",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/compile-rejections-gcc/cxx11-unsupported/results.json"
             }
           ]
         }

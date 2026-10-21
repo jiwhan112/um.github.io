@@ -1,0 +1,5 @@
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/copy_by_value.cpp:1:21: error: copy constructor must pass its first argument by reference
+    1 | struct Bad { Bad(Bad); };
+      |                     ^
+      |                      const &
+1 error generated.

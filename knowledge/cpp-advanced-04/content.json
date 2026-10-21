@@ -3,7 +3,7 @@
   "route": "/knowledge/cpp-advanced-04/",
   "kind": "knowledge",
   "title": "C++ 심화 04 · 연산자·템플릿·람다·제약 조건",
-  "subtitle": "호출을 허용하는 조건과 값·참조의 수명을 함께 설계합니다",
+  "subtitle": "호출 조건과 값·참조의 수명을 함께 설계합니다",
   "date": "2026-10-21",
   "number": "04",
   "category": "C++ 기초·심화",
@@ -3479,7 +3479,7 @@
                 ],
                 [
                   {
-                    "text": "GCC13.3 · 원본과 한국어판 성공 · 각 쌍 stdout 바이트 동일"
+                    "text": "GCC13.3 · 원본9개+한국어판6개 성공 · 출력6쌍 바이트 동일"
                   }
                 ]
               ]
@@ -3494,7 +3494,7 @@
                 ],
                 [
                   {
-                    "text": "이번 배치 실행 결과 확인 전 · Configure/Build/CTest 원시 로그 별도 기록 예정"
+                    "text": "GCC13.3 / Clang18.1.3 ASan·UBSan · CMake3.31.6 · 각각 Configure·Build·CTest15/15 성공, 출력6쌍 바이트 동일"
                   }
                 ]
               ]
@@ -3509,7 +3509,7 @@
                 ],
                 [
                   {
-                    "text": "이 팩은 C++20 요구 · strict C++11 호환판이 아님"
+                    "text": "로컬·GitHub GCC 엄격 C++11에서 원본9개 컴파일 거부 · 미지원·미실행"
                   }
                 ]
               ]
@@ -3528,6 +3528,32 @@
                   }
                 ]
               ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 GitHub 실행 39565624710",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39565624710"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "원시 로그73파일 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/README.md"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "artifact 해시 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/artifact-manifest.json"
             }
           ]
         },
@@ -3617,6 +3643,35 @@
               "text": "과거 report.json",
               "kind": "link",
               "href": "/knowledge/shared/cpp-advanced-lab/verification/historical-20261013/logs/report.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 실행의 원시 출력: "
+            },
+            {
+              "text": "GCC CTest",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/gcc-cxx20/ctest.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Clang ASan·UBSan CTest",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/clang-cxx20-asan-ubsan/ctest.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "GCC C++11 진단",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39565624710/compile-rejections-gcc/cxx11-unsupported/results.json"
             }
           ]
         }
