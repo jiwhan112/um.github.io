@@ -4,7 +4,6 @@
   "scope_recorded_at_utc": "2026-10-21T08:34:19Z",
   "baseline_master": "59209c9674786f84fd0e9e50e01c9b269ea72e81",
   "automation": {
-    "id": "6ad87837d4688191818e709038a6c0c4",
     "title": "프로그래밍 교재 시각 개편",
     "timezone": "Asia/Seoul",
     "schedule": "BEGIN:VEVENT\nDTSTART;TZID=Asia/Seoul:20261021T180000\nRRULE:FREQ=HOURLY;INTERVAL=1;BYMINUTE=0;BYSECOND=0\nEND:VEVENT",
@@ -17,15 +16,54 @@
   "source_collections": [
     {
       "id": "c-language",
-      "notion_url": null,
-      "state": "needs_source",
-      "note": "Find an actual C-language source under approved scope; do not confuse C01 development-common notes with the C language."
+      "notion_url": "https://app.notion.com/p/3fda99703f408153b1dffae9398aa3bc",
+      "title": "C01 · C11 입력 검증·정수 범위와 C++11/20 교차 컴파일",
+      "page_last_edited_at": "2026-10-20T04:35:45.263Z",
+      "state": "source_found_child_audit_pending",
+      "known_children": {
+        "cpu_source": "https://app.notion.com/p/3fea99703f40818c90b2d60e3b94c3ce",
+        "historical_native_logs": 17,
+        "historical_file_log_pages": 1
+      },
+      "note": "Fetched C01 revised material. Preserve read-only deleted original status; audit C01B and all historical logs/attachments before publishing. It is actual C-language material, not the general CS notes."
     },
     {
       "id": "effective-cpp",
       "notion_url": "https://app.notion.com/p/8178c17f593b4f4e83a0b42544b8fe2b",
-      "state": "inventory_pending",
-      "note": "Existing 55-item revised notes; preserve shared code, use independently written explanations without mass copying the book."
+      "state": "six_chapters_identified_capture_pending",
+      "note": "Existing 55-item revised notes; preserve shared code, use independently written explanations without mass copying the book.",
+      "children": [
+        {
+          "id": "effective-cpp-01",
+          "title": "항목 1–12 — 언어·초기화·특수 멤버",
+          "notion_url": "https://app.notion.com/p/3f8a99703f40816abc03e0fe7daf6deb"
+        },
+        {
+          "id": "effective-cpp-02",
+          "title": "항목 13–25 — 자원·API·복사·swap",
+          "notion_url": "https://app.notion.com/p/3f8a99703f408149b3edc2e5729e4106"
+        },
+        {
+          "id": "effective-cpp-03",
+          "title": "항목 26–31 — 구현·예외·컴파일 의존성",
+          "notion_url": "https://app.notion.com/p/3f8a99703f4081978c8ac4ae481f0b31"
+        },
+        {
+          "id": "effective-cpp-04",
+          "title": "항목 32–40 — 상속과 설계 대안",
+          "notion_url": "https://app.notion.com/p/3f8a99703f408165ab36f79f8376fba3"
+        },
+        {
+          "id": "effective-cpp-05",
+          "title": "항목 41–48 — 제네릭 프로그래밍과 메타프로그래밍",
+          "notion_url": "https://app.notion.com/p/3f8a99703f4081a3993ae737187e5928"
+        },
+        {
+          "id": "effective-cpp-06",
+          "title": "항목 49–55 — 할당·진단·표준 라이브러리",
+          "notion_url": "https://app.notion.com/p/3f8a99703f4081798361fdbf4881b8c6"
+        }
+      ]
     },
     {
       "id": "computer-science",
@@ -33,11 +71,20 @@
       "candidate_notion_urls": [
         "https://app.notion.com/p/31546e87512044d2822d9e97e751ae01",
         "https://app.notion.com/p/6786680dd23f4741bfa8378ea735f978",
-        "https://app.notion.com/p/cdc2e4075c184e048fb594529a3b97f7",
-        "https://app.notion.com/p/f1009f7441e8490194fceea19b6b9eea"
+        "https://app.notion.com/p/cdc2e4075c184e048fb594529a3b97f7"
       ],
       "state": "inventory_pending",
-      "note": "Confirm titles and map actual existing architecture/OS/network learning notes to CURRICULUM; avoid unrelated personal/book notes."
+      "note": "Root titles and existing CS01–03, OS01–06, NET01–05 links read. Confirm actual curriculum mapping and child sources before finalizing inventory; do not publish unrelated personal/book notes.",
+      "confirmed_titles": [
+        "개발자 필수 지식",
+        "운영체제",
+        "네트워크"
+      ],
+      "deferred_collection": {
+        "notion_url": "https://app.notion.com/p/f1009f7441e8490194fceea19b6b9eea",
+        "title": "자료구조 기본사항",
+        "reason": "Data structures is a separately scoped, design-later course under CURRICULUM; not automatically counted as existing computer-science chapters."
+      }
     }
   ],
   "active_batch": {
@@ -49,7 +96,7 @@
       "cpp-advanced-06"
     ],
     "lease_until_utc": "2026-10-21T10:30:00Z",
-    "pr_url": null,
+    "pr_url": "https://github.com/jiwhan112/um.github.io/pull/17",
     "instruction": "Read open PR and branch progress before editing; skip concurrent changes while this lease is valid."
   },
   "next_unit": "cpp-advanced-05",
@@ -1404,15 +1451,22 @@
       "state": "in_progress",
       "stages": {
         "source_capture": "complete",
-        "textbook": "in_progress",
-        "annotated_source": "in_progress",
-        "cpu_ci": "pending",
-        "web_ci": "pending",
-        "merged": "pending",
-        "public_verified": "pending"
+        "body": "complete_reviewing",
+        "full_source": "complete",
+        "source_integrity": "pass",
+        "local_gcc_cxx20": "pass_18_programs_9_stdout_pairs",
+        "strict_gcc_cxx11": "unsupported_9_expected_compile_rejections",
+        "clang_cmake_ctest": "pending",
+        "web_schema_typecheck_unit": "pass_30_unit_tests",
+        "pc_mobile_ci": "pending",
+        "pr": "draft_17",
+        "public_deployment": "pending"
       },
       "evidence": {
-        "source_capture": "knowledge/cpp-advanced-05/source-notion-capture.json"
+        "pr": "https://github.com/jiwhan112/um.github.io/pull/17",
+        "source_capture": "knowledge/cpp-advanced-05/source-notion-capture.json",
+        "local_execution": "knowledge/shared/cpp-advanced-lab/verification/local-gcc-advanced56-20261021/README.md",
+        "batch_ledger": "knowledge/CPP_ADVANCED_05_06_20261021.md"
       }
     },
     {
@@ -1424,16 +1478,135 @@
       "state": "in_progress",
       "stages": {
         "source_capture": "complete",
-        "textbook": "in_progress",
-        "annotated_source": "in_progress",
-        "cpu_ci": "pending",
-        "web_ci": "pending",
-        "merged": "pending",
-        "public_verified": "pending"
+        "body": "complete_reviewing",
+        "full_source": "complete",
+        "source_integrity": "pass",
+        "local_gcc_cxx20": "pass_18_programs_9_stdout_pairs",
+        "strict_gcc_cxx11": "unsupported_9_expected_compile_rejections",
+        "clang_cmake_ctest": "pending",
+        "web_schema_typecheck_unit": "pass_30_unit_tests",
+        "pc_mobile_ci": "pending",
+        "pr": "draft_17",
+        "public_deployment": "pending"
       },
       "evidence": {
-        "source_capture": "knowledge/cpp-advanced-06/source-notion-capture.json"
+        "pr": "https://github.com/jiwhan112/um.github.io/pull/17",
+        "source_capture": "knowledge/cpp-advanced-06/source-notion-capture.json",
+        "local_execution": "knowledge/shared/cpp-advanced-lab/verification/local-gcc-advanced56-20261021/README.md",
+        "batch_ledger": "knowledge/CPP_ADVANCED_05_06_20261021.md"
       }
+    },
+    {
+      "id": "c-language-01",
+      "title": "C01 · C11 입력 검증·정수 범위와 C++11/20 교차 컴파일",
+      "notion_url": "https://app.notion.com/p/3fda99703f408153b1dffae9398aa3bc",
+      "category": "C 언어",
+      "route": null,
+      "state": "pending_source_capture",
+      "evidence": {
+        "source_index_read": true
+      },
+      "remaining": [
+        "Capture latest full original and audit related source/log children",
+        "Author approved visual textbook and preserve full sources",
+        "Run appropriate code and PC/mobile publication verification"
+      ]
+    },
+    {
+      "id": "effective-cpp-01",
+      "title": "항목 1–12 — 언어·초기화·특수 멤버",
+      "notion_url": "https://app.notion.com/p/3f8a99703f40816abc03e0fe7daf6deb",
+      "category": "Effective C++",
+      "route": null,
+      "state": "pending_source_capture",
+      "evidence": {
+        "source_index_read": true
+      },
+      "remaining": [
+        "Capture latest full original and audit related source/log children",
+        "Author approved visual textbook and preserve full sources",
+        "Run appropriate code and PC/mobile publication verification"
+      ]
+    },
+    {
+      "id": "effective-cpp-02",
+      "title": "항목 13–25 — 자원·API·복사·swap",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408149b3edc2e5729e4106",
+      "category": "Effective C++",
+      "route": null,
+      "state": "pending_source_capture",
+      "evidence": {
+        "source_index_read": true
+      },
+      "remaining": [
+        "Capture latest full original and audit related source/log children",
+        "Author approved visual textbook and preserve full sources",
+        "Run appropriate code and PC/mobile publication verification"
+      ]
+    },
+    {
+      "id": "effective-cpp-03",
+      "title": "항목 26–31 — 구현·예외·컴파일 의존성",
+      "notion_url": "https://app.notion.com/p/3f8a99703f4081978c8ac4ae481f0b31",
+      "category": "Effective C++",
+      "route": null,
+      "state": "pending_source_capture",
+      "evidence": {
+        "source_index_read": true
+      },
+      "remaining": [
+        "Capture latest full original and audit related source/log children",
+        "Author approved visual textbook and preserve full sources",
+        "Run appropriate code and PC/mobile publication verification"
+      ]
+    },
+    {
+      "id": "effective-cpp-04",
+      "title": "항목 32–40 — 상속과 설계 대안",
+      "notion_url": "https://app.notion.com/p/3f8a99703f408165ab36f79f8376fba3",
+      "category": "Effective C++",
+      "route": null,
+      "state": "pending_source_capture",
+      "evidence": {
+        "source_index_read": true
+      },
+      "remaining": [
+        "Capture latest full original and audit related source/log children",
+        "Author approved visual textbook and preserve full sources",
+        "Run appropriate code and PC/mobile publication verification"
+      ]
+    },
+    {
+      "id": "effective-cpp-05",
+      "title": "항목 41–48 — 제네릭 프로그래밍과 메타프로그래밍",
+      "notion_url": "https://app.notion.com/p/3f8a99703f4081a3993ae737187e5928",
+      "category": "Effective C++",
+      "route": null,
+      "state": "pending_source_capture",
+      "evidence": {
+        "source_index_read": true
+      },
+      "remaining": [
+        "Capture latest full original and audit related source/log children",
+        "Author approved visual textbook and preserve full sources",
+        "Run appropriate code and PC/mobile publication verification"
+      ]
+    },
+    {
+      "id": "effective-cpp-06",
+      "title": "항목 49–55 — 할당·진단·표준 라이브러리",
+      "notion_url": "https://app.notion.com/p/3f8a99703f4081798361fdbf4881b8c6",
+      "category": "Effective C++",
+      "route": null,
+      "state": "pending_source_capture",
+      "evidence": {
+        "source_index_read": true
+      },
+      "remaining": [
+        "Capture latest full original and audit related source/log children",
+        "Author approved visual textbook and preserve full sources",
+        "Run appropriate code and PC/mobile publication verification"
+      ]
     }
   ],
   "deferred_new_design": [
@@ -1449,5 +1622,7 @@
     "final_audit": "pending",
     "all_approved_units_published": false,
     "automation_stop_confirmed": false
-  }
+  },
+  "after_active_batch_next_unit": "c-language-01",
+  "inventory_note": "90 inventory entries include 81 previously published documents, the active two C++ chapters, and seven identified source chapters. This is not the live catalog count. Computer-science child/source audit and remaining collection scope are still pending."
 }

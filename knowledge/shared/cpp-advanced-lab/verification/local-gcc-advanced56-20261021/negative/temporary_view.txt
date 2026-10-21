@@ -1,0 +1,7 @@
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/negative/temporary_view.cpp: In function ‘int main()’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/negative/temporary_view.cpp:8:49: error: use of deleted function ‘std::string_view Label::View() &&’
+    8 | int main() { auto view = Label{"temporary"}.View(); return static_cast<int>(view.size()); }
+      |                          ~~~~~~~~~~~~~~~~~~~~~~~^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-advanced-lab/original/negative/temporary_view.cpp:6:22: note: declared here
+    6 |     std::string_view View() && = delete;
+      |                      ^~~~

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640" role="img" aria-labelledby="title desc">
+  <title id="title">arena와 resource와 vector의 수명 순서</title>
+  <desc id="desc">시간이 왼쪽에서 오른쪽으로 흐르는 개념도다. 자동 arena 버퍼를 먼저 만들고, 이를 참조하는 resource를 만들고, 그 자원을 참조하는 values 벡터를 내부 스코프에 만든다. 정리는 values, resource, arena의 순서다. 버퍼1024바이트에4096바이트를 요청하면 null upstream이 bad_alloc을 던진다. 길이는 실행 시간 측정값이 아니다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker></defs>
+  <rect width="640" height="640" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="48" font-size="28" font-weight="700">컨테이너보다 긴 자원 수명</text>
+    <text x="32" y="86" font-size="24" fill="#b8c7dd">만들기: arena → resource → values</text>
+    <text x="32" y="129" font-size="23" fill="#b8c7dd">시간</text>
+    <path d="M105 122H606" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="32" y="158" width="576" height="75" rx="13" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <text x="320" y="204" text-anchor="middle" font-size="26">arena · 1024바이트 자동 버퍼</text>
+    <rect x="100" y="269" width="448" height="75" rx="13" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="324" y="315" text-anchor="middle" font-size="25">resource · 버퍼 참조</text>
+    <rect x="184" y="380" width="280" height="93" rx="13" fill="#1b2640" stroke="#c4b5fd" stroke-width="2"/>
+    <text x="324" y="417" text-anchor="middle" font-size="26" font-weight="700">values</text>
+    <text x="324" y="453" text-anchor="middle" font-size="23">pmr::vector&lt;int&gt;</text>
+    <text x="32" y="523" font-size="25">정리: values → resource → arena</text>
+    <rect x="32" y="552" width="576" height="62" rx="12" fill="#342232" stroke="#fda4af" stroke-width="2"/>
+    <text x="320" y="591" text-anchor="middle" font-size="22" fill="#fda4af">4096 요청 → null upstream → bad_alloc</text>
+  </g>
+</svg>

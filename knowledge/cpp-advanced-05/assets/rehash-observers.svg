@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="878" viewBox="0 0 640 878" role="img" aria-labelledby="title desc">
+<title id="title">rehash 이후 반복자와 원소 포인터의 서로 다른 유효성</title><desc id="desc">lookup에서 key 1의 string을 가리키는 value 포인터를 저장한 뒤 rehash(100)을 호출한다. 반복자는 무효화되지만 원소 포인터는 같은 원소를 가리킨다. 실습은 포인터 주소와 값 one을 검사하며 이전 반복자를 사용하지 않는다. 100은 버킷 수가 정확히 100이라는 뜻이 아니다.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#93c5fd"/></marker></defs>
+<rect x="1" y="1" width="638" height="876" rx="20" fill="#0f172a" stroke="#2c394d" stroke-width="2"/>
+<g font-family="Noto Sans KR, Malgun Gothic, sans-serif">
+<text x="32" y="48" fill="#e5edff" font-size="28" font-weight="700" text-anchor="start">rehash: 서로 다른 무효화</text>
+<text x="32" y="87" fill="#b9c7dc" font-size="22" font-weight="400" text-anchor="start">반복자와 원소 포인터를 나누어 봅니다.</text>
+<rect x="32" y="114" width="576" height="165" rx="14" fill="#1d2b41" stroke="none" stroke-width="2"/>
+<text x="52" y="152" fill="#93c5fd" font-size="23" font-weight="700" text-anchor="start">실습에서 보관한 포인터</text>
+<rect x="52" y="172" width="146" height="60" rx="14" fill="#263b56" stroke="#93c5fd" stroke-width="2"/>
+<text x="125" y="211" fill="#93c5fd" font-size="25" font-weight="700" text-anchor="middle">value</text>
+<path d="M211 202 L338 202" stroke="#93c5fd" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="352" y="172" width="232" height="60" rx="14" fill="#173c39" stroke="#6ee7b7" stroke-width="2"/>
+<text x="468" y="211" fill="#6ee7b7" font-size="23" font-weight="700" text-anchor="middle">key 1 · &quot;one&quot;</text>
+<text x="52" y="259" fill="#b9c7dc" font-size="20" font-weight="400" text-anchor="start">const std::string*</text>
+<rect x="108" y="310" width="424" height="65" rx="14" fill="#263b56" stroke="#93c5fd" stroke-width="2"/>
+<text x="320" y="351" fill="#93c5fd" font-size="25" font-weight="700" text-anchor="middle">lookup.rehash(100)</text>
+<text x="320" y="406" fill="#b9c7dc" font-size="21" font-weight="400" text-anchor="middle">100은 버킷 수의 하한 요청</text>
+<path d="M320 419 L170 419 L170 447" stroke="#93c5fd" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<path d="M320 419 L470 419 L470 447" stroke="#93c5fd" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="32" y="461" width="276" height="217" rx="14" fill="#1d2b41" stroke="none" stroke-width="2"/>
+<rect x="332" y="461" width="276" height="217" rx="14" fill="#1d2b41" stroke="none" stroke-width="2"/>
+<text x="52" y="500" fill="#fde68a" font-size="24" font-weight="700" text-anchor="start">이전 반복자</text>
+<text x="52" y="542" fill="#e5edff" font-size="23" font-weight="400" text-anchor="start">다시 얻어야 함</text>
+<text x="52" y="589" fill="#b9c7dc" font-size="21" font-weight="400" text-anchor="start">기존 순회 위치를</text>
+<text x="52" y="625" fill="#b9c7dc" font-size="21" font-weight="400" text-anchor="start">재사용하지 않음</text>
+<text x="352" y="500" fill="#6ee7b7" font-size="22" font-weight="700" text-anchor="start">원소 포인터 value</text>
+<text x="352" y="542" fill="#e5edff" font-size="21" font-weight="400" text-anchor="start">같은 원소를 가리킴</text>
+<rect x="352" y="567" width="236" height="75" rx="14" fill="#173c39" stroke="#6ee7b7" stroke-width="2"/>
+<text x="470" y="613" fill="#6ee7b7" font-size="26" font-weight="700" text-anchor="middle">&quot;one&quot;</text>
+<rect x="32" y="710" width="576" height="104" rx="14" fill="#173c39" stroke="#6ee7b7" stroke-width="2"/>
+<text x="52" y="750" fill="#6ee7b7" font-size="22" font-weight="700" text-anchor="start">확인: 포인터의 주소 동일 + 값 &quot;one&quot;</text>
+<text x="52" y="787" fill="#e5edff" font-size="20" font-weight="400" text-anchor="start">이전 반복자를 사용하는 검사는 하지 않음</text>
+<text x="32" y="850" fill="#b9c7dc" font-size="19" font-weight="400" text-anchor="start">실제 버킷 개수·배치·주소를 그린 그림은 아닙니다.</text>
+</g>
+</svg>

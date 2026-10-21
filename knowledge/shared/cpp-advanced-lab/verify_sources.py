@@ -23,9 +23,12 @@ COUNTS = {"lifetime": 10, "ownership": 13, "polymorphism": 12, "templates": 10,
 ANNOTATED = {"check.hpp": (0, 0), "lifetime.cpp": (7, 3),
              "ownership.cpp": (11, 2), "transaction.cpp": (6, 2),
              "polymorphism.cpp": (10, 2), "templates.cpp": (8, 2),
-             "interfaces.cpp": (6, 1)}
+             "interfaces.cpp": (6, 1), "containers.cpp": (14, 0),
+             "allocation.cpp": (5, 2), "pimpl.hpp": (0, 0),
+             "pimpl.cpp": (0, 0), "pimpl_main.cpp": (5, 1)}
 LESSON_GROUPS = {"01-02": ("lifetime", "ownership", "transaction"),
-                "03-04": ("polymorphism", "templates", "interfaces")}
+                "03-04": ("polymorphism", "templates", "interfaces"),
+                "05-06": ("containers", "allocation", "pimpl")}
 
 IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z_0-9]*")
 
@@ -156,7 +159,7 @@ def verify():
     captures = {}
     pairs = [(ROOT / "source-notion-index.md", ROOT / "source-notion-index-capture.json")]
     pairs += [(repo / ("knowledge/cpp-advanced-" + number + "/source-notion.md"),
-               repo / ("knowledge/cpp-advanced-" + number + "/source-notion-capture.json")) for number in ("01", "02", "03", "04")]
+               repo / ("knowledge/cpp-advanced-" + number + "/source-notion-capture.json")) for number in ("01", "02", "03", "04", "05", "06")]
     for source, capture in pairs:
         data = source.read_bytes()
         record = json.loads(capture.read_text(encoding="utf-8"))
@@ -242,13 +245,13 @@ def verify():
         "historical_log_file_count": 22, "markdown_code_block_count": 21, "markdown_zip_boundaries": boundaries,
         "validation_negative_blocks_exact": 6, "annotated_files": annotations,
         "original_runtime_check_invocations": COUNTS,
-        "original_runtime_check_invocations_total": 89, "selected_lessons_runtime_check_invocations": 60,
-        "selected_lessons": "01-04", "current_batch": "03-04",
+        "original_runtime_check_invocations_total": 89, "selected_lessons_runtime_check_invocations": 89,
+        "selected_lessons": "01-06", "current_batch": "05-06",
         "runtime_check_invocations_by_lesson_batch": {
             batch: sum(COUNTS[name] for name in names) for batch, names in LESSON_GROUPS.items()},
         "current_batch_runtime_check_invocations": 29,
-        "annotation_check_invocations_repeat_original": 60,
-        "counting_note": "89 counts calls in nine original programs. Lessons 01-02 account for 31 (10+13+8), and current lessons 03-04 for 29 (12+10+7), totaling 60 across annotated programs. ownership includes one Expect(true) following a compile-time guaranteed-elision example. templates has three static_assert sites, interfaces one, and ownership two; these are separate from runtime calls. Compiler/annotation reruns add no independent conditions.",
+        "annotation_check_invocations_repeat_original": 89,
+        "counting_note": "89 counts calls in nine original programs. Lessons 01-02 account for 31 (10+13+8), lessons 03-04 for 29 (12+10+7), and current lessons 05-06 for 29 (16+7+6), totaling 89 across annotated programs. containers has 14 Expect call sites but executes 16 calls because its three-item irreflexivity loop invokes one site three times. ownership includes one Expect(true) following a compile-time guaranteed-elision example. templates has three static_assert sites, interfaces one, ownership two, and pimpl_main one; these are separate from runtime calls. Compiler/annotation reruns add no independent conditions.",
         "limitations": ["Source fidelity and historical logs do not replace a new compile/run.",
                        "Recovered historical ZIP identity is confirmed against the Notion-recorded SHA-256.",
                        "Windows/MSVC, GPU, concurrency, ABI and performance were not validated by this script.",
@@ -277,7 +280,7 @@ def main():
         print("PASS: 21 Markdown blocks equal ZIP files plus one LF; six Notion negative blocks exact")
         for name, data in result["annotated_files"].items():
             print("PASS: {}: {} identical C++ tokens".format(name, data["cpp_token_count"]))
-        print("NOTE: fresh execution recorded separately; 89 whole-pack calls; lessons 01-02: 31, current 03-04: 29, annotated total: 60")
+        print("NOTE: fresh execution recorded separately; 89 whole-pack calls; lessons 01-02: 31, 03-04: 29, current 05-06: 29, annotated total: 89")
     return 0
 
 

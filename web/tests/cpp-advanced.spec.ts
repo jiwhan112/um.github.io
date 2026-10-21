@@ -5,7 +5,9 @@ const chapters=[
   {slug:'cpp-advanced-01',sources:['lifetime.cpp','check.hpp'],entry:'lifetime.cpp',previous:'cpp-basics-05',next:'cpp-advanced-02'},
   {slug:'cpp-advanced-02',sources:['ownership.cpp','transaction.cpp'],entry:'ownership.cpp',previous:'cpp-advanced-01',next:'cpp-advanced-03'},
   {slug:'cpp-advanced-03',sources:['polymorphism.cpp'],entry:'polymorphism.cpp',previous:'cpp-advanced-02',next:'cpp-advanced-04'},
-  {slug:'cpp-advanced-04',sources:['templates.cpp','interfaces.cpp'],entry:'templates.cpp',previous:'cpp-advanced-03',next:null},
+  {slug:'cpp-advanced-04',sources:['templates.cpp','interfaces.cpp'],entry:'templates.cpp',previous:'cpp-advanced-03',next:'cpp-advanced-05'},
+  {slug:'cpp-advanced-05',sources:['containers.cpp'],entry:'containers.cpp',previous:'cpp-advanced-04',next:'cpp-advanced-06'},
+  {slug:'cpp-advanced-06',sources:['allocation.cpp','pimpl.hpp','pimpl.cpp','pimpl_main.cpp'],entry:'allocation.cpp',previous:'cpp-advanced-05',next:null},
 ];
 
 for(const chapter of chapters)test(`${chapter.slug} renders concept visuals and connects exact full sources`,async({page,request},testInfo)=>{

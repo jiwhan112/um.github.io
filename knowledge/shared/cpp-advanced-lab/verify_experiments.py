@@ -15,9 +15,11 @@ import tempfile
 ROOT = Path(__file__).resolve().parent
 COUNTS = {"lifetime": 10, "ownership": 13, "polymorphism": 12, "templates": 10,
           "containers": 16, "interfaces": 7, "transaction": 8, "allocation": 7, "pimpl": 6}
-ANNOTATED = ("lifetime", "ownership", "transaction", "polymorphism", "templates", "interfaces")
+ANNOTATED = ("lifetime", "ownership", "transaction", "polymorphism", "templates", "interfaces",
+             "containers", "allocation", "pimpl")
 LESSON_GROUPS = {"01-02": ("lifetime", "ownership", "transaction"),
-                "03-04": ("polymorphism", "templates", "interfaces")}
+                "03-04": ("polymorphism", "templates", "interfaces"),
+                "05-06": ("containers", "allocation", "pimpl")}
 
 
 def sources(name, annotated=False):
@@ -43,12 +45,12 @@ def main():
         "status": "running",
         "commands": [],
         "results": [],
-        "selected_lessons": "01-04",
-        "current_batch": "03-04",
+        "selected_lessons": "01-06",
+        "current_batch": "05-06",
         "runtime_check_invocations_by_lesson_batch": {
             batch: sum(COUNTS[name] for name in names) for batch, names in LESSON_GROUPS.items()},
         "current_batch_runtime_check_invocations": 29,
-        "counting_note": "Original nine programs count 89 calls. Lessons 01-02 count 31 (10+13+8); current lessons 03-04 count 29 (12+10+7), totaling 60 across annotated programs. ownership includes Expect(true) after a compile-time construction example. templates has three static_assert sites, interfaces one, and ownership two; these are separate from runtime calls. Annotation/compiler reruns are not independent conditions.",
+        "counting_note": "Original nine programs count 89 calls. Lessons 01-02 count 31 (10+13+8), lessons 03-04 count 29 (12+10+7), and current lessons 05-06 count 29 (16+7+6), totaling 89 across annotated programs. containers has 14 Expect call sites but executes 16 calls because one irreflexivity site runs for three items. ownership includes Expect(true) after a compile-time construction example. templates has three static_assert sites, interfaces one, ownership two, and pimpl_main one; these are separate from runtime calls. Annotation/compiler reruns are not independent conditions.",
     }
     env = os.environ.copy()
     env.update({"ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1", "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"})
@@ -111,8 +113,8 @@ def main():
                     outputs[label] = result.stdout
                 for name in ANNOTATED:
                     require(outputs[name] == outputs[name + "_ko"], name + ": 원본·주석판 stdout 불일치")
-                report.update({"original_runtime_check_invocations": 89, "selected_lessons_runtime_check_invocations": 60,
-                               "annotation_check_invocations_repeat_original": 60, "all_stdout_pairs_equal": True,
+                report.update({"original_runtime_check_invocations": 89, "selected_lessons_runtime_check_invocations": 89,
+                               "annotation_check_invocations_repeat_original": 89, "all_stdout_pairs_equal": True,
                                "stdout_pair_count": len(ANNOTATED), "stdout_paired_programs": list(ANNOTATED),
                                "stdout_normalization_applied": False, "cmake_ctest_executed": False})
             elif args.mode == "compare":
@@ -126,8 +128,8 @@ def main():
                     require(original.stdout == annotated.stdout, name + ": 원본·주석판 stdout 불일치")
                 report.update({"all_stdout_pairs_equal": True, "stdout_normalization_applied": False,
                                "stdout_pair_count": len(ANNOTATED), "stdout_paired_programs": list(ANNOTATED),
-                               "selected_lessons_runtime_check_invocations": 60,
-                               "annotation_check_invocations_repeat_original": 60})
+                               "selected_lessons_runtime_check_invocations": 89,
+                               "annotation_check_invocations_repeat_original": 89})
             elif args.mode == "negative":
                 for source in sorted((ROOT / "original/negative").glob("*.cpp")):
                     result = run(source.stem, [compiler, "-std=c++20", "-pedantic-errors", "-c", str(source),

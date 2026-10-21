@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "scope": "2026-10-21 local GCC direct execution for advanced lessons 05-06; original nine plus nine annotations; excludes all earlier historical/local/GitHub evidence.",
+  "source_integrity_sha256": "3b9583eadc5d31c3ddf52f562a17c5fc22bde9c271792f5b251a80c600696929",
+  "verification_script_sha256": "c304b39e3e7c1a57c24ae7d25cd19d42eb3cc11419452693b07f4ab1327a728e",
+  "file_count": 61,
+  "total_bytes": 99713,
+  "files": {
+    "cxx11/allocation.txt": {
+      "bytes": 6957,
+      "sha256": "252e24b4840f5b9f8a49d1856676c356000ca070a211930751bf38e01d95ba6b"
+    },
+    "cxx11/compiler-version.txt": {
+      "bytes": 244,
+      "sha256": "78b5d66fa8e53c3cfadb14889dfb5936f1c58888ad49c019e15d3dc59fc64e30"
+    },
+    "cxx11/containers.txt": {
+      "bytes": 6329,
+      "sha256": "badf7429e4e830c54184c2efdd57746c3b778e445dd470f28068a9425a02b399"
+    },
+    "cxx11/interfaces.txt": {
+      "bytes": 5030,
+      "sha256": "74a80e822d8cc68b760c98c7de68ae79d5b2df1d556ce62aa9b85e45089fc1f0"
+    },
+    "cxx11/lifetime.txt": {
+      "bytes": 1294,
+      "sha256": "97498bbb8e5dda2cbf720a7047b14d9e0543715ac2fb89d8e4545dd70d0b7296"
+    },
+    "cxx11/ownership.txt": {
+      "bytes": 9809,
+      "sha256": "669019cbbdc61d93215d932a599a681e83f29a341b208f934bf8958dcf27aa9b"
+    },
+    "cxx11/pimpl.txt": {
+      "bytes": 5759,
+      "sha256": "3bbbc937721d8e915af0437d05f1106432dfcedb9a9338020bb0a80f845d0396"
+    },
+    "cxx11/polymorphism.txt": {
+      "bytes": 3313,
+      "sha256": "c32e603cb5a99868c799d5b3bebeec45c9243440d2cd50183f97f147a70fa2aa"
+    },
+    "cxx11/results.json": {
+      "bytes": 7680,
+      "sha256": "9df7f40d5dd0b74f2db7a14531d41e20116c49166bba743acb4f13911b76853f"
+    },
+    "cxx11/templates.txt": {
+      "bytes": 10887,
+      "sha256": "c0b4e14cc297560319197f486d92aee688aa32296c62199346138bc5f46c3bd9"
+    },
+    "cxx11/transaction.txt": {
+      "bytes": 5139,
+      "sha256": "c702a99e0a0910a7485cf45a667b2e3f77ab040a4a540b7e0a63e0a2f2cb73c3"
+    },
+    "environment.json": {
+      "bytes": 1201,
+      "sha256": "4ea1094814a3cf2ae3896fe26c7f0289a50e1eb4db1709c69bde45f11d03b7e5"
+    },
+    "negative/compiler-version.txt": {
+      "bytes": 244,
+      "sha256": "78b5d66fa8e53c3cfadb14889dfb5936f1c58888ad49c019e15d3dc59fc64e30"
+    },
+    "negative/constraint.txt": {
+      "bytes": 1756,
+      "sha256": "b4c3a743dfbacdf4a16908cbf369cb17eeaf5bbbd5e23a7ff4ab1222f5f13e23"
+    },
+    "negative/copy_by_value.txt": {
+      "bytes": 252,
+      "sha256": "dfc39e00608cda15bf4f723ae710bfa6e221d0dd97b7253adede5847ba2fde2a"
+    },
+    "negative/copy_unique.txt": {
+      "bytes": 893,
+      "sha256": "f4f6e59065bc0a50e2a98614337104d2cf1499fc1f4ba0b70f04b32765e6b193"
+    },
+    "negative/list_sort.txt": {
+      "bytes": 2602,
+      "sha256": "abbed9a2924d38c45d83541e69e22151893353169adc42d46b6d58269f3e7c31"
+    },
+    "negative/results.json": {
+      "bytes": 5154,
+      "sha256": "e3a88f37834e35f52f547a44497747e15542d04b9b5fb763e3e39cbbcc44b308"
+    },
+    "negative/temporary_view.txt": {
+      "bytes": 730,
+      "sha256": "bac9a2761e4a27d05bb671ef157345a3728d89558cf7ef8028596350c654f0e1"
+    },
+    "negative/wrong_override.txt": {
+      "bytes": 312,
+      "sha256": "a6dcef447eaa870625765d8a4ca9557ade14ca6fa0cfbd6604d16a6e4a788926"
+    },
+    "positive/allocation-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/allocation-run.txt": {
+      "bytes": 26,
+      "sha256": "51627b1bf3847b1bae271d763e4469353fb22a000ed7a9e4165c4812db689af2"
+    },
+    "positive/allocation_ko-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/allocation_ko-run.txt": {
+      "bytes": 26,
+      "sha256": "51627b1bf3847b1bae271d763e4469353fb22a000ed7a9e4165c4812db689af2"
+    },
+    "positive/compiler-version.txt": {
+      "bytes": 244,
+      "sha256": "78b5d66fa8e53c3cfadb14889dfb5936f1c58888ad49c019e15d3dc59fc64e30"
+    },
+    "positive/containers-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/containers-run.txt": {
+      "bytes": 27,
+      "sha256": "ff1668e76f2ecde6f08b90fad911dfc0e056a28486337d62473f3f31079260b8"
+    },
+    "positive/containers_ko-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/containers_ko-run.txt": {
+      "bytes": 27,
+      "sha256": "ff1668e76f2ecde6f08b90fad911dfc0e056a28486337d62473f3f31079260b8"
+    },
+    "positive/interfaces-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/interfaces-run.txt": {
+      "bytes": 26,
+      "sha256": "957e78288c75dbcdd74f53e9591d85218467f7fb3962ca04dfda28cf81bd0ac8"
+    },
+    "positive/interfaces_ko-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/interfaces_ko-run.txt": {
+      "bytes": 26,
+      "sha256": "957e78288c75dbcdd74f53e9591d85218467f7fb3962ca04dfda28cf81bd0ac8"
+    },
+    "positive/lifetime-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/lifetime-run.txt": {
+      "bytes": 25,
+      "sha256": "af7f57f4817199c50be6805445f0299b23e81228dc9298626723dc5c55f9f9de"
+    },
+    "positive/lifetime_ko-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/lifetime_ko-run.txt": {
+      "bytes": 25,
+      "sha256": "af7f57f4817199c50be6805445f0299b23e81228dc9298626723dc5c55f9f9de"
+    },
+    "positive/ownership-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/ownership-run.txt": {
+      "bytes": 26,
+      "sha256": "13eb7b435aa4c720428479c80ba437028323a9955f0c185c078407dc1fa629d8"
+    },
+    "positive/ownership_ko-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/ownership_ko-run.txt": {
+      "bytes": 26,
+      "sha256": "13eb7b435aa4c720428479c80ba437028323a9955f0c185c078407dc1fa629d8"
+    },
+    "positive/pimpl-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/pimpl-run.txt": {
+      "bytes": 21,
+      "sha256": "cdbda767df16b2a973b703e955a31f8d5324af2299614e23ae0021bde036dea7"
+    },
+    "positive/pimpl_ko-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/pimpl_ko-run.txt": {
+      "bytes": 21,
+      "sha256": "cdbda767df16b2a973b703e955a31f8d5324af2299614e23ae0021bde036dea7"
+    },
+    "positive/polymorphism-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/polymorphism-run.txt": {
+      "bytes": 29,
+      "sha256": "6333a4852341c2315a1324177e67728e9f154b2e425ac9387fd58397f7156f36"
+    },
+    "positive/polymorphism_ko-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/polymorphism_ko-run.txt": {
+      "bytes": 29,
+      "sha256": "6333a4852341c2315a1324177e67728e9f154b2e425ac9387fd58397f7156f36"
+    },
+    "positive/results.json": {
+      "bytes": 23302,
+      "sha256": "aacb9de2baf383a6635ea69cb8d6aaee459328c2cea1d62c5ce16113b8ab044d"
+    },
+    "positive/templates-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/templates-run.txt": {
+      "bytes": 26,
+      "sha256": "b77ad35c332b4ddb4a1ed72516332a4346924685be34b4889a6fc1331a6a7fda"
+    },
+    "positive/templates_ko-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/templates_ko-run.txt": {
+      "bytes": 26,
+      "sha256": "b77ad35c332b4ddb4a1ed72516332a4346924685be34b4889a6fc1331a6a7fda"
+    },
+    "positive/transaction-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/transaction-run.txt": {
+      "bytes": 27,
+      "sha256": "6b66f8995c31607f66557662702a67fa00c3c7d753b01b1700a76b243aaaaf58"
+    },
+    "positive/transaction_ko-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/transaction_ko-run.txt": {
+      "bytes": 27,
+      "sha256": "6b66f8995c31607f66557662702a67fa00c3c7d753b01b1700a76b243aaaaf58"
+    },
+    "positive/unsigned-width-build.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive/unsigned-width-probe.cpp": {
+      "bytes": 113,
+      "sha256": "aaefd2d61cb88c709c6c7d26366fa41bba3abd58b119191da082417b5461ad12"
+    },
+    "positive/unsigned-width-run.txt": {
+      "bytes": 3,
+      "sha256": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4"
+    }
+  }
+}
