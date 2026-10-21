@@ -38,6 +38,18 @@
       "sha256": "ff5da3b946c807fe4c1075149db28113885081bb7ab9034bece717b0ed414323",
       "capture": "knowledge/cpp-advanced-02/source-notion-capture.json",
       "matches_capture": true
+    },
+    "knowledge/cpp-advanced-03/source-notion.md": {
+      "bytes": 11117,
+      "sha256": "8d6fa796e736fd151a560051be777055b6571917119347172bcc6a16c620183e",
+      "capture": "knowledge/cpp-advanced-03/source-notion-capture.json",
+      "matches_capture": true
+    },
+    "knowledge/cpp-advanced-04/source-notion.md": {
+      "bytes": 12543,
+      "sha256": "b3acf306602488836c3e25c182c76b610949b1f3ebfcdf5a9b6dfa58e5e93e02",
+      "capture": "knowledge/cpp-advanced-04/source-notion-capture.json",
+      "matches_capture": true
     }
   },
   "zip_file_count": 44,
@@ -656,6 +668,42 @@
       "throws_call_sites": 2,
       "unconditional_expect_true_sites": 0,
       "static_assert_call_sites": 0
+    },
+    "ko/polymorphism.cpp": {
+      "bytes": 6209,
+      "sha256": "926d6a94ce56a14099c1eef078c92a92cda34de6e0876f906d941e16dd379121",
+      "original": "original/src/polymorphism.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 927,
+      "directives_exact": true,
+      "expect_call_sites": 10,
+      "throws_call_sites": 2,
+      "unconditional_expect_true_sites": 0,
+      "static_assert_call_sites": 0
+    },
+    "ko/templates.cpp": {
+      "bytes": 4956,
+      "sha256": "2b9417700081a1b9338eed8f4aed41e2f28285586f8f0aa41099eba5facfd1e8",
+      "original": "original/src/templates.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 727,
+      "directives_exact": true,
+      "expect_call_sites": 8,
+      "throws_call_sites": 2,
+      "unconditional_expect_true_sites": 0,
+      "static_assert_call_sites": 3
+    },
+    "ko/interfaces.cpp": {
+      "bytes": 4101,
+      "sha256": "289abb8866a0b1832a63853dbb12805f3a0d982d7df379d998fa4b24ce1c7a70",
+      "original": "original/src/interfaces.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 562,
+      "directives_exact": true,
+      "expect_call_sites": 6,
+      "throws_call_sites": 1,
+      "unconditional_expect_true_sites": 0,
+      "static_assert_call_sites": 1
     }
   },
   "original_runtime_check_invocations": {
@@ -670,9 +718,16 @@
     "pimpl": 6
   },
   "original_runtime_check_invocations_total": 89,
-  "selected_lessons_runtime_check_invocations": 31,
-  "annotation_check_invocations_repeat_original": 31,
-  "counting_note": "89 counts calls in nine original programs. The selected 01-02 programs account for 31 (10+13+8). ownership includes one Expect(true) following a compile-time guaranteed-elision example. Compiler/annotation reruns add no independent conditions.",
+  "selected_lessons_runtime_check_invocations": 60,
+  "selected_lessons": "01-04",
+  "current_batch": "03-04",
+  "runtime_check_invocations_by_lesson_batch": {
+    "01-02": 31,
+    "03-04": 29
+  },
+  "current_batch_runtime_check_invocations": 29,
+  "annotation_check_invocations_repeat_original": 60,
+  "counting_note": "89 counts calls in nine original programs. Lessons 01-02 account for 31 (10+13+8), and current lessons 03-04 for 29 (12+10+7), totaling 60 across annotated programs. ownership includes one Expect(true) following a compile-time guaranteed-elision example. templates has three static_assert sites, interfaces one, and ownership two; these are separate from runtime calls. Compiler/annotation reruns add no independent conditions.",
   "limitations": [
     "Source fidelity and historical logs do not replace a new compile/run.",
     "Recovered historical ZIP identity is confirmed against the Notion-recorded SHA-256.",

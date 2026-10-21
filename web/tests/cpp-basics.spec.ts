@@ -132,11 +132,11 @@ test('bitmask operations distinguish clearing from toggling and preserve existin
   expect(saved.other).toBe('keep-me');
 });
 
-test('C++ curriculum follows foundations 01–05 with advanced 01–02', async ({ page, isMobile }) => {
+test('C++ curriculum follows foundations 01–05 with advanced 01–04', async ({ page, isMobile }) => {
   await page.goto('knowledge/');
   const cpp = page.locator('#knowledge-cpp');
-  const order=[...chapters.map(chapter=>chapter.slug),'cpp-advanced-01','cpp-advanced-02'];
-  await expect(cpp.locator('.knowledge-document-link')).toHaveCount(7);
+  const order=[...chapters.map(chapter=>chapter.slug),'cpp-advanced-01','cpp-advanced-02','cpp-advanced-03','cpp-advanced-04'];
+  await expect(cpp.locator('.knowledge-document-link')).toHaveCount(9);
   expect(await cpp.locator('.knowledge-document-link').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')))).toEqual(order.map(slug => `/um.github.io/knowledge/${slug}/`));
   const expected=order.map(slug=>`/um.github.io/knowledge/${slug}/`);
   expect(await page.locator('.sidebar .chapter-nav a[href*="/knowledge/cpp-"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(expected);

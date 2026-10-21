@@ -1,0 +1,7 @@
+/home/runner/work/um.github.io/um.github.io/knowledge/shared/cpp-advanced-lab/original/negative/copy_unique.cpp:2:52: error: call to deleted constructor of '__detail::__unique_ptr_t<int>' (aka 'unique_ptr<int>')
+    2 | void F() { auto a = std::make_unique<int>(1); auto b = a; }
+      |                                                    ^   ~
+/usr/bin/../lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/unique_ptr.h:516:7: note: 'unique_ptr' has been explicitly marked deleted here
+  516 |       unique_ptr(const unique_ptr&) = delete;
+      |       ^
+1 error generated.

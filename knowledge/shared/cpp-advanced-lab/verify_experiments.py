@@ -15,7 +15,9 @@ import tempfile
 ROOT = Path(__file__).resolve().parent
 COUNTS = {"lifetime": 10, "ownership": 13, "polymorphism": 12, "templates": 10,
           "containers": 16, "interfaces": 7, "transaction": 8, "allocation": 7, "pimpl": 6}
-ANNOTATED = ("lifetime", "ownership", "transaction")
+ANNOTATED = ("lifetime", "ownership", "transaction", "polymorphism", "templates", "interfaces")
+LESSON_GROUPS = {"01-02": ("lifetime", "ownership", "transaction"),
+                "03-04": ("polymorphism", "templates", "interfaces")}
 
 
 def sources(name, annotated=False):
@@ -32,7 +34,7 @@ def main():
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     compiler = shutil.which(args.compiler)
-    if args.mode != "compare" and not compiler:
+    if not compiler:
         parser.error("컴파일러를 찾지 못했습니다: " + args.compiler)
     report = {
         "mode": args.mode,
@@ -41,7 +43,12 @@ def main():
         "status": "running",
         "commands": [],
         "results": [],
-        "counting_note": "Original nine programs count 89 calls; selected lessons 01-02 count 31 (10+13+8). ownership includes Expect(true) after a compile-time construction example. Annotation/compiler reruns are not independent conditions.",
+        "selected_lessons": "01-04",
+        "current_batch": "03-04",
+        "runtime_check_invocations_by_lesson_batch": {
+            batch: sum(COUNTS[name] for name in names) for batch, names in LESSON_GROUPS.items()},
+        "current_batch_runtime_check_invocations": 29,
+        "counting_note": "Original nine programs count 89 calls. Lessons 01-02 count 31 (10+13+8); current lessons 03-04 count 29 (12+10+7), totaling 60 across annotated programs. ownership includes Expect(true) after a compile-time construction example. templates has three static_assert sites, interfaces one, and ownership two; these are separate from runtime calls. Annotation/compiler reruns are not independent conditions.",
     }
     env = os.environ.copy()
     env.update({"ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1", "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"})
@@ -71,6 +78,23 @@ def main():
             report["compiler"] = version.stdout.decode("utf-8", errors="replace").splitlines()[0]
         with tempfile.TemporaryDirectory(prefix="atlas-cpp-advanced-") as temporary:
             temp = Path(temporary)
+            if args.mode in ("positive-direct", "compare"):
+                # PowerOfTwo의 원본 제한 31은 타입의 비트 폭을 계산하지 않는다.
+                # 환경 폭을 별도로 기록하며 원본 수정이나 새로운 논리 검사로 집계하지 않는다.
+                probe_source = args.out / "unsigned-width-probe.cpp"
+                probe_source.write_text(
+                    '#include <iostream>\n#include <limits>\n'
+                    "int main() { std::cout << std::numeric_limits<unsigned>::digits << '\\n'; }\n",
+                    encoding="utf-8")
+                probe_binary = temp / "unsigned-width-probe"
+                probe_build = run("unsigned-width-build", [compiler, "-std=c++20", "-pedantic-errors",
+                                  str(probe_source.resolve()), "-o", str(probe_binary)])
+                require(probe_build.returncode == 0, "unsigned 환경 폭 조회 빌드 실패")
+                probe_run = run("unsigned-width-run", [str(probe_binary)])
+                require(probe_run.returncode == 0 and probe_run.stdout.strip().isdigit(),
+                        "unsigned 환경 폭 조회 실행 실패")
+                report["unsigned_value_bits"] = int(probe_run.stdout.strip())
+                report["unsigned_width_probe_is_ctest_case"] = False
             if args.mode == "positive-direct":
                 outputs = {}
                 tasks = [(name, name, False) for name in COUNTS]
@@ -87,8 +111,9 @@ def main():
                     outputs[label] = result.stdout
                 for name in ANNOTATED:
                     require(outputs[name] == outputs[name + "_ko"], name + ": 원본·주석판 stdout 불일치")
-                report.update({"original_runtime_check_invocations": 89, "selected_lessons_runtime_check_invocations": 31,
-                               "annotation_check_invocations_repeat_original": 31, "all_three_stdout_pairs_equal": True,
+                report.update({"original_runtime_check_invocations": 89, "selected_lessons_runtime_check_invocations": 60,
+                               "annotation_check_invocations_repeat_original": 60, "all_stdout_pairs_equal": True,
+                               "stdout_pair_count": len(ANNOTATED), "stdout_paired_programs": list(ANNOTATED),
                                "stdout_normalization_applied": False, "cmake_ctest_executed": False})
             elif args.mode == "compare":
                 require(args.build is not None, "--build 경로가 필요합니다")
@@ -99,9 +124,10 @@ def main():
                     normal(name, name, original)
                     normal(name + "_ko", name, annotated)
                     require(original.stdout == annotated.stdout, name + ": 원본·주석판 stdout 불일치")
-                report.update({"all_three_stdout_pairs_equal": True, "stdout_normalization_applied": False,
-                               "selected_lessons_runtime_check_invocations": 31,
-                               "annotation_check_invocations_repeat_original": 31})
+                report.update({"all_stdout_pairs_equal": True, "stdout_normalization_applied": False,
+                               "stdout_pair_count": len(ANNOTATED), "stdout_paired_programs": list(ANNOTATED),
+                               "selected_lessons_runtime_check_invocations": 60,
+                               "annotation_check_invocations_repeat_original": 60})
             elif args.mode == "negative":
                 for source in sorted((ROOT / "original/negative").glob("*.cpp")):
                     result = run(source.stem, [compiler, "-std=c++20", "-pedantic-errors", "-c", str(source),

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="765" viewBox="0 0 640 765" role="img" aria-labelledby="title desc">
+<title id="title">가상 함수의 기본 인수와 실제 구현</title>
+<desc id="desc">동일한 Fire 객체를 Effect 참조로 부르면 기본 인수 2가 선택되고 Fire 구현이 20을 반환한다. 구체 Fire를 통해 부르면 기본 인수 3으로 같은 Fire 구현이 30을 반환한다. 기본 인수와 가상 함수 본체의 선택은 다르다.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#93c5fd"/></marker></defs>
+<rect width="640" height="765" rx="20" fill="#0f172a"/>
+<g font-family="Noto Sans KR, Malgun Gothic, sans-serif">
+<text x="32" y="48" font-size="28" fill="#e8f0ff" font-weight="700" text-anchor="start">같은 Fire, 다른 기본 인수</text>
+<text x="32" y="88" font-size="22" fill="#b8c7dd" font-weight="400" text-anchor="start">두 호출의 대상은 하나의 Fire 객체입니다.</text>
+<rect x="32" y="118" width="276" height="100" rx="12" fill="#1c2a41"/>
+<text x="50" y="154" font-size="22" fill="#93c5fd" font-weight="700" text-anchor="start">base.Strength()</text>
+<text x="50" y="192" font-size="23" fill="#b8c7dd" font-weight="400" text-anchor="start">Effect 선언을 봄</text>
+<path d="M170 222 L170 253" fill="none" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="260" width="276" height="113" rx="12" fill="#1c2a41"/>
+<text x="50" y="299" font-size="24" fill="#93c5fd" font-weight="700" text-anchor="start">기본 인수 선택</text>
+<text x="50" y="344" font-size="28" fill="#e8f0ff" font-weight="400" text-anchor="start">scale = 2</text>
+<path d="M170 377 L170 408" fill="none" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="415" width="276" height="132" rx="12" fill="#173a38" stroke="#6ee7b7" stroke-width="2"/>
+<text x="50" y="453" font-size="24" fill="#6ee7b7" font-weight="700" text-anchor="start">Fire::Strength</text>
+<text x="50" y="491" font-size="22" fill="#b8c7dd" font-weight="400" text-anchor="start">같은 가상 함수 본체</text>
+<text x="50" y="529" font-size="26" fill="#e8f0ff" font-weight="700" text-anchor="start">2 × 10 = 20</text>
+<rect x="332" y="118" width="276" height="100" rx="12" fill="#1c2a41"/>
+<text x="350" y="154" font-size="22" fill="#6ee7b7" font-weight="700" text-anchor="start">concrete-&gt;Strength()</text>
+<text x="350" y="192" font-size="23" fill="#b8c7dd" font-weight="400" text-anchor="start">Fire 선언을 봄</text>
+<path d="M470 222 L470 253" fill="none" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="332" y="260" width="276" height="113" rx="12" fill="#1c2a41"/>
+<text x="350" y="299" font-size="24" fill="#6ee7b7" font-weight="700" text-anchor="start">기본 인수 선택</text>
+<text x="350" y="344" font-size="28" fill="#e8f0ff" font-weight="400" text-anchor="start">scale = 3</text>
+<path d="M470 377 L470 408" fill="none" stroke="#93c5fd" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="332" y="415" width="276" height="132" rx="12" fill="#173a38" stroke="#6ee7b7" stroke-width="2"/>
+<text x="350" y="453" font-size="24" fill="#6ee7b7" font-weight="700" text-anchor="start">Fire::Strength</text>
+<text x="350" y="491" font-size="22" fill="#b8c7dd" font-weight="400" text-anchor="start">같은 가상 함수 본체</text>
+<text x="350" y="529" font-size="26" fill="#e8f0ff" font-weight="700" text-anchor="start">3 × 10 = 30</text>
+<rect x="32" y="579" width="576" height="113" rx="12" fill="#1c2a41"/>
+<text x="52" y="619" font-size="24" fill="#93c5fd" font-weight="700" text-anchor="start">기본 인수: 호출식에서 보이는 선언</text>
+<text x="52" y="661" font-size="24" fill="#6ee7b7" font-weight="700" text-anchor="start">함수 본체: 실제 Fire의 최종 재정의</text>
+<text x="32" y="733" font-size="21" fill="#b8c7dd" font-weight="400" text-anchor="start">기본값을 다르게 두었을 때의 주의 예제입니다.</text>
+</g>
+</svg>

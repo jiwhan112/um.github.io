@@ -88,8 +88,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,79);
- assert.equal(sourceCatalog.length,79);
+ assert.equal(docs.length,81);
+ assert.equal(sourceCatalog.length,81);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -440,6 +440,7 @@ test('C++ course order keeps foundations before advanced lessons in both navigat
  assert.deepEqual(ordered.map(d=>d.route),[
   '/knowledge/cpp-basics-01/','/knowledge/cpp-basics-02/','/knowledge/cpp-basics-03/',
   '/knowledge/cpp-basics-04/','/knowledge/cpp-basics-05/','/knowledge/cpp-advanced-01/','/knowledge/cpp-advanced-02/',
+  '/knowledge/cpp-advanced-03/','/knowledge/cpp-advanced-04/',
  ]);
 });
 
@@ -469,7 +470,7 @@ test('advanced lessons preserve ZIP bytes, historical evidence, complete annotat
   }
  }
  assert.equal(createHash('sha256').update(await readFile('public/'+base+'archive/cpp_advanced_effective_lab_v1.zip')).digest('hex'),'a97a4927e5d3472ad055dbffbad0e14ab72c4c81f6ea13a1d72b771d64d339ba');
- for(const [number,files]of [['01',['lifetime.cpp','check.hpp']],['02',['ownership.cpp','transaction.cpp']]]as const){
+ for(const [number,files]of [['01',['lifetime.cpp','check.hpp']],['02',['ownership.cpp','transaction.cpp']],['03',['polymorphism.cpp']],['04',['templates.cpp','interfaces.cpp']]]as const){
   const slug='cpp-advanced-'+number;
   const meta=catalog.documents.find(d=>d.route==='/knowledge/'+slug+'/');
   assert.ok(meta);
