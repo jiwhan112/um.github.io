@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="530" viewBox="0 0 640 530" role="img" aria-labelledby="title desc">
+  <title id="title">p, *p, &amp;p를 따라 읽기</title>
+  <desc id="desc">pp는 p 자신의 주소를 저장하고 p는 hp의 주소를 저장한다. *pp는 p, *p와 **pp는 hp를 지칭한다. alias는 hp의 참조 이름이다. 실제 주소나 메모리 배치가 아닌 개념도다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker>
+    <marker id="blue-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#93c5fd"/></marker>
+  </defs>
+  <rect width="640" height="530" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="48" font-size="28" font-weight="700">주소와 대상은 서로 다릅니다</text>
+    <text x="32" y="84" font-size="20" fill="#b8c7dd">int** pp = &amp;p;  ·  int* p = &amp;hp;</text>
+    <rect x="32" y="116" width="224" height="122" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="52" y="151" font-size="25" font-weight="700">포인터 객체 pp</text>
+    <text x="52" y="188" font-size="23">저장한 값: &amp;p</text>
+    <text x="52" y="218" font-size="20" fill="#b8c7dd">p 자신의 주소</text>
+    <rect x="384" y="116" width="224" height="122" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="404" y="151" font-size="25" font-weight="700">포인터 객체 p</text>
+    <text x="404" y="188" font-size="23">저장한 값: &amp;hp</text>
+    <text x="404" y="218" font-size="20" fill="#b8c7dd">hp의 주소</text>
+    <path d="M258 180H374" stroke="#6ee7b7" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+    <text x="320" y="164" text-anchor="middle" font-size="24" fill="#6ee7b7">*pp</text>
+    <rect x="384" y="344" width="224" height="112" rx="14" fill="#253248" stroke="#93c5fd" stroke-width="2"/>
+    <text x="404" y="379" font-size="25" font-weight="700">int 객체 hp</text>
+    <text x="404" y="421" font-size="29" fill="#93c5fd">값: 80</text>
+    <path d="M496 241V332" stroke="#6ee7b7" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+    <text x="518" y="285" font-size="24" fill="#6ee7b7">*p</text>
+    <text x="518" y="314" font-size="20" fill="#b8c7dd">또는 **pp</text>
+    <rect x="32" y="344" width="224" height="112" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2" stroke-dasharray="7 5"/>
+    <text x="52" y="379" font-size="25" font-weight="700">참조 이름 alias</text>
+    <text x="52" y="419" font-size="23">hp에 결합</text>
+    <path d="M260 401H374" stroke="#93c5fd" stroke-width="3" stroke-dasharray="7 5" fill="none" marker-end="url(#blue-arrow)"/>
+    <text x="320" y="381" text-anchor="middle" font-size="21" fill="#93c5fd">같은 대상</text>
+    <text x="32" y="498" font-size="20" fill="#b8c7dd">개념도 · 실제 주소값과 메모리 배치를 나타내지 않습니다.</text>
+  </g>
+</svg>
+

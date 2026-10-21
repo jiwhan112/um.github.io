@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="472" viewBox="0 0 640 472" role="img" aria-labelledby="title desc">
+<title id="title">초기화와 대입</title><desc id="desc">hp 객체를 100으로 만들고 같은 객체의 값을 80으로 바꾸는 시간 순서. 실제 메모리 주소는 나타내지 않는다.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#8ecbf0" stroke-width="2"/></marker></defs>
+<rect width="640" height="472" rx="18" fill="#101e2b"/>
+<g font-family="Noto Sans KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" fill="#ecf3fa">
+<text x="32" y="46" font-size="27" font-weight="700">하나의 hp, 두 시점</text>
+<rect x="32" y="76" width="576" height="130" rx="12" fill="#18354a" stroke="#4c819f"/>
+<text x="54" y="110" font-size="21" fill="#aadcf7">① 초기화 · 객체를 만들며</text>
+<text x="54" y="160" font-size="28" font-family="monospace">int hp{100};</text>
+<rect x="448" y="102" width="132" height="76" rx="9" fill="#092231" stroke="#8ecbf0"/>
+<text x="514" y="150" text-anchor="middle" font-size="36" font-weight="700">100</text>
+<path d="M320 215V254" stroke="#8ecbf0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="268" width="576" height="130" rx="12" fill="#193b34" stroke="#548c79"/>
+<text x="54" y="302" font-size="21" fill="#b9e5ce">② 대입 · 이미 있는 객체에</text>
+<text x="54" y="352" font-size="28" font-family="monospace">hp = 80;</text>
+<rect x="448" y="294" width="132" height="76" rx="9" fill="#102d27" stroke="#9cddbd"/>
+<text x="514" y="342" text-anchor="middle" font-size="36" font-weight="700">80</text>
+<text x="32" y="442" font-size="22" fill="#bed2e1">이름 hp와 타입 int는 유지되고 값이 달라집니다.</text></g></svg>

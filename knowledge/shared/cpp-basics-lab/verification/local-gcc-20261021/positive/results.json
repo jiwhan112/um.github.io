@@ -1,0 +1,359 @@
+{
+  "mode": "positive-direct",
+  "executed_at_utc": "2026-10-21T02:10:29.795996+00:00",
+  "status": "pass",
+  "commands": [
+    {
+      "label": "compiler-version",
+      "argv": [
+        "/usr/bin/g++",
+        "--version"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "compiler-version.txt"
+    },
+    {
+      "label": "types-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/types.cpp",
+        "-o",
+        "/tmp/atlas-cpp-basics-_rei8yff/types"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "types-build.txt"
+    },
+    {
+      "label": "types-run",
+      "argv": [
+        "/tmp/atlas-cpp-basics-_rei8yff/types"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "types-run.txt"
+    },
+    {
+      "label": "flow-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/flow.cpp",
+        "-o",
+        "/tmp/atlas-cpp-basics-_rei8yff/flow"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "flow-build.txt"
+    },
+    {
+      "label": "flow-run",
+      "argv": [
+        "/tmp/atlas-cpp-basics-_rei8yff/flow"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "flow-run.txt"
+    },
+    {
+      "label": "memory-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/memory.cpp",
+        "-o",
+        "/tmp/atlas-cpp-basics-_rei8yff/memory"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "memory-build.txt"
+    },
+    {
+      "label": "memory-run",
+      "argv": [
+        "/tmp/atlas-cpp-basics-_rei8yff/memory"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "memory-run.txt"
+    },
+    {
+      "label": "containers-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/containers.cpp",
+        "-o",
+        "/tmp/atlas-cpp-basics-_rei8yff/containers"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "containers-build.txt"
+    },
+    {
+      "label": "containers-run",
+      "argv": [
+        "/tmp/atlas-cpp-basics-_rei8yff/containers"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "containers-run.txt"
+    },
+    {
+      "label": "buffer-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/buffer.cpp",
+        "-o",
+        "/tmp/atlas-cpp-basics-_rei8yff/buffer"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "buffer-build.txt"
+    },
+    {
+      "label": "buffer-run",
+      "argv": [
+        "/tmp/atlas-cpp-basics-_rei8yff/buffer"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "buffer-run.txt"
+    },
+    {
+      "label": "inventory-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory.cpp",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp",
+        "-o",
+        "/tmp/atlas-cpp-basics-_rei8yff/inventory"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "inventory-build.txt"
+    },
+    {
+      "label": "inventory-run",
+      "argv": [
+        "/tmp/atlas-cpp-basics-_rei8yff/inventory"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "inventory-run.txt"
+    },
+    {
+      "label": "types_ko-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/ko/types.cpp",
+        "-o",
+        "/tmp/atlas-cpp-basics-_rei8yff/types_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "types_ko-build.txt"
+    },
+    {
+      "label": "types_ko-run",
+      "argv": [
+        "/tmp/atlas-cpp-basics-_rei8yff/types_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "types_ko-run.txt"
+    },
+    {
+      "label": "flow_ko-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/ko/flow.cpp",
+        "-o",
+        "/tmp/atlas-cpp-basics-_rei8yff/flow_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "flow_ko-build.txt"
+    },
+    {
+      "label": "flow_ko-run",
+      "argv": [
+        "/tmp/atlas-cpp-basics-_rei8yff/flow_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "flow_ko-run.txt"
+    },
+    {
+      "label": "memory_ko-build",
+      "argv": [
+        "/usr/bin/g++",
+        "-std=c++20",
+        "-g",
+        "-O0",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src",
+        "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/ko/memory.cpp",
+        "-o",
+        "/tmp/atlas-cpp-basics-_rei8yff/memory_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "memory_ko-build.txt"
+    },
+    {
+      "label": "memory_ko-run",
+      "argv": [
+        "/tmp/atlas-cpp-basics-_rei8yff/memory_ko"
+      ],
+      "cwd": "/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab",
+      "exit_code": 0,
+      "raw_output": "memory_ko-run.txt"
+    }
+  ],
+  "results": [
+    {
+      "name": "types",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 15
+    },
+    {
+      "name": "flow",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 15
+    },
+    {
+      "name": "memory",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 19
+    },
+    {
+      "name": "containers",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 49
+    },
+    {
+      "name": "buffer",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 104
+    },
+    {
+      "name": "inventory",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 19
+    },
+    {
+      "name": "types_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 15
+    },
+    {
+      "name": "flow_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 15
+    },
+    {
+      "name": "memory_ko",
+      "outcome": "normal-pass",
+      "runtime_check_invocations": 19
+    }
+  ],
+  "counting_note": "Compiler and annotated-source reruns repeat the original checks; do not add them as independent conditions.",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "original_runtime_check_invocations": 221,
+  "first_three_lessons": 49,
+  "annotation_check_invocations_repeat_original": 49,
+  "cmake_ctest_executed": false
+}

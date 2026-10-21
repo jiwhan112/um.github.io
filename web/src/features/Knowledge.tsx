@@ -19,7 +19,7 @@ const phaseLabels: Record<Phase,string> = {
 const areas: Area[] = [
   {id:'cpp',title:'C / C++',subtitle:'언어 원리부터 최신 C++까지 단계적으로 학습',icon:Braces,topics:[
     {id:'c',title:'C 언어',description:'C 언어 기본·포인터·메모리',phase:'legacy'},
-    {id:'cpp-core',title:'C++ 기초·심화',description:'객체·STL·템플릿·RAII',phase:'legacy'},
+    {id:'cpp-core',title:'C++ 기초·심화',description:'빌드·타입·함수·메모리에서 객체·STL·RAII까지',phase:'legacy',category:'C++ 기초·심화'},
     {id:'cpp-modern',title:'Modern C++',description:'C++11 이후 언어·표준 라이브러리의 버전별 변화',phase:'new'},
     {id:'cpp-effective',title:'Effective C++',description:'올바른 자원 관리와 C++ 설계 원칙',phase:'legacy'},
     {id:'cpp-effective-modern',title:'Effective Modern C++',description:'Scott Meyers 저서 중심의 현대 C++ 관용구',phase:'new'}
@@ -80,7 +80,7 @@ export default function Knowledge() {
         <span><strong>{areas.length}</strong>개 주요 분야</span>
         <span><strong>{totalTopics}</strong>개 하위 주제</span>
         <span><strong>{docs.length}</strong>개 기존 공개 교재</span>
-        <span className="knowledge-prototype">목차 설계 v2 · 콘텐츠는 단계별 집필</span>
+        <span className="knowledge-prototype">목차 설계 v3 · C++ 기초부터 순서대로</span>
       </div>
     </header>
     <div className="knowledge-layout">

@@ -1,0 +1,4 @@
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/negative/const_write.cpp: In function ‘int main()’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/negative/const_write.cpp:1:36: error: assignment of read-only variable ‘hp’
+    1 | int main() { const int hp{100}; hp = 80; }
+      |                                 ~~~^~~~

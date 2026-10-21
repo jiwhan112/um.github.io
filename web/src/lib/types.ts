@@ -9,6 +9,7 @@ export type Block =
  | { type: 'details'; title: string; blocks: Block[] }
  | { type: 'image'; src: string; alt: string; caption?: string }
  | { type: 'alpha-blend-lab' }
+ | { type: 'cpp-bitmask-lab' }
  | { type: 'group'|'callout'|'grid'; blocks: Block[]; title?: string }
  | { type: 'diagram'; items: string[] };
 export const inlineSchema: z.ZodType<Inline> = z.object({text:z.string(),kind:z.enum(['text','strong','em','code','link','br']).optional(),href:z.string().optional()});
@@ -20,6 +21,7 @@ export const blockSchema: z.ZodType<Block> = z.lazy(()=>z.union([
  z.object({type:z.literal('details'),title:z.string(),blocks:z.array(blockSchema)}),
  z.object({type:z.literal('image'),src:z.string(),alt:z.string(),caption:z.string().optional()}),
  z.object({type:z.literal('alpha-blend-lab')}),
+ z.object({type:z.literal('cpp-bitmask-lab')}),
  z.object({type:z.enum(['group','callout','grid']),blocks:z.array(blockSchema),title:z.string().optional()}),
  z.object({type:z.literal('diagram'),items:z.array(z.string())})
 ]));

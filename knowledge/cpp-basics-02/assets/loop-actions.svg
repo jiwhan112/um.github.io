@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="580" viewBox="0 0 640 580" role="img" aria-labelledby="title desc">
+<title id="title">continue와 break의 도착지</title>
+<desc id="desc">일반 for문에서 continue는 증감식과 조건 검사로 진행한다. 본문의 break는 가장 안쪽 반복문을 끝내고 반복문 다음 문장으로 진행한다.</desc>
+<style>
+text { font-family: "Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", sans-serif; fill: #e7eef7; }
+.title { font-size: 28px; font-weight: 700; }
+.label { font-size: 24px; font-weight: 700; }
+.body { font-size: 22px; }
+.muted { fill: #b6c6d9; font-size: 21px; }
+.cyan { fill: #79d9e8; }
+.gold { fill: #ffd07a; }
+.pink { fill: #ffabb8; }
+</style>
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="#79d9e8" stroke-width="2"/></marker>
+  <marker id="gold-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="#ffd07a" stroke-width="2"/></marker>
+</defs>
+<rect width="640" height="580" rx="22" fill="#101c2d"/>
+
+<text x="32" y="48" class="title">다음에 실행할 줄이 달라집니다</text>
+<text x="32" y="84" class="muted">일반 for 반복문의 본문에서 실행할 때</text>
+<rect x="28" y="112" width="276" height="386" rx="16" fill="#172e40" stroke="#397184"/>
+<rect x="336" y="112" width="276" height="386" rx="16" fill="#332c22" stroke="#8c7040"/>
+<text x="166" y="154" class="title cyan" text-anchor="middle">continue</text>
+<text x="474" y="154" class="title gold" text-anchor="middle">break</text>
+<text x="166" y="203" class="body" text-anchor="middle">남은 본문 건너뜀</text>
+<path d="M166 222 V259" stroke="#79d9e8" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="49" y="274" width="234" height="66" rx="10" fill="#0b2532"/>
+<text x="166" y="317" class="label" text-anchor="middle">증감식 ++i</text>
+<path d="M166 350 V384" stroke="#79d9e8" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="49" y="398" width="234" height="66" rx="10" fill="#0b2532"/>
+<text x="166" y="441" class="label" text-anchor="middle">계속 조건 검사</text>
+<text x="474" y="203" class="body" text-anchor="middle">반복문 종료</text>
+<path d="M474 222 V384" stroke="#ffd07a" stroke-width="3" marker-end="url(#gold-arrow)"/>
+<rect x="357" y="398" width="234" height="66" rx="10" fill="#241f18"/>
+<text x="474" y="441" class="label" text-anchor="middle">반복문 다음 문장</text>
+<text x="320" y="543" class="body" text-anchor="middle">계속할지와 끝낼지를 구분하세요.</text>
+
+</svg>

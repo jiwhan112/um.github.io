@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="800" viewBox="0 0 640 800" role="img" aria-labelledby="title desc">
+  <title id="title">소유권 이동과 관찰 포인터의 수명</title>
+  <desc id="desc">생성 직후 owner는 값 42인 int를 소유하고 observer는 관찰한다. 이동 뒤 new_owner가 동일한 int를 소유하고 owner는 비어 있다. reset은 int를 해제한다. observer는 자동 갱신되지 않으므로 사용을 끝내고 직접 nullptr를 대입한다.</desc>
+  <defs>
+    <marker id="owner-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker>
+    <marker id="observer-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#93c5fd"/></marker>
+  </defs>
+  <rect width="640" height="800" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="46" font-size="28" font-weight="700">객체는 그대로, 소유자만 이동</text>
+    <text x="32" y="81" font-size="20" fill="#b8c7dd">실선은 소유 · 점선은 잠깐 관찰하는 관계</text>
+    <rect x="20" y="100" width="600" height="190" rx="14" fill="#152236"/>
+    <text x="36" y="134" font-size="25" font-weight="700">1. make_unique로 생성</text>
+    <rect x="36" y="155" width="215" height="48" rx="8" fill="#143a37" stroke="#6ee7b7"/>
+    <text x="52" y="187" font-size="24">owner · 소유</text>
+    <rect x="36" y="219" width="215" height="48" rx="8" fill="#213650" stroke="#93c5fd"/>
+    <text x="52" y="251" font-size="24">observer · 관찰</text>
+    <rect x="428" y="161" width="170" height="105" rx="12" fill="#24374d" stroke="#e8f0ff"/>
+    <text x="513" y="198" text-anchor="middle" font-size="24">int 객체</text>
+    <text x="513" y="241" text-anchor="middle" font-size="32" fill="#fcd34d">42</text>
+    <path d="M253 180H417" stroke="#6ee7b7" stroke-width="3" marker-end="url(#owner-arrow)"/>
+    <path d="M253 243H417" stroke="#93c5fd" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#observer-arrow)"/>
+    <rect x="20" y="308" width="600" height="217" rx="14" fill="#152236"/>
+    <text x="36" y="343" font-size="25" font-weight="700">2. 이동 생성 · owner는 비어 있음</text>
+    <rect x="36" y="363" width="240" height="48" rx="8" fill="#143a37" stroke="#6ee7b7"/>
+    <text x="52" y="395" font-size="23">new_owner · 소유</text>
+    <rect x="36" y="427" width="240" height="48" rx="8" fill="#213650" stroke="#93c5fd"/>
+    <text x="52" y="459" font-size="23">observer · 관찰</text>
+    <rect x="428" y="369" width="170" height="105" rx="12" fill="#24374d" stroke="#e8f0ff"/>
+    <text x="513" y="406" text-anchor="middle" font-size="24">같은 int</text>
+    <text x="513" y="449" text-anchor="middle" font-size="32" fill="#fcd34d">42</text>
+    <path d="M279 388H417" stroke="#6ee7b7" stroke-width="3" marker-end="url(#owner-arrow)"/>
+    <path d="M279 451H417" stroke="#93c5fd" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#observer-arrow)"/>
+    <text x="36" y="505" font-size="21" fill="#b8c7dd">대상 복제 없음 · int의 주소도 그대로</text>
+    <rect x="20" y="543" width="600" height="230" rx="14" fill="#2d2030"/>
+    <text x="36" y="578" font-size="25" font-weight="700">3. reset으로 대상 해제</text>
+    <text x="36" y="618" font-size="22">new_owner는 비어 있음</text>
+    <text x="36" y="653" font-size="22">observer는 자동 갱신 안 됨</text>
+    <rect x="440" y="599" width="158" height="74" rx="10" fill="#37242e" stroke="#fda4af" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="519" y="644" text-anchor="middle" font-size="24" fill="#fda4af">수명 종료</text>
+    <path d="M373 635H430" stroke="#fda4af" stroke-width="3" stroke-dasharray="5 5"/>
+    <path d="M391 620L411 650M411 620L391 650" stroke="#fda4af" stroke-width="3"/>
+    <text x="36" y="707" font-size="23" fill="#fda4af">대상 접근을 끝냅니다.</text>
+    <text x="36" y="746" font-size="23">observer = nullptr; 를 직접 대입</text>
+  </g>
+</svg>
+

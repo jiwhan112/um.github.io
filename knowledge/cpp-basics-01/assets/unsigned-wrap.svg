@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="506" viewBox="0 0 640 506" role="img" aria-labelledby="title desc">
+<title id="title">8비트 부호 없는 모형의 래핑</title><desc id="desc">255 더하기 1은 256이고, 8비트 부호 없는 값은 256을 법으로 한 나머지 0으로 해석한다. signed 정수 산술에는 이 규칙을 적용하지 않는다.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#8ecbf0" stroke-width="2"/></marker></defs>
+<rect width="640" height="506" rx="18" fill="#101e2b"/>
+<g font-family="Noto Sans KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" fill="#ecf3fa">
+<text x="32" y="46" font-size="27" font-weight="700">8비트 부호 없음 · 설명용 모형</text>
+<text x="32" y="88" font-size="21" fill="#bbcfdf">표현 범위: 0 ~ 255</text>
+<rect x="32" y="114" width="576" height="142" rx="12" fill="#15354a" stroke="#507b98"/>
+<text x="56" y="158" font-size="24">최댓값 255 + 1</text>
+<text x="56" y="215" font-size="35" font-family="monospace" letter-spacing="5">1 00000000</text>
+<text x="560" y="214" text-anchor="end" font-size="23" fill="#b7dcf5">= 256</text>
+<path d="M320 266V304" stroke="#8ecbf0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="32" y="318" width="576" height="112" rx="12" fill="#193b34" stroke="#548c79"/>
+<text x="56" y="359" font-size="23">256으로 나눈 나머지</text>
+<text x="56" y="404" font-size="32" font-family="monospace" fill="#b9efce">00000000</text>
+<text x="560" y="403" text-anchor="end" font-size="28">= 0</text>
+<text x="32" y="476" font-size="21" fill="#ffd7b4">signed 정수의 범위 초과는 이 모형과 다릅니다.</text></g></svg>

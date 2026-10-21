@@ -1,0 +1,6 @@
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/negative/array_pointer.cpp: In function ‘int main()’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/negative/array_pointer.cpp:1:46: error: cannot convert ‘int (*)[3]’ to ‘int**’ in initialization
+    1 | int main() { int grid[2][3]{}; int** wrong = grid; (void)wrong; }
+      |                                              ^~~~
+      |                                              |
+      |                                              int (*)[3]

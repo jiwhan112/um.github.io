@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="612" viewBox="0 0 640 612" role="img" aria-labelledby="title desc">
+<title id="title">값 전달과 참조 전달의 수정 대상</title>
+<desc id="desc">값 전달에서는 value 복사본만 0으로 바뀌고 호출자의 hp는 10이다. 참조 전달에서는 value가 hp와 연결되어 hp가 0으로 바뀐다.</desc>
+<style>
+text { font-family: "Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", sans-serif; fill: #e7eef7; }
+.title { font-size: 28px; font-weight: 700; }
+.label { font-size: 24px; font-weight: 700; }
+.body { font-size: 22px; }
+.muted { fill: #b6c6d9; font-size: 21px; }
+.cyan { fill: #79d9e8; }
+.gold { fill: #ffd07a; }
+.pink { fill: #ffabb8; }
+</style>
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="#79d9e8" stroke-width="2"/></marker>
+  <marker id="gold-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="#ffd07a" stroke-width="2"/></marker>
+</defs>
+<rect width="640" height="612" rx="22" fill="#101c2d"/>
+
+<text x="32" y="48" class="title">어느 객체가 0으로 바뀔까요?</text>
+<text x="32" y="84" class="muted">함수 안에서 value = 0을 실행한 결과</text>
+<rect x="24" y="116" width="592" height="200" rx="16" fill="#192b42" stroke="#456282"/>
+<text x="48" y="154" class="label">값 전달 · int value</text>
+<rect x="48" y="182" width="214" height="102" rx="12" fill="#101c2d"/>
+<rect x="378" y="182" width="214" height="102" rx="12" fill="#101c2d"/>
+<text x="155" y="217" class="body" text-anchor="middle">호출자의 hp</text>
+<text x="155" y="262" class="title cyan" text-anchor="middle">10 유지</text>
+<text x="485" y="217" class="body" text-anchor="middle">복사한 value</text>
+<text x="485" y="262" class="title pink" text-anchor="middle">10 → 0</text>
+<text x="320" y="202" class="muted" text-anchor="middle">복사</text>
+<path d="M276 237 H360" stroke="#79d9e8" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="24" y="340" width="592" height="200" rx="16" fill="#172e40" stroke="#397184"/>
+<text x="48" y="378" class="label">참조 전달 · int&amp; value</text>
+<rect x="48" y="406" width="214" height="102" rx="12" fill="#0b2532"/>
+<rect x="378" y="406" width="214" height="102" rx="12" fill="#0b2532"/>
+<text x="155" y="442" class="body" text-anchor="middle">참조 이름</text>
+<text x="155" y="486" class="title" text-anchor="middle">value</text>
+<text x="485" y="442" class="body" text-anchor="middle">호출자의 hp</text>
+<text x="485" y="486" class="title pink" text-anchor="middle">10 → 0</text>
+<text x="320" y="426" class="muted" text-anchor="middle">연결</text>
+<path d="M276 462 H360" stroke="#79d9e8" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="320" y="582" class="body" text-anchor="middle">참조를 통해 원본 객체를 수정합니다.</text>
+
+</svg>

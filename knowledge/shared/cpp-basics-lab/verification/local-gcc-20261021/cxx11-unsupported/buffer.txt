@@ -1,0 +1,12 @@
+In file included from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/buffer.cpp:1:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:5:1: error: inline variables are only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+    5 | inline int checks = 0;
+      | ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/buffer.cpp: In member function ‘void IntBuffer::PushBack(int)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/buffer.cpp:20:30: error: ‘make_unique’ is not a member of ‘std’
+   20 |             auto next = std::make_unique<int[]>(next_capacity);
+      |                              ^~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/buffer.cpp:20:30: note: ‘std::make_unique’ is only available from C++14 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/buffer.cpp:20:42: error: expected primary-expression before ‘int’
+   20 |             auto next = std::make_unique<int[]>(next_capacity);
+      |                                          ^~~

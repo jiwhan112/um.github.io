@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="534" viewBox="0 0 640 534" role="img" aria-labelledby="title desc">
+<title id="title">덧셈과 저장 변환의 두 단계</title><desc id="desc">CHAR_BIT가 8이고 int가 unsigned char 모든 값을 표현하는 환경에서 255와 1은 int로 승격되어 256을 계산한다. auto로 받으면 int 256이고 unsigned char로 변환하면 0이다.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#8ecbf0" stroke-width="2"/></marker></defs>
+<rect width="640" height="534" rx="18" fill="#101e2b"/>
+<g font-family="Noto Sans KR,Apple SD Gothic Neo,Malgun Gothic,sans-serif" fill="#ecf3fa">
+<text x="32" y="46" font-size="27" font-weight="700">덧셈의 타입과 저장할 타입</text>
+<text x="32" y="84" font-size="19" fill="#bbcfdf">가정: 8비트 char · int가 0~255를 모두 표현</text>
+<rect x="32" y="112" width="576" height="114" rx="12" fill="#17334a" stroke="#507b98"/>
+<text x="54" y="150" font-size="22">unsigned char a{255}, b{1};</text>
+<text x="54" y="194" font-size="24" fill="#b6e2ff">a + b → int로 승격해 256 계산</text>
+<path d="M320 236V271M320 271H176V304M320 271H464V304" stroke="#8ecbf0" fill="none" stroke-width="3"/>
+<rect x="32" y="308" width="280" height="152" rx="12" fill="#193b34" stroke="#548c79"/>
+<text x="52" y="347" font-size="21">auto sum = a + b;</text>
+<text x="52" y="390" font-size="22" fill="#b9e5ce">int 유지</text>
+<text x="52" y="434" font-size="34" font-weight="700">256</text>
+<rect x="328" y="308" width="280" height="152" rx="12" fill="#3b3025" stroke="#8d7652"/>
+<text x="348" y="347" font-size="21">unsigned char로 변환</text>
+<text x="348" y="390" font-size="22" fill="#f2d3aa">저장할 때 범위 변환</text>
+<text x="348" y="434" font-size="34" font-weight="700">0</text>
+<text x="32" y="504" font-size="22" fill="#bed2e1">식의 계산과 이후 변환을 나누어 읽으세요.</text></g></svg>

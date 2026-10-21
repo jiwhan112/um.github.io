@@ -7,6 +7,7 @@ import { asset } from '@/lib/utils';
 import type { Block, Inline } from '@/lib/types';
 import { MermaidDiagram } from './MermaidDiagram';
 import { AlphaBlendLab } from './AlphaBlendLab';
+import { CppBitmaskLab } from './CppBitmaskLab';
 
 function ContentLink({href,children}:{href:string;children:React.ReactNode}){
  if(/^https?:\/\//.test(href))return <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>;
@@ -55,6 +56,7 @@ function RenderBlock({block:b}:{block:Block}){
  case 'list':{const Tag=b.ordered?'ol':'ul';return <Tag>{b.items.map((item,i)=><li key={i}><Blocks blocks={item}/></li>)}</Tag>;}
  case 'diagram':return <figure className="diagram"><div>{b.items.map((s,i)=><span key={i}>{s}</span>)}</div></figure>;
  case 'alpha-blend-lab':return <AlphaBlendLab/>;
+ case 'cpp-bitmask-lab':return <CppBitmaskLab/>;
  case 'grid':return <div className="content-grid"><Blocks blocks={b.blocks}/></div>;
  case 'callout':return <aside className="callout"><Blocks blocks={b.blocks}/></aside>;
  case 'group':return <div className="content-group"><Blocks blocks={b.blocks}/></div>;
