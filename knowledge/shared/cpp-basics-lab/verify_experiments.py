@@ -15,9 +15,10 @@ ROOT = Path(__file__).resolve().parent
 COUNTS = {"types": 15, "flow": 15, "memory": 19, "containers": 49, "buffer": 104, "inventory": 19}
 
 
-def sources(name):
+def sources(name, annotated=False):
     names = ["inventory.cpp", "inventory_main.cpp"] if name == "inventory" else [name + ".cpp"]
-    return [str(ROOT / "original/src" / filename) for filename in names]
+    directory = ROOT / ("ko" if annotated else "original/src")
+    return [str(directory / filename) for filename in names]
 
 
 def main():
@@ -70,8 +71,7 @@ def main():
             if args.mode == "positive-direct":
                 outputs = {}
                 tasks = [(name, sources(name), count) for name, count in COUNTS.items()]
-                tasks += [(name + "_ko", [str(ROOT / "ko" / (name + ".cpp"))], COUNTS[name])
-                          for name in ("types", "flow", "memory")]
+                tasks += [(name + "_ko", sources(name, annotated=True), count) for name, count in COUNTS.items()]
                 for name, paths, count in tasks:
                     binary = temp / name
                     command = [compiler, "-std=c++20", "-g", "-O0", "-Wall", "-Wextra", "-Wpedantic",
@@ -81,20 +81,26 @@ def main():
                     result = run(name + "-run", [str(binary)])
                     positive_result(name, result, count)
                     outputs[name] = result.stdout
-                for name in ("types", "flow", "memory"):
+                for name in COUNTS:
                     require(outputs[name] == outputs[name + "_ko"], name + ": 원본·주석판 출력 불일치")
                 report.update({"original_runtime_check_invocations": 221, "first_three_lessons": 49,
-                               "annotation_check_invocations_repeat_original": 49, "cmake_ctest_executed": False})
+                               "lessons_04_05": 172, "annotation_check_invocations_repeat_original": 221,
+                               "all_six_stdout_pairs_equal": True, "stdout_normalization_applied": False,
+                               "cmake_ctest_executed": False})
             elif args.mode == "compare":
                 require(args.build is not None, "--build 경로가 필요합니다")
                 build = args.build.resolve()
-                for name in ("types", "flow", "memory"):
+                # 두 프로그램 모두 ROOT에서 실행한다. inventory의 cwd 출력도 바이트 그대로 비교한다.
+                for name in COUNTS:
                     original = run(name + "-original", [str(build / "original" / name)])
                     annotated = run(name + "-korean", [str(build / (name + "_ko"))])
                     positive_result(name, original, COUNTS[name])
                     positive_result(name + "_ko", annotated, COUNTS[name])
                     require(original.stdout == annotated.stdout, name + ": 원본·주석판 출력 불일치")
-                report["all_three_stdout_pairs_equal"] = True
+                report["all_six_stdout_pairs_equal"] = True
+                report["stdout_normalization_applied"] = False
+                report["original_runtime_check_invocations"] = 221
+                report["annotation_check_invocations_repeat_original"] = 221
             elif args.mode == "negative":
                 for source in sorted((ROOT / "original/negative").glob("*.cpp")):
                     result = run(source.stem, [compiler, "-std=c++20", "-pedantic-errors", "-c", str(source),

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="510" viewBox="0 0 640 510" role="img" aria-labelledby="title desc">
+  <title id="title">같은 상대 경로, 다른 도착지</title>
+  <desc id="desc">saves/inventory.txt는 현재 작업 디렉터리에 따라 /game/saves/inventory.txt 또는 /game/build/saves/inventory.txt를 가리킨다. 이 경로들은 설명을 위한 예시다.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#6ee7b7"/></marker></defs>
+  <rect width="640" height="510" rx="20" fill="#0f172a"/>
+  <g font-family="Noto Sans KR, Malgun Gothic, sans-serif" fill="#e8f0ff">
+    <text x="32" y="48" font-size="28" font-weight="700">상대 경로의 출발점은 cwd</text>
+    <text x="32" y="84" font-size="22" fill="#b8c7dd">입력 경로: saves/inventory.txt</text>
+    <rect x="32" y="113" width="576" height="153" rx="14" fill="#172c3d" stroke="#6ee7b7" stroke-width="2"/>
+    <text x="52" y="150" font-size="25" font-weight="700">A · 프로젝트 폴더에서 실행</text>
+    <text x="52" y="190" font-size="23" fill="#6ee7b7">cwd = /game</text>
+    <text x="52" y="235" font-size="24">→ /game/saves/inventory.txt</text>
+    <rect x="32" y="289" width="576" height="153" rx="14" fill="#1b2640" stroke="#93c5fd" stroke-width="2"/>
+    <text x="52" y="326" font-size="25" font-weight="700">B · 빌드 폴더에서 실행</text>
+    <text x="52" y="366" font-size="23" fill="#93c5fd">cwd = /game/build</text>
+    <text x="52" y="411" font-size="24">→ /game/build/saves/inventory.txt</text>
+    <text x="32" y="481" font-size="21" fill="#b8c7dd">같은 실행 파일도 시작 설정에 따라 cwd가 달라집니다.</text>
+  </g>
+</svg>

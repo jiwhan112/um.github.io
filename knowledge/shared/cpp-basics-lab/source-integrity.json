@@ -21,6 +21,18 @@
       "capture": "knowledge/cpp-basics-03/source-notion-capture.json",
       "matches_capture": true
     },
+    "knowledge/cpp-basics-04/source-notion.md": {
+      "bytes": 19017,
+      "sha256": "efe77af7793c39f488d6005466d16aebb688fdefc0c86fd883bcb03a0fa5acea",
+      "capture": "knowledge/cpp-basics-04/source-notion-capture.json",
+      "matches_capture": true
+    },
+    "knowledge/cpp-basics-05/source-notion.md": {
+      "bytes": 17143,
+      "sha256": "f18ff42031d09b08856aba5f6448f87448729a0ed8759f76e7a64bfed3b09b33",
+      "capture": "knowledge/cpp-basics-05/source-notion-capture.json",
+      "matches_capture": true
+    },
     "knowledge/shared/cpp-basics-lab/source-notion-index.md": {
       "bytes": 9643,
       "sha256": "23f9a09f0b37e1ec9147119b752ea94a31f272e4c2540e468f5d5142e32fa3a3",
@@ -131,6 +143,56 @@
       "directives_exact": true,
       "check_call_sites": 19,
       "static_assert_call_sites": 0
+    },
+    "ko/containers.cpp": {
+      "bytes": 4200,
+      "sha256": "890e80f6d8bd959b65814cd21e12f9b3969c70a7d1478270926f3586c3e7cfd5",
+      "original": "original/src/containers.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 764,
+      "directives_exact": true,
+      "check_call_sites": 23,
+      "static_assert_call_sites": 0
+    },
+    "ko/buffer.cpp": {
+      "bytes": 2764,
+      "sha256": "0bab84762fd1c3232e8ec9e2c4fe383ab6030b5b232156e1ac27cc5c3d416624",
+      "original": "original/src/buffer.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 434,
+      "directives_exact": true,
+      "check_call_sites": 5,
+      "static_assert_call_sites": 0
+    },
+    "ko/inventory.hpp": {
+      "bytes": 810,
+      "sha256": "93743689a8a50cc749b6a1c233c9663dedc2466060c80b13d7c063c23af9e9dc",
+      "original": "original/src/inventory.hpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 87,
+      "directives_exact": true,
+      "check_call_sites": 0,
+      "static_assert_call_sites": 0
+    },
+    "ko/inventory.cpp": {
+      "bytes": 3230,
+      "sha256": "d5ab24756e986653bf99ca8c4a97cf84423d5bd0bedab74c397a5625601c534a",
+      "original": "original/src/inventory.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 565,
+      "directives_exact": true,
+      "check_call_sites": 0,
+      "static_assert_call_sites": 0
+    },
+    "ko/inventory_main.cpp": {
+      "bytes": 4243,
+      "sha256": "9f7c1e23aea6e7f98bf9a2654faf9b2011b23b5e7f211941d10d3697e0662618",
+      "original": "original/src/inventory_main.cpp",
+      "cpp_tokens_equal_before_macro_expansion": true,
+      "cpp_token_count": 728,
+      "directives_exact": true,
+      "check_call_sites": 19,
+      "static_assert_call_sites": 0
     }
   },
   "original_runtime_checks_recorded_in_attachment": {
@@ -143,8 +205,11 @@
   },
   "original_runtime_check_invocations_total_including_loop_iterations": 221,
   "first_three_lessons_check_invocations": 49,
+  "lessons_04_05_check_invocations": 172,
+  "annotated_source_file_count": 8,
+  "annotated_program_count": 6,
   "annotation_checks_repeat_original_conditions": true,
-  "counting_note": "221 is the original pack's runtime check count including loop iterations. The first three lessons account for 49 of those checks. Annotated and compiler reruns do not add independent conditions.",
+  "counting_note": "221 is the original pack's runtime check count including loop iterations: lessons 01-03 account for 49 and lessons 04-05 for 172. Static CHECK call sites are recorded separately. Annotated and compiler reruns do not add independent conditions.",
   "not_recovered": [
     "historical ZIP attachment",
     "historical raw build and execution logs"

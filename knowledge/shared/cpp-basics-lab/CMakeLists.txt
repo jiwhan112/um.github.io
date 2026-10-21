@@ -13,13 +13,16 @@ option(CPP_BASICS_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanit
 enable_testing()
 # 회수한 원본 CMake를 편집하지 않고 여섯 정상 실행 파일과 테스트를 그대로 구성한다.
 add_subdirectory(original)
-foreach(name IN ITEMS types flow memory)
+foreach(name IN ITEMS types flow memory containers buffer)
     add_executable(${name}_ko ko/${name}.cpp)
     target_include_directories(${name}_ko PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/original/src")
     add_test(NAME ${name}_ko COMMAND ${name}_ko)
 endforeach()
+add_executable(inventory_ko ko/inventory.cpp ko/inventory_main.cpp)
+target_include_directories(inventory_ko PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/original/src")
+add_test(NAME inventory_ko COMMAND inventory_ko)
 
-foreach(name IN ITEMS types flow memory containers buffer inventory types_ko flow_ko memory_ko)
+foreach(name IN ITEMS types flow memory containers buffer inventory types_ko flow_ko memory_ko containers_ko buffer_ko inventory_ko)
     if(MSVC)
         target_compile_options(${name} PRIVATE /W4 /permissive- /utf-8)
     else()

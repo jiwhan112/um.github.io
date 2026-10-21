@@ -1,0 +1,4 @@
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/negative/narrowing.cpp: In function ‘int main()’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/negative/narrowing.cpp:1:24: error: narrowing conversion of ‘3.5e+0’ from ‘double’ to ‘int’ [-Wnarrowing]
+    1 | int main() { int count{3.5}; return count; }
+      |                        ^~~

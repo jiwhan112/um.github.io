@@ -1,0 +1,200 @@
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory.cpp: In function ‘void study::Save(std::ostream&, const Inventory&)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory.cpp:27:42: error: ‘quoted’ is not a member of ‘std’
+   27 |         output << item.id << ' ' << std::quoted(item.name) << ' ' << item.quantity << '\n';
+      |                                          ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory.cpp:27:42: note: ‘std::quoted’ is only available from C++14 onwards
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory.cpp: In function ‘study::Inventory study::Load(std::istream&)’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory.cpp:41:38: error: ‘quoted’ is not a member of ‘std’
+   41 |         if (!(row >> item.id >> std::quoted(item.name) >> item.quantity)) throw std::runtime_error("bad row");
+      |                                      ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory.cpp:41:38: note: ‘std::quoted’ is only available from C++14 onwards
+In file included from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:1:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:5:1: error: inline variables are only available with ‘-std=c++17’ or ‘-std=gnu++17’ [-Wc++17-extensions]
+    5 | inline int checks = 0;
+      | ^~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:9:21: error: ‘filesystem’ is not a namespace-name; did you mean ‘system’?
+    9 | namespace fs = std::filesystem;
+      |                     ^~~~~~~~~~
+      |                     system
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:23:5: error: ‘fs’ does not name a type
+   23 |     fs::path path;
+      |     ^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp: In constructor ‘TempDirectory::TempDirectory()’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:15:30: error: ‘fs’ has not been declared
+   15 |             auto candidate = fs::temp_directory_path() / ("cpp_basics_" + std::to_string(token) + "_" + std::to_string(i));
+      |                              ^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:16:17: error: ‘fs’ has not been declared
+   16 |             if (fs::create_directory(candidate)) { path = std::move(candidate); return; }
+      |                 ^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:16:52: error: ‘path’ was not declared in this scope
+   16 |             if (fs::create_directory(candidate)) { path = std::move(candidate); return; }
+      |                                                    ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp: In destructor ‘TempDirectory::~TempDirectory()’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:22:47: error: ‘fs’ has not been declared
+   22 |     ~TempDirectory() { std::error_code error; fs::remove_all(path, error); }
+      |                                               ^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:22:62: error: ‘path’ was not declared in this scope
+   22 |     ~TempDirectory() { std::error_code error; fs::remove_all(path, error); }
+      |                                                              ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp: In function ‘int main()’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:32:66: error: no matching function for call to ‘std::vector<study::Item>::vector(<brace-enclosed initializer list>)’
+   32 |         study::Inventory items{{1,"Health Potion",3},{2,"Mana",1}};
+      |                                                                  ^
+In file included from /usr/include/c++/13/vector:66,
+                 from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory.hpp:6,
+                 from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:2:
+/usr/include/c++/13/bits/stl_vector.h:707:9: note: candidate: ‘template<class _InputIterator, class> std::vector<_Tp, _Alloc>::vector(_InputIterator, _InputIterator, const allocator_type&) [with <template-parameter-2-2> = _InputIterator; _Tp = study::Item; _Alloc = std::allocator<study::Item>]’
+  707 |         vector(_InputIterator __first, _InputIterator __last,
+      |         ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:707:9: note:   template argument deduction/substitution failed:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:32:66: note:   couldn’t deduce template parameter ‘_InputIterator’
+   32 |         study::Inventory items{{1,"Health Potion",3},{2,"Mana",1}};
+      |                                                                  ^
+/usr/include/c++/13/bits/stl_vector.h:678:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector(std::initializer_list<_Tp>, const allocator_type&) [with _Tp = study::Item; _Alloc = std::allocator<study::Item>; allocator_type = std::allocator<study::Item>]’
+  678 |       vector(initializer_list<value_type> __l,
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:678:43: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘std::initializer_list<study::Item>’
+  678 |       vector(initializer_list<value_type> __l,
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/usr/include/c++/13/bits/stl_vector.h:659:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector(std::vector<_Tp, _Alloc>&&, std::__type_identity_t<_Alloc>&) [with _Tp = study::Item; _Alloc = std::allocator<study::Item>; std::__type_identity_t<_Alloc> = std::allocator<study::Item>]’
+  659 |       vector(vector&& __rv, const __type_identity_t<allocator_type>& __m)
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:659:23: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘std::vector<study::Item>&&’
+  659 |       vector(vector&& __rv, const __type_identity_t<allocator_type>& __m)
+      |              ~~~~~~~~~^~~~
+/usr/include/c++/13/bits/stl_vector.h:640:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector(std::vector<_Tp, _Alloc>&&, const allocator_type&, std::false_type) [with _Tp = study::Item; _Alloc = std::allocator<study::Item>; allocator_type = std::allocator<study::Item>; std::false_type = std::integral_constant<bool, false>]’
+  640 |       vector(vector&& __rv, const allocator_type& __m, false_type)
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:640:7: note:   candidate expects 3 arguments, 2 provided
+/usr/include/c++/13/bits/stl_vector.h:635:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector(std::vector<_Tp, _Alloc>&&, const allocator_type&, std::true_type) [with _Tp = study::Item; _Alloc = std::allocator<study::Item>; allocator_type = std::allocator<study::Item>; std::true_type = std::integral_constant<bool, true>]’
+  635 |       vector(vector&& __rv, const allocator_type& __m, true_type) noexcept
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:635:7: note:   candidate expects 3 arguments, 2 provided
+/usr/include/c++/13/bits/stl_vector.h:624:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector(const std::vector<_Tp, _Alloc>&, std::__type_identity_t<_Alloc>&) [with _Tp = study::Item; _Alloc = std::allocator<study::Item>; std::__type_identity_t<_Alloc> = std::allocator<study::Item>]’
+  624 |       vector(const vector& __x, const __type_identity_t<allocator_type>& __a)
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:624:28: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘const std::vector<study::Item>&’
+  624 |       vector(const vector& __x, const __type_identity_t<allocator_type>& __a)
+      |              ~~~~~~~~~~~~~~^~~
+/usr/include/c++/13/bits/stl_vector.h:620:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector(std::vector<_Tp, _Alloc>&&) [with _Tp = study::Item; _Alloc = std::allocator<study::Item>]’
+  620 |       vector(vector&&) noexcept = default;
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:620:7: note:   candidate expects 1 argument, 2 provided
+/usr/include/c++/13/bits/stl_vector.h:601:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector(const std::vector<_Tp, _Alloc>&) [with _Tp = study::Item; _Alloc = std::allocator<study::Item>]’
+  601 |       vector(const vector& __x)
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:601:7: note:   candidate expects 1 argument, 2 provided
+/usr/include/c++/13/bits/stl_vector.h:569:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector(size_type, const value_type&, const allocator_type&) [with _Tp = study::Item; _Alloc = std::allocator<study::Item>; size_type = long unsigned int; value_type = study::Item; allocator_type = std::allocator<study::Item>]’
+  569 |       vector(size_type __n, const value_type& __value,
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:569:24: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘std::vector<study::Item>::size_type’ {aka ‘long unsigned int’}
+  569 |       vector(size_type __n, const value_type& __value,
+      |              ~~~~~~~~~~^~~
+/usr/include/c++/13/bits/stl_vector.h:556:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector(size_type, const allocator_type&) [with _Tp = study::Item; _Alloc = std::allocator<study::Item>; size_type = long unsigned int; allocator_type = std::allocator<study::Item>]’
+  556 |       vector(size_type __n, const allocator_type& __a = allocator_type())
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:556:24: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘std::vector<study::Item>::size_type’ {aka ‘long unsigned int’}
+  556 |       vector(size_type __n, const allocator_type& __a = allocator_type())
+      |              ~~~~~~~~~~^~~
+/usr/include/c++/13/bits/stl_vector.h:542:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector(const allocator_type&) [with _Tp = study::Item; _Alloc = std::allocator<study::Item>; allocator_type = std::allocator<study::Item>]’
+  542 |       vector(const allocator_type& __a) _GLIBCXX_NOEXCEPT
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:542:7: note:   candidate expects 1 argument, 2 provided
+/usr/include/c++/13/bits/stl_vector.h:531:7: note: candidate: ‘std::vector<_Tp, _Alloc>::vector() [with _Tp = study::Item; _Alloc = std::allocator<study::Item>]’
+  531 |       vector() = default;
+      |       ^~~~~~
+/usr/include/c++/13/bits/stl_vector.h:531:7: note:   candidate expects 0 arguments, 2 provided
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:43:50: error: invalid initialization of reference of type ‘const study::Inventory&’ {aka ‘const std::vector<study::Item>&’} from expression of type ‘<brace-enclosed initializer list>’
+   43 |         try { std::ostringstream out; study::Save(out, {{1,"A",-1}}); }
+      |                                       ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory.hpp:11:50: note: in passing argument 2 of ‘void study::Save(std::ostream&, const Inventory&)’
+   11 | void Save(std::ostream& output, const Inventory& items);
+      |                                 ~~~~~~~~~~~~~~~~~^~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:46:52: error: ‘class TempDirectory’ has no member named ‘path’
+   46 |         TempDirectory temp; const auto file = temp.path / "inventory.txt";
+      |                                                    ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:47:51: error: no matching function for call to ‘std::basic_ofstream<char>::basic_ofstream(<brace-enclosed initializer list>)’
+   47 |         { std::ofstream out{file, std::ios::binary}; if(!out) throw std::runtime_error("open failed");
+      |                                                   ^
+In file included from /workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:5:
+/usr/include/c++/13/fstream:857:7: note: candidate: ‘std::basic_ofstream<_CharT, _Traits>::basic_ofstream(std::basic_ofstream<_CharT, _Traits>&&) [with _CharT = char; _Traits = std::char_traits<char>]’
+  857 |       basic_ofstream(basic_ofstream&& __rhs)
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:857:7: note:   candidate expects 1 argument, 2 provided
+/usr/include/c++/13/fstream:832:7: note: candidate: ‘std::basic_ofstream<_CharT, _Traits>::basic_ofstream(const std::string&, std::ios_base::openmode) [with _CharT = char; _Traits = std::char_traits<char>; std::string = std::__cxx11::basic_string<char>; std::ios_base::openmode = std::ios_base::openmode]’
+  832 |       basic_ofstream(const std::string& __s,
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:832:7: note:   conversion of argument 1 would be ill-formed:
+/usr/include/c++/13/fstream:797:7: note: candidate: ‘std::basic_ofstream<_CharT, _Traits>::basic_ofstream(const char*, std::ios_base::openmode) [with _CharT = char; _Traits = std::char_traits<char>; std::ios_base::openmode = std::ios_base::openmode]’
+  797 |       basic_ofstream(const char* __s,
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:797:7: note:   conversion of argument 1 would be ill-formed:
+/usr/include/c++/13/fstream:786:7: note: candidate: ‘std::basic_ofstream<_CharT, _Traits>::basic_ofstream() [with _CharT = char; _Traits = std::char_traits<char>]’
+  786 |       basic_ofstream(): __ostream_type(), _M_filebuf()
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:786:7: note:   candidate expects 0 arguments, 2 provided
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:49:50: error: no matching function for call to ‘std::basic_ifstream<char>::basic_ifstream(<brace-enclosed initializer list>)’
+   49 |         { std::ifstream in{file, std::ios::binary}; if(!in) throw std::runtime_error("open failed");
+      |                                                  ^
+/usr/include/c++/13/fstream:594:7: note: candidate: ‘std::basic_ifstream<_CharT, _Traits>::basic_ifstream(std::basic_ifstream<_CharT, _Traits>&&) [with _CharT = char; _Traits = std::char_traits<char>]’
+  594 |       basic_ifstream(basic_ifstream&& __rhs)
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:594:7: note:   candidate expects 1 argument, 2 provided
+/usr/include/c++/13/fstream:569:7: note: candidate: ‘std::basic_ifstream<_CharT, _Traits>::basic_ifstream(const std::string&, std::ios_base::openmode) [with _CharT = char; _Traits = std::char_traits<char>; std::string = std::__cxx11::basic_string<char>; std::ios_base::openmode = std::ios_base::openmode]’
+  569 |       basic_ifstream(const std::string& __s,
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:569:7: note:   conversion of argument 1 would be ill-formed:
+/usr/include/c++/13/fstream:536:7: note: candidate: ‘std::basic_ifstream<_CharT, _Traits>::basic_ifstream(const char*, std::ios_base::openmode) [with _CharT = char; _Traits = std::char_traits<char>; std::ios_base::openmode = std::ios_base::openmode]’
+  536 |       basic_ifstream(const char* __s, ios_base::openmode __mode = ios_base::in)
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:536:7: note:   conversion of argument 1 would be ill-formed:
+/usr/include/c++/13/fstream:525:7: note: candidate: ‘std::basic_ifstream<_CharT, _Traits>::basic_ifstream() [with _CharT = char; _Traits = std::char_traits<char>]’
+  525 |       basic_ifstream() : __istream_type(), _M_filebuf()
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:525:7: note:   candidate expects 0 arguments, 2 provided
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:51:34: error: ‘class TempDirectory’ has no member named ‘path’
+   51 |         const auto copied = temp.path / "copy.bin";
+      |                                  ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:52:15: error: ‘fs’ has not been declared
+   52 |         CHECK(fs::copy_file(file, copied)); CHECK(fs::file_size(copied) == fs::file_size(file));
+      |               ^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:52:51: error: ‘fs’ has not been declared
+   52 |         CHECK(fs::copy_file(file, copied)); CHECK(fs::file_size(copied) == fs::file_size(file));
+      |                                                   ^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:52:76: error: ‘fs’ has not been declared
+   52 |         CHECK(fs::copy_file(file, copied)); CHECK(fs::file_size(copied) == fs::file_size(file));
+      |                                                                            ^~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/check.hpp:10:51: note: in definition of macro ‘CHECK’
+   10 | #define CHECK(expression) Check(static_cast<bool>(expression), #expression, __LINE__)
+      |                                                   ^~~~~~~~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:53:38: error: ‘class TempDirectory’ has no member named ‘path’
+   53 |         { std::ifstream missing{temp.path / "missing.txt"}; CHECK(!missing); }
+      |                                      ^~~~
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:53:58: error: no matching function for call to ‘std::basic_ifstream<char>::basic_ifstream(<brace-enclosed initializer list>)’
+   53 |         { std::ifstream missing{temp.path / "missing.txt"}; CHECK(!missing); }
+      |                                                          ^
+/usr/include/c++/13/fstream:594:7: note: candidate: ‘std::basic_ifstream<_CharT, _Traits>::basic_ifstream(std::basic_ifstream<_CharT, _Traits>&&) [with _CharT = char; _Traits = std::char_traits<char>]’
+  594 |       basic_ifstream(basic_ifstream&& __rhs)
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:594:7: note:   conversion of argument 1 would be ill-formed:
+/usr/include/c++/13/fstream:569:7: note: candidate: ‘std::basic_ifstream<_CharT, _Traits>::basic_ifstream(const std::string&, std::ios_base::openmode) [with _CharT = char; _Traits = std::char_traits<char>; std::string = std::__cxx11::basic_string<char>; std::ios_base::openmode = std::ios_base::openmode]’
+  569 |       basic_ifstream(const std::string& __s,
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:569:7: note:   conversion of argument 1 would be ill-formed:
+/usr/include/c++/13/fstream:536:7: note: candidate: ‘std::basic_ifstream<_CharT, _Traits>::basic_ifstream(const char*, std::ios_base::openmode) [with _CharT = char; _Traits = std::char_traits<char>; std::ios_base::openmode = std::ios_base::openmode]’
+  536 |       basic_ifstream(const char* __s, ios_base::openmode __mode = ios_base::in)
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:536:7: note:   conversion of argument 1 would be ill-formed:
+/usr/include/c++/13/fstream:525:7: note: candidate: ‘std::basic_ifstream<_CharT, _Traits>::basic_ifstream() [with _CharT = char; _Traits = std::char_traits<char>]’
+  525 |       basic_ifstream() : __istream_type(), _M_filebuf()
+      |       ^~~~~~~~~~~~~~
+/usr/include/c++/13/fstream:525:7: note:   candidate expects 0 arguments, 1 provided
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp:54:32: error: ‘fs’ has not been declared
+   54 |         std::cout << "cwd=" << fs::current_path().string() << '\n';
+      |                                ^~

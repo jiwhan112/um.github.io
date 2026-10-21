@@ -1,12 +1,20 @@
 # ATLAS NOTE — 프로그래밍 지식 라이브러리
 
-- [장기 학습 목차·집필 설계 v2](CURRICULUM.md): 최종적으로 새로 공부하고 작성할 과정에 대한 설계. **기존 Notion 이관 계획과 구분**.
+- [장기 학습 목차·집필 설계 v3](CURRICULUM.md): 상위 학습 목차와 C++ 기초·심화의 실제 단원 순서. **기존 Notion 원본 보존과 새 시각 교재 구성을 구분**.
 - [실제 공개 문서 원장](data/catalog.json): 독립된 학습 문서의 경로·Notion 출처·분류.
 - [WinAPI/게임 수학 첫 이관 감사](MIGRATION_WINAPI_MATH_20261019.md): 원본·표·접기·Mermaid·소스 복원·미이관 자산 상태.
 - [DX9 렌더링 파이프라인 01–05 이관 감사](MIGRATION_DX9_PIPELINE_20261019.md): 클립·래스터·깊이·블렌딩 문서 보존 상태.
 - [DX9 구현 01–12 본문 이관 원장](MIGRATION_DX9_IMPLEMENTATION_20261019.md): 장치·COM·DLL·버퍼/Reset·Scene·카메라·이펙트·셰이더/Frustum·통합 프로젝트.
 - [DX9 원본 CPU 소스 8종·21개 실제 CI 실행 로그](DX9_IMPLEMENTATION_CPU_VERIFICATION_20261019.md): GCC C++11/20 및 Clang ASan/UBSan; 플랫폼 검증 한계 포함.
 - [DX9 구현 01–12 이관 원장](MIGRATION_DX9_IMPLEMENTATION_20261019.md): 개정 03/04 섹션·원본 하위 페이지·미회수 첨부 등 남은 검증.
+
+## C++ 기초 시각 교재 · 2026-10-21
+
+- [01~03 교재·원본 보존 원장](CPP_FOUNDATIONS_01_03_20261021.md): 빌드·타입·함수·포인터·수명, 비트 연산 조작 실습.
+- [04~05 교재·검증 원장](CPP_FOUNDATIONS_04_05_20261021.md): 배열·문자열·사용자 타입, 파일·분할 빌드·인벤토리 통합 실습.
+- [전체 실습 팩](shared/cpp-basics-lab/README.md): 원본 C++·헤더·CMake 16개, 한국어 주석판 8개 파일, 프로그램 6쌍, 실제 실행 로그.
+
+각 교재는 개념과 원리 / 실습·복습 / 출처·검증 / 원문·변경기록의 네 탭을 사용한다. 개념 그림, 렌더링되는 Mermaid, 비교표, 접힌 복습 답안과 전체 소스를 제공하며 원본 Notion 본문은 별도 파일로 보존한다. C++20 실습 팩의 C++11 비호환 및 Windows/MSVC 실행 미검증 상태도 표시한다. 배포 완료 여부는 각 배치의 Actions 결과와 실제 공개 URL 확인으로 판정한다.
 
 ## 2026-10-20 · DX11 13–18 이관 및 기존 15 검수
 

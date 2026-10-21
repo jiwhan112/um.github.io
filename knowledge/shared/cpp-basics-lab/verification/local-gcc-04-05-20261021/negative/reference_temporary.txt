@@ -1,0 +1,4 @@
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/negative/reference_temporary.cpp: In function ‘int main()’:
+/workspace/scratch/3f645bebe8cc/atlas-note-web/knowledge/shared/cpp-basics-lab/original/negative/reference_temporary.cpp:1:27: error: cannot bind non-const lvalue reference of type ‘int&’ to an rvalue of type ‘int’
+    1 | int main() { int& wrong = 10; (void)wrong; }
+      |                           ^~

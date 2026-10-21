@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""원본 첨부의 바이트와 01~03 한국어 주석판의 전처리 전 C++ 토큰을 검사한다.
+"""원본 첨부의 바이트와 01~05 한국어 주석판의 전처리 전 C++ 토큰을 검사한다.
 
 매크로를 확장하지 않으므로 __LINE__ 진단은 각 파일의 실제 줄을 따른다.
 토큰 검사는 컴파일·실행과 별개이며 일반 C++ 의미 동등성의 증명은 아니다.
@@ -16,6 +16,10 @@ ROOT = Path(__file__).resolve().parent
 ATTACHMENT_SHA256 = "c48d34d0e978b43f3e1b81d86e1e902052e6c5f8536c6b372c2fae8a4d2ed761"
 SOURCE_REFERENCE = "notion-file-block://5fb8e4e7-6ccb-4edd-889f-bba260b4392b/2d74b3e5-ff5f-4dd0-9fff-4d3559528daf?space_id=815d1335-3b56-43a7-903b-d7addf097c9f&name=cpp_basics_lab_sources_v1.md"
 EXPECTED_CHECKS = {"types": 15, "flow": 15, "memory": 19, "containers": 49, "buffer": 104, "inventory": 19}
+# 정적 호출 지점 수와 루프 반복을 포함하는 런타임 횟수를 분리한다.
+EXPECTED_CHECK_SITES = {"types.cpp": 15, "flow.cpp": 15, "memory.cpp": 19,
+                        "containers.cpp": 23, "buffer.cpp": 5,
+                        "inventory.hpp": 0, "inventory.cpp": 0, "inventory_main.cpp": 19}
 IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z_0-9]*")
 
 RAW_START = re.compile(r'(?:u8|u|U|L)?R"([^\s()\\]{0,16})\(')
@@ -42,7 +46,7 @@ class Token:
     column: int
 
 def cpp_tokens(source, filename):
-    # 현재 두 소스에는 줄 연결이 없다. 새로운 전처리 구조는 묵인하지 않고 별도 검토를 요구한다.
+    # 현재 주석판 비교 대상에는 줄 연결이 없다. 새로운 전처리 구조는 별도 검토한다.
     if "\\\n" in source or "\\\r\n" in source:
         raise ValueError("{}: 줄 연결을 추가하면 검사기 지원 범위를 다시 검토해야 합니다".format(filename))
     tokens = []
@@ -139,7 +143,7 @@ def verify():
     captures = {}
     capture_pairs = [(repo / ("knowledge/cpp-basics-" + number) / "source-notion.md",
                       repo / ("knowledge/cpp-basics-" + number) / "source-notion-capture.json")
-                     for number in ("01", "02", "03")]
+                     for number in ("01", "02", "03", "04", "05")]
     capture_pairs.append((ROOT / "source-notion-index.md", ROOT / "source-notion-index-capture.json"))
     for source, capture in capture_pairs:
         data = source.read_bytes()
@@ -162,25 +166,25 @@ def verify():
             raise ValueError(relative + ": 원문 블록과 바이트 불일치")
         originals[relative] = file_info(actual)
     annotations = {}
-    for name in ("types", "flow", "memory"):
-        original = (ROOT / "original/src" / (name + ".cpp")).read_text(encoding="utf-8")
-        annotated_bytes = (ROOT / "ko" / (name + ".cpp")).read_bytes()
+    for name, expected_sites in EXPECTED_CHECK_SITES.items():
+        original = (ROOT / "original/src" / name).read_text(encoding="utf-8")
+        annotated_bytes = (ROOT / "ko" / name).read_bytes()
         annotated = annotated_bytes.decode("utf-8")
         if directive_lines(original) != directive_lines(annotated):
             raise ValueError(name + ": 전처리 지시문 불일치")
-        left = cpp_tokens(original, "original/src/" + name + ".cpp")
-        right = cpp_tokens(annotated, "ko/" + name + ".cpp")
+        left = cpp_tokens(original, "original/src/" + name)
+        right = cpp_tokens(annotated, "ko/" + name)
         for index in range(max(len(left), len(right))):
             a = left[index] if index < len(left) else None
             b = right[index] if index < len(right) else None
             if a is None or b is None or a.value != b.value:
                 raise ValueError("{} token {}: {} != {}".format(name, index + 1, a, b))
         check_calls = sum(token.value == "CHECK" for token in left)
-        if check_calls != EXPECTED_CHECKS[name]:
-            raise ValueError(name + ": CHECK 호출 수가 원문 기록과 다릅니다")
-        annotations["ko/" + name + ".cpp"] = {
+        if check_calls != expected_sites:
+            raise ValueError(name + ": CHECK 호출 지점 수가 원문과 다릅니다")
+        annotations["ko/" + name] = {
             **file_info(annotated_bytes),
-            "original": "original/src/" + name + ".cpp",
+            "original": "original/src/" + name,
             "cpp_tokens_equal_before_macro_expansion": True,
             "cpp_token_count": len(left),
             "directives_exact": True,
@@ -200,8 +204,11 @@ def verify():
         "original_runtime_checks_recorded_in_attachment": EXPECTED_CHECKS,
         "original_runtime_check_invocations_total_including_loop_iterations": 221,
         "first_three_lessons_check_invocations": 49,
+        "lessons_04_05_check_invocations": 172,
+        "annotated_source_file_count": 8,
+        "annotated_program_count": 6,
         "annotation_checks_repeat_original_conditions": True,
-        "counting_note": "221 is the original pack's runtime check count including loop iterations. The first three lessons account for 49 of those checks. Annotated and compiler reruns do not add independent conditions.",
+        "counting_note": "221 is the original pack's runtime check count including loop iterations: lessons 01-03 account for 49 and lessons 04-05 for 172. Static CHECK call sites are recorded separately. Annotated and compiler reruns do not add independent conditions.",
         "not_recovered": ["historical ZIP attachment", "historical raw build and execution logs"],
         "limitations": ["This is source fidelity verification, not a fresh compile/run result.", "__LINE__ diagnostics follow each source file's actual lines.", "The preserved pack requires C++20; no C++11 compatibility claim."],
     }

@@ -1,0 +1,10 @@
+PASS: attachment SHA-256; 16 exact original code blocks
+PASS: ko/types.cpp: 360 identical tokens, 15 CHECK call sites
+PASS: ko/flow.cpp: 471 identical tokens, 15 CHECK call sites
+PASS: ko/memory.cpp: 549 identical tokens, 19 CHECK call sites
+PASS: ko/containers.cpp: 764 identical tokens, 23 CHECK call sites
+PASS: ko/buffer.cpp: 434 identical tokens, 5 CHECK call sites
+PASS: ko/inventory.hpp: 87 identical tokens, 0 CHECK call sites
+PASS: ko/inventory.cpp: 565 identical tokens, 0 CHECK call sites
+PASS: ko/inventory_main.cpp: 728 identical tokens, 19 CHECK call sites
+NOTE: compilation and execution results are recorded separately
