@@ -97,7 +97,7 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await expect(page.getByRole('heading',{name:'프로그래밍 지식 라이브러리'})).toBeVisible();
  await expect(page.locator('.knowledge-map-sidebar nav a')).toHaveCount(7);
  const tree=page.locator('.knowledge-tree');
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(85);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(87);
  const cppTopics=page.locator('#knowledge-cpp .knowledge-topic-row strong');
  await expect(cppTopics).toHaveText(['C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++']);
  const windowsTopics=page.locator('#knowledge-windows .knowledge-topic-row strong');
@@ -122,7 +122,7 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await expect(page.locator('.knowledge-recent-list a').first()).toContainText('BeautifulSoup');
  await page.getByRole('button',{name:'목차 검색 초기화'}).click();
  await page.getByRole('button',{name:'모두 펼치기'}).click();
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(85);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(87);
  if(isMobile){
   await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
   await expect(page.getByRole('dialog').getByRole('link',{name:'프로그래밍 학습',exact:true})).toBeVisible();
@@ -295,12 +295,28 @@ test('DX11 knowledge outline follows numeric chapter sequence despite migration 
 test('published C01 opens from the C language curriculum topic',async({page})=>{
  await page.goto('knowledge/');
  const topic=page.locator('#knowledge-cpp .knowledge-topic').filter({has:page.getByText('C 언어',{exact:true})});
- await expect(topic.locator('.knowledge-topic-row')).toContainText('4개 공개');
- await expect(topic.locator('.knowledge-document-link')).toHaveCount(4);
+ await expect(topic.locator('.knowledge-topic-row')).toContainText('6개 공개');
+ await expect(topic.locator('.knowledge-document-link')).toHaveCount(6);
  const link=topic.locator('.knowledge-document-link[href="/um.github.io/knowledge/c-language-01/"]');
  await expect(link).toHaveCount(1);
  await expect(link).toHaveAttribute('href','/um.github.io/knowledge/c-language-01/');
  await link.click();
  await expect(page).toHaveURL(/\/knowledge\/c-language-01\/$/);
  await expect(page.locator('main h1')).toContainText('C01');
+});
+
+test('C fundamentals 04–05 are linked and render learning visuals',async({page})=>{
+ await page.goto('knowledge/');
+ const topic=page.locator('#knowledge-cpp .knowledge-topic').filter({has:page.getByText('C 언어',{exact:true})});
+ for(const chapter of ['04','05']){
+  const route=`/um.github.io/knowledge/c-basics-${chapter}/`;
+  const chapterLink=topic.locator(`a[href="${route}"]`);
+  await expect(chapterLink).toHaveCount(1);
+  await chapterLink.click();
+  await expect(page).toHaveURL(new RegExp(`/knowledge/c-basics-${chapter}/$`));
+  await expect(page.locator('main h1')).toContainText(`C 기초 ${chapter}`);
+  await expect(page.locator('main .mermaid-diagram').first()).toHaveAttribute('data-diagram-state','ready');
+  await expect(page.locator('main .mermaid-canvas img').first()).toBeVisible();
+  await page.goto('knowledge/');
+ }
 });
