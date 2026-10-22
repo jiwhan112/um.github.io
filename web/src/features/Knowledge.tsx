@@ -18,7 +18,7 @@ const phaseLabels: Record<Phase,string> = {
 // This is a long-term curriculum outline, NOT a declaration of migration or publication completion.
 const areas: Area[] = [
   {id:'cpp',title:'C / C++',subtitle:'언어 원리부터 최신 C++까지 단계적으로 학습',icon:Braces,topics:[
-    {id:'c',title:'C 언어',description:'C 언어 기본·포인터·메모리',phase:'legacy'},
+    {id:'c',title:'C 언어',description:'C 언어 기본·포인터·메모리',phase:'legacy',category:'C 언어'},
     {id:'cpp-core',title:'C++ 기초·심화',description:'빌드·타입·함수·메모리에서 객체·STL·RAII까지',phase:'legacy',category:'C++ 기초·심화'},
     {id:'cpp-modern',title:'Modern C++',description:'C++11 이후 언어·표준 라이브러리의 버전별 변화',phase:'new'},
     {id:'cpp-effective',title:'Effective C++',description:'올바른 자원 관리와 C++ 설계 원칙',phase:'legacy'},
