@@ -1,0 +1,815 @@
+{
+  "status": "pass",
+  "tested_at_utc": "2026-10-22T09:15:26.018903+00:00",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "compiler": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "language": "C11",
+  "configurations": [
+    "strict",
+    "ubsan"
+  ],
+  "distinct_addition_boundary_cases": 9,
+  "normal_programs": 3,
+  "source_files": [
+    {
+      "path": "knowledge/c-basics-01/main.c",
+      "sha256": "97f0c07f832007b20964a91f8b55b706043916756974fbe06188b04b95a1a3d1"
+    },
+    {
+      "path": "knowledge/c-basics-02/main.c",
+      "sha256": "065fbfa292cfc1f7a000b28c2324154a32364e5303d304b9fa0c6634089c0c32"
+    },
+    {
+      "path": "knowledge/c-basics-03/main.c",
+      "sha256": "271f4cfe98ec147753228d0571d601008a43cb554b5d996bdd09d4b8b3d470f0"
+    },
+    {
+      "path": "knowledge/shared/c-basics-lab/compile-error.c",
+      "sha256": "0260faf5e054933baabf99f996636f9c67d0ec605d648282c4b95743e2c0bfd2"
+    },
+    {
+      "path": "knowledge/shared/c-basics-lab/link-error.c",
+      "sha256": "37d0bc8d2866095f8d8668709ca975abc9a6f0069cdce07ca1cf9114cd8b0ec8"
+    },
+    {
+      "path": "knowledge/shared/c-basics-lab/verify.py",
+      "sha256": "2661d380db2e3097d6fb7392ed83159617e66d2155de501d76aed5c332c74fbc"
+    }
+  ],
+  "limitation": "GCC on this host only; not MSVC or other architectures. UBSan checks executed paths, not a proof for all inputs.",
+  "commands": [
+    {
+      "command": [
+        "gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "knowledge/c-basics-01/main.c",
+        "-o",
+        "<build>/strict-1"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/strict-1"
+      ],
+      "exit_code": 0,
+      "stdout": "Hello, C!\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "knowledge/c-basics-02/main.c",
+        "-o",
+        "<build>/strict-2"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/strict-2"
+      ],
+      "exit_code": 0,
+      "stdout": "score=85 total=0 average=2.5\nsizeof(int)=4 CHAR_BIT=8\nint=[-2147483648, 2147483647] UCHAR_MAX=255\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "knowledge/c-basics-03/main.c",
+        "-o",
+        "<build>/strict-3"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/strict-3"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=1\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "<build>/boundary-0.c",
+        "-o",
+        "<build>/boundary-strict-0"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-strict-0"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=1\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "<build>/boundary-1.c",
+        "-o",
+        "<build>/boundary-strict-1"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-strict-1"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "<build>/boundary-2.c",
+        "-o",
+        "<build>/boundary-strict-2"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-strict-2"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "<build>/boundary-3.c",
+        "-o",
+        "<build>/boundary-strict-3"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-strict-3"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=1\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "<build>/boundary-4.c",
+        "-o",
+        "<build>/boundary-strict-4"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-strict-4"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "<build>/boundary-5.c",
+        "-o",
+        "<build>/boundary-strict-5"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-strict-5"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "<build>/boundary-6.c",
+        "-o",
+        "<build>/boundary-strict-6"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-strict-6"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "<build>/boundary-7.c",
+        "-o",
+        "<build>/boundary-strict-7"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-strict-7"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "<build>/boundary-8.c",
+        "-o",
+        "<build>/boundary-strict-8"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-strict-8"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "knowledge/c-basics-01/main.c",
+        "-o",
+        "<build>/ubsan-1"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/ubsan-1"
+      ],
+      "exit_code": 0,
+      "stdout": "Hello, C!\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "knowledge/c-basics-02/main.c",
+        "-o",
+        "<build>/ubsan-2"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/ubsan-2"
+      ],
+      "exit_code": 0,
+      "stdout": "score=85 total=0 average=2.5\nsizeof(int)=4 CHAR_BIT=8\nint=[-2147483648, 2147483647] UCHAR_MAX=255\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "knowledge/c-basics-03/main.c",
+        "-o",
+        "<build>/ubsan-3"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/ubsan-3"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=1\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "<build>/boundary-0.c",
+        "-o",
+        "<build>/boundary-ubsan-0"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-ubsan-0"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=1\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "<build>/boundary-1.c",
+        "-o",
+        "<build>/boundary-ubsan-1"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-ubsan-1"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "<build>/boundary-2.c",
+        "-o",
+        "<build>/boundary-ubsan-2"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-ubsan-2"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "<build>/boundary-3.c",
+        "-o",
+        "<build>/boundary-ubsan-3"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-ubsan-3"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=1\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "<build>/boundary-4.c",
+        "-o",
+        "<build>/boundary-ubsan-4"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-ubsan-4"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "<build>/boundary-5.c",
+        "-o",
+        "<build>/boundary-ubsan-5"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-ubsan-5"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "<build>/boundary-6.c",
+        "-o",
+        "<build>/boundary-ubsan-6"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-ubsan-6"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "<build>/boundary-7.c",
+        "-o",
+        "<build>/boundary-ubsan-7"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-ubsan-7"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-g",
+        "<build>/boundary-8.c",
+        "-o",
+        "<build>/boundary-ubsan-8"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/boundary-ubsan-8"
+      ],
+      "exit_code": 0,
+      "stdout": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=0\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-E",
+        "knowledge/c-basics-01/main.c",
+        "-o",
+        "<build>/hello.i"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-S",
+        "knowledge/c-basics-01/main.c",
+        "-o",
+        "<build>/hello.s"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-c",
+        "knowledge/c-basics-01/main.c",
+        "-o",
+        "<build>/hello.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "<build>/hello.o",
+        "-o",
+        "<build>/hello"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "<build>/hello"
+      ],
+      "exit_code": 0,
+      "stdout": "Hello, C!\n",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-c",
+        "knowledge/shared/c-basics-lab/compile-error.c",
+        "-o",
+        "<build>/bad.o"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "knowledge/shared/c-basics-lab/compile-error.c: In function ‘main’:\nknowledge/shared/c-basics-lab/compile-error.c:1:26: error: expected ‘;’ before ‘}’ token\n    1 | int main(void) { return 0 } /* 의도적인 세미콜론 누락 */\n      |                          ^~\n      |                          ;\n",
+      "expected_success": false
+    },
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-c",
+        "knowledge/shared/c-basics-lab/link-error.c",
+        "-o",
+        "<build>/missing.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "expected_success": true
+    },
+    {
+      "command": [
+        "gcc",
+        "<build>/missing.o",
+        "-o",
+        "<build>/missing"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "/usr/bin/ld: <build>/missing.o: in function `main':\nlink-error.c:(.text+0x9): undefined reference to `missing'\ncollect2: error: ld returned 1 exit status\n",
+      "expected_success": false
+    }
+  ]
+}

@@ -12,6 +12,7 @@ function dx11ChapterSortKey(doc: DocumentMeta): number {
 export function compareKnowledgeDocuments(a: DocumentMeta,b: DocumentMeta):number {
   if(a.category!==b.category)return 0;
   if(a.category==='DirectX 11')return dx11ChapterSortKey(a)-dx11ChapterSortKey(b);
+  if(a.category==='C 언어')return cChapterSortKey(a)-cChapterSortKey(b);
   if(a.category==='C++ 기초·심화')return cppChapterSortKey(a)-cppChapterSortKey(b);
   return 0;
 }
@@ -23,3 +24,10 @@ function cppChapterSortKey(doc: DocumentMeta): number {
   return (match[1]==='advanced'?10000:0)+Number(match[2]);
 }
 
+
+function cChapterSortKey(doc: DocumentMeta): number {
+  // 기존 C01 응용 실습은 안전한 입력(정규 11) 이후에 읽는다.
+  if(doc.route==='/knowledge/c-language-01/')return 1150;
+  const match=doc.route.match(/^\/knowledge\/c-basics-(\d+)\/$/);
+  return match?Number(match[1])*100:Number.MAX_SAFE_INTEGER;
+}

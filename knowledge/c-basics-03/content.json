@@ -1,0 +1,559 @@
+{
+  "title": "C 기초 03 · 연산자와 형 변환",
+  "subtitle": "정수 나눗셈·비트 연산·범위 초과를 예측하고 검증하기",
+  "sections": [
+    {
+      "id": "start",
+      "title": "03 · 같은 숫자도 타입에 따라 계산이 달라진다",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 목표: 정수 나눗셈과 형 변환 시점, 논리 연산과 비트 연산, 정수 범위 초과를 구별한다. 02의 타입과 범위가 선수 지식이다. 약 45~60분 동안 결과를 먼저 예상하고 실행 결과와 비교한다. if문은 마지막 안전 검사 예제에서 맛보기로만 등장하며 문법은 04에서 자세히 배운다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/c-basics-03/assets/conversion.svg",
+          "alt": "형 변환을 나눗셈 전후 어디에 두는지가 결과를 결정한다",
+          "caption": "형 변환을 나눗셈 전후 어디에 두는지가 결과를 결정한다"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "계산은 대입받는 변수 타입만 보고 정해지지 않는다. double x = 5 / 2;에서도 오른쪽의 두 int로 먼저 정수 나눗셈을 하므로 x는 2.0이다. 한 피연산자를 나누기 전에 double로 바꾸면 다른 쪽도 계산에 맞게 변환되어 2.5가 나온다."
+            }
+          ]
+        }
+      ],
+      "tab": "document"
+    },
+    {
+      "id": "arithmetic",
+      "title": "산술 연산·나머지·괄호",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "표현식"
+                  }
+                ],
+                [
+                  {
+                    "text": "결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "이유"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "5 / 2"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "정수 나눗셈"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "-5 / 2"
+                  }
+                ],
+                [
+                  {
+                    "text": "-2"
+                  }
+                ],
+                [
+                  {
+                    "text": "C11 정수 나눗셈은 0 방향으로 버림"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "-5 % 2"
+                  }
+                ],
+                [
+                  {
+                    "text": "-1"
+                  }
+                ],
+                [
+                  {
+                    "text": "나머지 부호는 0이 아니면 피제수와 같음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "(double)5 / 2"
+                  }
+                ],
+                [
+                  {
+                    "text": "2.5"
+                  }
+                ],
+                [
+                  {
+                    "text": "나눗셈 전 변환"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "(double)(5 / 2)"
+                  }
+                ],
+                [
+                  {
+                    "text": "2.0"
+                  }
+                ],
+                [
+                  {
+                    "text": "이미 끝난 정수 계산 결과를 변환"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정수에서 0으로 나누거나 0으로 나눈 나머지를 구하면 미정의 동작이다. 몫을 타입에 표현할 수 없는 나눗셈도 피해야 한다. 흔한 2의 보수 int에서 INT_MIN / -1이 그 예다. 출력이 어떻게 나오는지 시험하는 대신 실행 전에 조건을 막아야 한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "c",
+          "text": "int total = 2 + 3 * 4;      // 14: 곱셈 우선\nint grouped = (2 + 3) * 4;  // 20: 괄호로 그룹 지정\nint n = 1;\nn += 1;                    // 부수 효과는 별도 문장으로 분리"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "우선순위는 어떤 연산끼리 묶이는지를 정하지만 모든 피연산자의 실행 순서를 정하지는 않는다. i++ + i++처럼 같은 객체를 순서 없이 여러 번 변경하는 식은 만들지 않는다. 짧게 쓰는 것보다 값을 읽고 바꾸는 지점을 분명히 하는 것이 먼저다."
+            }
+          ]
+        }
+      ],
+      "tab": "document"
+    },
+    {
+      "id": "promotions",
+      "title": "자동 변환과 signed/unsigned 경계",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "char·short 같은 작은 정수 타입은 산술 전에 int 또는 unsigned int로 승격될 수 있다. 그 뒤 피연산자를 공통 타입으로 맞추는 규칙이 적용된다. 따라서 작은 타입에 저장했다고 모든 중간 계산이 그 타입의 비트 수로 이루어지는 것은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "c",
+          "text": "unsigned char a = 200;\nunsigned char b = 100;\nint sum = a + b; // int가 모든 unsigned char 값을 담는 일반 환경의 예\n\nint negative = -1;\nunsigned int positive = 1u;\n// negative < positive 는 false: 여기서는 int가 unsigned int로 변환됩니다.\n// 경고가 필요한 비교 예이므로 실제 검증 소스에서는 실행하지 않습니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 sum 예는 int가 unsigned char의 모든 값을 표현할 수 있다는 전제를 표시한 설명 조각이다. 모든 구현에서 같은 승격을 가정하는 이식 코드로 복사하지 않는다. 같은 순위의 int와 unsigned int를 비교하면 int가 unsigned int로 바뀌므로 -1은 UINT_MAX가 된다. 음수가 더 작겠다는 직관만으로 결과를 예측하면 틀린다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명시적 캐스트는 의도를 드러내지만 검증을 대신하지 않는다. 음수나 큰 수를 작은 unsigned 타입으로 변환하면 모듈러 규칙에 따라 값이 달라질 수 있다. 범위를 벗어난 정수를 signed 타입으로 바꾼 결과는 C11에서 구현 정의이거나 구현 정의 신호가 발생할 수 있다. 먼저 값의 범위를 확인하고 그 다음 변환한다."
+            }
+          ]
+        }
+      ],
+      "tab": "document"
+    },
+    {
+      "id": "logic-bits",
+      "title": "논리값과 비트 패턴을 나눠 보기",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/c-basics-03/assets/bits.svg",
+          "alt": "&&는 참과 거짓을, &는 대응하는 비트끼리 계산한다",
+          "caption": "&&는 참과 거짓을, &는 대응하는 비트끼리 계산한다"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "논리 연산에서 0은 거짓이고 0이 아니면 참이다. &&, ||, !의 결과는 int 타입의 0 또는 1이다. &&는 왼쪽이 거짓이면 오른쪽을 평가하지 않고, ||는 왼쪽이 참이면 오른쪽을 평가하지 않는다. 이 단락 평가가 안전한 조건 확인에 유용하다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "c",
+          "text": "unsigned int flags = 0u;\nunsigned int mask = 1u << 2; // 값 4\nflags |= mask;              // 해당 비트를 켭니다.\nflags &= ~mask;             // 해당 비트를 끕니다.\nflags ^= mask;              // 해당 비트를 뒤집습니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "비트 연산은 unsigned 값을 기준으로 연습한다. 켜기를 두 번 해도 켜진 상태지만 뒤집기를 두 번 하면 원래 상태다. 이동 횟수는 음수가 아니고 승격된 왼쪽 타입의 비트 폭보다 작아야 한다. 1u << 2는 안전하지만 임의의 큰 이동 수를 그대로 쓰면 안 된다. signed의 음수 이동이나 표현 범위 밖 왼쪽 이동은 다른 제약이 있으므로 여기서는 사용하지 않는다."
+            }
+          ]
+        }
+      ],
+      "tab": "document"
+    },
+    {
+      "id": "overflow",
+      "title": "계산하고 나서 검사하면 늦다",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "signed 정수 덧셈 결과가 표현 범위를 벗어나면 미정의 동작이다. INT_MAX + 1을 먼저 계산하고 음수가 되었는지 검사하는 방식은 안전하지 않다. unsigned 덧셈은 최댓값 다음에 0으로 순환하지만, 그 순환이 프로그램 목적에 맞는지는 별도 문제다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "c",
+          "text": "/* right > 0이면 먼저 INT_MAX - right와 비교합니다. */\nif (right > 0 && left > INT_MAX - right) {\n    /* 덧셈 거부: left + right는 실행하지 않습니다. */\n}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습의 전체 코드는 음수 right도 분기하여 검사한다. 양수일 때만 INT_MAX - right를, 음수일 때만 INT_MIN - right를 평가하므로 검사식 자체가 위험한 뺄셈을 하지 않게 설계했다. 경계 확인과 실제 연산의 순서가 핵심이다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"left와 right\"] --> B{\"표현 범위 안인가?\"}\n B -->|예| C[\"덧셈 실행\"]\n B -->|아니오| D[\"덧셈 거부\"]\n C --> E[\"결과 사용\"]\n D --> F[\"오류 상태 전달\"]"
+        }
+      ],
+      "tab": "document"
+    },
+    {
+      "id": "practice",
+      "title": "실습 · 예상값을 쓰고 검증하기",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.c를 읽고 division, late, early, flags, overflow_rejected의 출력을 먼저 적는다. 실행 후 비교한다. 비트 켜기·끄기·뒤집기 각각을 한 번 더 추가하고 assert의 기대값을 바꿔 본다. 다음으로 right를 0으로 바꾸고 rejected와 left의 기대값을 수정해 허용 경로도 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "gcc -std=c11 -Wall -Wextra -Wpedantic -Werror main.c -o operators\n./operators"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "division=2 late=2.0 early=2.5\nflags=4 overflow_rejected=1"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 팩은 기본 예제 외에 덧셈 경계의 양수·음수·0 조합과 나눗셈·비트 연산 기대값을 검사한다. UBSan 실행 성공은 실행한 경로에서 탐지된 문제가 없다는 뜻이며 모든 입력과 모든 구현의 안전성 증명은 아니다. 직접 INT_MAX + 1을 실행하는 실험은 포함하지 않는다."
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "review",
+      "title": "복습 · 계산 전에 물어볼 질문",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "double x = 5 / 2;의 값과 수정 방법은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2.0이다. (double)5 / 2 또는 5.0 / 2로 나누기 전에 실수 연산을 선택한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "-5 / 2와 -5 % 2는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C11에서 각각 -2와 -1이다. 나눗셈은 0 방향으로 버린다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "4 && 2와 4 & 2의 차이는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫째는 두 값이 모두 참이므로 1이다. 둘째는 공통으로 켜진 비트가 없어 0이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "켜기와 뒤집기를 각각 두 번 하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "켜기를 두 번 하면 켜져 있고, 뒤집기를 두 번 하면 시작 상태로 돌아온다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "INT_MAX + 1을 계산한 다음 검사해도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "signed 범위 초과 연산 자체가 미정의 동작이므로 안 된다. 계산 전에 경계 조건을 검사해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "unsigned로 바꾸면 모든 범위 문제가 해결되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 음수 변환·순환·혼합 비교 때문에 의도와 다른 결과가 생길 수 있다. 입력 범위와 연산 목적을 함께 확인해야 한다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "main.c 내려받기",
+              "href": "/knowledge/c-basics-03/main.c"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.c · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "c",
+              "text": "#include <assert.h>\n#include <limits.h>\n#include <stdio.h>\n\nint main(void)\n{\n    int whole = 5 / 2;                    // 정수끼리 나눠서 2입니다.\n    double late = (double)(5 / 2);        // 이미 버린 소수는 돌아오지 않습니다.\n    double early = (double)5 / 2;         // 나누기 전에 double로 바꿉니다.\n    unsigned int flags = 0u;\n    const unsigned int mask = 1u << 2;    // 오른쪽에서 세 번째 비트: 4\n    int left = INT_MAX;\n    int right = 1;\n    int rejected = 0;\n\n    assert(whole == 2 && late == 2.0 && early == 2.5);\n    assert(-5 / 2 == -2 && -5 % 2 == -1);\n    assert((unsigned int)-1 == UINT_MAX);\n    assert(UINT_MAX + 1u == 0u);          // unsigned 덧셈의 모듈러 규칙\n    flags |= mask;                       // 켜기\n    assert(flags == 4u);\n    flags |= mask;                       // 다시 켜도 켜진 상태\n    assert(flags == 4u);\n    flags &= ~mask;                      // 끄기\n    assert(flags == 0u);\n    flags ^= mask;                       // 뒤집기\n    assert(flags == 4u);\n    assert((flags && 2u) == 1);          // 논리 AND: 두 값이 모두 0이 아님\n    assert((flags & 2u) == 0u);          // 비트 AND: 겹치는 1비트가 없음\n\n    // if와 ||는 04에서 자세히 배웁니다. 범위를 먼저 검사하는 예고입니다.\n    // right의 부호별로 안전한 뺄셈만 평가합니다(단락 평가).\n    if ((right > 0 && left > INT_MAX - right) ||\n        (right < 0 && left < INT_MIN - right)) {\n        rejected = 1;                    // 위험한 left + right를 실행하지 않습니다.\n    } else {\n        left += right;\n    }\n    assert(rejected == 1 && left == INT_MAX);\n    printf(\"division=%d late=%.1f early=%.1f\\n\", whole, late, early);\n    printf(\"flags=%u overflow_rejected=%d\\n\", flags, rejected);\n    return 0;\n}\n"
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "sources",
+      "title": "출처와 검증 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "설명·도해·예제는 이 과정용으로 새로 작성했다. 학습 기준은 C11이다. N1570은 공개 위원회 초안이며 최종 유료 표준 문서 자체로 표시하지 않는다. 아래 절 번호를 원문 대조의 출발점으로 사용한다: 6.3.1 산술 변환, 6.5.5 나눗셈, 6.5.7 이동, 6.5.13–14 논리 연산."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "WG14 N1570 · C11 위원회 초안",
+              "href": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "GCC 공식 문서 · 전체 빌드 단계와 옵션",
+              "href": "https://gcc.gnu.org/onlinedocs/gcc/Overall-Options.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "현재 실행 결과 · 명령·종료 코드·stdout",
+              "href": "/knowledge/shared/c-basics-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "재현 방법과 검증 한계",
+              "href": "/knowledge/shared/c-basics-lab/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "검증 스크립트 내려받기",
+              "href": "/knowledge/shared/c-basics-lab/verify.py"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 CPU 검증은 기록에 표시된 GCC 환경에서 수행한다. Windows/MSVC·다른 아키텍처 실행은 별도 미검증이다. 웹의 데스크톱·모바일 링크와 그림·탭 검사는 배포 회귀 검사로 구분한다."
+            }
+          ]
+        }
+      ],
+      "tab": "sources"
+    },
+    {
+      "id": "history",
+      "title": "작성 이력과 과정에서의 위치",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-22 · C 정규 과정 테스트 배치 01–03 신규 작성. 이 문서는 Notion 원문 이관본이 아니며 새 교재 원본은 content.json과 main.c다. 본문·그림·복습·소스의 수정은 Git 이력으로 추적한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이 단원 저작 원본 content.json",
+              "href": "/knowledge/c-basics-03/content.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정규 과정은 14개 단원으로 계획했다. 이번 테스트 범위는 01–03이며 04 이후는 미집필 상태다. 기존 C01은 입력 검증·정수 범위·C++ 교차 컴파일의 응용 자료로 보존하며 정규 11 이후에 참고한다. 03에서 이전/다음 문서의 기존 C01로 이동할 수 있지만 정규 04의 대체 수업은 아니다. 예약 작업은 비활성 상태로 두고, 테스트 3개에 대한 피드백을 받은 뒤 다음 배치를 정한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "전체 학습 목차",
+              "href": "/knowledge/"
+            }
+          ]
+        }
+      ],
+      "tab": "history"
+    }
+  ]
+}
