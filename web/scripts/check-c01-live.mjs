@@ -15,11 +15,11 @@ const report = { base, expectedSource: expected, resources: [], screens: [], unv
 ] };
 async function exact(path, localPath = '../' + path) {
   const response = await fetch(base + path + '?c01=' + Date.now(), { cache: 'no-store' });
-  expect(response.status(), path).toBe(200);
+  expect(response.status, path).toBe(200);
   const actual = Buffer.from(await response.arrayBuffer());
   const local = await readFile(localPath);
   expect(hash(actual), path).toBe(hash(local));
-  report.resources.push({ path, bytes: actual.length, sha256: hash(actual), status: response.status() });
+  report.resources.push({ path, bytes: actual.length, sha256: hash(actual), status: response.status });
 }
 async function walk(path) {
   for (const item of await readdir('../' + path, { withFileTypes: true })) {
@@ -28,7 +28,7 @@ async function walk(path) {
   }
 }
 const infoResponse = await fetch(base + 'build-info.json?c01=' + Date.now(), { cache: 'no-store' });
-expect(infoResponse.status()).toBe(200);
+expect(infoResponse.status).toBe(200);
 report.buildInfo = await infoResponse.json();
 expect(report.buildInfo.sourceCommit).toBe(expected);
 await exact('data/atlas/docs/knowledge--c-language-01.json', 'dist/data/atlas/docs/knowledge--c-language-01.json');
