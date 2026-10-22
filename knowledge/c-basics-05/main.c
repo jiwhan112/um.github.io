@@ -65,4 +65,3 @@ int main(void)
            original, clamped, sum_first(5), first, second);
     return 0;
 }
-

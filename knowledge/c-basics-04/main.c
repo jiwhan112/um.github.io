@@ -68,4 +68,3 @@ int main(void)
            grade, total, visits, attempts, selected, status);
     return 0;
 }
-
