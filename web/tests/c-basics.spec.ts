@@ -15,7 +15,7 @@ for(const [index,slug] of slugs.entries())test(`${slug} opens tabs, images, revi
   await diagram.scrollIntoViewIfNeeded();await expect(diagram).toHaveAttribute('data-diagram-state','ready');
  }
  const adjacent=page.getByRole('navigation',{name:'이전 다음 문서'});
- const expected=[index?slugs[index-1]:null,slugs[index+1]??'c-language-01'].filter(Boolean).map(s=>`/um.github.io/knowledge/${s}/`);
+ const expected=[index?slugs[index-1]:null,slugs[index+1]??'c-basics-04'].filter(Boolean).map(s=>`/um.github.io/knowledge/${s}/`);
  expect(await adjacent.getByRole('link').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')))).toEqual(expected);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await page.evaluate(()=>document.fonts.ready);
@@ -39,11 +39,11 @@ for(const [index,slug] of slugs.entries())test(`${slug} opens tabs, images, revi
  await expect(page.locator('.prose')).toContainText('Notion 원문 이관본이 아니며');
  expect(errors).toEqual([]);
 });
-test('C curriculum lists three regular samples before the existing applied lesson',async({page})=>{
+test('C curriculum includes five regular chapters before applied C01',async({page})=>{
  await page.goto('knowledge/');
  const topic=page.locator('#knowledge-cpp .knowledge-topic').filter({has:page.getByText('C 언어',{exact:true})});
- await expect(topic.locator('.knowledge-topic-row')).toContainText('4개 공개');
- expect(await topic.locator('.knowledge-document-link').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')))).toEqual([...slugs,'c-language-01'].map(s=>`/um.github.io/knowledge/${s}/`));
+ await expect(topic.locator('.knowledge-topic-row')).toContainText('6개 공개');
+ expect(await topic.locator('.knowledge-document-link').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')))).toEqual([...slugs,'c-basics-04','c-basics-05','c-language-01'].map(s=>`/um.github.io/knowledge/${s}/`));
  for(const slug of slugs){
   await topic.locator(`a[href="/um.github.io/knowledge/${slug}/"]`).click();
   await expect(page.locator('main h1')).toContainText('C 기초');
