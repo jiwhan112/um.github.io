@@ -134,7 +134,7 @@ test('bitmask operations distinguish clearing from toggling and preserve existin
 
 test('C++ curriculum follows foundations 01–05 with advanced 01–06', async ({ page, isMobile }) => {
   await page.goto('knowledge/');
-  const cpp = page.locator('#knowledge-cpp');
+  const cpp = page.locator('#knowledge-cpp .knowledge-topic').filter({ has: page.locator('.knowledge-topic-row strong', { hasText: 'C++ 기초·심화' }) });
   const order=[...chapters.map(chapter=>chapter.slug),'cpp-advanced-01','cpp-advanced-02','cpp-advanced-03','cpp-advanced-04','cpp-advanced-05','cpp-advanced-06'];
   await expect(cpp.locator('.knowledge-document-link')).toHaveCount(11);
   expect(await cpp.locator('.knowledge-document-link').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')))).toEqual(order.map(slug => `/um.github.io/knowledge/${slug}/`));
