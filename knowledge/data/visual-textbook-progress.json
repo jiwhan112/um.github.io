@@ -93,19 +93,18 @@
   ],
   "active_batch": {
     "worker": "interactive-chat",
-    "status": "released",
+    "status": "validation_pending",
     "unit_ids": [
-      "c-language-01"
+      "c-basics-01",
+      "c-basics-02",
+      "c-basics-03"
     ],
-    "branch": "feature/c-language-01-20261021",
+    "branch": "feature/c-basics-sample-20261022",
+    "phase": "authored_cpu_verified",
     "lease_until_utc": null,
-    "phase": "published_verified",
-    "source_commit": "3658cc6d98b066d61b8e747ee6b28c30dbff9c34",
-    "release_condition": "PR review+merged and published live verified",
-    "released_at_utc": "2026-10-22T06:07:57.604Z",
-    "release_evidence": "https://github.com/jiwhan112/um.github.io/pull/18"
+    "release_condition": "PR checks, merge and public Pages verification"
   },
-  "next_unit": "effective-cpp-01",
+  "next_unit": "c-basics-04",
   "units": [
     {
       "id": "dx11-frustum",
@@ -1684,6 +1683,45 @@
         "Author approved visual textbook and preserve full sources",
         "Run appropriate code and PC/mobile publication verification"
       ]
+    },
+    {
+      "id": "c-basics-01",
+      "category": "C 언어",
+      "route": "/knowledge/c-basics-01/",
+      "state": "authored_cpu_verified_web_pending",
+      "evidence": {
+        "cpu": "knowledge/shared/c-basics-lab/verification.json"
+      },
+      "remaining": [
+        "PR regression gate",
+        "Pages publication and public verification"
+      ]
+    },
+    {
+      "id": "c-basics-02",
+      "category": "C 언어",
+      "route": "/knowledge/c-basics-02/",
+      "state": "authored_cpu_verified_web_pending",
+      "evidence": {
+        "cpu": "knowledge/shared/c-basics-lab/verification.json"
+      },
+      "remaining": [
+        "PR regression gate",
+        "Pages publication and public verification"
+      ]
+    },
+    {
+      "id": "c-basics-03",
+      "category": "C 언어",
+      "route": "/knowledge/c-basics-03/",
+      "state": "authored_cpu_verified_web_pending",
+      "evidence": {
+        "cpu": "knowledge/shared/c-basics-lab/verification.json"
+      },
+      "remaining": [
+        "PR regression gate",
+        "Pages publication and public verification"
+      ]
     }
   ],
   "deferred_new_design": [
@@ -1700,7 +1738,33 @@
     "all_approved_units_published": false,
     "automation_stop_confirmed": false
   },
-  "after_active_batch_next_unit": "effective-cpp-01",
+  "after_active_batch_next_unit": "c-basics-04",
   "inventory_note": "Inventory is not the live catalog count. C++ advanced 05–06 and C01 are published; C01 was reconciled against merged PR18 and successful public verification. Computer-science child/source audit and remaining collection scope are still pending.",
-  "next_unit_after_verified_pr17": "c-language-01"
+  "next_unit_after_verified_pr17": "c-language-01",
+  "previous_released_batch": {
+    "worker": "interactive-chat",
+    "status": "released",
+    "unit_ids": [
+      "c-language-01"
+    ],
+    "branch": "feature/c-language-01-20261021",
+    "lease_until_utc": null,
+    "phase": "published_verified",
+    "source_commit": "3658cc6d98b066d61b8e747ee6b28c30dbff9c34",
+    "release_condition": "PR review+merged and published live verified",
+    "released_at_utc": "2026-10-22T06:07:57.604Z",
+    "release_evidence": "https://github.com/jiwhan112/um.github.io/pull/18"
+  },
+  "continuation_gate": "Wait for user feedback on the three C sample lessons; do not continue or enable scheduling automatically.",
+  "c_regular_course": {
+    "planned_chapters": 14,
+    "sample_batch": [
+      "c-basics-01",
+      "c-basics-02",
+      "c-basics-03"
+    ],
+    "existing_applied_lesson": "c-language-01",
+    "recommended_applied_after": 11,
+    "authorship": "new original lessons, not Notion migration"
+  }
 }

@@ -88,8 +88,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,84);
- assert.equal(sourceCatalog.length,84);
+ assert.equal(docs.length,87);
+ assert.equal(sourceCatalog.length,87);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -540,4 +540,31 @@ test('advanced lessons preserve ZIP bytes, historical evidence, complete annotat
  const integrity=spawnSync('python3',['../'+base+'verify_sources.py'],{encoding:'utf8'});
  assert.ifError(integrity.error);
  assert.equal(integrity.status,0,integrity.stdout+'\n'+integrity.stderr);
+});
+
+test('C sample course keeps regular order, executable sources and honest new authorship',async()=>{
+ const docs=catalog.documents.filter(d=>d.kind==='knowledge'&&d.category==='C 언어').sort(compareKnowledgeDocuments);
+ assert.deepEqual(docs.map(d=>d.route),['/knowledge/c-basics-01/','/knowledge/c-basics-02/','/knowledge/c-basics-03/','/knowledge/c-language-01/']);
+ const report=JSON.parse(await readFile('../knowledge/shared/c-basics-lab/verification.json','utf8'));
+ assert.equal(report.status,'pass');assert.equal(report.distinct_addition_boundary_cases,9);
+ assert.equal(report.commands.filter((c:{expected_success:boolean})=>!c.expected_success).length,2);
+ for(const file of report.source_files){
+  const bytes=await readFile('../'+file.path);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),file.sha256,file.path);
+  assert.deepEqual(await readFile('public/'+file.path),bytes);
+ }
+ for(const doc of docs.slice(0,3)){
+  const full=documentSchema.parse(JSON.parse(await readFile('public/'+doc.file,'utf8')));
+  assert.deepEqual([...new Set(full.sections.map(s=>s.tab))],['document','practice','sources','history']);
+  const blocks=full.sections.flatMap(s=>s.blocks);
+  assert.equal(blocks.filter(b=>b.type==='image').length,2);
+  assert.ok(blocks.some(b=>b.type==='code'&&b.language==='mermaid'));
+  assert.equal(full.sections.find(s=>s.id==='review')!.blocks.filter(b=>b.type==='details').length,6);
+  assert.ok(JSON.stringify(full.sections.filter(s=>s.tab==='history')).includes('Notion 원문 이관본이 아니며'));
+  const source=await readFile('../'+doc.route.slice(1)+'main.c','utf8');
+  assert.ok(full.sections.find(s=>s.id==='full-code')!.blocks.some(b=>b.type==='details'&&b.blocks.some(c=>c.type==='code'&&c.text===source)));
+  for(const b of blocks)if(b.type==='image')assert.ok((await readFile('public/'+b.src.slice(1),'utf8')).includes('<svg'));
+ }
+ const future=[12,11,14].map(n=>({...docs[0],route:`/knowledge/c-basics-${n}/` }));
+ assert.deepEqual([...future,docs[3]].sort(compareKnowledgeDocuments).map(d=>d.route),['/knowledge/c-basics-11/','/knowledge/c-language-01/','/knowledge/c-basics-12/','/knowledge/c-basics-14/']);
 });

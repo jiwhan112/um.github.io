@@ -97,7 +97,7 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await expect(page.getByRole('heading',{name:'프로그래밍 지식 라이브러리'})).toBeVisible();
  await expect(page.locator('.knowledge-map-sidebar nav a')).toHaveCount(7);
  const tree=page.locator('.knowledge-tree');
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(82);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(85);
  const cppTopics=page.locator('#knowledge-cpp .knowledge-topic-row strong');
  await expect(cppTopics).toHaveText(['C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++']);
  const windowsTopics=page.locator('#knowledge-windows .knowledge-topic-row strong');
@@ -122,7 +122,7 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await expect(page.locator('.knowledge-recent-list a').first()).toContainText('BeautifulSoup');
  await page.getByRole('button',{name:'목차 검색 초기화'}).click();
  await page.getByRole('button',{name:'모두 펼치기'}).click();
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(82);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(85);
  if(isMobile){
   await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
   await expect(page.getByRole('dialog').getByRole('link',{name:'프로그래밍 학습',exact:true})).toBeVisible();
@@ -295,8 +295,9 @@ test('DX11 knowledge outline follows numeric chapter sequence despite migration 
 test('published C01 opens from the C language curriculum topic',async({page})=>{
  await page.goto('knowledge/');
  const topic=page.locator('#knowledge-cpp .knowledge-topic').filter({has:page.getByText('C 언어',{exact:true})});
- await expect(topic.locator('.knowledge-topic-row')).toContainText('1개 공개');
- const link=topic.locator('.knowledge-document-link');
+ await expect(topic.locator('.knowledge-topic-row')).toContainText('4개 공개');
+ await expect(topic.locator('.knowledge-document-link')).toHaveCount(4);
+ const link=topic.locator('.knowledge-document-link[href="/um.github.io/knowledge/c-language-01/"]');
  await expect(link).toHaveCount(1);
  await expect(link).toHaveAttribute('href','/um.github.io/knowledge/c-language-01/');
  await link.click();
