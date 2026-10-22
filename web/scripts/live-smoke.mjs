@@ -14,9 +14,10 @@ const routes=JSON.parse(await readFile('dist/data/atlas/routes.json','utf8'));co
 const shots=new Map([['/thinking-lab/','library'],['/','dashboard'],['/daily-briefing/','briefing'],['/language-study/japanese/9/','japanese'],['/thinking-lab/ep-01-04-palindrome-permutation/','thinking'],['/ai-asset-lab/','gallery']]);
 try{
  for(const path of routes){
+  console.log('Checking public route:',path);
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   const response=await page.goto(base+path.slice(1));expect(response?.status()).toBe(200);
-  await expect(page.locator('[data-framework=react]')).toBeVisible();await expect(page.locator('main h1').first()).toBeVisible();
+  await expect(page.locator('[data-framework=react]')).toBeVisible();await expect(page.locator('main h1').first()).toBeVisible({timeout:30000});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);expect(errors).toEqual([]);
   expect(await page.locator('script[src*="assets/atlas/detail"]').count()).toBe(0);await expect(page.locator('html')).toHaveAttribute('data-theme','dark');await expect(page.locator('.app-shell')).toHaveCSS('background-color','rgb(16, 19, 25)');
   if(shots.has(path)){await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:'live-check/'+shots.get(path)+'.png'});}

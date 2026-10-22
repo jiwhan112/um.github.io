@@ -35,10 +35,12 @@ await exact('data/atlas/docs/knowledge--c-language-01.json', 'dist/data/atlas/do
 await exact('data/atlas/catalog.json', 'dist/data/atlas/catalog.json');
 await walk('knowledge/c-language-01');
 await walk('knowledge/shared/c01-lab');
+console.log('C01 public resource hashes verified:', report.resources.length);
 
 const browser = await chromium.launch();
 try {
   for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+    console.log('Checking public C01 viewport:', viewport.width, viewport.height);
     const mobile = viewport.width === 390;
     const context = await browser.newContext({ viewport, isMobile: mobile, hasTouch: mobile,
       locale: 'ko-KR', timezoneId: 'Asia/Seoul', serviceWorkers: 'block' });
