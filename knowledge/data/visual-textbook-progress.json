@@ -12,7 +12,7 @@
     "future_run_success_confirmed": false
   },
   "inventory_finalized": false,
-  "baseline_catalog_documents": 81,
+  "baseline_catalog_documents": 83,
   "source_collections": [
     {
       "id": "c-language",
@@ -90,18 +90,16 @@
   "active_batch": {
     "worker": "interactive-chat",
     "status": "active",
-    "branch": "feature/cpp-advanced-05-06-20261021",
     "unit_ids": [
-      "cpp-advanced-05",
-      "cpp-advanced-06"
+      "c-language-01"
     ],
-    "lease_until_utc": "2026-10-21T10:30:00Z",
-    "pr_url": "https://github.com/jiwhan112/um.github.io/pull/17",
-    "instruction": "Read open PR and branch progress before editing; skip concurrent changes while this lease is valid.",
-    "release_condition": "A later explicit released record in PR17 plus verified merge and public deployment supersedes this earlier lease; a merged PR alone does not release it.",
-    "phase": "final_evidence_commit_and_ci_before_merge"
+    "branch": "feature/c-language-01-20261021",
+    "lease_until_utc": "2026-10-22T03:00:00Z",
+    "phase": "cpu-and-react-ci",
+    "source_commit": "11d8e2a95095e78f63dbac6408dbbccc770974ac",
+    "release_condition": "PR review+merged and published live verified"
   },
-  "next_unit": "cpp-advanced-05",
+  "next_unit": "c-language-01",
   "units": [
     {
       "id": "dx11-frustum",
@@ -1450,7 +1448,7 @@
       "category": "C++ 기초·심화",
       "notion_url": "https://app.notion.com/p/3f8a99703f408180b127fe99defa9d16",
       "route": "/knowledge/cpp-advanced-05/",
-      "state": "in_progress",
+      "state": "published_verified",
       "stages": {
         "source_capture": "complete",
         "body": "complete_reviewed",
@@ -1461,8 +1459,8 @@
         "clang_cmake_ctest": "pass_gcc_and_clang_sanitizer_18_ctest_each_9_stdout_pairs",
         "web_schema_typecheck_unit": "pass_30_unit_tests",
         "pc_mobile_ci": "source_commit_pass_445_expected_1_intentional_skip_0_flaky",
-        "pr": "draft_17",
-        "public_deployment": "pending_final_head_ci_merge_pages_and_live_verification",
+        "pr": "merged_17",
+        "public_deployment": "published_verified_2026-10-21",
         "web_build": "pass_158_routes",
         "visual_review": "pass_desktop_mobile_actual_screenshots"
       },
@@ -1478,8 +1476,18 @@
         "final_publication_record": "https://github.com/jiwhan112/um.github.io/pull/17",
         "note": "Read final PR record before marking publication verified; evidence URL alone is not completion.",
         "visual_artifact_id": 12331658629,
-        "visual_artifact_sha256": "7e5f1bd195a7c683f0743db956a9c3ee08eff318d0073b0fe06fe8e73974e1db"
-      }
+        "visual_artifact_sha256": "7e5f1bd195a7c683f0743db956a9c3ee08eff318d0073b0fe06fe8e73974e1db",
+        "final_pr_head": "3b8545ddfc7e0019f78d467fffda1f1c0c6d4a3b",
+        "merge_source_commit": "a1d22d913a088f5f4ead53c24a4d67fc9128bd03",
+        "published_master_commit": "a05be1255d5859bc304ba857d450af5643f8791b",
+        "pages_publication_run": "https://github.com/jiwhan112/um.github.io/actions/runs/39574477000",
+        "pages_generated_run": "https://github.com/jiwhan112/um.github.io/actions/runs/39575258248",
+        "public_build_info_sourceCommit": "a1d22d913a088f5f4ead53c24a4d67fc9128bd03",
+        "public_resources_exact": 761,
+        "release_status": "released",
+        "released_at_utc": "2026-10-21T09:18:09Z"
+      },
+      "remaining": []
     },
     {
       "id": "cpp-advanced-06",
@@ -1487,7 +1495,7 @@
       "category": "C++ 기초·심화",
       "notion_url": "https://app.notion.com/p/3f8a99703f408186b6f6e6196b1be1a6",
       "route": "/knowledge/cpp-advanced-06/",
-      "state": "in_progress",
+      "state": "published_verified",
       "stages": {
         "source_capture": "complete",
         "body": "complete_reviewed",
@@ -1498,8 +1506,8 @@
         "clang_cmake_ctest": "pass_gcc_and_clang_sanitizer_18_ctest_each_9_stdout_pairs",
         "web_schema_typecheck_unit": "pass_30_unit_tests",
         "pc_mobile_ci": "source_commit_pass_445_expected_1_intentional_skip_0_flaky",
-        "pr": "draft_17",
-        "public_deployment": "pending_final_head_ci_merge_pages_and_live_verification",
+        "pr": "merged_17",
+        "public_deployment": "published_verified_2026-10-21",
         "web_build": "pass_158_routes",
         "visual_review": "pass_desktop_mobile_actual_screenshots"
       },
@@ -1515,24 +1523,57 @@
         "final_publication_record": "https://github.com/jiwhan112/um.github.io/pull/17",
         "note": "Read final PR record before marking publication verified; evidence URL alone is not completion.",
         "visual_artifact_id": 12331658629,
-        "visual_artifact_sha256": "7e5f1bd195a7c683f0743db956a9c3ee08eff318d0073b0fe06fe8e73974e1db"
-      }
+        "visual_artifact_sha256": "7e5f1bd195a7c683f0743db956a9c3ee08eff318d0073b0fe06fe8e73974e1db",
+        "final_pr_head": "3b8545ddfc7e0019f78d467fffda1f1c0c6d4a3b",
+        "merge_source_commit": "a1d22d913a088f5f4ead53c24a4d67fc9128bd03",
+        "published_master_commit": "a05be1255d5859bc304ba857d450af5643f8791b",
+        "pages_publication_run": "https://github.com/jiwhan112/um.github.io/actions/runs/39574477000",
+        "pages_generated_run": "https://github.com/jiwhan112/um.github.io/actions/runs/39575258248",
+        "public_build_info_sourceCommit": "a1d22d913a088f5f4ead53c24a4d67fc9128bd03",
+        "public_resources_exact": 761,
+        "release_status": "released",
+        "released_at_utc": "2026-10-21T09:18:09Z"
+      },
+      "remaining": []
     },
     {
       "id": "c-language-01",
       "title": "C01 · C11 입력 검증·정수 범위와 C++11/20 교차 컴파일",
       "notion_url": "https://app.notion.com/p/3fda99703f408153b1dffae9398aa3bc",
       "category": "C 언어",
-      "route": null,
-      "state": "pending_source_capture",
+      "route": "/knowledge/c-language-01/",
+      "state": "in_progress",
       "evidence": {
-        "source_index_read": true
+        "source_index_read": true,
+        "source_pages": [
+          "knowledge/c-language-01/source-notion.md",
+          "knowledge/c-language-01/c01b/source-notion.md"
+        ],
+        "source_manifest": "knowledge/shared/c01-lab/source-integrity.json",
+        "local_artifact": "sandbox:/mnt/data/ATLAS_NOTE_C01_local_work_20261021.zip",
+        "historical_logs": "knowledge/shared/c01-lab/historical-notion/",
+        "body_commit": "11d8e2a95095e78f63dbac6408dbbccc770974ac",
+        "recovery_branch": "feature/c-language-01-20261021"
       },
       "remaining": [
-        "Capture latest full original and audit related source/log children",
-        "Author approved visual textbook and preserve full sources",
-        "Run appropriate code and PC/mobile publication verification"
-      ]
+        "CPU CI and archive logs plus hashes",
+        "Full web React validation, desktop/mobile visual review",
+        "PR review, merge, actual Pages and public URL verify",
+        "Historical attached file binary not yet verified"
+      ],
+      "stages": {
+        "source_capture": "complete_two_pages",
+        "historical_native_logs": "17_verified_FNV64_and_byte_count",
+        "historical_attachment": "binary_unverified",
+        "body": "committed_pending_web_ci",
+        "full_source": "original_4_and_korean_2_committed",
+        "source_integrity": "original_4_SHA256_verified",
+        "local_build": "five_toolchains_CMake_CTest_pass",
+        "cpu_ci": "pending",
+        "react_web_ci": "pending",
+        "pr": "pending",
+        "public_deployment": "pending"
+      }
     },
     {
       "id": "effective-cpp-01",

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="408" viewBox="0 0 1000 408" role="img" aria-labelledby="t d">
+<title id="t">검증 관문 네 단계</title><desc id="d">숫자 입력에서 변환, 남은 토큰, 덧셈의 범위, 게임 상태 적용까지 차례로 검사한다.</desc>
+<rect width="1000" height="408" rx="20" fill="#0d192a"/>
+<text x="34" y="57" fill="#f8fafc" font-size="29" font-family="sans-serif" font-weight="700">입력 → 변환 → 연산 범위 → 상태 반영</text>
+<text x="34" y="93" fill="#cbd5e1" font-size="19" font-family="sans-serif">검사는 한 번에 하나의 계약을 확인합니다. 이전 단계에 실패하면 다음 단계로 진행하지 않습니다.</text>
+<g font-family="sans-serif" text-anchor="middle"><rect x="35" y="142" width="201" height="137" rx="15" fill="#163a56" stroke="#5eead4" stroke-width="3"/><text x="135" y="187" fill="#f8fafc" font-size="23" font-weight="700">① 입력 변환</text><text x="135" y="228" fill="#ccfbf1" font-size="18">정수 두 개?</text>
+<rect x="280" y="142" width="201" height="137" rx="15" fill="#163a56" stroke="#5eead4" stroke-width="3"/><text x="381" y="187" fill="#f8fafc" font-size="23" font-weight="700">② 잔여 토큰</text><text x="381" y="228" fill="#ccfbf1" font-size="18">쓰레기 입력 없음?</text>
+<rect x="525" y="142" width="201" height="137" rx="15" fill="#163a56" stroke="#5eead4" stroke-width="3"/><text x="626" y="187" fill="#f8fafc" font-size="23" font-weight="700">③ 연산 범위</text><text x="626" y="228" fill="#ccfbf1" font-size="18">오버플로 없음?</text>
+<rect x="770" y="142" width="195" height="137" rx="15" fill="#21412f" stroke="#86efac" stroke-width="3"/><text x="868" y="187" fill="#f8fafc" font-size="23" font-weight="700">④ 상태 갱신</text><text x="868" y="228" fill="#dcfce7" font-size="18">게임 규칙 충족?</text></g>
+<g fill="none" stroke="#5eead4" stroke-width="5" stroke-linecap="round"><path d="M241 207 H271"/><path d="M486 207 H516"/><path d="M731 207 H761"/></g><g fill="#5eead4"><path d="M271 207 l-11 -8 v16z"/><path d="M516 207 l-11 -8 v16z"/><path d="M761 207 l-11 -8 v16z"/></g>
+<text x="40" y="341" font-family="sans-serif" font-size="21" fill="#fda4af">실패 시: 오류를 반환하고 원래 게임 데이터를 유지</text>
+<text x="40" y="373" font-family="sans-serif" font-size="18" fill="#94a3b8">이 그림은 설계 개념도이며 자동 테스트의 성능 측정 결과가 아닙니다.</text></svg>

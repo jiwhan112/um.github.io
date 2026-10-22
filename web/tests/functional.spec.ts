@@ -104,7 +104,11 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await expect(windowsTopics).toHaveText(['WinAPI','게임 수학','DirectX 9','DirectX 11','DirectX 12']);
  await expect(page.getByText('집필 시 설계').first()).toBeVisible();
  await expect(page.getByText('신규 집필 예정').first()).toBeVisible();
- await expect(page.locator('.knowledge-recent-list a')).toHaveCount(83);
+ const publishedKnowledgeRoutes=catalog.documents.filter(d=>d.kind==='knowledge').map(d=>d.route).sort();
+ const recentLinks=page.locator('.knowledge-recent-list a');
+ await expect(recentLinks).toHaveCount(publishedKnowledgeRoutes.length);
+ const displayedRoutes=(await recentLinks.evaluateAll(links=>links.map(link=>new URL((link as HTMLAnchorElement).href).pathname.replace(/^\/um\.github\.io/,'')))).sort();
+ expect(displayedRoutes).toEqual(publishedKnowledgeRoutes);
  const dx11=tree.getByRole('button',{name:/Windows·그래픽스 프로그래밍/});
  await expect(dx11).toHaveAttribute('aria-expanded','true');
  await expect(tree.getByRole('link',{name:/Frustum Culling/})).toBeVisible();

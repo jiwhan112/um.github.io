@@ -88,8 +88,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,83);
- assert.equal(sourceCatalog.length,83);
+ assert.equal(docs.length,84);
+ assert.equal(sourceCatalog.length,84);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -115,6 +115,46 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
   assert.ok(full.sections.some(s=>s.blocks.some(b=>b.type==='code'&&b.language==='mermaid')),'diagram source lost '+entry.path);
   assert.ok(full.sections.some(s=>s.id==='full-source-refs'&&s.blocks.some(b=>b.type==='paragraph'&&b.content.some(n=>n.kind==='link'&&n.href?.startsWith('/knowledge/')))),'missing internal full source reference '+entry.path);
  }
+});
+
+test('C01 visual textbook preserves original source, 17 historical logs and Korean CPU source links',async()=>{
+ const full=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--c-language-01.json','utf8')));
+ const tabs=new Set(full.sections.map(s=>s.tab));
+ assert.deepEqual([...tabs].sort(),['document','history','practice','sources']);
+ assert.equal(full.sections.filter(s=>s.tab==='document').length,6);
+ const blocks=full.sections.flatMap(s=>s.blocks);
+ assert.ok(blocks.filter(b=>b.type==='image').length>=2);
+ assert.equal(blocks.filter(b=>b.type==='code'&&b.language==='mermaid').length,2);
+ assert.ok(blocks.filter(b=>b.type==='details').length>=12);
+ for(const code of ['original/c11/main.c','original/c11/CMakeLists.txt','original/c01b/main.cpp','original/c01b/CMakeLists.txt']){
+  const expected=JSON.parse(await readFile('../knowledge/shared/c01-lab/source-integrity.json','utf8')).source_files.find((f:{path:string})=>f.path.endsWith(code));
+  assert.ok(expected,'missing C01 source inventory '+code);
+  const bytes=await readFile('../'+expected.path);
+  assert.equal(bytes.length,expected.bytes,code);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),expected.sha256,code);
+ }
+ for(const folder of ['knowledge/c-language-01','knowledge/c-language-01/c01b']){
+  const provenance=JSON.parse(await readFile('../'+folder+'/source-notion-capture.json','utf8'));
+  const orig=await readFile('../'+folder+'/source-notion.md');
+  assert.equal(orig.length,provenance.source_bytes);
+  assert.equal(createHash('sha256').update(orig).digest('hex'),provenance.sha256);
+ }
+ const base='../knowledge/shared/c01-lab/historical-notion/';
+ let historical=0;
+ for(const id of ['initial','retest']){
+  const index=JSON.parse(await readFile(base+id+'-index.json','utf8'));
+  for(const entry of index.entries){
+   const content=await readFile('../'+entry.path);
+   assert.equal(content.length,entry.bytes,entry.path);
+   historical++;
+  }
+ }
+ assert.equal(historical,17);
+ const originalC=await readFile('../knowledge/shared/c01-lab/original/c11/main.c','utf8');
+ const originalCpp=await readFile('../knowledge/shared/c01-lab/original/c01b/main.cpp','utf8');
+ assert.ok(originalC.includes('PRId64')&&originalCpp.includes('bool checkedAdd'));
+ assert.ok((await readFile('../knowledge/shared/c01-lab/ko/c11/main.c','utf8')).includes('대입'));
+ assert.ok((await readFile('../knowledge/shared/c01-lab/ko/c01b/main.cpp','utf8')).includes('정수'));
 });
 
 test('WinAPI04A native CPU sources preserve original Notion byte counts and SHA-256',async()=>{

@@ -29,3 +29,4 @@ try{
  await writeFile('live-check/results.json',JSON.stringify({base,info,routes:results,legacyHash:true,mobileNavigation:true,allDark:true,libraryFilter:true},null,2));
  console.log('PUBLIC PAGES VERIFIED:',results.length,'React routes; source',expected);
 }finally{await browser.close();}
+await import('./check-c01-live.mjs');
