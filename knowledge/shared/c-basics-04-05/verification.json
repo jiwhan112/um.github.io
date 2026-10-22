@@ -1,0 +1,31 @@
+{
+  "status": "pass_local_only_web_pending",
+  "tested_at_utc": "2026-10-22T10:06:50Z",
+  "host": "Linux x86_64 (execution sandbox)",
+  "compiler": "gcc (Debian 14.2.0-19) 14.2.0",
+  "standard": "C11",
+  "configurations": [
+    "strict_gcc_c11_Wall_Wextra_Wpedantic_Werror",
+    "gcc_c11_ubsan_fno_sanitize_recover_all"
+  ],
+  "paths": [
+    {
+      "source": "knowledge/c-basics-04/main.c",
+      "sha256": "e0d14b294190613bdccee414631a7adb69dbc49afd22812152f6f1ac928e773d",
+      "stdout": "grade=pass total=15 visits=3 attempts=1 selected=6 status=found\n",
+      "exit_code": 0
+    },
+    {
+      "source": "knowledge/c-basics-05/main.c",
+      "sha256": "e074b64fab726776d0fbd4322ef66704f3a50aa131f5bbe2216b18b0283ef600",
+      "stdout": "original=120 clamped=100 sum5=15 tickets=1,2\n",
+      "exit_code": 0
+    }
+  ],
+  "limitations": [
+    "C11 strict and UBSan executed only on named Linux/GCC host",
+    "asserts enabled; no NDEBUG",
+    "Windows/MSVC, non-x86_64, all input combinations, performance and concurrent execution unverified",
+    "React/PC/mobile publication awaits GitHub Pages workflow"
+  ]
+}

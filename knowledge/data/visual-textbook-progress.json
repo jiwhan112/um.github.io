@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
-  "scope": "Approved existing-source programming textbook visual redesign",
-  "scope_recorded_at_utc": "2026-10-21T08:34:19Z",
+  "scope": "2026-10-22 finite C basics 04-14 authoring, Effective C++ 01-06 visual redesign",
+  "scope_recorded_at_utc": "2026-10-22T10:06:50Z",
   "baseline_master": "59209c9674786f84fd0e9e50e01c9b269ea72e81",
   "automation": {
-    "title": "프로그래밍 교재 시각 개편",
+    "title": "C·Effective C++ 교재 완성",
     "timezone": "Asia/Seoul",
-    "schedule": "BEGIN:VEVENT\nDTSTART;TZID=Asia/Seoul:20261021T180000\nRRULE:FREQ=HOURLY;INTERVAL=1;BYMINUTE=0;BYSECOND=0\nEND:VEVENT",
+    "schedule": "BEGIN:VEVENT\nDTSTART;TZID=Asia/Seoul:20261022T190000\nRRULE:FREQ=HOURLY;INTERVAL=1;BYMINUTE=0;BYSECOND=0\nEND:VEVENT",
     "timing_mode": "exact_schedule",
     "registration_confirmed": true,
     "future_run_success_confirmed": false,
     "id": "6ad87837d4688191818e709038a6c0c4",
-    "is_enabled": false,
-    "pause_reason": "User explicitly requested keeping the automation disabled during manual recovery on 2026-10-22.",
-    "resume_requires_explicit_user_request": true
+    "is_enabled": true,
+    "pause_reason": null,
+    "resume_requires_explicit_user_request": false
   },
   "inventory_finalized": false,
   "baseline_catalog_documents": 83,
@@ -92,22 +92,20 @@
     }
   ],
   "active_batch": {
-    "worker": "interactive-chat",
-    "status": "release_tracked_in_pr",
+    "worker": "automation",
+    "status": "committed_pending_pages_validation",
     "unit_ids": [
-      "c-basics-01",
-      "c-basics-02",
-      "c-basics-03"
+      "c-basics-04",
+      "c-basics-05"
     ],
-    "branch": "feature/c-basics-sample-20261022",
-    "phase": "authored_cpu_verified",
+    "branch": "master",
     "lease_until_utc": null,
-    "release_condition": "PR checks, merge and public Pages verification",
-    "release_evidence": "https://github.com/jiwhan112/um.github.io/pull/21",
-    "source_commit": "2473b0e591d859033158774eb60335fa2397c76d",
-    "note": "This source ledger is committed before CI/publication. PR21 holds the final checked SHA, workflow results and public verification. Read that release record before interpreting live completion; no scheduled worker owns this batch."
+    "phase": "source_complete_cpu_pass_web_pending",
+    "source_commit": null,
+    "verification": "knowledge/shared/c-basics-04-05/verification.json",
+    "note": "This batch recorded before atomic master commit. Confirm React Pages run and build-info before published_verified; no editor lease remains."
   },
-  "next_unit": "c-basics-04",
+  "next_unit": "c-basics-06",
   "units": [
     {
       "id": "dx11-frustum",
@@ -1691,58 +1689,97 @@
       "id": "c-basics-01",
       "category": "C 언어",
       "route": "/knowledge/c-basics-01/",
-      "state": "implementation_complete_release_tracked_in_pr",
+      "state": "published_verified",
       "evidence": {
         "cpu": "knowledge/shared/c-basics-lab/verification.json",
         "release_record": "https://github.com/jiwhan112/um.github.io/pull/21"
       },
-      "remaining": [
-        "User review of the three published sample lessons; do not automatically continue to 04."
-      ],
+      "remaining": [],
       "stages": {
         "body": "complete",
         "cpu": "pass_gcc_c11_strict_and_ubsan",
         "local_web": "pass_32_unit_tests_typecheck_build_166_routes",
-        "ci_and_publication": "read_PR21_release_record"
+        "ci_and_publication": "passed_pr21_merge_08724fea_source_and_Pages_run_39756113957",
+        "public_deployment": "published_verified_2026-10-22"
       }
     },
     {
       "id": "c-basics-02",
       "category": "C 언어",
       "route": "/knowledge/c-basics-02/",
-      "state": "implementation_complete_release_tracked_in_pr",
+      "state": "published_verified",
       "evidence": {
         "cpu": "knowledge/shared/c-basics-lab/verification.json",
         "release_record": "https://github.com/jiwhan112/um.github.io/pull/21"
       },
-      "remaining": [
-        "User review of the three published sample lessons; do not automatically continue to 04."
-      ],
+      "remaining": [],
       "stages": {
         "body": "complete",
         "cpu": "pass_gcc_c11_strict_and_ubsan",
         "local_web": "pass_32_unit_tests_typecheck_build_166_routes",
-        "ci_and_publication": "read_PR21_release_record"
+        "ci_and_publication": "passed_pr21_merge_08724fea_source_and_Pages_run_39756113957",
+        "public_deployment": "published_verified_2026-10-22"
       }
     },
     {
       "id": "c-basics-03",
       "category": "C 언어",
       "route": "/knowledge/c-basics-03/",
-      "state": "implementation_complete_release_tracked_in_pr",
+      "state": "published_verified",
       "evidence": {
         "cpu": "knowledge/shared/c-basics-lab/verification.json",
         "release_record": "https://github.com/jiwhan112/um.github.io/pull/21"
       },
-      "remaining": [
-        "User review of the three published sample lessons; do not automatically continue to 04."
-      ],
+      "remaining": [],
       "stages": {
         "body": "complete",
         "cpu": "pass_gcc_c11_strict_and_ubsan",
         "local_web": "pass_32_unit_tests_typecheck_build_166_routes",
-        "ci_and_publication": "read_PR21_release_record"
+        "ci_and_publication": "passed_pr21_merge_08724fea_source_and_Pages_run_39756113957",
+        "public_deployment": "published_verified_2026-10-22"
       }
+    },
+    {
+      "id": "c-basics-04",
+      "state": "authored_cpu_verified_pending_publication",
+      "route": "/knowledge/c-basics-04/",
+      "stages": {
+        "body": "complete_4tabs_svg2_mermaid1_review_full_source",
+        "full_source": "main.c_committed",
+        "cpu": "gcc14.2_c11_strict_and_ubsan_pass",
+        "web_ci": "pending_master_pages_workflow",
+        "public_deployment": "pending"
+      },
+      "evidence": {
+        "verification": "knowledge/shared/c-basics-04-05/verification.json",
+        "source": "knowledge/c-basics-04/main.c",
+        "content": "knowledge/c-basics-04/content.json"
+      },
+      "remaining": [
+        "React Pages validation and publication success",
+        "Public build-info sourceCommit and new lesson assets review"
+      ]
+    },
+    {
+      "id": "c-basics-05",
+      "state": "authored_cpu_verified_pending_publication",
+      "route": "/knowledge/c-basics-05/",
+      "stages": {
+        "body": "complete_4tabs_svg2_mermaid1_review_full_source",
+        "full_source": "main.c_committed",
+        "cpu": "gcc14.2_c11_strict_and_ubsan_pass",
+        "web_ci": "pending_master_pages_workflow",
+        "public_deployment": "pending"
+      },
+      "evidence": {
+        "verification": "knowledge/shared/c-basics-04-05/verification.json",
+        "source": "knowledge/c-basics-05/main.c",
+        "content": "knowledge/c-basics-05/content.json"
+      },
+      "remaining": [
+        "React Pages validation and publication success",
+        "Public build-info sourceCommit and new lesson assets review"
+      ]
     }
   ],
   "deferred_new_design": [
@@ -1755,7 +1792,7 @@
     "new Python/developer-tools curriculum"
   ],
   "completion": {
-    "final_audit": "pending",
+    "final_audit": "pending_new_scope",
     "all_approved_units_published": false,
     "automation_stop_confirmed": false
   },
@@ -1776,7 +1813,7 @@
     "released_at_utc": "2026-10-22T06:07:57.604Z",
     "release_evidence": "https://github.com/jiwhan112/um.github.io/pull/18"
   },
-  "continuation_gate": "Wait for user feedback on the three C sample lessons; do not continue or enable scheduling automatically.",
+  "continuation_gate": "C04-05 Pages/public evidence first; then C basics 06. User approved C04-14 and Effective C++01-06 without new feedback.",
   "c_regular_course": {
     "planned_chapters": 14,
     "sample_batch": [
@@ -1786,6 +1823,37 @@
     ],
     "existing_applied_lesson": "c-language-01",
     "recommended_applied_after": 11,
-    "authorship": "new original lessons, not Notion migration"
-  }
+    "authorship": "new original lessons, not Notion migration",
+    "last_released_sample_source": "08724feac20f586112c4fbfc735cb403cd5d5955",
+    "next_units": [
+      "c-basics-06",
+      "c-basics-07",
+      "c-basics-08",
+      "c-basics-09",
+      "c-basics-10",
+      "c-basics-11",
+      "c-basics-12",
+      "c-basics-13",
+      "c-basics-14"
+    ]
+  },
+  "approved_target_ids": [
+    "c-basics-04",
+    "c-basics-05",
+    "c-basics-06",
+    "c-basics-07",
+    "c-basics-08",
+    "c-basics-09",
+    "c-basics-10",
+    "c-basics-11",
+    "c-basics-12",
+    "c-basics-13",
+    "c-basics-14",
+    "effective-cpp-01",
+    "effective-cpp-02",
+    "effective-cpp-03",
+    "effective-cpp-04",
+    "effective-cpp-05",
+    "effective-cpp-06"
+  ]
 }

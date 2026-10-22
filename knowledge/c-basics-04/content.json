@@ -1,0 +1,573 @@
+{
+  "title": "C 기초 04 · 조건문·반복문",
+  "subtitle": "분기 조건·반복 불변식·종료 조건을 눈으로 따라가는 C11 제어 흐름",
+  "sections": [
+    {
+      "id": "start",
+      "title": "04 · 실행 경로를 직접 설계하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 목표: if/else의 분기, switch의 일치 선택, for·while·do-while의 종료 조건을 구분하고 break/continue가 어디까지 영향을 주는지 설명한다. 선수 단원은 03의 비교·논리 연산이다. 모든 예제는 C11이며 C++ 범위 기반 for와 혼동하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/c-basics-04/assets/branches.svg",
+          "alt": "값 범위 검증 후 점수 구간을 선택하는 세 단계: 범위 확인, 분기, 결과",
+          "caption": "값 범위 검증 후 점수 구간을 선택하는 세 단계: 범위 확인, 분기, 결과"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "조건은 C에서 0이면 거짓, 0이 아니면 참이다. 아래 예제는 먼저 0~100인지 확인해 범위를 벗어난 점수가 잘못 높은 등급으로 들어오지 않도록 한다. else는 문법적으로 결합 가능한 가장 가까운 if에 연결되므로 중괄호로 의도를 분명히 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "if-else",
+      "title": "if·else if·else: 순서가 결과를 바꾼다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "표현"
+                  }
+                ],
+                [
+                  {
+                    "text": "조건을 평가하는 시점"
+                  }
+                ],
+                [
+                  {
+                    "text": "주의할 점"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "if (x >= 90)"
+                  }
+                ],
+                [
+                  {
+                    "text": "처음"
+                  }
+                ],
+                [
+                  {
+                    "text": "앞 조건이 참이면 같은 사슬의 나머지 분기는 건너뛴다"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "else if (x >= 60)"
+                  }
+                ],
+                [
+                  {
+                    "text": "앞 조건이 거짓일 때"
+                  }
+                ],
+                [
+                  {
+                    "text": "큰 구간부터 검사해 겹침을 해소한다"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "else"
+                  }
+                ],
+                [
+                  {
+                    "text": "위 조건이 모두 거짓일 때"
+                  }
+                ],
+                [
+                  {
+                    "text": "유효성 검사 없이 실패 입력도 이 경로에 들어올 수 있다"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "c",
+          "text": "if (score < 0 || score > 100) {\n    grade = \"invalid\"; // 유효 범위 밖\n} else if (score >= 90) {\n    grade = \"excellent\";\n} else if (score >= 60) {\n    grade = \"pass\";\n} else {\n    grade = \"retry\";\n}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "&&와 ||는 단락 평가한다. 예를 들어 포인터가 NULL인지 확인한 뒤 역참조하는 패턴에서 순서가 중요하다. 논리 연산의 단락 평가와 별개로 임의의 함수 인자 평가 순서까지 보장되는 것은 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "title": "switch: 정수값 일치와 의도하지 않은 낙하",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "switch의 제어식은 정수 타입이어야 하며 case 레이블은 정수 상수식이다. switch(문자열)처럼 문자열 자체를 case로 비교할 수 없다. case 뒤의 break가 없으면 다음 레이블 아래 문장으로 실행이 이어질 수 있어 의도한 흐름인지 검토해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "c",
+          "text": "switch (selected) {\n    case 6:\n        status = \"found\";\n        break;             // switch를 빠져나갑니다.\n    default:\n        status = \"missing\";\n        break;\n}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "switch에 중괄호를 붙여도 case마다 자동으로 별도 지역 범위가 생기지는 않는다. case 안에 지역 객체를 선언할 때는 필요에 따라 별도 { }를 사용한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "loops",
+      "title": "for·while·do-while의 실행 횟수를 예측하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/c-basics-04/assets/loops.svg",
+          "alt": "for와 while은 본문 전 조건 평가, do-while은 본문 후 조건 평가: 처음 거짓일 때의 차이",
+          "caption": "for와 while은 본문 전 조건 평가, do-while은 본문 후 조건 평가: 처음 거짓일 때의 차이"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "문법"
+                  }
+                ],
+                [
+                  {
+                    "text": "처음 조건 확인"
+                  }
+                ],
+                [
+                  {
+                    "text": "예제의 실행 횟수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "for (i=1; i<=5; ++i)"
+                  }
+                ],
+                [
+                  {
+                    "text": "첫 반복 전"
+                  }
+                ],
+                [
+                  {
+                    "text": "5회, 합계 15"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "while (visits < 3)"
+                  }
+                ],
+                [
+                  {
+                    "text": "첫 반복 전"
+                  }
+                ],
+                [
+                  {
+                    "text": "3회"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "do { ... } while (attempts < 1)"
+                  }
+                ],
+                [
+                  {
+                    "text": "본문 실행 후"
+                  }
+                ],
+                [
+                  {
+                    "text": "1회"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "반복문이 끝날 조건이 정말 변하는지 확인해야 한다. 특히 부호 없는 정수의 역순 루프에서 i >= 0 같은 조건은 계속 참일 수 있다. 반복 중 인덱스와 연산 결과가 타입의 표현 범위를 벗어나지 않는지도 확인한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "break-continue",
+      "title": "break와 continue는 서로 다르다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "c",
+          "text": "for (int candidate = 1; candidate <= 10; ++candidate) {\n    if (candidate % 2 != 0) continue;  // 다음 후보로\n    selected = candidate;\n    if (candidate == 6) break;         // 반복문을 종료\n}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "continue는 가장 가까운 반복문의 현재 회차를 건너뛴다. for문에서는 증감식으로 이동하지만 while에서는 조건식 재평가로 이동한다. break는 가장 가까운 반복문 또는 switch 하나를 종료하며 중첩된 반복문을 전부 탈출하지는 않는다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  A[\"candidate = 1\"] --> B{\"candidate <= 10?\"}\n  B -->|아니오| H[\"반복 종료\"]\n  B -->|예| C{\"홀수인가?\"}\n  C -->|예: continue| G[\"++candidate\"]\n  C -->|아니오| D[\"selected = candidate\"]\n  D --> E{\"candidate == 6?\"}\n  E -->|예: break| H\n  E -->|아니오| G\n  G --> B"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 도식은 실제 예제의 루프 분기 논리만 나타낸 개념도다. 실행 시간이나 분기 예측 비용을 측정한 결과가 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "실습 · 경로와 횟수를 먼저 기록하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.c를 내려받고 grade·total·visits·attempts·selected·status를 실행 전에 적는다. score를 95, 59, -1로 바꿨을 때 분기를 예상한다. count 조건을 0으로 만들었을 때 while과 do-while이 각각 몇 번 도는지 비교한다. break를 없애면 selected가 어디까지 이동하는지 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "gcc -std=c11 -Wall -Wextra -Wpedantic -Werror main.c -o control\n./control"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "grade=pass total=15 visits=3 attempts=1 selected=6 status=found"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "변형 실험은 변경된 입력과 assert도 함께 수정해야 한다. 원본 main.c의 출력만 현재 실제 실행으로 검증했고 각 제안 변형을 별도로 실행했다고 주장하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 답을 펼치기 전에 경로 추적하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "if (score >= 60)부터 검사하면 95점은 어떤 분기에 들어가는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "95점은 60 이상 분기부터 통과하므로 그쪽이 먼저 실행된다. 높은 등급부터 판정하려면 더 높은 경계부터 검사한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "switch의 case는 문자열 자체를 사용할 수 있는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C11 switch 제어식은 정수 타입이어야 하므로 문자열 포인터나 문자 배열 자체로 문자열 내용을 case 분기할 수 없다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "while과 do-while의 조건이 처음부터 거짓이라면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "while은 본문을 0회 실행할 수 있지만 do-while은 최소 1회 본문을 실행한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "for 안의 continue 다음에는 무엇이 일어나는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 회차의 남은 본문을 건너뛰고 for의 증감식을 거쳐 조건을 재검사한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "중첩 반복문 내부의 break는 바깥 반복문도 종료하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 가장 가까운 반복문 또는 switch 하나를 종료한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "반복문을 설계할 때 매번 확인할 세 가지는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시작 상태, 매 반복 갱신되는 값, 종료 조건과 그 조건에 도달하는 증거다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "C 기초 04 전체 main.c 내려받기",
+              "href": "/knowledge/c-basics-04/main.c"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.c 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "c",
+              "text": "#include <assert.h>\n#include <stdio.h>\n#include <string.h>\n\nint main(void)\n{\n    const int score = 72;\n    const char *grade = \"invalid\";\n\n    // 유효 범위를 먼저 확인한 다음 점수 구간을 분류합니다.\n    if (score >= 0 && score <= 100) {\n        if (score >= 90) {\n            grade = \"excellent\";\n        } else if (score >= 60) {\n            grade = \"pass\";\n        } else {\n            grade = \"retry\";\n        }\n    }\n    assert(strcmp(grade, \"pass\") == 0);\n\n    int total = 0;\n    // 종료 조건과 증감식을 명시하고, 1부터 5까지만 더합니다.\n    for (int value = 1; value <= 5; ++value) {\n        total += value;\n    }\n    assert(total == 15);\n\n    int visits = 0;\n    // 조건이 거짓이 되는 시점에 반복을 끝냅니다.\n    while (visits < 3) {\n        ++visits;\n    }\n    assert(visits == 3);\n\n    int attempts = 0;\n    // do-while은 조건을 확인하기 전에 본문을 한 번 실행합니다.\n    do {\n        ++attempts;\n    } while (attempts < 1);\n    assert(attempts == 1);\n\n    int selected = -1;\n    for (int candidate = 1; candidate <= 10; ++candidate) {\n        if (candidate % 2 != 0) {\n            continue; // 홀수는 처리하지 않고 다음 후보로 넘어갑니다.\n        }\n        selected = candidate;\n        if (candidate == 6) {\n            break; // 가장 가까운 반복문만 종료합니다.\n        }\n    }\n    assert(selected == 6);\n\n    const char *status = \"unknown\";\n    // case 사이에 자동 break는 없으므로 각 경로를 명시합니다.\n    switch (selected) {\n        case 6:\n            status = \"found\";\n            break;\n        default:\n            status = \"missing\";\n            break;\n    }\n    assert(strcmp(status, \"found\") == 0);\n\n    printf(\"grade=%s total=%d visits=%d attempts=%d selected=%d status=%s\\n\",\n           grade, total, visits, attempts, selected, status);\n    return 0;\n}\n\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "코드에는 assert가 포함돼 있으므로 검사 용도로 NDEBUG를 정의하지 않는다. 출력은 이 문서와 동일한 파일의 GCC C11 실행을 근거로 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·검증과 한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 설명과 도식은 새로 독립 작성했다. C11 위원회 초안 WG14 N1570의 6.8.4(선택문), 6.8.5(반복문), 6.8.6(점프문)를 기술 규칙 대조의 출발점으로 사용했다. N1570을 최종 ISO 표준 구매본이라고 표시하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "WG14 N1570 · C11 공개 위원회 초안 (최종 ISO 표준 문서가 아님)",
+              "href": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "GCC 공식 문서 · 경고 옵션",
+              "href": "https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이 배치 실제 명령·출력·검증 범위",
+              "href": "/knowledge/shared/c-basics-04-05/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "검증 안내와 재현 스크립트",
+              "href": "/knowledge/shared/c-basics-04-05/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-22 GCC 14.2 C11 엄격 경고(-Werror)와 UBSan에서 전체 코드의 실제 출력·assert 경로를 확인했다. 다른 입력의 전체 경로, MSVC/Windows, 물리 모바일 성능 및 모든 미정의 동작 부재는 확인하지 않았다. 웹 PC/모바일·도식 렌더링은 Pages CI 결과로 별도 판정한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·변경기록과 앞뒤 단원",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-22 · C11 정규 과정 04 독립 신규 집필. Notion 이관본이 아니다. 본문의 원본은 이 content.json과 다운로드 가능한 main.c이며, 도식은 학습용 자체 SVG이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "교재 전체 원본 content.json",
+              "href": "/knowledge/c-basics-04/content.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이전 학습: C 기초 03 · 연산자와 형 변환",
+              "href": "/knowledge/c-basics-03/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음은 05 함수·범위·수명이다. 단원 간 순서는 정규 과정 목차를 따르며 기존 C 응용 C01 페이지는 11 이후 응용 자료로 그대로 유지한다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
