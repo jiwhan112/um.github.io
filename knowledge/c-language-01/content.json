@@ -189,7 +189,7 @@
         },
         {
           "type": "code",
-          "text": "if (scanf(\"%d %d\", &a, &b) != 2) {\\n    fputs(\"Expected two integers.\\\\n\", stderr);\\n    return 1;\\n}",
+          "text": "if (scanf(\"%d %d\", &a, &b) != 2) {\n    fputs(\"Expected two integers.\\n\", stderr);\n    return 1;\n}",
           "language": "c"
         },
         {
@@ -459,7 +459,7 @@
         },
         {
           "type": "code",
-          "text": "if ((b > 0 && a > INT_MAX - b) ||\\n    (b < 0 && a < INT_MIN - b)) return false;\\nresult = a + b;",
+          "text": "if ((b > 0 && a > INT_MAX - b) ||\n    (b < 0 && a < INT_MIN - b)) return false;\nresult = a + b;",
           "language": "cpp"
         },
         {
@@ -601,7 +601,7 @@
         },
         {
           "type": "code",
-          "text": "std::istringstream in(text);\\nif (!(in >> a >> b)) return false;\\nstd::string extra;\\nreturn !(in >> extra);",
+          "text": "std::istringstream in(text);\nif (!(in >> a >> b)) return false;\nstd::string extra;\nreturn !(in >> extra);",
           "language": "cpp"
         },
         {
@@ -785,12 +785,12 @@
         },
         {
           "type": "code",
-          "text": "cmake -S knowledge/shared/c01-lab/original/c11 -B build-c01-c -DCMAKE_CXX_STANDARD=11\\ncmake --build build-c01-c\\nctest --test-dir build-c01-c --output-on-failure",
+          "text": "cmake -S knowledge/shared/c01-lab/original/c11 -B build-c01-c -DCMAKE_CXX_STANDARD=11\ncmake --build build-c01-c\nctest --test-dir build-c01-c --output-on-failure",
           "language": "bash"
         },
         {
           "type": "code",
-          "text": "cmake -S knowledge/shared/c01-lab/original/c01b -B build-c01-cpp -DCXX_LEVEL=20\\ncmake --build build-c01-cpp\\nctest --test-dir build-c01-cpp --output-on-failure",
+          "text": "cmake -S knowledge/shared/c01-lab/original/c01b -B build-c01-cpp -DCXX_LEVEL=20\ncmake --build build-c01-cpp\nctest --test-dir build-c01-cpp --output-on-failure",
           "language": "bash"
         },
         {
@@ -833,7 +833,7 @@
         },
         {
           "type": "code",
-          "text": "cmake -S knowledge/shared/c01-lab/original/c01b -B build-c01-cpp11 -DCXX_LEVEL=11\\ncmake --build build-c01-cpp11\\nctest --test-dir build-c01-cpp11 --output-on-failure",
+          "text": "cmake -S knowledge/shared/c01-lab/original/c01b -B build-c01-cpp11 -DCXX_LEVEL=11\ncmake --build build-c01-cpp11\nctest --test-dir build-c01-cpp11 --output-on-failure",
           "language": "bash"
         },
         {
