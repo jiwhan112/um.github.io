@@ -96,5 +96,25 @@
       "timezone": "Asia/Seoul",
       "visualGuidelines": "Each episode: 1-3 original concept illustrations or diagrams where they clarify mechanics. Prefer purposeful labeled SVG for timelines/architecture/comparison; PNG/WebP when detailed artwork materially helps. Provide Korean alt and explanatory caption; link image blocks as /game-design/<episode>/assets/<filename>. Include visual sources if adapted; do not reuse copyrighted game screenshots without rights."
     }
-  ]
+  ],
+  "healthChecks": [
+    {
+      "id": "thinking-publish-watch",
+      "automationId": "6ad9b87794f0819185ab1fa31d22eb1a",
+      "primaryAutomationId": "6ac74151e0548191b7be75d5033dd6a9",
+      "localTime": "07:00",
+      "cadence": "daily",
+      "timingMode": "condition_watch",
+      "purpose": "Verify today's thinking lesson and React Pages publication; re-enable accidentally disabled 06:00 task and repair only if today's content is missing, never double-publish.",
+      "allowedWritePatterns": [
+        "^thinking-lab/data/catalog\\.json$",
+        "^thinking-lab/ep-[a-z0-9-]+/content\\.json$"
+      ],
+      "silentWhenHealthy": true
+    }
+  ],
+  "failurePolicy": {
+    "thinking": "Never self-disable on GitHub update_ref/PR or React Pages failure. Preserve actionable error details; 07:00 watchdog verifies the catalog, current KST date, source file, deployment and primary scheduler enabled status.",
+    "publication": "Prefer atomic create_tree/create_commit/update_ref(expected_sha). If GitHub safely permits a non-atomic Contents API recovery, write source first, verify it, then catalog; do not claim publication until both files and React Pages validation succeed. Never force-push or modify generated UI."
+  }
 }
