@@ -88,8 +88,8 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,87);
- assert.equal(sourceCatalog.length,87);
+ assert.equal(docs.length,89);
+ assert.equal(sourceCatalog.length,89);
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -544,7 +544,7 @@ test('advanced lessons preserve ZIP bytes, historical evidence, complete annotat
 
 test('C sample course keeps regular order, executable sources and honest new authorship',async()=>{
  const docs=catalog.documents.filter(d=>d.kind==='knowledge'&&d.category==='C 언어').sort(compareKnowledgeDocuments);
- assert.deepEqual(docs.map(d=>d.route),['/knowledge/c-basics-01/','/knowledge/c-basics-02/','/knowledge/c-basics-03/','/knowledge/c-language-01/']);
+ assert.deepEqual(docs.map(d=>d.route),['/knowledge/c-basics-01/','/knowledge/c-basics-02/','/knowledge/c-basics-03/','/knowledge/c-basics-04/','/knowledge/c-basics-05/','/knowledge/c-language-01/']);
  const report=JSON.parse(await readFile('../knowledge/shared/c-basics-lab/verification.json','utf8'));
  assert.equal(report.status,'pass');assert.equal(report.distinct_addition_boundary_cases,9);
  assert.equal(report.commands.filter((c:{expected_success:boolean})=>!c.expected_success).length,2);
@@ -565,6 +565,21 @@ test('C sample course keeps regular order, executable sources and honest new aut
   assert.ok(full.sections.find(s=>s.id==='full-code')!.blocks.some(b=>b.type==='details'&&b.blocks.some(c=>c.type==='code'&&c.text===source)));
   for(const b of blocks)if(b.type==='image')assert.ok((await readFile('public/'+b.src.slice(1),'utf8')).includes('<svg'));
  }
+ // New C11 lessons must retain full executable sources and real visual blocks.
+ for(const slug of ['c-basics-04','c-basics-05']){
+  const doc=docs.find(d=>d.route==='/knowledge/'+slug+'/')!;
+  assert.ok(doc,'missing new lesson '+slug);
+  const full=documentSchema.parse(JSON.parse(await readFile('public/'+doc.file,'utf8')));
+  assert.deepEqual([...new Set(full.sections.map(s=>s.tab))],['document','practice','sources','history']);
+  const blocks=full.sections.flatMap(s=>s.blocks);
+  const images=blocks.filter(b=>b.type==='image');
+  assert.equal(images.length,2,'concept SVG count '+slug);
+  for(const image of images)if(image.type==='image')assert.ok((await readFile('public/'+image.src.slice(1),'utf8')).includes('<svg'),'missing SVG '+image.src);
+  assert.ok(blocks.some(b=>b.type==='code'&&b.language==='mermaid'),'missing Mermaid '+slug);
+  assert.ok(full.sections.find(s=>s.id==='review')!.blocks.filter(b=>b.type==='details').length>=6,'missing review '+slug);
+  const source=await readFile('../knowledge/'+slug+'/main.c','utf8');
+  assert.ok(full.sections.find(s=>s.id==='full-code')!.blocks.some(b=>b.type==='details'&&b.blocks.some(c=>c.type==='code'&&c.text===source)),'full source mismatch '+slug);
+ }
  const future=[12,11,14].map(n=>({...docs[0],route:`/knowledge/c-basics-${n}/` }));
- assert.deepEqual([...future,docs[3]].sort(compareKnowledgeDocuments).map(d=>d.route),['/knowledge/c-basics-11/','/knowledge/c-language-01/','/knowledge/c-basics-12/','/knowledge/c-basics-14/']);
+ assert.deepEqual([...future,docs.find(d=>d.route==='/knowledge/c-language-01/')!].sort(compareKnowledgeDocuments).map(d=>d.route),['/knowledge/c-basics-11/','/knowledge/c-language-01/','/knowledge/c-basics-12/','/knowledge/c-basics-14/']);
 });
