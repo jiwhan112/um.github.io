@@ -12,7 +12,7 @@
     "future_run_success_confirmed": false
   },
   "inventory_finalized": false,
-  "baseline_catalog_documents": 81,
+  "baseline_catalog_documents": 83,
   "source_collections": [
     {
       "id": "c-language",
@@ -89,16 +89,15 @@
   ],
   "active_batch": {
     "worker": "interactive-chat",
-    "status": "released",
-    "branch": "feature/cpp-advanced-05-06-20261021",
+    "status": "active",
     "unit_ids": [
-      "cpp-advanced-05",
-      "cpp-advanced-06"
+      "c-language-01"
     ],
-    "released_at_utc": "2026-10-21T09:18:09Z",
-    "pr_url": "https://github.com/jiwhan112/um.github.io/pull/17",
-    "published_verified_at_utc": "2026-10-21T09:18:09Z",
-    "next_unit": "c-language-01"
+    "branch": "feature/c-language-01-20261021",
+    "lease_until_utc": "2026-10-22T03:00:00Z",
+    "phase": "cpu-and-react-ci",
+    "source_commit": "11d8e2a95095e78f63dbac6408dbbccc770974ac",
+    "release_condition": "PR review+merged and published live verified"
   },
   "next_unit": "c-language-01",
   "units": [
@@ -1542,16 +1541,39 @@
       "title": "C01 · C11 입력 검증·정수 범위와 C++11/20 교차 컴파일",
       "notion_url": "https://app.notion.com/p/3fda99703f408153b1dffae9398aa3bc",
       "category": "C 언어",
-      "route": null,
-      "state": "pending_source_capture",
+      "route": "/knowledge/c-language-01/",
+      "state": "in_progress",
       "evidence": {
-        "source_index_read": true
+        "source_index_read": true,
+        "source_pages": [
+          "knowledge/c-language-01/source-notion.md",
+          "knowledge/c-language-01/c01b/source-notion.md"
+        ],
+        "source_manifest": "knowledge/shared/c01-lab/source-integrity.json",
+        "local_artifact": "sandbox:/mnt/data/ATLAS_NOTE_C01_local_work_20261021.zip",
+        "historical_logs": "knowledge/shared/c01-lab/historical-notion/",
+        "body_commit": "11d8e2a95095e78f63dbac6408dbbccc770974ac",
+        "recovery_branch": "feature/c-language-01-20261021"
       },
       "remaining": [
-        "Capture latest full original and audit related source/log children",
-        "Author approved visual textbook and preserve full sources",
-        "Run appropriate code and PC/mobile publication verification"
-      ]
+        "CPU CI and archive logs plus hashes",
+        "Full web React validation, desktop/mobile visual review",
+        "PR review, merge, actual Pages and public URL verify",
+        "Historical attached file binary not yet verified"
+      ],
+      "stages": {
+        "source_capture": "complete_two_pages",
+        "historical_native_logs": "17_verified_FNV64_and_byte_count",
+        "historical_attachment": "binary_unverified",
+        "body": "committed_pending_web_ci",
+        "full_source": "original_4_and_korean_2_committed",
+        "source_integrity": "original_4_SHA256_verified",
+        "local_build": "five_toolchains_CMake_CTest_pass",
+        "cpu_ci": "pending",
+        "react_web_ci": "pending",
+        "pr": "pending",
+        "public_deployment": "pending"
+      }
     },
     {
       "id": "effective-cpp-01",

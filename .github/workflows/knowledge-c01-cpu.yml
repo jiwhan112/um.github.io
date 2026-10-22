@@ -1,0 +1,100 @@
+name: Knowledge C01 CPU validation
+
+on:
+  pull_request:
+    paths:
+      - "knowledge/c-language-01/**"
+      - "knowledge/shared/c01-lab/**"
+      - "knowledge/data/catalog.json"
+      - ".github/workflows/knowledge-c01-cpu.yml"
+  push:
+    branches:
+      - "feature/c-language-01-*"
+    paths:
+      - "knowledge/c-language-01/**"
+      - "knowledge/shared/c01-lab/**"
+      - "knowledge/data/catalog.json"
+      - ".github/workflows/knowledge-c01-cpu.yml"
+  workflow_dispatch:
+
+jobs:
+  cpu:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: gcc-c11-cxx11
+            project: c11
+            compiler: gcc
+            cxx_level: "11"
+          - id: gcc-c11-cxx20
+            project: c11
+            compiler: gcc
+            cxx_level: "20"
+          - id: gcc-cpp11
+            project: c01b
+            compiler: gcc
+            cxx_level: "11"
+          - id: gcc-cpp20
+            project: c01b
+            compiler: gcc
+            cxx_level: "20"
+          - id: clang-cpp20-asan-ubsan
+            project: c01b
+            compiler: clang
+            cxx_level: "20"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure, build, CTest, and retain raw logs
+        shell: bash
+        env:
+          TEST_ID: ${{ matrix.id }}
+          PROJECT_ID: ${{ matrix.project }}
+          COMPILER: ${{ matrix.compiler }}
+          CXX_LEVEL: ${{ matrix.cxx_level }}
+        run: |
+          set -euo pipefail
+          mkdir -p "c01-evidence/$TEST_ID"
+          gcc --version | head -n 1 > "c01-evidence/$TEST_ID/environment.txt"
+          clang++ --version | head -n 1 >> "c01-evidence/$TEST_ID/environment.txt"
+          cmake --version | head -n 1 >> "c01-evidence/$TEST_ID/environment.txt"
+          for variant in original ko; do
+            src="knowledge/shared/c01-lab/$variant/$PROJECT_ID"
+            tmp="$RUNNER_TEMP/c01-$TEST_ID-$variant-src"
+            build="$RUNNER_TEMP/c01-$TEST_ID-$variant-build"
+            mkdir -p "$tmp"
+            cp "knowledge/shared/c01-lab/original/$PROJECT_ID/CMakeLists.txt" "$tmp/CMakeLists.txt"
+            if [ "$PROJECT_ID" = c11 ]; then cp "$src/main.c" "$tmp/main.c"; else cp "$src/main.cpp" "$tmp/main.cpp"; fi
+            out="c01-evidence/$TEST_ID"
+            flags=(-DCMAKE_BUILD_TYPE=Debug)
+            if [ "$PROJECT_ID" = c11 ]; then
+              flags+=("-DCMAKE_CXX_STANDARD=$CXX_LEVEL")
+            else
+              flags+=("-DCXX_LEVEL=$CXX_LEVEL")
+            fi
+            if [ "$COMPILER" = clang ]; then
+              flags+=(-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ "-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer" "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined")
+            else
+              flags+=(-DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++)
+            fi
+            cmake -S "$tmp" -B "$build" "${flags[@]}" > "$out/$variant.configure.stdout.txt" 2> "$out/$variant.configure.stderr.txt"
+            cmake --build "$build" --parallel 2 > "$out/$variant.build.stdout.txt" 2> "$out/$variant.build.stderr.txt"
+            ctest --test-dir "$build" --output-on-failure -V > "$out/$variant.ctest.stdout.txt" 2> "$out/$variant.ctest.stderr.txt"
+          done
+          (cd "c01-evidence/$TEST_ID" && sha256sum *.txt > SHA256SUMS)
+          cat "c01-evidence/$TEST_ID/"*.ctest.stdout.txt | grep -E 'tests passed|Test #[0-9]'
+      - name: Verify exact original CPU program bytes
+        shell: bash
+        run: |
+          printf '%s  %s\n' \
+            86d23d4ce07c340f971ad01844313928cf4ab8652ea96be111819d7d9c383d02 knowledge/shared/c01-lab/original/c11/main.c \
+            04a539112c93595ff7b65acb648bec2d66ab1bc26111e7f3fbc35c705699a488 knowledge/shared/c01-lab/original/c11/CMakeLists.txt \
+            080a288ec894cda4e71018588879d1726e56aed11d0e17c8830e81e3e04828c9 knowledge/shared/c01-lab/original/c01b/main.cpp \
+            0ba3ac77d8c56004556c45f11861803f3774a9734f9a86826658b14652ce4c48 knowledge/shared/c01-lab/original/c01b/CMakeLists.txt | sha256sum --check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: c01-raw-${{ matrix.id }}
+          path: c01-evidence/${{ matrix.id }}/
+          if-no-files-found: warn
