@@ -93,7 +93,7 @@
   ],
   "active_batch": {
     "worker": "interactive-chat",
-    "status": "validation_pending",
+    "status": "release_tracked_in_pr",
     "unit_ids": [
       "c-basics-01",
       "c-basics-02",
@@ -102,7 +102,10 @@
     "branch": "feature/c-basics-sample-20261022",
     "phase": "authored_cpu_verified",
     "lease_until_utc": null,
-    "release_condition": "PR checks, merge and public Pages verification"
+    "release_condition": "PR checks, merge and public Pages verification",
+    "release_evidence": "https://github.com/jiwhan112/um.github.io/pull/21",
+    "source_commit": "2473b0e591d859033158774eb60335fa2397c76d",
+    "note": "This source ledger is committed before CI/publication. PR21 holds the final checked SHA, workflow results and public verification. Read that release record before interpreting live completion; no scheduled worker owns this batch."
   },
   "next_unit": "c-basics-04",
   "units": [
@@ -1688,40 +1691,58 @@
       "id": "c-basics-01",
       "category": "C 언어",
       "route": "/knowledge/c-basics-01/",
-      "state": "authored_cpu_verified_web_pending",
+      "state": "implementation_complete_release_tracked_in_pr",
       "evidence": {
-        "cpu": "knowledge/shared/c-basics-lab/verification.json"
+        "cpu": "knowledge/shared/c-basics-lab/verification.json",
+        "release_record": "https://github.com/jiwhan112/um.github.io/pull/21"
       },
       "remaining": [
-        "PR regression gate",
-        "Pages publication and public verification"
-      ]
+        "User review of the three published sample lessons; do not automatically continue to 04."
+      ],
+      "stages": {
+        "body": "complete",
+        "cpu": "pass_gcc_c11_strict_and_ubsan",
+        "local_web": "pass_32_unit_tests_typecheck_build_166_routes",
+        "ci_and_publication": "read_PR21_release_record"
+      }
     },
     {
       "id": "c-basics-02",
       "category": "C 언어",
       "route": "/knowledge/c-basics-02/",
-      "state": "authored_cpu_verified_web_pending",
+      "state": "implementation_complete_release_tracked_in_pr",
       "evidence": {
-        "cpu": "knowledge/shared/c-basics-lab/verification.json"
+        "cpu": "knowledge/shared/c-basics-lab/verification.json",
+        "release_record": "https://github.com/jiwhan112/um.github.io/pull/21"
       },
       "remaining": [
-        "PR regression gate",
-        "Pages publication and public verification"
-      ]
+        "User review of the three published sample lessons; do not automatically continue to 04."
+      ],
+      "stages": {
+        "body": "complete",
+        "cpu": "pass_gcc_c11_strict_and_ubsan",
+        "local_web": "pass_32_unit_tests_typecheck_build_166_routes",
+        "ci_and_publication": "read_PR21_release_record"
+      }
     },
     {
       "id": "c-basics-03",
       "category": "C 언어",
       "route": "/knowledge/c-basics-03/",
-      "state": "authored_cpu_verified_web_pending",
+      "state": "implementation_complete_release_tracked_in_pr",
       "evidence": {
-        "cpu": "knowledge/shared/c-basics-lab/verification.json"
+        "cpu": "knowledge/shared/c-basics-lab/verification.json",
+        "release_record": "https://github.com/jiwhan112/um.github.io/pull/21"
       },
       "remaining": [
-        "PR regression gate",
-        "Pages publication and public verification"
-      ]
+        "User review of the three published sample lessons; do not automatically continue to 04."
+      ],
+      "stages": {
+        "body": "complete",
+        "cpu": "pass_gcc_c11_strict_and_ubsan",
+        "local_web": "pass_32_unit_tests_typecheck_build_166_routes",
+        "ci_and_publication": "read_PR21_release_record"
+      }
     }
   ],
   "deferred_new_design": [
