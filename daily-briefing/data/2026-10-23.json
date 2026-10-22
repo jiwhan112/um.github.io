@@ -1,0 +1,227 @@
+{
+  "date": "2026-10-23",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 10월 23일(금) 한국시간 오전 08시 브리핑. 22일 실제 발표·출시된 의미 있는 소식을 중심으로 AI 4건, 게임 개발 3건, 게임 전반 이슈 4건을 선정했다. 자세한 기술 학습이 유용한 3건을 심층으로, 나머지 8건을 빠른 요약으로 설명한다. 21일 발표됐으나 이전 브리핑에서 다루지 않은 중요한 개발 관련 자료 2건은 발표일을 명시해 보완했다. 과거 기사와 차이가 있는 것은 22일 실제 출시가 확정된 후속 상태만 기록했다.",
+  "items": [
+    {
+      "category": "ai",
+      "depth": "deep",
+      "title": "🤖 OpenAI Decisions API 정식 출시 — 실시간 분류·라우팅용 경량 의사결정 계층",
+      "source": "OpenAI 공식 제품 발표",
+      "published": "2026-10-22",
+      "url": "https://openai.com/index/decisions-api/",
+      "tags": [
+        "Decisions API",
+        "GPT-6 Luna",
+        "LLM Latency",
+        "Choice",
+        "Predicate",
+        "Score",
+        "Agent Routing"
+      ],
+      "easy_explainer": "OpenAI가 10월 22일 Decisions API를 정식 제공하기 시작했어. 일반적인 생성형 응답은 자유로운 문장을 만들지만, 실제 에이전트의 실행 경로에는 '이 명령을 허용할까?', '요청을 어떤 서비스로 보낼까?', '사용자 의도를 어느 범주로 분류할까?'처럼 정해진 답의 집합 중 하나를 고르는 작업이 많아. 이 작은 질문을 매번 큰 생성 요청으로 처리하면 응답 지연과 추론 비용이 누적돼. Decisions API는 GPT-6 Luna 기반으로 텍스트·이미지·구조화 JSON을 받아 제한된 답을 빠르게 반환하는 인터페이스야.\n\n답변 유형은 세 가지야. `predicate`는 조건이 참일 확률(0~1), `choice`는 사용자가 미리 정의한 선택지 중 하나와 확률·신뢰도, `score`는 순서가 있는 평가 기준을 확률 가중 평균으로 계산한 점수를 반환해. 개발자는 질문과 허용 답을 정의하고 애플리케이션이 결과를 어떻게 사용할지 직접 결정해. 한 번의 요청에 최대 400개 질문을 묶을 수 있고, 반복 문맥용 프롬프트 캐시와 미국·EU 추론 리전도 지원한다고 발표했어.\n\n회사 측은 같은 Luna 모델의 Responses API 경로 대비 최대 10배 빠른 처리 사례를 소개했어. Box는 보험 문서 30건 평가에서 경로 결정 약 5배, Sierra는 특정 고객 서비스 환경에서 p95 280ms 미만·기존 방식 대비 약 3배 빠른 반응을 보고했어. 서로 다른 환경·작업의 측정이므로 모든 앱의 속도가 10배 오른다는 뜻은 아니야.",
+      "short_summary": "OpenAI Decisions API가 10월 22일 정식 출시됐어. 지정된 후보를 고르는 `choice`, 조건 확률인 `predicate`, 서열 점수인 `score`를 지원하며 질문 최대 400개를 요청할 수 있어. 최대 10배 속도 사례는 특정 비교 조건에 대한 발표이고 보편적 성능 보장은 아니야.",
+      "technical_context": "일반 대화 생성과 제한된 결정을 분리하는 게 핵심이야. `Command → Context → Bounded Decision → Policy Check → Execute`의 흐름에서 LLM 판단 결과는 권한 부여가 아니라 참고 신호야. 특히 에이전트가 만든 셸 명령의 위험도를 분류하더라도 읽기/쓰기 권한·파일 경로 허용 목록·사용자 승인 같은 결정적(Deterministic) 검사는 별도 정책 엔진이 맡아야 해. `predicate`의 확률은 보정 상태·데이터 분포 변화·임계값에 따라 오탐과 미탐 비용이 달라지므로 실제 데이터셋의 Precision·Recall과 p95 지연을 재야 해. 이번 발표는 GPT-Live 연결에서 실시간 음성 이벤트를 받아 아바타 반응을 고르는 예제도 공개했어.",
+      "why_it_matters": "생성 모델을 모든 판단에 사용하는 구조와, 작은 의사결정 인터페이스를 따로 두는 아키텍처를 비교할 수 있는 자료야. 특히 에이전트 도구 호출·리스크 판단·실시간 게임 캐릭터 반응에 연결되는 응용이 있어.",
+      "developer_view": "C++ 기반 게임 클라이언트에서도 `Input/Event → AI Decision Service → Validation → FSM Transition`처럼 AI의 출력과 상태 변경을 나누는 것이 안전해. 예를 들어 NPC 대사 톤 분류는 AI에 맡겨도 인벤토리 지급, 서버 권한, 계정 정보 변경은 기존 게임 규칙과 서버 검증이 결정해야 해. 모델별 속도 비교는 실제 지역·엔드포인트·입력 크기를 고정하고 p50/p95를 측정해."
+    },
+    {
+      "category": "ai",
+      "depth": "deep",
+      "title": "🖥️ NVIDIA Minerva — GPU·네트워크·작업 텔레메트리를 연결하는 AI 팩토리 관측 계층",
+      "source": "NVIDIA 공식 블로그",
+      "published": "2026-10-22",
+      "url": "https://blogs.nvidia.com/blog/minerva-platform-infrastructure/",
+      "tags": [
+        "NVIDIA Minerva",
+        "AIOps",
+        "Observability",
+        "GPU Telemetry",
+        "Knowledge Graph",
+        "Root Cause"
+      ],
+      "easy_explainer": "NVIDIA는 10월 22일 AI 데이터센터의 GPU 운영 문제를 탐지하는 AIOps 플랫폼 Minerva를 발표했어. 대규모 AI 학습·추론은 GPU만의 문제가 아니라 SuperNIC, 스위치, 케이블, 스토리지, 작업 스케줄러가 함께 동작하는 분산 시스템이야. 예를 들어 특정 NVMe 드라이브의 처리량이 떨어지거나 네트워크 링크에서 오류가 누적되면 여러 GPU가 계산할 준비가 돼 있어도 전체 처리율이 떨어질 수 있어.\n\nMinerva는 이처럼 서로 분리돼 보이던 지표를 한데 연결하고, 실제 작업이 어떤 GPU와 스토리지·네트워크 경로를 사용하는지 지식 그래프 형태로 연관 관계를 표현해. 정상적인 패턴을 학습한 모델이 새로운 이상 징후를 찾거나 관련 경고를 묶어서 '어떤 부품 때문에 어느 작업이 느려졌는가'라는 원인 후보를 제안하는 방식이야. 모니터링 수집 자체가 모든 장애를 자동 복구한다는 뜻은 아니고, 사람의 확인을 거치거나 외부 인프라 API에 연결할 수 있도록 설계했어.\n\nNVIDIA는 매시간 수십억 개의 데이터 포인트를 분석한다고 설명하며 IREN이 사용 중이라고 발표했어. 일부 다른 파트너는 향후 배포 계획 단계야. 이 숫자는 AI 모델 자체의 정확도나 일반 서비스의 속도 향상률이 아니야.",
+      "short_summary": "NVIDIA가 10월 22일 AI 팩토리 관측 플랫폼 Minerva를 발표했어. GPU·네트워크·스토리지·작업 메트릭을 지식 그래프로 연결해 장애 원인 후보를 찾는 AIOps 구조야. 발표에 나온 도입 파트너 가운데 실제 사용과 계획 상태를 구분해야 해.",
+      "technical_context": "일반 모니터링: `GPU 온도 경고`, `스토리지 응답 지연`, `Job 완료 지연`이 각각 별도 알림으로 보일 수 있어. 상관 분석: `GPU↔NIC↔Switch↔NVMe↔Job`의 토폴로지를 유지하면 단일 하드웨어 문제가 여러 성능 지표에 만든 연쇄 영향을 하나의 인시던트로 묶는 데 도움 돼. 핵심 지표는 GPU 가동률과 실제 유효 작업량(Goodput), 장애 간격과 평균 복구 시간, 시간당 토큰 생산량처럼 서로 성격이 달라. 'GPU 사용률이 100%'라는 수치만으로 모델 서비스가 건강하다고 단정하면 안 돼.",
+      "why_it_matters": "엔진 프레임 분석에서도 CPU/GPU/IO를 별도로 측정하는 데서 나아가 같은 프레임·작업 ID로 연계해야 실제 병목을 찾을 수 있다는 중요한 설계 원리를 보여줘.",
+      "developer_view": "게임 엔진의 프레임 텔레메트리에도 `FrameId`, `JobId`, `ResourceId`, `QueueId`를 공통 키로 기록하고 CPU 작업→리소스 스트리밍→GPU 제출→GPU 완료 간 연계를 확보하면 좋아. ETW·PIX·Tracy처럼 이벤트를 시간축과 인과 관계로 분석하는 도구를 떠올리면 이해하기 쉬워. 단 Minerva 자체가 DX11 엔진용 프로파일러라는 의미는 아니야."
+    },
+    {
+      "category": "ai",
+      "depth": "brief",
+      "title": "🌐 NVIDIA Cosmos — 세계 모델용 합성 데이터·시뮬레이션 툴체인 확장",
+      "source": "NVIDIA 공식 블로그",
+      "published": "2026-10-21",
+      "url": "https://blogs.nvidia.com/blog/cosmos-open-train-evaluate-deploy-world-models/",
+      "tags": [
+        "Cosmos",
+        "World Models",
+        "Physical AI",
+        "Synthetic Data",
+        "Simulation"
+      ],
+      "easy_explainer": "NVIDIA가 Cosmos Data Factory의 다중 감각 데이터 처리와 합성 영상 생성 블루프린트, Cosmos Framework의 학습·양자화·증류 도구를 확장했어. 새로운 Cosmos 3 Nano 변형은 자율주행·로봇 정책을 실제 현장에 투입하기 전 반복 가능하고 드문 상황에서 시험하는 데 초점을 둬. 기사 날짜는 10월 21일이지만 전날 브리핑에서 제외된 중요한 연구개발 발표라 이번 호에 보완했어. 이는 세계를 물리적으로 완벽히 복제하는 게임 엔진 출시가 아니야.",
+      "short_summary": "NVIDIA Cosmos가 물리 AI용 데이터 가공·세계 모델 학습·가상 환경 평가 도구를 확대했어. 10월 21일 발표 자료지만 이전 호에 빠져 보완했어. 폐쇄 루프 평가와 실제 로봇·게임 엔진의 재현 가능한 상태 시뮬레이션은 다른 문제야.",
+      "technical_context": "동영상·LiDAR·카메라 입력을 합성·라벨링해 드문 상황의 학습 데이터를 늘리고 시뮬레이션에서 정책을 평가해. 제조업체별 성능 향상 수치는 발표 자료에 제시된 제한된 현장·검증 조건의 값으로 이해해야 해.",
+      "why_it_matters": "가상 시뮬레이션을 통해 희소 사고 상황을 학습·검증하는 도구는 물리 AI뿐 아니라 미래의 게임 AI 테스트 및 시뮬레이션 설계에도 참고가 돼.",
+      "developer_view": "게임 엔진의 권위 있는 물리·충돌 상태를 통계적 세계 모델의 출력과 혼동하지 않는 것이 중요해. 생성형 모델을 시각 예측이나 테스트 데이터 보조에 사용하더라도 실제 충돌·게임 규칙은 결정적인 엔진 계층에서 유지해야 해."
+    },
+    {
+      "category": "ai",
+      "depth": "brief",
+      "title": "🏢 Uber, ChatGPT Work를 직원 3만 명 이상에게 전사 도입",
+      "source": "OpenAI·Uber 발표",
+      "published": "2026-10-22",
+      "url": "https://openai.com/index/uber-chatgpt-work-rollout/",
+      "tags": [
+        "ChatGPT Work",
+        "Enterprise AI",
+        "Agentic Workflow",
+        "Adoption"
+      ],
+      "easy_explainer": "Uber가 약 1,000명을 대상으로 시험한 ChatGPT Work를 전 세계 직원 3만 명 이상으로 확대한다고 발표했어. Google Drive·Gmail·Slack 등과 연결해 회의 준비, 리서치, 문서·데이터 작업을 수행하는 방식이야. 직원 전원에게 실제 생산성이 입증됐다는 결과 발표가 아니라 전사 배포를 시작한다는 소식으로, 조직별 승인된 연결과 내부 교육을 함께 제공한다고 밝혔어.",
+      "short_summary": "Uber가 ChatGPT Work를 시범 직원 1,000명에서 3만 명 이상 전사 규모로 확대하기 시작했어. 여러 사내 도구 연결을 통한 업무 실행이 목표지만 실제 성과 수치는 후속 검증이 필요해.",
+      "technical_context": "계정 연결·권한·감사 로그·업무별 도구 접근 범위를 미리 정의한 상태에서 여러 애플리케이션을 가로지르는 에이전트 작업을 운영해.",
+      "why_it_matters": "AI 도구가 개인의 질문 도구에서 조직 수준의 워크플로 플랫폼으로 확장되는 흐름을 보여 줘.",
+      "developer_view": "개발팀에서도 사용자별 API 연결 권한, 재시도 시 중복 작업 방지, 성과 지표와 감사 로그가 에이전트 도입의 핵심 운영 요소야."
+    },
+    {
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "🧩 GitHub Copilot 기업 전역 기본 정책 — 미설정 기능에 기본값 일괄 적용",
+      "source": "GitHub Changelog",
+      "published": "2026-10-22",
+      "url": "https://github.blog/changelog/2026-10-22-global-default-for-copilot-features-generally-available/",
+      "tags": [
+        "GitHub Copilot",
+        "Policy",
+        "MCP",
+        "Enterprise",
+        "Access Control"
+      ],
+      "easy_explainer": "10월 22일부터 GitHub Copilot Business·Enterprise의 미설정 기능에 조직 수준의 '새 기능 기본 정책'이 순차 적용되기 시작했어. 10월 26일까지 기업·조직마다 적용 시점이 다를 수 있고, 이미 각 기능에 대해 관리자가 명시적으로 켜거나 끈 설정은 그대로 유지돼. 대상은 Copilot의 `Features & clients` 및 `MCP servers in Copilot` 중 적용 가능한 일반 제공(GA) 설정이야. 미리보기 기능은 기존처럼 별도 옵트인이 필요해.\n\n이 소식은 단순히 관리 메뉴가 추가됐다는 의미만은 아니야. 조직에 여러 코딩 에이전트와 MCP 서버가 연결돼 있을 때 'Unconfigured'가 반드시 'Disabled'인 것은 아니며, 기본 정책이 Enabled인지 Disabled인지 또는 조직에 선택권을 넘기는지에 따라 실제 사용 가능 범위가 달라질 수 있어. 관리자가 확실하게 허용한 기능과 기본 정책에 의해 활성화된 기능을 나눠 점검해야 해.",
+      "short_summary": "GitHub Copilot 조직 정책이 10월 22~26일 사이 순차적으로 적용돼. 미설정인 GA 기능과 MCP 서버 설정에 기본값이 반영되지만 명시적으로 결정한 개별 설정은 보존돼. AI 기능의 기본 노출 범위가 조직 보안 경계에 영향을 줄 수 있어.",
+      "technical_context": "정책을 세 층으로 나눠 보자. ① Enterprise Global Default ② 제품 기능별 Explicit Override ③ 개별 사용자 인증·실행 권한. 첫 번째는 기능의 노출 여부를 결정할 뿐, 실제 Repository write나 비밀 정보 읽기 권한을 자동 보증하지는 않아. 위험한 조합은 `기본 허용 → MCP 서버 발견 → 과도한 토큰 권한 → 도구 실행`으로 이어질 수 있으므로 정책 변경 뒤 설정을 재평가해야 해. 일괄 적용은 한 번 이루어지고 추후 Global Default 변경이 이미 결정된 값을 자동으로 덮어쓰지 않는다는 공식 설명도 중요해.",
+      "why_it_matters": "팀별 AI 코딩 도구 사용이 늘어나는 상황에서 에이전트의 모델 품질이 아닌 정책·권한이 실제 운영 위험을 결정한다는 점을 보여 줘.",
+      "developer_view": "자체 엔진 도구에서도 `DefaultPolicy + FeatureOverride + CapabilityCheck`를 분리해. 에디터 명령을 활성화하더라도 배포·삭제·비밀 정보 접근은 별도 Capability를 요구해야 해. 도입 뒤엔 설정 diff와 실행 로그를 보존하는 것이 좋아."
+    },
+    {
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "🔑 GitHub CLI 2.103.0 — 자동 갱신되는 만료형 OAuth 토큰 미리보기",
+      "source": "GitHub Changelog",
+      "published": "2026-10-21",
+      "url": "https://github.blog/changelog/2026-10-21-github-cli-opt-in-to-expiring-auto-refreshing-oauth-tokens/",
+      "tags": [
+        "GitHub CLI",
+        "OAuth",
+        "Credential Helper",
+        "CI",
+        "Security"
+      ],
+      "easy_explainer": "GitHub CLI 2.103.0부터 `gh auth login --expiring`으로 수명이 짧고 자동 갱신되는 OAuth 인증을 선택할 수 있어. 10월 21일 공개된 미리보기 기능으로 기존 로그인은 영향을 받지 않아. Git HTTPS에도 사용하려면 `gh auth setup-git`을 권장하며, `gh auth token`을 한번 읽어 장기간 저장하는 스크립트는 토큰 만료 시 실패할 수 있으므로 점검이 필요해.",
+      "short_summary": "GitHub CLI에 자동 갱신형 단기 OAuth 토큰이 옵트인 미리보기로 들어왔어. 계정에 기존 장기 토큰을 자동으로 교체하지 않으며 `gh auth token` 값의 장기 캐시와 충돌할 수 있어.",
+      "technical_context": "Access Token 수명과 Refresh Token 회전을 분리한다. Credential Helper는 필요 시 새 토큰을 받을 수 있지만 비밀 값을 복사해 둔 외부 자동화는 수명 관리가 따로 필요해.",
+      "why_it_matters": "AI 에이전트 개발 환경의 자격 증명 노출 위험을 줄이는 데 유용하지만 자동 갱신 기능도 올바른 저장·회전 정책이 필수야.",
+      "developer_view": "GitHub에서 자동 커밋하는 개발 에이전트라면 저장소 범위가 제한된 권한과 토큰 수명·회전 정책을 함께 관리하고, 에이전트 코드에 토큰을 문자열로 넣지 말아야 해."
+    },
+    {
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "🛡️ GitHub Public Monitoring — 데이터 레지던시 기업도 공개 커밋의 비밀 키 노출 탐지",
+      "source": "GitHub Changelog",
+      "published": "2026-10-22",
+      "url": "https://github.blog/changelog/2026-10-22-public-monitoring-now-available-with-data-residency/",
+      "tags": [
+        "GitHub Secret Scanning",
+        "Data Residency",
+        "Public Monitoring",
+        "Credentials"
+      ],
+      "easy_explainer": "GitHub Enterprise Cloud Data Residency 환경에서도 GitHub 공개 커밋에 노출된 기업의 비밀 키를 추적하는 Public Monitoring의 공개 미리보기가 제공돼. 기업의 검증된 도메인과 공개 커밋 작성자 메일의 일치를 바탕으로 경고를 귀속시키며, 데이터 레지던시 경계를 넘겨 기업의 구성원 명단을 공유하지 않는다고 설명했어. GitHub Advanced Security 또는 Secret Protection 라이선스가 필요하고 모든 개인 저장소에 자동 적용되는 기능은 아니야.",
+      "short_summary": "GitHub가 데이터 레지던시 Enterprise에도 공개 저장소 비밀 키 모니터링을 제공해. 검증된 회사 도메인 기반으로 노출을 귀속하며 대상 라이선스·미리보기 제약이 있어.",
+      "technical_context": "공개 코드 검색만으로 회사와 관련된 비밀 키를 구분하기 어려우므로 조직이 검증한 도메인과 작성자 속성을 활용하는 귀속 메커니즘을 사용해.",
+      "why_it_matters": "에이전트가 우연히 공개 커밋에 토큰을 포함했을 때 탐지·회전하는 운영 절차의 중요성을 다시 보여 줘.",
+      "developer_view": "엔진 빌드·배포 토큰이 공개됐으면 알림을 읽는 것만으로 끝내지 않고 즉시 키 교체, 사용 이력 확인, 권한 축소와 재발 방지 검증을 수행해야 해."
+    },
+    {
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🌆 Cyberpunk 2077 업데이트 2.5 실제 배포 — PC·Mac·PS5·Xbox 적용",
+      "source": "CD PROJEKT RED 공식 공지",
+      "published": "2026-10-22",
+      "url": "https://www.cyberpunk.net/en/news/52125/cyberpunk-2077s-edgerunners-2-update-2-5-is-out-now",
+      "tags": [
+        "Cyberpunk 2077",
+        "Update 2.5",
+        "Edgerunners 2",
+        "Patch",
+        "PC"
+      ],
+      "easy_explainer": "전날에는 배포 예정으로 전했던 《Cyberpunk 2077》의 무료 Edgerunners 2 업데이트(2.5)가 10월 22일 실제 출시됐어. CD PROJEKT RED의 새 공지에 따르면 PC·Mac·PS5·Xbox Series X|S에서 제공 중이고 Nintendo Switch 2 적용은 향후 예정이야. 새 애니메이션 관련 콘텐츠와 패치가 포함됐으며 설치 여부·지역별 배포는 각 플랫폼에서 직접 확인해야 해.",
+      "short_summary": "《Cyberpunk 2077》 2.5가 10월 22일 PC·Mac·PS5·Xbox Series X|S에 배포됐어. Switch 2 적용은 아직 예정이야. 21일의 예고 기사와 달리 실제 배포 완료가 확인된 후속 소식이야.",
+      "technical_context": "동일 게임의 플랫폼별 버전 배포가 달라질 수 있어. 업데이트 완료 여부는 설치 패키지 버전과 실제 실행 빌드를 구분해 점검해야 해.",
+      "why_it_matters": "대형 게임의 장기 운영과 플랫폼별 패치 롤아웃의 사례야.",
+      "developer_view": "릴리스 브랜치가 플랫폼마다 달라질 때 콘텐츠 호환성과 저장 데이터 마이그레이션을 분리해 관리하는 이유를 생각해 볼 수 있어."
+    },
+    {
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "⚔️ FINAL FANTASY RESONANCE 출시 — HD-2D로 재구성한 Brave Exvius",
+      "source": "Square Enix 보도자료",
+      "published": "2026-10-22",
+      "url": "https://www.gamespress.com/en-GB/SQUARE-ENIXS-FINAL-FANTASY-RESONANCE-NOW-AVAILABLE-ON-ALL-MAJOR-PLATFO",
+      "tags": [
+        "Final Fantasy Resonance",
+        "Square Enix",
+        "HD-2D",
+        "RPG",
+        "Launch"
+      ],
+      "easy_explainer": "Square Enix가 10월 22일 《FINAL FANTASY RESONANCE》 출시를 공식 발표했어. 《FINAL FANTASY BRAVE EXVIUS》의 첫 번째 스토리를 기반으로 기존 모바일 게임을 단순 이식하지 않고 HD-2D 기반의 콘솔·PC RPG로 다시 구성한 작품이야. PS5, Switch·Switch 2, Xbox Series X|S, PC 등이 대상이며 무료 데모 저장 데이터를 정식 게임으로 이어갈 수 있다고 안내했어. 실제 Steam 잠금 해제 시각과 지역별 판매 상태는 각 스토어를 확인해야 해.",
+      "short_summary": "《FINAL FANTASY RESONANCE》가 10월 22일 출시됐어. 모바일 RPG Brave Exvius를 HD-2D 턴제 콘솔·PC RPG로 재구성했고 데모 저장 데이터 연계를 지원해. 출시 시간은 지역/스토어에 따라 다를 수 있어.",
+      "technical_context": "HD-2D는 2D 캐릭터·텍스처와 3D 조명·깊이·후처리를 조합하는 미술 표현으로, 특정 게임의 정확한 렌더링 내부 구조는 공식 개발 자료 없이 단정할 수 없어.",
+      "why_it_matters": "기존 IP를 최신 기술과 과금 구조로 다시 구성한 대형 게임 출시야.",
+      "developer_view": "데모에서 정식 버전으로 이어지는 저장 데이터에 스키마·버전·엔타이틀먼트 검사 체계가 필요함을 보여 주는 사례야."
+    },
+    {
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🏅 Nintendo Switch Sports Resort 출시 — Switch 2용 모션 스포츠 12종",
+      "source": "Nintendo 공식 소개",
+      "published": "2026-10-22",
+      "url": "https://www.nintendo.com/us/whatsnew/get-warmed-up-for-the-new-and-returning-sports-in-nintendo-switch-sports-resort/",
+      "tags": [
+        "Nintendo Switch 2",
+        "Sports Resort",
+        "Motion Controls",
+        "Release"
+      ],
+      "easy_explainer": "Nintendo의 Switch 2 전용 스포츠 게임 《Nintendo Switch Sports Resort》가 공식 출시 일정인 10월 22일을 맞았어. 모션 조작을 이용하는 스포츠 12종과 섬의 활동을 즐기는 구성이며 Switch 2용 게임이야. Nintendo 공식 안내는 출시 예정 날짜를 확인해 주지만, 한국 지역 eShop의 실시간 판매 상태·가격까지 직접 검증한 것은 아니야.",
+      "short_summary": "《Nintendo Switch Sports Resort》가 10월 22일 Switch 2 출시 일정을 맞았어. 모션 제어 스포츠 12종이 특징이며 실시간 국내 스토어 판매가·이용 가능 상태는 별도 확인 대상이야.",
+      "technical_context": "모션 입력 게임은 입력 센서의 샘플링·동작 인식·화면 응답 지연이 체감 품질에 영향을 줘. 이 작품의 내부 구현 세부 사항은 공개 소개만으로 확정할 수 없어.",
+      "why_it_matters": "Switch 2 플랫폼의 주요 신작으로, 모션 조작 장르의 후속 확장이야.",
+      "developer_view": "다양한 모션 입력 게임에서는 샘플 필터링과 게임 규칙의 판정을 분리하고, 사용자별 민감도 보정을 검토할 수 있어."
+    },
+    {
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🇫🇷 Paris Games Week 개막 — 프랑스 게임 소비 성장과 개발사 수익 위기 동시 부각",
+      "source": "Le Monde · CNC·SNJV 업계 조사 인용",
+      "published": "2026-10-22",
+      "url": "https://www.lemonde.fr/en/pixels/article/2026/10/22/paris-games-week-reveals-paradox-of-video-games-in-france-strong-demand-yet-struggling-studios_6761383_13.html",
+      "tags": [
+        "Paris Games Week",
+        "France",
+        "Game Industry",
+        "Studio Economics",
+        "2026"
+      ],
+      "easy_explainer": "Paris Games Week 2026이 10월 22~25일 프랑스 파리에서 시작됐어. Le Monde가 인용한 CNC·SNJV 조사에서 프랑스 게임 회사의 61.4%가 업계 전망을 비관적으로 봤고 약 48%는 2025년에 영업손실을 기록했다고 응답했어. 같은 보도에서 2025년 프랑스 게임 소비 시장은 약 58억 유로로 제시돼 소비 수요와 개발 스튜디오의 재무 건전성이 서로 다르게 움직이는 상황을 설명했어. 이는 프랑스 업계 표본에 관한 지표이지 전 세계 게임사의 적자율이 아니야.",
+      "short_summary": "Paris Games Week가 10월 22일 개막했어. 프랑스 관련 업계 조사에선 게임 회사의 48%가 손실, 61.4%가 미래를 비관했다고 응답했어. 게임 소비 성장과 개발사 수익 안정성을 동일시하기 어렵다는 산업 구조를 보여 줘.",
+      "technical_context": "장기 프로젝트가 출시되기 전까지 고정 인건비·미들웨어 비용이 발생하고, 출시 초기 발견 가능성과 매출 집중도가 수익성에 큰 영향을 줘. 보도 자료에 나온 표본별 조사 질문의 차이에 주의해야 해.",
+      "why_it_matters": "인기 있는 시장과 건강한 개발사 생태계가 동일하지 않다는 점을 보여 주는 게임 산업 소식이야.",
+      "developer_view": "개발 기술 결정이 경제적 위험에도 연결되므로 콘텐츠 제작·빌드·QA 파이프라인의 반복 비용을 측정하고 확장 가능한 툴링 투자와 프로젝트 범위를 균형 있게 잡는 것이 중요해."
+    }
+  ]
+}
