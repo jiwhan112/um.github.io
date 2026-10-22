@@ -9,7 +9,11 @@
     "schedule": "BEGIN:VEVENT\nDTSTART;TZID=Asia/Seoul:20261021T180000\nRRULE:FREQ=HOURLY;INTERVAL=1;BYMINUTE=0;BYSECOND=0\nEND:VEVENT",
     "timing_mode": "exact_schedule",
     "registration_confirmed": true,
-    "future_run_success_confirmed": false
+    "future_run_success_confirmed": false,
+    "id": "6ad87837d4688191818e709038a6c0c4",
+    "is_enabled": false,
+    "pause_reason": "User explicitly requested keeping the automation disabled during manual recovery on 2026-10-22.",
+    "resume_requires_explicit_user_request": true
   },
   "inventory_finalized": false,
   "baseline_catalog_documents": 83,
@@ -19,7 +23,7 @@
       "notion_url": "https://app.notion.com/p/3fda99703f408153b1dffae9398aa3bc",
       "title": "C01 · C11 입력 검증·정수 범위와 C++11/20 교차 컴파일",
       "page_last_edited_at": "2026-10-20T04:35:45.263Z",
-      "state": "source_found_child_audit_pending",
+      "state": "published_verified_with_attachment_limitation",
       "known_children": {
         "cpu_source": "https://app.notion.com/p/3fea99703f40818c90b2d60e3b94c3ce",
         "historical_native_logs": 17,
@@ -89,17 +93,19 @@
   ],
   "active_batch": {
     "worker": "interactive-chat",
-    "status": "active",
+    "status": "released",
     "unit_ids": [
       "c-language-01"
     ],
     "branch": "feature/c-language-01-20261021",
-    "lease_until_utc": "2026-10-22T03:00:00Z",
-    "phase": "cpu-and-react-ci",
-    "source_commit": "11d8e2a95095e78f63dbac6408dbbccc770974ac",
-    "release_condition": "PR review+merged and published live verified"
+    "lease_until_utc": null,
+    "phase": "published_verified",
+    "source_commit": "3658cc6d98b066d61b8e747ee6b28c30dbff9c34",
+    "release_condition": "PR review+merged and published live verified",
+    "released_at_utc": "2026-10-22T06:07:57.604Z",
+    "release_evidence": "https://github.com/jiwhan112/um.github.io/pull/18"
   },
-  "next_unit": "c-language-01",
+  "next_unit": "effective-cpp-01",
   "units": [
     {
       "id": "dx11-frustum",
@@ -1542,7 +1548,7 @@
       "notion_url": "https://app.notion.com/p/3fda99703f408153b1dffae9398aa3bc",
       "category": "C 언어",
       "route": "/knowledge/c-language-01/",
-      "state": "in_progress",
+      "state": "published_verified",
       "evidence": {
         "source_index_read": true,
         "source_pages": [
@@ -1553,26 +1559,34 @@
         "local_artifact": "sandbox:/mnt/data/ATLAS_NOTE_C01_local_work_20261021.zip",
         "historical_logs": "knowledge/shared/c01-lab/historical-notion/",
         "body_commit": "11d8e2a95095e78f63dbac6408dbbccc770974ac",
-        "recovery_branch": "feature/c-language-01-20261021"
+        "recovery_branch": "feature/c-language-01-20261021",
+        "pr": "https://github.com/jiwhan112/um.github.io/pull/18",
+        "final_pr_head": "b7f1c0772a76b73ac9359f38af1a05b667ad75d8",
+        "merge_commit": "83b677a9c28345f3be1f29a1a614f2bf4e53f591",
+        "published_source_commit": "3658cc6d98b066d61b8e747ee6b28c30dbff9c34",
+        "publication_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39731334179",
+        "public_verified_at_utc": "2026-10-22T06:07:57.604Z",
+        "public_url": "https://jiwhan112.github.io/um.github.io/knowledge/c-language-01/",
+        "verification_artifact": "https://github.com/jiwhan112/um.github.io/actions/runs/39731334179/artifacts/12404634057",
+        "verification_artifact_sha256": "c62265035016db07971b2e46ccb13e43cb40f6d258f7429cd897dde5a12e6c1e",
+        "artifact_retention_note": "Artifact expiry recorded as 2026-10-29; PR final verification record remains the durable summary."
       },
       "remaining": [
-        "CPU CI and archive logs plus hashes",
-        "Full web React validation, desktop/mobile visual review",
-        "PR review, merge, actual Pages and public URL verify",
-        "Historical attached file binary not yet verified"
+        "Historical Notion file-block attachment binary remains unverified; preserved native logs do not substitute for it.",
+        "Windows/MSVC, GPU/Direct3D/HLSL, ABI/concurrency/performance, physical mobile and authenticated two-device sync remain unverified."
       ],
       "stages": {
         "source_capture": "complete_two_pages",
         "historical_native_logs": "17_verified_FNV64_and_byte_count",
         "historical_attachment": "binary_unverified",
-        "body": "committed_pending_web_ci",
+        "body": "published_verified",
         "full_source": "original_4_and_korean_2_committed",
         "source_integrity": "original_4_SHA256_verified",
         "local_build": "five_toolchains_CMake_CTest_pass",
-        "cpu_ci": "pending",
-        "react_web_ci": "pending",
-        "pr": "pending",
-        "public_deployment": "pending"
+        "cpu_ci": "passed_five_jobs",
+        "react_web_ci": "passed_31_unit_459_e2e_1_intentional_skip",
+        "pr": "merged_18",
+        "public_deployment": "verified_desktop_and_mobile_37_exact_resources"
       }
     },
     {
@@ -1686,7 +1700,7 @@
     "all_approved_units_published": false,
     "automation_stop_confirmed": false
   },
-  "after_active_batch_next_unit": "c-language-01",
-  "inventory_note": "90 inventory entries include 81 previously published documents, the active two C++ chapters, and seven identified source chapters. This is not the live catalog count. Computer-science child/source audit and remaining collection scope are still pending.",
+  "after_active_batch_next_unit": "effective-cpp-01",
+  "inventory_note": "Inventory is not the live catalog count. C++ advanced 05–06 and C01 are published; C01 was reconciled against merged PR18 and successful public verification. Computer-science child/source audit and remaining collection scope are still pending.",
   "next_unit_after_verified_pr17": "c-language-01"
 }
