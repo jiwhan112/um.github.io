@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-22",
+  "updated": "2026-10-23",
   "book": {
     "title": "Cracking the Coding Interview",
     "edition": 6,
@@ -8,18 +8,35 @@
   },
   "current": {
     "chapter": 2,
-    "number": "2.5",
-    "topic_en": "Sum Lists",
-    "study_date": "2026-10-22",
-    "published_date": "2026-10-22"
+    "number": "2.6",
+    "topic_en": "Palindrome",
+    "study_date": "2026-10-23",
+    "published_date": "2026-10-23"
   },
   "next": {
     "chapter": 2,
-    "number": "2.6",
-    "topic_en": "Palindrome",
-    "study_date": "2026-10-23"
+    "number": "2.7",
+    "topic_en": "Intersection",
+    "study_date": "2026-10-24"
   },
   "episodes": [
+    {
+      "number": "2.6",
+      "chapter": 2,
+      "topic_en": "Palindrome",
+      "title": "이벤트 기록의 좌우 대칭 판별",
+      "summary": "단일 연결 리스트에서 원본 링크를 보존하며 양끝 이벤트의 대칭을 절반 버퍼로 검사",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "회문",
+        "두 포인터",
+        "스택"
+      ],
+      "study_date": "2026-10-23",
+      "published_date": "2026-10-23",
+      "path": "ep-02-06-palindrome/"
+    },
     {
       "number": "2.5",
       "chapter": 2,
