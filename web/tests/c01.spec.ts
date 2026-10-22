@@ -37,7 +37,7 @@ test('C01 practice, downloadable Korean C and C++ sources, and original archive 
   await expect(questions.first()).not.toHaveAttribute('open');
   await questions.first().locator('summary').click();
   await expect(questions.first()).toHaveAttribute('open', '');
-  await expect(questions.first()).toContainText('두 개의 변환');
+  await expect(questions.first()).toContainText('정수 두 항목의 변환');
   await page.getByRole('tab', { name: '출처·검증' }).click();
   for (const file of ['ko/c11/main.c', 'ko/c01b/main.cpp', 'original/c11/main.c', 'original/c01b/main.cpp']) {
     const path = '/um.github.io/knowledge/shared/c01-lab/' + file;
