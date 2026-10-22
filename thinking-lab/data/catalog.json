@@ -1,1 +1,264 @@
-{"schema_version":1,"updated":"2026-10-20","book":{"title":"Cracking the Coding Interview","edition":6,"author":"Gayle Laakmann McDowell"},"current":{"chapter":2,"number":"2.3","topic_en":"Delete Middle Node","study_date":"2026-10-20","published_date":"2026-10-20"},"next":{"chapter":2,"number":"2.4","topic_en":"Partition","study_date":"2026-10-21"},"episodes":[{"number":"2.3","chapter":2,"topic_en":"Delete Middle Node","title":"이벤트 큐 노드 삭제","summary":"head와 이전 노드 주소 없이 단일 연결 리스트의 이벤트를 O(1) 시간·공간으로 논리 삭제하는 포인터 연습","category":"연결 리스트","tags":["연결 리스트","노드 삭제","포인터 조작","제자리 수정"],"study_date":"2026-10-20","published_date":"2026-10-20","path":"ep-02-03-delete-middle-node/"},{"number":"2.2","chapter":2,"topic_en":"Return Kth to Last","title":"전투 리플레이의 뒤에서 k번째 이벤트","summary":"길이 정보를 모르는 단일 연결 리스트에서 간격이 일정한 두 포인터로 뒤에서 k번째 원본 노드를 한 번의 순회에 찾기","category":"연결 리스트","tags":["연결 리스트","두 포인터","단일 순회","포인터 간격"],"study_date":"2026-10-19","published_date":"2026-10-19","path":"ep-02-02-return-kth-to-last/"},{"number":"2.1","chapter":2,"topic_en":"Remove Dups","title":"보상 이벤트 연결 리스트의 중복 제거","summary":"단일 연결 리스트에서 최초 등장 노드와 순서를 보존하면서 해시 집합으로 중복 노드를 제거","category":"연결 리스트","tags":["연결 리스트","중복 검사","해시 테이블","제자리 수정"],"study_date":"2026-10-18","published_date":"2026-10-18","path":"ep-02-01-remove-dups/"},{"number":"1.9","chapter":1,"topic_en":"String Rotation","title":"순환 이벤트 패턴의 시작점 찾기","summary":"시작 위치만 달라진 이벤트 문자열인지 가상 이어 붙이기와 KMP 검색으로 판별","category":"배열과 문자열","tags":["문자열","문자열 검색","KMP","순환 이동"],"study_date":"2026-10-17","published_date":"2026-10-17","path":"ep-01-09-string-rotation/"},{"number":"1.8","chapter":1,"topic_en":"Zero Matrix","title":"타일 맵 장애 표식의 행·열 초기화","summary":"처음부터 0인 칸을 기준으로 대응하는 행과 열을 O(1) 추가 공간에 초기화","category":"배열과 문자열","tags":["2차원 배열","행렬","제자리 수정","마커 배열"],"study_date":"2026-10-16","published_date":"2026-10-16","path":"ep-01-08-zero-matrix/"},{"number":"1.7","chapter":1,"topic_en":"Rotate Matrix","title":"미니맵 타일의 시계 방향 회전","summary":"정사각형 격자를 네 위치 순환 교환으로 제자리에서 90도 회전","category":"배열과 문자열","tags":["2차원 배열","행렬","인덱스 변환","제자리 수정"],"study_date":"2026-10-15","published_date":"2026-10-16","path":"ep-01-07-rotate-matrix/"},{"number":"1.6","chapter":1,"topic_en":"String Compression","title":"전투 이벤트 프레임의 연속 코드 압축","summary":"연속 문자 묶음을 런 길이 인코딩으로 표현하고 짧아질 때만 채택","category":"배열과 문자열","tags":["문자열","문자열 압축","런 길이 인코딩"],"study_date":"2026-10-14","published_date":"2026-10-16","path":"ep-01-06-string-compression/"},{"number":"1.5","chapter":1,"topic_en":"One Away","title":"게임 로비 명령어의 한 글자 오타","summary":"삽입·삭제·치환을 한 번 이내로 허용하는 ASCII 명령어 비교","category":"배열과 문자열","tags":["문자열","두 포인터","편집 거리"],"study_date":"2026-10-13","published_date":"2026-10-13","path":"ep-01-05-one-away/"},{"number":"1.4","chapter":1,"topic_en":"Palindrome Permutation","title":"회문 순열 — 유적 암호의 대칭 배치","summary":"등장 횟수의 홀짝으로 회문 구성 가능성을 O(n)에 판정","category":"배열과 문자열","study_date":"2026-10-12","published_date":"2026-10-12","path":"ep-01-04-palindrome-permutation/","tags":["문자열","회문","문자 빈도","비트 연산"]},{"number":"1.3","chapter":1,"topic_en":"URLify","title":"URLify — 미니맵 위치 문자열의 공백 인코딩","summary":"역방향 두 포인터로 버퍼 안에서 공백을 %20으로 인코딩","category":"배열과 문자열","study_date":"2026-10-11","published_date":"2026-10-12","path":"ep-01-03-urlify/","tags":["문자열","두 포인터","제자리 수정"]},{"number":"1.2","chapter":1,"topic_en":"Check Permutation","title":"문자열 순열 관계 — 로비 배지 토큰 재배열","summary":"순서와 무관하게 두 문자열의 문자 구성이 같은지 검증","category":"배열과 문자열","published_date":"2026-10-12","path":"ep-01-02-check-permutation/","study_date":"2026-10-10","tags":["문자열","순열","문자 빈도"]},{"number":"1.1","chapter":1,"topic_en":"Is Unique","title":"중복 문자 검사 — 식별 문자열 검증","summary":"대문자 식별 문자열에 중복이 존재하는지 검사","category":"배열과 문자열","published_date":"2026-10-08","archived_on":"2026-10-12","path":"ep-01-01-is-unique/","study_date":"2026-10-09","tags":["문자열","중복 검사","해시 테이블"]}],"policy":{"start_date":"2026-10-09","cadence":"daily","timezone":"Asia/Seoul","description":"study_date is assigned learning date, published_date records actual GitHub publication"}}
+{
+  "schema_version": 1,
+  "updated": "2026-10-22",
+  "book": {
+    "title": "Cracking the Coding Interview",
+    "edition": 6,
+    "author": "Gayle Laakmann McDowell"
+  },
+  "current": {
+    "chapter": 2,
+    "number": "2.5",
+    "topic_en": "Sum Lists",
+    "study_date": "2026-10-22",
+    "published_date": "2026-10-22"
+  },
+  "next": {
+    "chapter": 2,
+    "number": "2.6",
+    "topic_en": "Palindrome",
+    "study_date": "2026-10-23"
+  },
+  "episodes": [
+    {
+      "number": "2.5",
+      "chapter": 2,
+      "topic_en": "Sum Lists",
+      "title": "보상 금액의 자릿수 연결 리스트 덧셈",
+      "summary": "큰 정수 변환 없이 역순 자릿수와 올림을 처리하고 독립 결과 체인을 생성",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "자릿수 연산",
+        "올림",
+        "메모리 소유권"
+      ],
+      "study_date": "2026-10-22",
+      "published_date": "2026-10-22",
+      "path": "ep-02-05-sum-lists/"
+    },
+    {
+      "number": "2.4",
+      "chapter": 2,
+      "topic_en": "Partition",
+      "title": "전투 이벤트 목록의 기준값 분할",
+      "summary": "노드 주소와 그룹 내 순서를 보존하면서 두 체인으로 안정적 분할",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "포인터 조작",
+        "안정적 분할",
+        "제자리 수정"
+      ],
+      "study_date": "2026-10-21",
+      "published_date": "2026-10-22",
+      "path": "ep-02-04-partition/"
+    },
+    {
+      "number": "2.3",
+      "chapter": 2,
+      "topic_en": "Delete Middle Node",
+      "title": "이벤트 큐 노드 삭제",
+      "summary": "head와 이전 노드 주소 없이 단일 연결 리스트의 이벤트를 O(1) 시간·공간으로 논리 삭제하는 포인터 연습",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "노드 삭제",
+        "포인터 조작",
+        "제자리 수정"
+      ],
+      "study_date": "2026-10-20",
+      "published_date": "2026-10-20",
+      "path": "ep-02-03-delete-middle-node/"
+    },
+    {
+      "number": "2.2",
+      "chapter": 2,
+      "topic_en": "Return Kth to Last",
+      "title": "전투 리플레이의 뒤에서 k번째 이벤트",
+      "summary": "길이 정보를 모르는 단일 연결 리스트에서 간격이 일정한 두 포인터로 뒤에서 k번째 원본 노드를 한 번의 순회에 찾기",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "두 포인터",
+        "단일 순회",
+        "포인터 간격"
+      ],
+      "study_date": "2026-10-19",
+      "published_date": "2026-10-19",
+      "path": "ep-02-02-return-kth-to-last/"
+    },
+    {
+      "number": "2.1",
+      "chapter": 2,
+      "topic_en": "Remove Dups",
+      "title": "보상 이벤트 연결 리스트의 중복 제거",
+      "summary": "단일 연결 리스트에서 최초 등장 노드와 순서를 보존하면서 해시 집합으로 중복 노드를 제거",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "중복 검사",
+        "해시 테이블",
+        "제자리 수정"
+      ],
+      "study_date": "2026-10-18",
+      "published_date": "2026-10-18",
+      "path": "ep-02-01-remove-dups/"
+    },
+    {
+      "number": "1.9",
+      "chapter": 1,
+      "topic_en": "String Rotation",
+      "title": "순환 이벤트 패턴의 시작점 찾기",
+      "summary": "시작 위치만 달라진 이벤트 문자열인지 가상 이어 붙이기와 KMP 검색으로 판별",
+      "category": "배열과 문자열",
+      "tags": [
+        "문자열",
+        "문자열 검색",
+        "KMP",
+        "순환 이동"
+      ],
+      "study_date": "2026-10-17",
+      "published_date": "2026-10-17",
+      "path": "ep-01-09-string-rotation/"
+    },
+    {
+      "number": "1.8",
+      "chapter": 1,
+      "topic_en": "Zero Matrix",
+      "title": "타일 맵 장애 표식의 행·열 초기화",
+      "summary": "처음부터 0인 칸을 기준으로 대응하는 행과 열을 O(1) 추가 공간에 초기화",
+      "category": "배열과 문자열",
+      "tags": [
+        "2차원 배열",
+        "행렬",
+        "제자리 수정",
+        "마커 배열"
+      ],
+      "study_date": "2026-10-16",
+      "published_date": "2026-10-16",
+      "path": "ep-01-08-zero-matrix/"
+    },
+    {
+      "number": "1.7",
+      "chapter": 1,
+      "topic_en": "Rotate Matrix",
+      "title": "미니맵 타일의 시계 방향 회전",
+      "summary": "정사각형 격자를 네 위치 순환 교환으로 제자리에서 90도 회전",
+      "category": "배열과 문자열",
+      "tags": [
+        "2차원 배열",
+        "행렬",
+        "인덱스 변환",
+        "제자리 수정"
+      ],
+      "study_date": "2026-10-15",
+      "published_date": "2026-10-16",
+      "path": "ep-01-07-rotate-matrix/"
+    },
+    {
+      "number": "1.6",
+      "chapter": 1,
+      "topic_en": "String Compression",
+      "title": "전투 이벤트 프레임의 연속 코드 압축",
+      "summary": "연속 문자 묶음을 런 길이 인코딩으로 표현하고 짧아질 때만 채택",
+      "category": "배열과 문자열",
+      "tags": [
+        "문자열",
+        "문자열 압축",
+        "런 길이 인코딩"
+      ],
+      "study_date": "2026-10-14",
+      "published_date": "2026-10-16",
+      "path": "ep-01-06-string-compression/"
+    },
+    {
+      "number": "1.5",
+      "chapter": 1,
+      "topic_en": "One Away",
+      "title": "게임 로비 명령어의 한 글자 오타",
+      "summary": "삽입·삭제·치환을 한 번 이내로 허용하는 ASCII 명령어 비교",
+      "category": "배열과 문자열",
+      "tags": [
+        "문자열",
+        "두 포인터",
+        "편집 거리"
+      ],
+      "study_date": "2026-10-13",
+      "published_date": "2026-10-13",
+      "path": "ep-01-05-one-away/"
+    },
+    {
+      "number": "1.4",
+      "chapter": 1,
+      "topic_en": "Palindrome Permutation",
+      "title": "회문 순열 — 유적 암호의 대칭 배치",
+      "summary": "등장 횟수의 홀짝으로 회문 구성 가능성을 O(n)에 판정",
+      "category": "배열과 문자열",
+      "study_date": "2026-10-12",
+      "published_date": "2026-10-12",
+      "path": "ep-01-04-palindrome-permutation/",
+      "tags": [
+        "문자열",
+        "회문",
+        "문자 빈도",
+        "비트 연산"
+      ]
+    },
+    {
+      "number": "1.3",
+      "chapter": 1,
+      "topic_en": "URLify",
+      "title": "URLify — 미니맵 위치 문자열의 공백 인코딩",
+      "summary": "역방향 두 포인터로 버퍼 안에서 공백을 %20으로 인코딩",
+      "category": "배열과 문자열",
+      "study_date": "2026-10-11",
+      "published_date": "2026-10-12",
+      "path": "ep-01-03-urlify/",
+      "tags": [
+        "문자열",
+        "두 포인터",
+        "제자리 수정"
+      ]
+    },
+    {
+      "number": "1.2",
+      "chapter": 1,
+      "topic_en": "Check Permutation",
+      "title": "문자열 순열 관계 — 로비 배지 토큰 재배열",
+      "summary": "순서와 무관하게 두 문자열의 문자 구성이 같은지 검증",
+      "category": "배열과 문자열",
+      "published_date": "2026-10-12",
+      "path": "ep-01-02-check-permutation/",
+      "study_date": "2026-10-10",
+      "tags": [
+        "문자열",
+        "순열",
+        "문자 빈도"
+      ]
+    },
+    {
+      "number": "1.1",
+      "chapter": 1,
+      "topic_en": "Is Unique",
+      "title": "중복 문자 검사 — 식별 문자열 검증",
+      "summary": "대문자 식별 문자열에 중복이 존재하는지 검사",
+      "category": "배열과 문자열",
+      "published_date": "2026-10-08",
+      "archived_on": "2026-10-12",
+      "path": "ep-01-01-is-unique/",
+      "study_date": "2026-10-09",
+      "tags": [
+        "문자열",
+        "중복 검사",
+        "해시 테이블"
+      ]
+    }
+  ],
+  "policy": {
+    "start_date": "2026-10-09",
+    "cadence": "daily",
+    "timezone": "Asia/Seoul",
+    "description": "study_date is assigned learning date, published_date records actual GitHub publication"
+  }
+}
