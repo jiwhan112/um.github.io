@@ -36,7 +36,11 @@ for (const chapter of visualChapters) test(`${chapter.path} renders all visual t
   await page.screenshot({path:testInfo.outputPath(`${chapter.path}-concepts.png`),fullPage:true});
   await page.getByRole('tab',{name:'실습·복습'}).click();
   const reviews = page.locator('#review details');
-  expect(await reviews.count()).toBeGreaterThanOrEqual(6);
+  const authored = JSON.parse(await readFile(`../knowledge/${chapter.path}/content.json`, 'utf8')) as {sections:{id:string;blocks:{type:string}[]}[]};
+  const reviewCount = authored.sections.find(section => section.id === 'review')!.blocks.filter(block => block.type === 'details').length;
+  expect(reviewCount).toBeGreaterThanOrEqual(6);
+  // A tab click schedules a React/router transition; wait for its actual authored content.
+  await expect(reviews).toHaveCount(reviewCount);
   for (const review of await reviews.all()) await expect(review).toHaveJSProperty('open',false);
   await reviews.first().locator('summary').click();
   await expect(reviews.first()).toHaveJSProperty('open',true);

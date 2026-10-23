@@ -6,7 +6,7 @@ const routes=JSON.parse(readFileSync('public/data/atlas/routes.json','utf8')) as
 const knowledgeDocs=catalog.documents.filter(doc=>doc.kind==='knowledge');
 const windowsCategories=['WinAPI','게임 수학','DirectX 9','DirectX 11'];
 const windowsCount=knowledgeDocs.filter(doc=>windowsCategories.includes(doc.category)).length;
-const treeCount=knowledgeDocs.filter(doc=>[...windowsCategories,'C 언어','C++ 기초·심화'].includes(doc.category)).length;
+const treeCount=knowledgeDocs.filter(doc=>[...windowsCategories,'C 언어','C++ 기초·심화','Effective C++'].includes(doc.category)).length;
 const cCount=knowledgeDocs.filter(doc=>doc.category==='C 언어').length;
 for(const route of routes){test('direct route '+route,async({page,isMobile,request})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
