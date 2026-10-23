@@ -27,3 +27,10 @@ PR21 C 기초 01–03: source `08724feac20f586112c4fbfc735cb403cd5d5955`, [Pages
 첫 신규 배치 C04–05의 실제 Linux GCC 14.2 C11 strict+UBSan 실행과 SHA-256은 [검증 JSON](shared/c-basics-04-05/verification.json)에 기록한다. 웹 CI/배포 확인 전에는 완료로 표시하지 않는다.
 
 데일리 브리핑·언어·사고력·게임 기획·AI 실험, Supabase 및 진도/북마크/읽음/메모 저장 키는 수정하지 않는다.
+
+## C06–08 배치 인계 · 2026-10-23
+
+- C06 배열·문자열 / C07 포인터 / C08 배열·포인터·함수 포인터: 작성한 JSON 3개, 전체 C11 소스 3개, SVG 6개, Mermaid 3개, 각 접힌 복습 답 6개와 연결된 웹 테스트. 원본 Notion 이관이 아닌 C11 독립 집필이다.
+- CPU 소스는 이전 실행의 GCC 14.2 strict·UBSan 성공 기록과 SHA-256을 `shared/c-basics-06-08/verification.json`에서 재사용했다. 소스가 바뀌지 않아 재컴파일하지 않았다. 웹·공개 검증은 성공한 workflow 확인 전 미완료다.
+- C04–05는 React build job 성공과 Pages 배포 workflow 성공을 확인했으나 전체 React run은 게시/실시간 확인 단계 실패였다. 공개 검증 완료로 승격하지 않는다.
+- 본문·카탈로그·진도·테스트는 atomic master commit으로 게시하며 자기 SHA는 기록하지 않는다. 게시 후 React Pages gate/공개 build-info와 새 페이지를 확인해야 한다. **다음 집필 시작점은 C09**이며, 전체 17개 공개 완료 뒤에만 예약을 종료한다.

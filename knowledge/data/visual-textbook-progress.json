@@ -95,17 +95,20 @@
     "worker": "automation",
     "status": "committed_pending_pages_validation",
     "unit_ids": [
-      "c-basics-04",
-      "c-basics-05"
+      "c-basics-06",
+      "c-basics-07",
+      "c-basics-08"
     ],
     "branch": "master",
     "lease_until_utc": null,
-    "phase": "source_complete_cpu_pass_web_pending",
+    "phase": "source_and_cpu_complete_web_gate_pending",
     "source_commit": null,
-    "verification": "knowledge/shared/c-basics-04-05/verification.json",
-    "note": "This batch recorded before atomic master commit. Confirm React Pages run and build-info before published_verified; no editor lease remains."
+    "verification": "knowledge/shared/c-basics-06-08/verification.json",
+    "base_master_sha": "1578d6e52e7ca0add84031d3f133f3ebd2509387",
+    "staged_tree_before_metadata": "cd6163b6c90ae485507c7da3d4449e616c25b95b",
+    "note": "Source SHA must be obtained from actual GitHub commit and later workflow, not stored recursively in its own commit. React master workflow not yet verified."
   },
-  "next_unit": "c-basics-06",
+  "next_unit": "c-basics-09",
   "units": [
     {
       "id": "dx11-frustum",
@@ -1692,7 +1695,9 @@
       "state": "published_verified",
       "evidence": {
         "cpu": "knowledge/shared/c-basics-lab/verification.json",
-        "release_record": "https://github.com/jiwhan112/um.github.io/pull/21"
+        "release_record": "https://github.com/jiwhan112/um.github.io/pull/21",
+        "published_source_commit": "08724feac20f586112c4fbfc735cb403cd5d5955",
+        "publication_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39756113957"
       },
       "remaining": [],
       "stages": {
@@ -1710,7 +1715,9 @@
       "state": "published_verified",
       "evidence": {
         "cpu": "knowledge/shared/c-basics-lab/verification.json",
-        "release_record": "https://github.com/jiwhan112/um.github.io/pull/21"
+        "release_record": "https://github.com/jiwhan112/um.github.io/pull/21",
+        "published_source_commit": "08724feac20f586112c4fbfc735cb403cd5d5955",
+        "publication_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39756113957"
       },
       "remaining": [],
       "stages": {
@@ -1728,7 +1735,9 @@
       "state": "published_verified",
       "evidence": {
         "cpu": "knowledge/shared/c-basics-lab/verification.json",
-        "release_record": "https://github.com/jiwhan112/um.github.io/pull/21"
+        "release_record": "https://github.com/jiwhan112/um.github.io/pull/21",
+        "published_source_commit": "08724feac20f586112c4fbfc735cb403cd5d5955",
+        "publication_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39756113957"
       },
       "remaining": [],
       "stages": {
@@ -1741,44 +1750,143 @@
     },
     {
       "id": "c-basics-04",
-      "state": "authored_cpu_verified_pending_publication",
+      "state": "authored_cpu_verified_pages_deployed_public_unverified",
       "route": "/knowledge/c-basics-04/",
       "stages": {
-        "body": "complete_4tabs_svg2_mermaid1_review_full_source",
-        "full_source": "main.c_committed",
-        "cpu": "gcc14.2_c11_strict_and_ubsan_pass",
-        "web_ci": "pending_master_pages_workflow",
-        "public_deployment": "pending"
+        "authored": true,
+        "cpu_verified": true,
+        "master_source": true,
+        "react_build_verified": true,
+        "pages_deployed": true,
+        "public_origin_verified": false
       },
       "evidence": {
         "verification": "knowledge/shared/c-basics-04-05/verification.json",
         "source": "knowledge/c-basics-04/main.c",
-        "content": "knowledge/c-basics-04/content.json"
+        "content": "knowledge/c-basics-04/content.json",
+        "source_revision": "0bc3128735b84eb6bd49356af6a71a79f81a62dc",
+        "react_build_job": "119839852151",
+        "react_build_job_result": "success",
+        "react_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39773801054",
+        "react_full_run_result": "failure: publication stale-head guard on retry",
+        "pages_deployment": "https://github.com/jiwhan112/um.github.io/actions/runs/39775702039",
+        "pages_deployment_result": "success",
+        "git_build_info_source_commit": "0bc3128735b84eb6bd49356af6a71a79f81a62dc"
       },
       "remaining": [
-        "React Pages validation and publication success",
-        "Public build-info sourceCommit and new lesson assets review"
+        "Original workflow overall failed during publication retry; public-origin verification not confirmed",
+        "Verify public build-info and representative C04-05 lesson/source links when accessible"
       ]
     },
     {
       "id": "c-basics-05",
-      "state": "authored_cpu_verified_pending_publication",
+      "state": "authored_cpu_verified_pages_deployed_public_unverified",
       "route": "/knowledge/c-basics-05/",
       "stages": {
-        "body": "complete_4tabs_svg2_mermaid1_review_full_source",
-        "full_source": "main.c_committed",
-        "cpu": "gcc14.2_c11_strict_and_ubsan_pass",
-        "web_ci": "pending_master_pages_workflow",
-        "public_deployment": "pending"
+        "authored": true,
+        "cpu_verified": true,
+        "master_source": true,
+        "react_build_verified": true,
+        "pages_deployed": true,
+        "public_origin_verified": false
       },
       "evidence": {
         "verification": "knowledge/shared/c-basics-04-05/verification.json",
         "source": "knowledge/c-basics-05/main.c",
-        "content": "knowledge/c-basics-05/content.json"
+        "content": "knowledge/c-basics-05/content.json",
+        "source_revision": "0bc3128735b84eb6bd49356af6a71a79f81a62dc",
+        "react_build_job": "119839852151",
+        "react_build_job_result": "success",
+        "react_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39773801054",
+        "react_full_run_result": "failure: publication stale-head guard on retry",
+        "pages_deployment": "https://github.com/jiwhan112/um.github.io/actions/runs/39775702039",
+        "pages_deployment_result": "success",
+        "git_build_info_source_commit": "0bc3128735b84eb6bd49356af6a71a79f81a62dc"
       },
       "remaining": [
-        "React Pages validation and publication success",
-        "Public build-info sourceCommit and new lesson assets review"
+        "Original workflow overall failed during publication retry; public-origin verification not confirmed",
+        "Verify public build-info and representative C04-05 lesson/source links when accessible"
+      ]
+    },
+    {
+      "id": "c-basics-06",
+      "title": "C 기초 06 · 배열·문자열",
+      "category": "C 언어",
+      "route": "/knowledge/c-basics-06/",
+      "state": "authored_cpu_verified_pending_publication",
+      "evidence": {
+        "content": "knowledge/c-basics-06/content.json",
+        "source": "knowledge/c-basics-06/main.c",
+        "verification": "knowledge/shared/c-basics-06-08/verification.json",
+        "cpu_result": "pass_local_only_web_pending",
+        "staged_git_tree": "cd6163b6c90ae485507c7da3d4449e616c25b95b",
+        "source_parent_before_commit": "1578d6e52e7ca0add84031d3f133f3ebd2509387"
+      },
+      "stages": {
+        "authored": true,
+        "cpu_verified": true,
+        "master_source": true,
+        "react_build_verified": false,
+        "pages_deployed": false,
+        "public_origin_verified": false
+      },
+      "remaining": [
+        "React Pages validation and publication workflow must succeed",
+        "Verify public build-info sourceCommit and C06-08 main.c, SVG and lesson URLs"
+      ]
+    },
+    {
+      "id": "c-basics-07",
+      "title": "C 기초 07 · 포인터 기초",
+      "category": "C 언어",
+      "route": "/knowledge/c-basics-07/",
+      "state": "authored_cpu_verified_pending_publication",
+      "evidence": {
+        "content": "knowledge/c-basics-07/content.json",
+        "source": "knowledge/c-basics-07/main.c",
+        "verification": "knowledge/shared/c-basics-06-08/verification.json",
+        "cpu_result": "pass_local_only_web_pending",
+        "staged_git_tree": "cd6163b6c90ae485507c7da3d4449e616c25b95b",
+        "source_parent_before_commit": "1578d6e52e7ca0add84031d3f133f3ebd2509387"
+      },
+      "stages": {
+        "authored": true,
+        "cpu_verified": true,
+        "master_source": true,
+        "react_build_verified": false,
+        "pages_deployed": false,
+        "public_origin_verified": false
+      },
+      "remaining": [
+        "React Pages validation and publication workflow must succeed",
+        "Verify public build-info sourceCommit and C06-08 main.c, SVG and lesson URLs"
+      ]
+    },
+    {
+      "id": "c-basics-08",
+      "title": "C 기초 08 · 배열·포인터·함수 포인터",
+      "category": "C 언어",
+      "route": "/knowledge/c-basics-08/",
+      "state": "authored_cpu_verified_pending_publication",
+      "evidence": {
+        "content": "knowledge/c-basics-08/content.json",
+        "source": "knowledge/c-basics-08/main.c",
+        "verification": "knowledge/shared/c-basics-06-08/verification.json",
+        "cpu_result": "pass_local_only_web_pending",
+        "staged_git_tree": "cd6163b6c90ae485507c7da3d4449e616c25b95b",
+        "source_parent_before_commit": "1578d6e52e7ca0add84031d3f133f3ebd2509387"
+      },
+      "stages": {
+        "authored": true,
+        "cpu_verified": true,
+        "master_source": true,
+        "react_build_verified": false,
+        "pages_deployed": false,
+        "public_origin_verified": false
+      },
+      "remaining": [
+        "React Pages validation and publication workflow must succeed",
+        "Verify public build-info sourceCommit and C06-08 main.c, SVG and lesson URLs"
       ]
     }
   ],
@@ -1796,7 +1904,7 @@
     "all_approved_units_published": false,
     "automation_stop_confirmed": false
   },
-  "after_active_batch_next_unit": "c-basics-04",
+  "after_active_batch_next_unit": "c-basics-09",
   "inventory_note": "Inventory is not the live catalog count. C++ advanced 05–06 and C01 are published; C01 was reconciled against merged PR18 and successful public verification. Computer-science child/source audit and remaining collection scope are still pending.",
   "next_unit_after_verified_pr17": "c-language-01",
   "previous_released_batch": {
@@ -1813,7 +1921,7 @@
     "released_at_utc": "2026-10-22T06:07:57.604Z",
     "release_evidence": "https://github.com/jiwhan112/um.github.io/pull/18"
   },
-  "continuation_gate": "C04-05 Pages/public evidence first; then C basics 06. User approved C04-14 and Effective C++01-06 without new feedback.",
+  "continuation_gate": "C04-05 Pages deploy success but public-origin React check unverified. Verify C06-08 new master workflow and public assets first; then C09.",
   "c_regular_course": {
     "planned_chapters": 14,
     "sample_batch": [
@@ -1826,16 +1934,24 @@
     "authorship": "new original lessons, not Notion migration",
     "last_released_sample_source": "08724feac20f586112c4fbfc735cb403cd5d5955",
     "next_units": [
-      "c-basics-06",
-      "c-basics-07",
-      "c-basics-08",
       "c-basics-09",
       "c-basics-10",
       "c-basics-11",
       "c-basics-12",
       "c-basics-13",
       "c-basics-14"
-    ]
+    ],
+    "latest_authored_batch": [
+      "c-basics-06",
+      "c-basics-07",
+      "c-basics-08"
+    ],
+    "sample_batch_release": {
+      "status": "released",
+      "state": "published_verified",
+      "source_commit": "08724feac20f586112c4fbfc735cb403cd5d5955",
+      "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39756113957"
+    }
   },
   "approved_target_ids": [
     "c-basics-04",

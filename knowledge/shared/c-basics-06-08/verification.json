@@ -1,0 +1,45 @@
+{
+  "status": "pass_local_only_web_pending",
+  "tested_at_utc": "2026-10-22T12:10:01Z",
+  "host": "Linux x86-64 container; Debian gcc (Debian 14.2.0-19) 14.2.0",
+  "language": "C11",
+  "configurations": [
+    "gcc -std=c11 -O0 -Wall -Wextra -Wpedantic -Werror -pedantic-errors -fno-common",
+    "gcc -std=c11 -O1 -g -fsanitize=undefined,bounds -fno-sanitize-recover=all -Wall -Wextra -Wpedantic -Werror"
+  ],
+  "programs": [
+    {
+      "path": "knowledge/c-basics-06/main.c",
+      "sha256": "6f39f38e4f168cb680c9c985cbb414949cef6deff02c755de98869a20abe3b2f",
+      "bytes": 2299,
+      "stdout": "count=4 total=356 matrix=21 tag=wolf bytes=5 length=4 moved=AABCD formatted=wolf-356\n",
+      "strict_exit_code": 0,
+      "ubsan_exit_code": 0,
+      "git_blob_sha": "170091506c50303d0bd4c37131274feb29ea13e5"
+    },
+    {
+      "path": "knowledge/c-basics-07/main.c",
+      "sha256": "84f897071a41484c251dc00a9cbcb0a046a186978207ce54c0176f68daa93f1d",
+      "bytes": 2099,
+      "stdout": "level=21 count=3 total=24 half=12 last=12\n",
+      "strict_exit_code": 0,
+      "ubsan_exit_code": 0,
+      "git_blob_sha": "b84ed3a0a1db446e81d1b9df08bd078efe927440"
+    },
+    {
+      "path": "knowledge/c-basics-08/main.c",
+      "sha256": "5966625fd32a794694203132f5452022cc18b034c242389e2906aaf597cd12f5",
+      "bytes": 2295,
+      "stdout": "matrix=6 ascending_first=-3 descending=9,5,0,-1,-3\n",
+      "strict_exit_code": 0,
+      "ubsan_exit_code": 0,
+      "git_blob_sha": "2b403bcdaa5af97d6574cdeeea31a540c31e7381"
+    }
+  ],
+  "limitations": [
+    "Assert enabled (NDEBUG not defined). Only supplied control paths and selected rejection branches were tested.",
+    "Windows/MSVC and other C implementations not tested.",
+    "Web browser, SVG and Mermaid rendering, mobile behavior and public Pages pending until master CI.",
+    "The unmodified C11 programs were not recompiled in this resumed run because identical Git blob hashes match the verified sources."
+  ]
+}

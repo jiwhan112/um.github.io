@@ -952,22 +952,6 @@
     "notion_url": "https://app.notion.com/p/3fba99703f4081c68669c3d4a2d5eb89"
   },
   {
-    "path": "c-language-01",
-    "title": "C 응용 실습 C01 · 입력 검증·정수 범위와 C++ 교차 컴파일",
-    "subtitle": "scanf 반환값·정수 폭·signed 오버플로·checkedAdd의 입력 계약을 비교하는 CPU 실습",
-    "date": "2026-10-22",
-    "category": "C 언어",
-    "tags": [
-      "C11",
-      "C++11",
-      "C++20",
-      "입력 검증",
-      "정수 오버플로",
-      "CMake"
-    ],
-    "notion_url": "https://app.notion.com/p/3fda99703f408153b1dffae9398aa3bc"
-  },
-  {
     "path": "cpp-basics-01",
     "title": "C++ 기초 01 · 빌드·타입·초기화·표현식",
     "subtitle": "만들 때의 값, 계산할 때의 타입, 상태를 바꾸는 비트",
@@ -1214,5 +1198,63 @@
       "저장 기간",
       "값 전달"
     ]
+  },
+  {
+    "path": "c-basics-06",
+    "title": "C 기초 06 · 배열·문자열",
+    "subtitle": "인덱스 경계·2차원 배열·널 종료·버퍼 안전성을 그림과 C11 코드로 검증",
+    "date": "2026-10-22",
+    "category": "C 언어",
+    "tags": [
+      "C11",
+      "배열",
+      "문자열",
+      "경계 검사",
+      "버퍼"
+    ]
+  },
+  {
+    "path": "c-basics-07",
+    "title": "C 기초 07 · 포인터 기초",
+    "subtitle": "주소와 역참조, NULL·유효 수명, const, 배열 범위를 C11 계약으로 배우기",
+    "date": "2026-10-22",
+    "category": "C 언어",
+    "tags": [
+      "C11",
+      "포인터",
+      "NULL",
+      "수명",
+      "const"
+    ]
+  },
+  {
+    "path": "c-basics-08",
+    "title": "C 기초 08 · 배열·포인터·함수 포인터",
+    "subtitle": "배열 인자 조정, 행 포인터, 콜백 선택 정렬을 C11 타입 계약으로 구현",
+    "date": "2026-10-22",
+    "category": "C 언어",
+    "tags": [
+      "C11",
+      "배열 포인터",
+      "함수 포인터",
+      "콜백",
+      "선택 정렬"
+    ]
+  },
+  {
+    "path": "c-language-01",
+    "title": "C 응용 실습 C01 · 입력 검증·정수 범위와 C++ 교차 컴파일",
+    "subtitle": "scanf 반환값·정수 폭·signed 오버플로·checkedAdd의 입력 계약을 비교하는 CPU 실습",
+    "date": "2026-10-22",
+    "category": "C 언어",
+    "tags": [
+      "C11",
+      "C++11",
+      "C++20",
+      "입력 검증",
+      "정수 오버플로",
+      "CMake"
+    ],
+    "notion_url": "https://app.notion.com/p/3fda99703f408153b1dffae9398aa3bc"
   }
 ]
