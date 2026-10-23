@@ -1,6 +1,6 @@
 /** Public-origin smoke tests, separate from deterministic CI fixture screenshots. */
 import {chromium,expect} from '@playwright/test';
-import {gotoWithTransientRetry} from './live-navigation.mjs';
+import {gotoWithTransientRetry,verifyRouteWithTransientRetry} from './live-navigation.mjs';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 const base='https://jiwhan112.github.io/um.github.io/';
 const expected=process.env.EXPECTED_SOURCE;if(!expected)throw Error('EXPECTED_SOURCE is required');
@@ -16,13 +16,19 @@ const shots=new Map([['/thinking-lab/','library'],['/','dashboard'],['/daily-bri
 try{
  for(const path of routes){
   console.log('Checking public route:',path);
-  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
-  const response=await gotoWithTransientRetry(page,base+path.slice(1));expect(response?.status()).toBe(200);
+  const result=await verifyRouteWithTransientRetry(context,base+path.slice(1),async(page,errors)=>{
+  const response=await page.goto(base+path.slice(1));expect(response?.status()).toBe(200);
   await expect(page.locator('[data-framework=react]')).toBeVisible();await expect(page.locator('main h1').first()).toBeVisible({timeout:30000});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);expect(errors).toEqual([]);
   expect(await page.locator('script[src*="assets/atlas/detail"]').count()).toBe(0);await expect(page.locator('html')).toHaveAttribute('data-theme','dark');await expect(page.locator('.app-shell')).toHaveCSS('background-color','rgb(16, 19, 25)');
   if(shots.has(path)){await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:'live-check/'+shots.get(path)+'.png'});}
-  results.push({path,status:response.status(),title:await page.locator('main h1').first().innerText(),errors});await page.close();
+  return {path,status:response.status(),title:await page.locator('main h1').first().innerText(),errors};
+  },{onFailure:async({page,history,retry})=>{
+   const name=path.replace(/[^a-zA-Z0-9_-]/g,'_')||'root';
+   await writeFile(`live-check/${name}-diagnostics.json`,JSON.stringify({retryCandidate:retry,attempts:history},null,2));
+   await page.screenshot({path:`live-check/${name}-failure-${history.length}.png`});
+  }});
+  results.push(result);
  }
  const liveCatalog=JSON.parse(await readFile('dist/data/atlas/catalog.json','utf8'));const matching=liveCatalog.documents.filter(d=>d.kind==='thinking'&&d.tags.includes('회문'));
  const library=await context.newPage();await gotoWithTransientRetry(library,base+'thinking-lab/?tag='+encodeURIComponent('회문'));await expect(library.getByTestId('library-card')).toHaveCount(matching.length);await library.getByRole('searchbox',{name:'문제 검색'}).fill('1.4');await library.reload();await expect(library.getByRole('searchbox',{name:'문제 검색'})).toHaveValue('1.4');await expect(library.getByTestId('library-card').first()).toBeVisible();await library.close();
