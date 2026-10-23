@@ -11,9 +11,10 @@
     "registration_confirmed": true,
     "future_run_success_confirmed": false,
     "id": "6adabd1e4eec8191b433a5dba872c157",
-    "is_enabled": true,
-    "pause_reason": null,
-    "resume_requires_explicit_user_request": false
+    "is_enabled": false,
+    "pause_reason": "User requested continuous execution instead of hourly scheduling on 2026-10-23.",
+    "resume_requires_explicit_user_request": true,
+    "execution_mode": "continuous_user_requested"
   },
   "inventory_finalized": false,
   "baseline_catalog_documents": 83,

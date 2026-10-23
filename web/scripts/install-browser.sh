@@ -3,7 +3,8 @@
 # Cache downloads, not the installed OS state: every fresh runner still installs deps.
 set -euo pipefail
 mkdir -p render-environment
-apt_cache="${HOME}/.cache/atlas-apt"
+apt_cache="/tmp/atlas-apt"
+# /tmp is traversable by apt's _apt downloader, unlike the runner's private HOME.
 mkdir -p "$apt_cache"
 apt_config=$(mktemp "${RUNNER_TEMP:-/tmp}/atlas-apt.XXXXXX")
 trap 'rm -f "$apt_config"' EXIT
@@ -19,7 +20,8 @@ APT
 # configuration. Do not persist apt settings, replace repositories or skip deps.
 timeout --kill-after=15s 420s sudo env "PATH=$PATH" "APT_CONFIG=$apt_config" \
   node node_modules/playwright/cli.js install-deps chromium
-timeout --kill-after=15s 240s sudo env "APT_CONFIG=$apt_config" \
+# The measured cold mirror rate (~134 kB/s) needs about eight minutes for 61 MB.
+timeout --kill-after=15s 600s sudo env "APT_CONFIG=$apt_config" \
   apt-get install -y --no-install-recommends fonts-noto-cjk
 # Actions caches only public .deb files, not root-only apt lock/partial state.
 PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT=60000 timeout --kill-after=15s 180s \

@@ -30,7 +30,7 @@ jobs:
   build:
     if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master')
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 40
     outputs:
       source: ${{ steps.source.outputs.sha }}
     steps:
@@ -62,11 +62,11 @@ jobs:
         with:
           path: |
             ~/.cache/ms-playwright
-            ~/.cache/atlas-apt/*.deb
+            /tmp/atlas-apt/*.deb
           key: atlas-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24-v1-${{ hashFiles('web/package-lock.json', 'web/scripts/install-browser.sh') }}
       - name: Restore the reviewed Chromium and font environment
         working-directory: web
-        timeout-minutes: 15
+        timeout-minutes: 22
         run: bash scripts/install-browser.sh
       - name: Regression gate (never update snapshots automatically)
         working-directory: web
@@ -90,7 +90,7 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 40
     permissions:
       contents: write
       pages: write
@@ -118,11 +118,11 @@ jobs:
         with:
           path: |
             ~/.cache/ms-playwright
-            ~/.cache/atlas-apt/*.deb
+            /tmp/atlas-apt/*.deb
           key: atlas-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24-v1-${{ hashFiles('web/package-lock.json', 'web/scripts/install-browser.sh') }}
       - name: Install live-check browser
         working-directory: web
-        timeout-minutes: 15
+        timeout-minutes: 22
         run: |
           npm ci
           bash scripts/install-browser.sh
