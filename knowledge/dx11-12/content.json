@@ -20,6 +20,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원은 그림으로 계약을 먼저 읽고, CPU 원본의 정상·거부 경로를 추적한 뒤 실제 SDK/GPU의 미검증 경계를 확인하는 순서입니다. 원본 날짜·코드·수식·검사 기록을 보존했고 그림은 직접 만든 설명도이며 GPU 화면이 아닙니다."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -69,6 +77,12 @@
       "title": "1. 기본 계약",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-12/assets/contract-map.svg",
+          "alt": "2×1 영역의 네 삼각형은 공유 정점 인덱스의 변을 통해 0→1→2→3으로 연결됩니다. 중심 그래프 경로와 실제 캐릭터 이동은 다릅니다.",
+          "caption": "2×1 영역의 네 삼각형은 공유 정점 인덱스의 변을 통해 0→1→2→3으로 연결됩니다. 중심 그래프 경로와 실제 캐릭터 이동은 다릅니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -272,14 +286,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "Cell 중심 간 거리로 Edge 비용을 정하고, 목표 중심까지의 직선 거리를 A"
-            },
-            {
-              "text": " 휴리스틱으로 사용합니다. 결과는 삼각형 인덱스의 Corridor",
-              "kind": "em"
-            },
-            {
-              "text": "*이지 실제 캐릭터의 매끈한 3D 좌표 경로가 아닙니다. 좁은 통로나 코너에서 자연스러운 경로는 Portal/Funnel과 에이전트 반경을 고려하는 추가 단계가 필요합니다."
+              "text": "Cell 중심 간 거리로 Edge 비용을 정하고, 목표 중심까지의 직선 거리를 A* 휴리스틱으로 사용합니다. 결과는 삼각형 인덱스의 Corridor이지 실제 캐릭터의 매끈한 3D 좌표 경로가 아닙니다. 좁은 통로나 코너에서 자연스러운 경로는 Portal/Funnel과 에이전트 반경을 고려하는 추가 단계가 필요합니다."
             }
           ]
         },
@@ -411,9 +418,158 @@
       ]
     },
     {
+      "id": "part-4",
+      "title": "4. 게임 개발에 적용",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "AI Steering은 "
+            },
+            {
+              "text": "NavMesh -> Corridor -> Desired velocity -> Character movement -> Collision resolution",
+              "kind": "code"
+            },
+            {
+              "text": "으로 책임을 나누는 편이 안전합니다. 경로 탐색을 이미 마쳤어도 매 프레임 움직이는 장애물에 부딪힐 수 있습니다. NavMesh만으로 장애물 처리를 완전히 없앨 수 있다는 기존 수업 메모의 표현은 과도합니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. 두 삼각형의 좌표값이 같으면 무조건 인접한가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 현 CPU 실습은 같은 정점 인덱스 두 개를 공유하는지를 판단합니다. 좌표 동등성과 인덱스 동일성은 다른 계약입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. A\\*가 반환한 Cell 목록을 그대로 캐릭터가 통과할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "꼭 그렇지는 않습니다. Cell 중심 경로는 최적의 실제 이동 경로가 아닙니다. Portal/Funnel, 에이전트 반경, 높이, 동적 장애물까지 다뤄야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. 서로 다른 두 층의 XZ 위치가 같아도 본 실습에서 분리되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 모델에는 Y가 없으므로 그 보장이 없습니다. 실제 NavMesh의 층·공간 관계를 따로 표현해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "생성 후 points나 tris를 변경해도 되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "공개 vector를 바꾸면 adj와 유효성 검사가 낡을 수 있습니다. 이 예제는 생성된 구조를 유지하며 읽는 사용을 전제합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "A*가 최적의 실제 보행 경로를 주나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "중심 거리 그래프의 셀 경로이며, 실제 표면 최단 이동이나 반경을 고려한 안전한 경로를 보장하지 않습니다. 허용 오차와 부동소수점의 영향도 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "도달 불가능과 시작점이 맵 밖인 경우의 결과는 같나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 유효 셀 사이에 경로가 없으면 빈 목록을 반환하지만 locate가 시작점이나 목표점을 찾지 못하면 예외를 던집니다. 호출자는 두 경로를 나누어 처리해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guided-trace",
+      "title": "손으로 추적하는 독립 실습",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "네 삼각형의 adj를 0:[1], 1:[0,2], 2:[1,3], 3:[2]로 적고 시작·목표 셀을 찾아보세요. 고립 셀로 가는 요청의 빈 결과와 NavMesh 밖 점의 예외는 서로 다른 실패입니다. 같은 좌표를 가진 별도 vertex ID가 왜 연결되지 않는지 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스와 빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-11-12/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 실행 원본 main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-11-12/12_navmesh/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "코드 변경·실행 전에 예상값과 거부 조건을 먼저 적으세요. 기존 27회 조건 검사는 보존 기록이며 이번 본문 편집에서 재실행한 결과가 아닙니다. 주석본의 별도 검증이 있으면 출처 탭에서 구분합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-3",
       "title": "3. 전체 실습·검증",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -487,128 +643,9 @@
       ]
     },
     {
-      "id": "part-4",
-      "title": "4. 게임 개발에 적용",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "AI Steering은 "
-            },
-            {
-              "text": "NavMesh -> Corridor -> Desired velocity -> Character movement -> Collision resolution",
-              "kind": "code"
-            },
-            {
-              "text": "으로 책임을 나누는 편이 안전합니다. 경로 탐색을 이미 마쳤어도 매 프레임 움직이는 장애물에 부딪힐 수 있습니다. NavMesh만으로 장애물 처리를 완전히 없앨 수 있다는 기존 수업 메모의 표현은 과도합니다."
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "Q. 두 삼각형의 좌표값이 같으면 무조건 인접한가요?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "아닙니다. 현 CPU 실습은 같은 정점 인덱스 두 개를 공유하는지를 판단합니다. 좌표 동등성과 인덱스 동일성은 다른 계약입니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "Q. A\\*가 반환한 Cell 목록을 그대로 캐릭터가 통과할 수 있나요?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "꼭 그렇지는 않습니다. Cell 중심 경로는 최적의 실제 이동 경로가 아닙니다. Portal/Funnel, 에이전트 반경, 높이, 동적 장애물까지 다뤄야 합니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "Q. 서로 다른 두 층의 XZ 위치가 같아도 본 실습에서 분리되나요?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "이 모델에는 Y가 없으므로 그 보장이 없습니다. 실제 NavMesh의 층·공간 관계를 따로 표현해야 합니다."
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "part-5",
-      "title": "5. 참고 · 변경 기록",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "list",
-          "ordered": false,
-          "items": [
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "Recast Navigation 공식 저장소",
-                    "kind": "link",
-                    "href": "https://github.com/recastnavigation/recastnavigation"
-                  }
-                ]
-              }
-            ],
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "A* 원 논문 Hart et al. (1968), IEEE",
-                    "kind": "link",
-                    "href": "https://doi.org/10.1109/TSSC.1968.300136"
-                  }
-                ]
-              }
-            ]
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "2026-10-16 v1.0. 단순 삼각형 공유·내적 검사·메시당 충돌 대체라는 메모를 Cell 그래프/Pathfinding/물리 책임 분리로 재작성했습니다. C++ 모델은 설계의 제한을 표시한 채 독립 실행 가능하도록 만들었습니다."
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "12A · Navigation Mesh C++ 전체 소스·CMake·CTest 기록",
-              "kind": "link",
-              "href": "/knowledge/dx11-sources-11-12/"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "full-cpu-source",
       "title": "전체 소스·CMake·검증 출처",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "callout",
@@ -662,6 +699,139 @@
                   "text": "아닙니다. 이번 프로젝트의 CPU 학습 모델은 개념·자료구조·수학 계약만 검증합니다. Windows/MSVC·D3D11 GPU·Assimp 라이브러리 통합·Recast/Funnel 실행 결과로 확대해서 해석하지 않습니다."
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본 전체 main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-11-12-ko/12_navmesh/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 구성과 빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-11-12-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 별도 주석본 검증",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-11-12-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 전체 코드는 위 연결의 소스 자료실에서 원본과 나란히 펼쳐 읽을 수 있습니다. 실행 토큰을 바꾸지 않은 주석본의 원본 복원·전처리 동일성 및 GCC 14.2 직접 실행을 확인했습니다. 이번 확인은 기존 CTest/sanitizer 기록과 별개이며 Windows·실제 SDK·GPU의 검증이 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification-scope",
+      "title": "증거가 말하는 것과 말하지 않는 것",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원의 CPU 모델은 D3D11 장치나 실제 Assimp·DirectXCollision·Recast SDK를 호출하지 않습니다. Windows/MSVC·GPU·HLSL 실행은 미검증입니다. 검사 통과를 파일 파서·실제 화면·모든 입력·성능의 보장으로 확대하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 소스 안내",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-11-12/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "5. 참고 · 변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Recast Navigation 공식 저장소",
+                    "kind": "link",
+                    "href": "https://github.com/recastnavigation/recastnavigation"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "A* 원 논문 Hart et al. (1968), IEEE",
+                    "kind": "link",
+                    "href": "https://doi.org/10.1109/TSSC.1968.300136"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-16 v1.0. 단순 삼각형 공유·내적 검사·메시당 충돌 대체라는 메모를 Cell 그래프/Pathfinding/물리 책임 분리로 재작성했습니다. C++ 모델은 설계의 제한을 표시한 채 독립 실행 가능하도록 만들었습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "12A · Navigation Mesh C++ 전체 소스·CMake·CTest 기록",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-11-12/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-revision",
+      "title": "시각 교재 개편 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 · 기존 섹션 ID, 원본 날짜와 직접 코드·표·Mermaid·복습 payload를 보존하면서 네 탭으로 역할을 분리했습니다. 의미 중심 그림, 한국어 추적 과제와 코드의 실제 미방어 경계를 추가했습니다. 원본 소스와 캡처는 변경하지 않았습니다."
             }
           ]
         }

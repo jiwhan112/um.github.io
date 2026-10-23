@@ -20,6 +20,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 지도: Primitive 입력 → clip/NDC 크기 → 출력 strip → CPU와 HLSL 검증 분리."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -53,6 +61,32 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "visual-clip-size",
+      "title": "같은 화면 크기: clip 오프셋에 w를 곱한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-14/assets/clip-size.svg",
+          "alt": "같은 화면 크기: clip 오프셋에 w를 곱한다",
+          "caption": "같은 화면 크기: clip 오프셋에 w를 곱한다 · 명시된 학습 모델의 계약 도식, GPU 실행 화면 아님."
+        }
+      ]
+    },
+    {
+      "id": "visual-gs-primitive",
+      "title": "GS 호출 단위는 Primitive다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-14/assets/gs-primitive.svg",
+          "alt": "GS 호출 단위는 Primitive다",
+          "caption": "GS 호출 단위는 Primitive다 · 명시된 학습 모델의 계약 도식, GPU 실행 화면 아님."
         }
       ]
     },
@@ -374,9 +408,57 @@
       ]
     },
     {
+      "id": "part-8",
+      "title": "부록 14A · main.cpp · validation 함수",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "bool finite(float f) { return std::isfinite(f); }\nbool valid(const Sprite& s) {\n    return finite(s.clipCenter.x) && finite(s.clipCenter.y) &&\n           finite(s.clipCenter.z) && finite(s.clipCenter.w) &&\n           finite(s.halfWidth) && finite(s.halfHeight) &&\n           s.clipCenter.w > 0.0f && s.halfWidth > 0.0f && s.halfHeight > 0.0f;\n}"
+        }
+      ]
+    },
+    {
+      "id": "part-9",
+      "title": "부록 14A · main.cpp · sprite 함수",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "void emitPointSprite(const Sprite& sprite, Stream& output, std::size_t maxVertices) {\n    if (!valid(sprite)) throw std::invalid_argument(\"invalid sprite\");\n    if (maxVertices < 4 || output.vertices.size() > maxVertices - 4)\n        throw std::length_error(\"GS output vertex cap exceeded\");\n    // Width and height are NDC half-extents: shift clip coordinates by w*NDC.\n    const std::array<Vec2, 4> corners{{{-1,-1}, {-1,1}, {1,-1}, {1,1}}};\n    const std::array<Vec2, 4> uv{{{0,1}, {0,0}, {1,1}, {1,0}}};\n    for (std::size_t i=0; i<corners.size(); ++i) {\n        const Vec4& c=sprite.clipCenter;\n        const Vec2 p=corners[i];\n        output.vertices.push_back({{c.x+p.x*sprite.halfWidth*c.w,\n                                    c.y+p.y*sprite.halfHeight*c.w,c.z,c.w}, uv[i]});\n    }\n    ++output.restarts;\n}"
+        }
+      ]
+    },
+    {
+      "id": "part-10",
+      "title": "부록 14A · main.cpp · 테스트 앞부분",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "unsigned testCount=0;\nvoid verify(bool value, const char* message) {\n    ++testCount; if (!value) throw std::runtime_error(message);\n}\ntemplate<class Exception, class Callable> void expectThrow(Callable call) {\n    bool caught=false; try { call(); } catch (const Exception&) { caught=true; }\n    verify(caught,\"expected specific exception\");\n}\nint main() {\n    const Sprite s{{0.0f,0.0f,0.5f,2.0f},0.25f,0.5f};\n    Stream out;\n    emitPointSprite(s,out,4);\n    verify(out.vertices.size()==4,\"quad has 4 vertices\");\n    verify(out.restarts==1,\"end strip counted\");\n    verify(out.vertices[0].position.x==-0.5f,\"left lower x\");\n    verify(out.vertices[1].position.x==-0.5f,\"left upper x\");\n    verify(out.vertices[2].position.x==0.5f,\"right lower x\");\n    verify(out.vertices[3].position.x==0.5f,\"right upper x\");\n    verify(out.vertices[0].position.y==-1.0f,\"lower y\");\n    verify(out.vertices[1].position.y==1.0f,\"upper y\");\n    verify(out.vertices[2].position.y==-1.0f,\"lower right y\");\n    verify(out.vertices[3].position.y==1.0f,\"upper right y\");\n    verify(out.vertices[0].position.z==0.5f,\"z unaffected\");\n    verify(out.vertices[2].position.w==2.0f,\"w unaffected\");\n    verify(out.vertices[0].uv.x==0 && out.vertices[0].uv.y==1,\"uv lower left\");\n    verify(out.vertices[3].uv.x==1 && out.vertices[3].uv.y==0,\"uv upper right\");\n    verify((out.vertices[0].position.x/out.vertices[0].position.w)==-0.25f,\"NDC left offset\");\n    verify((out.vertices[3].position.y/out.vertices[3].position.w)==0.5f,\"NDC top offset\");"
+        }
+      ]
+    },
+    {
+      "id": "part-11",
+      "title": "부록 14A · main.cpp · 테스트 후반과 종료",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "    expectThrow<std::length_error>([&]{emitPointSprite(s,out,7);});\n    verify(out.vertices.size()==4,\"overflow preserves output\");\n    emitPointSprite(s,out,8);\n    verify(out.vertices.size()==8,\"second strip emits 4 vertices\");\n    verify(out.restarts==2,\"two separate strips\");\n    expectThrow<std::length_error>([&]{emitPointSprite(s,out,8);});\n    verify(out.restarts==2,\"failed capacity preserves strips\");\n    expectThrow<std::length_error>([&]{Stream local;emitPointSprite(s,local,3);});\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,0,0},1,1},local,4);});\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,0,-1},1,1},local,4);});\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,0,1},0,1},local,4);});\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,0,1},1,-1},local,4);});\n    const float nan=std::numeric_limits<float>::quiet_NaN();\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{nan,0,0,1},1,1},local,4);});\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,0,1},nan,1},local,4);});\n    const float inf=std::numeric_limits<float>::infinity();\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,inf,1},1,1},local,4);});\n    verify(out.vertices[4].uv.y==1 && out.vertices[7].uv.y==0,\"repeat strip UV\");\n    std::cout << \"PASS \" << testCount << \" geometry shader CPU contracts\\n\";\n}"
+        }
+      ]
+    },
+    {
       "id": "part-5",
       "title": "5. 엔진 설계",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -445,9 +527,140 @@
       ]
     },
     {
+      "id": "guided-practice",
+      "title": "실습 · 수치와 실패 경계부터",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "halfExtentNdc0.1에서 w2와w10의 clip 오프셋0.2와1을 계산한다. 생성된 네 정점의 UV·w·strip 순서를 원본 HLSL과 CPU 모델에서 대응시킨다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답하고 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "GS는 언제나 정점 하나당 한 번 호출되나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "입력 Primitive 단위다. IA 토폴로지와 GS 입력 형식을 맞춘다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "NDC 크기를 clip.x에 바로 더하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원근 나눗셈 뒤 크기가 w에 따라 변한다. 일정 NDC 크기는 오프셋에 w를 곱한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "화면 고정 크기와 월드 고정 크기는 같은가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 월드 크기는 카메라 right/up으로 월드에서 확장한 뒤 변환한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "GS가 Instancing Quad보다 항상 빠른가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 출력 확대와 실행 비용이 있으며 대상 GPU와 장면으로 비교해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "다음 패스에서 GS 상태를 방치하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이전 셰이더가 다음 Draw에 남을 수 있다. null 또는 필요한 GS를 명시한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CPU31조건 통과로 HLSL 컴파일 완료인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. CPU 수치 모델, 셰이더 컴파일, GPU 화면 검증을 구분한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "annotated-source-map",
+      "title": "한국어 주석 전체 소스와 의존성",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "관련 전체 CPU 코드·HLSL·CMake 자료실",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-14/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문의 API 호출 발췌와 전체 CPU 참조 프로그램은 다르다. 자료실의 한국어 주석 전체 파일과 같은 폴더 빌드 안내를 함께 준비한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-6",
       "title": "공식 근거 · 개정 이력",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "list",
@@ -504,7 +717,7 @@
     {
       "id": "part-7",
       "title": "부록 14A · CPU 참조 프로그램 시작부",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "code",
@@ -522,57 +735,9 @@
       ]
     },
     {
-      "id": "part-8",
-      "title": "부록 14A · main.cpp · validation 함수",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "code",
-          "language": "cpp",
-          "text": "bool finite(float f) { return std::isfinite(f); }\nbool valid(const Sprite& s) {\n    return finite(s.clipCenter.x) && finite(s.clipCenter.y) &&\n           finite(s.clipCenter.z) && finite(s.clipCenter.w) &&\n           finite(s.halfWidth) && finite(s.halfHeight) &&\n           s.clipCenter.w > 0.0f && s.halfWidth > 0.0f && s.halfHeight > 0.0f;\n}"
-        }
-      ]
-    },
-    {
-      "id": "part-9",
-      "title": "부록 14A · main.cpp · sprite 함수",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "code",
-          "language": "cpp",
-          "text": "void emitPointSprite(const Sprite& sprite, Stream& output, std::size_t maxVertices) {\n    if (!valid(sprite)) throw std::invalid_argument(\"invalid sprite\");\n    if (maxVertices < 4 || output.vertices.size() > maxVertices - 4)\n        throw std::length_error(\"GS output vertex cap exceeded\");\n    // Width and height are NDC half-extents: shift clip coordinates by w*NDC.\n    const std::array<Vec2, 4> corners{{{-1,-1}, {-1,1}, {1,-1}, {1,1}}};\n    const std::array<Vec2, 4> uv{{{0,1}, {0,0}, {1,1}, {1,0}}};\n    for (std::size_t i=0; i<corners.size(); ++i) {\n        const Vec4& c=sprite.clipCenter;\n        const Vec2 p=corners[i];\n        output.vertices.push_back({{c.x+p.x*sprite.halfWidth*c.w,\n                                    c.y+p.y*sprite.halfHeight*c.w,c.z,c.w}, uv[i]});\n    }\n    ++output.restarts;\n}"
-        }
-      ]
-    },
-    {
-      "id": "part-10",
-      "title": "부록 14A · main.cpp · 테스트 앞부분",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "code",
-          "language": "cpp",
-          "text": "unsigned testCount=0;\nvoid verify(bool value, const char* message) {\n    ++testCount; if (!value) throw std::runtime_error(message);\n}\ntemplate<class Exception, class Callable> void expectThrow(Callable call) {\n    bool caught=false; try { call(); } catch (const Exception&) { caught=true; }\n    verify(caught,\"expected specific exception\");\n}\nint main() {\n    const Sprite s{{0.0f,0.0f,0.5f,2.0f},0.25f,0.5f};\n    Stream out;\n    emitPointSprite(s,out,4);\n    verify(out.vertices.size()==4,\"quad has 4 vertices\");\n    verify(out.restarts==1,\"end strip counted\");\n    verify(out.vertices[0].position.x==-0.5f,\"left lower x\");\n    verify(out.vertices[1].position.x==-0.5f,\"left upper x\");\n    verify(out.vertices[2].position.x==0.5f,\"right lower x\");\n    verify(out.vertices[3].position.x==0.5f,\"right upper x\");\n    verify(out.vertices[0].position.y==-1.0f,\"lower y\");\n    verify(out.vertices[1].position.y==1.0f,\"upper y\");\n    verify(out.vertices[2].position.y==-1.0f,\"lower right y\");\n    verify(out.vertices[3].position.y==1.0f,\"upper right y\");\n    verify(out.vertices[0].position.z==0.5f,\"z unaffected\");\n    verify(out.vertices[2].position.w==2.0f,\"w unaffected\");\n    verify(out.vertices[0].uv.x==0 && out.vertices[0].uv.y==1,\"uv lower left\");\n    verify(out.vertices[3].uv.x==1 && out.vertices[3].uv.y==0,\"uv upper right\");\n    verify((out.vertices[0].position.x/out.vertices[0].position.w)==-0.25f,\"NDC left offset\");\n    verify((out.vertices[3].position.y/out.vertices[3].position.w)==0.5f,\"NDC top offset\");"
-        }
-      ]
-    },
-    {
-      "id": "part-11",
-      "title": "부록 14A · main.cpp · 테스트 후반과 종료",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "code",
-          "language": "cpp",
-          "text": "    expectThrow<std::length_error>([&]{emitPointSprite(s,out,7);});\n    verify(out.vertices.size()==4,\"overflow preserves output\");\n    emitPointSprite(s,out,8);\n    verify(out.vertices.size()==8,\"second strip emits 4 vertices\");\n    verify(out.restarts==2,\"two separate strips\");\n    expectThrow<std::length_error>([&]{emitPointSprite(s,out,8);});\n    verify(out.restarts==2,\"failed capacity preserves strips\");\n    expectThrow<std::length_error>([&]{Stream local;emitPointSprite(s,local,3);});\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,0,0},1,1},local,4);});\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,0,-1},1,1},local,4);});\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,0,1},0,1},local,4);});\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,0,1},1,-1},local,4);});\n    const float nan=std::numeric_limits<float>::quiet_NaN();\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{nan,0,0,1},1,1},local,4);});\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,0,1},nan,1},local,4);});\n    const float inf=std::numeric_limits<float>::infinity();\n    expectThrow<std::invalid_argument>([&]{Stream local;emitPointSprite({{0,0,inf,1},1,1},local,4);});\n    verify(out.vertices[4].uv.y==1 && out.vertices[7].uv.y==0,\"repeat strip UV\");\n    std::cout << \"PASS \" << testCount << \" geometry shader CPU contracts\\n\";\n}"
-        }
-      ]
-    },
-    {
       "id": "part-12",
       "title": "공용 Root CMakeLists.txt (14/15/16 세 CPU 실행 파일)",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -646,7 +811,7 @@
     {
       "id": "part-13",
       "title": "원시 검증 로그 — GCC 14.2 C++20",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "code",
@@ -658,7 +823,7 @@
     {
       "id": "part-14",
       "title": "원시 검증 로그 — GCC 14.2 C++11",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "code",
@@ -670,7 +835,7 @@
     {
       "id": "part-15",
       "title": "Clang ASan/UBSan CTest 원시 로그 · 1/2",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "code",
@@ -682,7 +847,7 @@
     {
       "id": "part-16",
       "title": "Clang ASan/UBSan CTest 원시 로그 · 2/2",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "code",
@@ -694,7 +859,7 @@
     {
       "id": "github-source",
       "title": "전체 C++ 소스 · 빌드 · 검증 경계",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -725,6 +890,46 @@
                   "text": "보장하지 않습니다. CPU의 수치·입력·리소스 상태 계약에 대한 예제이며 Windows D3D11 파이프라인과 GPU 이미지·컴파일러/드라이버 동작은 별도로 검증해야 합니다."
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification-boundary",
+      "title": "과거 증거와 이번 주석본 검사 구분",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 날짜·원시 로그·해시는 역사적 증거다. 2026-10-23 한국어 주석본은 클라우드 Linux/GCC14.2 C++20 직접 빌드·실행과 원본 복원/전처리 동일성을 검사했다. 이번 CMake/CTest·sanitizer·Windows/MSVC·HLSL컴파일·GPU는 미실행이다. 현행 CPU 통과가 역사적 SHA 불일치를 해소하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·개편 이력",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 모든 원문 기술 블록·기존 절 ID·URL·메타데이터를 보존하며 시각 설명, 실습, 접힌 복습, 한국어 주석 전체코드 연결을 보완했다. 원문 속 이전 시점의 미완료/미실행 문장은 당시 기록이며, 현재 주석본 검사 범위와 분리한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 원문 Markdown",
+              "kind": "link",
+              "href": "/knowledge/dx11-14/source-notion.md"
             }
           ]
         }

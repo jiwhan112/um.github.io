@@ -20,6 +20,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원은 그림으로 계약을 먼저 읽고, CPU 원본의 정상·거부 경로를 추적한 뒤 실제 SDK/GPU의 미검증 경계를 확인하는 순서입니다. 원본 날짜·코드·수식·검사 기록을 보존했고 그림은 직접 만든 설명도이며 GPU 화면이 아닙니다."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -61,6 +69,12 @@
       "title": "1. 정의: 충돌 판정 ≠ 물리 해결 ≠ 디버그 렌더링",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-11/assets/contract-map.svg",
+          "alt": "위에서 본 동일한 XZ 풋프린트는 ObbXZ에서 true지만 Y가 20 떨어진 상자의 3D 충돌을 증명하지 않습니다.",
+          "caption": "위에서 본 동일한 XZ 풋프린트는 ObbXZ에서 true지만 Y가 20 떨어진 상자의 3D 충돌을 증명하지 않습니다."
+        },
         {
           "type": "list",
           "ordered": false,
@@ -455,9 +469,143 @@
       ]
     },
     {
+      "id": "part-5",
+      "title": "5. 흔한 오해와 이해 확인",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "Q. AABB에 회전을 더하면 그대로 OBB가 됩니까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. AABB 표현은 월드 축 정렬을 전제합니다. 회전한 기하에 대해 새 World AABB를 재계산하거나 OBB 형상을 별도로 유지해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. 이 코드의 OBB 교차 결과로 위아래 층끼리 충돌을 판정할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 됩니다. XZ 투영 SAT라 Y 분리가 완전히 무시됩니다. 높이 범위의 추가 검사 또는 완전한 3D SAT가 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. Ray Direction을 정규화하지 않으면 outT는 미터가 됩니까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 거리 = t * \\|Direction\\|입니다. 단위 방향벡터면 t가 거리처럼 해석되지만 이 실습은 정규화를 요구하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "유한 입력이면 극단적으로 큰 값도 안전한 판정인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "유한성 검사가 제곱·차·내적 중간값의 유한성까지 보장하지 않습니다. 원본 검사 범위 밖의 큰 좌표에는 스케일 제한과 수치 정책이 추가로 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "접촉 true가 관통 해결까지 뜻하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 접촉 법선·깊이·시간과 물리 반응은 bool 판정에 없는 정보입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Ray가 AABB 안에서 시작하면 outT는 항상 출구 거리인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 코드의 tmin은 0에서 시작하므로 적중하면 0입니다. 출구 매개변수나 실제 이동 거리를 반환하는 다른 계약과 구분합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guided-trace",
+      "title": "손으로 추적하는 독립 실습",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "AABB [-1,1]에 원점 (-3,0,0), 방향 (1,0,0)의 레이를 넣으면 t=2입니다. 방향을 (2,0,0)으로 바꾼 손계산은 t=1이지만 거리는 여전히 2입니다. 이 변경은 기존 실행 결과가 아닌 추론 과제입니다. miss 이후 outT를 새 적중값으로 사용하면 안 되는 이유도 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스와 빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-11-12/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 실행 원본 main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-11-12/11_collision/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "코드 변경·실행 전에 예상값과 거부 조건을 먼저 적으세요. 기존 29회 조건 검사는 보존 기록이며 이번 본문 편집에서 재실행한 결과가 아닙니다. 주석본의 별도 검증이 있으면 출처 탭에서 구분합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-4",
       "title": "4. 전체 실행 가능 실습",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -531,49 +679,125 @@
       ]
     },
     {
-      "id": "part-5",
-      "title": "5. 흔한 오해와 이해 확인",
-      "tab": "document",
+      "id": "full-cpu-source",
+      "title": "전체 소스·CMake·검증 출처",
+      "tab": "sources",
       "blocks": [
         {
-          "type": "details",
-          "title": "Q. AABB에 회전을 더하면 그대로 OBB가 됩니까?",
+          "type": "callout",
           "blocks": [
             {
               "type": "paragraph",
               "content": [
                 {
-                  "text": "아닙니다. AABB 표현은 월드 축 정렬을 전제합니다. 회전한 기하에 대해 새 World AABB를 재계산하거나 OBB 형상을 별도로 유지해야 합니다."
+                  "text": "원본 하위 CPU 전체 파일은 별도 GitHub 페이지에 복구했습니다. C++20·C++11 및 Clang ASan/UBSan의 신규 실행 결과는 별도 GitHub Actions 결과를 확인한 경우에만 새 검증으로 보고합니다. 실제 GPU·SDK 통합은 미검증입니다."
                 }
               ]
             }
           ]
         },
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 C++ 및 CMake 파일 열기",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-11-12/"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "원본 복구·검증 원장",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/DX11_09_12_SOURCE_LEDGER_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "11A · Collider CPU 전체 소스·CMake·검증 기록 · Notion 원본",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f40810fa644ef6c5351b3bf"
+            }
+          ]
+        },
+        {
           "type": "details",
-          "title": "Q. 이 코드의 OBB 교차 결과로 위아래 층끼리 충돌을 판정할 수 있나요?",
+          "title": "D3D11/GPU·Assimp SDK를 실제로 실행한 결과인가요?",
           "blocks": [
             {
               "type": "paragraph",
               "content": [
                 {
-                  "text": "안 됩니다. XZ 투영 SAT라 Y 분리가 완전히 무시됩니다. 높이 범위의 추가 검사 또는 완전한 3D SAT가 필요합니다."
+                  "text": "아닙니다. 이번 프로젝트의 CPU 학습 모델은 개념·자료구조·수학 계약만 검증합니다. Windows/MSVC·D3D11 GPU·Assimp 라이브러리 통합·Recast/Funnel 실행 결과로 확대해서 해석하지 않습니다."
                 }
               ]
             }
           ]
         },
         {
-          "type": "details",
-          "title": "Q. Ray Direction을 정규화하지 않으면 outT는 미터가 됩니까?",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "아닙니다. 거리 = t * \\|Direction\\|입니다. 단위 방향벡터면 t가 거리처럼 해석되지만 이 실습은 정규화를 요구하지 않습니다."
-                }
-              ]
+              "text": "한국어 주석본 전체 main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-11-12-ko/11_collision/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 구성과 빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-11-12-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 별도 주석본 검증",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-11-12-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 전체 코드는 위 연결의 소스 자료실에서 원본과 나란히 펼쳐 읽을 수 있습니다. 실행 토큰을 바꾸지 않은 주석본의 원본 복원·전처리 동일성 및 GCC 14.2 직접 실행을 확인했습니다. 이번 확인은 기존 CTest/sanitizer 기록과 별개이며 Windows·실제 SDK·GPU의 검증이 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification-scope",
+      "title": "증거가 말하는 것과 말하지 않는 것",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원의 CPU 모델은 D3D11 장치나 실제 Assimp·DirectXCollision·Recast SDK를 호출하지 않습니다. Windows/MSVC·GPU·HLSL 실행은 미검증입니다. 검사 통과를 파일 파서·실제 화면·모든 입력·성능의 보장으로 확대하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 소스 안내",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-11-12/"
             }
           ]
         }
@@ -582,7 +806,7 @@
     {
       "id": "part-6",
       "title": "6. 공식 근거 · 변경 기록",
-      "tab": "document",
+      "tab": "history",
       "blocks": [
         {
           "type": "list",
@@ -659,62 +883,15 @@
       ]
     },
     {
-      "id": "full-cpu-source",
-      "title": "전체 소스·CMake·검증 출처",
-      "tab": "document",
+      "id": "visual-revision",
+      "title": "시각 교재 개편 기록",
+      "tab": "history",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "원본 하위 CPU 전체 파일은 별도 GitHub 페이지에 복구했습니다. C++20·C++11 및 Clang ASan/UBSan의 신규 실행 결과는 별도 GitHub Actions 결과를 확인한 경우에만 새 검증으로 보고합니다. 실제 GPU·SDK 통합은 미검증입니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 C++ 및 CMake 파일 열기",
-              "kind": "link",
-              "href": "/knowledge/dx11-sources-11-12/"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "원본 복구·검증 원장",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/DX11_09_12_SOURCE_LEDGER_20261019.md"
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "11A · Collider CPU 전체 소스·CMake·검증 기록 · Notion 원본",
-              "kind": "link",
-              "href": "https://app.notion.com/p/3fba99703f40810fa644ef6c5351b3bf"
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "D3D11/GPU·Assimp SDK를 실제로 실행한 결과인가요?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "아닙니다. 이번 프로젝트의 CPU 학습 모델은 개념·자료구조·수학 계약만 검증합니다. Windows/MSVC·D3D11 GPU·Assimp 라이브러리 통합·Recast/Funnel 실행 결과로 확대해서 해석하지 않습니다."
-                }
-              ]
+              "text": "2026-10-23 · 기존 섹션 ID, 원본 날짜와 직접 코드·표·Mermaid·복습 payload를 보존하면서 네 탭으로 역할을 분리했습니다. 의미 중심 그림, 한국어 추적 과제와 코드의 실제 미방어 경계를 추가했습니다. 원본 소스와 캡처는 변경하지 않았습니다."
             }
           ]
         }

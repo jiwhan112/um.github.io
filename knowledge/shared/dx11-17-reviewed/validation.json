@@ -1,0 +1,229 @@
+{
+  "date": "2026-10-23",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "scope": "Linux CPU only; direct compiler, not CMake/CTest; no Windows/GPU/HLSL/sanitizer",
+  "change": "inside requires r.h > 0; original and ko remain immutable",
+  "original_sha256": {
+    "fontlab.hpp": "d6d99e7f792a5238123a09f300b3d2783f0e76368dc3e40a968eb841cd6f94c9",
+    "main.cpp": "409e7fbefc2b343712c793bce39b172e48cce8396315b1066fe24add8cd647cd",
+    "CMakeLists.txt": "eca337b6f062d39a7f87a69392981b47f68c73b27fe2aebf435bcc00a7b7a82c"
+  },
+  "reviewed_sha256": {
+    "fontlab.hpp": "52ee801d00797cbb6c203dd7b070516a607054cf56893b90538344a9e15cb1d0",
+    "main.cpp": "9fa0d700dae5528c235397120c9b52572caabfda8fa41c8c2eb558d5ad6dbfd9",
+    "CMakeLists.txt": "92e8d7d643efe55bae01c23fcf77d5fb5fe5b287198942027418ca5cd1987607",
+    "height-regression.cpp": "448a4135aabdb2a8449b00381ee869c322a912ef15758a6bb9870fa507ee60a3"
+  },
+  "commands": [
+    {
+      "command": [
+        "g++",
+        "-std=c++11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17/main.cpp",
+        "-o",
+        "/tmp/font-c++11-original"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/font-c++11-original"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS 49 Font UTF-8 atlas layout CPU contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "g++",
+        "-std=c++11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-DEXPECT_REJECTION=0",
+        "-I/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17",
+        "/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17-reviewed/height-regression.cpp",
+        "-o",
+        "/tmp/font-c++11-original-height"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/font-c++11-original-height"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS 6 height boundary checks; rejection=0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "g++",
+        "-std=c++11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17-reviewed/main.cpp",
+        "-o",
+        "/tmp/font-c++11-reviewed"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/font-c++11-reviewed"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS 49 Font UTF-8 atlas layout CPU contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "g++",
+        "-std=c++11",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-DEXPECT_REJECTION=1",
+        "-I/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17-reviewed",
+        "/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17-reviewed/height-regression.cpp",
+        "-o",
+        "/tmp/font-c++11-reviewed-height"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/font-c++11-reviewed-height"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS 6 height boundary checks; rejection=1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "g++",
+        "-std=c++20",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17/main.cpp",
+        "-o",
+        "/tmp/font-c++20-original"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/font-c++20-original"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS 49 Font UTF-8 atlas layout CPU contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "g++",
+        "-std=c++20",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-DEXPECT_REJECTION=0",
+        "-I/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17",
+        "/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17-reviewed/height-regression.cpp",
+        "-o",
+        "/tmp/font-c++20-original-height"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/font-c++20-original-height"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS 6 height boundary checks; rejection=0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "g++",
+        "-std=c++20",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17-reviewed/main.cpp",
+        "-o",
+        "/tmp/font-c++20-reviewed"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/font-c++20-reviewed"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS 49 Font UTF-8 atlas layout CPU contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "g++",
+        "-std=c++20",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-DEXPECT_REJECTION=1",
+        "-I/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17-reviewed",
+        "/workspace/scratch/27644fc094dd/atlas-textbooks/knowledge/shared/dx11-17-reviewed/height-regression.cpp",
+        "-o",
+        "/tmp/font-c++20-reviewed-height"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/font-c++20-reviewed-height"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS 6 height boundary checks; rejection=1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "g++",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "g++ (Debian 14.2.0-19) 14.2.0\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    }
+  ],
+  "post_validation_note": "After CPU tests, two Korean comments were corrected to describe reviewed rather than original semantics. Executable tokens unchanged."
+}

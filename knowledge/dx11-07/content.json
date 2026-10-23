@@ -20,6 +20,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원은 그림으로 계약을 먼저 읽고, CPU 원본의 정상·거부 경로를 추적한 뒤 실제 SDK/GPU의 미검증 경계를 확인하는 순서입니다. 원본 날짜·코드·수식·검사 기록을 보존했고 그림은 직접 만든 설명도이며 GPU 화면이 아닙니다."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -61,6 +69,12 @@
       "title": "1. Skybox와 TextureCube",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-07/assets/contract-map.svg",
+          "alt": "상단은 깊이 1 하늘 샘플의 두 비교 결과, 하단은 표면에서 광원으로 향하는 방향의 Lambert 결과입니다. 두 실험은 독립입니다.",
+          "caption": "상단은 깊이 1 하늘 샘플의 두 비교 결과, 하단은 표면에서 광원으로 향하는 방향의 Lambert 결과입니다. 두 실험은 독립입니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -232,38 +246,9 @@
       ]
     },
     {
-      "id": "part-4",
-      "title": "4. 실제 실습·오류 한계",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "07A CPU 모델은 TextureCube의 6면 구성 일부, LESS vs LESS_EQUAL, Skybox DepthWrite, 카메라 상대 위치, Lambert의 앞·옆·뒷면과 잘못된 방향을 "
-            },
-            {
-              "text": "28개 조건",
-              "kind": "strong"
-            },
-            {
-              "text": "으로 검사합니다. GCC14.2 C++20·C++11, Clang17 ASan/UBSan에서 동일 28조건·구성별 CTest 1/1 통과했습니다. 하위 07A에는 HLSL 참고 코드와 CMake, 실제 테스트 원시 출력도 보존합니다. 실제 HLSL 컴파일·GPU TextureCube 제작과 렌더링은 "
-            },
-            {
-              "text": "실행하지 않았습니다",
-              "kind": "strong"
-            },
-            {
-              "text": "."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "part-5",
       "title": "5. 자주 틀리는 점과 적용",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -314,19 +299,61 @@
               ]
             }
           ]
+        },
+        {
+          "type": "details",
+          "title": "validCube가 GPU 생성 성공을 보장하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 6면 플래그·mip 수만 보는 CPU 조건입니다. 크기·포맷·실제 SRV 생성과 HRESULT는 별도입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Lambert 함수가 모든 색 입력을 방어하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 원본은 radiance의 유한성이나 albedo의 비음수 범위를 모두 검사하지 않습니다. 기록된 정상 입력 범위를 넘는 색 검증과 출력 정책은 추가 계약입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "HLSL 참고 파일이 본문의 모든 상태 계약을 구현했나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 원본 셰이더는 입력 법선을 그대로 전달하며 하늘의 far 깊이를 강제하지 않습니다. CPU 개념과 실제 셰이더·상태 설정의 미완성 경계를 구분합니다."
+                }
+              ]
+            }
+          ]
         }
       ]
     },
     {
-      "id": "part-6",
-      "title": "변경 이력",
-      "tab": "document",
+      "id": "guided-trace",
+      "title": "손으로 추적하는 독립 실습",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "2026-10-16 v1.0. 원본 Skybox·Lighting의 숨은 전제와 상태 계약을 분리했습니다. 다음은 Terrain 격자·HeightMap·Splatting입니다."
+              "text": "depthAccept(1,1,opaque())와 skybox()의 결과를 먼저 예측하세요. 그다음 저장 깊이를 .3으로 바꾸면 하늘이 왜 거부되는지 설명합니다. Lambert 입력의 normal과 towardLight를 반대로 놓고 ambient만 남는 사례를 원본 검사와 연결하세요."
             }
           ]
         },
@@ -334,9 +361,56 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "07A · Skybox·Lighting CPU·HLSL 전체 소스·검증",
+              "text": "전체 소스와 빌드 안내",
               "kind": "link",
               "href": "/knowledge/dx11-sources-05-08/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 실행 원본 main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-05-08/07_skybox_lighting/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "코드 변경·실행 전에 예상값과 거부 조건을 먼저 적으세요. 기존 28회 조건 검사는 보존 기록이며 이번 본문 편집에서 재실행한 결과가 아닙니다. 주석본의 별도 검증이 있으면 출처 탭에서 구분합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. 실제 실습·오류 한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "07A CPU 모델은 TextureCube의 6면 구성 일부, LESS vs LESS_EQUAL, Skybox DepthWrite, 카메라 상대 위치, Lambert의 앞·옆·뒷면과 잘못된 방향을 "
+            },
+            {
+              "text": "28개 조건",
+              "kind": "strong"
+            },
+            {
+              "text": "으로 검사합니다. GCC14.2 C++20·C++11, Clang17 ASan/UBSan에서 동일 28조건·구성별 CTest 1/1 통과했습니다. 하위 07A에는 HLSL 참고 코드와 CMake, 실제 테스트 원시 출력도 보존합니다. 실제 HLSL 컴파일·GPU TextureCube 제작과 렌더링은 "
+            },
+            {
+              "text": "실행하지 않았습니다",
+              "kind": "strong"
+            },
+            {
+              "text": "."
             }
           ]
         }
@@ -345,7 +419,7 @@
     {
       "id": "full-source",
       "title": "전체 소스·CMake·독립 실행 예제",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -374,6 +448,117 @@
                   "text": "CPU 테스트는 설명용 리소스·수치·상태 계약을 검사합니다. 실제 Windows SDK/Direct3D11 장치 생성·리소스 바인딩·셰이더 컴파일과 GPU 화면 비교는 실행하지 않았습니다."
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본 전체 main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-05-08-ko/07_skybox_lighting/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 구성·빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-05-08-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 주석본 별도 검증 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-05-08-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본은 원본 실행 토큰을 보존한 별도 파일입니다. GCC 14.2 직접 빌드·실행에서 이 단원의 28회 검사와 전처리 동일성을 확인했습니다. 원본 과거 CTest 기록과 별개이며 Windows·HLSL·GPU 실행은 포함하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주의: 참고 HLSL은 입력 법선을 그대로 전달하고 스카이박스의 far 깊이를 강제하지 않습니다. 본문의 depth=1·정규화·법선 공간 계약이 GPU 코드에서 이미 완성되었다고 읽지 마세요."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification-scope",
+      "title": "증거가 말하는 것과 말하지 않는 것",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원의 CPU 모델은 D3D11 장치나 실제 Assimp·DirectXCollision·Recast SDK를 호출하지 않습니다. Windows/MSVC·GPU·HLSL 실행은 미검증입니다. 검사 통과를 파일 파서·실제 화면·모든 입력·성능의 보장으로 확대하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 소스 안내",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-05-08/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "변경 이력",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-16 v1.0. 원본 Skybox·Lighting의 숨은 전제와 상태 계약을 분리했습니다. 다음은 Terrain 격자·HeightMap·Splatting입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "07A · Skybox·Lighting CPU·HLSL 전체 소스·검증",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-05-08/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-revision",
+      "title": "시각 교재 개편 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 · 기존 섹션 ID, 원본 날짜와 직접 코드·표·Mermaid·복습 payload를 보존하면서 네 탭으로 역할을 분리했습니다. 의미 중심 그림, 한국어 추적 과제와 코드의 실제 미방어 경계를 추가했습니다. 원본 소스와 캡처는 변경하지 않았습니다."
             }
           ]
         }

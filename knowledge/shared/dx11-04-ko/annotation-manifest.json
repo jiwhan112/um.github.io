@@ -1,0 +1,64 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-04/CMakeLists.txt",
+      "annotated": "shared/dx11-04-ko/CMakeLists.txt",
+      "original_sha256": "20c80b24000487d79bb8f1f308c56ef8c8ca4607409cedd79d1ab16e4408a1a1",
+      "annotated_sha256": "20c80b24000487d79bb8f1f308c56ef8c8ca4607409cedd79d1ab16e4408a1a1",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-04/main.cpp",
+      "annotated": "shared/dx11-04-ko/main.cpp",
+      "original_sha256": "bf5f9ae3c81e4da3efa8509e50421bff914229fc6792ab99e72b38f8f8185f69",
+      "annotated_sha256": "31384be25ccdaac36c0264027b5cca4c37434ce40aca4e5b8bfc67935e0d821b",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 17,
+          "suffix": " // [한국어 해설] 소스/목적지 Pitch를 별도로 적용하며 패딩은 복사하지 않는다. 같은 버퍼 별칭은 거부한다."
+        },
+        {
+          "line": 34,
+          "suffix": " // [한국어 해설] 음수 나머지를 보정하여 음수 좌표도 양의 텍셀 인덱스로 감싼다."
+        },
+        {
+          "line": 40,
+          "suffix": " // [한국어 해설] 정수 텍셀 주소 모델이다. GPU의 선형·밉·이방성 필터링을 재현하지 않는다."
+        },
+        {
+          "line": 50,
+          "suffix": " // [한국어 해설] 같은 resource ID와 특정 mip 한 장만으로 겹침을 판단하는 제한 모델이다."
+        },
+        {
+          "line": 57,
+          "suffix": " // [한국어 해설] Pitch·범위·wrap/clamp·읽기쓰기 뷰 충돌과 상수 배치를 CPU에서 검사한다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx11-04/texture.hlsl",
+      "annotated": "shared/dx11-04-ko/texture.hlsl",
+      "original_sha256": "0e9d3c37074c36c1052d2d3c0171dbe542ebc376928c5a6ef60b8ae826189e1b",
+      "annotated_sha256": "3eb9729f791b52941e897db6f21dc7503a8c5b9d52cb26e40ed2a582b74a60a3",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 2,
+          "suffix": " // [한국어 해설] b0의 row_major 행렬과 Tint를 CPU 구조체 배치에 맞춰 전달해야 한다."
+        },
+        {
+          "line": 10,
+          "suffix": " // [한국어 해설] 동차 위치를 반환하고 UV는 래스터 보간으로 넘긴다."
+        },
+        {
+          "line": 16,
+          "suffix": " // [한국어 해설] t0 텍스처와 s0 샘플러를 별도 바인딩한다. 이번 FXC/GPU 실행은 하지 않았다."
+        }
+      ]
+    }
+  ]
+}

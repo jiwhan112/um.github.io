@@ -20,6 +20,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 지도: 요소 경계 검증 → 같은 Slot의 겹침 검증. compact/두 단계의 서로 다른 정책을 유지한다."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -53,6 +61,19 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "visual-safe-range",
+      "title": "끝점을 더하기 전에 범위를 증명한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-13b/assets/safe-range.svg",
+          "alt": "끝점을 더하기 전에 범위를 증명한다",
+          "caption": "끝점을 더하기 전에 범위를 증명한다 · 명시된 학습 모델의 계약 도식, GPU 실행 화면 아님."
         }
       ]
     },
@@ -199,7 +220,7 @@
     {
       "id": "part-2",
       "title": "C++20 전체 실행 소스 · C++11 호환",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -227,39 +248,9 @@
       ]
     },
     {
-      "id": "part-3",
-      "title": "전체 CMakeLists.txt",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "code",
-          "language": "text",
-          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13b_layout LANGUAGES CXX)\nset(LAB_STD 20 CACHE STRING \"C++ standard, 11 or 20\")\nif(NOT LAB_STD STREQUAL \"11\" AND NOT LAB_STD STREQUAL \"20\")\n  message(FATAL_ERROR \"LAB_STD must be 11 or 20\")\nendif()\nadd_executable(dx11_13b_layout main.cpp)\nset_target_properties(dx11_13b_layout PROPERTIES CXX_STANDARD ${LAB_STD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(CMAKE_CXX_COMPILER_ID MATCHES \"GNU|Clang\")\n  target_compile_options(dx11_13b_layout PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME dx11_13b_layout COMMAND dx11_13b_layout)\n"
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "CMakeLists.txt 616바이트, SHA256 ad7635f631dcdc11955a100a48f10d2abc4f033000350a466cad848b194f40bd, FNV64 7ad4bb35e2621f80."
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "이 본문에 대응하는 compact 전체 파일",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-compact/CMakeLists.txt"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "part-4",
       "title": "로컬 빌드·검증 명령",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "code",
@@ -411,9 +402,170 @@
       ]
     },
     {
+      "id": "guided-practice",
+      "title": "실습 · 수치와 실패 경계부터",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "stride16/offset12/width4는 성공, width5는 실패임을 뺄셈 조건으로 확인한다. 두 단계 21조건 모델은 enum 결과로 InvalidElement와 Overlap을 구별하므로, 극단 unsigned 값이 뒤 요소에 있어도 InvalidElement를 먼저 반환해야 하는 이유를 추적한다. compact 13조건 모델은 out_of_range/invalid_argument 예외를 bool valid 결과로 합치므로 같은 enum 진단을 보고하지 않는다. 두 구현의 검사 순서와 외부 오류 표현을 따로 비교한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답하고 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "offset+width≤stride를 먼저 계산하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "부호 없는 덧셈이 wrap할 수 있다. offset≤stride, width≤stride−offset 순으로 검증한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "첫 요소와 미검증 다음 요소를 즉시 겹침 검사해도 될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "잘못된 다음 요소를 겹침 오류로 분류할 수 있다. 모든 요소의 경계를 먼저 검증한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "compact와 두 단계 모델의 StepRate 정책은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "compact는 양수, 두 단계 모델은 교육용으로 정확히1을 요구한다. 동일 구현으로 합치지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "13개와21개 검사를 더하면 독립34개인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "의미 중복을 제거해 산정하지 않았으므로 그렇게 주장하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CPU 레이아웃 검사로 HLSL signature까지 검증되나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 실제 시맨틱·형식·셰이더 시그니처·장치 생성은 별도다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "서로 다른 Slot의 같은 offset은 항상 겹침인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 각 Slot은 별도 입력 스트림이며 동일 Slot 범위 검사를 구분한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "annotated-source-map",
+      "title": "한국어 주석 전체 소스와 의존성",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "관련 전체 CPU 코드·HLSL·CMake 자료실",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-13b/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문의 API 호출 발췌와 전체 CPU 참조 프로그램은 다르다. 자료실의 한국어 주석 전체 파일과 같은 폴더 빌드 안내를 함께 준비한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "전체 CMakeLists.txt",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "text",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13b_layout LANGUAGES CXX)\nset(LAB_STD 20 CACHE STRING \"C++ standard, 11 or 20\")\nif(NOT LAB_STD STREQUAL \"11\" AND NOT LAB_STD STREQUAL \"20\")\n  message(FATAL_ERROR \"LAB_STD must be 11 or 20\")\nendif()\nadd_executable(dx11_13b_layout main.cpp)\nset_target_properties(dx11_13b_layout PROPERTIES CXX_STANDARD ${LAB_STD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(CMAKE_CXX_COMPILER_ID MATCHES \"GNU|Clang\")\n  target_compile_options(dx11_13b_layout PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME dx11_13b_layout COMMAND dx11_13b_layout)\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CMakeLists.txt 616바이트, SHA256 ad7635f631dcdc11955a100a48f10d2abc4f033000350a466cad848b194f40bd, FNV64 7ad4bb35e2621f80."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 본문에 대응하는 compact 전체 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b-compact/CMakeLists.txt"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-5",
       "title": "공식 자료·변경 내역",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "list",
@@ -470,7 +622,7 @@
     {
       "id": "github-source",
       "title": "전체 C++ 소스 · 빌드 · 검증 경계",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "callout",
@@ -514,6 +666,46 @@
                   "text": "보장하지 않습니다. CPU의 수치·입력·리소스 상태 계약에 대한 예제이며 Windows D3D11 파이프라인과 GPU 이미지·컴파일러/드라이버 동작은 별도로 검증해야 합니다."
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification-boundary",
+      "title": "과거 증거와 이번 주석본 검사 구분",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 날짜·원시 로그·해시는 역사적 증거다. 2026-10-23 한국어 주석본은 클라우드 Linux/GCC14.2 C++20 직접 빌드·실행과 원본 복원/전처리 동일성을 검사했다. 이번 CMake/CTest·sanitizer·Windows/MSVC·HLSL컴파일·GPU는 미실행이다. 현행 CPU 통과가 역사적 SHA 불일치를 해소하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·개편 이력",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 모든 원문 기술 블록·기존 절 ID·URL·메타데이터를 보존하며 시각 설명, 실습, 접힌 복습, 한국어 주석 전체코드 연결을 보완했다. 원문 속 이전 시점의 미완료/미실행 문장은 당시 기록이며, 현재 주석본 검사 범위와 분리한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 원문 Markdown",
+              "kind": "link",
+              "href": "/knowledge/dx11-13b/source-notion.md"
             }
           ]
         }

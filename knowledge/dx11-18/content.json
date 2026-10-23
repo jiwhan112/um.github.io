@@ -64,6 +64,49 @@
       ]
     },
     {
+      "id": "visual-contract",
+      "title": "현행 실행 범위 · 그림으로 읽는 계약",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-18/assets/binding-hazard.svg",
+          "alt": "읽기 결합 요청은 쓰기 충돌 여부에 따라 실패 또는 성공으로 분기한다.",
+          "caption": "읽기 결합 요청은 쓰기 충돌 여부에 따라 실패 또는 성공으로 분기한다."
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-18/assets/resize-boundary.svg",
+          "alt": "v2 resize는 결합 해제를 확인하며 실제 자원을 재생성하지 않는다.",
+          "caption": "v2 resize는 결합 해제를 확인하며 실제 자원을 재생성하지 않는다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현행 v2 Graph는 텍스처 ID 전체 단위의 읽기·쓰기 목록, bind 플래그, MRT 개수, 크기·sample 호환성을 검사한다. 실제 ID3D11Resource/View나 mip·array slice 범위 객체를 만들지 않는다. 같은 리소스의 서로 다른 subresource를 허용하는 정교한 겹침 모델도 없다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "과거 39개 모델 설명의 subresource/generation/깊이 재구성은 현재 41개 검사 소스의 구현 범위가 아니다. 현재 API는 unbindOM/unbindPS이며 resize()는 결합이 비었는지 검사만 한다. 텍스처 재생성·generation 증가·옛 ID 폐기는 일어나지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 D3D11의 충돌 시 자동 NULL 결합 동작을 그대로 흉내 내지 않고 애플리케이션 측 잘못된 순서를 예외로 거절하는 교육 모델이다. HLSL은 Geometry Pass 출력 모양의 예시이며 GPU 컴파일·렌더링·성능 검증은 없다. 41개 통과는 ID 오버플로 등 모든 가능한 입력을 검증했다는 뜻이 아니다."
+            }
+          ]
+        }
+      ],
+      "tab": "document"
+    },
+    {
       "id": "part-1",
       "title": "1. 정의: Deferred는 Rendering Pass 분리",
       "tab": "document",
@@ -380,6 +423,14 @@
           "type": "paragraph",
           "content": [
             {
+              "text": "역사적 v1 설명 보존: 이 절의 기능·검사 수는 현행 v2와 다를 수 있다. 위의 「현행 실행 범위」와 최신 전체 소스를 우선 대조한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
               "text": "18A의 완전한 CPU 구현은 Texture/View descriptor를 축소 표현하고 "
             },
             {
@@ -468,9 +519,49 @@
       ]
     },
     {
+      "id": "part-8",
+      "title": "최신 소스 (v2)",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 CPU "
+            },
+            {
+              "text": "main.cpp",
+              "kind": "code"
+            },
+            {
+              "text": ": "
+            },
+            {
+              "text": "18B · Deferred MRT CPU v2 전체 main.cpp · 41조건",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-18/"
+            },
+            {
+              "text": ". GCC C++20·C++11 및 Clang ASan/UBSan에서 41조건. 실제 GPU 미검증."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "18C · Deferred CPU v2 CMake·실행 검증 원장 · 2026-10-17",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fca99703f4081cda923c214901bed45"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-6",
       "title": "6. 실무 실수·이해 확인",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "details",
@@ -531,9 +622,388 @@
       ]
     },
     {
+      "id": "guided-practice",
+      "title": "실습 · 결과를 먼저 예측하고 소스로 확인",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "bindOM → bindPS를 바로 호출하는 잘못된 순서와 unbindOM을 끼운 순서를 비교한다. 이어 unbindPS 없이 다음 frame의 bindOM을 시도할 때 어느 검사에서 거절되는지 찾는다. resize 전후 descriptor가 바뀌지 않는 것을 구현 본문으로 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "남길 기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "예측"
+                  }
+                ],
+                [
+                  {
+                    "text": "입력·기대 결과·실패 분기"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "소스 추적"
+                  }
+                ],
+                [
+                  {
+                    "text": "해당 함수와 검사 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "실행한다면"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 컴파일러·옵션·표준·종료 코드·stdout"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "해석"
+                  }
+                ],
+                [
+                  {
+                    "text": "CPU에서 확인한 것 / Windows·GPU에서 미확인인 것"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-review",
+      "title": "접어서 확인하는 복습",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "Geometry에서 쓴 ID를 곧바로 bindPS하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "쓰기 결합이 남아 있으면 v2는 예외로 거절한다. unbindOM 후 읽기 단계로 넘어간다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "다음 프레임에 다시 쓰기 전 필요한 것은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그 ID를 읽던 PS 결합도 해제해야 한다. v2는 unbindPS로 읽기 목록을 비운다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "resize는 크기를 바꾸는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 구현은 결합이 비었는지 확인할 뿐 텍스처 descriptor나 ID를 바꾸지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "서로 다른 mip이면 v2가 별도 판단하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. ID 전체 단위이며 subresource 범위를 표현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CPU 예외와 D3D11 자동 NULL 처리는 동일한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 같은 위험을 설명하되 애플리케이션 측 거절 정책으로 단순화한 모델이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "41개 통과로 HLSL도 컴파일되었는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. HLSL 파일은 예제이며 GPU 컴파일과 출력 검증은 없다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "MRT 크기만 같으면 충분한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 모델도 samples, bind 플래그, 중복 ID, 읽기 충돌과 depth 호환성을 함께 검사한다. 실제 D3D11의 모든 포맷 제약을 대신하지는 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "annotated-full-source",
+      "title": "한국어 주석 전체 코드 · 원본 동일본",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본은 원본 바이트를 복원할 수 있는 별도 파일이다. 기능 수정판이 아니며 원본의 검증 누락·미구현 기능도 그대로 남긴다. 주석 삽입 검증과 새 직접 CPU 실행은 아래 별도 manifest/validation 기록의 범위로 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석 전체: main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-18-ko/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석 전체: CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-18-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석 전체: geometry_pass.example.hlsl",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-18-ko/geometry_pass.example.hlsl"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 기록: README.md",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-18-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 기록: annotation-manifest.json",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-18-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 기록: validation.json",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-18-ko/validation.json"
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "github-source",
+      "title": "전체 C++ 소스 · 빌드 · 검증 경계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 실행 코드·CMake·원본 복구본: "
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "18 · GitHub 전체 소스 교재",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-18/"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Linux CPU 테스트가 GPU 사용 가능성을 보장하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "보장하지 않습니다. CPU의 수치·입력·리소스 상태 계약에 대한 예제이며 Windows D3D11 파이프라인과 GPU 이미지·컴파일러/드라이버 동작은 별도로 검증해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source-navigation",
+      "title": "전체 파일 · 빌드 의존성",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 원본 파일 전체를 같은 디렉터리 구조로 받는다. 부분 코드 조각만으로 완전한 프로그램이라 부르지 않는다. CMakeLists의 타깃·표준 선택과 소스 파일 목록을 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체: main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-18/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체: CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-18/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체: geometry_pass.example.hlsl",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-18/geometry_pass.example.hlsl"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 묶음 README · 실제 옵션과 역사적 기록",
+              "kind": "link",
+              "href": "/knowledge/verification/dx11-13-18/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "수집·재조립 원본 무결성 기록",
+              "kind": "link",
+              "href": "/knowledge/verification/dx11-13-18/source-integrity.json"
+            }
+          ]
+        }
+      ],
+      "tab": "sources"
+    },
+    {
       "id": "part-7",
       "title": "공식 출처·검증·변경 기록",
-      "tab": "document",
+      "tab": "history",
       "blocks": [
         {
           "type": "list",
@@ -608,30 +1078,14 @@
       ]
     },
     {
-      "id": "part-8",
-      "title": "최신 소스 (v2)",
-      "tab": "document",
+      "id": "visual-revision-history",
+      "title": "시각 개편 기록 · 증거의 경계",
       "blocks": [
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 CPU "
-            },
-            {
-              "text": "main.cpp",
-              "kind": "code"
-            },
-            {
-              "text": ": "
-            },
-            {
-              "text": "18B · Deferred MRT CPU v2 전체 main.cpp · 41조건",
-              "kind": "link",
-              "href": "/knowledge/dx11-sources-18/"
-            },
-            {
-              "text": ". GCC C++20·C++11 및 Clang ASan/UBSan에서 41조건. 실제 GPU 미검증."
+              "text": "2026-10-23: 원문 section ID·출처·날짜·전체 소스·과거 실행 기록을 보존하면서 개념/실습/자료/역사 4탭으로 재배치했다. 설명 그림, 현재 소스 범위 대조와 접힌 복습을 추가했다. 이 편집 자체는 새로운 CPU 또는 GPU 실행 결과가 아니다."
             }
           ]
         },
@@ -639,52 +1093,20 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "18C · Deferred CPU v2 CMake·실행 검증 원장 · 2026-10-17",
-              "kind": "link",
-              "href": "https://app.notion.com/p/3fca99703f4081cda923c214901bed45"
+              "text": "보존된 교정 CI 39380255011은 GCC 13.3의 C++20/C++11 및 Clang 18.1.3 C++20+ASan/UBSan 실제 옵션을 감사한 기록이다. 초기 39351876445/39353407595의 Font/Deferred 표준 옵션 미사용 기록을 C++11 증거로 쓰지 않는다. 16의 124개, 17 v2의 49개, 18 v2의 41개 조건은 각각 해당 프로그램의 검사 수다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Notion의 과거 GCC 14.2/Clang 17 기록과 GitHub의 재검증은 다른 환경의 증거다. Windows/MSVC, DirectX 장치·GPU, HLSL 컴파일은 여기서 확인되지 않았다. 주석본이 추가되면 그 검증 manifest의 실행 범위도 별도로 읽는다."
             }
           ]
         }
-      ]
-    },
-    {
-      "id": "github-source",
-      "title": "전체 C++ 소스 · 빌드 · 검증 경계",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "전체 실행 코드·CMake·원본 복구본: "
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "18 · GitHub 전체 소스 교재",
-              "kind": "link",
-              "href": "/knowledge/dx11-sources-18/"
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "Linux CPU 테스트가 GPU 사용 가능성을 보장하나요?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "보장하지 않습니다. CPU의 수치·입력·리소스 상태 계약에 대한 예제이며 Windows D3D11 파이프라인과 GPU 이미지·컴파일러/드라이버 동작은 별도로 검증해야 합니다."
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      ],
+      "tab": "history"
     }
   ]
 }

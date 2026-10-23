@@ -1,0 +1,64 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-13/CMakeLists.txt",
+      "annotated": "shared/dx11-13-ko/CMakeLists.txt",
+      "original_sha256": "1ba7395b7b9201cf982fa1059a41a70edef99fbd4aa93743088b4dc43a3c3ed2",
+      "annotated_sha256": "1ba7395b7b9201cf982fa1059a41a70edef99fbd4aa93743088b4dc43a3c3ed2",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-13/instancing_example.hlsl",
+      "annotated": "shared/dx11-13-ko/instancing_example.hlsl",
+      "original_sha256": "fec9915ac640ed949a4bc1760bd81149c5bafd8b6ea67c79c3123098cf29566f",
+      "annotated_sha256": "e3174bb74f323268f928c634ecc8bfe403dbb37508a1a8ff3734595ce89842c0",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 1,
+          "suffix": " // [한국어 해설] b0는 row_major ViewProj다. 인스턴스 행렬은 IA의 네 INSTANCEWORLD 입력에서 받는다."
+        },
+        {
+          "line": 8,
+          "suffix": " // [한국어 해설] 행 네 개로 world를 조립하여 위치*world*ViewProj 순서로 변환한다."
+        },
+        {
+          "line": 14,
+          "suffix": " // [한국어 해설] UV를 색으로 보여 주는 참조 PS다. 이번 HLSL 컴파일·GPU 실행은 하지 않았다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx11-13/main.cpp",
+      "annotated": "shared/dx11-13-ko/main.cpp",
+      "original_sha256": "ef9b0cfe2e764adc896a45451f5607fd751ab0c8b523e6477339994ba758a4b8",
+      "annotated_sha256": "266da7c0edf0fd97f09ee3f1640f7dcc499d468fd2c30396aec9215bf2f73e95",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 10,
+          "suffix": " // [한국어 해설] 원래 단일 순회 검증기의 계약이다. 뒤 원소를 먼저 완전히 검사하는 보완판은 별도13B에 보존되어 있다."
+        },
+        {
+          "line": 21,
+          "suffix": " // [한국어 해설] 정점과 인스턴스의 시작/개수를 구분한다. base가 음수여도 유효 범위일 수 있으므로 안전한 차감으로 검사한다."
+        },
+        {
+          "line": 33,
+          "suffix": " // [한국어 해설] GPU가 사용 중인 범위의 논리 모델이다. 실제 GPU 완료 쿼리나 자원 rename을 실행하지 않는다."
+        },
+        {
+          "line": 36,
+          "suffix": " // [한국어 해설] 기존 범위를 비우는 CPU 표현이다. 실제 DISCARD 동작의 드라이버 구현을 단정하지 않는다."
+        },
+        {
+          "line": 45,
+          "suffix": " // [한국어 해설] stride/slot/step-rate와 극단 정수·인스턴스 예약 경계를 검사한다."
+        }
+      ]
+    }
+  ]
+}

@@ -64,6 +64,65 @@
       ]
     },
     {
+      "id": "visual-contract",
+      "title": "현행 실행 범위 · 그림으로 읽는 계약",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-17/assets/glyph-fallback.svg",
+          "alt": "해독된 scalar에 글리프가 없으면 대체 글리프 여부로 분기한다.",
+          "caption": "해독된 scalar에 글리프가 없으면 대체 글리프 여부로 분기한다."
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-17/assets/advance-bearing.svg",
+          "alt": "그림의 위치·폭과 다음 펜 위치를 수치로 분리한다.",
+          "caption": "그림의 위치·폭과 다음 펜 위치를 수치로 분리한다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현행 v2는 UTF-8 scalar 해독, 글리프 사각형·metrics 등록, 미등록 문자의 ? 대체, 줄바꿈, 크기 배율과 UV 계산을 구현한다. 복잡 문자 shaping, pair kerning, 글꼴 래스터화와 실제 GPU 출력은 구현하지 않는다. 한글 문자열을 해독할 수 있다는 사실은 한글 글리프가 준비되거나 조합·표시가 시험되었다는 뜻이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래에 보존한 38개 검사·kerning·한글·공백에 관한 기술은 과거 v1 기록이다. 현재 내려받는 v2의 49개 검사와 합쳐서 현행 기능 목록으로 읽지 않는다. v2 main.cpp는 A/B/?와 대체 문자 등을 검사하며 실제 한글 글리프나 kerning을 시험하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 inside(Rect)는 r.w > 0을 검사하지만 r.h > 0 조건이 빠져 있다. 0 또는 음수 높이가 일부 입력에서 통과할 수 있으며 현재 49개 검사가 이를 막는다는 보장은 없다. 이 개편은 원본을 보존하므로 해당 결함을 수정한 배포로 표시하지 않는다. 큰 유한 metrics·size의 연산 결과가 유한하다는 보장도 별도다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "header의 함수 정의는 다중 번역 단위용 inline 라이브러리로 정리된 형태가 아니다. 제공된 단일 main.cpp 빌드를 기준으로 읽는다. DirectXTK 예제 조각은 별도 API 사용 설명이며 이 C++11 CPU 실행 파일이나 완전한 Windows 앱이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "높이 양수 검사 누락만 별도 reviewed 수정판으로 해결했다. 원본 v2/ko는 계속 보존하며 아래 실습 탭에서 정확한 변경·회귀 증거·수정판 전체 파일을 구별해 제공한다."
+            }
+          ]
+        }
+      ],
+      "tab": "document"
+    },
+    {
       "id": "part-1",
       "title": "1. 정의: 문자열, 글리프, 아틀라스는 다르다",
       "tab": "document",
@@ -418,6 +477,14 @@
           "type": "paragraph",
           "content": [
             {
+              "text": "역사적 v1 설명 보존: 이 절의 기능·검사 수는 현행 v2와 다를 수 있다. 위의 「현행 실행 범위」와 최신 전체 소스를 우선 대조한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
               "text": "완전한 독립 C++ 구현은 17A에 전체 "
             },
             {
@@ -499,9 +566,40 @@
       ]
     },
     {
+      "id": "part-9",
+      "title": "최신 소스 (v2)",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "17B 전체 헤더 "
+            },
+            {
+              "text": "17B · Font UTF-8·Glyph Atlas CPU v2 헤더 전체 소스",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-17/"
+            },
+            {
+              "text": " 및 17C 테스트 "
+            },
+            {
+              "text": "17C · Font CPU v2 전체 main.cpp · 49조건 테스트",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-17/"
+            },
+            {
+              "text": ". C++11·C++20 49조건 통과, GPU 미검증."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-6",
       "title": "6. 이해 확인",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "details",
@@ -548,9 +646,471 @@
       ]
     },
     {
+      "id": "guided-practice",
+      "title": "실습 · 결과를 먼저 예측하고 소스로 확인",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "A/B/?의 atlas 사각형과 bearing·advance를 main.cpp에서 찾는다. \"AB\", 미등록 \"Z\", 줄바꿈을 각각 입력했다고 가정하고 quad 수·다음 penX·UV를 예측한다. 별도 실험 복사본에서만 높이 0/음수 입력을 추가해 알려진 검증 누락을 재현하도록 계획하고, 보존된 49개 통과 기록과 새 결과를 혼합하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "남길 기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "예측"
+                  }
+                ],
+                [
+                  {
+                    "text": "입력·기대 결과·실패 분기"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "소스 추적"
+                  }
+                ],
+                [
+                  {
+                    "text": "해당 함수와 검사 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "실행한다면"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 컴파일러·옵션·표준·종료 코드·stdout"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "해석"
+                  }
+                ],
+                [
+                  {
+                    "text": "CPU에서 확인한 것 / Windows·GPU에서 미확인인 것"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-review",
+      "title": "접어서 확인하는 복습",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "UTF-8 바이트 수가 글자 quad 수인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 여러 바이트가 scalar 하나가 될 수 있고 줄바꿈은 quad를 만들지 않는다. shaping이 있다면 scalar와 glyph 수도 달라질 수 있으나 v2는 shaping을 구현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "미등록 Z에 ?가 있으면 무엇을 그리는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "?의 atlas 사각형과 metrics를 사용한다. Quad.codepoint 필드는 요청한 scalar를 기록하므로 그 값만 보고 실제 글리프 이미지를 판단하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "advance와 그림 너비가 같은가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "별개다. bearing은 그림의 시작 위치, atlas 폭은 그림 너비, advance는 다음 펜 위치 이동에 쓰인다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CRLF를 그대로 넣어도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "v2는 CR을 예외로 거절한다. 호출 전에 줄끝 정규화가 필요하며 LF만 줄바꿈 처리한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "49개 검사는 kerning·한글 렌더링 시험인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 최신 v2 코드의 검사 범위를 보아야 한다. 과거 v1 38개 설명을 현행 기능으로 합산하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "음수 높이는 원본에서 모두 거절되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. inside에 r.h > 0 조건이 없다. 알려진 입력 검증 누락을 보존된 원본의 제한으로 명시한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "UV에 size를 곱하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 위치에는 출력 크기를 적용하지만 UV는 atlas 픽셀 좌표를 atlas 크기로 나눈다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "annotated-full-source",
+      "title": "한국어 주석 전체 코드 · 원본 동일본",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본은 원본 바이트를 복원할 수 있는 별도 파일이다. 기능 수정판이 아니며 원본의 검증 누락·미구현 기능도 그대로 남긴다. 주석 삽입 검증과 새 직접 CPU 실행은 아래 별도 manifest/validation 기록의 범위로 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석 전체: fontlab.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-ko/fontlab.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석 전체: main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-ko/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석 전체: CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 기록: README.md",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 기록: annotation-manifest.json",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 기록: validation.json",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-ko/validation.json"
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "reviewed-height-fix",
+      "title": "높이 경계 수정판 · 원본과 구분",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 별도 reviewed 수정판: 원본 및 원본 동일 주석본은 보존하고, inside에 r.h > 0 조건만 추가했다. 원본의 높이 0/−1 허용을 실제로 재현했으며 수정판은 두 입력을 거절한다. 기존 49개 검사와 별도 높이 회귀 6개는 GCC 14.2 C++11/C++20 직접 빌드에서 각각 통과했다. 6개에는 inside와 Atlas.add의 0/−1 경계 4개 및 정상 높이·layout 2개가 포함된다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "수정된 전체 파일은 아래 reviewed 경로다. 기존 v2나 ko 경로를 고친 것이 아니다. 수정판 CMake/CTest, sanitizer, Windows/GPU는 미실행이며 kerning·shaping 등 기능 추가는 없다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "높이 경계 수정판: fontlab.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-reviewed/fontlab.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "높이 경계 수정판: main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-reviewed/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "높이 경계 수정판: height-regression.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-reviewed/height-regression.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "높이 경계 수정판: CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-reviewed/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "수정판 근거: README.md",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-reviewed/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "수정판 근거: validation.json",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17-reviewed/validation.json"
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "github-source",
+      "title": "전체 C++ 소스 · 빌드 · 검증 경계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 실행 코드·CMake·원본 복구본: "
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "17 · GitHub 전체 소스 교재",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-17/"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Linux CPU 테스트가 GPU 사용 가능성을 보장하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "보장하지 않습니다. CPU의 수치·입력·리소스 상태 계약에 대한 예제이며 Windows D3D11 파이프라인과 GPU 이미지·컴파일러/드라이버 동작은 별도로 검증해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source-navigation",
+      "title": "전체 파일 · 빌드 의존성",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 원본 파일 전체를 같은 디렉터리 구조로 받는다. 부분 코드 조각만으로 완전한 프로그램이라 부르지 않는다. CMakeLists의 타깃·표준 선택과 소스 파일 목록을 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체: fontlab.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17/fontlab.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체: main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체: CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-17/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 묶음 README · 실제 옵션과 역사적 기록",
+              "kind": "link",
+              "href": "/knowledge/verification/dx11-13-18/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "수집·재조립 원본 무결성 기록",
+              "kind": "link",
+              "href": "/knowledge/verification/dx11-13-18/source-integrity.json"
+            }
+          ]
+        }
+      ],
+      "tab": "sources"
+    },
+    {
       "id": "part-7",
       "title": "공식 출처·검증·변경 기록",
-      "tab": "document",
+      "tab": "history",
       "blocks": [
         {
           "type": "list",
@@ -595,7 +1155,7 @@
     {
       "id": "part-8",
       "title": "부록 · 17 CPU 구현 검증 및 빌드 조건",
-      "tab": "document",
+      "tab": "history",
       "blocks": [
         {
           "type": "paragraph",
@@ -642,40 +1202,9 @@
       ]
     },
     {
-      "id": "part-9",
-      "title": "최신 소스 (v2)",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "17B 전체 헤더 "
-            },
-            {
-              "text": "17B · Font UTF-8·Glyph Atlas CPU v2 헤더 전체 소스",
-              "kind": "link",
-              "href": "/knowledge/dx11-sources-17/"
-            },
-            {
-              "text": " 및 17C 테스트 "
-            },
-            {
-              "text": "17C · Font CPU v2 전체 main.cpp · 49조건 테스트",
-              "kind": "link",
-              "href": "/knowledge/dx11-sources-17/"
-            },
-            {
-              "text": ". C++11·C++20 49조건 통과, GPU 미검증."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "part-10",
       "title": "2026-10-17 20시 재검수 · CPU v2 소스/원시 로그 보관 완료",
-      "tab": "document",
+      "tab": "history",
       "blocks": [
         {
           "type": "paragraph",
@@ -741,15 +1270,14 @@
       ]
     },
     {
-      "id": "github-source",
-      "title": "전체 C++ 소스 · 빌드 · 검증 경계",
-      "tab": "document",
+      "id": "visual-revision-history",
+      "title": "시각 개편 기록 · 증거의 경계",
       "blocks": [
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 실행 코드·CMake·원본 복구본: "
+              "text": "2026-10-23: 원문 section ID·출처·날짜·전체 소스·과거 실행 기록을 보존하면서 개념/실습/자료/역사 4탭으로 재배치했다. 설명 그림, 현재 소스 범위 대조와 접힌 복습을 추가했다. 이 편집 자체는 새로운 CPU 또는 GPU 실행 결과가 아니다."
             }
           ]
         },
@@ -757,27 +1285,20 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "17 · GitHub 전체 소스 교재",
-              "kind": "link",
-              "href": "/knowledge/dx11-sources-17/"
+              "text": "보존된 교정 CI 39380255011은 GCC 13.3의 C++20/C++11 및 Clang 18.1.3 C++20+ASan/UBSan 실제 옵션을 감사한 기록이다. 초기 39351876445/39353407595의 Font/Deferred 표준 옵션 미사용 기록을 C++11 증거로 쓰지 않는다. 16의 124개, 17 v2의 49개, 18 v2의 41개 조건은 각각 해당 프로그램의 검사 수다."
             }
           ]
         },
         {
-          "type": "details",
-          "title": "Linux CPU 테스트가 GPU 사용 가능성을 보장하나요?",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "보장하지 않습니다. CPU의 수치·입력·리소스 상태 계약에 대한 예제이며 Windows D3D11 파이프라인과 GPU 이미지·컴파일러/드라이버 동작은 별도로 검증해야 합니다."
-                }
-              ]
+              "text": "Notion의 과거 GCC 14.2/Clang 17 기록과 GitHub의 재검증은 다른 환경의 증거다. Windows/MSVC, DirectX 장치·GPU, HLSL 컴파일은 여기서 확인되지 않았다. 주석본이 추가되면 그 검증 manifest의 실행 범위도 별도로 읽는다."
             }
           ]
         }
-      ]
+      ],
+      "tab": "history"
     }
   ]
 }

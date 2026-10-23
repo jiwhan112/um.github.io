@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-16/CMakeLists.txt",
+      "annotated": "shared/dx11-16-ko/CMakeLists.txt",
+      "original_sha256": "ddb1c8da7118421e1c6a02e9d39c43d22f879a9e68e0fd970e5e5c8a4d6060e1",
+      "annotated_sha256": "ddb1c8da7118421e1c6a02e9d39c43d22f879a9e68e0fd970e5e5c8a4d6060e1",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-16/main.cpp",
+      "annotated": "shared/dx11-16-ko/main.cpp",
+      "original_sha256": "115ffdb56c92f91118aac906ada689bb05318d32344735a87cbe6b547386fbcc",
+      "annotated_sha256": "643f4cc2e4f09085d2de1bb5fa720bd794d422527a98c906fe152420f8a6278f",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 20,
+          "suffix": " // [한국어 해설] 하나의 자식에 완전히 들어갈 때만 내려간다. 경계에 공유되거나 걸치는 객체는 부모에 남긴다."
+        },
+        {
+          "line": 29,
+          "suffix": " // [한국어 해설] 최대 깊이와 실제 분할 가능한 중점을 확인한다. 유한 입력도 극단 좌표의 중점 산술에는 주의가 필요하다."
+        },
+        {
+          "line": 60,
+          "suffix": " // [한국어 해설] 부모에 남은 객체도 검사하고 겹치는 자식으로 내려간다. 모든 후보를 자식에만 두었다고 가정하지 않는다."
+        },
+        {
+          "line": 66,
+          "suffix": " // [한국어 해설] CPU broad-phase다. 결과 후보의 정밀 충돌이나 동적 이동/삭제를 수행하는 완성 엔진은 아니다."
+        },
+        {
+          "line": 71,
+          "suffix": " // [한국어 해설] ID 등록 뒤 트리 저장소 할당이 실패하는 경우까지 강한 트랜잭션 롤백을 보장하지 않는다."
+        },
+        {
+          "line": 85,
+          "suffix": " // [한국어 해설] 트리 질의를 brute-force 겹침 결과와 비교하며 경계·중복·잘못된 입력을 검사한다."
+        }
+      ]
+    }
+  ]
+}

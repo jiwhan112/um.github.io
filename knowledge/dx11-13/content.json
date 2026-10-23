@@ -20,6 +20,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 지도: 공유 메시와 인스턴스 스트림 → IA 계약 → 업로드 범위 → CPU 검사와 GPU 한계."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -53,6 +61,32 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "visual-instance-streams",
+      "title": "공유 메시와 인스턴스 스트림은 다른 차원",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-13/assets/instance-streams.svg",
+          "alt": "공유 메시와 인스턴스 스트림은 다른 차원",
+          "caption": "공유 메시와 인스턴스 스트림은 다른 차원 · 명시된 학습 모델의 계약 도식, GPU 실행 화면 아님."
+        }
+      ]
+    },
+    {
+      "id": "visual-buffer-ranges",
+      "title": "NO_OVERWRITE: GPU 사용 범위를 건드리지 않는다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-13/assets/buffer-ranges.svg",
+          "alt": "NO_OVERWRITE: GPU 사용 범위를 건드리지 않는다",
+          "caption": "NO_OVERWRITE: GPU 사용 범위를 건드리지 않는다 · 명시된 학습 모델의 계약 도식, GPU 실행 화면 아님."
         }
       ]
     },
@@ -430,192 +464,6 @@
       ]
     },
     {
-      "id": "part-6",
-      "title": "6. CPU 실습·검증",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "13A의 전체 C++ CPU 모델은 Layout Slot/Stride/Offset/StepRate·인덱스 범위·signed BaseVertex·InstanceSpan·WRITE_DISCARD/NO_OVERWRITE로 단순화한 in-flight 범위 정책을 검사합니다. 일반 C++11에서 컴파일 가능합니다."
-            }
-          ]
-        },
-        {
-          "type": "list",
-          "ordered": false,
-          "items": [
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "GCC14.2 C++20: "
-                  },
-                  {
-                    "text": "37조건",
-                    "kind": "strong"
-                  },
-                  {
-                    "text": ", CTest 1/1"
-                  }
-                ]
-              }
-            ],
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "GCC14.2 C++11: 동일 37조건, CTest 1/1"
-                  }
-                ]
-              }
-            ],
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "Clang17 C++20 ASan/UBSan: 동일 37조건, CTest 1/1"
-                  }
-                ]
-              }
-            ],
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "Windows/MSVC·D3D11 런타임·HLSL 컴파일·GPU 인스턴스 드로우/성능 측정은 "
-                  },
-                  {
-                    "text": "미검증",
-                    "kind": "strong"
-                  },
-                  {
-                    "text": "입니다."
-                  }
-                ]
-              }
-            ]
-          ]
-        },
-        {
-          "type": "details",
-          "title": "Q. 1만 개 인스턴스를 그리려면 Index Buffer의 6개 사각형 Index를 1만 번 복제해야 합니까?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "아닙니다. 하나의 Index Buffer를 공유하고 DrawIndexedInstanced의 InstanceCount에 10000을 전달하면 됩니다. Instance record 또는 다른 방식으로 각 인스턴스 데이터를 제공해야 합니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "Q. Slot 1의 Matrix가 네 개의 float4라면 InputLayout에는 한 항목만 추가하나요?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "일반적인 4x4 Matrix Stream은 4개의 별도 InputElement로 나누고 SemanticIndex 0~3과 ByteOffset 0,16,32,48을 맞춥니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "Q. NO_OVERWRITE를 쓰면 이전 프레임의 World Matrix에 +=해도 안전합니까?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "안 됩니다. NO_OVERWRITE는 해당 버퍼 구간을 이미 GPU가 읽는 동안 덮어쓰지 않는다는 약속이지 수학적 누적 연산이나 동기화를 의미하지 않습니다."
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "part-7",
-      "title": "공식 출처·변경 기록",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "list",
-          "ordered": false,
-          "items": [
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "D3D11_INPUT_ELEMENT_DESC",
-                    "kind": "link",
-                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc"
-                  }
-                ]
-              }
-            ],
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "IASetVertexBuffers",
-                    "kind": "link",
-                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-iasetvertexbuffers"
-                  }
-                ]
-              }
-            ],
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "DrawIndexedInstanced",
-                    "kind": "link",
-                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-drawindexedinstanced"
-                  }
-                ]
-              }
-            ],
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "D3D11_MAP",
-                    "kind": "link",
-                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_map"
-                  }
-                ]
-              }
-            ]
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "2026-10-16 v1.0. 기존 강의의 인덱스 복제·NoOverwrite 오해를 교정하고 개별 입력 스트림/Shader/Dynamic Buffer 계약을 분리했습니다."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "part-8",
       "title": "2026-10-18 재현 검증 추가",
       "tab": "document",
@@ -760,9 +608,326 @@
       ]
     },
     {
+      "id": "part-6",
+      "title": "6. CPU 실습·검증",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "13A의 전체 C++ CPU 모델은 Layout Slot/Stride/Offset/StepRate·인덱스 범위·signed BaseVertex·InstanceSpan·WRITE_DISCARD/NO_OVERWRITE로 단순화한 in-flight 범위 정책을 검사합니다. 일반 C++11에서 컴파일 가능합니다."
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "GCC14.2 C++20: "
+                  },
+                  {
+                    "text": "37조건",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": ", CTest 1/1"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "GCC14.2 C++11: 동일 37조건, CTest 1/1"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Clang17 C++20 ASan/UBSan: 동일 37조건, CTest 1/1"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Windows/MSVC·D3D11 런타임·HLSL 컴파일·GPU 인스턴스 드로우/성능 측정은 "
+                  },
+                  {
+                    "text": "미검증",
+                    "kind": "strong"
+                  },
+                  {
+                    "text": "입니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. 1만 개 인스턴스를 그리려면 Index Buffer의 6개 사각형 Index를 1만 번 복제해야 합니까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 하나의 Index Buffer를 공유하고 DrawIndexedInstanced의 InstanceCount에 10000을 전달하면 됩니다. Instance record 또는 다른 방식으로 각 인스턴스 데이터를 제공해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. Slot 1의 Matrix가 네 개의 float4라면 InputLayout에는 한 항목만 추가하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일반적인 4x4 Matrix Stream은 4개의 별도 InputElement로 나누고 SemanticIndex 0~3과 ByteOffset 0,16,32,48을 맞춥니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q. NO_OVERWRITE를 쓰면 이전 프레임의 World Matrix에 +=해도 안전합니까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 됩니다. NO_OVERWRITE는 해당 버퍼 구간을 이미 GPU가 읽는 동안 덮어쓰지 않는다는 약속이지 수학적 누적 연산이나 동기화를 의미하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guided-practice",
+      "title": "실습 · 수치와 실패 경계부터",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정점/인스턴스 스트림을 나눠 Slot·Stride·Offset·StepRate 표를 작성한다. 100개 인스턴스의 IB 복제 여부와 in-flight 구간에 대한 NO_OVERWRITE 금지 범위를 먼저 예측한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답하고 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "인스턴스 100개면 IB를 100벌 복제하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "공유 메시의 IB 한 벌을 재사용한다. 인덱스 수와 인스턴스 수는 별도 인자다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Slot과 Stride는 같은 뜻인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Slot은 입력 스트림 선택, Stride는 해당 스트림 레코드 사이 바이트 간격이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "StepRate=1만 D3D11에서 유효한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 예제의 제한이다. 다른 유효한 배치와 StepRate를 API 전체 금지로 해석하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "NO_OVERWRITE가 GPU 완료를 자동 보장하나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. GPU가 읽는 범위를 덮어쓰지 않는다는 호출자의 약속이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Draw 호출이 줄면 정점 처리량도 사라지는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 인스턴스별 변환·오버드로·컬링 비용은 여전히 고려한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "현행 CPU 빌드 성공이 과거 SHA 불일치를 해소하나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 현재 코드의 재현성과 역사적 원본 동일성은 다른 증거다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "annotated-source-map",
+      "title": "한국어 주석 전체 소스와 의존성",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "관련 전체 CPU 코드·HLSL·CMake 자료실",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-13/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문의 API 호출 발췌와 전체 CPU 참조 프로그램은 다르다. 자료실의 한국어 주석 전체 파일과 같은 폴더 빌드 안내를 함께 준비한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "공식 출처·변경 기록",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "D3D11_INPUT_ELEMENT_DESC",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "IASetVertexBuffers",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-iasetvertexbuffers"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "DrawIndexedInstanced",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-drawindexedinstanced"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "D3D11_MAP",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_map"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-16 v1.0. 기존 강의의 인덱스 복제·NoOverwrite 오해를 교정하고 개별 입력 스트림/Shader/Dynamic Buffer 계약을 분리했습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "github-source",
       "title": "전체 C++ 소스 · 빌드 · 검증 경계",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -821,6 +986,46 @@
                   "text": "보장하지 않습니다. CPU의 수치·입력·리소스 상태 계약에 대한 예제이며 Windows D3D11 파이프라인과 GPU 이미지·컴파일러/드라이버 동작은 별도로 검증해야 합니다."
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification-boundary",
+      "title": "과거 증거와 이번 주석본 검사 구분",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 날짜·원시 로그·해시는 역사적 증거다. 2026-10-23 한국어 주석본은 클라우드 Linux/GCC14.2 C++20 직접 빌드·실행과 원본 복원/전처리 동일성을 검사했다. 이번 CMake/CTest·sanitizer·Windows/MSVC·HLSL컴파일·GPU는 미실행이다. 현행 CPU 통과가 역사적 SHA 불일치를 해소하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·개편 이력",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 모든 원문 기술 블록·기존 절 ID·URL·메타데이터를 보존하며 시각 설명, 실습, 접힌 복습, 한국어 주석 전체코드 연결을 보완했다. 원문 속 이전 시점의 미완료/미실행 문장은 당시 기록이며, 현재 주석본 검사 범위와 분리한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 원문 Markdown",
+              "kind": "link",
+              "href": "/knowledge/dx11-13/source-notion.md"
             }
           ]
         }

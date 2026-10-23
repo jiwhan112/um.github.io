@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-23",
+  "environment": "Cloud Linux; g++ (Debian 14.2.0-19) 14.2.0",
+  "status": "portable_direct_compile_and_execution_passed",
+  "compiler_flags": [
+    "-std=c++20",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror"
+  ],
+  "NDEBUG": false,
+  "program_outputs": {
+    "main.cpp": "PASS 32 IA/pipeline/hazard checks (CPU model only)\n"
+  },
+  "annotation_files": 3,
+  "appended_comment_segments": 9,
+  "exact_original_reconstruction": "passed, physical line counts and final newline preserved",
+  "gcc_preprocessor_identity": {
+    "files": [
+      "main.cpp"
+    ],
+    "method": "-E -P; respective source root mapped to SOURCE using -fmacro-prefix-map; physical line numbers unchanged"
+  },
+  "cmake_ctest": "not run: executables unavailable",
+  "windows_msvc_hlsl_fxc_dxc_gpu_sanitizers": "not run",
+  "scope": "comment-only derivative; no user-computer access"
+}

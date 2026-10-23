@@ -1,0 +1,68 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-17/CMakeLists.txt",
+      "annotated": "shared/dx11-17-ko/CMakeLists.txt",
+      "original_sha256": "eca337b6f062d39a7f87a69392981b47f68c73b27fe2aebf435bcc00a7b7a82c",
+      "annotated_sha256": "eca337b6f062d39a7f87a69392981b47f68c73b27fe2aebf435bcc00a7b7a82c",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-17/fontlab.hpp",
+      "annotated": "shared/dx11-17-ko/fontlab.hpp",
+      "original_sha256": "d6d99e7f792a5238123a09f300b3d2783f0e76368dc3e40a968eb841cd6f94c9",
+      "annotated_sha256": "0816af4e42d68ca31410ddbaa9e6f8840455055ab14d7038563f432799e2bdb7",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 20,
+          "suffix": " // [한국어 해설] UTF-8 선행/연속 바이트, overlong, surrogate와 Unicode 상한을 검사한다. shaping이나 조합 문자 배치는 아니다."
+        },
+        {
+          "line": 41,
+          "suffix": " // [한국어 해설] 원문은 r.h>0 검사를 누락했다. 이 주석본은 원본 의미를 바꾸지 않으며 호출자는 양수 높이를 보장해야 한다."
+        },
+        {
+          "line": 45,
+          "suffix": " // [한국어 해설] 반열린 사각형이어서 경계 접촉은 겹침이 아니다. 입력이 유효한 atlas 사각형이라는 전제가 필요하다."
+        },
+        {
+          "line": 55,
+          "suffix": " // [한국어 해설] 중복 코드포인트와 atlas 겹침을 거부한다. 내부 inside의 높이 제한 누락까지 보완된 검증기로 오해하지 않는다."
+        },
+        {
+          "line": 63,
+          "suffix": " // [한국어 해설] 코드포인트당 glyph quad를 배치한다. kerning·복잡문자 shaping·GPU font 렌더러는 범위 밖이다."
+        },
+        {
+          "line": 70,
+          "suffix": " // [한국어 해설] CR은 미리 정규화해야 한다. 누락 glyph는 ? fallback을 찾고 없으면 거부한다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx11-17/main.cpp",
+      "annotated": "shared/dx11-17-ko/main.cpp",
+      "original_sha256": "409e7fbefc2b343712c793bce39b172e48cce8396315b1066fe24add8cd647cd",
+      "annotated_sha256": "9fa0d700dae5528c235397120c9b52572caabfda8fa41c8c2eb558d5ad6dbfd9",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 3,
+          "suffix": " // [한국어 해설] 원시 UTF-8 오류 입력을 정확한 바이트로 구성한다. 환경 문자열 인코딩에 맡기지 않는다."
+        },
+        {
+          "line": 9,
+          "suffix": " // [한국어 해설] 디코더·atlas·advance·bearing·줄바꿈을 CPU 검사한다. 글꼴 래스터화나 GPU 출력 검사는 아니다."
+        },
+        {
+          "line": 41,
+          "suffix": " // [한국어 해설] 작은 합성 glyph로 위치/UV 계약을 검사한다. 실제 한글 shaping 품질을 검증하는 테스트가 아니다."
+        }
+      ]
+    }
+  ]
+}

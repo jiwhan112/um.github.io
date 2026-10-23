@@ -1,0 +1,99 @@
+// CPU-only skeletal animation: quaternion interpolation, hierarchy, skin weights.
+// Assimp ReadFile, Windows Direct3D11, HLSL skinning NOT executed.
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <iostream>
+#include <limits>
+#include <stdexcept>
+#include <vector>
+struct V {double x,y,z;};
+V operator+(V a,V b){return {a.x+b.x,a.y+b.y,a.z+b.z};}
+V operator*(V a,double s){return {a.x*s,a.y*s,a.z*s};}
+bool finite(V v){return std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z);}
+double dot(V a,V b){return a.x*b.x+a.y*b.y+a.z*b.z;}
+struct Q {double w,x,y,z;};
+double dot(Q a,Q b){return a.w*b.w+a.x*b.x+a.y*b.y+a.z*b.z;}
+Q normalized(Q q){double l=std::sqrt(dot(q,q));if(!(l>1e-12)||!std::isfinite(l))throw std::invalid_argument("bad quaternion");return {q.w/l,q.x/l,q.y/l,q.z/l};}
+Q conj(Q q){return {q.w,-q.x,-q.y,-q.z};}
+Q multiply(Q a,Q b){return {a.w*b.w-a.x*b.x-a.y*b.y-a.z*b.z,a.w*b.x+a.x*b.w+a.y*b.z-a.z*b.y,a.w*b.y-a.x*b.z+a.y*b.w+a.z*b.x,a.w*b.z+a.x*b.y-a.y*b.x+a.z*b.w};}
+V rotate(Q q,V v){q=normalized(q);const Q p=multiply(multiply(q,{0,v.x,v.y,v.z}),conj(q));return {p.x,p.y,p.z};}
+Q slerp(Q a,Q b,double t){ // [한국어 해설] 내적이 음수면 부호를 뒤집어 짧은 회전 호를 선택하고 가까운 쿼터니언은 선형 근사 뒤 정규화한다.
+ if(!std::isfinite(t)||t<0||t>1)throw std::invalid_argument("time range");
+ a=normalized(a);b=normalized(b);double d=dot(a,b);
+ if(d<0){b={-b.w,-b.x,-b.y,-b.z};d=-d;}
+ Q q{};
+ if(d>.9995)q={a.w+(b.w-a.w)*t,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,a.z+(b.z-a.z)*t};
+ else{d=std::max(-1.0,std::min(1.0,d));double ang=std::acos(d),sinAng=std::sin(ang);
+  const double s0=std::sin((1-t)*ang)/sinAng,s1=std::sin(t*ang)/sinAng;
+  q={a.w*s0+b.w*s1,a.x*s0+b.x*s1,a.y*s0+b.y*s1,a.z*s0+b.z*s1};}
+ return normalized(q);
+}
+struct Pose{V p;Q r;}; // [한국어 해설] 이 예제 Pose에는 이동과 회전만 있고 스케일은 없다. 일반 행렬 스키닝의 모든 경우를 표현하지 않는다.
+Pose compose(Pose parent,Pose child){return {parent.p+rotate(parent.r,child.p),normalized(multiply(parent.r,child.r))};}
+V transform(Pose p,V x){return p.p+rotate(p.r,x);}
+struct Key {double tick;Pose pose;};
+Pose sample(const std::vector<Key>& keys,double time){ // [한국어 해설] 키 시간은 엄격히 증가해야 한다. 위치/쿼터니언 입력을 검사하고 양끝 범위는 clamp한다.
+ if(keys.empty()||!std::isfinite(time))throw std::invalid_argument("keys/time");
+ for(std::size_t i=0;i<keys.size();++i){if(!std::isfinite(keys[i].tick)||keys[i].tick<0||!finite(keys[i].pose.p))throw std::invalid_argument("invalid key");if(i&&!(keys[i].tick>keys[i-1].tick))throw std::invalid_argument("unsorted keys");(void)normalized(keys[i].pose.r);}
+ if(time<=keys.front().tick)return keys.front().pose;
+ if(time>=keys.back().tick)return keys.back().pose;
+ for(std::size_t i=1;i<keys.size();++i)if(time<=keys[i].tick){
+  const double t=(time-keys[i-1].tick)/(keys[i].tick-keys[i-1].tick);
+  const V a=keys[i-1].pose.p,b=keys[i].pose.p;
+  return {a*(1-t)+b*t,slerp(keys[i-1].pose.r,keys[i].pose.r,t)};
+ }
+ throw std::logic_error("unreachable");
+}
+struct Clip{double durationTicks,ticksPerSecond;std::vector<Key> keys;};
+Pose atSeconds(const Clip& clip,double seconds){ // [한국어 해설] 초를 ticks로 변환하고 clip 길이로 순환시킨다. 시간 변환 오버플로는 거부한다.
+ if(!(clip.durationTicks>0)||!(clip.ticksPerSecond>0)||!std::isfinite(clip.durationTicks)||!std::isfinite(clip.ticksPerSecond)||!std::isfinite(seconds)||seconds<0)throw std::invalid_argument("invalid clip");
+ double tick=std::fmod(seconds*clip.ticksPerSecond,clip.durationTicks);
+ if(!std::isfinite(tick))throw std::invalid_argument("tick overflow");
+ return sample(clip.keys,tick);
+}
+struct Influence {std::size_t bone;double weight;};
+V skin(V vertex,const std::vector<Pose>& boneWorld,const std::vector<Pose>& inverseBind,const std::vector<Influence>& weights){ // [한국어 해설] 최대4개 영향과 가중치 합을 검사한다. bone 위치와 모든 중간/출력값의 유한성을 완전 방어하지는 않는다.
+ if(!finite(vertex)||boneWorld.size()!=inverseBind.size()||weights.empty()||weights.size()>4)throw std::invalid_argument("skin layout");
+ V out{0,0,0};double total=0;
+ for(auto i:weights){if(i.bone>=boneWorld.size()||!std::isfinite(i.weight)||i.weight<0)throw std::invalid_argument("bad influence");
+  out=out+transform(boneWorld[i.bone],transform(inverseBind[i.bone],vertex))*i.weight; total+=i.weight;}
+ if(!std::isfinite(total)||std::abs(total-1)>1e-6)throw std::invalid_argument("weight sum");
+ return out;
+}
+bool near(double a,double b){return std::isfinite(a)&&std::isfinite(b)&&std::abs(a-b)<1e-8;}
+int main(){unsigned n=0;auto ck=[&](bool ok,const char* why){++n;if(!ok)throw std::runtime_error(why);}; // [한국어 해설] CPU 보간·계층·스키닝 모델이며 Assimp 로더나 GPU 스키닝 실행 검사가 아니다.
+ const Q I{1,0,0,0};const double pi=std::acos(-1.0);
+ const Q half{std::cos(pi/4),0,0,std::sin(pi/4)},turn{0,0,0,1};
+ auto v=rotate(I,{1,0,0});ck(near(v.x,1),"identity rot");ck(near(v.y,0),"identity y");
+ v=rotate(half,{1,0,0});ck(near(v.x,0),"quarter x");ck(near(v.y,1),"quarter y");
+ const auto q=slerp(I,turn,.5);v=rotate(q,{1,0,0});ck(near(v.y,1),"slerp half");
+ ck(near(dot(q,q),1),"slerp normalized");ck(near(slerp(I,turn,0).w,1),"slerp start");
+ ck(near(slerp(I,turn,1).z,1),"slerp end");
+ const Q antipodal{-1,0,0,0};ck(near(slerp(I,antipodal,.5).w,1),"shortest arc sign");
+ const Pose a{{10,0,0},I},b{{0,2,0},I};Pose composed=compose(a,b);
+ ck(near(composed.p.x,10),"parent x");ck(near(composed.p.y,2),"child y");
+ composed=compose({{10,0,0},half},{{1,0,0},I});ck(near(composed.p.x,10),"rotated child x");ck(near(composed.p.y,1),"rotated child y");
+ std::vector<Key> keys{{0,{{0,0,0},I}},{10,{{10,0,0},turn}}};
+ auto p=sample(keys,5);ck(near(p.p.x,5),"linear translation");v=rotate(p.r,{1,0,0});ck(near(v.y,1),"quaternion mid");
+ ck(near(sample(keys,-1).p.x,0),"clamp before");ck(near(sample(keys,11).p.x,10),"clamp after");
+ Clip clip{10,10,keys};ck(near(atSeconds(clip,.5).p.x,5),"seconds to ticks");
+ ck(near(atSeconds(clip,1.5).p.x,5),"wrap animation");
+ ck(near(atSeconds(clip,2.0).p.x,0),"wrap zero");
+ const std::vector<Pose> world={{{0,0,0},half}},bind={{{0,0,0},I}};
+ v=skin({1,0,0},world,bind,{{0,1}});ck(near(v.x,0),"skin x");ck(near(v.y,1),"skin y");
+ std::vector<Pose> twoWorld={{{0,0,0},I},{{2,0,0},I}},twoBind={{{0,0,0},I},{{0,0,0},I}};
+ v=skin({0,0,0},twoWorld,twoBind,{{0,.5},{1,.5}});ck(near(v.x,1),"weighted skin");
+ auto bad=[&](bool caught){ck(caught,"invalid must reject");};bool e=false;
+ try{slerp(I,turn,-.1);}catch(const std::invalid_argument&){e=true;}bad(e);
+ e=false;try{slerp({0,0,0,0},turn,.5);}catch(const std::invalid_argument&){e=true;}bad(e);
+ e=false;try{sample({},0);}catch(const std::invalid_argument&){e=true;}bad(e);
+ e=false;try{sample({keys[1],keys[0]},5);}catch(const std::invalid_argument&){e=true;}bad(e);
+ e=false;try{atSeconds({10,0,keys},.5);}catch(const std::invalid_argument&){e=true;}bad(e);
+ e=false;try{atSeconds(clip,-.5);}catch(const std::invalid_argument&){e=true;}bad(e);
+ e=false;try{skin({0,0,0},world,bind,{{2,1}});}catch(const std::invalid_argument&){e=true;}bad(e);
+ e=false;try{skin({0,0,0},world,bind,{{0,.8}});}catch(const std::invalid_argument&){e=true;}bad(e);
+ e=false;try{skin({0,0,0},world,bind,{{0,-.1},{0,1.1}});}catch(const std::invalid_argument&){e=true;}bad(e);
+ e=false;try{skin({0,0,0},world,bind,{{0,.25},{0,.25},{0,.25},{0,.15},{0,.1}});}catch(const std::invalid_argument&){e=true;}bad(e);
+ std::cout<<"PASS "<<n<<" CPU skeletal animation checks\n";
+}

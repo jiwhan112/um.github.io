@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-13b-compact/CMakeLists.txt",
+      "annotated": "shared/dx11-13b-compact-ko/CMakeLists.txt",
+      "original_sha256": "ad7635f631dcdc11955a100a48f10d2abc4f033000350a466cad848b194f40bd",
+      "annotated_sha256": "ad7635f631dcdc11955a100a48f10d2abc4f033000350a466cad848b194f40bd",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-13b-compact/main.cpp",
+      "annotated": "shared/dx11-13b-compact-ko/main.cpp",
+      "original_sha256": "9002375bbb188e31aa02d999739b66ada0dd74e0a87aeb82be703b04978b5324",
+      "annotated_sha256": "1400da113a21e9efb86e1d12ed955aaac0324a15c15b331574d350ae62f984de",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 18,
+          "suffix": " // [한국어 해설] 모든 원소 범위를 먼저 검증하고 안전한 끝점끼리 겹침을 비교한다."
+        },
+        {
+          "line": 31,
+          "suffix": " // [한국어 해설] 이 축약판은 per-instance step이 양수면 허용한다. 13B 상세판의 step=1 정책과 구별한다."
+        },
+        {
+          "line": 42,
+          "suffix": " // [한국어 해설] 검증 예외를 bool로 바꾼 편의 함수다. 메모리 할당 등 모든 예외를 성공/실패 bool로 숨기지 않는다."
+        },
+        {
+          "line": 47,
+          "suffix": " // [한국어 해설] 극단 오프셋·겹침·서로 다른 슬롯과 stepRate2를 포함하는13개 CPU 검사다."
+        }
+      ]
+    }
+  ]
+}

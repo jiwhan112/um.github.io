@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(dx11_collision_navmesh LANGUAGES CXX)
+set(LAB_CXX_STANDARD 20 CACHE STRING "20 default / 11 compatible")
+enable_testing()
+add_subdirectory(11_collision)
+add_subdirectory(12_navmesh)

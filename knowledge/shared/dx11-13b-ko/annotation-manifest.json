@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-13b/CMakeLists.txt",
+      "annotated": "shared/dx11-13b-ko/CMakeLists.txt",
+      "original_sha256": "699e52c8ebc0ab3dedb48554df11cffc97655568bf631cbe7c79326db574e126",
+      "annotated_sha256": "699e52c8ebc0ab3dedb48554df11cffc97655568bf631cbe7c79326db574e126",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-13b/main.cpp",
+      "annotated": "shared/dx11-13b-ko/main.cpp",
+      "original_sha256": "e8e0cab9c77fda85b0d7da6a08240b71334eb9e27a1a80679aea0695d4c54610",
+      "annotated_sha256": "a4584a755791762812101c305b2dbba51a535a3dd482933c9b57f85ff935fe33",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 20,
+          "suffix": " // [한국어 해설] 모든 원소의 범위를 먼저 검증한 뒤 겹침을 계산하는 두 단계 검증이다."
+        },
+        {
+          "line": 37,
+          "suffix": " // [한국어 해설] 첫 단계가 offset+bytes≤stride를 증명한 뒤 넓은 정수로 끝점을 계산한다."
+        },
+        {
+          "line": 55,
+          "suffix": " // [한국어 해설] 비교를 위한 옛 진단 순서 모델이다. unsigned wrap 자체는 정의된 동작이며 UB라고 부르지 않는다."
+        },
+        {
+          "line": 71,
+          "suffix": " // [한국어 해설] 이 버전은 instance stepRate=1 수업정책이다. 실제 D3D11의 더 큰 양수 stepRate까지 금지한다는 뜻은 아니다."
+        }
+      ]
+    }
+  ]
+}

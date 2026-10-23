@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.16)
+project(Font_CPU_v2 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ standard")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+add_executable(font_cpu main.cpp)
+if(MSVC)
+  target_compile_options(font_cpu PRIVATE /W4)
+else()
+  target_compile_options(font_cpu PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+enable_testing()
+add_test(NAME font_cpu_contract COMMAND font_cpu)
+
+# 한국어 해설: 원본 49개 조건과 높이 경계 회귀 검사를 별도 타깃으로 실행한다.
+add_executable(font_height_regression height-regression.cpp)
+target_include_directories(font_height_regression PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+add_test(NAME font_height_regression COMMAND font_height_regression)

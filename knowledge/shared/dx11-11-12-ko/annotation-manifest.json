@@ -1,0 +1,84 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-11-12/11_collision/CMakeLists.txt",
+      "annotated": "shared/dx11-11-12-ko/11_collision/CMakeLists.txt",
+      "original_sha256": "a9070aa685b6db664213079dd23ee1ecbd47a34c26021cf7bcaeac2f9aac99b7",
+      "annotated_sha256": "a9070aa685b6db664213079dd23ee1ecbd47a34c26021cf7bcaeac2f9aac99b7",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-11-12/11_collision/main.cpp",
+      "annotated": "shared/dx11-11-12-ko/11_collision/main.cpp",
+      "original_sha256": "93e4703cb99830247a2de8eb0e4516d2915b3c5f4393c8da210b1baf28723ae2",
+      "annotated_sha256": "b803e1b023473a48e46e4de8dce35766902944e25d30118b45d21824eec39590",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 18,
+          "suffix": " // [한국어 해설] 상자에서 중심에 가장 가까운 점과 거리 제곱을 비교한다. 유한 입력도 극단 크기에서는 중간 산술이 넘칠 수 있다."
+        },
+        {
+          "line": 24,
+          "suffix": " // [한국어 해설] XZ 평면 네 축 SAT다. 높이 y를 무시하므로 3차원15축 OBB 검사라고 부르면 안 된다."
+        },
+        {
+          "line": 35,
+          "suffix": " // [한국어 해설] 축별 slab 구간을 교집합한다. dir이 단위벡터가 아니면 t를 월드 거리로 해석할 수 없다."
+        },
+        {
+          "line": 47,
+          "suffix": " // [한국어 해설] 접촉 포함·평행광선·제한구간·잘못된 입력의 CPU 계약을 검사한다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx11-11-12/12_navmesh/CMakeLists.txt",
+      "annotated": "shared/dx11-11-12-ko/12_navmesh/CMakeLists.txt",
+      "original_sha256": "29abd3dea3e86df11f986cf2e477359d6be8ef4fa26fa8951bb80e892866e6b0",
+      "annotated_sha256": "29abd3dea3e86df11f986cf2e477359d6be8ef4fa26fa8951bb80e892866e6b0",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-11-12/12_navmesh/main.cpp",
+      "annotated": "shared/dx11-11-12-ko/12_navmesh/main.cpp",
+      "original_sha256": "e3c7a4c1107a69e4afa2dd100a352adf94d2f5a5f0505dec1776da572daeee6b",
+      "annotated_sha256": "41844c2217324239423ec2a761e462a5ad170a7abb7a5fc98b347db990ddf138",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 15,
+          "suffix": " // [한국어 해설] 생성 시 검증하고 공유 변으로 인접 그래프를 만든다. 공개 points/tris/adj를 외부에서 바꾸면 불변식이 깨질 수 있다."
+        },
+        {
+          "line": 30,
+          "suffix": " // [한국어 해설] 삼각형 무게중심 부호로 포함을 판정한다. 경계 허용 오차는 이 학습 모델의 정책이다."
+        },
+        {
+          "line": 44,
+          "suffix": " // [한국어 해설] 중심 간 거리 그래프의 A* 경로다. funnel·에이전트 반경·실제 연속 이동 경로는 구현하지 않는다."
+        },
+        {
+          "line": 55,
+          "suffix": " // [한국어 해설] 더 짧은 경로 발견 뒤 남은 오래된 우선순위 큐 항목을 건너뛴다."
+        },
+        {
+          "line": 67,
+          "suffix": " // [한국어 해설] 인접성·포함·연결/비연결 경로·잘못된 메시에 대한 CPU 검사다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx11-11-12/CMakeLists.txt",
+      "annotated": "shared/dx11-11-12-ko/CMakeLists.txt",
+      "original_sha256": "ee4aa4fc3d0977d4534e9a315eb64be7baa3a85a9d2382fc331ee6fd81637186",
+      "annotated_sha256": "ee4aa4fc3d0977d4534e9a315eb64be7baa3a85a9d2382fc331ee6fd81637186",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    }
+  ]
+}

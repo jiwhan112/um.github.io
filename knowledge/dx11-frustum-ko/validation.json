@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-23",
+  "environment": "Cloud Linux; GCC14.2.0",
+  "status": "portable_direct_compile_and_execution_passed",
+  "compiler_flags": [
+    "-std=c++20",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror"
+  ],
+  "NDEBUG": false,
+  "program_outputs": {
+    "main.cpp": "PASS 33 frustum plane and AABB CPU checks"
+  },
+  "annotation_files": 2,
+  "appended_comment_segments": 6,
+  "exact_original_reconstruction": "passed; physical line count/final newline preserved",
+  "gcc_preprocessor_identity": "passed -E -P; only respective source root mapped to SOURCE via -fmacro-prefix-map",
+  "cmake_ctest": "not run: tools unavailable",
+  "windows_gpu_sanitizers": "not run",
+  "scope": "comment-only derivative; no user-computer access"
+}

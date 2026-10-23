@@ -1,0 +1,68 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-18/CMakeLists.txt",
+      "annotated": "shared/dx11-18-ko/CMakeLists.txt",
+      "original_sha256": "4b8a553ede73fd9b4b1870fa66c0e196c8d7e971e689998ce57991069ed2d6e2",
+      "annotated_sha256": "4b8a553ede73fd9b4b1870fa66c0e196c8d7e971e689998ce57991069ed2d6e2",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-18/geometry_pass.example.hlsl",
+      "annotated": "shared/dx11-18-ko/geometry_pass.example.hlsl",
+      "original_sha256": "aa3eb0ce374fd6000a651e3efe9a963035bdbd9eab91413872c41815c5ce225c",
+      "annotated_sha256": "fa6ed70ba791c5e2f3e5ae915648ae67f8a228e16e808dfe845366aadbcaaeb9",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 2,
+          "suffix": " // [한국어 해설] SV_Target0/1을 서로 다른 렌더 타깃에 기록한다. 호스트의 MRT 바인딩·포맷이 맞아야 한다."
+        },
+        {
+          "line": 5,
+          "suffix": " // [한국어 해설] 법선 공간과 인코딩 규약을 조명 패스와 합의해야 한다. 여기에는 조명 패스 전체가 포함되지 않는다."
+        },
+        {
+          "line": 8,
+          "suffix": " // [한국어 해설] 정규화 법선을 [-1,1]에서 [0,1]로 인코딩한다. 0법선·공간 변환은 호출 경계에서 다룬다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx11-18/main.cpp",
+      "annotated": "shared/dx11-18-ko/main.cpp",
+      "original_sha256": "625f850cc0a7c0bd33dc6e09154d6418b1bff04bc8da2109ec161c7f13aaa431",
+      "annotated_sha256": "7a258e4aed33b1bca85d2b5482e45d27044f96cc5d73668ef792995f8d7acd82",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 15,
+          "suffix": " // [한국어 해설] 명시적인 애플리케이션 패스 소유 모델이다. D3D11이 충돌 뷰를 자동 해제하는 실제 동작과 달리 오류로 거부한다."
+        },
+        {
+          "line": 29,
+          "suffix": " // [한국어 해설] 크기·샘플·바인드·축약 포맷 조합을 검사한다. 실제 format support나 자원 할당은 조회하지 않는다."
+        },
+        {
+          "line": 35,
+          "suffix": " // [한국어 해설] MRT 개수·중복·크기/샘플 일치·읽기충돌을 모두 검사한 뒤 상태를 교체한다."
+        },
+        {
+          "line": 55,
+          "suffix": " // [한국어 해설] 출력으로 쓰는 같은 자원의 읽기를 거부한다. 세부 mip/array/view 중첩 전체 모델은 아니다."
+        },
+        {
+          "line": 62,
+          "suffix": " // [한국어 해설] 바인딩이 없다는 전제만 검사한다. 자원 재생성·COM 참조 해제·실제 ResizeBuffers는 수행하지 않는다."
+        },
+        {
+          "line": 72,
+          "suffix": " // [한국어 해설] G-buffer 쓰기→해제→조명 읽기→해제 순서와 실패 경계를 CPU에서 검사한다."
+        }
+      ]
+    }
+  ]
+}

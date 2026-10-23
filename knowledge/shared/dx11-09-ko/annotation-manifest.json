@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-09/CMakeLists.txt",
+      "annotated": "shared/dx11-09-ko/CMakeLists.txt",
+      "original_sha256": "6a9a5de86d3298adcac2679d058f474d7b020ad5da60d3ff692375428e5f1b56",
+      "annotated_sha256": "6a9a5de86d3298adcac2679d058f474d7b020ad5da60d3ff692375428e5f1b56",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-09/main.cpp",
+      "annotated": "shared/dx11-09-ko/main.cpp",
+      "original_sha256": "ba5e091d4679f42de15aac3633c1997fdf165e5bda1338d03b33471105a36a09",
+      "annotated_sha256": "e733e0fd4b4de7858377a0ebe5cf33700aad897315b4ca0af4dbf030327e5de1",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 16,
+          "suffix": " // [한국어 해설] 노드 참조마다 누적 이동을 적용한다. 공유 mesh 정점에 변환을 영구적으로 굽지 않는다."
+        },
+        {
+          "line": 18,
+          "suffix": " // [한국어 해설] 이 축약 모델은 이동만 지원한다. 실제 Assimp의 전체 행렬·회전·스케일을 재현하지 않는다."
+        },
+        {
+          "line": 31,
+          "suffix": " // [한국어 해설] 지역 결과에 모으므로 실패 결과를 반환하지 않는다. 외부 vector를 받는 traverse의 부분 추가는 자동 롤백되지 않는다."
+        },
+        {
+          "line": 33,
+          "suffix": " // [한국어 해설] mesh 인덱스와 material 인덱스의 독립성, 공유 참조·누락 채널·깊이 제한을 검사한다."
+        }
+      ]
+    }
+  ]
+}

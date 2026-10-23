@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes; physical lines and final newline preserved",
+  "files": [
+    {
+      "original": "dx11-frustum/main.cpp",
+      "annotated": "dx11-frustum-ko/main.cpp",
+      "original_sha256": "82d202367f037a5ff8c830a5b9693790614947aeba8830638fdc531d0e10cde3",
+      "annotated_sha256": "a80e2c481360a70a34562dc96c37ef61b7e4db304863fcfb6ae68d00a9415ee0",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 9,
+          "suffix": " // [한국어 해설] 이 원문은 열 벡터 clip=M*world 규약이다. 다른 단원의 행 벡터 코드와 추출 행/열을 섞지 않는다."
+        },
+        {
+          "line": 16,
+          "suffix": " // [한국어 해설] 행을 조합해 -w≤x,y≤w 및 0≤z≤w 평면을 얻고 법선과 d를 함께 정규화한다."
+        },
+        {
+          "line": 28,
+          "suffix": " // [한국어 해설] extract가 만든 유효한 평면을 전제로 한다. 임의 외부 평면의 유한성·단위길이까지 다시 검사하지 않는다."
+        },
+        {
+          "line": 34,
+          "suffix": " // [한국어 해설] 법선 방향 최대 지지점도 밖이면 전체 AABB가 밖이다. 최소 지지점만 밖이면 경계와 교차한다."
+        },
+        {
+          "line": 44,
+          "suffix": " // [한국어 해설] 양의 near와 far>near를 요구하는 축약 투영이다. 입력 전체 유한성 검사를 갖춘 범용 행렬 API는 아니다."
+        },
+        {
+          "line": 52,
+          "suffix": " // [한국어 해설] 33개 평면·AABB CPU 검사다. 실제 GPU 컬링 이미지나 모든 수치 범위의 증명은 아니다."
+        }
+      ]
+    },
+    {
+      "original": "dx11-frustum/CMakeLists.txt",
+      "annotated": "dx11-frustum-ko/CMakeLists.txt",
+      "original_sha256": "349b67f5c2030f56a7f13400ab6dc2d22e63dcb7e031b8a9003b487a8ff1929e",
+      "annotated_sha256": "349b67f5c2030f56a7f13400ab6dc2d22e63dcb7e031b8a9003b487a8ff1929e",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    }
+  ]
+}

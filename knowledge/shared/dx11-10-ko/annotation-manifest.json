@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-10/CMakeLists.txt",
+      "annotated": "shared/dx11-10-ko/CMakeLists.txt",
+      "original_sha256": "d7d02ed803e9a796c640983c542c13d6ef9a9886ee1ef5a1827f0f5f3b107a1a",
+      "annotated_sha256": "d7d02ed803e9a796c640983c542c13d6ef9a9886ee1ef5a1827f0f5f3b107a1a",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-10/main.cpp",
+      "annotated": "shared/dx11-10-ko/main.cpp",
+      "original_sha256": "3c4df314bb9cb5ebf4d48e988ba9e8b78a8313c0e688159caf2e1a9d1c100ee9",
+      "annotated_sha256": "a1d382c6c11d77a9f1666b30cc7ba26f4e60991b92b758fb85d86c015857f68d",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 21,
+          "suffix": " // [한국어 해설] 내적이 음수면 부호를 뒤집어 짧은 회전 호를 선택하고 가까운 쿼터니언은 선형 근사 뒤 정규화한다."
+        },
+        {
+          "line": 32,
+          "suffix": " // [한국어 해설] 이 예제 Pose에는 이동과 회전만 있고 스케일은 없다. 일반 행렬 스키닝의 모든 경우를 표현하지 않는다."
+        },
+        {
+          "line": 36,
+          "suffix": " // [한국어 해설] 키 시간은 엄격히 증가해야 한다. 위치/쿼터니언 입력을 검사하고 양끝 범위는 clamp한다."
+        },
+        {
+          "line": 49,
+          "suffix": " // [한국어 해설] 초를 ticks로 변환하고 clip 길이로 순환시킨다. 시간 변환 오버플로는 거부한다."
+        },
+        {
+          "line": 56,
+          "suffix": " // [한국어 해설] 최대4개 영향과 가중치 합을 검사한다. bone 위치와 모든 중간/출력값의 유한성을 완전 방어하지는 않는다."
+        },
+        {
+          "line": 65,
+          "suffix": " // [한국어 해설] CPU 보간·계층·스키닝 모델이며 Assimp 로더나 GPU 스키닝 실행 검사가 아니다."
+        }
+      ]
+    }
+  ]
+}

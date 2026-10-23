@@ -27,9 +27,538 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "Notion 원본 페이지의 네이티브 전체 코드 블록을 GitHub 파일로 독립 보존했습니다. 새 Linux CPU CTest 결과는 GitHub Actions에서 별도로 검증합니다. 포함된 Win32/D3D11 GUI와 HLSL은 Windows/GPU에서 실제 실행·컴파일되지 않았습니다."
+                  "text": "이 자료실의 복구된 실행 소스는 CPU 계약 모델 main.cpp와 CMakeLists.txt 두 파일입니다. 원본과 별도 한국어 주석본을 함께 제공합니다. Win32/D3D11 GUI 및 HLSL 파일은 이 자료실에 없습니다. 실제 Map/Unmap·드라이버·셰이더 검증은 별도 SDK 환경의 작업이며 현재 미검증입니다. 과거 원본 CTest 로그와 2026-10-23 주석본 직접 CPU 실행 기록도 구별합니다."
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "파일 범위: main.cpp → dx11_resource_contract CPU 실행 파일, CMakeLists.txt → resource_contract CTest 등록. Windows GUI·HLSL 소스는 포함하지 않습니다. 아래 SDK 검증 영역은 이 두 파일에서 생성되거나 검증 완료되는 결과가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 소스 Notion 페이지",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f40814ebc7fe5250ad8d967"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "코드 복구 이력과 파일 목록",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/DX11_SOURCE_LEDGER_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원래 Notion ZIP·첨부 바이너리도 복구했나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Notion 네이티브 코드 전문은 복원했습니다. DX11 01 첨부는 서명 다운로드 URL만 확인했으며 원본 첨부 파일의 바이트 동일성은 검증하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-sources-02/assets/source-boundary.svg",
+          "alt": "이 자료실의 main.cpp와 CMakeLists.txt는 CPU 계약 모델과 과거 CTest 기록으로 연결됩니다. Windows GUI·HLSL 파일은 이 자료실에 없으며 SDK 검증은 외부 영역입니다.",
+          "caption": "리소스 · CPU 계약 모델의 검사 경계 — 이 자료실의 main.cpp와 CMakeLists.txt는 CPU 계약 모델과 과거 CTest 기록으로 연결됩니다. Windows GUI·HLSL 파일은 이 자료실에 없으며 SDK 검증은 외부 영역입니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 CMake는 CPU 계약 모델만 빌드합니다. GPU Map/Unmap이나 드라이버 동기화를 실행하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "찾을 대상"
+                  }
+                ],
+                [
+                  {
+                    "text": "정확한 이름 또는 위치"
+                  }
+                ],
+                [
+                  {
+                    "text": "의미"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "CPU 실행 타깃"
+                  }
+                ],
+                [
+                  {
+                    "text": "dx11_resource_contract"
+                  }
+                ],
+                [
+                  {
+                    "text": "프로그램과 테스트 이름을 구별"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "CTest 등록 이름"
+                  }
+                ],
+                [
+                  {
+                    "text": "resource_contract"
+                  }
+                ],
+                [
+                  {
+                    "text": "과거 로그의 항목과 대조"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "CPU 구현"
+                  }
+                ],
+                [
+                  {
+                    "text": "main.cpp"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 조건·예외·경계 입력 읽기"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  A[\"이 자료실: main.cpp + CMakeLists.txt\"] --> B[\"dx11_resource_contract CPU 타깃\"]\n  B --> C[\"CPU 계약 조건\"]\n  C --> D[\"resource_contract CTest · 과거 로그\"]\n  E[\"외부 SDK 검증 영역\"] --> F[\"Windows GUI·HLSL: 이 자료실에 파일 없음\"]\n  F --> G[\"실제 D3D11·GPU 검증은 별도 작업 · 미실행\"]"
+        }
+      ]
+    },
+    {
+      "id": "file-1",
+      "title": "CMakeLists.txt",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 파일 (원본 코드 텍스트) · "
+            },
+            {
+              "text": "GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-02/CMakeLists.txt"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Notion 출처",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f40814ebc7fe5250ad8d967"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cmake",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_resource_contract LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"C++20 study or C++11 compatibility\")\nadd_executable(dx11_resource_contract main.cpp)\nset_target_properties(dx11_resource_contract PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(dx11_resource_contract PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(dx11_resource_contract PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME resource_contract COMMAND dx11_resource_contract)"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석 전체 파일 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-02-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt · 한국어 주석 전체 소스",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본 직접 코드 블록은 위에 그대로 보존했습니다. 아래는 별도 주석 학습본이며 원본 복원·검증 경계는 주석 원장으로 확인합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_resource_contract LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"C++20 study or C++11 compatibility\")\nadd_executable(dx11_resource_contract main.cpp)\nset_target_properties(dx11_resource_contract PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(dx11_resource_contract PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(dx11_resource_contract PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME resource_contract COMMAND dx11_resource_contract)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-build",
+      "title": "빌드 경로 읽기 · 명령은 미실행 안내",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래는 저장소 루트에서 사용할 재현 명령 예시입니다. 이 개편 작업에서는 실행하지 않았습니다. 원본 CMake와 플랫폼 분기를 먼저 읽고, Windows 창·GPU 검증은 별도 승인된 환경의 작업으로 분리합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S knowledge/shared/dx11-02 -B /tmp/atlas-dx11-02 -DLAB_CXX_STANDARD=20\ncmake --build /tmp/atlas-dx11-02 --config Debug\nctest --test-dir /tmp/atlas-dx11-02 -C Debug --output-on-failure"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 CMake는 CPU 계약 모델만 빌드합니다. GPU Map/Unmap이나 드라이버 동기화를 실행하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-review",
+      "title": "복습 · 코드와 증거를 구분하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "실행 파일 이름과 CTest 이름이 항상 같은가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 위 표와 원본 add_executable/add_test를 따로 확인한다. 로그에서 찾을 이름은 CTest에 등록된 이름이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CPU 코드가 통과하면 Windows 창도 검증되었는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 조건 모델과 D3D11·드라이버·실제 창의 실행 경계가 다르다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "다른 자료실의 HLSL 파일 보존은 컴파일 성공 증거인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 파일 복구와 FXC/DXC 또는 런타임 컴파일 결과를 구별한다. CPU CTest는 이를 대신하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "새 그림 추가가 과거 로그의 재실행을 뜻하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 2026-10-19 실행은 당시 기록이며 이번 개편에서 재컴파일하지 않았다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "네이티브 코드 복구와 ZIP 바이트 복구는 같은가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 복구 원장은 Notion 코드 블록을 기준으로 한다. 접근되지 않은 첨부 ZIP과 동일한 바이트라고 확대하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "실패 조건을 추가할 때 무엇을 먼저 적는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "입력·사전 조건·기대 실패 위치·실패 후 상태를 적는다. 검사가 없는 범위까지 성공이라고 보고하지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "file-2",
+      "title": "main.cpp",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 파일 (원본 코드 텍스트) · "
+            },
+            {
+              "text": "GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-02/main.cpp"
+            },
+            {
+              "text": " · "
+            },
+            {
+              "text": "Notion 출처",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3fba99703f40814ebc7fe5250ad8d967"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include <algorithm>\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\nenum class Usage { Default, Immutable, Dynamic, Staging };\nenum Bind : unsigned { Vertex = 1, Index = 2, Constant = 4, ShaderResource = 8, RenderTarget = 16 };\nenum Cpu : unsigned { Read = 1, Write = 2 };\nenum class Map { Read, Write, ReadWrite, WriteDiscard, WriteNoOverwrite };\nstruct BufferDesc {\n    Usage usage;\n    unsigned bind;\n    unsigned cpu;\n    std::uint32_t bytes;\n    bool initial;\n    BufferDesc(Usage u, unsigned b, unsigned c, std::uint32_t n, bool init)\n        : usage(u), bind(b), cpu(c), bytes(n), initial(init) {}\n};\nbool IsPowerOfTwo(unsigned v) { return v && (v & (v-1)) == 0; }\n// Deliberately limited teaching subset: no MiscFlags, structured/indirect buffers or 11.1 extended CB.\nbool Valid(const BufferDesc& d) {\n    if (!d.bytes) return false;\n    if (d.bind & Constant) {\n        if (d.bind != Constant || d.bytes % 16 != 0 || d.bytes > 65536) return false;\n    }\n    switch(d.usage) {\n        case Usage::Default: return d.cpu == 0;\n        case Usage::Immutable: return d.cpu == 0 && d.bind != 0 && d.initial;\n        case Usage::Dynamic: return d.cpu == Write && d.bind != 0;\n        case Usage::Staging: return d.bind == 0 && d.cpu != 0;\n    }\n    return false;\n}\nbool CanMap(const BufferDesc& d, Map m, bool runtime11_1=false) {\n    if (!Valid(d)) return false;\n    if (d.usage == Usage::Staging) {\n        if(m == Map::Read) return (d.cpu & Read) != 0;\n        if(m == Map::Write) return (d.cpu & Write) != 0;\n        if(m == Map::ReadWrite) return d.cpu == (Read|Write);\n        return false;\n    }\n    if (d.usage != Usage::Dynamic) return false;\n    if (m == Map::WriteDiscard) return true;\n    if (m == Map::WriteNoOverwrite) return (d.bind & (Vertex|Index)) != 0 ||\n        (runtime11_1 && (d.bind & Constant) != 0);\n    return false;\n}\nbool CanUpdateSubresource(const BufferDesc& d) {return Valid(d) && d.usage == Usage::Default;}\nbool CanCreateView(unsigned resourceBind, unsigned requestedViewBind) {\n    if (!IsPowerOfTwo(requestedViewBind) ||\n        (requestedViewBind != ShaderResource && requestedViewBind != RenderTarget)) return false;\n    return (resourceBind & requestedViewBind) != 0;\n}\nstruct ByteRange {std::uint32_t offset, length;};\nbool Fits(std::uint32_t capacity, ByteRange r) {\n    return r.offset <= capacity && r.length <= capacity-r.offset;\n}\nstruct DynamicRing {\n    std::uint32_t size;\n    std::uint32_t cursor = 0;\n    explicit DynamicRing(std::uint32_t n) : size(n) {}\n    bool DiscardReserve(std::uint32_t n, ByteRange& out) {\n        if (!n || n > size) return false;\n        cursor=n; out={0,n}; return true; // DISCARD: old contents undefined.\n    }\n    bool NoOverwriteReserve(std::uint32_t n, ByteRange& out) {\n        if (!n || n>size-cursor) return false;\n        out={cursor,n}; cursor += n; return true;\n    }\n};\nint main() {\n    unsigned checks=0;\n    const auto check=[&](bool b, const char* why) {++checks;if(!b) throw std::runtime_error(why);};\n    try {\n        const BufferDesc def{Usage::Default,Vertex,0,80,false};\n        const BufferDesc imm{Usage::Immutable,Index,0,12,true};\n        const BufferDesc dyn{Usage::Dynamic,Vertex,Write,96,false};\n        const BufferDesc cb{Usage::Dynamic,Constant,Write,64,false};\n        const BufferDesc staging{Usage::Staging,0,Read|Write,64,false};\n        check(Valid(def),\"default VB\");\n        check(Valid(imm),\"immutable IB initialized\");\n        check(!Valid({Usage::Immutable,Index,0,12,false}),\"immutable initial required\");\n        check(!Valid({Usage::Immutable,Index,Write,12,true}),\"immutable CPU access forbidden\");\n        check(Valid(dyn),\"dynamic writable VB\");\n        check(!Valid({Usage::Dynamic,Vertex,Read,96,false}),\"dynamic read forbidden\");\n        check(!Valid({Usage::Dynamic,Vertex,0,96,false}),\"dynamic missing CPU write\");\n        check(!Valid({Usage::Default,Vertex,Write,96,false}),\"default cannot CPU write\");\n        check(Valid(staging),\"staging readwrite\");\n        check(!Valid({Usage::Staging,Vertex,Read,64,false}),\"staging cannot bind\");\n        check(!Valid({Usage::Staging,0,0,64,false}),\"staging needs CPU access\");\n        check(!Valid({Usage::Default,Vertex,0,0,false}),\"zero allocation\");\n        check(Valid(cb),\"dynamic constant buffer\");\n        check(!Valid({Usage::Default,Constant,0,20,false}),\"CB 16 byte multiple\");\n        check(!Valid({Usage::Default,Constant|Vertex,0,32,false}),\"CB exclusive bind\");\n        check(!Valid({Usage::Default,Constant,0,65552,false}),\"legacy CB >64KiB\");\n        check(Valid({Usage::Default,Constant,0,65536,false}),\"legacy CB max\");\n        check(CanMap(dyn,Map::WriteDiscard),\"dynamic discard\");\n        check(CanMap(dyn,Map::WriteNoOverwrite),\"dynamic VB no-overwrite\");\n        check(!CanMap(dyn,Map::Read),\"dynamic can't CPU read\");\n        check(!CanMap(def,Map::Write),\"default no map\");\n        check(CanUpdateSubresource(def),\"default UpdateSubresource\");\n        check(!CanUpdateSubresource(dyn),\"dynamic not UpdateSubresource in this model\");\n        check(CanMap(staging,Map::ReadWrite),\"staging readwrite map\");\n        check(!CanMap(staging,Map::WriteDiscard),\"staging not discard\");\n        check(!CanMap(cb,Map::WriteNoOverwrite,false),\"11.0 CB nooverwrite unavailable\");\n        check(CanMap(cb,Map::WriteNoOverwrite,true),\"11.1 CB nooverwrite capability assumed\");\n        check(CanCreateView(ShaderResource|RenderTarget,ShaderResource),\"SRV bind flags\");\n        check(CanCreateView(ShaderResource|RenderTarget,RenderTarget),\"RTV bind flags\");\n        check(!CanCreateView(ShaderResource,RenderTarget),\"RTV missing bind flag\");\n        check(!CanCreateView(ShaderResource|RenderTarget,ShaderResource|RenderTarget),\"one view kind per descriptor\");\n        check(Fits(80,{76,4}),\"byte range exact end\");\n        check(!Fits(80,{76,8}),\"byte range past end\");\n        check(!Fits(80,{std::numeric_limits<std::uint32_t>::max(),8}),\"unsigned wrap handled\");\n        DynamicRing ring(24);ByteRange r{0,0};\n        check(ring.DiscardReserve(12,r) && r.offset==0 && r.length==12,\"discard first chunk\");\n        check(ring.NoOverwriteReserve(8,r) && r.offset==12,\"reserve unwritten region\");\n        check(!ring.NoOverwriteReserve(8,r),\"reject overwriting prior region\");\n        check(!ring.DiscardReserve(25,r),\"discard cannot exceed capacity\");\n        check(ring.DiscardReserve(24,r) && ring.cursor==24,\"discard reinitialize ring\");\n        check(!ring.NoOverwriteReserve(1,r),\"ring full\");\n        std::cout << \"PASS \" << checks << \" resource-contract checks (CPU model only)\\n\";\n    } catch(const std::exception& e){std::cerr << \"FAIL \" << checks << \" \" << e.what() << '\\n';return 1;}\n}"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석 전체 파일 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-02-ko/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp · 한국어 주석 전체 소스",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본 직접 코드 블록은 위에 그대로 보존했습니다. 아래는 별도 주석 학습본이며 원본 복원·검증 경계는 주석 원장으로 확인합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\nenum class Usage { Default, Immutable, Dynamic, Staging };\nenum Bind : unsigned { Vertex = 1, Index = 2, Constant = 4, ShaderResource = 8, RenderTarget = 16 };\nenum Cpu : unsigned { Read = 1, Write = 2 };\nenum class Map { Read, Write, ReadWrite, WriteDiscard, WriteNoOverwrite };\nstruct BufferDesc {\n    Usage usage;\n    unsigned bind;\n    unsigned cpu;\n    std::uint32_t bytes;\n    bool initial;\n    BufferDesc(Usage u, unsigned b, unsigned c, std::uint32_t n, bool init)\n        : usage(u), bind(b), cpu(c), bytes(n), initial(init) {}\n};\nbool IsPowerOfTwo(unsigned v) { return v && (v & (v-1)) == 0; }\n// Deliberately limited teaching subset: no MiscFlags, structured/indirect buffers or 11.1 extended CB.\nbool Valid(const BufferDesc& d) { // [한국어 해설] 리소스 Usage·Bind·CPUAccess 조합의 제한된 학습 규칙이다. 모든 D3D11 descriptor 조합을 검증하지 않는다.\n    if (!d.bytes) return false;\n    if (d.bind & Constant) {\n        if (d.bind != Constant || d.bytes % 16 != 0 || d.bytes > 65536) return false;\n    }\n    switch(d.usage) {\n        case Usage::Default: return d.cpu == 0;\n        case Usage::Immutable: return d.cpu == 0 && d.bind != 0 && d.initial;\n        case Usage::Dynamic: return d.cpu == Write && d.bind != 0;\n        case Usage::Staging: return d.bind == 0 && d.cpu != 0;\n    }\n    return false;\n}\nbool CanMap(const BufferDesc& d, Map m, bool runtime11_1=false) { // [한국어 해설] 11.1 상수 버퍼 NO_OVERWRITE는 capability가 있다고 가정한 분기다. 실제 feature support 조회는 별도다.\n    if (!Valid(d)) return false;\n    if (d.usage == Usage::Staging) {\n        if(m == Map::Read) return (d.cpu & Read) != 0;\n        if(m == Map::Write) return (d.cpu & Write) != 0;\n        if(m == Map::ReadWrite) return d.cpu == (Read|Write);\n        return false;\n    }\n    if (d.usage != Usage::Dynamic) return false;\n    if (m == Map::WriteDiscard) return true;\n    if (m == Map::WriteNoOverwrite) return (d.bind & (Vertex|Index)) != 0 ||\n        (runtime11_1 && (d.bind & Constant) != 0);\n    return false;\n}\nbool CanUpdateSubresource(const BufferDesc& d) {return Valid(d) && d.usage == Usage::Default;}\nbool CanCreateView(unsigned resourceBind, unsigned requestedViewBind) { // [한국어 해설] 하나의 뷰 종류와 해당 바인드 플래그를 확인한다. 포맷 호환·서브리소스 전체 검증은 범위 밖이다.\n    if (!IsPowerOfTwo(requestedViewBind) ||\n        (requestedViewBind != ShaderResource && requestedViewBind != RenderTarget)) return false;\n    return (resourceBind & requestedViewBind) != 0;\n}\nstruct ByteRange {std::uint32_t offset, length;};\nbool Fits(std::uint32_t capacity, ByteRange r) {\n    return r.offset <= capacity && r.length <= capacity-r.offset;\n}\nstruct DynamicRing { // [한국어 해설] DISCARD는 이전 내용을 버리고 NO_OVERWRITE는 아직 쓰지 않은 구간을 예약하는 CPU 모델이다.\n    std::uint32_t size;\n    std::uint32_t cursor = 0;\n    explicit DynamicRing(std::uint32_t n) : size(n) {}\n    bool DiscardReserve(std::uint32_t n, ByteRange& out) {\n        if (!n || n > size) return false;\n        cursor=n; out={0,n}; return true; // DISCARD: old contents undefined.\n    }\n    bool NoOverwriteReserve(std::uint32_t n, ByteRange& out) {\n        if (!n || n>size-cursor) return false;\n        out={cursor,n}; cursor += n; return true;\n    }\n};\nint main() { // [한국어 해설] 기본 조합과 바이트 범위·링 버퍼 경계를 실제 CPU에서 검사한다.\n    unsigned checks=0;\n    const auto check=[&](bool b, const char* why) {++checks;if(!b) throw std::runtime_error(why);};\n    try {\n        const BufferDesc def{Usage::Default,Vertex,0,80,false};\n        const BufferDesc imm{Usage::Immutable,Index,0,12,true};\n        const BufferDesc dyn{Usage::Dynamic,Vertex,Write,96,false};\n        const BufferDesc cb{Usage::Dynamic,Constant,Write,64,false};\n        const BufferDesc staging{Usage::Staging,0,Read|Write,64,false};\n        check(Valid(def),\"default VB\");\n        check(Valid(imm),\"immutable IB initialized\");\n        check(!Valid({Usage::Immutable,Index,0,12,false}),\"immutable initial required\");\n        check(!Valid({Usage::Immutable,Index,Write,12,true}),\"immutable CPU access forbidden\");\n        check(Valid(dyn),\"dynamic writable VB\");\n        check(!Valid({Usage::Dynamic,Vertex,Read,96,false}),\"dynamic read forbidden\");\n        check(!Valid({Usage::Dynamic,Vertex,0,96,false}),\"dynamic missing CPU write\");\n        check(!Valid({Usage::Default,Vertex,Write,96,false}),\"default cannot CPU write\");\n        check(Valid(staging),\"staging readwrite\");\n        check(!Valid({Usage::Staging,Vertex,Read,64,false}),\"staging cannot bind\");\n        check(!Valid({Usage::Staging,0,0,64,false}),\"staging needs CPU access\");\n        check(!Valid({Usage::Default,Vertex,0,0,false}),\"zero allocation\");\n        check(Valid(cb),\"dynamic constant buffer\");\n        check(!Valid({Usage::Default,Constant,0,20,false}),\"CB 16 byte multiple\");\n        check(!Valid({Usage::Default,Constant|Vertex,0,32,false}),\"CB exclusive bind\");\n        check(!Valid({Usage::Default,Constant,0,65552,false}),\"legacy CB >64KiB\");\n        check(Valid({Usage::Default,Constant,0,65536,false}),\"legacy CB max\");\n        check(CanMap(dyn,Map::WriteDiscard),\"dynamic discard\");\n        check(CanMap(dyn,Map::WriteNoOverwrite),\"dynamic VB no-overwrite\");\n        check(!CanMap(dyn,Map::Read),\"dynamic can't CPU read\");\n        check(!CanMap(def,Map::Write),\"default no map\");\n        check(CanUpdateSubresource(def),\"default UpdateSubresource\");\n        check(!CanUpdateSubresource(dyn),\"dynamic not UpdateSubresource in this model\");\n        check(CanMap(staging,Map::ReadWrite),\"staging readwrite map\");\n        check(!CanMap(staging,Map::WriteDiscard),\"staging not discard\");\n        check(!CanMap(cb,Map::WriteNoOverwrite,false),\"11.0 CB nooverwrite unavailable\");\n        check(CanMap(cb,Map::WriteNoOverwrite,true),\"11.1 CB nooverwrite capability assumed\");\n        check(CanCreateView(ShaderResource|RenderTarget,ShaderResource),\"SRV bind flags\");\n        check(CanCreateView(ShaderResource|RenderTarget,RenderTarget),\"RTV bind flags\");\n        check(!CanCreateView(ShaderResource,RenderTarget),\"RTV missing bind flag\");\n        check(!CanCreateView(ShaderResource|RenderTarget,ShaderResource|RenderTarget),\"one view kind per descriptor\");\n        check(Fits(80,{76,4}),\"byte range exact end\");\n        check(!Fits(80,{76,8}),\"byte range past end\");\n        check(!Fits(80,{std::numeric_limits<std::uint32_t>::max(),8}),\"unsigned wrap handled\");\n        DynamicRing ring(24);ByteRange r{0,0};\n        check(ring.DiscardReserve(12,r) && r.offset==0 && r.length==12,\"discard first chunk\");\n        check(ring.NoOverwriteReserve(8,r) && r.offset==12,\"reserve unwritten region\");\n        check(!ring.NoOverwriteReserve(8,r),\"reject overwriting prior region\");\n        check(!ring.DiscardReserve(25,r),\"discard cannot exceed capacity\");\n        check(ring.DiscardReserve(24,r) && ring.cursor==24,\"discard reinitialize ring\");\n        check(!ring.NoOverwriteReserve(1,r),\"ring full\");\n        std::cout << \"PASS \" << checks << \" resource-contract checks (CPU model only)\\n\";\n    } catch(const std::exception& e){std::cerr << \"FAIL \" << checks << \" \" << e.what() << '\\n';return 1;}\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-evidence",
+      "title": "출처·전체 파일·실행 증거 탐색",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "각 원본 파일 섹션의 다운로드 링크와 전체 코드 블록은 그대로 유지했습니다. 설명 그림과 복습은 새 학습용 표현입니다. 원본 해시·복구 방식과 과거 실행 로그를 서로 다른 원장으로 확인하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "네이티브 코드 복구 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/DX11_SOURCE_LEDGER_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "과거 CPU 실행의 환경·제한·원시 로그",
+              "kind": "link",
+              "href": "/knowledge/verification/dx11/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-19 GitHub Actions CPU 실행",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39222967585"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "관련 학습 본문 2",
+              "kind": "link",
+              "href": "/knowledge/dx11-02/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "별도 한국어 주석 학습 팩: 2026-10-23 Cloud Linux GCC 14.2 C++20 직접 컴파일·CPU 실행과 전처리 동일성 검사를 통과한 기록입니다. 이는 위 2026-10-19 원본 CTest 기록과 다른 실행이며, Windows 창·HLSL·GPU·CMake/CTest·sanitizer는 이번 주석 검증에서 미실행입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석 팩 설명",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-02-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석 변경·원본 해시 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-02-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 복원 검사 스크립트",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-02-ko/verify_annotations.py"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석 학습본 실제 검증 결과",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-02-ko/validation.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-history",
+      "title": "원본 보존과 개편 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 원래 섹션 ID·파일 제목·직접 전체 코드·원문 링크·표·접힌 설명을 보존하고 네 탭, 소스 경계 그림, 빌드 탐색, 복습을 추가했습니다. 기존 date는 원본 기록 날짜이며 새 실행 날짜로 바꾸지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows/MSVC·GPU 화면·HLSL 컴파일·성능 측정은 이번 개편에서 미실행입니다. CPU 원본도 재컴파일하지 않았습니다. 새 페이지 렌더·원본 동일성·배포 결과는 게시 검증 기록을 따로 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "추가: 별도 한국어 주석 팩의 전체 파일 다운로드와 접힌 전체 코드를 원본 옆에 병기했습니다. 주석 팩의 신규 CPU 실행 기록은 출처 탭에서 과거 원본 실행과 구분합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 두 블록은 과거 공통 안내의 원문입니다. 그 안의 “Windows·HLSL 정적 소스 보존/이 문서의 Windows·HLSL 소스”는 이 자료실의 실제 파일 목록과 맞지 않는 공통 표현이었습니다. 원문 보존을 위해 여기에 남기며, 현행 자료실에는 CPU main.cpp와 CMake만 있습니다."
             }
           ]
         },
@@ -99,24 +628,6 @@
           ]
         },
         {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "원본 전체 소스 Notion 페이지",
-              "kind": "link",
-              "href": "https://app.notion.com/p/3fba99703f40814ebc7fe5250ad8d967"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "코드 복구 이력과 파일 목록",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/DX11_SOURCE_LEDGER_20261019.md"
-            }
-          ]
-        },
-        {
           "type": "details",
           "title": "Linux CPU 테스트 통과가 실제 DirectX 실행을 증명하나요?",
           "blocks": [
@@ -129,86 +640,6 @@
               ]
             }
           ]
-        },
-        {
-          "type": "details",
-          "title": "원래 Notion ZIP·첨부 바이너리도 복구했나요?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "Notion 네이티브 코드 전문은 복원했습니다. DX11 01 첨부는 서명 다운로드 URL만 확인했으며 원본 첨부 파일의 바이트 동일성은 검증하지 않았습니다."
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "file-1",
-      "title": "CMakeLists.txt",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "전체 파일 (원본 코드 텍스트) · "
-            },
-            {
-              "text": "GitHub 원본 파일",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-02/CMakeLists.txt"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "Notion 출처",
-              "kind": "link",
-              "href": "https://app.notion.com/p/3fba99703f40814ebc7fe5250ad8d967"
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "cmake",
-          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_resource_contract LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"C++20 study or C++11 compatibility\")\nadd_executable(dx11_resource_contract main.cpp)\nset_target_properties(dx11_resource_contract PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(dx11_resource_contract PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(dx11_resource_contract PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME resource_contract COMMAND dx11_resource_contract)"
-        }
-      ]
-    },
-    {
-      "id": "file-2",
-      "title": "main.cpp",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "전체 파일 (원본 코드 텍스트) · "
-            },
-            {
-              "text": "GitHub 원본 파일",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-02/main.cpp"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "Notion 출처",
-              "kind": "link",
-              "href": "https://app.notion.com/p/3fba99703f40814ebc7fe5250ad8d967"
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "cpp",
-          "text": "#include <algorithm>\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\nenum class Usage { Default, Immutable, Dynamic, Staging };\nenum Bind : unsigned { Vertex = 1, Index = 2, Constant = 4, ShaderResource = 8, RenderTarget = 16 };\nenum Cpu : unsigned { Read = 1, Write = 2 };\nenum class Map { Read, Write, ReadWrite, WriteDiscard, WriteNoOverwrite };\nstruct BufferDesc {\n    Usage usage;\n    unsigned bind;\n    unsigned cpu;\n    std::uint32_t bytes;\n    bool initial;\n    BufferDesc(Usage u, unsigned b, unsigned c, std::uint32_t n, bool init)\n        : usage(u), bind(b), cpu(c), bytes(n), initial(init) {}\n};\nbool IsPowerOfTwo(unsigned v) { return v && (v & (v-1)) == 0; }\n// Deliberately limited teaching subset: no MiscFlags, structured/indirect buffers or 11.1 extended CB.\nbool Valid(const BufferDesc& d) {\n    if (!d.bytes) return false;\n    if (d.bind & Constant) {\n        if (d.bind != Constant || d.bytes % 16 != 0 || d.bytes > 65536) return false;\n    }\n    switch(d.usage) {\n        case Usage::Default: return d.cpu == 0;\n        case Usage::Immutable: return d.cpu == 0 && d.bind != 0 && d.initial;\n        case Usage::Dynamic: return d.cpu == Write && d.bind != 0;\n        case Usage::Staging: return d.bind == 0 && d.cpu != 0;\n    }\n    return false;\n}\nbool CanMap(const BufferDesc& d, Map m, bool runtime11_1=false) {\n    if (!Valid(d)) return false;\n    if (d.usage == Usage::Staging) {\n        if(m == Map::Read) return (d.cpu & Read) != 0;\n        if(m == Map::Write) return (d.cpu & Write) != 0;\n        if(m == Map::ReadWrite) return d.cpu == (Read|Write);\n        return false;\n    }\n    if (d.usage != Usage::Dynamic) return false;\n    if (m == Map::WriteDiscard) return true;\n    if (m == Map::WriteNoOverwrite) return (d.bind & (Vertex|Index)) != 0 ||\n        (runtime11_1 && (d.bind & Constant) != 0);\n    return false;\n}\nbool CanUpdateSubresource(const BufferDesc& d) {return Valid(d) && d.usage == Usage::Default;}\nbool CanCreateView(unsigned resourceBind, unsigned requestedViewBind) {\n    if (!IsPowerOfTwo(requestedViewBind) ||\n        (requestedViewBind != ShaderResource && requestedViewBind != RenderTarget)) return false;\n    return (resourceBind & requestedViewBind) != 0;\n}\nstruct ByteRange {std::uint32_t offset, length;};\nbool Fits(std::uint32_t capacity, ByteRange r) {\n    return r.offset <= capacity && r.length <= capacity-r.offset;\n}\nstruct DynamicRing {\n    std::uint32_t size;\n    std::uint32_t cursor = 0;\n    explicit DynamicRing(std::uint32_t n) : size(n) {}\n    bool DiscardReserve(std::uint32_t n, ByteRange& out) {\n        if (!n || n > size) return false;\n        cursor=n; out={0,n}; return true; // DISCARD: old contents undefined.\n    }\n    bool NoOverwriteReserve(std::uint32_t n, ByteRange& out) {\n        if (!n || n>size-cursor) return false;\n        out={cursor,n}; cursor += n; return true;\n    }\n};\nint main() {\n    unsigned checks=0;\n    const auto check=[&](bool b, const char* why) {++checks;if(!b) throw std::runtime_error(why);};\n    try {\n        const BufferDesc def{Usage::Default,Vertex,0,80,false};\n        const BufferDesc imm{Usage::Immutable,Index,0,12,true};\n        const BufferDesc dyn{Usage::Dynamic,Vertex,Write,96,false};\n        const BufferDesc cb{Usage::Dynamic,Constant,Write,64,false};\n        const BufferDesc staging{Usage::Staging,0,Read|Write,64,false};\n        check(Valid(def),\"default VB\");\n        check(Valid(imm),\"immutable IB initialized\");\n        check(!Valid({Usage::Immutable,Index,0,12,false}),\"immutable initial required\");\n        check(!Valid({Usage::Immutable,Index,Write,12,true}),\"immutable CPU access forbidden\");\n        check(Valid(dyn),\"dynamic writable VB\");\n        check(!Valid({Usage::Dynamic,Vertex,Read,96,false}),\"dynamic read forbidden\");\n        check(!Valid({Usage::Dynamic,Vertex,0,96,false}),\"dynamic missing CPU write\");\n        check(!Valid({Usage::Default,Vertex,Write,96,false}),\"default cannot CPU write\");\n        check(Valid(staging),\"staging readwrite\");\n        check(!Valid({Usage::Staging,Vertex,Read,64,false}),\"staging cannot bind\");\n        check(!Valid({Usage::Staging,0,0,64,false}),\"staging needs CPU access\");\n        check(!Valid({Usage::Default,Vertex,0,0,false}),\"zero allocation\");\n        check(Valid(cb),\"dynamic constant buffer\");\n        check(!Valid({Usage::Default,Constant,0,20,false}),\"CB 16 byte multiple\");\n        check(!Valid({Usage::Default,Constant|Vertex,0,32,false}),\"CB exclusive bind\");\n        check(!Valid({Usage::Default,Constant,0,65552,false}),\"legacy CB >64KiB\");\n        check(Valid({Usage::Default,Constant,0,65536,false}),\"legacy CB max\");\n        check(CanMap(dyn,Map::WriteDiscard),\"dynamic discard\");\n        check(CanMap(dyn,Map::WriteNoOverwrite),\"dynamic VB no-overwrite\");\n        check(!CanMap(dyn,Map::Read),\"dynamic can't CPU read\");\n        check(!CanMap(def,Map::Write),\"default no map\");\n        check(CanUpdateSubresource(def),\"default UpdateSubresource\");\n        check(!CanUpdateSubresource(dyn),\"dynamic not UpdateSubresource in this model\");\n        check(CanMap(staging,Map::ReadWrite),\"staging readwrite map\");\n        check(!CanMap(staging,Map::WriteDiscard),\"staging not discard\");\n        check(!CanMap(cb,Map::WriteNoOverwrite,false),\"11.0 CB nooverwrite unavailable\");\n        check(CanMap(cb,Map::WriteNoOverwrite,true),\"11.1 CB nooverwrite capability assumed\");\n        check(CanCreateView(ShaderResource|RenderTarget,ShaderResource),\"SRV bind flags\");\n        check(CanCreateView(ShaderResource|RenderTarget,RenderTarget),\"RTV bind flags\");\n        check(!CanCreateView(ShaderResource,RenderTarget),\"RTV missing bind flag\");\n        check(!CanCreateView(ShaderResource|RenderTarget,ShaderResource|RenderTarget),\"one view kind per descriptor\");\n        check(Fits(80,{76,4}),\"byte range exact end\");\n        check(!Fits(80,{76,8}),\"byte range past end\");\n        check(!Fits(80,{std::numeric_limits<std::uint32_t>::max(),8}),\"unsigned wrap handled\");\n        DynamicRing ring(24);ByteRange r{0,0};\n        check(ring.DiscardReserve(12,r) && r.offset==0 && r.length==12,\"discard first chunk\");\n        check(ring.NoOverwriteReserve(8,r) && r.offset==12,\"reserve unwritten region\");\n        check(!ring.NoOverwriteReserve(8,r),\"reject overwriting prior region\");\n        check(!ring.DiscardReserve(25,r),\"discard cannot exceed capacity\");\n        check(ring.DiscardReserve(24,r) && ring.cursor==24,\"discard reinitialize ring\");\n        check(!ring.NoOverwriteReserve(1,r),\"ring full\");\n        std::cout << \"PASS \" << checks << \" resource-contract checks (CPU model only)\\n\";\n    } catch(const std::exception& e){std::cerr << \"FAIL \" << checks << \" \" << e.what() << '\\n';return 1;}\n}"
         }
       ]
     }

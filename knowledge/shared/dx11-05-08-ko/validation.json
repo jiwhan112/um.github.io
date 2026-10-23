@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-23",
+  "environment": "Cloud Linux; g++ (Debian 14.2.0-19) 14.2.0",
+  "status": "portable_direct_compile_and_execution_passed",
+  "compiler_flags": [
+    "-std=c++20",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror"
+  ],
+  "NDEBUG": false,
+  "program_outputs": {
+    "05_textured_rect/main.cpp": "PASS 29 textured rect CPU contract checks\n",
+    "06_transform_camera/main.cpp": "PASS 30 transform/camera CPU contract checks\n",
+    "07_skybox_lighting/main.cpp": "PASS 28 skybox/lighting CPU contract checks\n",
+    "08_terrain/main.cpp": "PASS 33 terrain CPU contract checks\n"
+  },
+  "annotation_files": 12,
+  "appended_comment_segments": 30,
+  "exact_original_reconstruction": "passed, physical line counts and final newline preserved",
+  "gcc_preprocessor_identity": {
+    "files": [
+      "05_textured_rect/main.cpp",
+      "06_transform_camera/main.cpp",
+      "07_skybox_lighting/main.cpp",
+      "08_terrain/main.cpp"
+    ],
+    "method": "-E -P; respective source root mapped to SOURCE using -fmacro-prefix-map; physical line numbers unchanged"
+  },
+  "cmake_ctest": "not run: executables unavailable",
+  "windows_msvc_hlsl_fxc_dxc_gpu_sanitizers": "not run",
+  "scope": "comment-only derivative; no user-computer access"
+}

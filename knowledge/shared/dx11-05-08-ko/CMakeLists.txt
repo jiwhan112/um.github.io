@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.16)
+project(dx11_study_05_08 LANGUAGES CXX)
+set(LAB_CXX_STANDARD 20 CACHE STRING "20 default, 11 compatibility")
+enable_testing()
+add_subdirectory(05_textured_rect)
+add_subdirectory(06_transform_camera)
+add_subdirectory(07_skybox_lighting)
+add_subdirectory(08_terrain)

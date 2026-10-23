@@ -1,0 +1,68 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-03/CMakeLists.txt",
+      "annotated": "shared/dx11-03-ko/CMakeLists.txt",
+      "original_sha256": "bddbcf7f45555a6dbba14c356a84a5f901703031a87e6386b9b49c230b3b0944",
+      "annotated_sha256": "bddbcf7f45555a6dbba14c356a84a5f901703031a87e6386b9b49c230b3b0944",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-03/d3d11_triangle_window.cpp",
+      "annotated": "shared/dx11-03-ko/d3d11_triangle_window.cpp",
+      "original_sha256": "2df42ad1b2bcf502ec47c37e050d1b5b6ba760a35e4049d048347349df284823",
+      "annotated_sha256": "a09f8e2a7848427e40898c7ce79776feb62186f6235a1e4317f628c3752f740d",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 32,
+          "suffix": " // [한국어 해설] 내장 raw string 셰이더는 변경하지 않는다. 컴파일 실패 때 오류 blob을 출력하고 HRESULT를 전파한다."
+        },
+        {
+          "line": 59,
+          "suffix": " // [한국어 해설] ClearState와 RTV 해제 후 Resize한다. 이후 프레임에서 필요한 상태를 전부 다시 바인딩한다."
+        },
+        {
+          "line": 69,
+          "suffix": " // [한국어 해설] 정점 배치와 VS signature에 맞춰 InputLayout을 만들고 초기 데이터로 immutable VB/IB를 생성한다."
+        },
+        {
+          "line": 97,
+          "suffix": " // [한국어 해설] IA→VS/PS→출력 상태를 연결한 뒤 인덱스3개를 그린다. 이 Windows 경로는 이번에 미실행이다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx11-03/main.cpp",
+      "annotated": "shared/dx11-03-ko/main.cpp",
+      "original_sha256": "1db402b6c522f0fdaf9dec7dedd496b39958a6589bd1c5e305eb389e6fc498d3",
+      "annotated_sha256": "242ecc1618cab743cddf80b2d6d9a41f6c5dacea1891502976cbef33cd91c0bb",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 16,
+          "suffix": " // [한국어 해설] 이 단원에 필요한 상태의 논리 모델이다. null 셰이더 등 API가 허용할 수 있는 경우도 수업 정책으로 거부한다."
+        },
+        {
+          "line": 26,
+          "suffix": " // [한국어 해설] stride·index 형식·start/base를 구분하고 실제 정점 범위를 검사한다."
+        },
+        {
+          "line": 44,
+          "suffix": " // [한국어 해설] 읽기와 쓰기의 같은 자원 충돌을 표현하는 단순 모델이다. 모든 overlapping view 경우를 포괄하지 않는다."
+        },
+        {
+          "line": 69,
+          "suffix": " // [한국어 해설] CPU payload 크기/정렬만 확인한다. 실제 HLSL packing·row_major 계약은 별도로 맞춰야 한다."
+        },
+        {
+          "line": 71,
+          "suffix": " // [한국어 해설] 빠진 상태, 주소 경계, SRV/RT 충돌과 상수 버퍼 배치를 검사한다."
+        }
+      ]
+    }
+  ]
+}

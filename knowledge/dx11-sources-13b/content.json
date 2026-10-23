@@ -21,6 +21,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "자료실 읽기: 요소 경계 검증 → 같은 Slot의 겹침 검증. compact/두 단계의 서로 다른 정책을 유지한다."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -128,6 +136,19 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "visual-safe-range",
+      "title": "끝점을 더하기 전에 범위를 증명한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx11-sources-13b/assets/safe-range.svg",
+          "alt": "끝점을 더하기 전에 범위를 증명한다",
+          "caption": "끝점을 더하기 전에 범위를 증명한다 · 명시된 학습 모델의 계약 도식, GPU 실행 화면 아님."
         }
       ]
     },
@@ -249,7 +270,7 @@
     {
       "id": "file-1",
       "title": "main.cpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -272,34 +293,9 @@
       ]
     },
     {
-      "id": "file-2",
-      "title": "CMakeLists.txt",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "전체 소스 파일 · 681바이트 · "
-            },
-            {
-              "text": "GitHub 원본 열기",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b/CMakeLists.txt"
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "cmake",
-          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13b_cpu LANGUAGES CXX)\nset(LAB_CXX_STANDARD \"20\" CACHE STRING \"11 or 20\")\nif(NOT LAB_CXX_STANDARD STREQUAL \"11\" AND NOT LAB_CXX_STANDARD STREQUAL \"20\")\n  message(FATAL_ERROR \"LAB_CXX_STANDARD must be 11 or 20\")\nendif()\nadd_executable(layout_contract main.cpp)\nset_target_properties(layout_contract PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(layout_contract PRIVATE /W4)\nelse()\n  target_compile_options(layout_contract PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME two_pass_layout_validation COMMAND layout_contract)\n"
-        }
-      ]
-    },
-    {
       "id": "two-pass-explanation",
       "title": "2-pass 검증 순서 · 원본 보충 설명",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -1068,7 +1064,7 @@
     {
       "id": "compact-main",
       "title": "compact · 전체 main.cpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -1107,9 +1103,277 @@
       ]
     },
     {
+      "id": "guided-practice",
+      "title": "실습 · 수치와 실패 경계부터",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "stride16/offset12/width4는 성공, width5는 실패임을 뺄셈 조건으로 확인한다. 두 단계 21조건 모델은 enum 결과로 InvalidElement와 Overlap을 구별하므로, 극단 unsigned 값이 뒤 요소에 있어도 InvalidElement를 먼저 반환해야 하는 이유를 추적한다. compact 13조건 모델은 out_of_range/invalid_argument 예외를 bool valid 결과로 합치므로 같은 enum 진단을 보고하지 않는다. 두 구현의 검사 순서와 외부 오류 표현을 따로 비교한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답하고 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "offset+width≤stride를 먼저 계산하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "부호 없는 덧셈이 wrap할 수 있다. offset≤stride, width≤stride−offset 순으로 검증한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "첫 요소와 미검증 다음 요소를 즉시 겹침 검사해도 될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "잘못된 다음 요소를 겹침 오류로 분류할 수 있다. 모든 요소의 경계를 먼저 검증한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "compact와 두 단계 모델의 StepRate 정책은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "compact는 양수, 두 단계 모델은 교육용으로 정확히1을 요구한다. 동일 구현으로 합치지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "13개와21개 검사를 더하면 독립34개인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "의미 중복을 제거해 산정하지 않았으므로 그렇게 주장하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CPU 레이아웃 검사로 HLSL signature까지 검증되나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 실제 시맨틱·형식·셰이더 시그니처·장치 생성은 별도다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "서로 다른 Slot의 같은 offset은 항상 겹침인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 각 Slot은 별도 입력 스트림이며 동일 Slot 범위 검사를 구분한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "annotated-full-code",
+      "title": "한국어 주석 전체 코드 · 원본과 별도",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래는 한국어 설명 주석만 추가한 파생 전체 소스다. 기존 원본 코드는 위에서 보존하며 서로 대체하지 않는다. 13B 두 구현은 별도 폴더와 CMake 정책을 유지한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "dx11-13b-ko/main.cpp 내려받기",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-13b-ko/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "dx11-13b-ko/main.cpp · 한국어 주석 전체 소스",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// DX11 13B: CPU-only input-layout bounds and overlap validator.\n// C++11 and C++20 compatible; no Direct3D or Windows API calls.\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\nenum class Result { Ok, InvalidLayout, InvalidElement, Overlap };\nstruct Element {\n    std::uint32_t slot, offset, bytes, stepRate;\n    bool perInstance;\n};\nstruct Layout {\n    std::uint32_t vertexStride, instanceStride;\n    std::vector<Element> elements;\n};\n\nResult validate(const Layout& x) { // [한국어 해설] 모든 원소의 범위를 먼저 검증한 뒤 겹침을 계산하는 두 단계 검증이다.\n    if (x.vertexStride == 0 || x.instanceStride == 0 || x.elements.empty()) {\n        return Result::InvalidLayout;\n    }\n    // First pass: reject malformed elements before doing interval arithmetic.\n    for (std::size_t i = 0; i < x.elements.size(); ++i) {\n        const Element& e = x.elements[i];\n        if (e.slot > 1) return Result::InvalidElement;\n        const std::uint32_t stride = e.slot == 0 ? x.vertexStride : x.instanceStride;\n        if (e.bytes == 0 || e.offset > stride || e.bytes > stride - e.offset) {\n            return Result::InvalidElement;\n        }\n        if (e.perInstance != (e.slot == 1)) return Result::InvalidElement;\n        // Pedagogical contract: every per-instance element advances once.\n        // Real D3D11 permits nonzero step rates greater than one.\n        if (e.stepRate != (e.perInstance ? 1u : 0u)) return Result::InvalidElement;\n    }\n    // Second pass: end <= stride is now guaranteed. Wide ends add clarity. // [한국어 해설] 첫 단계가 offset+bytes≤stride를 증명한 뒤 넓은 정수로 끝점을 계산한다.\n    for (std::size_t i = 0; i < x.elements.size(); ++i) {\n        for (std::size_t j = i + 1; j < x.elements.size(); ++j) {\n            const Element& a = x.elements[i];\n            const Element& b = x.elements[j];\n            if (a.slot != b.slot) continue;\n            const std::uint64_t endA = std::uint64_t(a.offset) + a.bytes;\n            const std::uint64_t endB = std::uint64_t(b.offset) + b.bytes;\n            if (std::uint64_t(a.offset) < endB && std::uint64_t(b.offset) < endA) {\n                return Result::Overlap;\n            }\n        }\n    }\n    return Result::Ok;\n}\n\n// Small model of the old single-pass branch: unsafe ordering of diagnostics,\n// not undefined behavior (unsigned wrap itself is defined by C++).\nResult oldOrder(const Layout& x) { // [한국어 해설] 비교를 위한 옛 진단 순서 모델이다. unsigned wrap 자체는 정의된 동작이며 UB라고 부르지 않는다.\n    if (!x.vertexStride || !x.instanceStride || x.elements.empty()) return Result::InvalidLayout;\n    for (std::size_t i = 0; i < x.elements.size(); ++i) {\n        const Element a = x.elements[i];\n        const std::uint32_t stride = a.slot == 0 ? x.vertexStride : a.slot == 1 ? x.instanceStride : 0;\n        if (!stride || !a.bytes || a.offset > stride || a.bytes > stride-a.offset ||\n            a.perInstance != (a.slot == 1) || a.stepRate != (a.perInstance ? 1u : 0u)) return Result::InvalidElement;\n        for (std::size_t j = i+1; j < x.elements.size(); ++j) {\n            const Element b = x.elements[j]; // b has not been bounds-checked.\n            if (a.slot == b.slot && a.offset < b.offset+b.bytes &&\n                b.offset < a.offset+a.bytes) return Result::Overlap;\n        }\n    }\n    return Result::Ok;\n}\n\nint main() { // [한국어 해설] 이 버전은 instance stepRate=1 수업정책이다. 실제 D3D11의 더 큰 양수 stepRate까지 금지한다는 뜻은 아니다.\n    unsigned checked = 0;\n    const auto expect = [&](const Layout& layout, Result result, const char* name) {\n        ++checked;\n        if (validate(layout) != result) throw std::runtime_error(name);\n    };\n    const Element v0 = {0, 0, 12, 0, false};\n    const Element v1 = {0, 12, 8, 0, false};\n    const Element i0 = {1, 0, 16, 1, true};\n    expect({20, 64, {v0, v1, i0}}, Result::Ok, \"standard valid\");\n    expect({20, 64, {v0, v1}}, Result::Ok, \"adjacent intervals\");\n    expect({20, 64, {v0, {0, 11, 8, 0, false}}}, Result::Overlap, \"real overlap\");\n    expect({20, 64, {v0, {1, 0, 8, 1, true}}}, Result::Ok, \"different slots\");\n    expect({0, 64, {v0}}, Result::InvalidLayout, \"zero vertex stride\");\n    expect({20, 0, {v0}}, Result::InvalidLayout, \"zero instance stride\");\n    expect({20, 64, {}}, Result::InvalidLayout, \"empty layout\");\n    expect({20, 64, {{2, 0, 4, 0, false}}}, Result::InvalidElement, \"slot not in model\");\n    expect({20, 64, {{0, 0, 0, 0, false}}}, Result::InvalidElement, \"zero byte width\");\n    expect({20, 64, {{0, 21, 1, 0, false}}}, Result::InvalidElement, \"offset beyond stride\");\n    expect({20, 64, {{0, 20, 1, 0, false}}}, Result::InvalidElement, \"at end plus one\");\n    expect({20, 64, {{0, 19, 2, 0, false}}}, Result::InvalidElement, \"width beyond rest\");\n    expect({20, 64, {{0, 0, 4, 0, true}}}, Result::InvalidElement, \"wrong input class\");\n    expect({20, 64, {{0, 0, 4, 1, false}}}, Result::InvalidElement, \"vertex step rate\");\n    expect({20, 64, {{1, 0, 4, 2, true}}}, Result::InvalidElement, \"model expects instance step rate 1\");\n    const std::uint32_t m = (std::numeric_limits<std::uint32_t>::max)();\n    expect({m, m, {{0, m-1, 1, 0, false}}}, Result::Ok, \"valid at extreme stride\");\n    expect({m, m, {{0, 0, m, 0, false}, {0, m-2, 10, 0, false}}},\n           Result::InvalidElement, \"bad second element classified before overlap\");\n    expect({m, m, {{0, m-2, 10, 0, false}, {0, 0, m, 0, false}}},\n           Result::InvalidElement, \"bad first element rejected\");\n    expect({m, m, {{0, 0, m, 0, false}}}, Result::Ok, \"maximal single range\");\n    expect({20, 64, {{0, 18, 2, 0, false}, {0, 19, 1, 0, false}}},\n           Result::Overlap, \"overlap at last byte\");\n    ++checked;\n    const Layout adversarial = {m, m, {{0, 0, m, 0, false}, {0, m-2, 10, 0, false}}};\n    if (oldOrder(adversarial) != Result::Overlap || validate(adversarial) != Result::InvalidElement)\n        throw std::runtime_error(\"old/new classification counterexample\");\n    std::cout << \"PASS \" << checked << \" unique layout contract checks\\n\";\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "같은 폴더 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-13b-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "의존성·직접 빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-13b-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 주석본 CPU 검사 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-13b-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본/주석본 무결성 명세",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-13b-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "dx11-13b-compact-ko/main.cpp 내려받기",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-13b-compact-ko/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "dx11-13b-compact-ko/main.cpp · 한국어 주석 전체 소스",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// DX11 13B: educational CPU-only InputLayout contract; not GPU/API execution.\n// C++11 source, tested with C++11 and C++20.\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nstruct Element {\n    std::uint32_t slot, offset, bytes, step;\n    bool per_instance;\n};\nstruct Layout {\n    std::uint32_t vertex_stride, instance_stride;\n    std::vector<Element> elements;\n};\n\nvoid validate(const Layout& l) { // [한국어 해설] 모든 원소 범위를 먼저 검증하고 안전한 끝점끼리 겹침을 비교한다.\n    if (!l.vertex_stride || !l.instance_stride || l.elements.empty())\n        throw std::invalid_argument(\"missing stream\");\n    // Stage 1: validate ALL elements before calculating any end offsets.\n    for (std::size_t i = 0; i < l.elements.size(); ++i) {\n        const Element& e = l.elements[i];\n        if (e.slot > 1 || !e.bytes || e.per_instance != (e.slot == 1) ||\n            (e.per_instance ? e.step == 0 : e.step != 0))\n            throw std::invalid_argument(\"slot or class\");\n        const std::uint32_t stride = e.slot == 0 ? l.vertex_stride : l.instance_stride;\n        if (e.offset > stride || e.bytes > stride - e.offset)\n            throw std::out_of_range(\"element beyond stride\");\n    }\n    // Stage 2: safe sums, because Stage 1 proved offset+bytes <= stride. // [한국어 해설] 이 축약판은 per-instance step이 양수면 허용한다. 13B 상세판의 step=1 정책과 구별한다.\n    for (std::size_t i = 0; i < l.elements.size(); ++i)\n        for (std::size_t j = i + 1; j < l.elements.size(); ++j) {\n            const Element& a = l.elements[i];\n            const Element& b = l.elements[j];\n            if (a.slot == b.slot && a.offset < b.offset + b.bytes &&\n                b.offset < a.offset + a.bytes)\n                throw std::invalid_argument(\"overlapping elements\");\n        }\n}\n\nbool valid(const Layout& l) { // [한국어 해설] 검증 예외를 bool로 바꾼 편의 함수다. 메모리 할당 등 모든 예외를 성공/실패 bool로 숨기지 않는다.\n    try { validate(l); return true; }\n    catch (const std::invalid_argument&) { return false; }\n    catch (const std::out_of_range&) { return false; }\n}\nint main() { // [한국어 해설] 극단 오프셋·겹침·서로 다른 슬롯과 stepRate2를 포함하는13개 CPU 검사다.\n    unsigned checks = 0;\n    const auto expect = [&](bool result) {\n        ++checks;\n        if (!result) throw std::runtime_error(\"layout assertion failed\");\n    };\n    expect(valid({20,64,{{0,0,12,0,false},{0,12,8,0,false},\n         {1,0,16,2,true},{1,16,16,2,true},{1,32,16,2,true},{1,48,16,2,true}}}));\n    expect(!valid({0,64,{{0,0,4,0,false}}}));\n    expect(!valid({20,64,{}}));\n    expect(!valid({20,64,{{2,0,4,0,false}}}));\n    expect(!valid({20,64,{{0,0,0,0,false}}}));\n    expect(!valid({20,64,{{0,0,4,1,false}}}));\n    expect(!valid({20,64,{{1,0,4,0,true}}}));\n    expect(!valid({20,64,{{0,20,1,0,false}}}));\n    expect(!valid({20,64,{{0,4294967292U,16,0,false}}}));\n    expect(!valid({20,64,{{0,0,12,0,false},{0,8,8,0,false}}}));\n    expect(valid({20,64,{{0,0,12,0,false},{0,12,8,0,false}}}));\n    expect(valid({20,64,{{0,0,12,0,false},{1,0,12,1,true}}}));\n    expect(!valid({20,64,{{0,0,12,0,false},{1,63,2,1,true}}}));\n    std::cout << \"PASS \" << checks << \" CPU InputLayout checks\\n\";\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "같은 폴더 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-13b-compact-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "의존성·직접 빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-13b-compact-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 주석본 CPU 검사 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-13b-compact-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본/주석본 무결성 명세",
+              "kind": "link",
+              "href": "/knowledge/shared/dx11-13b-compact-ko/annotation-manifest.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "file-2",
+      "title": "CMakeLists.txt",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스 파일 · 681바이트 · "
+            },
+            {
+              "text": "GitHub 원본 열기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx11-13b/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cmake",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx11_13b_cpu LANGUAGES CXX)\nset(LAB_CXX_STANDARD \"20\" CACHE STRING \"11 or 20\")\nif(NOT LAB_CXX_STANDARD STREQUAL \"11\" AND NOT LAB_CXX_STANDARD STREQUAL \"20\")\n  message(FATAL_ERROR \"LAB_CXX_STANDARD must be 11 or 20\")\nendif()\nadd_executable(layout_contract main.cpp)\nset_target_properties(layout_contract PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(layout_contract PRIVATE /W4)\nelse()\n  target_compile_options(layout_contract PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME two_pass_layout_validation COMMAND layout_contract)\n"
+        }
+      ]
+    },
+    {
       "id": "compact-cmake",
       "title": "compact · 전체 CMakeLists.txt",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -1150,7 +1414,7 @@
     {
       "id": "source-archive",
       "title": "Notion 원문과 구현별 과거 로그",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -1346,6 +1610,46 @@
                   }
                 ]
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification-boundary",
+      "title": "과거 증거와 이번 주석본 검사 구분",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 날짜·원시 로그·해시는 역사적 증거다. 2026-10-23 한국어 주석본은 클라우드 Linux/GCC14.2 C++20 직접 빌드·실행과 원본 복원/전처리 동일성을 검사했다. 이번 CMake/CTest·sanitizer·Windows/MSVC·HLSL컴파일·GPU는 미실행이다. 현행 CPU 통과가 역사적 SHA 불일치를 해소하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·개편 이력",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 모든 원문 기술 블록·기존 절 ID·URL·메타데이터를 보존하며 시각 설명, 실습, 접힌 복습, 한국어 주석 전체코드 연결을 보완했다. 원문 속 이전 시점의 미완료/미실행 문장은 당시 기록이며, 현재 주석본 검사 범위와 분리한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문·로그 전체 보관 경로는 출처 탭 참고",
+              "kind": "link",
+              "href": "/knowledge/dx11-sources-13b/#source-archive"
             }
           ]
         }

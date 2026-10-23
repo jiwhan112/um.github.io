@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "method": "Exact same-line comment suffixes only; physical line count and final newline preserved.",
+  "files": [
+    {
+      "original": "shared/dx11-02/CMakeLists.txt",
+      "annotated": "shared/dx11-02-ko/CMakeLists.txt",
+      "original_sha256": "fa686249a780b7821970e8b568b126e129b6bce4146ce505fb71f512b87990d4",
+      "annotated_sha256": "fa686249a780b7821970e8b568b126e129b6bce4146ce505fb71f512b87990d4",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx11-02/main.cpp",
+      "annotated": "shared/dx11-02-ko/main.cpp",
+      "original_sha256": "770f4cc4f5065f7dd1173b58006f4404d133dc269ecc456ebfd83b0e2c1abe3a",
+      "annotated_sha256": "b188ddcd018da4a76b4defb8ebaedf3c84ab6554e7385e988a7ab9dee6aa95b2",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 24,
+          "suffix": " // [한국어 해설] 리소스 Usage·Bind·CPUAccess 조합의 제한된 학습 규칙이다. 모든 D3D11 descriptor 조합을 검증하지 않는다."
+        },
+        {
+          "line": 37,
+          "suffix": " // [한국어 해설] 11.1 상수 버퍼 NO_OVERWRITE는 capability가 있다고 가정한 분기다. 실제 feature support 조회는 별도다."
+        },
+        {
+          "line": 52,
+          "suffix": " // [한국어 해설] 하나의 뷰 종류와 해당 바인드 플래그를 확인한다. 포맷 호환·서브리소스 전체 검증은 범위 밖이다."
+        },
+        {
+          "line": 61,
+          "suffix": " // [한국어 해설] DISCARD는 이전 내용을 버리고 NO_OVERWRITE는 아직 쓰지 않은 구간을 예약하는 CPU 모델이다."
+        },
+        {
+          "line": 74,
+          "suffix": " // [한국어 해설] 기본 조합과 바이트 범위·링 버퍼 경계를 실제 CPU에서 검사한다."
+        }
+      ]
+    }
+  ]
+}
