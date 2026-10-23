@@ -35,6 +35,72 @@
           "type": "paragraph",
           "content": [
             {
+              "text": "C06·08의 배열과 길이, C09의 태그, C10의 소유 버퍼를 다시 구현하는 장이 아닙니다. C++ 표준 소유 타입과 비소유 뷰 중 무엇을 고르고, 변경 후 어떤 접근을 다시 얻어야 하는지가 중심입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "C에서 확인한 공통 기반"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 C++ 단원의 새로운 판단"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "C06/08 배열·문자열·행 포인터"
+                  }
+                ],
+                [
+                  {
+                    "text": "array/vector/string와 span/string_view 선택"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "C09/10 태그·동적 소유"
+                  }
+                ],
+                [
+                  {
+                    "text": "enum class/variant와 컨테이너 무효화 계약"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 순서: 공통 원리가 낯설면 아래 C 연결을 먼저 확인하고, 익숙하면 C++ 고유 선택과 실패 경계로 진행하세요. C11과 C++20은 서로 다른 언어 규칙이며 C 코드의 문법·타입·수명 규칙을 그대로 옮기지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
               "text": "아이템 목록을 늘렸더니 UI가 엉뚱한 이름을 보여 준다고 가정해 봅시다. 배열에 값을 넣는 방법만 알아서는 원인을 찾기 어렵습니다. "
             },
             {
@@ -145,7 +211,7 @@
     },
     {
       "id": "arrays",
-      "title": "1. 배열 전체와 첫 원소의 주소를 구분합니다",
+      "title": "1. C 배열 원리를 재사용하고 C++ 범위 도구 고르기",
       "tab": "document",
       "blocks": [
         {
@@ -153,14 +219,37 @@
           "level": 2,
           "content": [
             {
-              "text": "1. 배열 전체와 첫 원소의 주소를 구분합니다"
+              "text": "1. C 배열 원리를 재사용하고 C++ 범위 도구 고르기"
             }
           ]
         },
         {
-          "type": "code",
-          "language": "cpp",
-          "text": "int values[3]{10, 20, 30};   // int 원소 3개를 직접 포함합니다.\nint* first = values;         // 이 표현식에서는 첫 원소의 주소로 변환됩니다.\n// sizeof(values)는 세 원소 전체 크기입니다.\n// sizeof(first)는 포인터 타입의 크기입니다.\n"
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "배열과 포인터의 구별, 함수 인자의 배열 조정은 C06·08에서 익혔습니다. T[N]이 보이는 곳의 std::size는 원소 수를 구할 수 있지만 포인터만 받은 곳에서 원래 길이를 복구하는 도구는 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C06 배열·문자열",
+              "kind": "link",
+              "href": "/knowledge/c-basics-06/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C08 배열 매개변수와 행 포인터",
+              "kind": "link",
+              "href": "/knowledge/c-basics-08/"
+            }
+          ]
         },
         {
           "type": "table",
@@ -170,17 +259,12 @@
               "cells": [
                 [
                   {
-                    "text": "표현"
+                    "text": "지금 필요한 것"
                   }
                 ],
                 [
                   {
-                    "text": "무엇을 가지고 있나"
-                  }
-                ],
-                [
-                  {
-                    "text": "길이를 알 수 있나"
+                    "text": "먼저 검토할 C++ 표현"
                   }
                 ]
               ]
@@ -190,17 +274,12 @@
               "cells": [
                 [
                   {
-                    "text": "int values[3]"
+                    "text": "고정 수의 원소를 값으로 보유"
                   }
                 ],
                 [
                   {
-                    "text": "세 int 원소가 있는 배열"
-                  }
-                ],
-                [
-                  {
-                    "text": "배열 타입에 원소 수 포함"
+                    "text": "std::array<T,N>"
                   }
                 ]
               ]
@@ -210,17 +289,12 @@
               "cells": [
                 [
                   {
-                    "text": "int* first"
+                    "text": "개수가 바뀌는 원소 소유"
                   }
                 ],
                 [
                   {
-                    "text": "한 주소값을 저장하는 포인터"
-                  }
-                ],
-                [
-                  {
-                    "text": "포인터만으로 원본 길이 복구 불가"
+                    "text": "std::vector<T>"
                   }
                 ]
               ]
@@ -230,77 +304,30 @@
               "cells": [
                 [
                   {
-                    "text": "void F(int values[3])"
+                    "text": "연속 원소를 함수 호출 동안 관찰"
                   }
                 ],
                 [
                   {
-                    "text": "함수 매개변수는 int*로 조정됨"
-                  }
-                ],
-                [
-                  {
-                    "text": "3개인지 자동 검사하지 않음"
+                    "text": "std::span<T> 또는 span<const T>"
                   }
                 ]
               ]
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "배열은 많은 표현식에서 포인터로 변환되지만, 배열 타입 자체가 포인터로 바뀌지는 않습니다. 배열이 그대로 보이는 범위에서는 "
             },
             {
-              "text": "std::size(values)",
-              "kind": "code"
-            },
-            {
-              "text": "로 원소 수를 구할 수 있습니다. 함수의 포인터 매개변수에 sizeof를 적용해서 호출자의 배열 길이를 구하지 않습니다."
-            }
-          ]
-        },
-        {
-          "type": "callout",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "인덱스의 범위는 0 ≤ index < 원소 수",
-                  "kind": "strong"
-                }
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "기존 C API에 전달"
+                  }
+                ],
+                [
+                  {
+                    "text": "요구한 포인터·길이·수명 계약 확인"
+                  }
+                ]
               ]
-            },
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "끝 다음 위치는 범위의 경계이며 원소가 아닙니다. 범위 밖 접근에서 예외가 항상 발생하는 것도 아닙니다. 실행 중 정한 count로 선언하는 "
-                },
-                {
-                  "text": "int values[count];",
-                  "kind": "code"
-                },
-                {
-                  "text": "는 표준 C++의 가변 길이 배열이 아니므로 vector 등으로 의도를 표현합니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "근거: "
-            },
-            {
-              "text": "Microsoft · 배열과 다차원 배열",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/cpp/cpp/arrays-cpp?view=msvc-170"
             }
           ]
         }
@@ -492,6 +519,14 @@
               "text": "N4861 · span",
               "kind": "link",
               "href": "https://timsong-cpp.github.io/cppwp/n4861/views.span"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C의 pointer+count를 span 하나로 묶으면 인터페이스에 범위를 드러낼 수 있지만 C++20 span::operator[]가 경계 검사 예외를 제공하는 것은 아닙니다. std::vector::at은 범위 오류를 예외로 알리는 다른 선택입니다. 빈 범위를 허용할지와 산술 상한은 여전히 함수 계약입니다."
             }
           ]
         }
@@ -822,7 +857,7 @@
     },
     {
       "id": "grid",
-      "title": "5. 두 번째 대괄호는 한 행 안의 위치입니다",
+      "title": "5. 행 배열을 복습하고 C++ 저장 구조 선택하기",
       "tab": "document",
       "blocks": [
         {
@@ -830,7 +865,25 @@
           "level": 2,
           "content": [
             {
-              "text": "5. 두 번째 대괄호는 한 행 안의 위치입니다"
+              "text": "5. 행 배열을 복습하고 C++ 저장 구조 선택하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "int[2][3]의 한 행 타입이 int[3]이고 int**와 다르다는 규칙은 C08에서 복습합니다. 그림은 행과 열의 경계만 남겨 확인하고, 여기서는 표준 컨테이너의 저장 구조를 선택합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C08 행 포인터",
+              "kind": "link",
+              "href": "/knowledge/c-basics-08/"
             }
           ]
         },
@@ -841,11 +894,6 @@
           "caption": "다차원 배열과 평탄한 vector가 같은 값을 표현하는 예입니다. 이 그림은 행 배열을 int**로 캐스팅하라는 뜻이 아닙니다."
         },
         {
-          "type": "code",
-          "language": "cpp",
-          "text": "int grid[2][3]{{1, 2, 3}, {4, 5, 6}};\nint (*row)[3] = grid;   // 첫 원소인 \"int 3개짜리 행\"을 가리킵니다.\nint value = row[1][2];  // 두 번째 행의 세 번째 값: 6\n\nstd::vector<int> flat{1, 2, 3, 4, 5, 6};\nint same = flat.at(1 * 3 + 2);  // (y * width) + x = 5\n"
-        },
-        {
           "type": "table",
           "rows": [
             {
@@ -853,12 +901,12 @@
               "cells": [
                 [
                   {
-                    "text": "형태"
+                    "text": "표현"
                   }
                 ],
                 [
                   {
-                    "text": "첫 단계에서 읽는 대상"
+                    "text": "보유·접근 계약"
                   }
                 ]
               ]
@@ -868,27 +916,12 @@
               "cells": [
                 [
                   {
-                    "text": "int (*)[3]"
+                    "text": "array<array<int,3>,2>"
                   }
                 ],
                 [
                   {
-                    "text": "int 3개짜리 행 배열"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "int**"
-                  }
-                ],
-                [
-                  {
-                    "text": "int* 포인터 객체"
+                    "text": "각 행도 값인 고정 배열; 행 경계에 맞춰 접근"
                   }
                 ]
               ]
@@ -903,7 +936,7 @@
                 ],
                 [
                   {
-                    "text": "행마다 별도 vector · 전체가 한 연속 배열이라는 보장 없음"
+                    "text": "행마다 독립 소유; 전체가 하나의 평탄한 배열이라는 보장 없음"
                   }
                 ]
               ]
@@ -918,7 +951,7 @@
                 ],
                 [
                   {
-                    "text": "한 연속 저장 공간 · 개발자가 2차원 규약을 정의"
+                    "text": "평탄 인덱스 y*width+x의 범위와 곱셈을 별도 검사"
                   }
                 ]
               ]
@@ -926,66 +959,10 @@
           ]
         },
         {
-          "type": "callout",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "좌표 검사와 전체 크기 검사는 따로 합니다",
-                  "kind": "strong"
-                }
-              ]
-            },
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "x < width와 y < height를 확인하고, "
-                },
-                {
-                  "text": "width * height",
-                  "kind": "code"
-                },
-                {
-                  "text": "의 오버플로와 메모리 예산을 할당 전에 검사합니다. "
-                },
-                {
-                  "text": "at()",
-                  "kind": "code"
-                },
-                {
-                  "text": "가 전체 인덱스만 확인하므로 x가 한 행의 폭을 넘었는데 우연히 다음 행 인덱스가 된 경우까지 알아내지는 못합니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
           "type": "paragraph",
           "content": [
             {
-              "text": "이 교재는 "
-            },
-            {
-              "text": "grid[y][x]",
-              "kind": "code"
-            },
-            {
-              "text": " 규약을 사용합니다. 행렬의 행·열, 텍스처 좌표, 화면 y축 방향을 연결할 때는 입력과 출력의 기준도 함께 적습니다."
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "근거: "
-            },
-            {
-              "text": "Microsoft · 다차원 배열",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/cpp/cpp/arrays-cpp?view=msvc-170"
+              "text": "화면 y축·행렬 관례·grid[y][x] 규약은 메모리 배치와 별도입니다. 저장을 평탄화했다고 모든 행/열 인덱스가 유효해지지 않습니다."
             }
           ]
         }
@@ -1002,6 +979,16 @@
           "content": [
             {
               "text": "6. 직접 만든 IntBuffer에서 소유권 교체 순서를 봅니다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "비교할 소유 불변식 · C10 동적 인벤토리",
+              "kind": "link",
+              "href": "/knowledge/c-basics-10/"
             }
           ]
         },
@@ -1137,6 +1124,14 @@
               "href": "/knowledge/shared/cpp-basics-lab/original/src/buffer.cpp"
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C10은 realloc 실패 때 원래 블록을 유지하고 명시적으로 destroy했습니다. 이 IntBuffer는 새 배열을 먼저 확보·복사한 뒤 unique_ptr 이동 대입으로 소유권을 교체합니다. 재할당 방식과 오류 표현은 다르며, 기존 104회 CHECK가 할당 실패를 주입해 확인한 것은 아닙니다. 여기서는 사용자의 size/capacity와 At 계약에 집중하고 범용 컨테이너 구현으로 확대하지 않습니다."
+            }
+          ]
         }
       ]
     },
@@ -1151,6 +1146,16 @@
           "content": [
             {
               "text": "7. 저장된 코드 단위와 화면의 글자 수를 나눕니다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C06 널 종료와 버퍼 경계",
+              "kind": "link",
+              "href": "/knowledge/c-basics-06/"
             }
           ]
         },
@@ -1171,7 +1176,7 @@
         {
           "type": "code",
           "language": "cpp",
-          "text": "char editable[]{\"abc\"};        // a, b, c, 끝의 널 문자: 4칸\nconst char* literal = \"abc\";\nliteral = \"def\";               // 포인터 재지정은 가능합니다.\n// literal[0] = 'D';          // 리터럴 내용은 수정하지 않습니다.\n\nstd::string embedded{\"a\\0b\", 3};\n// embedded.size() == 3\n// std::strlen(embedded.c_str()) == 1: 첫 널 문자에서 멈춥니다.\n"
+          "text": "std::string embedded{\"a\\0b\", 3};\n// embedded.size() == 3: 길이를 별도로 보유합니다.\n// std::strlen(embedded.c_str()) == 1: C 문자열 규칙은 첫 NUL에서 멈춥니다."
         },
         {
           "type": "table",
@@ -1348,6 +1353,16 @@
           "content": [
             {
               "text": "8. 타입에 담을 의미와 현재 들어 있는 값을 정합니다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C09 구조체·태그와 배치",
+              "kind": "link",
+              "href": "/knowledge/c-basics-09/"
             }
           ]
         },
@@ -1550,6 +1565,22 @@
               "text": "Microsoft · variant",
               "kind": "link",
               "href": "https://learn.microsoft.com/en-us/cpp/standard-library/variant?view=msvc-170"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C09의 수동 태그 union은 생성 코드가 태그와 멤버를 맞추었습니다. variant는 활성 대안의 수명을 관리하지만 변경 중 예외로 valueless_by_exception 상태가 될 수 있어 “언제나 값 하나가 존재”한다고 일반화하지 않습니다. 현재 containers 검사는 int→string 전환만 확인하며 그 예외 상태를 주입하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "enum class는 정수로 암시적 변환되지 않고 열거자 이름도 범위에 묶입니다. 그러나 외부 값이 정의된 이름 중 하나인지 검사하는 기능은 아닙니다. using ItemId = int 역시 독립 타입이 아니므로 강한 ID 구별이 필요하면 별도 타입을 설계해야 합니다."
             }
           ]
         }
@@ -2283,6 +2314,34 @@
               ]
             }
           ]
+        },
+        {
+          "type": "details",
+          "title": "7. C++20 span이 포인터·길이를 함께 담으면 수명과 경계도 검사할까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원소를 소유하거나 수명을 연장하지 않습니다. operator[]의 인덱스 유효성은 호출자 계약입니다. 범위를 묶는 것과 런타임 검사는 다른 기능입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "8. variant는 예외 중에도 반드시 어떤 대안 값을 가질까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일부 변경 연산의 예외 경로에서 valueless_by_exception 상태가 가능하므로 API에 맞게 처리합니다. 기존 예제는 그 경로를 실행하지 않았습니다."
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -2648,6 +2707,26 @@
                   }
                 ]
               ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 · span 원소 접근의 전제",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/span.elem"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 · variant의 값 없는 상태",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/variant.status"
             }
           ]
         }
@@ -3635,6 +3714,14 @@
               "text": "05 · 파일·분할 빌드·통합 실습",
               "kind": "link",
               "href": "/knowledge/cpp-basics-05/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 · C01–14와 중복되는 공통 원리는 짧은 복습과 실제 단원 링크로 연결하고, C++의 타입·소유권·표준 도구·오류 계약 선택에 학습 비중을 옮겼습니다. 기존 섹션 ID·원문 캡처·전체 한국어 소스·CPU 검증 기록과 그림은 유지했습니다. 새 설명·연습은 기존 CHECK 횟수나 CPU 실행 증거에 합산하지 않습니다. 이번 본문 개편의 웹 표시·공개 배포 확인은 별도 단계입니다."
             }
           ]
         }

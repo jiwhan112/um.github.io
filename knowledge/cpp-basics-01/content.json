@@ -34,6 +34,72 @@
           "type": "paragraph",
           "content": [
             {
+              "text": "이 장은 C01–03의 빌드·숫자 연산을 처음부터 반복하는 대신, 같은 값을 C++에서 어떤 선언으로 만들고 어떤 타입으로 읽는지에 집중합니다. 주 학습 지점은 ‘초기화’와 ‘const·constexpr·auto’ 절입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "C에서 확인한 공통 기반"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 C++ 단원의 새로운 판단"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "C01 빌드·C02 타입/초기값"
+                  }
+                ],
+                [
+                  {
+                    "text": "목록 초기화와 축소 변환 진단"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "C03 변환·평가 순서·비트 연산"
+                  }
+                ],
+                [
+                  {
+                    "text": "static_cast, auto의 값/참조 추론, constexpr"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 순서: 공통 원리가 낯설면 아래 C 연결을 먼저 확인하고, 익숙하면 C++ 고유 선택과 실패 경계로 진행하세요. C11과 C++20은 서로 다른 언어 규칙이며 C 코드의 문법·타입·수명 규칙을 그대로 옮기지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
               "text": "체력을 100에서 80으로 바꾸고, 이동 속도를 7 / 2로 구하고, 상태 비트 하나를 켜 봅시다. 짧은 코드도 언제 만들어지고 어떤 타입으로 계산되는지에 따라 결과가 달라집니다."
             }
           ]
@@ -145,7 +211,7 @@
     },
     {
       "id": "build",
-      "title": "1. 컴파일과 링크는 무엇을 확인할까?",
+      "title": "1. C에서 익힌 빌드 흐름에 C++ 선언 규칙 연결하기",
       "tab": "document",
       "blocks": [
         {
@@ -153,7 +219,7 @@
           "level": 2,
           "content": [
             {
-              "text": "1. 컴파일과 링크는 무엇을 확인할까?"
+              "text": "1. C에서 익힌 빌드 흐름에 C++ 선언 규칙 연결하기"
             }
           ]
         },
@@ -161,7 +227,27 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "일반적인 네이티브 빌드에서 .cpp와 그 파일이 포함한 헤더는 하나의 번역 단위를 이룹니다. 각 번역 단위를 따로 컴파일한 뒤, 링커가 목적 파일과 라이브러리의 필요한 정의를 연결합니다."
+              "text": "번역 단위→컴파일→링크의 큰 흐름과 오류 단계는 C01·C13에서 익혔습니다. 여기서는 .cpp가 C++ 언어 모드로 컴파일되고, 선언의 매개변수·이름 공간·정의가 맞아야 연결된다는 점을 확인합니다. 파일 확장자를 바꾸는 것만으로 C11 프로그램이 올바른 C++ 프로그램으로 변환되지는 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C01 프로그램과 빌드",
+              "kind": "link",
+              "href": "/knowledge/c-basics-01/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다중 파일 원리 · C13 전처리기·다중 파일 빌드",
+              "kind": "link",
+              "href": "/knowledge/c-basics-13/"
             }
           ]
         },
@@ -174,132 +260,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "선언은 이름과 타입을 알립니다. 함수 정의는 실행할 본문을 제공합니다. 호출하는 쪽이 선언을 알고 있어도, 필요한 정의가 연결되지 않으면 링크가 실패할 수 있습니다."
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "cpp",
-          "text": "// 선언: 이 이름의 함수가 int 두 개를 받고 int를 돌려줍니다.\nint Add(int a, int b);\n\n// 정의: 실제 계산할 본문을 제공합니다.\nint Add(int a, int b) {\n    return a + b;\n}\n"
-        },
-        {
-          "type": "table",
-          "rows": [
-            {
-              "header": true,
-              "cells": [
-                [
-                  {
-                    "text": "실패한 단계"
-                  }
-                ],
-                [
-                  {
-                    "text": "대표 증상"
-                  }
-                ],
-                [
-                  {
-                    "text": "먼저 볼 곳"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "컴파일"
-                  }
-                ],
-                [
-                  {
-                    "text": "문법 오류 · 이름이나 타입 불일치"
-                  }
-                ],
-                [
-                  {
-                    "text": "오류가 난 표현식과 선언"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "링크"
-                  }
-                ],
-                [
-                  {
-                    "text": "필요한 함수의 정의를 찾지 못함"
-                  }
-                ],
-                [
-                  {
-                    "text": "정의가 있는 소스와 빌드 대상"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "실행"
-                  }
-                ],
-                [
-                  {
-                    "text": "잘못된 결과 · 유효하지 않은 접근"
-                  }
-                ],
-                [
-                  {
-                    "text": "입력 범위 · 수명 · 실행 흐름"
-                  }
-                ]
-              ]
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "전처리·정의의 범위를 더 정확히 읽기",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "전처리는 포함 파일, 조건부 컴파일, 매크로 등을 처리합니다. 어셈블리 파일을 따로 남기는지는 도구 설정에 달려 있습니다. 다중 파일의 선언·정의 배치는 05에서 다시 실습합니다."
-                }
-              ]
-            },
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "extern int score;는 보통 객체를 정의하지 않는 선언이고, 네임스페이스 범위의 int score{};는 정의입니다. inline 함수·템플릿 등의 규칙까지 모두 “정의는 프로그램에 한 번”으로 일반화하지 않습니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "근거: "
-            },
-            {
-              "text": "Microsoft · 번역 단위와 링크",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/cpp/cpp/program-and-linkage-cpp?view=msvc-170"
+              "text": "C11의 f() 선언은 매개변수 정보를 제공하지 않는 형태일 수 있지만 C++의 f()는 매개변수가 없는 함수를 선언합니다. C API를 연결할 때의 extern \"C\"와 실제 바이너리 경계는 03에서, C++ ODR·네임스페이스는 05에서 다룹니다."
             }
           ]
         }
@@ -466,20 +427,12 @@
               "href": "https://timsong-cpp.github.io/cppwp/n4861/dcl.init.list"
             }
           ]
-        }
-      ]
-    },
-    {
-      "id": "representation",
-      "title": "3. 바이트·비트·진수를 구분한다",
-      "tab": "document",
-      "blocks": [
+        },
         {
-          "type": "heading",
-          "level": 2,
+          "type": "paragraph",
           "content": [
             {
-              "text": "3. 바이트·비트·진수를 구분한다"
+              "text": "C11의 int count = {3.5};와 C++의 int count{3.5};를 같은 진단 계약으로 읽지 마세요. C++ 목록 초기화는 정해진 축소 변환을 거부합니다. 그렇다고 모든 손실 가능 변환을 런타임까지 검사하거나 객체 내부 불변식을 검증하는 것은 아닙니다."
             }
           ]
         },
@@ -487,7 +440,41 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "sizeof는 C++ 바이트 단위의 저장 크기입니다. sizeof(char)는 1이고, 한 바이트의 비트 수는 CHAR_BIT로 확인합니다. “int는 언제나 4바이트”처럼 내 컴퓨터의 결과를 언어 전체의 규칙으로 외우지 마세요."
+              "text": "중괄호는 “무조건 기본 생성자”라는 뜻도 아닙니다. 기본 타입의 빈 목록, 집합체 초기화, 생성자 오버로드 선택은 타입에 따라 다릅니다. 여기서는 int의 0 초기화와 vector의 괄호/중괄호 차이를 분리해 이해하고, 클래스 불변식은 심화01로 넘깁니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "representation",
+      "title": "3. 공통 타입 경계는 복습하고 C++ 질의 도구 선택하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "content": [
+            {
+              "text": "3. 공통 타입 경계는 복습하고 C++ 질의 도구 선택하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "sizeof(char)==1, CHAR_BIT, 구현별 타입 크기, 진수와 표현 범위는 C02·03의 공통 기반입니다. 이 장에서는 크기를 암기하는 대신 <limits>의 std::numeric_limits<T>로 선택한 타입의 성질을 코드에 붙이는 데 집중합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C02 타입의 크기와 범위",
+              "kind": "link",
+              "href": "/knowledge/c-basics-02/"
             }
           ]
         },
@@ -499,42 +486,12 @@
               "cells": [
                 [
                   {
-                    "text": "확인 도구"
+                    "text": "C++ 질의"
                   }
                 ],
                 [
                   {
-                    "text": "무엇을 알려 주나?"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "sizeof(T)"
-                  }
-                ],
-                [
-                  {
-                    "text": "타입 T의 저장 크기 · C++ 바이트 단위"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "CHAR_BIT"
-                  }
-                ],
-                [
-                  {
-                    "text": "C++ 바이트 하나의 비트 수 · 최소 8"
+                    "text": "사용할 때 구별할 점"
                   }
                 ]
               ]
@@ -549,7 +506,7 @@
                 ],
                 [
                   {
-                    "text": "표현할 수 있는 최댓값"
+                    "text": "해당 타입의 표현 상한"
                   }
                 ]
               ]
@@ -579,7 +536,22 @@
                 ],
                 [
                   {
-                    "text": "정수의 최솟값 · 부동소수점은 최소 양의 정규화 값"
+                    "text": "정수 최솟값과 부동소수점 최소 양의 정규화 값은 의미가 다름"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "sizeof(T)·CHAR_BIT"
+                  }
+                ],
+                [
+                  {
+                    "text": "저장 크기와 바이트의 비트 수; 글자 수가 아님"
                   }
                 ]
               ]
@@ -590,163 +562,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "정확한 폭이 필요한 경우에는 제공되는 환경에서 std::uint32_t 같은 타입으로 의도를 나타낼 수 있습니다. 타입을 고르는 것만으로 파일의 바이트 순서나 직렬화 규칙이 정해지지는 않습니다."
-            }
-          ]
-        },
-        {
-          "type": "table",
-          "rows": [
-            {
-              "header": true,
-              "cells": [
-                [
-                  {
-                    "text": "C++ 표기"
-                  }
-                ],
-                [
-                  {
-                    "text": "십진수로 읽으면"
-                  }
-                ],
-                [
-                  {
-                    "text": "주의할 점"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "0b00000010"
-                  }
-                ],
-                [
-                  {
-                    "text": "2"
-                  }
-                ],
-                [
-                  {
-                    "text": "0b는 이진수 · C++14부터"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "0b0100 ^ 0b0011"
-                  }
-                ],
-                [
-                  {
-                    "text": "7"
-                  }
-                ],
-                [
-                  {
-                    "text": "XOR는 서로 다른 자리만 1"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "0x10"
-                  }
-                ],
-                [
-                  {
-                    "text": "16"
-                  }
-                ],
-                [
-                  {
-                    "text": "0x는 16진수"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "0132"
-                  }
-                ],
-                [
-                  {
-                    "text": "90"
-                  }
-                ],
-                [
-                  {
-                    "text": "앞의 0은 전통적인 8진수 표기"
-                  }
-                ]
-              ]
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "용량 단위도 구분합니다. 1 kB는 1000 B, 1 KiB는 1024 B입니다. 특정 16진수의 첫 글자가 8이라고 그 값이 항상 음수인 것은 아닙니다. 타입의 폭과 부호를 함께 봐야 합니다."
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "환경별 측정값과 문자 크기",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "과거 Notion 실험의 Linux x86-64에서는 long 8바이트, wchar_t 4바이트, void* 8바이트가 기록되어 있습니다. MSVC 문서의 Windows 모델에서는 long 4바이트, wchar_t 2바이트입니다. Windows/MSVC를 이번 실습에서 실행했다는 뜻은 아닙니다."
-                }
-              ]
-            },
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "포인터 크기는 가리키는 객체의 크기가 아니며, wchar_t의 크기도 사용자가 보는 글자 하나의 크기를 뜻하지 않습니다. 새 실습의 측정값은 보관된 실행 로그로 따로 확인합니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "근거: "
-            },
-            {
-              "text": "N4861 · 기본 타입",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/basic.fundamental"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "Microsoft · 구현별 타입 범위",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/cpp/cpp/data-type-ranges?view=msvc-170"
+              "text": "std::uint32_t는 제공되는 환경에서 정확한 폭을 표현하지만 파일 엔디안은 별도입니다. types.cpp의 크기 출력은 기존 실행 환경의 관찰이며 Windows/MSVC의 새 실행 증거로 사용하지 않습니다."
             }
           ]
         }
@@ -754,7 +570,7 @@
     },
     {
       "id": "integer",
-      "title": "4. 계산할 때의 타입을 먼저 확인한다",
+      "title": "4. C의 산술 계약을 C++ 타입 표현에 연결하기",
       "tab": "document",
       "blocks": [
         {
@@ -762,7 +578,25 @@
           "level": 2,
           "content": [
             {
-              "text": "4. 계산할 때의 타입을 먼저 확인한다"
+              "text": "4. C의 산술 계약을 C++ 타입 표현에 연결하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "승격·unsigned 모듈러 산술·signed 오버플로 금지는 C03과 연결해 읽습니다. C++의 중괄호나 auto가 계산 자체를 넓히지는 않습니다. 아래 두 그림은 이 공통 전제를 짧게 재확인하는 보조 자료입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C03 형 변환과 오버플로 검사",
+              "kind": "link",
+              "href": "/knowledge/c-basics-03/"
             }
           ]
         },
@@ -773,55 +607,21 @@
           "caption": "이 그림은 8비트 모형입니다. 실제 unsigned int의 폭은 환경에서 확인합니다."
         },
         {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "부호 없는 정수 연산은 해당 타입의 범위에 따른 모듈러 연산을 합니다. 반면 C++20에서 부호 있는 정수의 산술 결과가 표현 범위를 벗어나면 미정의 동작입니다. 두 경우를 같은 래핑으로 취급하면 안 됩니다."
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "cpp",
-          "text": "// <limits>가 필요합니다. unsigned int의 실제 최댓값을 구합니다.\nunsigned int value = std::numeric_limits<unsigned int>::max();\nunsigned int wrapped = value + 1u;  // 부호 없는 연산 결과는 0입니다.\n\n// 게임 규칙: 피해가 체력 이상이면 체력을 0으로 제한합니다.\nunsigned int hp{3};\nunsigned int damage{5};\nhp = damage >= hp ? 0u : hp - damage;  // 먼저 비교해 큰 양수로 도는 일을 막습니다.\n"
-        },
-        {
           "type": "image",
           "src": "/knowledge/cpp-basics-01/assets/promotion.svg",
           "alt": "8비트 unsigned char 두 값을 더할 때 int로 승격해 256을 계산한 뒤, auto 결과는 256이고 unsigned char로 변환한 결과는 0인 두 경로.",
           "caption": "CHAR_BIT가 8이고 int가 0~255를 모두 표현하는 환경을 가정한 그림입니다."
         },
         {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "작은 정수는 계산 전에 int 등으로 승격될 수 있습니다. unsigned char 값 255와 1을 더한 식이 곧바로 8비트 덧셈이 되는 것은 아닙니다. 계산 과정과 결과를 저장할 때의 변환을 나누어 읽으세요."
-            }
-          ]
-        },
-        {
           "type": "code",
           "language": "cpp",
-          "text": "int a{1000};\nint b{1000};\n// a와 b를 먼저 int로 곱하고 나중에 저장 타입을 바꾸면 늦을 수 있습니다.\n// 이 예에서는 곱하기 전에 한 피연산자를 long long으로 넓힙니다.\nlong long result = static_cast<long long>(a) * b;\n// 넓은 타입도 유한합니다. 일반 입력은 그 결과 범위까지 검사해야 합니다.\n"
+          "text": "int a{10};\nint b{20};\nauto product = a * b;  // 추론 결과 int: auto가 범위를 확대하지 않습니다.\nlong long wide = static_cast<long long>(a) * b;\n// 변환은 곱하기 전에 합니다. long long의 범위도 무한하지 않습니다."
         },
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "근거: "
-            },
-            {
-              "text": "N4861 · 부호 있는 정수와 부호 없는 정수",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/basic.fundamental"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "N4861 · 정수 승격",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/conv.prom"
+              "text": "static_cast는 변환 의도를 보이게 할 뿐 일반 입력의 범위 검사가 아닙니다. 사용자가 정한 체력·수량 상한은 표현 가능한 정수 범위와 별도로 검사합니다. 이 설명 조각은 기존 types의 15회 검사에 추가된 실행 시험이 아닙니다."
             }
           ]
         }
@@ -829,7 +629,7 @@
     },
     {
       "id": "floating",
-      "title": "5. 소수 부분을 잃은 뒤에는 형 변환으로 되살릴 수 없다",
+      "title": "5. 형 변환은 계산 전인가, 계산 뒤인가?",
       "tab": "document",
       "blocks": [
         {
@@ -837,7 +637,25 @@
           "level": 2,
           "content": [
             {
-              "text": "5. 소수 부분을 잃은 뒤에는 형 변환으로 되살릴 수 없다"
+              "text": "5. 형 변환은 계산 전인가, 계산 뒤인가?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정수 나눗셈과 근삿값 비교 원리는 C03에서 복습합니다. C++에서 새로 읽을 것은 static_cast의 위치입니다. double로 저장하거나 auto를 쓰는 것만으로 이미 끝난 정수 나눗셈을 되돌리지 못합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C03 산술과 변환 순서",
+              "kind": "link",
+              "href": "/knowledge/c-basics-03/"
             }
           ]
         },
@@ -950,55 +768,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "리터럴 10.0의 타입은 double, 10.0f는 float입니다. f는 타입을 지정하는 표기이며 특정 CPU 저장 위치를 지시하지 않습니다. 저장·레지스터·상수 접기는 컴파일러와 최적화에 달려 있습니다."
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "부동소수점은 유한한 정밀도로 계산합니다. 이진 부동소수점에서 0.1 같은 값은 근삿값입니다. 가까움을 비교할 때는 값의 크기와 문제의 허용 오차를 먼저 정해야 합니다."
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "cpp",
-          "text": "// <cmath>가 필요합니다. 이 작은 수 예제만을 위한 절대 오차입니다.\nbool close = std::abs((0.1 + 0.2) - 0.3) < 1e-12;\n// 게임 전체의 모든 좌표·속도·시간 비교에 같은 값을 복사하지 않습니다.\n"
-        },
-        {
-          "type": "details",
-          "title": "오차 정책을 고르는 질문",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "허용 오차가 거리 단위로 고정되어 있는가, 값이 커질수록 허용 폭도 커져야 하는가를 구분합니다. 절대·상대 오차 정책이 필요할 수 있습니다. 정확히 셀 수 있는 개수는 정수로 다루고, 금액 등 정확한 표현이 필요한 값은 별도의 표현·반올림 규칙을 정하세요."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "근거: "
-            },
-            {
-              "text": "Microsoft · 숫자 리터럴",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/cpp/cpp/numeric-boolean-and-pointer-literals-cpp?view=msvc-170"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "N4861 · 나눗셈",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.mul"
+              "text": "10.0은 double, 10.0f는 float입니다. 타입 표기는 CPU 저장 위치를 지정하지 않습니다. types.cpp의 1e-12 절대 오차는 작은 수의 예일 뿐 모든 좌표·시간 계산의 공통 정책이 아닙니다."
             }
           ]
         }
@@ -1136,12 +906,100 @@
               "href": "https://timsong-cpp.github.io/cppwp/n4861/dcl.spec.auto"
             }
           ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "선언"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 예제의 타입/관계"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "const int source{7}; auto copy = source;"
+                  }
+                ],
+                [
+                  {
+                    "text": "copy는 수정 가능한 int 복사본"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "const auto& view = source;"
+                  }
+                ],
+                [
+                  {
+                    "text": "const int&로 원본 관찰"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "auto list = {1, 2};"
+                  }
+                ],
+                [
+                  {
+                    "text": "<initializer_list>가 선언된 문맥의 initializer_list<int>"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "auto one{1};"
+                  }
+                ],
+                [
+                  {
+                    "text": "C++20에서 int; auto와 중괄호 형태를 함께 읽기"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C11에서 auto는 저장 클래스 지정자이고 이 C++ 타입 추론 용법과 다릅니다. auto는 실행 중 타입이 바뀌는 기능이 아닙니다. const가 아닌 복사본을 만드는지, const 참조로 빌리는지를 명시적으로 선택하세요. constexpr 함수의 모든 호출이 상수 평가되는 것도 아니며, 계산 가능성과 최적화 결과는 다른 질문입니다."
+            }
+          ]
         }
       ]
     },
     {
       "id": "expressions",
-      "title": "7. 묶이는 순서와 실행되는 순서는 다르다",
+      "title": "7. 공통 평가 규칙을 C++에 무조건 일반화하지 않기",
       "tab": "document",
       "blocks": [
         {
@@ -1149,7 +1007,7 @@
           "level": 2,
           "content": [
             {
-              "text": "7. 묶이는 순서와 실행되는 순서는 다르다"
+              "text": "7. 공통 평가 규칙을 C++에 무조건 일반화하지 않기"
             }
           ]
         },
@@ -1157,20 +1015,17 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "연산자 우선순위는 식을 어떻게 묶어 해석할지 정합니다. 평가 순서는 실제 계산과 부수 효과가 언제 일어날지의 문제입니다. 괄호를 더한다고 모든 함수 호출 순서가 정해지지는 않습니다."
+              "text": "우선순위와 평가 순서의 차이는 C03에서 확인했습니다. C++에서도 괄호가 임의 함수 호출 순서를 정하지는 않습니다. 특히 기본 &&·||는 단락 평가하지만 오버로드된 논리 연산자를 같은 단락 계약으로 읽으면 안 됩니다."
             }
           ]
-        },
-        {
-          "type": "code",
-          "language": "cpp",
-          "text": "int i{5};\nint old = i++;  // 식의 결과는 증가 전 값 5. 이 문장 뒤 i는 6입니다.\nint now = ++i;  // 먼저 i를 7로 증가시키고 그 값을 사용합니다.\n// old = 5, now = 7, i = 7입니다. 한 식에서 여러 번 바꾸지 않습니다.\n"
         },
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "기본 &&와 ||는 단락 평가를 합니다. 아래 도식은 &&의 왼쪽이 거짓이면 오른쪽이 실행되지 않는다는 뜻입니다. 오버로드된 연산자까지 같은 동작으로 일반화하지 않습니다."
+              "text": "공통 복습 · C03 논리 연산과 평가",
+              "kind": "link",
+              "href": "/knowledge/c-basics-03/"
             }
           ]
         },
@@ -1180,58 +1035,10 @@
           "text": "flowchart TD\naccTitle: 기본 논리 AND의 단락 평가\naccDescr: 왼쪽 조건이 거짓이면 오른쪽을 건너뛰어 거짓을 반환하고, 참이면 오른쪽 평가 결과를 사용합니다.\n  A[\"왼쪽 조건 평가\"] --> B{\"참인가?\"}\n  B -->|아니요| C[\"오른쪽 생략\"]\n  B -->|예| D[\"오른쪽 조건 평가\"]\n  C --> E[\"결과는 거짓\"]\n  D --> F[\"오른쪽의 참거짓 사용\"]\n"
         },
         {
-          "type": "code",
-          "language": "cpp",
-          "text": "bool evaluated = false;\nconst bool result = false && (evaluated = true);\n// 오른쪽 대입이 실행되지 않습니다: result와 evaluated는 모두 false입니다.\n"
-        },
-        {
-          "type": "callout",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "널 검사와 수명 검사는 다릅니다",
-                  "kind": "strong"
-                }
-              ]
-            },
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "p != nullptr && *p > 0은 p가 널이면 오른쪽 접근을 건너뜁니다. 널이 아닌 포인터도 수명이 끝난 객체를 가리킬 수 있습니다. 수명과 유효 범위는 03에서 별도로 확인합니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
           "type": "paragraph",
           "content": [
             {
-              "text": "근거: "
-            },
-            {
-              "text": "N4861 · 단락 평가",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.log.and"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "N4861 · 후위 증가",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.post.incr"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "N4861 · 실행 순서",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/intro.execution"
+              "text": "types.cpp는 기본 &&에서 오른쪽 대입이 생략됨을 검사합니다. C++ 버전별 상세 시퀀싱과 함수 호출·연산자 오버로드의 모든 조합을 그 한 검사로 검증한 것은 아닙니다."
             }
           ]
         }
@@ -1682,6 +1489,34 @@
               "href": "/knowledge/cpp-basics-02/"
             }
           ]
+        },
+        {
+          "type": "details",
+          "title": "06 · auto copy = source는 const와 참조까지 그대로 복사할까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 단원의 const int source 예에서 copy는 int 값 복사본입니다. 원본을 빌리려면 const auto&처럼 의도를 표시합니다. 모든 추론 문맥을 같은 규칙으로 단순화하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "07 · int x{...}가 모든 숫자 오류를 막을까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "목록 초기화의 축소 변환 규칙을 검사하지만 산술의 오버플로, 사용자 입력 범위, 클래스 불변식 전체를 대신 검사하지 않습니다."
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -1982,6 +1817,16 @@
               "text": "원본 01의 빌드·초기화·크기·진수·정수·실수·상수·평가 순서·비트 마스크·실습·검증 주제를 각각 이 문서의 본문과 네 탭에 대응시켰습니다. 원본의 세 복습 질문도 보존했습니다."
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 · auto 추론의 실제 규칙",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/dcl.spec.auto"
+            }
+          ]
         }
       ]
     },
@@ -2207,6 +2052,14 @@
           "content": [
             {
               "text": "원본 팩의 기준은 C++20입니다. C++11에서는 지원하지 않는 기능으로 컴파일이 거부되며, 그 진단 기록은 과거 C++20 실행 기록과 별도로 보관합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 · C01–14와 중복되는 공통 원리는 짧은 복습과 실제 단원 링크로 연결하고, C++의 타입·소유권·표준 도구·오류 계약 선택에 학습 비중을 옮겼습니다. 기존 섹션 ID·원문 캡처·전체 한국어 소스·CPU 검증 기록과 그림은 유지했습니다. 새 설명·연습은 기존 CHECK 횟수나 CPU 실행 증거에 합산하지 않습니다. 이번 본문 개편의 웹 표시·공개 배포 확인은 별도 단계입니다."
             }
           ]
         }

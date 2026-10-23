@@ -35,6 +35,72 @@
           "type": "paragraph",
           "content": [
             {
+              "text": "주소·const 위치·배열 경계·해제 후 관찰은 C07·C10에서 배웠습니다. 여기서는 같은 불변식을 C++ 참조와 소유 타입으로 어떻게 표현하며 C API와 만나는 지점에서 무엇을 보장해야 하는지 읽습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "C에서 확인한 공통 기반"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 C++ 단원의 새로운 판단"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "C07 포인터·대상·수명"
+                  }
+                ],
+                [
+                  {
+                    "text": "참조의 결합과 int*& 출력"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "C10 명시적 free·실패 정리"
+                  }
+                ],
+                [
+                  {
+                    "text": "unique_ptr의 RAII·이동·맞는 deleter"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 순서: 공통 원리가 낯설면 아래 C 연결을 먼저 확인하고, 익숙하면 C++ 고유 선택과 실패 경계로 진행하세요. C11과 C++20은 서로 다른 언어 규칙이며 C 코드의 문법·타입·수명 규칙을 그대로 옮기지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
               "text": "게임의 적이 사라진 뒤에도 이벤트가 그 적의 포인터를 갖고 있다면 어떻게 될까요? 주소가 남아 있다는 사실만으로 객체가 살아 있지는 않습니다."
             }
           ]
@@ -80,7 +146,7 @@
     },
     {
       "id": "part-1",
-      "title": "1. p, *p, &p는 서로 다른 것을 뜻한다",
+      "title": "1. 포인터 관계를 복습하고 참조를 새로 연결하기",
       "tab": "document",
       "blocks": [
         {
@@ -88,7 +154,25 @@
           "level": 2,
           "content": [
             {
-              "text": "1. p, *p, &p는 서로 다른 것을 뜻한다"
+              "text": "1. 포인터 관계를 복습하고 참조를 새로 연결하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "p는 대상 주소, *p는 대상, &p는 포인터 객체의 주소라는 공통 원리는 C07에서 복습합니다. 아래 그림에 새로 추가되는 C++ 요소는 int& alias입니다. 포인터 객체를 하나 더 소유하는 설명이 아니라 기존 hp에 결합한 다른 이름으로 읽습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C07 포인터 기초",
+              "kind": "link",
+              "href": "/knowledge/c-basics-07/"
             }
           ]
         },
@@ -104,209 +188,10 @@
           "caption": "이름과 대상의 관계를 그린 개념도입니다. 주소 숫자나 실제 스택 배치를 측정한 그림이 아닙니다."
         },
         {
-          "type": "table",
-          "rows": [
-            {
-              "header": true,
-              "cells": [
-                [
-                  {
-                    "text": "표현"
-                  }
-                ],
-                [
-                  {
-                    "text": "무엇을 뜻하나"
-                  }
-                ],
-                [
-                  {
-                    "text": "위 코드에서"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "p",
-                    "kind": "code"
-                  }
-                ],
-                [
-                  {
-                    "text": "포인터 객체에 저장된 값"
-                  }
-                ],
-                [
-                  {
-                    "text": "hp",
-                    "kind": "code"
-                  },
-                  {
-                    "text": "의 주소"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "*p",
-                    "kind": "code"
-                  }
-                ],
-                [
-                  {
-                    "text": "포인터가 가리키는 대상"
-                  }
-                ],
-                [
-                  {
-                    "text": "hp",
-                    "kind": "code"
-                  },
-                  {
-                    "text": "를 지칭하며 값은 80"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "&p",
-                    "kind": "code"
-                  }
-                ],
-                [
-                  {
-                    "text": "포인터 객체 자신의 주소"
-                  }
-                ],
-                [
-                  {
-                    "text": "hp",
-                    "kind": "code"
-                  },
-                  {
-                    "text": "의 주소와 구분"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "alias",
-                    "kind": "code"
-                  }
-                ],
-                [
-                  {
-                    "text": "참조가 결합된 대상"
-                  }
-                ],
-                [
-                  {
-                    "text": "동일한 "
-                  },
-                  {
-                    "text": "hp",
-                    "kind": "code"
-                  }
-                ]
-              ]
-            }
-          ]
-        },
-        {
           "type": "paragraph",
           "content": [
             {
-              "text": "int** pp = &p;",
-              "kind": "code"
-            },
-            {
-              "text": "라면 "
-            },
-            {
-              "text": "*pp",
-              "kind": "code"
-            },
-            {
-              "text": "는 포인터 객체 "
-            },
-            {
-              "text": "p",
-              "kind": "code"
-            },
-            {
-              "text": ", "
-            },
-            {
-              "text": "**pp",
-              "kind": "code"
-            },
-            {
-              "text": "는 정수 객체 "
-            },
-            {
-              "text": "hp",
-              "kind": "code"
-            },
-            {
-              "text": "를 지칭합니다. 별표가 늘어날 때마다 ‘지금 어느 객체를 보고 있나’를 한 단계씩 따라가세요."
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "구조체 포인터의 화살표 읽기",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "유효한 구조체 포인터에서 "
-                },
-                {
-                  "text": "p->member",
-                  "kind": "code"
-                },
-                {
-                  "text": "는 "
-                },
-                {
-                  "text": "(*p).member",
-                  "kind": "code"
-                },
-                {
-                  "text": "와 대응합니다. "
-                },
-                {
-                  "text": "->",
-                  "kind": "code"
-                },
-                {
-                  "text": " 전체가 멤버 접근 연산자입니다. "
-                },
-                {
-                  "text": ">",
-                  "kind": "code"
-                },
-                {
-                  "text": " 하나를 역참조 연산자로 읽지 않습니다."
-                }
-              ]
+              "text": "참조도 수명을 자동 추적하지 않습니다. 유효하지 않은 대상에 결합하거나 수명이 끝난 뒤 사용해도 안전한 “널 아닌 포인터”로 이해하면 안 됩니다. 대상 재결합과 대입의 차이는 3절에서 이어집니다."
             }
           ]
         }
@@ -779,7 +664,7 @@
     },
     {
       "id": "part-4",
-      "title": "4. const는 어느 것을 고정할까?",
+      "title": "4. C의 const 경로에서 C++ 참조·값 범주로",
       "tab": "document",
       "blocks": [
         {
@@ -787,7 +672,7 @@
           "level": 2,
           "content": [
             {
-              "text": "4. const는 어느 것을 고정할까?"
+              "text": "4. C의 const 경로에서 C++ 참조·값 범주로"
             }
           ]
         },
@@ -795,116 +680,17 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "포인터에는 ‘자기 자신’과 ‘가리키는 대상’이 있습니다. const가 어느 쪽에 붙었는지 두 칸으로 나누어 읽으면 됩니다."
+              "text": "const int*와 int* const의 구별은 C07과 공통입니다. 이 C++ 장에서는 const int&의 관찰 경로와 lvalue/rvalue가 서로 다른 질문이라는 점에 집중합니다."
             }
           ]
         },
         {
-          "type": "table",
-          "rows": [
+          "type": "paragraph",
+          "content": [
             {
-              "header": true,
-              "cells": [
-                [
-                  {
-                    "text": "선언"
-                  }
-                ],
-                [
-                  {
-                    "text": "포인터 재지정"
-                  }
-                ],
-                [
-                  {
-                    "text": "이 경로로 대상 수정"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "int* p",
-                    "kind": "code"
-                  }
-                ],
-                [
-                  {
-                    "text": "가능"
-                  }
-                ],
-                [
-                  {
-                    "text": "가능"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "const int* p",
-                    "kind": "code"
-                  }
-                ],
-                [
-                  {
-                    "text": "가능"
-                  }
-                ],
-                [
-                  {
-                    "text": "불가"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "int* const p",
-                    "kind": "code"
-                  }
-                ],
-                [
-                  {
-                    "text": "불가"
-                  }
-                ],
-                [
-                  {
-                    "text": "가능"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "const int* const p",
-                    "kind": "code"
-                  }
-                ],
-                [
-                  {
-                    "text": "불가"
-                  }
-                ],
-                [
-                  {
-                    "text": "불가"
-                  }
-                ]
-              ]
+              "text": "공통 복습 · C07 const의 위치",
+              "kind": "link",
+              "href": "/knowledge/c-basics-07/"
             }
           ]
         },
@@ -912,25 +698,6 @@
           "type": "code",
           "language": "cpp",
           "text": "int hp{9};\nconst int* read_only = &hp; // 이 경로로는 hp를 수정하지 못합니다.\nint* const fixed = &hp;     // 포인터 자체를 재지정하지 못합니다.\n*fixed = 6;                 // hp는 원래 비const이므로 수정 가능합니다.\n// 이제 *read_only로 읽어도 6입니다.\n"
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "const int*",
-              "kind": "code"
-            },
-            {
-              "text": "와 "
-            },
-            {
-              "text": "int const*",
-              "kind": "code"
-            },
-            {
-              "text": "는 같은 뜻입니다. 읽기 전용 경로를 하나 만들었다고 다른 경로에서의 변경까지 사라지지는 않습니다."
-            }
-          ]
         },
         {
           "type": "details",
@@ -976,17 +743,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "const 접근 경로",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/dcl.type.cv"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "값 범주",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/basic.lval"
+              "text": "const int&는 그 참조 경로의 변경을 제한할 뿐 다른 합법적인 경로의 변경을 모두 금지하지 않습니다. 이동을 원한다고 원래 const인 객체에서 const를 제거해 수정하면 안 됩니다."
             }
           ]
         }
@@ -994,7 +751,7 @@
     },
     {
       "id": "part-5",
-      "title": "5. 이름의 범위와 객체의 수명은 다르다",
+      "title": "5. C의 저장 기간에서 C++ 생성·소멸로 연결하기",
       "tab": "document",
       "blocks": [
         {
@@ -1002,7 +759,25 @@
           "level": 2,
           "content": [
             {
-              "text": "5. 이름의 범위와 객체의 수명은 다르다"
+              "text": "5. C의 저장 기간에서 C++ 생성·소멸로 연결하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "범위는 이름의 가시성, 저장 기간은 공간의 유지 기간이라는 구분은 C05에서 복습합니다. C++에서는 클래스 객체의 초기화·소멸과 예외로 인한 정리도 수명 설명의 중심이 됩니다. 자동 저장 기간이라고 모든 비정상 종료에서 소멸자가 반드시 실행된다는 뜻은 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C05 범위·저장 기간",
+              "kind": "link",
+              "href": "/knowledge/c-basics-05/"
             }
           ]
         },
@@ -1014,17 +789,12 @@
               "cells": [
                 [
                   {
-                    "text": "질문"
+                    "text": "C++에서 새로 확인할 질문"
                   }
                 ],
                 [
                   {
-                    "text": "개념"
-                  }
-                ],
-                [
-                  {
-                    "text": "살펴볼 것"
+                    "text": "예"
                   }
                 ]
               ]
@@ -1034,17 +804,12 @@
               "cells": [
                 [
                   {
-                    "text": "이 이름을 어디서 쓸까?"
+                    "text": "초기화가 성공했는가"
                   }
                 ],
                 [
                   {
-                    "text": "범위 · scope"
-                  }
-                ],
-                [
-                  {
-                    "text": "블록·함수·네임스페이스"
+                    "text": "생성자가 던지면 완성된 객체의 소멸자는 호출되지 않음"
                   }
                 ]
               ]
@@ -1054,17 +819,12 @@
               "cells": [
                 [
                   {
-                    "text": "객체가 언제 존재할까?"
+                    "text": "정상적으로 수명을 끝내는가"
                   }
                 ],
                 [
                   {
-                    "text": "수명 · lifetime"
-                  }
-                ],
-                [
-                  {
-                    "text": "초기화와 소멸·저장 공간 재사용"
+                    "text": "정상 블록 종료·스택 풀기에서 소유자 정리"
                   }
                 ]
               ]
@@ -1074,17 +834,12 @@
               "cells": [
                 [
                   {
-                    "text": "저장 공간은 얼마나 유지될까?"
+                    "text": "관찰자는 더 오래 남는가"
                   }
                 ],
                 [
                   {
-                    "text": "저장 기간"
-                  }
-                ],
-                [
-                  {
-                    "text": "자동·정적·스레드·동적"
+                    "text": "객체를 지운 뒤 raw 포인터·참조 접근 중단"
                   }
                 ]
               ]
@@ -1095,186 +850,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "예를 들어 함수 안의 지역 "
-            },
-            {
-              "text": "static",
-              "kind": "code"
-            },
-            {
-              "text": " 이름은 그 함수 안에서만 보이지만, 저장 공간은 함수 호출이 끝나도 유지됩니다. 반대로 동적 객체는 지역 raw 포인터가 사라진다는 이유만으로 해제되지 않습니다."
-            }
-          ]
-        },
-        {
-          "type": "table",
-          "rows": [
-            {
-              "header": true,
-              "cells": [
-                [
-                  {
-                    "text": "저장 기간"
-                  }
-                ],
-                [
-                  {
-                    "text": "대표적인 예"
-                  }
-                ],
-                [
-                  {
-                    "text": "기억할 점"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "자동"
-                  }
-                ],
-                [
-                  {
-                    "text": "일반 지역 객체"
-                  }
-                ],
-                [
-                  {
-                    "text": "보통 블록 종료 때 소멸"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "정적"
-                  }
-                ],
-                [
-                  {
-                    "text": "전역 객체·지역 "
-                  },
-                  {
-                    "text": "static",
-                    "kind": "code"
-                  }
-                ],
-                [
-                  {
-                    "text": "저장 공간은 프로그램 실행 동안 유지"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "스레드"
-                  }
-                ],
-                [
-                  {
-                    "text": "thread_local",
-                    "kind": "code"
-                  },
-                  {
-                    "text": " 객체"
-                  }
-                ],
-                [
-                  {
-                    "text": "스레드별로 존재하며 종료와 연관"
-                  }
-                ]
-              ]
-            },
-            {
-              "header": false,
-              "cells": [
-                [
-                  {
-                    "text": "동적"
-                  }
-                ],
-                [
-                  {
-                    "text": "new",
-                    "kind": "code"
-                  },
-                  {
-                    "text": "로 만든 객체"
-                  }
-                ],
-                [
-                  {
-                    "text": "소유자가 해제 시점을 관리"
-                  }
-                ]
-              ]
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "지역 객체의 주소나 참조를 반환해 호출 뒤에 사용하면 대상의 수명이 이미 끝났을 수 있습니다. 저장 공간이 남아 보이는지보다 "
-            },
-            {
-              "text": "그 객체가 아직 살아 있는지",
-              "kind": "strong"
-            },
-            {
-              "text": "를 먼저 확인합니다."
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "CODE / DATA / STACK / HEAP 그림의 한계",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "이 구분은 흔한 구현을 설명하는 모델입니다. C++가 물리 RAM을 반드시 네 구역으로 나누라는 규칙은 아닙니다. 최적화하면 값이 레지스터에만 있거나 저장 자체가 없어질 수도 있습니다."
-                }
-              ]
-            },
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "정적 저장 기간과 객체의 수명도 완전히 같은 말은 아닙니다. 초기화 시점과 소멸 순서는 별도로 살펴야 합니다. 여기서는 먼저 언어가 정하는 수명과 접근 조건을 이해합니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "객체 수명",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/basic.life"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "저장 기간",
-              "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/basic.stc"
+              "text": "물리 메모리를 CODE/DATA/STACK/HEAP 네 칸으로 고정하는 그림보다 소유자의 수명과 관찰 종료 시점을 먼저 적습니다. 자세한 생성·소멸 순서와 예외 안전성은 C++ 심화01·02에서 다룹니다."
             }
           ]
         }
@@ -1737,12 +1313,30 @@
               "href": "https://timsong-cpp.github.io/cppwp/n4861/forward"
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "비교할 C 구현 · C10 동적 메모리 소유자",
+              "kind": "link",
+              "href": "/knowledge/c-basics-10/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C10에서는 성공·실패 경로마다 destroy 호출 책임을 명시했습니다. C++에서는 올바른 deleter를 가진 소유 객체가 정상 소멸과 스택 풀기에 그 책임을 연결합니다. malloc으로 얻은 블록을 기본 unique_ptr<T>의 delete에 넘기거나, C API 전용 Release 자원을 delete로 해제하면 안 됩니다. 획득 API에 맞는 정리 함수를 선택해야 합니다. shared_ptr로 모두 바꾸는 것이 해법은 아닙니다."
+            }
+          ]
         }
       ]
     },
     {
       "id": "part-8",
-      "title": "8. 끝 다음 주소는 경계이지 원소가 아니다",
+      "title": "8. 끝 다음 경계는 C 복습, 범위 API 선택은 C++ 과제",
       "tab": "document",
       "blocks": [
         {
@@ -1750,7 +1344,25 @@
           "level": 2,
           "content": [
             {
-              "text": "8. 끝 다음 주소는 경계이지 원소가 아니다"
+              "text": "8. 끝 다음 경계는 C 복습, 범위 API 선택은 C++ 과제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "배열 끝 다음 위치를 만들 수 있어도 역참조할 수 없다는 원칙은 C07·08과 공통입니다. 이 관계도는 전체 범위와 접근 가능한 원소를 구별하는 짧은 복습입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 복습 · C07 배열 경계",
+              "kind": "link",
+              "href": "/knowledge/c-basics-07/"
             }
           ]
         },
@@ -1761,62 +1373,10 @@
           "caption": "포인터 덧셈은 같은 배열 안의 원소 또는 끝 다음 위치까지입니다. 한 칸 이동은 대상 타입의 원소 한 개 단위입니다."
         },
         {
-          "type": "code",
-          "language": "cpp",
-          "text": "int values[]{10, 20, 30};\nint* p = values;\nint* end = values + 3;        // 끝 다음 경계를 나타냅니다.\nint second = *(p + 1);        // values[1], 값은 20입니다.\n// *end를 읽거나 쓰지 않습니다. values[3] 원소는 없습니다.\n"
-        },
-        {
           "type": "paragraph",
           "content": [
             {
-              "text": "end - values",
-              "kind": "code"
-            },
-            {
-              "text": "는 이 배열의 원소 수 3입니다. 같은 배열 경계를 넘어 포인터를 더 만들거나, 관계없는 두 배열의 포인터를 빼는 것은 허용되는 일반 주소 계산이 아닙니다."
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "배열이 포인터로 변환되어도 배열 자체가 포인터는 아닙니다",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "배열은 많은 표현식에서 첫 원소를 가리키는 포인터로 변환됩니다. 하지만 배열 자체의 "
-                },
-                {
-                  "text": "sizeof",
-                  "kind": "code"
-                },
-                {
-                  "text": "는 전체 배열 크기이고, 함수 인자로 변환된 포인터의 "
-                },
-                {
-                  "text": "sizeof",
-                  "kind": "code"
-                },
-                {
-                  "text": "는 포인터 타입 크기입니다."
-                }
-              ]
-            },
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "배열 이름에 "
-                },
-                {
-                  "text": "values++",
-                  "kind": "code"
-                },
-                {
-                  "text": "를 적용해 포인터 변수처럼 재지정할 수 없습니다. 포인터의 이동 단위가 타입 크기에 맞는다고 다른 배열이나 다른 타입을 통한 접근까지 정당해지지는 않습니다. 다차원 배열은 다음 04 단원에서 이어갑니다."
-                }
-              ]
+              "text": "C++20에서는 연속 범위를 전달할 때 span으로 포인터와 길이를 함께 표현할 수 있습니다. 하지만 span도 원소를 소유하지 않고 잘못된 원본 범위나 수명 종료를 복구하지 않습니다. 선택과 무효화 규칙은 다음 04 단원에서 다룹니다."
             }
           ]
         },
@@ -1824,17 +1384,9 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "N4861: 포인터 산술",
+              "text": "다음 적용 · C++04 소유 컨테이너와 비소유 뷰",
               "kind": "link",
-              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.add"
-            },
-            {
-              "text": " · "
-            },
-            {
-              "text": "Microsoft: 배열",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/cpp/cpp/arrays-cpp?view=msvc-170"
+              "href": "/knowledge/cpp-basics-04/"
             }
           ]
         }
@@ -1984,6 +1536,109 @@
               "text": "bit_cast 조건",
               "kind": "link",
               "href": "https://timsong-cpp.github.io/cppwp/n4861/bit.cast"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "C API 경계에서 확인할 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "C++ 호출자의 책임"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "void*와 실제 대상 타입"
+                  }
+                ],
+                [
+                  {
+                    "text": "C11의 암시적 변환 습관을 가져오지 말고 원래 타입·수명·정렬 확인"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "pointer + length"
+                  }
+                ],
+                [
+                  {
+                    "text": "유효 연속 범위와 API 보관 기간 확인"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "획득/해제 함수 쌍"
+                  }
+                ],
+                [
+                  {
+                    "text": "맞는 deleter로 소유권을 한 번만 인수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "extern \"C\" 선언"
+                  }
+                ],
+                [
+                  {
+                    "text": "언어 연결 지정; 임의 C++ 클래스의 ABI 호환 보증이 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "오류 전달"
+                  }
+                ],
+                [
+                  {
+                    "text": "C 호출 경계를 넘어 예외를 전파하지 않도록 경계 정책 정의"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C 라이브러리 헤더가 제공하는 C++ 연결 가드를 우선 사용하세요. extern \"C\"로 선언을 감싸도 std::string·참조·소유권 계약이 C 인터페이스로 자동 변환되는 것은 아닙니다. 이 경계 설계는 설명 범위이며 현재 memory.cpp가 실제 C 라이브러리 연동이나 플랫폼 ABI를 검증한 것은 아닙니다."
             }
           ]
         }
@@ -2570,6 +2225,34 @@
               ]
             }
           ]
+        },
+        {
+          "type": "details",
+          "title": "9. malloc 결과를 기본 unique_ptr<T>에 넣어도 RAII이므로 안전할까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 기본 deleter의 delete와 malloc/free는 다른 쌍입니다. 획득 규약에 맞는 deleter와 대상 수명 계약을 먼저 정합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "10. extern \"C\"가 C++ 객체를 C와 호환시킬까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "언어 연결을 지정할 뿐 임의 클래스 배치·소유권·예외 처리를 변환하지 않습니다. 경계 타입과 실패 정책을 따로 설계합니다."
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -2950,6 +2633,16 @@
               ]
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "N4861 · C와 C++ 언어 연결",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/dcl.link"
+            }
+          ]
         }
       ]
     },
@@ -3276,6 +2969,14 @@
               "type": "code",
               "language": "text",
               "text": "2f48b54d2578f67b641553d180d078eb6d5fe0c0cf0fe70c0f7eaf68fe7e3091\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 · C01–14와 중복되는 공통 원리는 짧은 복습과 실제 단원 링크로 연결하고, C++의 타입·소유권·표준 도구·오류 계약 선택에 학습 비중을 옮겼습니다. 기존 섹션 ID·원문 캡처·전체 한국어 소스·CPU 검증 기록과 그림은 유지했습니다. 새 설명·연습은 기존 CHECK 횟수나 CPU 실행 증거에 합산하지 않습니다. 이번 본문 개편의 웹 표시·공개 배포 확인은 별도 단계입니다."
             }
           ]
         }
