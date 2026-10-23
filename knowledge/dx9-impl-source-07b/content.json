@@ -21,15 +21,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "이 페이지는 Notion에 보관된 기존 전체 코드 전문을 학습용으로 이전한 자료입니다. GitHub에서 CMake·소스 파일을 각각 독립적으로 다운로드할 수 있습니다. 과거 Notion CPU 결과와 GitHub에서 새로 실행한 결과는 별도로 집계합니다. Windows/MSVC·D3D9·GPU는 미검증입니다."
-                }
-              ]
+              "text": "07B는 실제 D3DX 호출 예제가 아니라 CPU 카메라·피킹·지형 모델의 전체 수정본 자료실이다. 입력 유한성과 계산 결과 유한성 검사를 모두 읽는다."
             }
           ]
         },
@@ -40,7 +35,15 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "**수동 검수 13 · 07 확장 실습 전체 보관과 실패 입력 교정**\n\t2026-10-16. 원형의 25조건을 재실행한 뒤 NaN 삼각형을 충돌로 판정하는 반례를 재현했습니다. 기존 교재 <mention-page url=\"https://app.notion.com/p/3f8a99703f4081e3b908de685a551c23\">07 · 카메라·지형·피킹 — 좌표 변환과 Ray 교차</mention-page>는 유지하고 수정된 전체 소스와 33조건 검증을 이 페이지에 보존합니다."
+                  "text": "**수동 검수 13 · 07 확장 실습 전체 보관과 실패 입력 교정**\n\t2026-10-16. 원형의 25조건을 재실행한 뒤 NaN 삼각형을 충돌로 판정하는 반례를 재현했습니다. 기존 교재 "
+                },
+                {
+                  "text": "07 · 카메라·지형·피킹 — 좌표 변환과 Ray 교차",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f4081e3b908de685a551c23"
+                },
+                {
+                  "text": "는 유지하고 수정된 전체 소스와 33조건 검증을 이 페이지에 보존합니다."
                 }
               ]
             }
@@ -53,6 +56,12 @@
       "title": "1. 비교식만으로 NaN을 거부할 수 없는 이유",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-source-07b/assets/failure-contract.svg",
+          "alt": "07B 회귀: NaN과 유한성 계약",
+          "caption": "07B 회귀: NaN과 유한성 계약 · 계약을 설명하는 도식이며 실제 GPU 캡처가 아닙니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -99,7 +108,7 @@
     {
       "id": "part-3",
       "title": "3. main.cpp — 전체 수정본",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "code",
@@ -109,47 +118,9 @@
       ]
     },
     {
-      "id": "part-4",
-      "title": "4. CMakeLists.txt·재현·검증",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "code",
-          "language": "text",
-          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx9_picking_recovered LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nadd_executable(picking main.cpp)\nset_target_properties(picking PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(picking PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(picking PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME picking COMMAND picking)"
-        },
-        {
-          "type": "code",
-          "language": "bash",
-          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build -j 2\nctest --test-dir build --output-on-failure -V\n# C++11: -DLAB_CXX_STANDARD=11\n# sanitizer: clang++ + -fsanitize=address,undefined -fno-sanitize-recover=undefined"
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "외부 입력·에셋 없이 실행하며 정상 출력은 PASS 33 checks와 종료 코드 0입니다. 조건 실패는 예외로 중단되며 CTest가 실패로 처리합니다. C++20이 학습 기본이지만 사용한 문법·라이브러리의 C++11 호환 빌드도 아래와 같이 실제 확인했습니다."
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "text",
-          "text": "UTC 2026-10-16T06:06:26.574370+00:00 to 06:06:30.009736+00:00\nGCC 14.2 C++20: PASS 33 checks\nGCC 14.2 C++11: PASS 33 checks\nClang 17 C++20 ASan+UBSan: PASS 33 checks\nExisting mini: PASS 7 CPU checks\nBatch CTest (extended + mini): each 2/2, exit=0\nWindows/MSVC/D3DX/Direct3D9/GPU: NOT RUN"
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "위 독립 CMake에는 확장 실행파일 하나가 등록됩니다. 기존 미니는 [원본 관련 문서](https://app.notion.com/p/3f8a99703f4081da9335faf6d568d1c3)에 보존되어 있으며 수정본의 새 실패 입력 검사를 대체하지 않습니다. 같은 33조건을 반복한 결과를 서로 다른 99조건이라고 세지 않습니다."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "part-5",
       "title": "5. 이해 확인과 변경 이력",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "details",
@@ -190,9 +161,245 @@
       ]
     },
     {
+      "id": "guided-practice",
+      "title": "실습 · 입력과 실패 경계를 먼저 예측",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Ray·삼각형·카메라·World·높이의 검사 위치를 찾고, 잘못된 입력 예외와 정상적인 교차 없음 결과를 구별한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스와 빌드 파일을 함께 읽고 원문 검증 범위와 비교한다. 이미 보존된 통과 횟수는 개편 과정의 새 실행으로 바꾸어 보고하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답하고 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "월드 단위 t를 유지하면서 로컬로 옮길 때 방향을 재정규화할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 모델에서는 하지 않는다. 비균일 스케일 뒤 재정규화하면 t의 크기 관계가 달라진다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "10×10 정점 격자의 셀과 삼각형 수는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "셀81, 삼각형162다. 셀10×10일 때의 정점11×11과 구별한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "u,v가 텍스처 UV인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "삼각형 교차의 u,v는 무게중심 좌표다. 정점 속성 보간은 별도 계산한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "NaN에서 t<0 검사만 하면 안전한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. NaN의 일반 크기 비교는 거부를 보장하지 않으므로 유한성을 검사한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "이 CPU 모델이 실제 D3D9 화면을 검증하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 코드가 모델링한 수치·소유권 계약만 검사한다. Windows/MSVC·실제 장치·GPU 화면 검증과 구별한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원문 검증 횟수가 이번 개편에서 새로 실행한 횟수인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 기존 날짜·로그·코드 해시를 보존한 역사적 증거다. 새 실행은 별도 기록이 있을 때만 주장한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "annotated-full-code",
+      "title": "한국어 주석 전체 소스 · 원본과 별도 제공",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 코드는 위에 그대로 보존했다. 아래 파생본은 한국어 설명 주석만 추가한 전체 파일이며, 주석 제거 후 원본 바이트 복원과 GCC 전처리 결과 동일성을 별도 검사했다. 모든 관련 파일을 함께 준비한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.cpp · 한국어 주석 전체 파일",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-07b-ko/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp · 전체 한국어 주석 소스",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <functional>\n#include <algorithm>\n#include <cstddef>\n#include <utility>\n#include <cassert>\n#include <cmath>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nstruct V3 { double x, y, z; };\nbool finite(V3 v){return std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z);}\nV3 operator+(V3 a, V3 b) { return {a.x+b.x,a.y+b.y,a.z+b.z}; }\nV3 operator-(V3 a, V3 b) { return {a.x-b.x,a.y-b.y,a.z-b.z}; }\nV3 operator*(V3 a, double s) { return {a.x*s,a.y*s,a.z*s}; }\ndouble dot(V3 a,V3 b) { return a.x*b.x+a.y*b.y+a.z*b.z; }\nV3 cross(V3 a,V3 b) { return {a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x}; }\ndouble length(V3 a) { return std::sqrt(dot(a,a)); }\nV3 normalized(V3 a) {\n    const double n=length(a);\n    if (!(n>1e-12) || !std::isfinite(n)) throw std::invalid_argument(\"zero/invalid direction\");\n    return a*(1.0/n);\n}\nbool close(double a,double b) { return std::abs(a-b)<1e-8; }\nstruct Ray { V3 origin, dir; double maxT; }; // dir world-unit; near -> far\nstruct Viewport { double x,y,width,height; };\nRay makeRay(double px,double py,Viewport vp,V3 eye,V3 at,V3 up,double fovy,double zn,double zf) { // [한국어 해설] 뷰포트 오프셋과 화면 y 반전을 반영해 near에서 far까지 유한 구간 광선을 만든다.\n    if (!std::isfinite(px)||!std::isfinite(py)||!std::isfinite(vp.x)||!std::isfinite(vp.y)||\n        !std::isfinite(vp.width)||!std::isfinite(vp.height)||!std::isfinite(fovy)||\n        !std::isfinite(zn)||!std::isfinite(zf)||!finite(eye)||!finite(at)||!finite(up))\n        throw std::invalid_argument(\"non-finite camera/viewport\");\n    if (!(vp.width>0 && vp.height>0 && zn>0 && zf>zn && fovy>0 && fovy<3.141592653589793))\n        throw std::invalid_argument(\"invalid camera/viewport\");\n    if (!(px>=vp.x && px<vp.x+vp.width && py>=vp.y && py<vp.y+vp.height))\n        throw std::out_of_range(\"mouse outside viewport\");\n    const V3 f=normalized(at-eye),r=normalized(cross(up,f)),u=cross(f,r);\n    const double nx=2.0*(px-vp.x)/vp.width-1.0;\n    const double ny=1.0-2.0*(py-vp.y)/vp.height;\n    const double h=std::tan(fovy*0.5),aspect=vp.width/vp.height;\n    const V3 nearVec=f+r*(nx*aspect*h)+u*(ny*h);\n    const V3 start=eye+nearVec*zn;\n    const V3 end=eye+nearVec*zf;\n    const double maxT=length(end-start);\n    if(!finite(start)||!finite(end)||!std::isfinite(maxT)||maxT<=0)\n        throw std::invalid_argument(\"ray construction overflow\");\n    return {start, normalized(nearVec), maxT};\n}\nstruct Hit { bool yes; double t,u,v; };\nHit intersect(Ray ray,V3 a,V3 b,V3 c) { // [한국어 해설] 양면 삼각형 교차다. 평행/퇴화·바깥 무게중심·광선 구간 밖 결과를 거부한다.\n    const double eps=1e-10;\n    if(!finite(ray.origin)||!finite(ray.dir)||!std::isfinite(ray.maxT)||ray.maxT<0||\n       !finite(a)||!finite(b)||!finite(c)) throw std::invalid_argument(\"non-finite ray/triangle\");\n    const double dirLength=length(ray.dir);\n    if(!std::isfinite(dirLength)||dirLength<=1e-12) throw std::invalid_argument(\"invalid ray direction\");\n    const V3 e1=b-a,e2=c-a,p=cross(ray.dir,e2);\n    const double det=dot(e1,p);\n    if (!std::isfinite(det)) throw std::invalid_argument(\"intersection overflow\");\n    if (std::abs(det)<eps) return {false,0,0,0};\n    const double inv=1.0/det;\n    const V3 s=ray.origin-a;\n    const double u=dot(s,p)*inv;\n    if (!std::isfinite(u)) throw std::invalid_argument(\"barycentric overflow\");\n    if (u<-eps || u>1+eps) return {false,0,0,0};\n    const V3 q=cross(s,e1);\n    const double v=dot(ray.dir,q)*inv;\n    if (!std::isfinite(v)) throw std::invalid_argument(\"barycentric overflow\");\n    if (v<-eps || u+v>1+eps) return {false,0,0,0};\n    const double t=dot(e2,q)*inv;\n    if (!std::isfinite(t)) throw std::invalid_argument(\"distance overflow\");\n    if (t<-eps || t>ray.maxT+eps) return {false,0,0,0};\n    return {true,t,u,v};\n}\nstruct Mat { double m[4][4]; };\nMat identity() { Mat a={}; for(int i=0;i<4;++i) a.m[i][i]=1; return a; }\nMat multiply(Mat a,Mat b) {\n    Mat r={};\n    for(int i=0;i<4;++i) for(int j=0;j<4;++j) for(int k=0;k<4;++k)\n        r.m[i][j]+=a.m[i][k]*b.m[k][j];\n    return r;\n}\nMat scale(double x,double y,double z) { Mat a=identity(); a.m[0][0]=x;a.m[1][1]=y;a.m[2][2]=z;return a; }\nMat translate(double x,double y,double z) { Mat a=identity();a.m[3][0]=x;a.m[3][1]=y;a.m[3][2]=z;return a; }\nMat inverse(Mat a) { // [한국어 해설] 부분 피벗 가우스-조던 역행렬이다. 특이행렬과 비유한 값을 거부한다.\n    for(const auto& row:a.m)for(double v:row)if(!std::isfinite(v))throw std::invalid_argument(\"non-finite matrix\");\n    Mat r=identity();\n    for(int j=0;j<4;++j) {\n        int pivot=j;\n        for(int i=j+1;i<4;++i) if(std::abs(a.m[i][j])>std::abs(a.m[pivot][j])) pivot=i;\n        if(std::abs(a.m[pivot][j])<1e-12) throw std::invalid_argument(\"singular world matrix\");\n        for(int k=0;k<4;++k) { std::swap(a.m[j][k],a.m[pivot][k]); std::swap(r.m[j][k],r.m[pivot][k]); }\n        const double d=a.m[j][j];\n        for(int k=0;k<4;++k) { a.m[j][k]/=d;r.m[j][k]/=d; }\n        for(int i=0;i<4;++i) if(i!=j) {\n            const double f=a.m[i][j];\n            for(int k=0;k<4;++k) { a.m[i][k]-=f*a.m[j][k]; r.m[i][k]-=f*r.m[j][k]; }\n        }\n    }\n    for(const auto& row:r.m)for(double v:row)if(!std::isfinite(v))throw std::invalid_argument(\"inverse overflow\");\n    return r;\n}\nV3 transform(V3 v,Mat m,bool point) {\n    const double w=point?1.0:0.0;\n    return {v.x*m.m[0][0]+v.y*m.m[1][0]+v.z*m.m[2][0]+w*m.m[3][0],\n            v.x*m.m[0][1]+v.y*m.m[1][1]+v.z*m.m[2][1]+w*m.m[3][1],\n            v.x*m.m[0][2]+v.y*m.m[1][2]+v.z*m.m[2][2]+w*m.m[3][2]};\n}\nRay toLocal(Ray r,Mat world) { // [한국어 해설] 방향은 벡터로 역변환하되 재정규화하지 않는다. 그래야 t가 원래 월드 거리 매개변수로 유지된다.\n    if(world.m[0][3]!=0||world.m[1][3]!=0||world.m[2][3]!=0||world.m[3][3]!=1)\n        throw std::invalid_argument(\"local ray needs affine world\");\n    Mat inv=inverse(world);\n    // Do not normalize the transformed direction: world-distance t must be preserved.\n    return {transform(r.origin,inv,true),transform(r.dir,inv,false),r.maxT};\n}\nstruct Terrain { // [한국어 해설] b→c 대각선의 두 삼각형 높이를 보간한다. 사각 셀의 bilinear 보간과 다른 표면이다.\n    int width, depth;\n    std::vector<double> y; // row-major (z*width+x), +z increases with row\n    double sample(double x,double z) const {\n        if(width<2 || depth<2 || static_cast<std::size_t>(width)>std::numeric_limits<std::size_t>::max()/static_cast<std::size_t>(depth) ||\n           y.size()!=static_cast<std::size_t>(width)*static_cast<std::size_t>(depth) ||\n           !std::isfinite(x)||!std::isfinite(z)||x<0||z<0||x>width-1||z>depth-1)\n            throw std::out_of_range(\"invalid terrain/coordinate\");\n        const int ix=std::min(static_cast<int>(x),width-2),iz=std::min(static_cast<int>(z),depth-2);\n        const double fx=x-ix,fz=z-iz;\n        const std::size_t i=static_cast<std::size_t>(iz)*static_cast<std::size_t>(width)+static_cast<std::size_t>(ix);\n        const std::size_t w=static_cast<std::size_t>(width);\n        const double a=y[i],b=y[i+1],c=y[i+w],d=y[i+w+1];\n        if(!std::isfinite(a)||!std::isfinite(b)||!std::isfinite(c)||!std::isfinite(d))\n            throw std::invalid_argument(\"non-finite height\");\n        // Explicit diagonal b -> c; never bilinear interpolation of a triangle mesh.\n        return fx+fz<=1 ? a*(1-fx-fz)+b*fx+c*fz : d*(fx+fz-1)+b*(1-fz)+c*(1-fx);\n    }\n};\nint main() { // [한국어 해설] 화면광선·교차·비균일 변환·지형 경계와 잘못된 입력을 CPU에서 검사한다.\n    int checks=0;\n    const auto check=[&](bool yes){ if(!yes) throw std::runtime_error(\"assertion failed\"); ++checks; };\n    const double pi=3.141592653589793;\n    const Viewport vp{100,50,800,600};\n    const Ray r=makeRay(500,350,vp,{0,0,0},{0,0,1},{0,1,0},pi/2,1,100);\n    check(close(r.origin.x,0)&&close(r.origin.y,0)&&close(r.origin.z,1));\n    check(close(r.dir.x,0)&&close(r.dir.y,0)&&close(r.dir.z,1));\n    check(close(r.maxT,99));\n    const Ray corner=makeRay(100,50,vp,{0,0,0},{0,0,1},{0,1,0},pi/2,1,100);\n    check(corner.dir.x<0&&corner.dir.y>0&&corner.dir.z>0);\n    bool rejected=false;\n    try { (void)makeRay(99,350,vp,{0,0,0},{0,0,1},{0,1,0},pi/2,1,100); } catch(const std::out_of_range&) { rejected=true; }\n    check(rejected);\n    rejected=false;\n    try { (void)makeRay(500,350,vp,{0,0,0},{0,0,0},{0,1,0},pi/2,1,100); } catch(const std::invalid_argument&) { rejected=true; }\n    check(rejected);\n    rejected=false;\n    try { (void)makeRay(500,350,vp,{0,0,0},{0,0,1},{0,0,1},pi/2,1,100); } catch(const std::invalid_argument&) { rejected=true; }\n    check(rejected);\n    rejected=false;\n    try { (void)makeRay(500,350,vp,{0,0,0},{0,0,1},{0,1,0},pi/2,0,100); } catch(const std::invalid_argument&) { rejected=true; }\n    check(rejected);\n    const V3 a{-1,-1,5},b{1,-1,5},c{0,1,5};\n    Hit h=intersect(r,a,b,c);\n    check(h.yes&&close(h.t,4));\n    check(close(h.u,.25)&&close(h.v,.5)&&close(1-h.u-h.v,.25));\n    check(!intersect(r,{10,10,5},{12,10,5},{11,12,5}).yes);\n    check(!intersect(r,{0,0,5},{0,0,5},{0,0,5}).yes);\n    check(!intersect(r,{-1,-1,.5},{1,-1,.5},{0,1,.5}).yes);\n    check(!intersect(r,{-1,-1,101},{1,-1,101},{0,1,101}).yes);\n    const Mat world=multiply(scale(2,1,2),translate(0,0,1));\n    const Ray local=toLocal(r,world);\n    check(close(local.origin.z,0)&&close(local.dir.z,.5));\n    h=intersect(local,{-1,-1,2},{1,-1,2},{0,1,2});\n    check(h.yes&&close(h.t,4));\n    const V3 worldHit=transform(local.origin+local.dir*h.t,world,true);\n    check(close(worldHit.x,0)&&close(worldHit.y,0)&&close(worldHit.z,5));\n    rejected=false;\n    try { (void)toLocal(r,scale(0,1,1)); } catch(const std::invalid_argument&) { rejected=true; }\n    check(rejected);\n    const Terrain plane{2,2,{0,10,20,30}};\n    check(close(plane.sample(.25,.25),7.5));\n    check(close(plane.sample(.75,.75),22.5));\n    check(close(plane.sample(1,1),30));\n    const Terrain seam{2,2,{0,0,0,10}};\n    check(close(seam.sample(.25,.25),0));\n    check(close(seam.sample(.75,.75),5));\n    rejected=false;\n    try { (void)seam.sample(-.01,0); } catch(const std::out_of_range&) { rejected=true; }\n    check(rejected);\n    rejected=false;\n    try { (void)Terrain{2,2,{1,2,3}}.sample(.1,.1); } catch(const std::out_of_range&) { rejected=true; }\n    check(rejected);\n    const double nan=std::numeric_limits<double>::quiet_NaN();\n    auto invalid=[&](const std::function<void()>& fn){bool threw=false;try{fn();}catch(const std::invalid_argument&){threw=true;}check(threw);};\n    invalid([&]{intersect(r,{nan,-1,5},b,c);});\n    invalid([&]{Ray bad=r;bad.dir.x=nan;intersect(bad,a,b,c);});\n    invalid([&]{Ray bad=r;bad.dir={0,0,0};intersect(bad,a,b,c);});\n    invalid([&]{makeRay(500,350,vp,{0,0,0},{0,0,1},{0,1,0},pi/2,1,std::numeric_limits<double>::infinity());});\n    invalid([&]{Mat bad=identity();bad.m[0][0]=nan;toLocal(r,bad);});\n    invalid([&]{Mat bad=identity();bad.m[0][3]=0.5;toLocal(r,bad);});\n    invalid([&]{Terrain{2,2,{0,0,0,nan}}.sample(.75,.75);});\n    check(intersect(r,a,c,b).yes);\n    std::cout<<\"PASS \"<<checks<<\" checks\\n\";\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "필수 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-07b-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "의존성·직접 빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-07b-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 검사 결과와 실행 범위",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-07b-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본/파생본 무결성 명세",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-07b-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 클라우드 Linux/GCC 14.2 C++20 직접 빌드·실행을 수행했다. CMake/CTest·sanitizer·Windows·GPU는 이번 주석본 검증에서 실행하지 않았다. 원문에 보존된 과거 결과와 구분한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. CMakeLists.txt·재현·검증",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "text",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx9_picking_recovered LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nadd_executable(picking main.cpp)\nset_target_properties(picking PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(picking PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(picking PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME picking COMMAND picking)"
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build -j 2\nctest --test-dir build --output-on-failure -V\n# C++11: -DLAB_CXX_STANDARD=11\n# sanitizer: clang++ + -fsanitize=address,undefined -fno-sanitize-recover=undefined"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부 입력·에셋 없이 실행하며 정상 출력은 PASS 33 checks와 종료 코드 0입니다. 조건 실패는 예외로 중단되며 CTest가 실패로 처리합니다. C++20이 학습 기본이지만 사용한 문법·라이브러리의 C++11 호환 빌드도 아래와 같이 실제 확인했습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "UTC 2026-10-16T06:06:26.574370+00:00 to 06:06:30.009736+00:00\nGCC 14.2 C++20: PASS 33 checks\nGCC 14.2 C++11: PASS 33 checks\nClang 17 C++20 ASan+UBSan: PASS 33 checks\nExisting mini: PASS 7 CPU checks\nBatch CTest (extended + mini): each 2/2, exit=0\nWindows/MSVC/D3DX/Direct3D9/GPU: NOT RUN"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 독립 CMake에는 확장 실행파일 하나가 등록됩니다. 기존 미니는 [원본 관련 문서](https://app.notion.com/p/3f8a99703f4081da9335faf6d568d1c3)에 보존되어 있으며 수정본의 새 실패 입력 검사를 대체하지 않습니다. 같은 33조건을 반복한 결과를 서로 다른 99조건이라고 세지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "raw-source-index",
       "title": "원본 전체 소스 파일과 빌드",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -240,6 +447,89 @@
                   "text": "아닙니다. Windows SDK/MSVC·D3D9 드라이버·GPU 실행은 이번 이관에서 검증하지 않았습니다. 네이티브 전체 소스를 보존한 사실과 플랫폼 실행 검증을 혼동하지 마세요."
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification-boundary",
+      "title": "검증 범위 · 역사적 기록과 현재 개편 구분",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문의 실행 로그·도구 버전·소스 SHA·조건 수는 각 원문 시점의 보존 증거다. 이번 작업은 문서와 설명 그림의 개편이며, 같은 CPU 검사나 Windows/D3D9/GPU 실행을 새로 수행했다는 뜻이 아니다. 웹 검증·배포 역시 별도의 단계다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "build-source-map",
+      "title": "빌드 파일 · 전체 의존성 지도",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 CMakeLists.txt 전체 파일",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-07b/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cmake",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx9_picking_recovered LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nadd_executable(picking main.cpp)\nset_target_properties(picking PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(picking PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(picking PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME picking COMMAND picking)\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 CMake는 원본 파일을 그대로 표시한다. 해당 소스 페이지의 모든 .cpp와 헤더를 함께 준비하며, 과거 로그는 당시 기록으로 읽는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·개편 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 페이지는 Notion에 보관된 기존 전체 코드 전문을 학습용으로 이전한 자료입니다. GitHub에서 CMake·소스 파일을 각각 독립적으로 다운로드할 수 있습니다. 과거 Notion CPU 결과와 GitHub에서 새로 실행한 결과는 별도로 집계합니다. Windows/MSVC·D3D9·GPU는 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 Notion 원문",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-07b/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 기존 URL·절 ID·원본 코드·Mermaid·표·접힌 답변·검증 기록을 보존하고 4탭 학습 동선, 설명 그림, 예측 실습과 추가 복습을 구성했다. CPU 학습 모델의 결과를 실제 GPU 동작으로 확대하지 않는다."
             }
           ]
         }

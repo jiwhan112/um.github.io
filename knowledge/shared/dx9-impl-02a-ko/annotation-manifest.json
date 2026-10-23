@@ -1,0 +1,98 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes preserve physical line numbers, including assert and __LINE__ diagnostics. Remove recorded suffixes to reconstruct exact original bytes.",
+  "files": [
+    {
+      "original": "shared/dx9-impl-02a/CMakeLists.txt",
+      "annotated": "shared/dx9-impl-02a-ko/CMakeLists.txt",
+      "original_sha256": "4707d77adc7941fc4ad5451f880632215b4f65ccdeb61c0ce9a7bdd393729107",
+      "annotated_sha256": "4707d77adc7941fc4ad5451f880632215b4f65ccdeb61c0ce9a7bdd393729107",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx9-impl-02a/include/engine_api.h",
+      "annotated": "shared/dx9-impl-02a-ko/include/engine_api.h",
+      "original_sha256": "d1b427994d5a42984fd5256565752e5bee79ce92b7f5e7daf306d0e4a8992eed",
+      "annotated_sha256": "a13cc6d0723124919b0f2e8b414782716e6144ec75e7f092b0ce52eb6ef6403d",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 25,
+          "suffix": " // [한국어 해설] 불투명 핸들로 구현 크기를 숨긴다. 호출자는 delete 대신 짝인 Engine_Destroy를 사용한다."
+        },
+        {
+          "line": 27,
+          "suffix": " // [한국어 해설] C ABI 경계는 결과 코드로 실패를 전달한다. C++ 예외나 STL 객체를 경계 밖으로 넘기지 않는다."
+        },
+        {
+          "line": 34,
+          "suffix": " // [한국어 해설] out 포인터가 유효하고 그 대상이 비어 있어야 한다. 기존 소유자를 덮어쓰지 않는다."
+        },
+        {
+          "line": 37,
+          "suffix": " // [한국어 해설] 유한한 [0,1]초만 허용한다. 거부된 tick은 누적 시간을 변경하지 않는다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx9-impl-02a/src/client.cpp",
+      "annotated": "shared/dx9-impl-02a-ko/src/client.cpp",
+      "original_sha256": "1676fda792c7c9077999fcb457c7a659a6ec8005f34588e9feb8cd55350c68d8",
+      "annotated_sha256": "9ff01a02828f6b3cf014755eea4e8a1c9af0702e17d52d6f5cd9dc500c126e89",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 5,
+          "suffix": " // [한국어 해설] 클라이언트 RAII 래퍼는 엔진의 파괴 API를 호출한다. opaque 타입에 직접 delete하지 않는다."
+        },
+        {
+          "line": 17,
+          "suffix": " // [한국어 해설] 공유 라이브러리에 두 tick을 전달하고 누적 0.05초를 확인하는 최소 클라이언트다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx9-impl-02a/src/engine_api.cpp",
+      "annotated": "shared/dx9-impl-02a-ko/src/engine_api.cpp",
+      "original_sha256": "37b17acd9ca5bf415d74e1604a5bf0e4703ae1fc1d12a73885fb72c8489e6994",
+      "annotated_sha256": "53afd243f98d7b47514899938ac0de33fe99de2d48c4dd3951c8fa2deaa18035",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 6,
+          "suffix": " // [한국어 해설] 라이브러리 내부 타입이다. 생성과 파괴를 같은 모듈에서 처리하여 할당자 경계를 맞춘다."
+        },
+        {
+          "line": 12,
+          "suffix": " // [한국어 해설] nothrow 할당 실패를 OUT_OF_MEMORY로 변환한다. 성공할 때만 out 핸들을 기록한다."
+        },
+        {
+          "line": 20,
+          "suffix": " // [한국어 해설] delete 후 호출자의 핸들을 null로 만든다. 다른 복사본의 댕글링 포인터까지 무효화해 주지는 않는다."
+        },
+        {
+          "line": 27,
+          "suffix": " // [한국어 해설] 입력을 먼저 검사하고 성공 경로에서만 상태를 갱신한다. 무한히 누적한 시간의 범용 오버플로 보장은 없다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx9-impl-02a/tests/engine_contract_tests.cpp",
+      "annotated": "shared/dx9-impl-02a-ko/tests/engine_contract_tests.cpp",
+      "original_sha256": "1d35c967026d5d9438e06c4ff024e451107f34bcc1ae9c6025a7503588889d62",
+      "annotated_sha256": "451e8e56a131e816d2297347f2bbc5685cf18929d072b9f5a1e5173206f8327f",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 12,
+          "suffix": " // [한국어 해설] null·중복 생성·잘못된 delta·초기화·파괴의 결과 코드와 상태 보존을 검사한다."
+        },
+        {
+          "line": 33,
+          "suffix": " // [한국어 해설] 소유 핸들은 비워지지만 임의의 복제 raw 포인터를 검사하는 세대 핸들 방식은 아니다."
+        }
+      ]
+    }
+  ]
+}

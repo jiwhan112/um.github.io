@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes preserve physical line numbers, including assert and __LINE__ diagnostics. Remove recorded suffixes to reconstruct exact original bytes.",
+  "files": [
+    {
+      "original": "shared/dx9-impl-06a/CMakeLists.txt",
+      "annotated": "shared/dx9-impl-06a-ko/CMakeLists.txt",
+      "original_sha256": "d451e90726923e1ec8f00dff74eefdbe179f02bd7a19dadb75d11bf1733e95dd",
+      "annotated_sha256": "d451e90726923e1ec8f00dff74eefdbe179f02bd7a19dadb75d11bf1733e95dd",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx9-impl-06a/mesh_texture_contract.cpp",
+      "annotated": "shared/dx9-impl-06a-ko/mesh_texture_contract.cpp",
+      "original_sha256": "ab99f00febf1fe93f989aad03ef8aa9ff96686cdfd8b4525ca778f5931a95a60",
+      "annotated_sha256": "3602eca12921071d57c88b4d52b71baaaf67d281d1b2ea21e0f6bb9605ff0fc7",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 14,
+          "suffix": " // [한국어 해설] VB/IB 범위와 base 인덱스를 검사하는 CPU 계약이다. 드라이버 드로콜 실행을 대신하지 않는다."
+        },
+        {
+          "line": 48,
+          "suffix": " // [한국어 해설] dynamic VB/IB와 MANAGED 조합 금지, 0바이트 금지 조건을 모형화한다."
+        },
+        {
+          "line": 54,
+          "suffix": " // [한국어 해설] 행 내용 바이트 수와 목적지 Pitch를 구분한다. 패딩을 건드리지 않고 행별로 복사한다."
+        },
+        {
+          "line": 59,
+          "suffix": " // [한국어 해설] 같은 버퍼로 확장 복사하면 이후 원본 행을 덮을 수 있어 먼저 거부한다."
+        },
+        {
+          "line": 80,
+          "suffix": " // [한국어 해설] 정상 사각형, 선언 범위·정수 경계, Pitch·별칭 거부와 실패 시 저장소 보존을 검사한다."
+        }
+      ]
+    }
+  ]
+}

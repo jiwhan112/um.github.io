@@ -20,23 +20,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "원본 Notion 본문을 GitHub Pages로 이전해 보존했습니다. 실제 GPU/Direct3D 실행 결과가 아닙니다. "
-                },
-                {
-                  "text": "원본 Notion",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f408146bf8fd6f6f9024a0d"
-                },
-                {
-                  "text": " · 공통 DX9 CPU 실습 파일 전체 ZIP은 아직 확보되지 않았으며 Mermaid/수식은 원본 코드로 제공합니다."
-                }
-              ]
+              "text": "이 교재는 보존한 Notion 원문과 CPU 학습 소스를 바탕으로 개념→시각 관계→손으로 추적→검증 경계 순서로 재구성했습니다. 본문의 그림은 직접 제작한 설명도이며 GPU 캡처가 아닙니다. CPU C++20 모델과 실제 D3D9 실행을 구분합니다."
             }
           ]
         },
@@ -187,6 +174,12 @@
       "title": "3. 버퍼·선언·stride는 각각 다른 정보입니다",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-pipeline-01/assets/vertex-byte-contract.svg",
+          "alt": "두 정점의 20바이트 간격과 각 정점의 위치12바이트·UV8바이트를 분리한 개념도. 실제 GPU 캡처가 아닙니다.",
+          "caption": "두 정점의 20바이트 간격과 각 정점의 위치12바이트·UV8바이트를 분리한 개념도. 실제 GPU 캡처가 아닙니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -814,7 +807,7 @@
     {
       "id": "part-7",
       "title": "7. 이해 확인과 검증 범위",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "details",
@@ -845,14 +838,104 @@
           ]
         },
         {
+          "type": "details",
+          "title": "UV가 깨졌을 때 텍스처 교체보다 먼저 볼 입력은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "TEXCOORD offset과 형식, stride, 스트림 시작점을 대조합니다. 범위 안 주소여도 잘못된 의미의 바이트를 읽을 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "BaseVertexIndex와 OffsetInBytes는 같은 단위인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "전자는 정점 단위, 후자는 바이트 단위입니다. 먼저 최종 정점 인덱스를 만든 뒤 stride를 곱합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "TEX1은 텍스처가 바인딩됐다는 뜻인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "FVF에서 텍스처 좌표 세트 수를 뜻합니다. 실제 텍스처 바인딩은 별도 상태입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CPU FetchOffset 통과가 GPU 드로우 성공인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 특정 주소 산술 계약을 확인한 것이며 장치·버퍼·선언·드로우 HRESULT와 GPU 실행은 별도입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guided-practice",
+      "title": "UV 위치를 손으로 계산하기",
+      "tab": "practice",
+      "blocks": [
+        {
           "type": "paragraph",
           "content": [
             {
-              "text": "vertex_input",
-              "kind": "code"
-            },
+              "text": "FetchOffset(120, 0, 20, 2, 3, 12, 8)의 최종 정점 인덱스는 5, 시작 위치는 112입니다. 마지막 8바이트가 버퍼 크기 120 안에 들어갑니다. base를 -1, index를 0으로 바꾼 사례는 주소 계산을 계속하지 않고 거부합니다. 원본의 정상·거부 CHECK를 찾아 근거를 짝지으세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
             {
-              "text": "의 22회 조건 검사는 GCC 14.2.0, Clang 17.0.0, Clang ASan·UBSan에서 통과했습니다. 이는 CPU의 레이아웃·주소 계산·범위 검사입니다. D3D9 버퍼 생성, GPU 정점 해석과 실제 드로우는 실행 검증하지 않았습니다."
+              "text": "아래는 기존 소스를 그대로 재현할 때의 명령입니다. 이번 본문 개편 중 CPU 실행을 반복하지 않았습니다. 전체 프로젝트를 내려받고 저장소 루트에서 실행하며 헤더·CMake를 함께 사용합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S knowledge/shared/dx9-pipeline-lab -B build-dx9-study -DCMAKE_BUILD_TYPE=Debug\ncmake --build build-dx9-study\nctest --test-dir build-dx9-study -R \"^vertex_input$\" -V --output-on-failure"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 원본 vertex_input.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-pipeline-lab/src/vertex_input.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 실행 코드와 영어 검사명은 보존했습니다. 출처 탭에는 같은 실행 토큰을 유지한 한국어 주석본 전체와 다운로드 링크를 제공합니다. 검사 횟수가 늘어난 새 프로그램으로 세지 않습니다."
             }
           ]
         }
@@ -861,18 +944,13 @@
     {
       "id": "full-source-refs",
       "title": "전체 소스·CMake·재검증",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "원문 본문은 그대로 보존하고, 이 단원과 직접 연결된 전체 실습 코드도 ATLAS NOTE에서 열 수 있도록 연결했습니다. Linux GCC/Clang CPU 모델은 검증했지만 Windows/MSVC·Direct3D/GPU·HLSL 실기기 실행은 별도 미검증입니다."
-                }
-              ]
+              "text": "원본12개 파일은 보존된 Markdown에서 복원했습니다. 소스·CPU 실행·웹 표시·GPU 실행은 서로 다른 검증 단계입니다. 원본 ZIP 바이너리는 미확보이며 새 그림을 실제 GPU 결과로 제시하지 않습니다."
             }
           ]
         },
@@ -913,6 +991,193 @@
               "text": "원본 무결성 및 2026-10-19 GitHub CPU 재검증",
               "kind": "link",
               "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본은 설명 주석만 추가한 별도 학습용 파일입니다. 원본은 그대로 보존하며, 공통 헤더와 소스 폴더 구조를 함께 받아야 빌드할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 주석본 구성·빌드 안내",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 공통 계산 헤더",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/include/pipeline.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 검사 헤더",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/include/check.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 전체 vertex_input.cpp",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/src/vertex_input.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"pipeline.hpp\"\n#include \"check.hpp\"\n#include <type_traits>\n// [한국어 해설] 메모리 배치 계약을 static_assert로 확인한다. 3개 위치 float 뒤 2개 UV float, stride 20바이트다.\nstruct VertexPT { float x,y,z,u,v; };\nstatic_assert(std::is_standard_layout_v<VertexPT> && std::is_trivially_copyable_v<VertexPT>);\nstatic_assert(sizeof(float)==4 && sizeof(VertexPT)==20 && offsetof(VertexPT,u)==12);\n// [한국어 해설] 정점 선언의 오프셋과 실제 바이트 읽기를 비교하고 범위를 벗어나는 주소 계산을 거부한다.\nint main() { return Run(\"vertex_input\",[](Checks& c) {\n    using namespace pipeline;\n    const std::array<VertexPT,4> vertices{{{-1,1,2,0,0},{1,1,2,1,0},{1,-1,2,1,1},{-1,-1,2,0,1}}};\n    const std::array<std::uint32_t,6> indices{0,1,2,0,2,3};\n    const auto bytes=std::as_bytes(std::span(vertices));\n    for(auto i:indices) {\n        const auto off=FetchOffset(bytes.size(),0,sizeof(VertexPT),0,i,12,8);\n// [한국어 해설] memcpy로 읽어 정렬·별칭 문제를 피한다. GPU 입력 어셈블러의 실제 실행 검증은 아니다.\n        std::array<float,2> uv{}; std::memcpy(uv.data(),bytes.data()+off,sizeof(uv));\n        c.Near(uv[0],vertices[i].u,\"u matches declaration\");\n        c.Near(uv[1],vertices[i].v,\"v matches declaration\");\n    }\n// [한국어 해설] 인덱스 6개는 triangle-list 기준 삼각형 2개다. 공유 정점 4개와 구별한다.\n    c.That(indices.size()/3==2,\"two triangle-list primitives\");\n    c.That(FetchOffset(120,0,20,2,3,12,8)==112,\"base index and byte offset differ\");\n    c.That(FetchOffset(100,20,20,0,3,12,8)==92,\"stream offset in bytes\");\n    c.Rejects([]{FetchOffset(80,0,20,0,4,0,12);},\"index beyond buffer\");\n    c.Rejects([]{FetchOffset(80,0,20,-1,0,0,12);},\"negative effective index\");\n    c.Rejects([]{FetchOffset(80,0,16,0,0,12,8);},\"stride too short\");\n    c.Rejects([]{FetchOffset(80,81,20,0,0,0,4);},\"stream offset beyond buffer\");\n    c.Rejects([]{FetchOffset(80,0,0,0,0,0,4);},\"zero stride unsupported by this model\");\n    c.Rejects([]{FetchOffset(80,0,20,0,0,19,4);},\"element crosses stride\");\n    c.Rejects([]{FetchOffset(80,0,20,0,0xffffffffu,0,4);},\"huge index cannot wrap\");\n    std::cout<<\"quad: 4 vertices / 6 indices / 2 triangles / stride=20\\n\";\n}); }\n\n"
+            }
+          ],
+          "title": "한국어 주석본 전체: src/vertex_input.cpp"
+        }
+      ]
+    },
+    {
+      "id": "verification-boundary",
+      "title": "실행 증거와 미검증 경계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래의 단원별 수치는 기존 원문·소스가 기록한 관찰입니다. 실행 입력과 함수 범위에 한정되며 반복되는 검사 호출을 독립 기능 수로 부풀리지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "vertex_input",
+              "kind": "code"
+            },
+            {
+              "text": "의 22회 조건 검사는 GCC 14.2.0, Clang 17.0.0, Clang ASan·UBSan에서 통과했습니다. 이는 CPU의 레이아웃·주소 계산·범위 검사입니다. D3D9 버퍼 생성, GPU 정점 해석과 실제 드로우는 실행 검증하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-19 소스 복원 및 GitHub CPU 재검증 원장",
+              "kind": "link",
+              "href": "/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 GitHub CPU 실행 39213029058",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39213029058"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 기록은 GCC 14.2 C++20과 Clang 17 ASan/UBSan의 5/5 CPU CTest 통과입니다. 원문 296회는 루프 반복을 포함합니다. Windows/MSVC·D3D9·FXC/HLSL·GPU·성능·비트단위 하드웨어 일치는 미검증입니다. 이번 수정의 웹 표시·배포는 별도로 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 한국어 주석본은 별도 Cloud Linux GCC 14.2 직접 빌드·실행으로 5개 프로그램의 22/79/71/19/105회 검사를 확인했습니다. 원본 9개 파일의 바이트 복원 해시와 5개 프로그램의 전처리 결과 동일성도 확인했습니다. 이번 환경에는 CMake/CTest가 없어 실행하지 않았습니다. sanitizer·Windows/MSVC·FXC/HLSL·GPU도 이번 검증에 포함하지 않았습니다. 이는 아래의 2026-10-19 실행과 별개의 증거입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 주석본 검증 결과",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "파일별 원본 복원 해시 명세",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/annotation-manifest.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source-history",
+      "title": "원문·변경기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Notion 원본",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f8a99703f408146bf8fd6f6f9024a0d"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "수정하지 않은 원본 전체 Markdown",
+              "kind": "link",
+              "href": "/knowledge/dx9-pipeline-01/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 이관 기록",
+              "kind": "link",
+              "href": "/knowledge/MIGRATION_DX9_PIPELINE_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 · 기존 수식·코드·기술 전제를 보존하고 긴 단락을 나누었습니다. 직접 만든 관계도, 한국어 추적 과제, 접힌 복습, 네 탭과 한국어 주석본을 추가했습니다. 원본 소스·원문 파일·기존 CPU 로그는 수정하지 않았습니다. 별도 주석본 검증과 역사적 CPU 기록을 구분하며 실제 GPU 실행을 주장하지 않습니다."
             }
           ]
         }

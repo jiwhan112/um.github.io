@@ -1,0 +1,93 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes preserve physical line numbers, including assert and __LINE__ diagnostics. Remove recorded suffixes to reconstruct exact original bytes.",
+  "files": [
+    {
+      "original": "shared/dx9-impl-01a/CMakeLists.txt",
+      "annotated": "shared/dx9-impl-01a-ko/CMakeLists.txt",
+      "original_sha256": "a737bb3933329cf5a332596ae5278f64fdc0a010605e99c89b60fe090caf8ba5",
+      "annotated_sha256": "a737bb3933329cf5a332596ae5278f64fdc0a010605e99c89b60fe090caf8ba5",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx9-impl-01a/com_owner.h",
+      "annotated": "shared/dx9-impl-01a-ko/com_owner.h",
+      "original_sha256": "65ebe40fd25f688c6129e7eebc062f583408f8b93292be7873da5edfd503a7c0",
+      "annotated_sha256": "efec02ff2fe492fbcaee9fc796ada09410b7bae95d215df383a169552f36a068",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 8,
+          "suffix": " // [한국어 해설] 정확히 COM 참조 하나를 소유한다. raw pointer를 받으면 AddRef하지 않고 이미 소유한 참조를 인수한다."
+        },
+        {
+          "line": 19,
+          "suffix": " // [한국어 해설] 이동은 참조 카운트를 늘리지 않고 기존 포인터 소유권만 이전한다."
+        },
+        {
+          "line": 30,
+          "suffix": " // [한국어 해설] out 매개변수로 쓰기 전에 기존 참조를 해제한다. API 실패 후 소유 상태도 확인해야 한다."
+        },
+        {
+          "line": 32,
+          "suffix": " // [한국어 해설] 해제하지 않고 포인터를 넘긴다. 호출자가 참조의 새 소유자가 되어야 한다."
+        },
+        {
+          "line": 38,
+          "suffix": " // [한국어 해설] 같은 포인터면 유지한다. 두 소유자가 필요하면 별도 AddRef한 참조를 전달해야 한다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx9-impl-01a/com_owner_tests.cpp",
+      "annotated": "shared/dx9-impl-01a-ko/com_owner_tests.cpp",
+      "original_sha256": "073fc40f1e6f299e898c7039ea547ac16df5f06894b8008e16b22cb85e2048cc",
+      "annotated_sha256": "8cc5d6d9c7e17cadcdab3a2667a7cfbbe09ef36bc71171e4b63a385ca0edbbd3",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 14,
+          "suffix": " // [한국어 해설] 실제 COM 대신 참조·파괴 횟수를 세는 CPU 모형이다. D3D9 장치 실행은 검증하지 않는다."
+        },
+        {
+          "line": 29,
+          "suffix": " // [한국어 해설] 복사 금지·이동·out 매개변수·공유 참조를 검사한다. assert가 사라지는 NDEBUG 빌드를 피한다."
+        },
+        {
+          "line": 51,
+          "suffix": " // [한국어 해설] 두 번째 소유자를 만들 때는 참조를 한 번 늘리고 각 소유자가 한 번씩 Release한다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx9-impl-01a/d3d9_window.cpp",
+      "annotated": "shared/dx9-impl-01a-ko/d3d9_window.cpp",
+      "original_sha256": "13782456db74562471a54c4427c43a1b00b08a0ad1d49a18b9009bb51f2ab94c",
+      "annotated_sha256": "51e9a561cbc0fd62f275b80f7877e685e62a4e87c9e2f8f606e6c1bc8f9b5b54",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 10,
+          "suffix": " // [한국어 해설] 메시지는 크기 변경 상태만 표시한다. 실제 Reset은 렌더 루프의 장치 상태 확인 뒤 수행한다."
+        },
+        {
+          "line": 30,
+          "suffix": " // [한국어 해설] 창 모드 Clear 전용 예제라 자동 깊이 버퍼를 사용하지 않는다. 이후 깊이 사용 실습과 구분한다."
+        },
+        {
+          "line": 43,
+          "suffix": " // [한국어 해설] Windows 전용 전체 예제다. 이번 클라우드 환경에서 컴파일·화면 실행하지 않았다."
+        },
+        {
+          "line": 103,
+          "suffix": " // [한국어 해설] 이 예제에는 별도 DEFAULT 자원이 없다. 자원을 추가하면 Reset 전에 해당 참조를 해제해야 한다."
+        },
+        {
+          "line": 112,
+          "suffix": " // [한국어 해설] Reset 성공 후에는 렌더 상태와 필요한 자원을 재설정한다. 기존 상태가 보존된다고 가정하지 않는다."
+        }
+      ]
+    }
+  ]
+}

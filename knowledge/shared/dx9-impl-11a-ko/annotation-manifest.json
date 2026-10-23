@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes preserve physical line numbers, including assert and __LINE__ diagnostics. Remove recorded suffixes to reconstruct exact original bytes.",
+  "files": [
+    {
+      "original": "shared/dx9-impl-11a/CMakeLists.txt",
+      "annotated": "shared/dx9-impl-11a-ko/CMakeLists.txt",
+      "original_sha256": "6d80bbfb054728b65658ae2047e53e65ad8786821c660f92a2e6dc7a9d6125c1",
+      "annotated_sha256": "6d80bbfb054728b65658ae2047e53e65ad8786821c660f92a2e6dc7a9d6125c1",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx9-impl-11a/main.cpp",
+      "annotated": "shared/dx9-impl-11a-ko/main.cpp",
+      "original_sha256": "dcbb2900c718e7c3fb19dcfb8158a54cb784237ba267a708e462e52628a62925",
+      "annotated_sha256": "9291a482368042e8a07e56e15d82c2f3b1c3d4471e1b682970534dada34c1dcb",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 22,
+          "suffix": " // [한국어 해설] 법선뿐 아니라 d도 같은 길이로 나눠 평면의 위치와 거리 해석을 보존한다."
+        },
+        {
+          "line": 29,
+          "suffix": " // [한국어 해설] 행 벡터 클립 부등식으로 열을 조합한다. D3D near 평면은 z열이며 OpenGL식 w+z가 아니다."
+        },
+        {
+          "line": 38,
+          "suffix": " // [한국어 해설] 조기 탈락 전에 여섯 평면을 모두 검증해 뒤쪽의 잘못된 입력을 숨기지 않는다."
+        },
+        {
+          "line": 77,
+          "suffix": " // [한국어 해설] 구 중심의 부호 거리와 반지름으로 보수적으로 분류한다. 접촉은 경계 교차로 남긴다."
+        },
+        {
+          "line": 90,
+          "suffix": " // [한국어 해설] 월드 축 정렬 상자의 반폭을 법선에 투영한다. 회전한 OBB에 이 식을 그대로 적용하면 안 된다."
+        },
+        {
+          "line": 108,
+          "suffix": " // [한국어 해설] 이름 있는 검사와 15000개 속성 비교 표본은 별도 수치다. 표본 개수를 독립 검사 수로 부풀리지 않는다."
+        }
+      ]
+    }
+  ]
+}

@@ -21,15 +21,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "이 페이지는 Notion에 보관된 기존 전체 코드 전문을 학습용으로 이전한 자료입니다. GitHub에서 CMake·소스 파일을 각각 독립적으로 다운로드할 수 있습니다. 과거 Notion CPU 결과와 GitHub에서 새로 실행한 결과는 별도로 집계합니다. Windows/MSVC·D3D9·GPU는 미검증입니다."
-                }
-              ]
+              "text": "06A는 Pitch 별칭·인덱스 범위 거부 계약의 전체 소스 자료실이다. memcpy 한 번의 겹침과 행 루프 전체의 덮어쓰기를 구분한다."
             }
           ]
         },
@@ -40,7 +35,15 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "**수동 검수 13 · VIBuffer·Texture 확장 소스 복구**\n\t2026-10-16. 원형 22조건 재통과 뒤 제자리 Pitch 복사의 데이터 손상 반례를 실제 재현했습니다. 수정된 전체 CPU 소스와 재현 조건을 보존합니다. 상위 교재 <mention-page url=\"https://app.notion.com/p/3f8a99703f40817cbe12e85790420aab\">06 · VIBuffer·Texture의 D3D9 API 계약 — 개정 본문</mention-page>의 실제 D3D9 계약과 CPU 모형을 구별합니다."
+                  "text": "**수동 검수 13 · VIBuffer·Texture 확장 소스 복구**\n\t2026-10-16. 원형 22조건 재통과 뒤 제자리 Pitch 복사의 데이터 손상 반례를 실제 재현했습니다. 수정된 전체 CPU 소스와 재현 조건을 보존합니다. 상위 교재 "
+                },
+                {
+                  "text": "06 · VIBuffer·Texture의 D3D9 API 계약 — 개정 본문",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f40817cbe12e85790420aab"
+                },
+                {
+                  "text": "의 실제 D3D9 계약과 CPU 모형을 구별합니다."
                 }
               ]
             }
@@ -53,6 +56,12 @@
       "title": "1. 발견한 문제: 행 간격이 다르면 같은 버퍼에 복사해도 될까",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-source-06a/assets/failure-contract.svg",
+          "alt": "06A 회귀: 제자리 행 복사",
+          "caption": "06A 회귀: 제자리 행 복사 · 계약을 설명하는 도식이며 실제 GPU 캡처가 아닙니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -99,7 +108,7 @@
     {
       "id": "part-3",
       "title": "3. mesh_texture_contract.cpp — 전체",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "code",
@@ -109,47 +118,9 @@
       ]
     },
     {
-      "id": "part-4",
-      "title": "4. 빌드 설정과 실제 검증",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "code",
-          "language": "text",
-          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx9_mesh_recovered LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nadd_executable(mesh_texture mesh_texture_contract.cpp)\nset_target_properties(mesh_texture PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(mesh_texture PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(mesh_texture PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME mesh_texture COMMAND mesh_texture)"
-        },
-        {
-          "type": "code",
-          "language": "bash",
-          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build -j 2\nctest --test-dir build --output-on-failure -V\n# C++11 확인: 구성 시 -DLAB_CXX_STANDARD=11\n# sanitizer: clang++ 및 컴파일/링크 옵션에 -fsanitize=address,undefined 사용"
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "외부 에셋·입력 없이 실행합니다. 정상 종료 코드는 0, 실패한 Check는 메시지와 종료 코드 1입니다. 다음은 실제 배치 실행 로그에서 추린 결과이며 모든 구성의 configure/build/CTest 종료 코드가 0이었습니다."
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "text",
-          "text": "UTC 2026-10-16T06:06:23.592352+00:00 to 06:06:26.573793+00:00\nGCC 14.2 C++20: PASS 28 CPU contract assertions\nGCC 14.2 C++11: PASS 28 CPU contract assertions\nClang 17 C++20 ASan+UBSan: PASS 28 CPU contract assertions\nExisting mini on each configuration: PASS 12 CPU checks\nFull batch CTest (extended + mini): each 2/2; sanitizer diagnostic: none\nWindows/MSVC/D3D9/GPU: NOT RUN\nSource SHA256: ab99f00febf1fe93f989aad03ef8aa9ff96686cdfd8b4525ca778f5931a95a60"
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "위 독립 CMake는 확장 실행파일 하나만 등록합니다. 기존 미니 전체 소스는 [원본 관련 문서](https://app.notion.com/p/3f8a99703f4081058f96d3bd885a4ef7)를 유지합니다. 그 미니는 v1.1의 새 경계 검사를 포함하지 않습니다. 세 구성에서 같은 검사를 반복한 것이며 84개 독립 검사가 아닙니다."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "part-5",
       "title": "5. 이해 확인과 변경 기록",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "details",
@@ -190,9 +161,245 @@
       ]
     },
     {
+      "id": "guided-practice",
+      "title": "실습 · 입력과 실패 경계를 먼저 예측",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "0..23 바이트, rowBytes4/height3/Pitch8의 쓰기 순서를 추적한다. memmove 한 번으로 전체 행 의존성이 해결되지 않는 이유를 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스와 빌드 파일을 함께 읽고 원문 검증 범위와 비교한다. 이미 보존된 통과 횟수는 개편 과정의 새 실행으로 바꾸어 보고하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답하고 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "인덱스 6개인 TriangleList의 PrimitiveCount는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 삼각형이면 2다. 정점 수·인덱스 수·삼각형 수를 구분한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Pitch=8이고 유효 행이 4바이트라면 두 번째 행 시작은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "목적지 offset8이다. 원본의 촘촘한 배열 간격4와 혼동하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Base=-3, IB={3,4,5}의 실제 접근 위치는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "{0,1,2}다. 부호 있는 Base와 인덱스 산술을 안전한 범위로 검사한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "SetTexture만 호출하면 모든 상태가 설정되나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 샘플러·알파·깊이·컬링 등 해당 패스가 요구하는 상태를 따로 설정한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "이 CPU 모델이 실제 D3D9 화면을 검증하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 코드가 모델링한 수치·소유권 계약만 검사한다. Windows/MSVC·실제 장치·GPU 화면 검증과 구별한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원문 검증 횟수가 이번 개편에서 새로 실행한 횟수인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 기존 날짜·로그·코드 해시를 보존한 역사적 증거다. 새 실행은 별도 기록이 있을 때만 주장한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "annotated-full-code",
+      "title": "한국어 주석 전체 소스 · 원본과 별도 제공",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 코드는 위에 그대로 보존했다. 아래 파생본은 한국어 설명 주석만 추가한 전체 파일이며, 주석 제거 후 원본 바이트 복원과 GCC 전처리 결과 동일성을 별도 검사했다. 모든 관련 파일을 함께 준비한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "mesh_texture_contract.cpp · 한국어 주석 전체 파일",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-06a-ko/mesh_texture_contract.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "mesh_texture_contract.cpp · 전체 한국어 주석 소스",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// DX9 VB/IB and texture upload contract - CPU-only executable test (C++11).\n// This is NOT a Direct3D9 implementation or an emulated GPU.\n#include <algorithm>\n#include <cstdint>\n#include <cstring>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nstruct VertexPT { float x, y, z, u, v; };\nstatic_assert(sizeof(VertexPT) == 20, \"VertexPT must be 20 bytes\");\n\nbool ValidateTriangleList(const std::vector<VertexPT>& vertices, // [한국어 해설] VB/IB 범위와 base 인덱스를 검사하는 CPU 계약이다. 드라이버 드로콜 실행을 대신하지 않는다.\n                          const std::vector<std::uint16_t>& indices,\n                          std::size_t startIndex, std::size_t primitiveCount,\n                          std::size_t minIndex, std::size_t numVertices,\n                          std::int32_t baseVertexIndex) {\n    if (vertices.empty() || numVertices == 0 || indices.empty()) return false;\n    if (startIndex > indices.size()) return false;\n    if (primitiveCount > (indices.size() - startIndex) / 3) return false;\n    if (minIndex > std::numeric_limits<std::size_t>::max() - numVertices) return false;\n    const std::size_t endIndex = minIndex + numVertices; // exclusive, raw index range\n    const auto adjustedFits = [&](std::size_t raw) {\n        const std::uintmax_t value = raw, count = vertices.size();\n        const std::int64_t base = baseVertexIndex;\n        if (base >= 0) {\n            const auto offset = static_cast<std::uintmax_t>(base);\n            return offset < count && value < count - offset;\n        }\n        const auto magnitude = static_cast<std::uintmax_t>(-base); // base is int32\n        return value >= magnitude && value - magnitude < count;\n    };\n    if (!adjustedFits(minIndex) || !adjustedFits(endIndex - 1)) return false;\n\n    for (std::size_t n = startIndex; n < startIndex + primitiveCount * 3; ++n) {\n        const std::size_t raw = indices[n];\n        if (raw < minIndex || raw >= endIndex) return false;\n        const std::int64_t effective = static_cast<std::int64_t>(baseVertexIndex) +\n            static_cast<std::int64_t>(raw); // raw is a uint16 index\n        if (effective < 0 || static_cast<std::uint64_t>(effective) >= vertices.size()) return false;\n    }\n    return primitiveCount != 0;\n}\n\nenum class Pool { Default, Managed, SystemMem };\nstruct BufferSpec { bool dynamic; Pool pool; std::size_t bytes; };\nbool ValidVertexBufferSpec(const BufferSpec& spec) { // [한국어 해설] dynamic VB/IB와 MANAGED 조합 금지, 0바이트 금지 조건을 모형화한다.\n    if (!spec.bytes) return false;\n    // This models the documented D3D9 dynamic VB/IB + MANAGED prohibition.\n    return !(spec.dynamic && spec.pool == Pool::Managed);\n}\n\nbool CopyImageRows(const std::vector<std::uint8_t>& src, // [한국어 해설] 행 내용 바이트 수와 목적지 Pitch를 구분한다. 패딩을 건드리지 않고 행별로 복사한다.\n                   std::size_t width, std::size_t height,\n                   std::size_t bytesPerPixel, std::size_t destinationPitch,\n                   std::vector<std::uint8_t>& destination) {\n    // In-place expansion can overwrite a later source row; reject aliasing first.\n    if (&src == &destination) return false; // [한국어 해설] 같은 버퍼로 확장 복사하면 이후 원본 행을 덮을 수 있어 먼저 거부한다.\n    if (!width || !height || !bytesPerPixel) return false;\n    if (width > std::numeric_limits<std::size_t>::max() / bytesPerPixel) return false;\n    const std::size_t rowBytes = width * bytesPerPixel;\n    if (destinationPitch < rowBytes) return false;\n    if (height > std::numeric_limits<std::size_t>::max() / rowBytes) return false;\n    if (src.size() < rowBytes * height) return false;\n    if (height > std::numeric_limits<std::size_t>::max() / destinationPitch) return false;\n    if (destination.size() < destinationPitch * height) return false;\n    for (std::size_t row = 0; row < height; ++row)\n        std::memcpy(destination.data() + row * destinationPitch,\n                    src.data() + row * rowBytes, rowBytes);\n    return true;\n}\n\nint checks = 0;\nvoid Check(bool condition, const char* label) {\n    ++checks;\n    if (!condition) throw std::runtime_error(label);\n}\n\nint main() { // [한국어 해설] 정상 사각형, 선언 범위·정수 경계, Pitch·별칭 거부와 실패 시 저장소 보존을 검사한다.\n    try {\n        const std::vector<VertexPT> vertices(4);\n        const std::vector<std::uint16_t> indices = {0, 1, 2, 2, 1, 3};\n        Check(sizeof(VertexPT) * vertices.size() == 80, \"vertex byte size\");\n        Check(sizeof(std::uint16_t) * indices.size() == 12, \"index byte size\");\n        Check(ValidateTriangleList(vertices, indices, 0, 2, 0, 4, 0), \"valid indexed rect\");\n        Check(!ValidateTriangleList(vertices, indices, 0, 3, 0, 4, 0), \"out of index range\");\n        Check(!ValidateTriangleList(vertices, indices, 4, 1, 0, 4, 0), \"start too late\");\n        Check(!ValidateTriangleList(vertices, indices, 0, 2, 0, 3, 0), \"wrong NumVertices\");\n        Check(!ValidateTriangleList(vertices, indices, 0, 2, 1, 3, 0), \"wrong MinIndex\");\n        Check(!ValidateTriangleList(vertices, indices, 0, 2, 0, 4, -1), \"negative effective index\");\n        Check(!ValidateTriangleList(vertices, indices, 0, 2, 0, 4, 1), \"effective index beyond VB\");\n        Check(!ValidateTriangleList(vertices, indices, 0, 0, 0, 4, 0), \"zero primitives\");\n        Check(!ValidateTriangleList(vertices, indices, 0, 2,\n              std::numeric_limits<std::size_t>::max(), 4, 0), \"index range overflow\");\n        Check(ValidVertexBufferSpec({false, Pool::Managed, 80}), \"managed static allowed\");\n        Check(ValidVertexBufferSpec({true, Pool::Default, 80}), \"default dynamic allowed\");\n        Check(!ValidVertexBufferSpec({true, Pool::Managed, 80}), \"managed dynamic rejected\");\n        Check(!ValidVertexBufferSpec({false, Pool::Default, 0}), \"zero byte buffer rejected\");\n        std::vector<std::uint8_t> source = {1,2,3,4, 5,6,7,8};\n        std::vector<std::uint8_t> dest(16, 0xcc);  // 2 rows; pitch 8, row content 4\n        Check(CopyImageRows(source, 1, 2, 4, 8, dest), \"pitched texture copy\");\n        Check(dest[0] == 1 && dest[3] == 4 && dest[8] == 5 && dest[11] == 8,\n              \"both rows placed at destination pitch\");\n        Check(dest[4] == 0xcc && dest[12] == 0xcc, \"destination padding preserved\");\n        Check(!CopyImageRows(source, 1, 2, 4, 3, dest), \"pitch smaller than row rejected\");\n        Check(!CopyImageRows(source, 1, 3, 4, 8, dest), \"undersized source rejected\");\n        std::vector<std::uint8_t> smallDest(12, 0);\n        Check(!CopyImageRows(source, 1, 2, 4, 8, smallDest), \"undersized destination rejected\");\n        Check(!CopyImageRows(source, std::numeric_limits<std::size_t>::max(),\n                            2, 4, 8, dest), \"width overflow rejected\");\n        const std::vector<std::uint16_t> shifted = {3,4,5};\n        Check(ValidateTriangleList(std::vector<VertexPT>(3), shifted, 0,1,3,3,-3),\n              \"negative base valid range\");\n        Check(!ValidateTriangleList(vertices, {0,0,0}, 0,1,0,5,0),\n              \"full declared range beyond VB rejected\");\n        std::vector<std::uint8_t> alias(24);\n        for (unsigned i=0;i<alias.size();++i) alias[i]=static_cast<std::uint8_t>(i);\n        const auto beforeAlias=alias;\n        Check(!CopyImageRows(alias,1,3,4,8,alias), \"in-place pitched copy rejected\");\n        Check(alias==beforeAlias, \"alias rejection leaves storage unchanged\");\n        const auto beforeDest=dest;\n        Check(!CopyImageRows(source,0,2,4,8,dest), \"zero width rejected\");\n        Check(dest==beforeDest, \"invalid width leaves destination unchanged\");\n        std::cout << \"PASS \" << checks << \" CPU contract assertions\\n\";\n    } catch (const std::exception& err) {\n        std::cerr << \"FAIL \" << checks << \": \" << err.what() << '\\n';\n        return 1;\n    }\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "필수 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-06a-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "의존성·직접 빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-06a-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 검사 결과와 실행 범위",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-06a-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본/파생본 무결성 명세",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-06a-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 클라우드 Linux/GCC 14.2 C++20 직접 빌드·실행을 수행했다. CMake/CTest·sanitizer·Windows·GPU는 이번 주석본 검증에서 실행하지 않았다. 원문에 보존된 과거 결과와 구분한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "4. 빌드 설정과 실제 검증",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "text",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx9_mesh_recovered LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nadd_executable(mesh_texture mesh_texture_contract.cpp)\nset_target_properties(mesh_texture PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(mesh_texture PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(mesh_texture PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME mesh_texture COMMAND mesh_texture)"
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build -j 2\nctest --test-dir build --output-on-failure -V\n# C++11 확인: 구성 시 -DLAB_CXX_STANDARD=11\n# sanitizer: clang++ 및 컴파일/링크 옵션에 -fsanitize=address,undefined 사용"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부 에셋·입력 없이 실행합니다. 정상 종료 코드는 0, 실패한 Check는 메시지와 종료 코드 1입니다. 다음은 실제 배치 실행 로그에서 추린 결과이며 모든 구성의 configure/build/CTest 종료 코드가 0이었습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "UTC 2026-10-16T06:06:23.592352+00:00 to 06:06:26.573793+00:00\nGCC 14.2 C++20: PASS 28 CPU contract assertions\nGCC 14.2 C++11: PASS 28 CPU contract assertions\nClang 17 C++20 ASan+UBSan: PASS 28 CPU contract assertions\nExisting mini on each configuration: PASS 12 CPU checks\nFull batch CTest (extended + mini): each 2/2; sanitizer diagnostic: none\nWindows/MSVC/D3D9/GPU: NOT RUN\nSource SHA256: ab99f00febf1fe93f989aad03ef8aa9ff96686cdfd8b4525ca778f5931a95a60"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 독립 CMake는 확장 실행파일 하나만 등록합니다. 기존 미니 전체 소스는 [원본 관련 문서](https://app.notion.com/p/3f8a99703f4081058f96d3bd885a4ef7)를 유지합니다. 그 미니는 v1.1의 새 경계 검사를 포함하지 않습니다. 세 구성에서 같은 검사를 반복한 것이며 84개 독립 검사가 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "raw-source-index",
       "title": "원본 전체 소스 파일과 빌드",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -240,6 +447,89 @@
                   "text": "아닙니다. Windows SDK/MSVC·D3D9 드라이버·GPU 실행은 이번 이관에서 검증하지 않았습니다. 네이티브 전체 소스를 보존한 사실과 플랫폼 실행 검증을 혼동하지 마세요."
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification-boundary",
+      "title": "검증 범위 · 역사적 기록과 현재 개편 구분",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문의 실행 로그·도구 버전·소스 SHA·조건 수는 각 원문 시점의 보존 증거다. 이번 작업은 문서와 설명 그림의 개편이며, 같은 CPU 검사나 Windows/D3D9/GPU 실행을 새로 수행했다는 뜻이 아니다. 웹 검증·배포 역시 별도의 단계다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "build-source-map",
+      "title": "빌드 파일 · 전체 의존성 지도",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 CMakeLists.txt 전체 파일",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-06a/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cmake",
+          "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx9_mesh_recovered LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nadd_executable(mesh_texture mesh_texture_contract.cpp)\nset_target_properties(mesh_texture PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(mesh_texture PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(mesh_texture PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME mesh_texture COMMAND mesh_texture)\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 CMake는 원본 파일을 그대로 표시한다. 해당 소스 페이지의 모든 .cpp와 헤더를 함께 준비하며, 과거 로그는 당시 기록으로 읽는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·개편 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 페이지는 Notion에 보관된 기존 전체 코드 전문을 학습용으로 이전한 자료입니다. GitHub에서 CMake·소스 파일을 각각 독립적으로 다운로드할 수 있습니다. 과거 Notion CPU 결과와 GitHub에서 새로 실행한 결과는 별도로 집계합니다. Windows/MSVC·D3D9·GPU는 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 Notion 원문",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-06a/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 기존 URL·절 ID·원본 코드·Mermaid·표·접힌 답변·검증 기록을 보존하고 4탭 학습 동선, 설명 그림, 예측 실습과 추가 복습을 구성했다. CPU 학습 모델의 결과를 실제 GPU 동작으로 확대하지 않는다."
             }
           ]
         }

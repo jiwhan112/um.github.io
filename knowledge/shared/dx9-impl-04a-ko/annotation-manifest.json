@@ -1,0 +1,80 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes preserve physical line numbers, including assert and __LINE__ diagnostics. Remove recorded suffixes to reconstruct exact original bytes.",
+  "files": [
+    {
+      "original": "shared/dx9-impl-04a/CMakeLists.txt",
+      "annotated": "shared/dx9-impl-04a-ko/CMakeLists.txt",
+      "original_sha256": "a78dd634fdd38c28cc39d93f33cc365df431c0136378ac5bb173ce479b621c9d",
+      "annotated_sha256": "a78dd634fdd38c28cc39d93f33cc365df431c0136378ac5bb173ce479b621c9d",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx9-impl-04a/notion_example.cpp",
+      "annotated": "shared/dx9-impl-04a-ko/notion_example.cpp",
+      "original_sha256": "83a5d96e211d1cd326cb2c4487081ecf9a6e8bc5ec88ab49d81fdd9a78c4dc4a",
+      "annotated_sha256": "65791e7c7e49937da054e108136981e41be53ea7be1ff5c81b7c9cf9f8bfb714",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 11,
+          "suffix": " // [한국어 해설] 간단한 원문 CPU 예제다. Clone은 컴포넌트를 새로 만들고 내부 자산 shared_ptr만 공유한다."
+        },
+        {
+          "line": 18,
+          "suffix": " // [한국어 해설] 행 벡터·왼손 +Z 전방이며 이 축약 예제의 부모 변환은 이동만 지원한다."
+        },
+        {
+          "line": 44,
+          "suffix": " // [한국어 해설] weak_ptr 등록으로 큐가 게임 객체 수명을 불필요하게 늘리지 않는다."
+        },
+        {
+          "line": 49,
+          "suffix": " // [한국어 해설] 유효 객체만 모아 패스별 순서를 정하고 이번 프레임 등록을 비운다."
+        },
+        {
+          "line": 71,
+          "suffix": " // [한국어 해설] 원문 사례를 별도 실행한다. 더 상세한 실패·계약 검사는 renderer_components.cpp에 있다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx9-impl-04a/renderer_components.cpp",
+      "annotated": "shared/dx9-impl-04a-ko/renderer_components.cpp",
+      "original_sha256": "91f929a6fc96dfdf61fae8c68dd131d361eeeaa4ba3ead81be0e93921ee639fc",
+      "annotated_sha256": "77adae382e089ac5239949ef5b28596e57c2cb00170223c1c9c9f18bbf49f912",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 40,
+          "suffix": " // [한국어 해설] 행 벡터에서 자식 Local*부모 World 순서로 결합한다. 행렬 저장 규약을 일관되게 유지한다."
+        },
+        {
+          "line": 52,
+          "suffix": " // [한국어 해설] 컴포넌트 인스턴스는 독립 복제하지만 CPU 텍스처 자산 핸들은 공유한다. COM AddRef 모형은 아니다."
+        },
+        {
+          "line": 61,
+          "suffix": " // [한국어 해설] 프로토타입의 고유 소유권을 보관하고 Clone으로 새 컴포넌트를 생성한다. 중복 키는 거부한다."
+        },
+        {
+          "line": 95,
+          "suffix": " // [한국어 해설] 큐는 weak_ptr로 빌려 두고 Flush에서 살아 있는 항목만 잠시 소유한다."
+        },
+        {
+          "line": 116,
+          "suffix": " // [한국어 해설] 불투명은 앞→뒤, 알파는 뒤→앞, UI는 등록 순서다. 모든 투명도 문제를 해결하는 보편 정렬은 아니다."
+        },
+        {
+          "line": 124,
+          "suffix": " // [한국어 해설] 매 draw의 핵심 상태를 초기화하여 이전 패스의 텍스처·깊이·블렌드 상태 누출을 막는다."
+        },
+        {
+          "line": 133,
+          "suffix": " // [한국어 해설] 변환, 독립 인스턴스/공유 자산, 만료된 큐, 순서·상태 및 소유권 해제를 CPU에서 검사한다."
+        }
+      ]
+    }
+  ]
+}

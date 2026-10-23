@@ -21,6 +21,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "읽는 순서: 개념·도식 → 실습·복습 → 출처·검증 → 원문·변경 기록. 기존 날짜·CPU 기록·전체 소스는 보존한다. 이 페이지의 시각 개편은 Windows/MSVC·실제 D3D9·GPU 성공 기록이 아니다."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -83,6 +91,12 @@
       "title": "코드와 결과물의 관계",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-02/assets/link-load.svg",
+          "alt": "빌드 시 import library 연결과 실행 시 DLL 탐색은 별도 단계다.",
+          "caption": "빌드 시 import library 연결과 실행 시 DLL 탐색은 별도 단계다."
+        },
         {
           "type": "table",
           "rows": [
@@ -246,59 +260,16 @@
       ]
     },
     {
-      "id": "part-4",
-      "title": "공식 기준",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "list",
-          "ordered": false,
-          "items": [
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "Microsoft: Create and use a DLL",
-                    "kind": "link",
-                    "href": "https://learn.microsoft.com/en-us/cpp/build/walkthrough-creating-and-using-a-dynamic-link-library-cpp"
-                  }
-                ]
-              }
-            ],
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "Microsoft: Import library의 역할",
-                    "kind": "link",
-                    "href": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-creation"
-                  }
-                ]
-              }
-            ],
-            [
-              {
-                "type": "paragraph",
-                "content": [
-                  {
-                    "text": "Microsoft: DLL 검색 순서",
-                    "kind": "link",
-                    "href": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order"
-                  }
-                ]
-              }
-            ]
-          ]
-        }
-      ]
-    },
-    {
       "id": "part-5",
       "title": "DLL 경계에서 소유권은 왜 더 중요해지는가",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-02/assets/module-ownership.svg",
+          "alt": "생성과 파괴를 엔진 모듈에서 수행하고 Client는 불투명 핸들 계약을 따른다.",
+          "caption": "생성과 파괴를 엔진 모듈에서 수행하고 Client는 불투명 핸들 계약을 따른다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -562,47 +533,9 @@
       ]
     },
     {
-      "id": "part-8",
-      "title": "검증 기록",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "Linux GCC·Clang에서 공유 라이브러리 실습을 수행했습니다. 2026-10-16 수동 검수 12에서 "
-            },
-            {
-              "text": "02A · DLL·클라이언트 전체 소스 복구와 재검증",
-              "kind": "link",
-              "href": "/knowledge/dx9-impl-source-02a/"
-            },
-            {
-              "text": "에 공개 헤더·라이브러리·클라이언트·테스트·CMake 전체와 재현 안내·검증 결과를 네이티브 코드 블록으로 보관하고 다시 읽었습니다. 이번 재실행은 GCC Debug와 Clang Debug ASan/UBSan 각각 CTest 2/2, 동일 계약 조건 21개 통과입니다. 아래의 세 구성 결과는 이전 실행 기록이며 Windows/MSVC·실제 D3D9·GPU 실행과 구분합니다. GCC 14.2·Clang 17·Clang ASan/UBSan에서 CTest 2/2와 동일 API 계약 조건 21개를 각각 통과했습니다."
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "bash",
-          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build --config Debug\nctest --test-dir build -C Debug --output-on-failure"
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "02A · DLL·클라이언트 전체 소스 복구와 재검증",
-              "kind": "link",
-              "href": "/knowledge/dx9-impl-source-02a/"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "source-files",
       "title": "전체 소스·CMake·CPU 검증 및 미검증 범위",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "callout",
@@ -680,13 +613,129 @@
               ]
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 원본 파일을 아래와 같이 보존한다. CMake의 타깃·표준·include 경로·플랫폼 분기까지 함께 받아야 전체 빌드 입력이 된다. 주석본은 원본과 별도 파일로 연결하며 원본 소스·과거 결과를 바꾸지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · include/engine_api.h",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a/include/engine_api.h"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · src/engine_api.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a/src/engine_api.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · src/client.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a/src/client.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · tests/engine_contract_tests.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a/tests/engine_contract_tests.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 한국어 주석본은 연결된 소스 페이지의 “한국어 전체 소스”에서 펼쳐 읽을 수 있다. 아래 직접 파일 링크도 같은 실제 파일을 가리킨다. 원본과 과거 로그를 교체하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · include/engine_api.h",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a-ko/include/engine_api.h"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · src/engine_api.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a-ko/src/engine_api.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · src/client.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a-ko/src/client.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · tests/engine_contract_tests.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a-ko/tests/engine_contract_tests.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a-ko/CMakeLists.txt"
+            }
+          ]
         }
       ]
     },
     {
       "id": "migration-review",
       "title": "이관 보충 · 이해 확인",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "details",
@@ -716,6 +765,430 @@
           ]
         }
       ]
+    },
+    {
+      "id": "visual-practice",
+      "title": "실습 · 코드 계약을 증거와 연결",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 헤더·공유 라이브러리·클라이언트·테스트의 파일 의존 그래프를 그린다. 링크 오류와 실행 로더 오류를 서로 다른 단계에 배치한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Engine_Create에 null 출력 포인터와 비어 있지 않은 출력 변수를 전달하는 두 거부 사례를 소스에서 찾는다. 해제 뒤 복사해 둔 별칭은 테스트 입력으로 역참조하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "유효 Tick 다음 NaN 또는 1초 초과 Tick에서 elapsed가 보존되는지 기존 21조건과 연결해 읽는다. 할당 실패 주입·장기간 누적 범위는 별도로 검증된 사실이 아니다."
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-review",
+      "title": "복습 · 실패 경로부터 설명하기",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "Import .lib가 있으면 DLL 없이 실행되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. import library는 링크 정보다. 실행 시 DLL과 종속성 배포·검색 정책이 별도로 충족되어야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "extern C 하나면 모든 ABI가 호환되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 링크 지정만으로 호출 규약·자료 배치·정수 폭·런타임·버전 계약까지 통일되지는 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Engine_Destroy가 모든 핸들 복사본을 지우는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "전달한 소유 변수만 null로 만든다. 다른 변수에 복사해 둔 주소는 댕글링이므로 다시 호출하면 안 된다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Create의 출력 변수가 이미 차 있으면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 원본은 *out_handle이 null이어야 한다. 비어 있지 않은 출력 변수는 거부하고 기존 핸들을 덮어써 누수시키지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Tick의 0..1초는 DX9 공식 제한인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 이 CPU 라이브러리의 입력 계약이다. 비유한 값과 범위 밖 값을 거부하고 해당 호출에서는 상태를 바꾸지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Engine 모듈에서 만든 객체는 어디서 정리하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "공개 Engine_Destroy를 통해 같은 구현 모듈의 삭제 경로를 사용한다. Client는 내부 타입의 크기나 삭제 방법을 임의로 추측하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CTest 2/2는 21조건 두 묶음인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "클라이언트 실행과 계약 테스트 두 실행파일이다. 계약 테스트 내부의 21조건을 CTest 항목 수나 컴파일러 반복 수와 혼동하지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "part-4",
+      "title": "공식 기준",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft: Create and use a DLL",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/cpp/build/walkthrough-creating-and-using-a-dynamic-link-library-cpp"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft: Import library의 역할",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-creation"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "Microsoft: DLL 검색 순서",
+                    "kind": "link",
+                    "href": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-8",
+      "title": "검증 기록",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Linux GCC·Clang에서 공유 라이브러리 실습을 수행했습니다. 2026-10-16 수동 검수 12에서 "
+            },
+            {
+              "text": "02A · DLL·클라이언트 전체 소스 복구와 재검증",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-02a/"
+            },
+            {
+              "text": "에 공개 헤더·라이브러리·클라이언트·테스트·CMake 전체와 재현 안내·검증 결과를 네이티브 코드 블록으로 보관하고 다시 읽었습니다. 이번 재실행은 GCC Debug와 Clang Debug ASan/UBSan 각각 CTest 2/2, 동일 계약 조건 21개 통과입니다. 아래의 세 구성 결과는 이전 실행 기록이며 Windows/MSVC·실제 D3D9·GPU 실행과 구분합니다. GCC 14.2·Clang 17·Clang ASan/UBSan에서 CTest 2/2와 동일 API 계약 조건 21개를 각각 통과했습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build --config Debug\nctest --test-dir build -C Debug --output-on-failure"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "02A · DLL·클라이언트 전체 소스 복구와 재검증",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-02a/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-evidence",
+      "title": "검증을 읽는 세 층",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "층"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인하는 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인하지 않는 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원본·캡처 보관"
+                  }
+                ],
+                [
+                  {
+                    "text": "파일·본문·과거 해시의 출처"
+                  }
+                ],
+                [
+                  {
+                    "text": "코드가 모든 입력에서 옳다는 증명"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "보존 CPU 실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "명시된 모델·입력·컴파일러 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "Windows 로더·COM·D3D9·GPU 동작"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "현재 웹 개편"
+                  }
+                ],
+                [
+                  {
+                    "text": "도식·탭·코드 접근성"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 네이티브 실행 성공"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문에서 “이번”이라고 적힌 실행 문장은 해당 원문의 날짜에 수행한 기록이다. 2026-10-23의 웹 표현 개편과 혼동하지 않는다. 기존 검증 횟수에 컴파일러 반복이나 같은 소스의 다른 페이지 설명을 더하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존된 Notion 원문",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-02/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본은 기존 줄 끝에 설명 suffix만 덧붙인 별도 파생 파일이다. 원본 코드·문자열·물리행 수·진단 행번호를 보존하며 manifest에 기록된 suffix를 제거하면 원본 바이트가 복원된다. CMake는 원본과 동일하다. 주석본 담당자는 2026-10-23 Linux GCC 14.2 C++20 직접 빌드·실행 및 전처리 비교를 별도로 수행했다. 두 폴더의 __FILE__ 경로만 동일한 SOURCE 접두사로 맞추었고, 진단 행번호를 삭제해 비교한 것은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 주석본의 직접 실행은 원문의 과거 C++11·C++20·Clang sanitizer·CTest 기록과 구별한다. 주석본 확인에서는 CMake/CTest·Windows/MSVC·실제 COM/D3D9/GPU·sanitizer를 실행하지 않았다. NDEBUG를 정의하지 않은 CPU 검사이며 결과 수는 새 독립 요구사항으로 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 팩 구성·실제 재현 명령",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·주석본 해시와 주석 위치",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 실제 확인·미검증 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 바이트 복원 검사 도구",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-02a-ko/verify_annotations.py"
+            }
+          ]
+        }
+      ],
+      "tab": "sources"
+    },
+    {
+      "id": "visual-history",
+      "title": "원문·변경 기록",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 기존 본문 주제·직접 코드·Mermaid·답안·링크를 유지하며 네 탭, 설명 SVG, 실습과 접힌 복습을 보강했다. 자료실의 문자열로 남아 있던 원본 해시 표는 값 변경 없이 typed table로 표시했다. 원본 Notion Markdown·공유 소스·CMake·과거 검증 기록은 수정하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 원문 전체",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-02/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 웹 저작 JSON",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-02/content.json"
+            }
+          ]
+        }
+      ],
+      "tab": "history"
     }
   ]
 }

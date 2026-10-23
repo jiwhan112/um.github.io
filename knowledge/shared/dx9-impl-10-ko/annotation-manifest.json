@@ -1,0 +1,55 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes preserve physical line numbers, including assert and __LINE__ diagnostics. Remove recorded suffixes to reconstruct exact original bytes.",
+  "files": [
+    {
+      "original": "shared/dx9-impl-10-ko/original/CMakeLists.txt",
+      "annotated": "shared/dx9-impl-10-ko/CMakeLists.txt",
+      "original_sha256": "63c62ab920e25bdf21eab39f9e4ea814a2ff9fcc2965e5529880c3c59c5547fc",
+      "annotated_sha256": "63c62ab920e25bdf21eab39f9e4ea814a2ff9fcc2965e5529880c3c59c5547fc",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx9-impl-10-ko/original/main.cpp",
+      "annotated": "shared/dx9-impl-10-ko/main.cpp",
+      "original_sha256": "6a3ec20edb17657ced8a261515b9d09cb09d2bafbb4dfa916b726fef949abb3e",
+      "annotated_sha256": "3ab489b241f7d61544c375a1f36df5017e01f45d4f9b2e249494b2813378e504",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 27,
+          "suffix": " // [한국어 해설] 행 벡터와 행렬의 곱이다. w=0인 방향에는 이동이 적용되지 않는다."
+        },
+        {
+          "line": 50,
+          "suffix": " // [한국어 해설] VS 계약을 CPU로 나타낸다. 실제 HLSL 컴파일이나 정점 셰이더 실행은 아니다."
+        },
+        {
+          "line": 55,
+          "suffix": " // [한국어 해설] 화면 무게중심 λ를 w로 나눈 가중치를 사용해 UV와 뷰 깊이를 원근 보정한다."
+        },
+        {
+          "line": 77,
+          "suffix": " // [한국어 해설] 뷰 깊이로 선형 안개 가시율을 계산하고 [0,1]로 제한한다. start<end 계약을 검사한다."
+        },
+        {
+          "line": 82,
+          "suffix": " // [한국어 해설] 안개는 RGB만 섞고 샘플 알파는 유지한다. 텍스처 샘플 값은 호출자가 제공한다."
+        },
+        {
+          "line": 95,
+          "suffix": " // [한국어 해설] 복구한 원본의 34개 이름 있는 CPU 검사를 실행한다. GPU 화면 검증으로 해석하지 않는다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx9-impl-10-ko/original/shader_contract.fx",
+      "annotated": "shared/dx9-impl-10-ko/shader_contract.fx",
+      "original_sha256": "c8e4cef1740c2d0ed57e024eeb811798a941861a419378689049d08ea458fedf",
+      "annotated_sha256": "c8e4cef1740c2d0ed57e024eeb811798a941861a419378689049d08ea458fedf",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    }
+  ]
+}

@@ -21,6 +21,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "읽는 순서: 개념·도식 → 실습·복습 → 출처·검증 → 원문·변경 기록. 기존 날짜·CPU 기록·전체 소스는 보존한다. 이 페이지의 시각 개편은 Windows/MSVC·실제 D3D9·GPU 성공 기록이 아니다."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -135,53 +143,6 @@
       ]
     },
     {
-      "id": "part-6",
-      "title": "검증",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "이전 26조건 검증 기록을 보존합니다. 2026-10-16 수동 검수 13에서 "
-            },
-            {
-              "text": "04A · Renderer·Transform 전체 소스와 재검증",
-              "kind": "link",
-              "href": "/knowledge/dx9-impl-source-04a/"
-            },
-            {
-              "text": "에 확장 소스와 별도 미니 소스 전체, CMake, 재현 안내·결과를 보관했습니다. 확장 26조건과 미니 실행을 GCC C++20·GCC C++11·Clang ASan/UBSan에서 각각 재통과했고, 게시한 확장 전용 CMake도 CTest 1/1을 확인했습니다. Windows/MSVC·COM·D3D9·GPU는 미검증입니다. 공식 자료: "
-            },
-            {
-              "text": "SetTexture",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d9/nf-d3d9-idirect3ddevice9-settexture"
-            },
-            {
-              "text": ", "
-            },
-            {
-              "text": "Managing Resources",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/managing-resources"
-            },
-            {
-              "text": ", "
-            },
-            {
-              "text": "Alpha Blending",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/alpha-blending"
-            },
-            {
-              "text": "."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "part-7",
       "title": "프레임 흐름과 소유권을 별도로 모델링",
       "tab": "document",
@@ -206,6 +167,12 @@
       "title": "네 가지 수명",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-04/assets/weak-queue.svg",
+          "alt": "weak 요청의 lock 성공·실패에 따라 생존 대상을 처리하거나 건너뛴다.",
+          "caption": "weak 요청의 lock 성공·실패에 따라 생존 대상을 처리하거나 건너뛴다."
+        },
         {
           "type": "table",
           "rows": [
@@ -361,8 +328,14 @@
     {
       "id": "part-10",
       "title": "Transform 수치 추적",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-04/assets/transform-order.svg",
+          "alt": "행 벡터 SRT와 부모 변환을 실제 좌표로 추적한다.",
+          "caption": "행 벡터 SRT와 부모 변환을 실제 좌표로 추적한다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -500,7 +473,7 @@
     {
       "id": "source-files",
       "title": "전체 소스·CMake·CPU 검증 및 미검증 범위",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "callout",
@@ -558,8 +531,468 @@
               ]
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 원본 파일을 아래와 같이 보존한다. CMake의 타깃·표준·include 경로·플랫폼 분기까지 함께 받아야 전체 빌드 입력이 된다. 주석본은 원본과 별도 파일로 연결하며 원본 소스·과거 결과를 바꾸지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · renderer_components.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a/renderer_components.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · notion_example.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a/notion_example.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 한국어 주석본은 연결된 소스 페이지의 “한국어 전체 소스”에서 펼쳐 읽을 수 있다. 아래 직접 파일 링크도 같은 실제 파일을 가리킨다. 원본과 과거 로그를 교체하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · renderer_components.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/renderer_components.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · notion_example.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/notion_example.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/CMakeLists.txt"
+            }
+          ]
         }
       ]
+    },
+    {
+      "id": "visual-practice",
+      "title": "실습 · 코드 계약을 증거와 연결",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "prototype과 두 clone의 컴포넌트 주소, 공유 TextureAsset 주소를 나란히 적는다. 독립 인스턴스와 공유 자산이라는 두 계약을 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "큐 등록 뒤 대상 owner를 없앤 사례에서 lock 실패 경로를 추적한다. 정상 대상을 모은 live 목록이 언제 없어지는지도 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "p=(1,0,0)에 Scale 2, Yaw +90도, Local 이동(1,2,3), Parent 이동(10,0,0)을 순서대로 적용한다. 마지막 결과(11,2,1)만 외우지 말고 중간 좌표를 남긴다."
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-review",
+      "title": "복습 · 실패 경로부터 설명하기",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "컴포넌트를 Clone하면 TextureAsset도 반드시 복제되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 모델은 별도 Component를 만들지만 자산은 shared_ptr로 공유한다. 컴포넌트 주소의 독립성과 자산 공유를 따로 검사한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "렌더 큐가 weak_ptr를 저장하는 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "프레임 요청 등록만으로 객체 수명을 연장하지 않기 위해서다. Flush에서 lock에 실패한 대상은 건너뛴다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Flush 중 객체를 어떻게 유지하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "성공한 lock으로 얻은 shared_ptr를 임시 live 목록에 보관한다. 큐를 비운 뒤 그 목록을 정렬·처리한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Alpha 뒤→앞이면 모든 투명 문제가 해결되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 객체 기준 정렬은 교차하는 투명 면이나 복잡한 메시 내부 순서를 완벽하게 해결하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "행 벡터에서 ParentWorld는 어느 쪽인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 예제는 World=Local×ParentWorld, 점은 p×World다. 다른 벡터·행렬 규약을 혼합하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "TextureAsset의 shared_ptr 수가 COM AddRef 수인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 이 자산은 이름을 가진 일반 CPU 객체다. D3D9 COM 호출이 없으므로 COM 참조 수명 시험이 아니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "26조건의 세 구성 성공을 78개의 새 성질로 세는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 조건을 반복한 것이다. 확장 실행파일·미니 실행파일·언어 모드·검사기 구성을 별도로 기록한다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "part-6",
+      "title": "검증",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전 26조건 검증 기록을 보존합니다. 2026-10-16 수동 검수 13에서 "
+            },
+            {
+              "text": "04A · Renderer·Transform 전체 소스와 재검증",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-04a/"
+            },
+            {
+              "text": "에 확장 소스와 별도 미니 소스 전체, CMake, 재현 안내·결과를 보관했습니다. 확장 26조건과 미니 실행을 GCC C++20·GCC C++11·Clang ASan/UBSan에서 각각 재통과했고, 게시한 확장 전용 CMake도 CTest 1/1을 확인했습니다. Windows/MSVC·COM·D3D9·GPU는 미검증입니다. 공식 자료: "
+            },
+            {
+              "text": "SetTexture",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/d3d9/nf-d3d9-idirect3ddevice9-settexture"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "Managing Resources",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/managing-resources"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "Alpha Blending",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/alpha-blending"
+            },
+            {
+              "text": "."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-evidence",
+      "title": "검증을 읽는 세 층",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "층"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인하는 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인하지 않는 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원본·캡처 보관"
+                  }
+                ],
+                [
+                  {
+                    "text": "파일·본문·과거 해시의 출처"
+                  }
+                ],
+                [
+                  {
+                    "text": "코드가 모든 입력에서 옳다는 증명"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "보존 CPU 실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "명시된 모델·입력·컴파일러 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "Windows 로더·COM·D3D9·GPU 동작"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "현재 웹 개편"
+                  }
+                ],
+                [
+                  {
+                    "text": "도식·탭·코드 접근성"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 네이티브 실행 성공"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문에서 “이번”이라고 적힌 실행 문장은 해당 원문의 날짜에 수행한 기록이다. 2026-10-23의 웹 표현 개편과 혼동하지 않는다. 기존 검증 횟수에 컴파일러 반복이나 같은 소스의 다른 페이지 설명을 더하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존된 Notion 원문",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-04/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본은 기존 줄 끝에 설명 suffix만 덧붙인 별도 파생 파일이다. 원본 코드·문자열·물리행 수·진단 행번호를 보존하며 manifest에 기록된 suffix를 제거하면 원본 바이트가 복원된다. CMake는 원본과 동일하다. 주석본 담당자는 2026-10-23 Linux GCC 14.2 C++20 직접 빌드·실행 및 전처리 비교를 별도로 수행했다. 두 폴더의 __FILE__ 경로만 동일한 SOURCE 접두사로 맞추었고, 진단 행번호를 삭제해 비교한 것은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 주석본의 직접 실행은 원문의 과거 C++11·C++20·Clang sanitizer·CTest 기록과 구별한다. 주석본 확인에서는 CMake/CTest·Windows/MSVC·실제 COM/D3D9/GPU·sanitizer를 실행하지 않았다. NDEBUG를 정의하지 않은 CPU 검사이며 결과 수는 새 독립 요구사항으로 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 팩 구성·실제 재현 명령",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·주석본 해시와 주석 위치",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 실제 확인·미검증 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 바이트 복원 검사 도구",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/verify_annotations.py"
+            }
+          ]
+        }
+      ],
+      "tab": "sources"
+    },
+    {
+      "id": "visual-history",
+      "title": "원문·변경 기록",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 기존 본문 주제·직접 코드·Mermaid·답안·링크를 유지하며 네 탭, 설명 SVG, 실습과 접힌 복습을 보강했다. 자료실의 문자열로 남아 있던 원본 해시 표는 값 변경 없이 typed table로 표시했다. 원본 Notion Markdown·공유 소스·CMake·과거 검증 기록은 수정하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 원문 전체",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-04/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 웹 저작 JSON",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-04/content.json"
+            }
+          ]
+        }
+      ],
+      "tab": "history"
     }
   ]
 }

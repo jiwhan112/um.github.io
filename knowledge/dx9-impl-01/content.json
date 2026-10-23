@@ -21,6 +21,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "읽는 순서: 개념·도식 → 실습·복습 → 출처·검증 → 원문·변경 기록. 기존 날짜·CPU 기록·전체 소스는 보존한다. 이 페이지의 시각 개편은 Windows/MSVC·실제 D3D9·GPU 성공 기록이 아니다."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -95,6 +103,14 @@
           "type": "code",
           "language": "mermaid",
           "text": "flowchart TD\n W[\"Win32 HWND 생성\"] --> D[\"Direct3DCreate9\"]\n D --> P[\"D3DPRESENT_PARAMETERS 준비\"]\n P --> C[\"IDirect3D9::CreateDevice\"]\n C --> R[\"Clear -> Present\"]\n R --> L{\"Lost / Resize?\"}\n L -->|No| R\n L -->|Yes| Q[\"TestCooperativeLevel / Reset 가능 여부 확인\"]\n Q --> B[\"Reset 전 기본 풀 자원 해제\"]\n B --> T[\"Reset 후 자원·상태 복원\"]\n T --> R\n R --> E[\"종료: Device Release -> Direct3D Release -> HWND 정리\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 도식은 전체 책임을 보여 주는 개략도다. Reset의 성공 여부를 생략한 화살표를 무조건 성공으로 읽지 않는다. DEVICELOST 대기, DEVICENOTRESET 준비, Reset 실패 후 재판단은 03의 분기 도식에서 따로 확인한다."
+            }
+          ]
         }
       ]
     },
@@ -103,6 +119,12 @@
       "title": "핵심 계약",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-01/assets/create-failure.svg",
+          "alt": "CreateDevice 실패와 성공 이후 사용 경로를 분리한다.",
+          "caption": "CreateDevice 실패와 성공 이후 사용 경로를 분리한다."
+        },
         {
           "type": "list",
           "ordered": false,
@@ -187,6 +209,12 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-01/assets/com-ownership.svg",
+          "alt": "단순 주소 관찰과 별도 COM 소유 참조를 구별한다.",
+          "caption": "단순 주소 관찰과 별도 COM 소유 참조를 구별한다."
+        },
+        {
           "type": "paragraph",
           "content": [
             {
@@ -213,87 +241,12 @@
               "text": "로, 복사를 금지하고 move와 Release를 테스트합니다. 복수 소유에는 각 소유권별 AddRef가 필요합니다. 프로덕션 코드는 Microsoft WRL ComPtr 등의 기존 검증된 유틸리티를 검토합니다."
             }
           ]
-        }
-      ]
-    },
-    {
-      "id": "part-5",
-      "title": "실습 원본 파일",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "callout",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "원본 Notion 첨부 참조(dx9_com_owner_h.txt)가 포함되어 있습니다. 첨부 원본 바이트와 이미지·파일 해시를 아직 확보하지 못해 현재 페이지에는 링크만 보존했습니다. "
-                },
-                {
-                  "text": "원본 Notion 페이지에서 확인",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f408135a849f7c66e4d54ad"
-                }
-              ]
-            }
-          ]
         },
-        {
-          "type": "callout",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "원본 Notion 첨부 참조(dx9_com_owner_tests_cpp.txt)가 포함되어 있습니다. 첨부 원본 바이트와 이미지·파일 해시를 아직 확보하지 못해 현재 페이지에는 링크만 보존했습니다. "
-                },
-                {
-                  "text": "원본 Notion 페이지에서 확인",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f408135a849f7c66e4d54ad"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "callout",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "원본 Notion 첨부 참조(dx9_device_validation.txt)가 포함되어 있습니다. 첨부 원본 바이트와 이미지·파일 해시를 아직 확보하지 못해 현재 페이지에는 링크만 보존했습니다. "
-                },
-                {
-                  "text": "원본 Notion 페이지에서 확인",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f408135a849f7c66e4d54ad"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "part-6",
-      "title": "재현 방법",
-      "tab": "document",
-      "blocks": [
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "파일 이름을 각각 com_owner.h와 com_owner_tests.cpp로 저장하여 같은 디렉터리에 둡니다. Linux 또는 Windows의 C++11 컴파일러에서 "
-            },
-            {
-              "text": "g++ -std=c++11 -Wall -Wextra -Werror com_owner_tests.cpp -o test && ./test",
-              "kind": "code"
-            },
-            {
-              "text": "를 실행합니다. 종료 시 created=4, destroyed=4, AddRef=1, Release=5를 확인합니다. 이것은 fake COM 객체 수명의 테스트이지 D3D9 GPU 실행 테스트가 아닙니다."
+              "text": "ComOwner는 최소 학습 래퍼다. reset에 현재와 같은 주소를 넘기면 아무 작업도 하지 않는다. 별도로 AddRef한 같은 주소의 추가 참조까지 소비하는 일반적인 attach 연산으로 가정하면 안 된다. put은 기존 참조를 먼저 버리므로 실패 원자성이 필요할 때는 별도 후보 owner로 출력값을 받은 뒤 성공 시 교체한다."
             }
           ]
         }
@@ -402,9 +355,31 @@
       ]
     },
     {
+      "id": "part-6",
+      "title": "재현 방법",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "파일 이름을 각각 com_owner.h와 com_owner_tests.cpp로 저장하여 같은 디렉터리에 둡니다. Linux 또는 Windows의 C++11 컴파일러에서 "
+            },
+            {
+              "text": "g++ -std=c++11 -Wall -Wextra -Werror com_owner_tests.cpp -o test && ./test",
+              "kind": "code"
+            },
+            {
+              "text": "를 실행합니다. 종료 시 created=4, destroyed=4, AddRef=1, Release=5를 확인합니다. 이것은 fake COM 객체 수명의 테스트이지 D3D9 GPU 실행 테스트가 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-9",
       "title": "이해 확인",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "details",
@@ -451,9 +426,315 @@
       ]
     },
     {
+      "id": "source-files",
+      "title": "전체 소스·CMake·CPU 검증 및 미검증 범위",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 장에 연결된 기존 Notion의 검증된 소스 보관본을 별도 페이지에 전체 제공하며 파일별 CMake 원본도 GitHub에 저장했습니다. 이번 이관 자체는 Windows/MSVC·D3D9/GPU 실행을 포함하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DX9 01 · 전체 소스·CMake·원본 검증 페이지",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-01a/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "com_owner.h — 독립 GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-01a/com_owner.h"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "com_owner_tests.cpp — 독립 GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-01a/com_owner_tests.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "d3d9_window.cpp — 독립 GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-01a/d3d9_window.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CPU 회귀 검사와 실제 Direct3D9 실행은 같은 건가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다릅니다. CPU 데이터·컴포넌트 모형의 컴파일·CTest가 통과하더라도 실제 Win32 창, D3D9 드라이버, GPU 프레임, DX9 Reset은 실행해 본 것이 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 원본 파일을 아래와 같이 보존한다. CMake의 타깃·표준·include 경로·플랫폼 분기까지 함께 받아야 전체 빌드 입력이 된다. 주석본은 원본과 별도 파일로 연결하며 원본 소스·과거 결과를 바꾸지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · com_owner.h",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a/com_owner.h"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · com_owner_tests.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a/com_owner_tests.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · d3d9_window.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a/d3d9_window.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 한국어 주석본은 연결된 소스 페이지의 “한국어 전체 소스”에서 펼쳐 읽을 수 있다. 아래 직접 파일 링크도 같은 실제 파일을 가리킨다. 원본과 과거 로그를 교체하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · com_owner.h",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a-ko/com_owner.h"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · com_owner_tests.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a-ko/com_owner_tests.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · d3d9_window.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a-ko/d3d9_window.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a-ko/CMakeLists.txt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-practice",
+      "title": "실습 · 코드 계약을 증거와 연결",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "com_owner_tests.cpp의 생성·move·detach·reset 각 지점에서 소유 참조 장부를 쓴다. 주소를 가진 변수 수가 아니라 Release 의무의 수를 센다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "put() 호출 전 owner가 차 있는 상황을 가정하고 기존 참조가 언제 해제되는지 추적한다. API 실패 시 원본 상태 보존이 필요하면 별도 후보를 사용하는 절차를 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "d3d9_window.cpp의 실제 HRESULT 분기를 읽되 실행한 것으로 표시하지 않는다. CPU fake COM과 Windows 장치 생성의 검증 목록을 분리한다."
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-review",
+      "title": "복습 · 실패 경로부터 설명하기",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "같은 COM 주소를 두 ComOwner에 넣으면 안전한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "주소가 같다는 것과 소유 참조가 두 개라는 것은 다르다. 두 소유자가 각각 Release하려면 각자 인수할 참조가 있어야 한다. 하나의 참조만 있으면 한쪽은 비소유 관찰자로 둔다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "move 때 AddRef도 함께 호출하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 최소 래퍼는 기존 참조의 소유권만 옮긴다. 원본은 비고 총 소유 참조 수는 늘지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "put()이 실패 시 기존 값을 보존하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 이 구현의 put은 reset으로 기존 참조를 먼저 해제한다. 기존 상태 보존이 필요하면 별도 후보 owner로 받은 뒤 성공 시 교체하는 호출 설계가 필요하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Direct3DCreate9와 CreateDevice는 같은 반환 검사인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "전자는 반환 인터페이스 포인터의 null, 후자는 HRESULT와 출력 포인터 계약을 확인한다. 성공 종류를 섞지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "COM 객체를 delete하면 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "호출자가 가진 소유 참조를 Release로 반환한다. 실제 객체 파괴 시점은 객체의 COM 수명 관리에 달려 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "fake COM 4생성·4파괴면 GPU 누수도 없다는 뜻인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 특정 CPU 소유 시나리오의 결과다. 실제 장치·바인딩·드라이버·Reset·종료의 참조 수명은 별도 네이티브 검증이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Reset 실패 뒤 곧바로 Draw로 돌아가도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 된다. 상태를 다시 확인하고 준비가 되었을 때만 복구를 진행한다. 성공 뒤에도 자원 재생성과 상태 재바인딩이 필요하다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
       "id": "part-10",
       "title": "실제 검증과 범위",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -475,7 +756,7 @@
     {
       "id": "part-11",
       "title": "공식 출처와 교정 기록",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "list",
@@ -547,10 +828,184 @@
       ]
     },
     {
-      "id": "source-files",
-      "title": "전체 소스·CMake·CPU 검증 및 미검증 범위",
-      "tab": "document",
+      "id": "visual-evidence",
+      "title": "검증을 읽는 세 층",
       "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "층"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인하는 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인하지 않는 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원본·캡처 보관"
+                  }
+                ],
+                [
+                  {
+                    "text": "파일·본문·과거 해시의 출처"
+                  }
+                ],
+                [
+                  {
+                    "text": "코드가 모든 입력에서 옳다는 증명"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "보존 CPU 실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "명시된 모델·입력·컴파일러 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "Windows 로더·COM·D3D9·GPU 동작"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "현재 웹 개편"
+                  }
+                ],
+                [
+                  {
+                    "text": "도식·탭·코드 접근성"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 네이티브 실행 성공"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문에서 “이번”이라고 적힌 실행 문장은 해당 원문의 날짜에 수행한 기록이다. 2026-10-23의 웹 표현 개편과 혼동하지 않는다. 기존 검증 횟수에 컴파일러 반복이나 같은 소스의 다른 페이지 설명을 더하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존된 Notion 원문",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-01/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본은 기존 줄 끝에 설명 suffix만 덧붙인 별도 파생 파일이다. 원본 코드·문자열·물리행 수·진단 행번호를 보존하며 manifest에 기록된 suffix를 제거하면 원본 바이트가 복원된다. CMake는 원본과 동일하다. 주석본 담당자는 2026-10-23 Linux GCC 14.2 C++20 직접 빌드·실행 및 전처리 비교를 별도로 수행했다. 두 폴더의 __FILE__ 경로만 동일한 SOURCE 접두사로 맞추었고, 진단 행번호를 삭제해 비교한 것은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 주석본의 직접 실행은 원문의 과거 C++11·C++20·Clang sanitizer·CTest 기록과 구별한다. 주석본 확인에서는 CMake/CTest·Windows/MSVC·실제 COM/D3D9/GPU·sanitizer를 실행하지 않았다. NDEBUG를 정의하지 않은 CPU 검사이며 결과 수는 새 독립 요구사항으로 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 팩 구성·실제 재현 명령",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·주석본 해시와 주석 위치",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 실제 확인·미검증 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 바이트 복원 검사 도구",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-01a-ko/verify_annotations.py"
+            }
+          ]
+        }
+      ],
+      "tab": "sources"
+    },
+    {
+      "id": "part-5",
+      "title": "실습 원본 파일",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 개별 Notion 첨부의 미회수 표시는 최초 이관 상태를 남긴 역사 기록이다. 현재 읽을 수 있는 전체 소스와 별도 복구 증거는 실습 탭의 01A 소스 페이지에 연결되어 있다. 개별 첨부 자체의 바이트 확인과 별도 소스 보관본 확보를 같은 주장으로 합치지 않는다."
+            }
+          ]
+        },
         {
           "type": "callout",
           "blocks": [
@@ -558,67 +1013,89 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "이 장에 연결된 기존 Notion의 검증된 소스 보관본을 별도 페이지에 전체 제공하며 파일별 CMake 원본도 GitHub에 저장했습니다. 이번 이관 자체는 Windows/MSVC·D3D9/GPU 실행을 포함하지 않습니다."
+                  "text": "원본 Notion 첨부 참조(dx9_com_owner_h.txt)가 포함되어 있습니다. 첨부 원본 바이트와 이미지·파일 해시를 아직 확보하지 못해 현재 페이지에는 링크만 보존했습니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지에서 확인",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f408135a849f7c66e4d54ad"
                 }
               ]
             }
           ]
         },
         {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "DX9 01 · 전체 소스·CMake·원본 검증 페이지",
-              "kind": "link",
-              "href": "/knowledge/dx9-impl-source-01a/"
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "com_owner.h — 독립 GitHub 원본 파일",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-01a/com_owner.h"
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "com_owner_tests.cpp — 독립 GitHub 원본 파일",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-01a/com_owner_tests.cpp"
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "d3d9_window.cpp — 독립 GitHub 원본 파일",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-01a/d3d9_window.cpp"
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "CPU 회귀 검사와 실제 Direct3D9 실행은 같은 건가요?",
+          "type": "callout",
           "blocks": [
             {
               "type": "paragraph",
               "content": [
                 {
-                  "text": "다릅니다. CPU 데이터·컴포넌트 모형의 컴파일·CTest가 통과하더라도 실제 Win32 창, D3D9 드라이버, GPU 프레임, DX9 Reset은 실행해 본 것이 아닙니다."
+                  "text": "원본 Notion 첨부 참조(dx9_com_owner_tests_cpp.txt)가 포함되어 있습니다. 첨부 원본 바이트와 이미지·파일 해시를 아직 확보하지 못해 현재 페이지에는 링크만 보존했습니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지에서 확인",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f408135a849f7c66e4d54ad"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원본 Notion 첨부 참조(dx9_device_validation.txt)가 포함되어 있습니다. 첨부 원본 바이트와 이미지·파일 해시를 아직 확보하지 못해 현재 페이지에는 링크만 보존했습니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지에서 확인",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f408135a849f7c66e4d54ad"
                 }
               ]
             }
           ]
         }
       ]
+    },
+    {
+      "id": "visual-history",
+      "title": "원문·변경 기록",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 기존 본문 주제·직접 코드·Mermaid·답안·링크를 유지하며 네 탭, 설명 SVG, 실습과 접힌 복습을 보강했다. 자료실의 문자열로 남아 있던 원본 해시 표는 값 변경 없이 typed table로 표시했다. 원본 Notion Markdown·공유 소스·CMake·과거 검증 기록은 수정하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 원문 전체",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-01/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 웹 저작 JSON",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-01/content.json"
+            }
+          ]
+        }
+      ],
+      "tab": "history"
     }
   ]
 }

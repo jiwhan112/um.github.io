@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes preserve physical line numbers, including assert and __LINE__ diagnostics. Remove recorded suffixes to reconstruct exact original bytes.",
+  "files": [
+    {
+      "original": "shared/dx9-impl-08-ko/original/CMakeLists.txt",
+      "annotated": "shared/dx9-impl-08-ko/CMakeLists.txt",
+      "original_sha256": "0ae173d64a54c8ba0fd7156b908d96475bfcdb6082eec766a5408299dbf9bd01",
+      "annotated_sha256": "0ae173d64a54c8ba0fd7156b908d96475bfcdb6082eec766a5408299dbf9bd01",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx9-impl-08-ko/original/main.cpp",
+      "annotated": "shared/dx9-impl-08-ko/main.cpp",
+      "original_sha256": "5a4281356e9737ca474bf8168138e96fd0d2795ee36d89f2e7caa290e33426f6",
+      "annotated_sha256": "ae1e0a251b3d70d2a14e079b1f5c6a6aae4acdd566a6494f013394adfa362b8b",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 20,
+          "suffix": " // [한국어 해설] 범위를 벗어나면 CPU 상태 스냅샷을 복원한다. 실제 D3D9 StateBlock 실행 검사가 아니다."
+        },
+        {
+          "line": 30,
+          "suffix": " // [한국어 해설] sky-first 정책은 깊이 검사와 기록을 끈다. 다른 스카이 렌더 정책과 혼용하지 않는다."
+        },
+        {
+          "line": 40,
+          "suffix": " // [한국어 해설] 픽셀 y 아래쪽을 중심 원점 y 위쪽으로 변환한다. 이 원문 모델은 NaN 거부를 구현하지 않는다."
+        },
+        {
+          "line": 52,
+          "suffix": " // [한국어 해설] 학습 모델의 LESSEQUAL 판정이다. 실제 장치 전체 렌더 상태를 재현하지 않는다."
+        },
+        {
+          "line": 61,
+          "suffix": " // [한국어 해설] straight alpha RGB 합성을 계산하며 이 함수는 깊이 비교를 별도로 하지 않는다."
+        },
+        {
+          "line": 68,
+          "suffix": " // [한국어 해설] sky→opaque→UI 이후 상태 복원과 화면좌표 왕복·경계를 검사한다."
+        }
+      ]
+    }
+  ]
+}

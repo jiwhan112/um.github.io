@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes preserve physical line numbers, including assert and __LINE__ diagnostics. Remove recorded suffixes to reconstruct exact original bytes.",
+  "files": [
+    {
+      "original": "shared/dx9-impl-03a/CMakeLists.txt",
+      "annotated": "shared/dx9-impl-03a-ko/CMakeLists.txt",
+      "original_sha256": "dbbe0ae3cdf7ed19a4fe6001255448f2c27cea0c3d369395cc61be81f735b8d0",
+      "annotated_sha256": "dbbe0ae3cdf7ed19a4fe6001255448f2c27cea0c3d369395cc61be81f735b8d0",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx9-impl-03a/resource_model.cpp",
+      "annotated": "shared/dx9-impl-03a-ko/resource_model.cpp",
+      "original_sha256": "13e2b28a4854f5438d0a9f2acc4616e115d9a6b2b62b21e77e04412bcb56ad37",
+      "annotated_sha256": "c2fcd5df458c2ca367277f2f5dbc3c06164ee2f56f9817505438dcbd7ad54b94",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 20,
+          "suffix": " // [한국어 해설] CPU 상태 기계이며 열거값은 실제 HRESULT가 아니다. LOST→NOTRESET→Reset 조건을 학습한다."
+        },
+        {
+          "line": 46,
+          "suffix": " // [한국어 해설] 모든 살아 있는 DEFAULT 자원을 해제한 경우에만 세대를 올리고 정상 상태로 돌아간다."
+        },
+        {
+          "line": 66,
+          "suffix": " // [한국어 해설] base+상대 인덱스를 직접 더하기 전에 범위를 확인해 부호 오버플로를 피한다."
+        },
+        {
+          "line": 77,
+          "suffix": " // [한국어 해설] 선언 범위도 BaseVertexIndex 기준 상대 범위다. 정점 수와 삼각형 수, 인덱스 개수를 구분한다."
+        },
+        {
+          "line": 110,
+          "suffix": " // [한국어 해설] 링 버퍼의 DISCARD/NOOVERWRITE 예약 정책 모형이다. GPU 사용 완료를 실제로 조회하지 않는다."
+        },
+        {
+          "line": 130,
+          "suffix": " // [한국어 해설] 복구 순서, 음수 base의 유효 사례, 극단 정수 입력과 링 버퍼 경계를 검사한다."
+        }
+      ]
+    }
+  ]
+}

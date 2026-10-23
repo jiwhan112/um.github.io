@@ -96,6 +96,25 @@
       ]
     },
     {
+      "id": "visual-map",
+      "title": "그림으로 보는 보수적 제거",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-11/assets/plane-volume.svg",
+          "alt": "같은 평면에서 구 전체가 바깥인 경우만 제거하며 걸친 구와 안쪽 구는 나머지 평면 검사를 계속한다.",
+          "caption": "같은 평면에서 구 전체가 바깥인 경우만 제거하며 걸친 구와 안쪽 구는 나머지 평면 검사를 계속한다."
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-11/assets/projected-radius.svg",
+          "alt": "구는 반지름, AABB는 법선 절댓값과 반길이의 합으로 같은 부호 거리 구간을 만든다.",
+          "caption": "구는 반지름, AABB는 법선 절댓값과 반길이의 합으로 같은 부호 거리 구간을 만든다."
+        }
+      ]
+    },
+    {
       "id": "part-1",
       "title": "1. 무엇을 검사하는가",
       "tab": "document",
@@ -212,36 +231,6 @@
             },
             {
               "text": "을 기준으로 합니다. 아래 Sphere/AABB 판정식과 수치 예제는 그 조건에서 유도한 독립 설명입니다."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "part-2",
-      "title": "2. 원본 메모에서 이어받은 범위와 확인 한계",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "원본 Frustum 절에는 8개 투영 공간 꼭짓점을 만들고, 투영·뷰 역행렬로 월드 공간에 옮긴 뒤 6개 평면으로 그리기 여부를 판단하는 흐름이 있습니다. 이 구조를 없애는 대신 아래에서 행렬 계수 직접 추출 방식과 비교합니다. 원본의 이미지153~157 파일 참조는 그대로 보존했습니다. 이번 실행에서 이미지 다운로드 URL 조회는 성공했으나 이미지 바이트 취득은 DNS 오류 등으로 완료하지 못했습니다. "
-            },
-            {
-              "text": "이미지 속 코드가 중심만 검사한다거나 반지름을 누락했다고 단정하지 않습니다.",
-              "kind": "strong"
-            },
-            {
-              "text": " 본문의 중심점 검사 오류는 일반적인 반례이며 원본 구현의 확정 오류 판정이 아닙니다. 이전 미게시 초안에서 이 구분이 불명확했던 문장을 수정했습니다. 기존 대표 페이지의 원문·이미지·01~10 하위 문서는 덮어쓰지 않았습니다. 이미 있는 원본 복제본 "
-            },
-            {
-              "text": "관련 Notion 페이지",
-              "kind": "link",
-              "href": "https://app.notion.com/p/3f8a99703f40816eb9dbdced1f9a1855"
-            },
-            {
-              "text": "의 보관함 이동은 별도 잔여 작업입니다."
             }
           ]
         }
@@ -745,9 +734,37 @@
       ]
     },
     {
+      "id": "part-8",
+      "title": "8. 게임 프레임에 연결하는 방법",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 게임 상태·Transform과 현재 카메라의 View/Projection을 확정합니다. 그 다음 변형된 메시를 실제로 감싸는 월드 경계 체적을 준비하고 Frustum 검사를 수행합니다. Out이 아닌 객체만 해당 뷰의 렌더 큐에 넣습니다. 이 흐름은 학습용 책임 분리 예시이며 강의의 싱글턴·GameInstance·LateTick 명칭을 C++ 언어 규칙으로 취급하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n  A[\"게임 상태와 Transform 갱신\"] --> B[\"월드 경계 체적 갱신\"]\n  C[\"Camera View와 Projection 갱신\"] --> D[\"가시성 검사\"]\n  B --> D\n  D --> E[\"렌더 큐: 통과 객체만 등록\"]\n  E --> F[\"머티리얼 및 정렬 정책\"]\n  F --> G[\"실제 D3D9 Draw\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "로컬 AABB의 중심만 월드로 옮기고 h를 그대로 두면 회전·스케일에 대응하지 못합니다. 보수적인 월드 AABB는 변환한 8꼭짓점의 min/max로 얻거나, 행 벡터 선형 행렬 A에 대해 hWorld[j]=Σi \\|A[i][j]\\|hLocal[i]로 얻을 수 있습니다. 후자는 각 출력 축에서 선형식의 최댓값을 취하는 같은 원리입니다. 이번 소스는 이미 월드 경계 체적이 준비되었다고 가정하며 변형·스키닝의 경계 계산은 구현하지 않습니다. 카메라 뷰와 그림자 뷰는 다른 가시성 집합입니다. 메인 카메라 밖이라고 객체의 시뮬레이션, 다른 카메라 또는 그림자 렌더까지 무조건 생략하면 안 됩니다. 많은 객체를 검사하는 최적화에서는 평면 캐시·경계 갱신 비용도 측정해야 합니다. 현재 예제는 입력 검증을 매 분류 호출마다 수행하는 학습용 구현이고 성능 수치를 제시하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-7",
       "title": "7. 수치 예제와 반례",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -908,37 +925,9 @@
       ]
     },
     {
-      "id": "part-8",
-      "title": "8. 게임 프레임에 연결하는 방법",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "먼저 게임 상태·Transform과 현재 카메라의 View/Projection을 확정합니다. 그 다음 변형된 메시를 실제로 감싸는 월드 경계 체적을 준비하고 Frustum 검사를 수행합니다. Out이 아닌 객체만 해당 뷰의 렌더 큐에 넣습니다. 이 흐름은 학습용 책임 분리 예시이며 강의의 싱글턴·GameInstance·LateTick 명칭을 C++ 언어 규칙으로 취급하지 않습니다."
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "mermaid",
-          "text": "flowchart LR\n  A[\"게임 상태와 Transform 갱신\"] --> B[\"월드 경계 체적 갱신\"]\n  C[\"Camera View와 Projection 갱신\"] --> D[\"가시성 검사\"]\n  B --> D\n  D --> E[\"렌더 큐: 통과 객체만 등록\"]\n  E --> F[\"머티리얼 및 정렬 정책\"]\n  F --> G[\"실제 D3D9 Draw\"]"
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "로컬 AABB의 중심만 월드로 옮기고 h를 그대로 두면 회전·스케일에 대응하지 못합니다. 보수적인 월드 AABB는 변환한 8꼭짓점의 min/max로 얻거나, 행 벡터 선형 행렬 A에 대해 hWorld[j]=Σi \\|A[i][j]\\|hLocal[i]로 얻을 수 있습니다. 후자는 각 출력 축에서 선형식의 최댓값을 취하는 같은 원리입니다. 이번 소스는 이미 월드 경계 체적이 준비되었다고 가정하며 변형·스키닝의 경계 계산은 구현하지 않습니다. 카메라 뷰와 그림자 뷰는 다른 가시성 집합입니다. 메인 카메라 밖이라고 객체의 시뮬레이션, 다른 카메라 또는 그림자 렌더까지 무조건 생략하면 안 됩니다. 많은 객체를 검사하는 최적화에서는 평면 캐시·경계 갱신 비용도 측정해야 합니다. 현재 예제는 입력 검증을 매 분류 호출마다 수행하는 학습용 구현이고 성능 수치를 제시하지 않습니다."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "part-9",
       "title": "9. 전체 실행 소스·빌드 안내·로그",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -1025,9 +1014,290 @@
       ]
     },
     {
+      "id": "part-11",
+      "title": "11. 이해 확인과 접힌 해설",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "Q1. Near 평면만 C3+C2가 아니라 C2인 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 단원의 동차 깊이 하한이 z≥0이기 때문입니다. clip.z=p·C2이므로 Near는 p·C2≥0입니다. z≥-w인 규약의 공식을 섞지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q2. 구 중심의 부호 거리가 -0.2이고 반지름이 0.5이면 제거하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 구가 만드는 거리 구간은 [-0.7,0.3]이므로 평면 안쪽 부분이 남습니다. -0.2가 -0.5보다 작지 않으므로 이 평면에서는 제거할 수 없습니다. 다른 평면 검사도 계속해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q3. (0,0,2,-2)에서 법선만 정규화하면 왜 틀리나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원래 식은 2z-2=0, 즉 z=1입니다. 법선만 나누면 z-2=0, 즉 z=2가 됩니다. D까지 나누어 (0,0,1,-1)로 만들어야 같은 평면입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q4. Intersect가 나왔으면 반드시 화면에 픽셀이 생기나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 이 분류는 보수적인 렌더 후보 판정입니다. 절두체 모서리의 false positive, 실제 메시와 경계 체적의 차이, 다른 객체의 가림, 뒤이은 렌더 상태 등에 의해 보이지 않을 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q5. 39검사와 CTest 1/1은 모순인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. CTest에는 실행파일 하나를 등록했고 그 프로그램 안에서 39개 명명 조건을 검사했습니다. 같은 조건을 네 가지 구성으로 반복 실행했으며 GPU 테스트로 계산하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-review",
+      "title": "경계값을 계산하고 실패를 분류하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 값은 단위 평면과 같은 거리 단위이며 epsilon=0의 단순 예입니다. 실행 코드의 epsilon 정책과 구별하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "s=-3, r=2인 구는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "s+r=-1<0이므로 이 평면에서 전체가 바깥입니다. 나머지 평면과 무관하게 Out입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "s=-1, r=2인데 중심은 바깥입니다. 제거하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. s+r=1이어서 일부가 안쪽일 수 있습니다. 중심점만으로 제거하면 보이는 부분을 잃습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "n=(1,0,0), h=(2,7,9)의 AABB 방향 반경은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "r=2입니다. 이 평면 방향에는 y,z의 반길이가 기여하지 않습니다. 법선이 회전하면 기여도 달라집니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "n과 D 중 n만 정규화해도 되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 됩니다. 평면의 위치까지 달라집니다. 같은 양의 길이로 네 계수를 함께 나눕니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Intersect를 충돌 발생으로 써도 되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 보수적 culling은 여섯 반공간에서 거부하지 못했다는 뜻입니다. 정확한 체적 교차나 충돌 판정의 충분조건이 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "메인 카메라 Out이면 시뮬레이션도 중단하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 다른 카메라·그림자·게임 규칙의 필요성을 따로 판단합니다. 특정 뷰의 렌더 후보 필터와 전체 게임 업데이트를 혼동하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "annotated-full-source",
+      "title": "한국어 전체 코드 · 원본 동일성",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "완전한 한국어 주석 파생본입니다. 본문 코드 조각을 이어 붙이지 말고 해당 폴더의 전체 파일을 사용하세요. 원본 바이트는 복원 검증과 SHA로 보존하고 실행 의미를 바꾸는 수정은 하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.cpp · 한국어 전체 파일 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-11a-ko/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp · 전체 한국어 주석 소스",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// DX9 chapter 11 v1.1. CPU-only, row-vector LH; NOT a D3D9 renderer.\n// C++20 teaching build; syntax and standard-library use also tested as C++11.\n#include <array>\n#include <cmath>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <string>\nstruct V3 { double x,y,z; };\nstruct V4 { double x,y,z,w; };\nstruct Mat { double a[4][4]; };\nstruct Plane { V3 n; double d; }; // inside if dot(n,p)+d >= 0\nstruct Sphere { V3 center; double radius; };\nstruct Aabb { V3 center,half; }; // WORLD ALIGNED, not OBB\nusing Frustum=std::array<Plane,6>;\nenum class Result { Out, Intersect, In };\nV4 col(const Mat&m,int j){return {m.a[0][j],m.a[1][j],m.a[2][j],m.a[3][j]};}\nV4 plus(V4 a,V4 b){return {a.x+b.x,a.y+b.y,a.z+b.z,a.w+b.w};}\nV4 minus(V4 a,V4 b){return {a.x-b.x,a.y-b.y,a.z-b.z,a.w-b.w};}\nbool ok(double v){return std::isfinite(v);}\nbool ok(V3 v){return ok(v.x)&&ok(v.y)&&ok(v.z);}\nPlane unit(V4 v){ // [한국어 해설] 법선뿐 아니라 d도 같은 길이로 나눠 평면의 위치와 거리 해석을 보존한다.\n  double len=std::hypot(v.x,std::hypot(v.y,v.z));\n  if(!ok(len)||len<1.e-12||!ok(v.w))throw std::invalid_argument(\"plane\");\n  const Plane p{{v.x/len,v.y/len,v.z/len},v.w/len};\n  if(!ok(p.n)||!ok(p.d))throw std::invalid_argument(\"normalized plane overflow\");\n  return p;\n}\nFrustum extract(const Mat&m){ // [한국어 해설] 행 벡터 클립 부등식으로 열을 조합한다. D3D near 평면은 z열이며 OpenGL식 w+z가 아니다.\n  for(const auto&row:m.a)for(double n:row)if(!ok(n))throw std::invalid_argument(\"matrix\");\n  const V4 x=col(m,0),y=col(m,1),z=col(m,2),w=col(m,3);\n  // x,y in [-w,w], z in [0,w]. Inward normals.\n  return {{unit(plus(w,x)),unit(minus(w,x)),unit(plus(w,y)),\n           unit(minus(w,y)),unit(z),unit(minus(w,z))}};\n}\n// Public classify functions require six inward, unit, finite planes.\n// Validate all six before early-out so malformed data is not silently accepted.\nvoid validate(const Frustum& f){ // [한국어 해설] 조기 탈락 전에 여섯 평면을 모두 검증해 뒤쪽의 잘못된 입력을 숨기지 않는다.\n  for(const Plane& p:f){\n    const double n=std::hypot(p.n.x,std::hypot(p.n.y,p.n.z));\n    if(!ok(p.n)||!ok(p.d)||!ok(n)||std::abs(n-1.)>1.e-8)\n      throw std::invalid_argument(\"frustum requires finite unit planes\");\n  }\n}\nMat mul(const Mat&a,const Mat&b){\n  Mat c{};\n  for(int i=0;i<4;++i){\n    for(int j=0;j<4;++j){\n      for(int k=0;k<4;++k)c.a[i][j]+=a.a[i][k]*b.a[k][j];\n    }\n  }\n  return c;\n}\nMat projLH(double fov,double aspect,double nearZ,double farZ){\n  if(!ok(fov)||!ok(aspect)||!ok(nearZ)||!ok(farZ)||\n     fov<=0||fov>=std::acos(-1.)||aspect<=0||nearZ<=0||farZ<=nearZ)\n    throw std::invalid_argument(\"projection\");\n  double ys=1./std::tan(fov/2),zs=farZ/(farZ-nearZ);\n  return {{{ys/aspect,0,0,0},{0,ys,0,0},{0,0,zs,1},\n           {0,0,-nearZ*zs,0}}};\n}\nMat cameraView(V3 eye){\n  if(!ok(eye))throw std::invalid_argument(\"camera\");\n  return {{{1,0,0,0},{0,1,0,0},{0,0,1,0},\n           {-eye.x,-eye.y,-eye.z,1}}};\n}\nV4 clip(V3 p,const Mat&m){\n  double a[4]={p.x,p.y,p.z,1},r[4]={};\n  for(int j=0;j<4;++j)for(int k=0;k<4;++k)r[j]+=a[k]*m.a[k][j];\n  return {r[0],r[1],r[2],r[3]};\n}\nbool insideClip(V3 p,const Mat&m){\n  V4 v=clip(p,m);\n  return v.w>0 && -v.w<=v.x&&v.x<=v.w&&-v.w<=v.y&&v.y<=v.w&&\n         0<=v.z&&v.z<=v.w;\n}\nResult classify(const Frustum&f,Sphere s,double epsilon=1.e-9){ // [한국어 해설] 구 중심의 부호 거리와 반지름으로 보수적으로 분류한다. 접촉은 경계 교차로 남긴다.\n  if(!ok(s.center)||!ok(s.radius)||s.radius<0||!ok(epsilon)||epsilon<0)\n    throw std::invalid_argument(\"sphere\");\n  validate(f);\n  bool part=false;\n  for(auto p:f){\n    double d=p.n.x*s.center.x+p.n.y*s.center.y+p.n.z*s.center.z+p.d;\n    if(!ok(d))throw std::invalid_argument(\"overflow\");\n    if(d < -s.radius-epsilon)return Result::Out;\n    if(d <= s.radius+epsilon)part=true;\n  }\n  return part?Result::Intersect:Result::In;\n}\nResult classify(const Frustum&f,Aabb b,double epsilon=1.e-9){ // [한국어 해설] 월드 축 정렬 상자의 반폭을 법선에 투영한다. 회전한 OBB에 이 식을 그대로 적용하면 안 된다.\n  if(!ok(b.center)||!ok(b.half)||b.half.x<0||b.half.y<0||b.half.z<0||\n     !ok(epsilon)||epsilon<0)throw std::invalid_argument(\"box\");\n  validate(f);\n  bool part=false;\n  for(auto p:f){\n    double d=p.n.x*b.center.x+p.n.y*b.center.y+p.n.z*b.center.z+p.d;\n    double r=std::abs(p.n.x)*b.half.x+std::abs(p.n.y)*b.half.y+\n             std::abs(p.n.z)*b.half.z;\n    if(!ok(d)||!ok(r))throw std::invalid_argument(\"overflow\");\n    if(d < -r-epsilon)return Result::Out;\n    if(d <= r+epsilon)part=true;\n  }\n  return part?Result::Intersect:Result::In;\n}\ntemplate<typename F>bool invalid(F fn){\n  try{fn();}catch(const std::invalid_argument&){return true;}return false;\n}\nint runTests(){ // [한국어 해설] 이름 있는 검사와 15000개 속성 비교 표본은 별도 수치다. 표본 개수를 독립 검사 수로 부풀리지 않는다.\n  int checks=0;\n  auto test=[&](bool condition,const char*label){\n    ++checks;if(!condition)throw std::runtime_error(std::string(\"FAIL: \")+label);\n  };\n  const Mat projection=projLH(std::acos(-1.)/2,1,1,10);\n  const Frustum f=extract(projection);\n  test(classify(f,Sphere{{0,0,5},0.1})==Result::In,\"sphere inside\");\n  test(classify(f,Sphere{{0,0,0.2},0.1})==Result::Out,\"sphere near outside\");\n  test(classify(f,Sphere{{0,0,11},0.2})==Result::Out,\"sphere far outside\");\n  test(classify(f,Sphere{{-10,0,2},0.1})==Result::Out,\"sphere left outside\");\n  test(classify(f,Sphere{{10,0,2},0.1})==Result::Out,\"sphere right outside\");\n  test(classify(f,Sphere{{0,10,2},0.1})==Result::Out,\"sphere top outside\");\n  test(classify(f,Sphere{{0,-10,2},0.1})==Result::Out,\"sphere bottom outside\");\n  test(classify(f,Sphere{{0,0,0.5},0.5})==Result::Intersect,\"sphere near tangent\");\n  test(classify(f,Sphere{{0,0,10.5},0.5})==Result::Intersect,\"sphere far tangent\");\n  test(classify(f,Sphere{{0,0,5},0})==Result::In,\"zero-radius sphere\");\n  test(classify(f,Aabb{{0,0,5},{0.5,0.5,0.5}})==Result::In,\"box inside\");\n  test(classify(f,Aabb{{0,0,0.5},{0.1,0.1,0.1}})==Result::Out,\"box near outside\");\n  test(classify(f,Aabb{{0,0,11},{0.1,0.1,0.1}})==Result::Out,\"box far outside\");\n  test(classify(f,Aabb{{0,0,0.8},{0.1,0.1,0.2}})==Result::Intersect,\"box near tangent\");\n  test(classify(f,Aabb{{3,0,2},{1.5,1.5,0.5}})==Result::Intersect,\"box crosses right\");\n  test(classify(f,Aabb{{0,0,5},{0,0,0}})==Result::In,\"zero-half box\");\n  const Frustum translated=extract(mul(cameraView({0,0,5}),projection));\n  test(classify(translated,Sphere{{0,0,8},0.1})==Result::In,\"translated camera inside\");\n  test(classify(translated,Sphere{{0,0,5},0.1})==Result::Out,\"translated camera near reject\");\n  test(classify(translated,Aabb{{0,0,16},{0.1,0.1,0.1}})==Result::Out,\"translated camera far reject\");\n  test(invalid([&]{projLH(1,1,1,1);}),\"near==far rejected\");\n  test(invalid([&]{projLH(1,0,1,10);}),\"aspect zero rejected\");\n  test(invalid([&]{extract(Mat{});}),\"degenerate plane rejected\");\n  test(invalid([&]{Mat bad=projection;bad.a[0][0]=std::numeric_limits<double>::quiet_NaN();extract(bad);}),\"NaN matrix rejected\");\n  test(invalid([&]{classify(f,Sphere{{0,0,2},-1});}),\"negative radius rejected\");\n  test(invalid([&]{classify(f,Aabb{{0,0,2},{1,-1,1}});}),\"negative extent rejected\");\n  test(invalid([&]{classify(f,Sphere{{0,0,2},std::numeric_limits<double>::infinity()});}),\"infinite radius rejected\");\n  test(invalid([&]{classify(f,Aabb{{0,0,2},{1,1,1}},-0.1);}),\"negative tolerance rejected\");\n  // v1.1: 11 additional named regression checks, not more random samples.\n  const Plane scaled=unit({0,0,2,-2});\n  test(scaled.n.z==1 && scaled.d==-1,\"normalize both normal and D\");\n  test(invalid([&]{unit({1.e-11,0,0,std::numeric_limits<double>::max()});}),\n       \"normalized D overflow rejected\");\n  test(invalid([&]{classify(f,Sphere{{0,0,2},0.1},std::numeric_limits<double>::quiet_NaN());}),\n       \"NaN tolerance rejected\");\n  test(invalid([&]{classify(f,Aabb{{0,0,2},{1,std::numeric_limits<double>::infinity(),1}});}),\n       \"infinite extent rejected\");\n  const Sphere closeToNear{{0,0,1.-5.e-10},0};\n  test(classify(f,closeToNear,1.e-9)!=Result::Out && classify(f,closeToNear,0)==Result::Out,\n       \"epsilon keeps near-boundary uncertainty\");\n  // Camera at origin, oriented toward world +X. World x becomes view z.\n  const Mat viewPlusX={{{0,0,1,0},{0,1,0,0},{-1,0,0,0},{0,0,0,1}}};\n  const Frustum rotated=extract(mul(viewPlusX,projection));\n  test(classify(rotated,Sphere{{5,0,0},0.1})==Result::In,\"rotated camera inside\");\n  test(classify(rotated,Sphere{{-5,0,0},0.1})==Result::Out,\"rotated camera behind\");\n  // Orthographic: width=height=4; near=1; far=10. Same clip inequalities.\n  const Mat ortho={{{0.5,0,0,0},{0,0.5,0,0},{0,0,1./9,0},{0,0,-1./9,1}}};\n  const Frustum of=extract(ortho);\n  test(classify(of,Aabb{{0,0,5},{0.5,0.5,0.5}})==Result::In,\"orthographic box inside\");\n  test(classify(of,Sphere{{2.2,0,5},0.1})==Result::Out,\"orthographic right reject\");\n  Frustum wrongNear=f;\n  wrongNear[4]=unit(plus(col(projection,3),col(projection,2)));\n  const Sphere beforeNear{{0,0,0.75},0};\n  test(classify(f,beforeNear)==Result::Out && classify(wrongNear,beforeNear)!=Result::Out,\n       \"OpenGL near extraction is wrong for this D3D9 projection\");\n  test(invalid([&]{Frustum bad=f;bad[0].n={0,0,0};classify(bad,Sphere{{0,0,5},0.1});}),\n       \"nonunit frustum rejected before classification\");\n  // A single property-based test, not 15,000 independent named tests.\n  std::size_t sampleCount=0;\n  for(int iz=0;iz<24;++iz)for(int iy=-12;iy<=12;++iy)for(int ix=-12;ix<=12;++ix){\n    V3 p{ix*0.31+0.017,iy*0.27+0.013,0.3+iz*0.49};\n    if((classify(f,Sphere{p,0},0)!=Result::Out)!=insideClip(p,projection))\n      throw std::runtime_error(\"clip-vs-plane mismatch\");\n    ++sampleCount;\n  }\n  test(sampleCount==15000,\"15,000 sampled clip comparisons\");\n  std::cout<<\"PASS \"<<checks<<\" named checks; property sample points=\"<<sampleCount\n           <<\". CPU-only (NOT D3D9 GPU).\\n\";\n  return 0;\n}\nint main(){\n  try{return runTests();}\n  catch(const std::exception& e){std::cerr<<e.what()<<'\\n';return 1;}\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CMakeLists.txt · 전체 빌드 파일 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-11a-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt · 전체 빌드 파일(원문 보존)",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx9_frustum11_cpu LANGUAGES CXX)\nset(FRUSTUM_CXX_STANDARD 20 CACHE STRING \"Teaching standard: 20, compatibility: 11\")\nadd_executable(frustum_cpu main.cpp)\nset_target_properties(frustum_cpu PROPERTIES\n  CXX_STANDARD ${FRUSTUM_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(frustum_cpu PRIVATE /W4 /permissive- /EHsc)\nelse()\n  target_compile_options(frustum_cpu PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME frustum_contract COMMAND frustum_cpu)\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 Cloud Linux GCC14.2에서 주석본 CPU 직접 컴파일·실행과 원본 복원·전처리 결과 비교를 확인했습니다. 진단 행번호도 보존하며 __FILE__의 폴더 경로만 동일한 SOURCE로 매핑해 비교했습니다. CMake/CTest·Windows·FXC/GPU·sanitizer는 이번 주석본 검사에서 실행하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "README.md · 현재 주석본의 검증과 한계",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-11a-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "annotation-manifest.json · 현재 주석본의 검증과 한계",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-11a-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "verify_annotations.py · 현재 주석본의 검증과 한계",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-11a-ko/verify_annotations.py"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "validation.json · 현재 주석본의 검증과 한계",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-11a-ko/validation.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-10",
       "title": "10. 이번 실행에서 실제 검증한 것",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "table",
@@ -1186,75 +1456,52 @@
       ]
     },
     {
-      "id": "part-11",
-      "title": "11. 이해 확인과 접힌 해설",
-      "tab": "document",
+      "id": "source-files",
+      "title": "전체 소스·CMake·CPU 검증 및 미검증 범위",
+      "tab": "sources",
       "blocks": [
         {
-          "type": "details",
-          "title": "Q1. Near 평면만 C3+C2가 아니라 C2인 이유는?",
+          "type": "callout",
           "blocks": [
             {
               "type": "paragraph",
               "content": [
                 {
-                  "text": "이 단원의 동차 깊이 하한이 z≥0이기 때문입니다. clip.z=p·C2이므로 Near는 p·C2≥0입니다. z≥-w인 규약의 공식을 섞지 않습니다."
+                  "text": "이 장에 연결된 기존 Notion의 검증된 소스 보관본을 별도 페이지에 전체 제공하며 파일별 CMake 원본도 GitHub에 저장했습니다. 이번 이관 자체는 Windows/MSVC·D3D9/GPU 실행을 포함하지 않습니다."
                 }
               ]
             }
           ]
         },
         {
-          "type": "details",
-          "title": "Q2. 구 중심의 부호 거리가 -0.2이고 반지름이 0.5이면 제거하나요?",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "아닙니다. 구가 만드는 거리 구간은 [-0.7,0.3]이므로 평면 안쪽 부분이 남습니다. -0.2가 -0.5보다 작지 않으므로 이 평면에서는 제거할 수 없습니다. 다른 평면 검사도 계속해야 합니다."
-                }
-              ]
+              "text": "DX9 11 · 전체 소스·CMake·원본 검증 페이지",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-11a/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.cpp — 독립 GitHub 원본 파일",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-11a/main.cpp"
             }
           ]
         },
         {
           "type": "details",
-          "title": "Q3. (0,0,2,-2)에서 법선만 정규화하면 왜 틀리나요?",
+          "title": "CPU 회귀 검사와 실제 Direct3D9 실행은 같은 건가요?",
           "blocks": [
             {
               "type": "paragraph",
               "content": [
                 {
-                  "text": "원래 식은 2z-2=0, 즉 z=1입니다. 법선만 나누면 z-2=0, 즉 z=2가 됩니다. D까지 나누어 (0,0,1,-1)로 만들어야 같은 평면입니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "Q4. Intersect가 나왔으면 반드시 화면에 픽셀이 생기나요?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "아닙니다. 이 분류는 보수적인 렌더 후보 판정입니다. 절두체 모서리의 false positive, 실제 메시와 경계 체적의 차이, 다른 객체의 가림, 뒤이은 렌더 상태 등에 의해 보이지 않을 수 있습니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "Q5. 39검사와 CTest 1/1은 모순인가요?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "아닙니다. CTest에는 실행파일 하나를 등록했고 그 프로그램 안에서 39개 명명 조건을 검사했습니다. 같은 조건을 네 가지 구성으로 반복 실행했으며 GPU 테스트로 계산하지 않습니다."
+                  "text": "다릅니다. CPU 데이터·컴포넌트 모형의 컴파일·CTest가 통과하더라도 실제 Win32 창, D3D9 드라이버, GPU 프레임, DX9 Reset은 실행해 본 것이 아닙니다."
                 }
               ]
             }
@@ -1263,9 +1510,54 @@
       ]
     },
     {
+      "id": "overhaul-evidence",
+      "title": "검증을 읽는 기준",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문의 과거 명명 검사 수와 실행 환경은 원문 기록을 그대로 유지합니다. 한국어 주석 파생본의 원본 복원·CPU 확인은 별도 validation.json의 실제 범위만 인정합니다. Windows API·FXC/HLSL 컴파일·GPU 화면·장치 손실 재현은 실행 증거가 없으면 미검증입니다. 이 페이지의 웹 렌더링 검사도 CPU 알고리즘 검사와 다릅니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "2. 원본 메모에서 이어받은 범위와 확인 한계",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 Frustum 절에는 8개 투영 공간 꼭짓점을 만들고, 투영·뷰 역행렬로 월드 공간에 옮긴 뒤 6개 평면으로 그리기 여부를 판단하는 흐름이 있습니다. 이 구조를 없애는 대신 아래에서 행렬 계수 직접 추출 방식과 비교합니다. 원본의 이미지153~157 파일 참조는 그대로 보존했습니다. 이번 실행에서 이미지 다운로드 URL 조회는 성공했으나 이미지 바이트 취득은 DNS 오류 등으로 완료하지 못했습니다. "
+            },
+            {
+              "text": "이미지 속 코드가 중심만 검사한다거나 반지름을 누락했다고 단정하지 않습니다.",
+              "kind": "strong"
+            },
+            {
+              "text": " 본문의 중심점 검사 오류는 일반적인 반례이며 원본 구현의 확정 오류 판정이 아닙니다. 이전 미게시 초안에서 이 구분이 불명확했던 문장을 수정했습니다. 기존 대표 페이지의 원문·이미지·01~10 하위 문서는 덮어쓰지 않았습니다. 이미 있는 원본 복제본 "
+            },
+            {
+              "text": "관련 Notion 페이지",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f8a99703f40816eb9dbdced1f9a1855"
+            },
+            {
+              "text": "의 보관함 이동은 별도 잔여 작업입니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-12",
       "title": "12. 출처·변경 이력·남은 검수",
-      "tab": "document",
+      "tab": "history",
       "blocks": [
         {
           "type": "paragraph",
@@ -1312,20 +1604,15 @@
       ]
     },
     {
-      "id": "source-files",
-      "title": "전체 소스·CMake·CPU 검증 및 미검증 범위",
-      "tab": "document",
+      "id": "overhaul-history",
+      "title": "개편 이력 · 원본과 이번 작업 구분",
+      "tab": "history",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "이 장에 연결된 기존 Notion의 검증된 소스 보관본을 별도 페이지에 전체 제공하며 파일별 CMake 원본도 GitHub에 저장했습니다. 이번 이관 자체는 Windows/MSVC·D3D9/GPU 실행을 포함하지 않습니다."
-                }
-              ]
+              "text": "2026-10-23 기존 교재 개편: 기존 절 식별자·URL·원문 캡처·실행 소스·과거 로그를 보존하고 개념, 실습, 출처, 이력으로 재배치했습니다. 새 그림과 수치 추적 문제는 설명 자료이지 새 GPU 실행 증거가 아닙니다. 아래 옛 문서의 “이번 실행”은 그 문서 작성 당시 기록입니다. 사용자 컴퓨터를 사용하지 않습니다."
             }
           ]
         },
@@ -1333,33 +1620,9 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "DX9 11 · 전체 소스·CMake·원본 검증 페이지",
+              "text": "보존한 원문 전체",
               "kind": "link",
-              "href": "/knowledge/dx9-impl-source-11a/"
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "main.cpp — 독립 GitHub 원본 파일",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-11a/main.cpp"
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "CPU 회귀 검사와 실제 Direct3D9 실행은 같은 건가요?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "다릅니다. CPU 데이터·컴포넌트 모형의 컴파일·CTest가 통과하더라도 실제 Win32 창, D3D9 드라이버, GPU 프레임, DX9 Reset은 실행해 본 것이 아닙니다."
-                }
-              ]
+              "href": "/knowledge/dx9-impl-11/source-notion.md"
             }
           ]
         }

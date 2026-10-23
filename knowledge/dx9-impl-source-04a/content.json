@@ -21,6 +21,14 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "읽는 순서: 개념·도식 → 실습·복습 → 출처·검증 → 원문·변경 기록. 기존 날짜·CPU 기록·전체 소스는 보존한다. 이 페이지의 시각 개편은 Windows/MSVC·실제 D3D9·GPU 성공 기록이 아니다."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -40,11 +48,24 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "**수동 검수 13 · 04 확장 실습 보관 복구**\n\t2026-10-16. 실제 회수한 renderer_components.cpp 전체를 보존합니다. 기존 04 학습 본문은 <mention-page url=\"https://app.notion.com/p/bdcccf3ce6d34930827bf0a519b4fa78\">쥬신 5–6개월차 — DirectX 9</mention-page>에 있습니다. 아래 코드는 Direct3D9·COM을 호출하지 않는 CPU 모델입니다. 기존 알고리즘을 중복 작성하지 않고 실행·보관 경로를 복구했습니다."
+                  "text": "**수동 검수 13 · 04 확장 실습 보관 복구**\n\t2026-10-16. 실제 회수한 renderer_components.cpp 전체를 보존합니다. 기존 04 학습 본문은 "
+                },
+                {
+                  "text": "쥬신 5–6개월차 — DirectX 9",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/bdcccf3ce6d34930827bf0a519b4fa78"
+                },
+                {
+                  "text": "에 있습니다. 아래 코드는 Direct3D9·COM을 호출하지 않는 CPU 모델입니다. 기존 알고리즘을 중복 작성하지 않고 실행·보관 경로를 복구했습니다."
                 }
               ]
             }
           ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n A[보존 원본 파일] --> B[빌드 입력과 계약 읽기]\n B --> C[명시된 CPU 실행 기록 확인]\n C --> D[미검증 네이티브 범위 분리]\n A --> E[별도 한국어 주석본]\n E --> F[원본 복원·동일성 기록 확인]"
         }
       ]
     },
@@ -53,6 +74,12 @@
       "title": "파일과 실행 계약",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-source-04a/assets/model-boundary.svg",
+          "alt": "CPU Renderer 모델의 검증과 실제 D3D9의 미검증 범위를 분리한다.",
+          "caption": "CPU Renderer 모델의 검증과 실제 D3D9의 미검증 범위를 분리한다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -66,7 +93,7 @@
     {
       "id": "part-2",
       "title": "renderer_components.cpp — 전체",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "code",
@@ -78,7 +105,7 @@
     {
       "id": "part-3",
       "title": "CMakeLists.txt — 이 확장 소스의 독립 빌드",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "code",
@@ -88,34 +115,9 @@
       ]
     },
     {
-      "id": "part-4",
-      "title": "이번 검증 기록",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "아래 세 구성에서 동일한 확장 26조건을 통과했습니다. 같은 26조건을 78개의 서로 다른 검사로 합산하지 않습니다. 별도 기존 notion_example.cpp도 각 구성에서 실행했으며 성공 메시지를 확인했지만 해당 미니 프로그램의 조건 수를 새로 계수한 것은 아닙니다. 검수용 배치 CMake는 확장·미니 실행파일 둘을 등록하여 2/2 통과했고, 위 독립 CMake는 확장 하나만 등록합니다."
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "bash",
-          "text": "cmake -S . -B build-gcc20 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++\ncmake --build build-gcc20 -j 2\nctest --test-dir build-gcc20 --output-on-failure -V\ncmake -S . -B build-gcc11 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++ -DLAB_CXX_STANDARD=11\ncmake --build build-gcc11 -j 2\nctest --test-dir build-gcc11 --output-on-failure -V\ncmake -S . -B build-san -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++ \"-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer\" \"-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined\"\ncmake --build build-san -j 2\nctest --test-dir build-san --output-on-failure -V"
-        },
-        {
-          "type": "code",
-          "language": "text",
-          "text": "Linux x86-64 / GCC 14.2 C++20: PASS: 26 conditions\nLinux x86-64 / GCC 14.2 C++11: PASS: 26 conditions\nLinux x86-64 / Clang 17 ASan+UBSan C++20: PASS: 26 conditions\nEach batch CTest: 2/2, exit=0; sanitizer diagnostic: none.\nWindows/MSVC/COM/Direct3D9/GPU: NOT RUN."
-        }
-      ]
-    },
-    {
       "id": "part-5",
       "title": "이해 확인",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "details",
@@ -148,24 +150,9 @@
       ]
     },
     {
-      "id": "part-6",
-      "title": "변경 이력·근거·잔여",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "이번 확장 C++ 소스는 원형을 보존했습니다. 네이티브 소스 보관과 CPU 재실행 완료를 GPU 상태 복원·COM·투명 렌더링 실행 검증으로 표현하지 않습니다. CMake의 학습 표준 선택 옵션과 위 재현 안내는 이번에 보완했습니다. 별도 미니 원형 notion_example.cpp도 아래 부록에 전체 파일로 보관했습니다. 확장 실습 26조건과 미니 프로그램의 실행 결과를 구분합니다. 기술 설명과 공식 API 근거는 대표 페이지 04 및 [Microsoft SetTexture](https://learn.microsoft.com/en-us/windows/win32/api/d3d9/nf-d3d9-idirect3ddevice9-settexture), [D3DXVec3TransformCoord](https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3transformcoord)를 함께 봅니다."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "part-7",
       "title": "부록 · 기존 미니 실습 전체 소스",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -198,7 +185,7 @@
     {
       "id": "raw-source-index",
       "title": "원본 전체 소스 파일과 빌드",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -258,8 +245,519 @@
               ]
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 원본 파일을 아래와 같이 보존한다. CMake의 타깃·표준·include 경로·플랫폼 분기까지 함께 받아야 전체 빌드 입력이 된다. 주석본은 원본과 별도 파일로 연결하며 원본 소스·과거 결과를 바꾸지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · renderer_components.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a/renderer_components.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · notion_example.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a/notion_example.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a/CMakeLists.txt"
+            }
+          ]
         }
       ]
+    },
+    {
+      "id": "visual-practice",
+      "title": "실습 · 코드 계약을 증거와 연결",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "prototype과 두 clone의 컴포넌트 주소, 공유 TextureAsset 주소를 나란히 적는다. 독립 인스턴스와 공유 자산이라는 두 계약을 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "큐 등록 뒤 대상 owner를 없앤 사례에서 lock 실패 경로를 추적한다. 정상 대상을 모은 live 목록이 언제 없어지는지도 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "p=(1,0,0)에 Scale 2, Yaw +90도, Local 이동(1,2,3), Parent 이동(10,0,0)을 순서대로 적용한다. 마지막 결과(11,2,1)만 외우지 말고 중간 좌표를 남긴다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "개념 교재로 돌아가기",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-04/"
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-review",
+      "title": "복습 · 실패 경로부터 설명하기",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "컴포넌트를 Clone하면 TextureAsset도 반드시 복제되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 모델은 별도 Component를 만들지만 자산은 shared_ptr로 공유한다. 컴포넌트 주소의 독립성과 자산 공유를 따로 검사한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "렌더 큐가 weak_ptr를 저장하는 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "프레임 요청 등록만으로 객체 수명을 연장하지 않기 위해서다. Flush에서 lock에 실패한 대상은 건너뛴다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Flush 중 객체를 어떻게 유지하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "성공한 lock으로 얻은 shared_ptr를 임시 live 목록에 보관한다. 큐를 비운 뒤 그 목록을 정렬·처리한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Alpha 뒤→앞이면 모든 투명 문제가 해결되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 객체 기준 정렬은 교차하는 투명 면이나 복잡한 메시 내부 순서를 완벽하게 해결하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "행 벡터에서 ParentWorld는 어느 쪽인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 예제는 World=Local×ParentWorld, 점은 p×World다. 다른 벡터·행렬 규약을 혼합하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "TextureAsset의 shared_ptr 수가 COM AddRef 수인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 이 자산은 이름을 가진 일반 CPU 객체다. D3D9 COM 호출이 없으므로 COM 참조 수명 시험이 아니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "26조건의 세 구성 성공을 78개의 새 성질로 세는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 조건을 반복한 것이다. 확장 실행파일·미니 실행파일·언어 모드·검사기 구성을 별도로 기록한다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "annotated-full-source",
+      "title": "한국어 전체 소스 · 원본과 나란히 읽기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 코드와 과거 증거는 기존 섹션에 그대로 있다. 아래는 코드 일부를 생략하지 않은 한국어 주석 파생본이며 파일별 다운로드와 접힌 전문이 같다. 빌드할 때에는 헤더·CPP·CMake 및 폴더 구조를 함께 사용한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · renderer_components.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/renderer_components.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "renderer_components.cpp · 한국어 학습 팩 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <cassert>\n#include <cmath>\n#include <cstddef>\n#include <iostream>\n#include <map>\n#include <memory>\n#include <stdexcept>\n#include <string>\n#include <utility>\n#include <vector>\n\n// CPU-only educational model: this does NOT call Direct3D 9 or model COM AddRef.\nstruct Vec3 { double x, y, z; };\nstruct Mat4 {\n    double a[4][4] = {};\n    static Mat4 Identity() { Mat4 r; for (int i=0;i<4;++i) r.a[i][i]=1.0; return r; }\n    static Mat4 Scale(double x,double y,double z) {\n        Mat4 r=Identity(); r.a[0][0]=x; r.a[1][1]=y; r.a[2][2]=z; return r;\n    }\n    static Mat4 Yaw(double t) {\n        Mat4 r=Identity(); double c=std::cos(t),s=std::sin(t);\n        r.a[0][0]=c; r.a[0][2]=-s; r.a[2][0]=s; r.a[2][2]=c;\n        return r;\n    }\n    static Mat4 Translate(Vec3 p) {\n        Mat4 r=Identity(); r.a[3][0]=p.x; r.a[3][1]=p.y; r.a[3][2]=p.z; return r;\n    }\n};\nMat4 Mul(const Mat4& x,const Mat4& y) {\n    Mat4 z{}; for(int i=0;i<4;++i) for(int j=0;j<4;++j)\n        for(int k=0;k<4;++k) z.a[i][j]+=x.a[i][k]*y.a[k][j];\n    return z;\n}\nVec3 TransformPoint(Vec3 p, const Mat4& m) { // [x y z 1] * M (row-vector)\n    return {p.x*m.a[0][0]+p.y*m.a[1][0]+p.z*m.a[2][0]+m.a[3][0],\n            p.x*m.a[0][1]+p.y*m.a[1][1]+p.z*m.a[2][1]+m.a[3][1],\n            p.x*m.a[0][2]+p.y*m.a[1][2]+p.z*m.a[2][2]+m.a[3][2]};\n}\nstruct Transform { // [한국어 해설] 행 벡터에서 자식 Local*부모 World 순서로 결합한다. 행렬 저장 규약을 일관되게 유지한다.\n    Vec3 position{0,0,0};\n    Vec3 scale{1,1,1};\n    double yaw=0;\n    Mat4 Local() const {return Mul(Mul(Mat4::Scale(scale.x,scale.y,scale.z),Mat4::Yaw(yaw)), Mat4::Translate(position));}\n    Mat4 World(const Mat4& parentWorld=Mat4::Identity()) const {return Mul(Local(),parentWorld);}\n};\nstruct Component {\n    virtual ~Component() = default;\n    virtual std::unique_ptr<Component> Clone() const = 0;\n};\nstruct TextureAsset { explicit TextureAsset(std::string n):name(std::move(n)) {} std::string name; };\nstruct TextureComponent : Component { // [한국어 해설] 컴포넌트 인스턴스는 독립 복제하지만 CPU 텍스처 자산 핸들은 공유한다. COM AddRef 모형은 아니다.\n    explicit TextureComponent(std::shared_ptr<TextureAsset> p):asset(std::move(p)) {\n        if(!asset) throw std::invalid_argument(\"null texture\");\n    }\n    std::shared_ptr<TextureAsset> asset; // CPU handle only, not a COM reference.\n    std::unique_ptr<Component> Clone() const override {\n        return std::unique_ptr<Component>(new TextureComponent(asset));\n    }\n};\nstruct ComponentCatalog { // [한국어 해설] 프로토타입의 고유 소유권을 보관하고 Clone으로 새 컴포넌트를 생성한다. 중복 키는 거부한다.\n    std::map<std::string,std::unique_ptr<Component>> prototypes;\n    void Add(const std::string& key,std::unique_ptr<Component> p) {\n        if(key.empty()||!p||prototypes.count(key)) throw std::invalid_argument(\"invalid/duplicate prototype\");\n        prototypes.emplace(key,std::move(p));\n    }\n    std::unique_ptr<Component> Create(const std::string& key) const {\n        auto p=prototypes.find(key);\n        if(p==prototypes.end()) throw std::out_of_range(\"unknown component\");\n        return p->second->Clone();\n    }\n};\nstruct GameObject {\n    explicit GameObject(std::string s):name(std::move(s)) {}\n    std::string name;\n    Transform transform;\n    std::map<std::string,std::unique_ptr<Component>> components;\n    void Attach(std::string key,std::unique_ptr<Component> p) {\n        if(!p||components.count(key)) throw std::invalid_argument(\"duplicate/null component\");\n        components.emplace(std::move(key),std::move(p));\n    }\n    const TextureAsset* Texture() const {\n        auto p=components.find(\"texture\"); if(p==components.end()) return nullptr;\n        auto t=dynamic_cast<TextureComponent*>(p->second.get());\n        return t ? t->asset.get():nullptr;\n    }\n};\nenum class Group { Opaque, Alpha, UI };\nstruct RenderState {\n    bool depthTest,depthWrite,blend; std::string boundTexture;\n    RenderState(bool test=true,bool write=true,bool blending=false,std::string texture=\"\")\n        :depthTest(test),depthWrite(write),blend(blending),boundTexture(std::move(texture)) {}\n};\nstruct RenderEvent { std::string object; Group group; double depth; RenderState state; };\nstruct RenderQueue { // [한국어 해설] 큐는 weak_ptr로 빌려 두고 Flush에서 살아 있는 항목만 잠시 소유한다.\n    struct Entry { std::weak_ptr<GameObject> object; Group group; double depth; std::size_t order; };\n    std::vector<Entry> queue;\n    std::size_t serial=0;\n    RenderState state;\n    void BeginFrame() {queue.clear();serial=0;state=RenderState{};}\n    void Add(std::weak_ptr<GameObject> object, Group group, double depth) {\n        if(!std::isfinite(depth)) throw std::invalid_argument(\"nonfinite depth\");\n        queue.push_back({object,group,depth,serial++});\n    }\n    static RenderState StateFor(Group group) {\n        if(group==Group::Opaque) return {true,true,false,\"\"};\n        if(group==Group::Alpha) return {true,false,true,\"\"};\n        return {false,false,true,\"\"}; // example UI: no depth test, per-design policy.\n    }\n    std::vector<RenderEvent> Flush() {\n        struct Live {std::shared_ptr<GameObject> object; Group group; double depth; std::size_t order;};\n        std::vector<Live> live;\n        for(const auto& item:queue) if(auto p=item.object.lock())\n            live.push_back({p,item.group,item.depth,item.order});\n        queue.clear(); // no stale registrations after flushing\n        std::stable_sort(live.begin(),live.end(),[](const Live& a,const Live& b){ // [한국어 해설] 불투명은 앞→뒤, 알파는 뒤→앞, UI는 등록 순서다. 모든 투명도 문제를 해결하는 보편 정렬은 아니다.\n            if(a.group!=b.group) return static_cast<int>(a.group)<static_cast<int>(b.group);\n            if(a.group==Group::Alpha) return a.depth>b.depth; // back-to-front demo\n            if(a.group==Group::Opaque) return a.depth<b.depth; // front-to-back demo\n            return a.order<b.order;\n        });\n        std::vector<RenderEvent> events;\n        for(const auto& e:live) {\n            state=StateFor(e.group);  // initialize critical states on EACH draw/pass // [한국어 해설] 매 draw의 핵심 상태를 초기화하여 이전 패스의 텍스처·깊이·블렌드 상태 누출을 막는다.\n            if(auto tex=e.object->Texture()) state.boundTexture=tex->name;\n            events.push_back({e.object->name,e.group,e.depth,state});\n        }\n        state=RenderState{}; // explicit invariant for next frame in this model\n        return events;\n    }\n};\n\nint main() { // [한국어 해설] 변환, 독립 인스턴스/공유 자산, 만료된 큐, 순서·상태 및 소유권 해제를 CPU에서 검사한다.\n    int checks=0;\n    const auto check=[&](bool b,const char* m){++checks;if(!b) throw std::runtime_error(m);};\n    const auto near=[&](double a,double b){return std::abs(a-b)<1e-9;};\n    Transform t; t.position={1,2,3};t.scale={2,2,2};t.yaw=std::acos(-1.0)/2;\n    Vec3 local=TransformPoint({1,0,0},t.Local());\n    check(near(local.x,1)&&near(local.y,2)&&near(local.z,1),\"S*R*T row-vector\");\n    Vec3 world=TransformPoint({1,0,0},t.World(Mat4::Translate({10,0,0})));\n    check(near(world.x,11)&&near(world.y,2)&&near(world.z,1),\"child local * parent world\");\n    Vec3 origin=TransformPoint({0,0,0},t.Local());\n    check(near(origin.x,1)&&near(origin.y,2)&&near(origin.z,3),\"translation placement\");\n\n    auto texture=std::make_shared<TextureAsset>(\"smoke.dds\");\n    ComponentCatalog catalog;\n    catalog.Add(\"smoke\",std::unique_ptr<Component>(new TextureComponent(texture)));\n    std::unique_ptr<Component> compA=catalog.Create(\"smoke\");\n    std::unique_ptr<Component> compB=catalog.Create(\"smoke\");\n    check(compA.get()!=compB.get(),\"component instance clone independent\");\n    auto ta=dynamic_cast<TextureComponent*>(compA.get());\n    auto tb=dynamic_cast<TextureComponent*>(compB.get());\n    check(ta&&tb&&ta->asset==tb->asset,\"asset handle shared\");\n    check(texture.use_count()==4,\"texture owners: local+prototype+two clones\");\n    bool rejectedDuplicate=false;try {catalog.Add(\"smoke\",std::unique_ptr<Component>(new TextureComponent(texture)));}\n    catch(const std::invalid_argument&) {rejectedDuplicate=true;}\n    check(rejectedDuplicate,\"duplicate prototype rejected\");\n    bool missingRejected=false;try {catalog.Create(\"missing\");}catch(const std::out_of_range&){missingRejected=true;}\n    check(missingRejected,\"missing prototype rejected\");\n\n    auto nearOpaque=std::make_shared<GameObject>(\"near-opaque\");\n    auto farOpaque=std::make_shared<GameObject>(\"far-opaque\");\n    auto farAlpha=std::make_shared<GameObject>(\"far-alpha\");\n    auto nearAlpha=std::make_shared<GameObject>(\"near-alpha\");\n    auto ui=std::make_shared<GameObject>(\"hud\");\n    farAlpha->Attach(\"texture\",std::move(compA));\n    nearAlpha->Attach(\"texture\",std::move(compB));\n    check(farAlpha->Texture()==nearAlpha->Texture(),\"two owned components share one asset\");\n    RenderQueue queue;queue.BeginFrame();\n    queue.Add(nearAlpha,Group::Alpha,3);\n    queue.Add(farOpaque,Group::Opaque,8);\n    queue.Add(ui,Group::UI,0);\n    queue.Add(farAlpha,Group::Alpha,10);\n    queue.Add(nearOpaque,Group::Opaque,2);\n    auto dead=std::make_shared<GameObject>(\"despawned\");\n    queue.Add(dead,Group::Opaque,1);dead.reset(); // queue borrows; no use-after-free\n    const auto events=queue.Flush();\n    check(events.size()==5,\"expired borrowed item skipped\");\n    const char* order[]={\"near-opaque\",\"far-opaque\",\"far-alpha\",\"near-alpha\",\"hud\"};\n    for(std::size_t i=0;i<5;++i) check(events[i].object==order[i],\"render order\");\n    check(events[0].state.depthWrite&&!events[0].state.blend,\"opaque state\");\n    check(events[2].state.depthTest&&!events[2].state.depthWrite&&events[2].state.blend,\"alpha state\");\n    check(!events[4].state.depthTest&&!events[4].state.depthWrite&&events[4].state.blend,\"ui state\");\n    check(events[2].state.boundTexture==\"smoke.dds\",\"texture stage setup\");\n    check(events[0].state.boundTexture.empty(),\"no leaked texture between passes\");\n    check(queue.queue.empty(),\"per-frame queue cleared\");\n    check(queue.state.depthWrite&&!queue.state.blend&&queue.state.boundTexture.empty(),\"state reset\");\n    queue.BeginFrame();check(queue.Flush().empty(),\"empty frame\");\n    bool badDepth=false;try {queue.Add(ui,Group::UI,std::nan(\"\"));}\n    catch(const std::invalid_argument&) {badDepth=true;}\n    check(badDepth,\"nonfinite depth rejected\");\n    check(queue.queue.empty(),\"bad item not queued\");\n    farAlpha.reset();nearAlpha.reset();catalog.prototypes.clear();\n    check(texture.use_count()==1,\"ownership released after owners cleared\");\n    std::cout<<\"PASS: \"<<checks<<\" conditions; groups=opaque(front-back),alpha(back-front),ui; CPU-only\\n\";\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · notion_example.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/notion_example.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "notion_example.cpp · 한국어 학습 팩 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <cassert>\n#include <cmath>\n#include <iostream>\n#include <memory>\n#include <string>\n#include <vector>\n\n// Standalone C++11 CPU model. No Direct3D calls; shared_ptr is NOT COM AddRef.\nstruct Texture { explicit Texture(const std::string& n) : name(n) {} std::string name; };\nstruct TextureComponent { // [한국어 해설] 간단한 원문 CPU 예제다. Clone은 컴포넌트를 새로 만들고 내부 자산 shared_ptr만 공유한다.\n    explicit TextureComponent(std::shared_ptr<Texture> p) : resource(p) {}\n    std::shared_ptr<Texture> resource;\n    std::unique_ptr<TextureComponent> Clone() const {\n        return std::unique_ptr<TextureComponent>(new TextureComponent(resource));\n    }\n};\nstruct Transform { // [한국어 해설] 행 벡터·왼손 +Z 전방이며 이 축약 예제의 부모 변환은 이동만 지원한다.\n    double x = 0, z = 0, scale = 1, yaw = 0;\n    // Row vector, LH +Z forward. Local S*R*T, parent translation only in this model.\n    double WorldX(double localX, double localZ, double parentX) const {\n        return scale * (localX * std::cos(yaw) + localZ * std::sin(yaw)) + x + parentX;\n    }\n    double WorldZ(double localX, double localZ) const {\n        return scale * (-localX * std::sin(yaw) + localZ * std::cos(yaw)) + z;\n    }\n};\nstruct Object {\n    explicit Object(const std::string& n) : name(n) {}\n    std::string name;\n    std::unique_ptr<TextureComponent> texture; // instance owner\n};\nenum class Pass { Opaque, Alpha, UI };\nstruct Job {\n    std::weak_ptr<Object> ref; // not an owner\n    Pass pass;\n    double depth;\n};\nstruct Event {\n    std::string object;\n    bool ztest, zwrite, blend;\n    std::string texture;\n};\nstruct Queue { // [한국어 해설] weak_ptr 등록으로 큐가 게임 객체 수명을 불필요하게 늘리지 않는다.\n    std::vector<Job> jobs;\n    void Add(const std::shared_ptr<Object>& obj, Pass pass, double depth) {\n        jobs.push_back({obj, pass, depth});\n    }\n    std::vector<Event> Flush() { // [한국어 해설] 유효 객체만 모아 패스별 순서를 정하고 이번 프레임 등록을 비운다.\n        struct Live { std::shared_ptr<Object> obj; Pass pass; double depth; };\n        std::vector<Live> live;\n        for (const auto& job : jobs)\n            if (auto obj = job.ref.lock()) live.push_back({obj, job.pass, job.depth});\n        jobs.clear();\n        std::stable_sort(live.begin(), live.end(), [](const Live& a, const Live& b) {\n            if (a.pass != b.pass) return a.pass < b.pass;\n            if (a.pass == Pass::Alpha) return a.depth > b.depth;\n            if (a.pass == Pass::Opaque) return a.depth < b.depth;\n            return false;\n        });\n        std::vector<Event> out;\n        for (const auto& item : live) {\n            const bool opaque = item.pass == Pass::Opaque;\n            const bool ui = item.pass == Pass::UI;\n            const std::string tex = item.obj->texture ? item.obj->texture->resource->name : \"\";\n            out.push_back({item.obj->name, !ui, opaque, !opaque, tex});\n        }\n        return out;\n    }\n};\nint main() { // [한국어 해설] 원문 사례를 별도 실행한다. 더 상세한 실패·계약 검사는 renderer_components.cpp에 있다.\n    Transform t; t.x = 1; t.z = 3; t.scale = 2;\n    t.yaw = std::acos(-1.0) / 2;\n    assert(std::abs(t.WorldX(1, 0, 10) - 11) < 1e-9);\n    assert(std::abs(t.WorldZ(1, 0) - 1) < 1e-9);\n    auto asset = std::make_shared<Texture>(\"smoke.dds\");\n    TextureComponent prototype(asset);\n    auto a = std::make_shared<Object>(\"alpha-near\");\n    auto b = std::make_shared<Object>(\"alpha-far\");\n    a->texture = prototype.Clone(); b->texture = prototype.Clone();\n    assert(a->texture.get() != b->texture.get());\n    assert(a->texture->resource == b->texture->resource);\n    auto opaque = std::make_shared<Object>(\"opaque\");\n    auto ui = std::make_shared<Object>(\"hud\");\n    Queue q; q.Add(a, Pass::Alpha, 3); q.Add(b, Pass::Alpha, 10);\n    q.Add(ui, Pass::UI, 0); q.Add(opaque, Pass::Opaque, 2);\n    auto removed = std::make_shared<Object>(\"removed\");\n    q.Add(removed, Pass::Opaque, 1); removed.reset();\n    const auto out = q.Flush();\n    assert(out.size() == 4);\n    assert(out[0].object == \"opaque\");\n    assert(out[1].object == \"alpha-far\" && out[2].object == \"alpha-near\");\n    assert(out[3].object == \"hud\");\n    assert(out[0].ztest && out[0].zwrite && !out[0].blend);\n    assert(out[1].ztest && !out[1].zwrite && out[1].blend);\n    assert(!out[3].ztest && !out[3].zwrite && out[3].blend);\n    assert(out[1].texture == \"smoke.dds\");\n    assert(q.jobs.empty() && q.Flush().empty());\n    std::cout << \"PASS: row transform, separate instances/shared texture, \"\n                 \"expired queue item, pass order and state\\n\";\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt · 한국어 학습 팩 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(dx9_renderer_recovered LANGUAGES CXX)\nset(LAB_CXX_STANDARD 20 CACHE STRING \"20 or 11\")\nadd_executable(renderer_components renderer_components.cpp)\nset_target_properties(renderer_components PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(renderer_components PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(renderer_components PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME renderer_components COMMAND renderer_components)\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CMake 명령은 환경에 도구가 준비되었을 때의 재현 안내다. 원본 설정의 언어 표준과 이번 주석본 직접 빌드의 C++20 모드를 구별한다. 이 웹 페이지에서 코드를 열거나 저장하는 것 자체가 컴파일 실행은 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "이번 검증 기록",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 세 구성에서 동일한 확장 26조건을 통과했습니다. 같은 26조건을 78개의 서로 다른 검사로 합산하지 않습니다. 별도 기존 notion_example.cpp도 각 구성에서 실행했으며 성공 메시지를 확인했지만 해당 미니 프로그램의 조건 수를 새로 계수한 것은 아닙니다. 검수용 배치 CMake는 확장·미니 실행파일 둘을 등록하여 2/2 통과했고, 위 독립 CMake는 확장 하나만 등록합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S . -B build-gcc20 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++\ncmake --build build-gcc20 -j 2\nctest --test-dir build-gcc20 --output-on-failure -V\ncmake -S . -B build-gcc11 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++ -DLAB_CXX_STANDARD=11\ncmake --build build-gcc11 -j 2\nctest --test-dir build-gcc11 --output-on-failure -V\ncmake -S . -B build-san -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++ \"-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer\" \"-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined\"\ncmake --build build-san -j 2\nctest --test-dir build-san --output-on-failure -V"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "Linux x86-64 / GCC 14.2 C++20: PASS: 26 conditions\nLinux x86-64 / GCC 14.2 C++11: PASS: 26 conditions\nLinux x86-64 / Clang 17 ASan+UBSan C++20: PASS: 26 conditions\nEach batch CTest: 2/2, exit=0; sanitizer diagnostic: none.\nWindows/MSVC/COM/Direct3D9/GPU: NOT RUN."
+        }
+      ]
+    },
+    {
+      "id": "visual-evidence",
+      "title": "검증을 읽는 세 층",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "층"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인하는 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인하지 않는 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원본·캡처 보관"
+                  }
+                ],
+                [
+                  {
+                    "text": "파일·본문·과거 해시의 출처"
+                  }
+                ],
+                [
+                  {
+                    "text": "코드가 모든 입력에서 옳다는 증명"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "보존 CPU 실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "명시된 모델·입력·컴파일러 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "Windows 로더·COM·D3D9·GPU 동작"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "현재 웹 개편"
+                  }
+                ],
+                [
+                  {
+                    "text": "도식·탭·코드 접근성"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 네이티브 실행 성공"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문에서 “이번”이라고 적힌 실행 문장은 해당 원문의 날짜에 수행한 기록이다. 2026-10-23의 웹 표현 개편과 혼동하지 않는다. 기존 검증 횟수에 컴파일러 반복이나 같은 소스의 다른 페이지 설명을 더하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존된 Notion 원문",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-04a/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본은 기존 줄 끝에 설명 suffix만 덧붙인 별도 파생 파일이다. 원본 코드·문자열·물리행 수·진단 행번호를 보존하며 manifest에 기록된 suffix를 제거하면 원본 바이트가 복원된다. CMake는 원본과 동일하다. 주석본 담당자는 2026-10-23 Linux GCC 14.2 C++20 직접 빌드·실행 및 전처리 비교를 별도로 수행했다. 두 폴더의 __FILE__ 경로만 동일한 SOURCE 접두사로 맞추었고, 진단 행번호를 삭제해 비교한 것은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 주석본의 직접 실행은 원문의 과거 C++11·C++20·Clang sanitizer·CTest 기록과 구별한다. 주석본 확인에서는 CMake/CTest·Windows/MSVC·실제 COM/D3D9/GPU·sanitizer를 실행하지 않았다. NDEBUG를 정의하지 않은 CPU 검사이며 결과 수는 새 독립 요구사항으로 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 팩 구성·실제 재현 명령",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·주석본 해시와 주석 위치",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 실제 확인·미검증 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 바이트 복원 검사 도구",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-04a-ko/verify_annotations.py"
+            }
+          ]
+        }
+      ],
+      "tab": "sources"
+    },
+    {
+      "id": "part-6",
+      "title": "변경 이력·근거·잔여",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 확장 C++ 소스는 원형을 보존했습니다. 네이티브 소스 보관과 CPU 재실행 완료를 GPU 상태 복원·COM·투명 렌더링 실행 검증으로 표현하지 않습니다. CMake의 학습 표준 선택 옵션과 위 재현 안내는 이번에 보완했습니다. 별도 미니 원형 notion_example.cpp도 아래 부록에 전체 파일로 보관했습니다. 확장 실습 26조건과 미니 프로그램의 실행 결과를 구분합니다. 기술 설명과 공식 API 근거는 대표 페이지 04 및 [Microsoft SetTexture](https://learn.microsoft.com/en-us/windows/win32/api/d3d9/nf-d3d9-idirect3ddevice9-settexture), [D3DXVec3TransformCoord](https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3transformcoord)를 함께 봅니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-history",
+      "title": "원문·변경 기록",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 기존 본문 주제·직접 코드·Mermaid·답안·링크를 유지하며 네 탭, 설명 SVG, 실습과 접힌 복습을 보강했다. 자료실의 문자열로 남아 있던 원본 해시 표는 값 변경 없이 typed table로 표시했다. 원본 Notion Markdown·공유 소스·CMake·과거 검증 기록은 수정하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 원문 전체",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-04a/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 웹 저작 JSON",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-04a/content.json"
+            }
+          ]
+        }
+      ],
+      "tab": "history"
     }
   ]
 }

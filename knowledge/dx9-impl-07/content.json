@@ -21,26 +21,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "GitHub Pages 이전본 · 기존 Notion 원본의 본문·코드·Mermaid 원본·표·접힌 답안을 보존했습니다. 미회수한 원본 첨부·이미지는 별도 표시합니다. "
-                },
-                {
-                  "text": "원본 Notion",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f4081e3b908de685a551c23"
-                },
-                {
-                  "text": ". "
-                },
-                {
-                  "text": "과거 CPU 테스트 기록은 이번 GitHub 신규 검증이나 Windows/MSVC·D3D9·GPU 실행을 의미하지 않습니다."
-                }
-              ]
+              "text": "화면 입력을 NDC와 카메라 공간으로 되돌린 뒤, 레이의 t 의미를 보존하며 객체 로컬로 옮긴다. 지형 높이는 실제 메시 대각선과 같은 보간식을 사용한다."
             }
           ]
         },
@@ -69,6 +53,12 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-07/assets/ray-distance.svg",
+          "alt": "near에서 시작한 레이의 t",
+          "caption": "near에서 시작한 레이의 t · 계약을 설명하는 도식이며 실제 GPU 캡처가 아닙니다."
+        },
+        {
           "type": "paragraph",
           "content": [
             {
@@ -83,6 +73,12 @@
       "title": "2. 화면 픽셀에서 월드 Ray 생성",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-impl-07/assets/terrain-diagonal.svg",
+          "alt": "메시 대각선이 높이 보간을 결정한다",
+          "caption": "메시 대각선이 높이 보간을 결정한다 · 계약을 설명하는 도식이며 실제 GPU 캡처가 아닙니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -196,9 +192,90 @@
       ]
     },
     {
+      "id": "part-7",
+      "title": "7. 공식 근거 및 변경 기록",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "D3DXMatrixLookAtLH",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxmatrixlookatlh"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "D3DXMatrixPerspectiveFovLH",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxmatrixperspectivefovlh"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "D3DXVec3Unproject",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3unproject"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "D3DXIntersectTri",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxintersecttri"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "D3DXVec3TransformCoord",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3transformcoord"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "D3DXVec3TransformNormal",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3transformnormal"
+            },
+            {
+              "text": ". D3DX는 지원 종료된 레거시 유틸리티로 신규 프로젝트에는 DirectXMath 등의 대안을 검토합니다. 원본의 카메라·지형·피킹 절을 교정했으며, 원문·이미지 복제본 "
+            },
+            {
+              "text": "관련 Notion 페이지",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f8a99703f40816eb9dbdced1f9a1855"
+            },
+            {
+              "text": "은 보존합니다. 기존 화면 캡처를 모두 전사·실행한 것은 아닙니다. 다음 개정: 스카이박스·UI·알파·이펙트·셰이더·Frustum 컬링. "
+            },
+            {
+              "text": "07A · C++11 전체 미니 소스와 재현 방법",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f8a99703f4081da9335faf6d568d1c3"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "07B · NaN 피킹 오류 교정·전체 카메라·지형 소스 v1.1",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-07b/"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-5",
       "title": "5. 디버깅과 체크포인트",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "table",
@@ -340,9 +417,123 @@
       ]
     },
     {
+      "id": "guided-practice",
+      "title": "실습 · 입력과 실패 경계를 먼저 예측",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "뷰포트(100,50,800,600)의 중심 클릭(500,350)을 NDC로 바꾼다. near1/far100/삼각형z5의 t=4를 확인한다. 삼각형 꼭짓점에 NaN을 넣었을 때 단순 범위 비교가 왜 거부에 실패할 수 있는지 07B 수정본에서 찾는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스와 빌드 파일을 함께 읽고 원문 검증 범위와 비교한다. 이미 보존된 통과 횟수는 개편 과정의 새 실행으로 바꾸어 보고하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답하고 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "월드 단위 t를 유지하면서 로컬로 옮길 때 방향을 재정규화할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 모델에서는 하지 않는다. 비균일 스케일 뒤 재정규화하면 t의 크기 관계가 달라진다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "10×10 정점 격자의 셀과 삼각형 수는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "셀81, 삼각형162다. 셀10×10일 때의 정점11×11과 구별한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "u,v가 텍스처 UV인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "삼각형 교차의 u,v는 무게중심 좌표다. 정점 속성 보간은 별도 계산한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "NaN에서 t<0 검사만 하면 안전한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. NaN의 일반 크기 비교는 거부를 보장하지 않으므로 유한성을 검사한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "이 CPU 모델이 실제 D3D9 화면을 검증하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 코드가 모델링한 수치·소유권 계약만 검사한다. Windows/MSVC·실제 장치·GPU 화면 검증과 구별한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원문 검증 횟수가 이번 개편에서 새로 실행한 횟수인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 기존 날짜·로그·코드 해시를 보존한 역사적 증거다. 새 실행은 별도 기록이 있을 때만 주장한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-6",
       "title": "6. 재현 가능한 실습과 검증 한계",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -363,90 +554,9 @@
       ]
     },
     {
-      "id": "part-7",
-      "title": "7. 공식 근거 및 변경 기록",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "D3DXMatrixLookAtLH",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxmatrixlookatlh"
-            },
-            {
-              "text": ", "
-            },
-            {
-              "text": "D3DXMatrixPerspectiveFovLH",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxmatrixperspectivefovlh"
-            },
-            {
-              "text": ", "
-            },
-            {
-              "text": "D3DXVec3Unproject",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3unproject"
-            },
-            {
-              "text": ", "
-            },
-            {
-              "text": "D3DXIntersectTri",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxintersecttri"
-            },
-            {
-              "text": ", "
-            },
-            {
-              "text": "D3DXVec3TransformCoord",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3transformcoord"
-            },
-            {
-              "text": ", "
-            },
-            {
-              "text": "D3DXVec3TransformNormal",
-              "kind": "link",
-              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec3transformnormal"
-            },
-            {
-              "text": ". D3DX는 지원 종료된 레거시 유틸리티로 신규 프로젝트에는 DirectXMath 등의 대안을 검토합니다. 원본의 카메라·지형·피킹 절을 교정했으며, 원문·이미지 복제본 "
-            },
-            {
-              "text": "관련 Notion 페이지",
-              "kind": "link",
-              "href": "https://app.notion.com/p/3f8a99703f40816eb9dbdced1f9a1855"
-            },
-            {
-              "text": "은 보존합니다. 기존 화면 캡처를 모두 전사·실행한 것은 아닙니다. 다음 개정: 스카이박스·UI·알파·이펙트·셰이더·Frustum 컬링. "
-            },
-            {
-              "text": "07A · C++11 전체 미니 소스와 재현 방법",
-              "kind": "link",
-              "href": "https://app.notion.com/p/3f8a99703f4081da9335faf6d568d1c3"
-            },
-            {
-              "text": " "
-            },
-            {
-              "text": "07B · NaN 피킹 오류 교정·전체 카메라·지형 소스 v1.1",
-              "kind": "link",
-              "href": "/knowledge/dx9-impl-source-07b/"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "source-files",
       "title": "전체 소스·CMake·CPU 검증 및 미검증 범위",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "callout",
@@ -492,6 +602,100 @@
                   "text": "다릅니다. CPU 데이터·컴포넌트 모형의 컴파일·CTest가 통과하더라도 실제 Win32 창, D3D9 드라이버, GPU 프레임, DX9 Reset은 실행해 본 것이 아닙니다."
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석 전체 코드와 원본 비교 자료실",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-source-07b/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본 빌드/의존성 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-07b-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 실제 CPU 검사 결과",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-impl-07b-ko/validation.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification-boundary",
+      "title": "검증 범위 · 역사적 기록과 현재 개편 구분",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문의 실행 로그·도구 버전·소스 SHA·조건 수는 각 원문 시점의 보존 증거다. 이번 작업은 문서와 설명 그림의 개편이며, 같은 CPU 검사나 Windows/D3D9/GPU 실행을 새로 수행했다는 뜻이 아니다. 웹 검증·배포 역시 별도의 단계다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·개편 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이전본 · 기존 Notion 원본의 본문·코드·Mermaid 원본·표·접힌 답안을 보존했습니다. 미회수한 원본 첨부·이미지는 별도 표시합니다. "
+                },
+                {
+                  "text": "원본 Notion",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f4081e3b908de685a551c23"
+                },
+                {
+                  "text": ". "
+                },
+                {
+                  "text": "과거 CPU 테스트 기록은 이번 GitHub 신규 검증이나 Windows/MSVC·D3D9·GPU 실행을 의미하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 Notion 원문",
+              "kind": "link",
+              "href": "/knowledge/dx9-impl-07/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 기존 URL·절 ID·원본 코드·Mermaid·표·접힌 답변·검증 기록을 보존하고 4탭 학습 동선, 설명 그림, 예측 실습과 추가 복습을 구성했다. CPU 학습 모델의 결과를 실제 GPU 동작으로 확대하지 않는다."
             }
           ]
         }

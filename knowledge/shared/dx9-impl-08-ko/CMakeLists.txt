@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.10)
+project(dx9_sky_ui_cpu_lab LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_executable(dx9_sky_ui_cpu sky_ui_pass.cpp)
+enable_testing()
+add_test(NAME dx9_sky_ui_cpu COMMAND dx9_sky_ui_cpu)

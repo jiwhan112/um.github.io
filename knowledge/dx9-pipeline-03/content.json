@@ -20,23 +20,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "원본 Notion 본문을 GitHub Pages로 이전해 보존했습니다. 실제 GPU/Direct3D 실행 결과가 아닙니다. "
-                },
-                {
-                  "text": "원본 Notion",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f4081b98c00f5601b7d0c54"
-                },
-                {
-                  "text": " · 공통 DX9 CPU 실습 파일 전체 ZIP은 아직 확보되지 않았으며 Mermaid/수식은 원본 코드로 제공합니다."
-                }
-              ]
+              "text": "이 교재는 보존한 Notion 원문과 CPU 학습 소스를 바탕으로 개념→시각 관계→손으로 추적→검증 경계 순서로 재구성했습니다. 본문의 그림은 직접 제작한 설명도이며 GPU 캡처가 아닙니다. CPU C++20 모델과 실제 D3D9 실행을 구분합니다."
             }
           ]
         },
@@ -125,6 +112,12 @@
       "title": "2. 래스터화는 샘플을 검사합니다",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-pipeline-03/assets/shared-edge-samples.svg",
+          "alt": "0..4 사각형에서 x,y가0..3인 정수 중심16개가 포함됩니다. 색 있는 점은 합집합이며 대각선 소속은 한쪽에만 배정합니다.",
+          "caption": "0..4 사각형에서 x,y가0..3인 정수 중심16개가 포함됩니다. 색 있는 점은 합집합이며 대각선 소속은 한쪽에만 배정합니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -216,7 +209,7 @@
               "kind": "code"
             },
             {
-              "text": "입니다. P가 A쪽에 더 가깝다는 의미를 수치로 읽을 수 있습니다. 화면 공간에서 선형인 값은 이 가중치로 직접 보간합니다. 하지만 원근 투영된 표면의 UV를 그대로 "
+              "text": "입니다. A의 속성값에 적용할 화면 가중치가 0.5라는 뜻이며 유클리드 거리의 가까움을 직접 뜻하지는 않습니다. 화면 공간에서 선형인 값은 이 가중치로 직접 보간합니다. 하지만 원근 투영된 표면의 UV를 그대로 "
             },
             {
               "text": "Σ λUV",
@@ -234,6 +227,12 @@
       "title": "4. UV는 원근 보정이 필요합니다",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-pipeline-03/assets/uv-versus-depth.svg",
+          "alt": "UV에는1/w를 사용하는 원근 보정, 기본 z-buffer 깊이에는 이미 나눈z/w의 화면 선형 보간을 적용하는 두 독립 경로입니다.",
+          "caption": "UV에는1/w를 사용하는 원근 보정, 기본 z-buffer 깊이에는 이미 나눈z/w의 화면 선형 보간을 적용하는 두 독립 경로입니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -611,7 +610,7 @@
     {
       "id": "part-8",
       "title": "8. 이해 확인과 검증 범위",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "details",
@@ -642,14 +641,104 @@
           ]
         },
         {
+          "type": "details",
+          "title": "Covers가 정점 순서를 뒤집으면 컬링한 것인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "포함 판정의 부호를 통일한 것입니다. 후면을 버리는 컬링 구현은 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "이미 나눈 깊이에 UV 보정식을 다시 쓰면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기본 z-buffer 모델의 z/w는 화면 선형 보간합니다. UV용 분수를 다시 적용하면 다른 값을 만듭니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "반 픽셀 보정은 모든 월드 정점에서0.5를 빼는 것인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. D3D9의 해당 화면 정렬·텍셀 대응 규약에서 적용하며 이미 보정한 경로의 이중 보정을 피합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "LinearClamp가 실제2D텍스처 샘플러를 검증했는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "1차원 level0 선형·clamp 모델만 확인했습니다. LOD·2D필터·MSAA·GPU출력은 미검증입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guided-practice",
+      "title": "같은 가중치로 두 종류의 보간 비교하기",
+      "tab": "practice",
+      "blocks": [
+        {
           "type": "paragraph",
           "content": [
             {
-              "text": "raster_uv",
-              "kind": "code"
-            },
+              "text": "λ=(.5,.25,.25), w=(1,2,4)에서 UV 분모는 11/16입니다. UV 분자와 깊이의 화면 선형합을 따로 적으세요. 모든 w를 1로 바꾼 경우만 시험하면 보정 누락을 찾기 어려운 이유를 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
             {
-              "text": "의 71회 조건 검사에서 공유 모서리 소속, 퇴화 삼각형, 무게중심 좌표, UV 원근 보정, 깊이 보간, 1차원 선형 필터와 텍셀 중심을 확인했습니다. GCC·Clang·Clang ASan/UBSan에서 통과했습니다. GPU 래스터화 적합성, 텍스처 LOD, MSAA, HLSL 컴파일과 실제 출력 화면은 미검증입니다."
+              "text": "아래는 기존 소스를 그대로 재현할 때의 명령입니다. 이번 본문 개편 중 CPU 실행을 반복하지 않았습니다. 전체 프로젝트를 내려받고 저장소 루트에서 실행하며 헤더·CMake를 함께 사용합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S knowledge/shared/dx9-pipeline-lab -B build-dx9-study -DCMAKE_BUILD_TYPE=Debug\ncmake --build build-dx9-study\nctest --test-dir build-dx9-study -R \"^raster_uv$\" -V --output-on-failure"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 원본 raster_uv.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-pipeline-lab/src/raster_uv.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 실행 코드와 영어 검사명은 보존했습니다. 출처 탭에는 같은 실행 토큰을 유지한 한국어 주석본 전체와 다운로드 링크를 제공합니다. 검사 횟수가 늘어난 새 프로그램으로 세지 않습니다."
             }
           ]
         }
@@ -658,18 +747,13 @@
     {
       "id": "full-source-refs",
       "title": "전체 소스·CMake·재검증",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "원문 본문은 그대로 보존하고, 이 단원과 직접 연결된 전체 실습 코드도 ATLAS NOTE에서 열 수 있도록 연결했습니다. Linux GCC/Clang CPU 모델은 검증했지만 Windows/MSVC·Direct3D/GPU·HLSL 실기기 실행은 별도 미검증입니다."
-                }
-              ]
+              "text": "원본12개 파일은 보존된 Markdown에서 복원했습니다. 소스·CPU 실행·웹 표시·GPU 실행은 서로 다른 검증 단계입니다. 원본 ZIP 바이너리는 미확보이며 새 그림을 실제 GPU 결과로 제시하지 않습니다."
             }
           ]
         },
@@ -710,6 +794,214 @@
               "text": "원본 무결성 및 2026-10-19 GitHub CPU 재검증",
               "kind": "link",
               "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본은 설명 주석만 추가한 별도 학습용 파일입니다. 원본은 그대로 보존하며, 공통 헤더와 소스 폴더 구조를 함께 받아야 빌드할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 주석본 구성·빌드 안내",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 공통 계산 헤더",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/include/pipeline.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 검사 헤더",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/include/check.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 전체 raster_uv.cpp",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/src/raster_uv.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"pipeline.hpp\"\n#include \"check.hpp\"\n// [한국어 해설] 공유 변 소유권, 원근 UV와 화면 선형 깊이, 텍셀 중심 및 잘못된 입력을 검사한다.\nint main(){return Run(\"raster_uv\",[](Checks& c){\n    using namespace pipeline;\n    const std::array<Vec2,3> a{{{0,0},{4,0},{4,4}}},b{{{0,0},{4,4},{0,4}}};\n    int total=0;\n// [한국어 해설] 정수 픽셀 중심 샘플에서 사각형 내부는 정확히 한 삼각형만 소유해야 한다.\n    for(int y=-1;y<=5;++y)for(int x=-1;x<=5;++x){\n        const Vec2 sample{static_cast<double>(x),static_cast<double>(y)};\n        const int covered=static_cast<int>(Covers(a,sample))+static_cast<int>(Covers(b,sample));\n        const int wanted=(x>=0 && x<4 && y>=0 && y<4)?1:0;\n        c.That(covered==wanted,\"shared edge has exactly one owner\");total+=covered;\n    }\n    c.That(total==16,\"quad covers 16 integer pixel centers\");\n    auto reversed=a;std::swap(reversed[1],reversed[2]);\n    c.That(Covers(reversed,{2,1})==Covers(a,{2,1}),\"coverage invariant without culling\");\n    c.That(Edge(a[0],a[1],a[2])>0 && Edge(reversed[0],reversed[1],reversed[2])<0,\"winding changes sign\");\n// [한국어 해설] 서로 다른 1/w를 사용하므로 UV의 단순 보간과 원근 보정 값이 달라진다.\n    std::array<ScreenVertex,3> t{{{{0,0},.2,1,{0,0}},{{4,0},.6,.5,{1,0}},{{0,4},.9,.25,{0,1}}}};\n    auto l=Barycentric({t[0].p,t[1].p,t[2].p},{1,1});c.That(l.has_value(),\"nondegenerate triangle\");\n    c.Near((*l)[0],.5,\"weight0\");c.Near((*l)[1],.25,\"weight1\");c.Near((*l)[2],.25,\"weight2\");\n    auto uv=PerspectiveUV(t,*l);c.Near(uv.x,2.0/11,\"perspective u\");c.Near(uv.y,1.0/11,\"perspective v\");\n    c.Near(AffineDepth(t,*l),.475,\"depth uses screen-linear z/w\");\n    c.That(!Barycentric({Vec2{0,0},Vec2{1,1},Vec2{2,2}},{1,1}),\"degenerate rejected\");\n// [한국어 해설] 레벨0 1차원 샘플러 모델로 중심 정렬을 설명한다. GPU 텍스처 출력 캡처는 아니다.\n    const std::array<double,4> texels{0,1,0,1};\n    for(int i=0;i<4;++i)c.Near(LinearClamp(texels,(i+.5)/4),texels[static_cast<std::size_t>(i)],\"texel center\");\n    c.Near(LinearClamp(texels,.25),.5,\"uncorrected pixel mixes texels\");\n    c.Near(LinearClamp(texels,(1+.5)/4),1,\"minus half-pixel vertex alignment\");\n    c.Near(LinearClamp(texels,-1),0,\"left clamp\");c.Near(LinearClamp(texels,2),1,\"right clamp\");\n    c.Rejects([]{LinearClamp({},0);},\"empty texture\");\n    const double nan=std::numeric_limits<double>::quiet_NaN();\n    c.That(!Covers(a,{nan,0}),\"nonfinite sample is not covered\");\n    c.That(!Barycentric(a,{0,nan}),\"nonfinite barycentric input rejected\");\n    std::cout<<\"weights=(0.5,0.25,0.25) affine_uv=(0.25,0.25) perspective_uv=(2/11,1/11) depth=0.475\\n\";\n});}\n\n"
+            }
+          ],
+          "title": "한국어 주석본 전체: src/raster_uv.cpp"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 HLSL 참고 소스 — 실행 미검증",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/examples/texture_sm3.hlsl"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "hlsl",
+              "text": "// Reference only: NOT compiled with FXC and NOT executed on a GPU in this revision.\n// D3D9: compile VSMain as vs_3_0 and PSMain as ps_3_0 in your Windows toolchain.\n// Host contract: POSITION0 float3, TEXCOORD0 float2; four float4 ROWS at c0;\n// a 2D texture and sampler states at s0; valid target/depth/output state.\n// The CPU lab uses double arrays: do NOT upload their bytes as float registers.\n// [한국어 해설] 호스트는 float4 행 네 개를 c0부터 전달해야 한다. CPU double 배열을 그대로 업로드하면 안 된다.\nrow_major float4x4 gWorldViewProjection : register(c0);\nsampler2D gAlbedo : register(s0);\n\n// [한국어 해설] 정점 선언과 POSITION0 float3/TEXCOORD0 float2 의미·형식을 맞춰야 한다.\nstruct VSInput {\n    float3 position : POSITION0;\n    float2 uv : TEXCOORD0;\n};\nstruct VSOutput {\n    float4 position : POSITION0;\n    float2 uv : TEXCOORD0;\n};\n\n// [한국어 해설] 동차 w를 그대로 출력하여 하드웨어가 클리핑과 원근 보간을 수행하게 한다.\nVSOutput VSMain(VSInput input) {\n    VSOutput output;\n    // Keep homogeneous w for hardware clipping and perspective interpolation.\n    output.position = mul(float4(input.position, 1.0), gWorldViewProjection);\n    output.uv = input.uv;\n    return output;\n}\n\n// [한국어 해설] s0의 텍스처와 샘플러 상태를 호스트가 준비해야 한다. FXC 컴파일·GPU 실행은 이번에 하지 않았다.\nfloat4 PSMain(float2 uv : TEXCOORD0) : COLOR0 {\n    return tex2D(gAlbedo, uv);\n}\n\n"
+            }
+          ],
+          "title": "한국어 주석본 전체: examples/texture_sm3.hlsl"
+        }
+      ]
+    },
+    {
+      "id": "verification-boundary",
+      "title": "실행 증거와 미검증 경계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래의 단원별 수치는 기존 원문·소스가 기록한 관찰입니다. 실행 입력과 함수 범위에 한정되며 반복되는 검사 호출을 독립 기능 수로 부풀리지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "raster_uv",
+              "kind": "code"
+            },
+            {
+              "text": "의 71회 조건 검사에서 공유 모서리 소속, 퇴화 삼각형, 무게중심 좌표, UV 원근 보정, 깊이 보간, 1차원 선형 필터와 텍셀 중심을 확인했습니다. GCC·Clang·Clang ASan/UBSan에서 통과했습니다. GPU 래스터화 적합성, 텍스처 LOD, MSAA, HLSL 컴파일과 실제 출력 화면은 미검증입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-19 소스 복원 및 GitHub CPU 재검증 원장",
+              "kind": "link",
+              "href": "/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 GitHub CPU 실행 39213029058",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39213029058"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 기록은 GCC 14.2 C++20과 Clang 17 ASan/UBSan의 5/5 CPU CTest 통과입니다. 원문 296회는 루프 반복을 포함합니다. Windows/MSVC·D3D9·FXC/HLSL·GPU·성능·비트단위 하드웨어 일치는 미검증입니다. 이번 수정의 웹 표시·배포는 별도로 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 한국어 주석본은 별도 Cloud Linux GCC 14.2 직접 빌드·실행으로 5개 프로그램의 22/79/71/19/105회 검사를 확인했습니다. 원본 9개 파일의 바이트 복원 해시와 5개 프로그램의 전처리 결과 동일성도 확인했습니다. 이번 환경에는 CMake/CTest가 없어 실행하지 않았습니다. sanitizer·Windows/MSVC·FXC/HLSL·GPU도 이번 검증에 포함하지 않았습니다. 이는 아래의 2026-10-19 실행과 별개의 증거입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 주석본 검증 결과",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "파일별 원본 복원 해시 명세",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/annotation-manifest.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source-history",
+      "title": "원문·변경기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Notion 원본",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f8a99703f4081b98c00f5601b7d0c54"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "수정하지 않은 원본 전체 Markdown",
+              "kind": "link",
+              "href": "/knowledge/dx9-pipeline-03/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 이관 기록",
+              "kind": "link",
+              "href": "/knowledge/MIGRATION_DX9_PIPELINE_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 · 기존 수식·코드·기술 전제를 보존하고 긴 단락을 나누었습니다. 직접 만든 관계도, 한국어 추적 과제, 접힌 복습, 네 탭과 한국어 주석본을 추가했습니다. 원본 소스·원문 파일·기존 CPU 로그는 수정하지 않았습니다. 별도 주석본 검증과 역사적 CPU 기록을 구분하며 실제 GPU 실행을 주장하지 않습니다."
             }
           ]
         }

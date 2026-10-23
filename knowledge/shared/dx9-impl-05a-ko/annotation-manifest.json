@@ -1,0 +1,80 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes preserve physical line numbers, including assert and __LINE__ diagnostics. Remove recorded suffixes to reconstruct exact original bytes.",
+  "files": [
+    {
+      "original": "shared/dx9-impl-05a/CMakeLists.txt",
+      "annotated": "shared/dx9-impl-05a-ko/CMakeLists.txt",
+      "original_sha256": "64ffbd0dbed97dbec99b0eb21c7f05d4a023ff3d8e9c57379a1165c84409d846",
+      "annotated_sha256": "64ffbd0dbed97dbec99b0eb21c7f05d4a023ff3d8e9c57379a1165c84409d846",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx9-impl-05a/scene_loop.hpp",
+      "annotated": "shared/dx9-impl-05a-ko/scene_loop.hpp",
+      "original_sha256": "ee2c4c561037c76f4d9764a6120f725ad1ea123e6c860e5982521fe3fb551074",
+      "annotated_sha256": "4dfb2346cd32a6d25f60e5055e57af97663e991708f7fd9da9294671c742f3e0",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 15,
+          "suffix": " // [한국어 해설] 세대와 ID를 함께 저장하여 장면 교체 뒤 같은 숫자 ID를 이전 객체로 오인하지 않게 한다."
+        },
+        {
+          "line": 24,
+          "suffix": " // [한국어 해설] World가 배우를 소유한다. FixedTick/LateTick/Render는 단계별 책임을 나눈 가상 훅이다."
+        },
+        {
+          "line": 43,
+          "suffix": " // [한국어 해설] 순회 중 컨테이너를 직접 바꾸지 않고 추가 대기 목록에 고유 소유권을 넘긴다."
+        },
+        {
+          "line": 68,
+          "suffix": " // [한국어 해설] 삭제 후 추가를 반영한다. 같은 단계에서 생성 후 취소한 객체는 정식 목록에 들어가지 않는다."
+        },
+        {
+          "line": 121,
+          "suffix": " // [한국어 해설] 장면 경계에서만 소유권을 교체하고 누적 시간을 초기화한다. 이전 장면의 시간이 새 장면으로 새지 않는다."
+        },
+        {
+          "line": 127,
+          "suffix": " // [한국어 해설] 입력시간은 최대 0.25초, 고정갱신은 최대5회다. 초과 적체를 버리는 정책이지 결정적 네트워크 시계가 아니다."
+        },
+        {
+          "line": 168,
+          "suffix": " // [한국어 해설] 새 객체는 현재 순회에 끼어들지 않고 다음 고정 단계부터 갱신된다."
+        },
+        {
+          "line": 182,
+          "suffix": " // [한국어 해설] LateTick 후 삭제를 반영한 다음 세대 핸들을 다시 해석하여 이미 지운 객체를 그리지 않는다."
+        }
+      ]
+    },
+    {
+      "original": "shared/dx9-impl-05a/tests.cpp",
+      "annotated": "shared/dx9-impl-05a-ko/tests.cpp",
+      "original_sha256": "163c361ff6cf413eccacc98e20d3dcda5ecf12ec53e8c91d8da4dd5966223d05",
+      "annotated_sha256": "3c9ccbf0231d39c4fb57d4c8b5e1c15c4f271ba0a994fb36e58f6da1f193d4e8",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 10,
+          "suffix": " // [한국어 해설] 테스트 배우는 갱신·렌더 이벤트와 파괴 횟수를 관찰한다."
+        },
+        {
+          "line": 25,
+          "suffix": " // [한국어 해설] 갱신 중 자식을 생성하고 자신을 삭제하여 지연 반영 계약을 검사한다."
+        },
+        {
+          "line": 46,
+          "suffix": " // [한국어 해설] 고정 갱신 중 장면을 예약할 때 이전 장면의 LateTick/Render가 중단되는지 확인한다."
+        },
+        {
+          "line": 60,
+          "suffix": " // [한국어 해설] __LINE__ 진단을 보존하려고 이 파일은 새 줄 대신 줄 끝 한국어 주석만 추가했다."
+        }
+      ]
+    }
+  ]
+}

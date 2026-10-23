@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "method": "Same-line Korean comment suffixes preserve physical line numbers, including assert and __LINE__ diagnostics. Remove recorded suffixes to reconstruct exact original bytes.",
+  "files": [
+    {
+      "original": "shared/dx9-impl-07b/CMakeLists.txt",
+      "annotated": "shared/dx9-impl-07b-ko/CMakeLists.txt",
+      "original_sha256": "670120c0fb3c9c1c7d58be84b3a45565feed0d783d57a3963cda74e941791380",
+      "annotated_sha256": "670120c0fb3c9c1c7d58be84b3a45565feed0d783d57a3963cda74e941791380",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": []
+    },
+    {
+      "original": "shared/dx9-impl-07b/main.cpp",
+      "annotated": "shared/dx9-impl-07b-ko/main.cpp",
+      "original_sha256": "12ef5eacc19888c27fe23033c15a3947ac3de099ad561813f26c9f586ada9675",
+      "annotated_sha256": "7a5bc497d4cec94e68ea6cae35907826ebae4944afeaeb9c3e9e1f184840b8f0",
+      "inserted_comment_lines": [],
+      "appended_comment_segments": [
+        {
+          "line": 28,
+          "suffix": " // [한국어 해설] 뷰포트 오프셋과 화면 y 반전을 반영해 near에서 far까지 유한 구간 광선을 만든다."
+        },
+        {
+          "line": 50,
+          "suffix": " // [한국어 해설] 양면 삼각형 교차다. 평행/퇴화·바깥 무게중심·광선 구간 밖 결과를 거부한다."
+        },
+        {
+          "line": 84,
+          "suffix": " // [한국어 해설] 부분 피벗 가우스-조던 역행렬이다. 특이행렬과 비유한 값을 거부한다."
+        },
+        {
+          "line": 108,
+          "suffix": " // [한국어 해설] 방향은 벡터로 역변환하되 재정규화하지 않는다. 그래야 t가 원래 월드 거리 매개변수로 유지된다."
+        },
+        {
+          "line": 115,
+          "suffix": " // [한국어 해설] b→c 대각선의 두 삼각형 높이를 보간한다. 사각 셀의 bilinear 보간과 다른 표면이다."
+        },
+        {
+          "line": 134,
+          "suffix": " // [한국어 해설] 화면광선·교차·비균일 변환·지형 경계와 잘못된 입력을 CPU에서 검사한다."
+        }
+      ]
+    }
+  ]
+}

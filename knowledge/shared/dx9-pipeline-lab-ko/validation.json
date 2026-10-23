@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-23",
+  "environment": "Cloud Linux; g++ (Debian 14.2.0-19) 14.2.0",
+  "status": "portable_direct_compile_and_execution_passed",
+  "compiler_flags": [
+    "-std=c++20",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wshadow",
+    "-Werror"
+  ],
+  "program_checks": {
+    "vertex_input": 22,
+    "transform_clip": 79,
+    "raster_uv": 71,
+    "depth_blend": 19,
+    "pipeline_trace": 105
+  },
+  "pipeline_trace_covered_samples": 25,
+  "annotation_files": 9,
+  "inserted_comment_lines": 56,
+  "exact_original_reconstruction": "passed all 9 files including HLSL and unchanged CMake",
+  "gcc_preprocessor_identity": "passed all five portable programs (-E -P)",
+  "cmake_ctest": "not run: cmake and ctest unavailable in this cloud environment",
+  "windows_msvc_fxc_hlsl_gpu": "not compiled or run",
+  "sanitizers": "not run in this annotation validation",
+  "scope": "comment-only derivative; immutable hashes in annotation-manifest.json; no user-computer access"
+}

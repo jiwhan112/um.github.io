@@ -20,23 +20,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "원본 Notion 본문을 GitHub Pages로 이전해 보존했습니다. 실제 GPU/Direct3D 실행 결과가 아닙니다. "
-                },
-                {
-                  "text": "원본 Notion",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f408105948ddf79d5139bb1"
-                },
-                {
-                  "text": " · 공통 DX9 CPU 실습 파일 전체 ZIP은 아직 확보되지 않았으며 Mermaid/수식은 원본 코드로 제공합니다."
-                }
-              ]
+              "text": "이 교재는 보존한 Notion 원문과 CPU 학습 소스를 바탕으로 개념→시각 관계→손으로 추적→검증 경계 순서로 재구성했습니다. 본문의 그림은 직접 제작한 설명도이며 GPU 캡처가 아닙니다. CPU C++20 모델과 실제 D3D9 실행을 구분합니다."
             }
           ]
         },
@@ -277,6 +264,12 @@
       "title": "3. 삼각형 한 개를 따라갑니다",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/dx9-pipeline-05/assets/trace-one-sample.svg",
+          "alt": "8×8 뷰포트의 삼각형과 중심 샘플의 수치를 그린 개념도.25개 포함과105회 검사는 보존 CPU 코드의 관찰이며 GPU 화면이 아닙니다.",
+          "caption": "8×8 뷰포트의 삼각형과 중심 샘플의 수치를 그린 개념도.25개 포함과105회 검사는 보존 CPU 코드의 관찰이며 GPU 화면이 아닙니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -652,7 +645,7 @@
     {
       "id": "part-5",
       "title": "5. 실행 방법",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -698,10 +691,155 @@
       ]
     },
     {
+      "id": "part-8",
+      "title": "8. 이해 확인",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "이 CPU 모델에서 좌표가 맞으면 실제 게임의 행렬도 맞다고 확정할 수 있을까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "확정할 수 없습니다. GPU에 전달한 float 데이터, 전치 여부, 셰이더 mul 방향, 활성 셰이더와 상수 레지스터까지 같은 계약인지 확인해야 합니다. CPU 모델은 기대값을 만드는 기준이며 전송 경로 검증을 대신하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "통합 예제는 왜 텍스처 파일이나 복잡한 모델을 읽지 않을까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "입력·변환·보간·출력의 원인을 분리하기 위해서입니다. 파일 디코딩이나 자원 생성 오류가 섞이면 수식이 맞는지 확인하기 어렵습니다. 먼저 이 작은 모델의 기대값을 확인하고 다음 DX9 구현 단계에서 실제 자원과 연결합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "25샘플에서105회 검사는 어떻게 나오는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "샘플마다4회로100회, 클립정점수1회·총포함수1회·중심UV2회·방향부호1회로5회를 더합니다. 독립 요구사항105개라는 뜻은 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "이 통합 예제가 임의 클립다각형을 렌더링하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "입력이 클립후3정점을 유지하는 사례에 특화되어 있습니다.4개이상 다각형을 삼각형으로 나누는 완성 렌더러는 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "최종색만 맞으면 이전 단계도 모두 맞았나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "우연히 같은 결과가 가능하므로 공간별 좌표,coverage,UV,깊이와 상태를 나눠 관찰합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "검사기 무진단이 모든 GPU의 정확성인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "CPU 입력과 해당 검사 범위의 결과입니다.실기기 정밀도·지원능력·전송경로·성능·플랫폼은 별도입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guided-practice",
+      "title": "실패 경계를 한 단계씩 좁히기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "pipeline_trace.cpp에서 중심 (4,4)의 가중치·UV·깊이와 각 샘플의 output 초기화를 찾으세요. 이 프로그램은 실제 프레임버퍼의 연속 드로우가 아니라 샘플별 독립 출력 검사입니다. 임의 상태를 여러 개 바꾸기 전에 입력 좌표 공간과 첫 실패 조건을 기록하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래는 기존 소스를 그대로 재현할 때의 명령입니다. 이번 본문 개편 중 CPU 실행을 반복하지 않았습니다. 전체 프로젝트를 내려받고 저장소 루트에서 실행하며 헤더·CMake를 함께 사용합니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S knowledge/shared/dx9-pipeline-lab -B build-dx9-study -DCMAKE_BUILD_TYPE=Debug\ncmake --build build-dx9-study\nctest --test-dir build-dx9-study -R \"^pipeline_trace$\" -V --output-on-failure"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 원본 pipeline_trace.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/dx9-pipeline-lab/src/pipeline_trace.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 실행 코드와 영어 검사명은 보존했습니다. 출처 탭에는 같은 실행 토큰을 유지한 한국어 주석본 전체와 다운로드 링크를 제공합니다. 검사 횟수가 늘어난 새 프로그램으로 세지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "part-6",
       "title": "6. 실제 검증 결과",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 표는 보존한 2026-10-13 원문 실행 요약입니다. 이번 교재 개편의 새 실행 결과가 아닙니다. 별도2026-10-19 GitHub CPU 재검증은 아래 출처에서 구별합니다. 원본이 말하는 logs/ZIP은 현재 그 ZIP바이트를 확보했다는 뜻이 아닙니다."
+            }
+          ]
+        },
         {
           "type": "table",
           "rows": [
@@ -811,7 +949,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "296회에는 반복문에서 샘플별로 검사한 횟수가 포함됩니다. 같은 검사를 세 구성에서 반복했으므로 독립된 888개 조건이라고 세지 않습니다. 별도의 컴파일 거부 예제는 없으며, 잘못된 입력에 대한 함수 거부를 실행 시 검사했습니다. 원시 로그는 ZIP의 logs 폴더에 있습니다. 기본 경고 옵션은 GCC/Clang의 "
+              "text": "296회에는 반복문에서 샘플별로 검사한 횟수가 포함됩니다. 같은 검사를 세 구성에서 반복했으므로 독립된 888개 조건이라고 세지 않습니다. 별도의 컴파일 거부 예제는 없으며, 잘못된 입력에 대한 함수 거부를 실행 시 검사했습니다. 원문은 당시 ZIP의 logs 폴더를 참조합니다. 해당 ZIP과 과거 로그 바이트는 현재 미확보이며 새 GitHub 원시 로그와 구별합니다. 기본 경고 옵션은 GCC/Clang의 "
             },
             {
               "text": "-Wall -Wextra -Wpedantic -Wconversion -Wshadow",
@@ -834,7 +972,7 @@
     {
       "id": "part-7",
       "title": "7. 이 테스트로 말할 수 없는 것",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "paragraph",
@@ -847,35 +985,129 @@
       ]
     },
     {
-      "id": "part-8",
-      "title": "8. 이해 확인",
-      "tab": "document",
+      "id": "full-source-refs",
+      "title": "전체 소스·CMake·재검증",
+      "tab": "sources",
       "blocks": [
         {
-          "type": "details",
-          "title": "이 CPU 모델에서 좌표가 맞으면 실제 게임의 행렬도 맞다고 확정할 수 있을까?",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "확정할 수 없습니다. GPU에 전달한 float 데이터, 전치 여부, 셰이더 mul 방향, 활성 셰이더와 상수 레지스터까지 같은 계약인지 확인해야 합니다. CPU 모델은 기대값을 만드는 기준이며 전송 경로 검증을 대신하지 않습니다."
-                }
-              ]
+              "text": "원본12개 파일은 보존된 Markdown에서 복원했습니다. 소스·CPU 실행·웹 표시·GPU 실행은 서로 다른 검증 단계입니다. 원본 ZIP 바이너리는 미확보이며 새 그림을 실제 GPU 결과로 제시하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 실습 프로젝트 · CMake · 코드 모음 열기",
+              "kind": "link",
+              "href": "/knowledge/dx9-pipeline-lab/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "src/pipeline_trace.cpp — GitHub 원본 코드",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/src/pipeline_trace.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "examples/texture_sm3.hlsl — GitHub 원본 코드",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/examples/texture_sm3.hlsl"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 무결성 및 2026-10-19 GitHub CPU 재검증",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본은 설명 주석만 추가한 별도 학습용 파일입니다. 원본은 그대로 보존하며, 공통 헤더와 소스 폴더 구조를 함께 받아야 빌드할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 주석본 구성·빌드 안내",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 공통 계산 헤더",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/include/pipeline.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 검사 헤더",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/include/check.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 전체 pipeline_trace.cpp",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/src/pipeline_trace.cpp"
             }
           ]
         },
         {
           "type": "details",
-          "title": "통합 예제는 왜 텍스처 파일이나 복잡한 모델을 읽지 않을까?",
           "blocks": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "입력·변환·보간·출력의 원인을 분리하기 위해서입니다. 파일 디코딩이나 자원 생성 오류가 섞이면 수식이 맞는지 확인하기 어렵습니다. 먼저 이 작은 모델의 기대값을 확인하고 다음 DX9 구현 단계에서 실제 자원과 연결합니다."
-                }
-              ]
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"pipeline.hpp\"\n#include \"check.hpp\"\n\n// [한국어 해설] 8×8 뷰포트의 한 삼각형을 CPU로 단계별 추적한다. 실제 D3D9 드로콜이나 GPU 픽셀 일치 검사가 아니다.\nint main() {\n    return Run(\"pipeline_trace\", [](Checks& c) {\n        using namespace pipeline;\n        // This triangle is entirely inside the six clip planes. Clipping that\n        // creates a polygon is tested separately in transform_clip.cpp.\n        const std::array<Vertex, 3> input{{\n            {{-0.8, 0.8, 0.4, 1}, {0, 0}},\n            {{0.8, 0.8, 0.4, 1}, {1, 0}},\n            {{0, -0.8, 0.4, 1}, {0.5, 1}}\n        }};\n        const auto polygon = Clip(input);\n        c.That(polygon.size() == 3, \"triangle survives clipping\");\n\n// [한국어 해설] 클리핑 결과가 삼각형인 이 사례만 직접 연결한다. 일반 다각형의 삼각분할은 이 예제 범위 밖이다.\n        std::array<ScreenVertex, 3> screen{};\n        for (std::size_t i = 0; i < 3; ++i) {\n            screen[i] = Project(polygon[i], {0, 0, 8, 8, 0, 1});\n        }\n        const std::array<Vec2, 3> xy{screen[0].p, screen[1].p, screen[2].p};\n        int covered = 0;\n        for (int y = 0; y < 8; ++y) {\n            for (int x = 0; x < 8; ++x) {\n                const Vec2 point{static_cast<double>(x), static_cast<double>(y)};\n                if (!Covers(xy, point)) {\n                    continue;\n                }\n                ++covered;\n// [한국어 해설] 덮인 샘플만 화면 가중치→원근 UV→선형 깊이→출력 단계로 보낸다.\n                const auto weights = Barycentric(xy, point);\n                c.That(weights.has_value(), \"sample barycentric\");\n                const auto uv = PerspectiveUV(screen, *weights);\n                const double depth = AffineDepth(screen, *weights);\n\n                // An independent target sample, initially black with depth 1.\n// [한국어 해설] 샘플마다 독립적인 초기 타깃이다. 프레임버퍼 전체를 저장하는 렌더러는 아니다.\n                Pixel output{{0, 0, 0, 1}, 1};\n                c.That(Fragment(output, {uv.x, uv.y, 0, 1}, depth, {}),\n                       \"fragment passes output stage\");\n                c.That(uv.x >= -1e-12 && uv.x <= 1 + 1e-12 &&\n                       uv.y >= -1e-12 && uv.y <= 1 + 1e-12,\n                       \"interpolated uv in range\");\n                c.Near(output.depth, 0.4, \"constant depth across triangle\");\n            }\n        }\n        c.That(covered == 25, \"25 covered samples\");\n        const auto center_weights = Barycentric(xy, {4, 4});\n        if (!center_weights) {\n            throw std::runtime_error(\"center has no barycentric coordinates\");\n        }\n        const auto center_uv = PerspectiveUV(screen, *center_weights);\n        c.Near(center_uv.x, 0.5, \"center u\");\n        c.Near(center_uv.y, 0.5, \"center v\");\n\n// [한국어 해설] 감김을 뒤집으면 유향 면적의 부호가 바뀐다. 실제 컬링 상태 설정은 별도 작업이다.\n        auto reversed = xy;\n        std::swap(reversed[1], reversed[2]);\n        c.That(Edge(xy[0], xy[1], xy[2]) ==\n                   -Edge(reversed[0], reversed[1], reversed[2]),\n               \"culling diagnostic\");\n        std::cout << \"8x8 viewport: covered samples=\" << covered\n                  << \", sample (4,4): uv=(0.5,0.5), z=0.4\\n\";\n    });\n}\n\n"
+            }
+          ],
+          "title": "한국어 주석본 전체: src/pipeline_trace.cpp"
+        }
+      ]
+    },
+    {
+      "id": "verification-boundary",
+      "title": "실행 증거와 미검증 경계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래의 단원별 수치는 기존 원문·소스가 기록한 관찰입니다. 실행 입력과 함수 범위에 한정되며 반복되는 검사 호출을 독립 기능 수로 부풀리지 않습니다."
             }
           ]
         },
@@ -918,24 +1150,77 @@
               "text": ". 장치·자원·버퍼·드로우·상태 관리와 Lost Device/Reset을 파이프라인 개념에 연결합니다."
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-19 소스 복원 및 GitHub CPU 재검증 원장",
+              "kind": "link",
+              "href": "/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 GitHub CPU 실행 39213029058",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39213029058"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 기록은 GCC 14.2 C++20과 Clang 17 ASan/UBSan의 5/5 CPU CTest 통과입니다. 원문 296회는 루프 반복을 포함합니다. Windows/MSVC·D3D9·FXC/HLSL·GPU·성능·비트단위 하드웨어 일치는 미검증입니다. 이번 수정의 웹 표시·배포는 별도로 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 한국어 주석본은 별도 Cloud Linux GCC 14.2 직접 빌드·실행으로 5개 프로그램의 22/79/71/19/105회 검사를 확인했습니다. 원본 9개 파일의 바이트 복원 해시와 5개 프로그램의 전처리 결과 동일성도 확인했습니다. 이번 환경에는 CMake/CTest가 없어 실행하지 않았습니다. sanitizer·Windows/MSVC·FXC/HLSL·GPU도 이번 검증에 포함하지 않았습니다. 이는 아래의 2026-10-19 실행과 별개의 증거입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "한국어 주석본 검증 결과",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "파일별 원본 복원 해시 명세",
+              "href": "/knowledge/shared/dx9-pipeline-lab-ko/annotation-manifest.json"
+            }
+          ]
         }
       ]
     },
     {
-      "id": "full-source-refs",
-      "title": "전체 소스·CMake·재검증",
-      "tab": "document",
+      "id": "source-history",
+      "title": "원문·변경기록",
+      "tab": "history",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "원문 본문은 그대로 보존하고, 이 단원과 직접 연결된 전체 실습 코드도 ATLAS NOTE에서 열 수 있도록 연결했습니다. Linux GCC/Clang CPU 모델은 검증했지만 Windows/MSVC·Direct3D/GPU·HLSL 실기기 실행은 별도 미검증입니다."
-                }
-              ]
+              "text": "Notion 원본",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f8a99703f408105948ddf79d5139bb1"
             }
           ]
         },
@@ -943,9 +1228,9 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "전체 실습 프로젝트 · CMake · 코드 모음 열기",
+              "text": "수정하지 않은 원본 전체 Markdown",
               "kind": "link",
-              "href": "/knowledge/dx9-pipeline-lab/"
+              "href": "/knowledge/dx9-pipeline-05/source-notion.md"
             }
           ]
         },
@@ -953,9 +1238,9 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "src/pipeline_trace.cpp — GitHub 원본 코드",
+              "text": "기존 이관 기록",
               "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/src/pipeline_trace.cpp"
+              "href": "/knowledge/MIGRATION_DX9_PIPELINE_20261019.md"
             }
           ]
         },
@@ -963,19 +1248,7 @@
           "type": "paragraph",
           "content": [
             {
-              "text": "examples/texture_sm3.hlsl — GitHub 원본 코드",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-pipeline-lab/examples/texture_sm3.hlsl"
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "원본 무결성 및 2026-10-19 GitHub CPU 재검증",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+              "text": "2026-10-23 · 기존 수식·코드·기술 전제를 보존하고 긴 단락을 나누었습니다. 직접 만든 관계도, 한국어 추적 과제, 접힌 복습, 네 탭과 한국어 주석본을 추가했습니다. 원본 소스·원문 파일·기존 CPU 로그는 수정하지 않았습니다. 별도 주석본 검증과 역사적 CPU 기록을 구분하며 실제 GPU 실행을 주장하지 않습니다."
             }
           ]
         }
