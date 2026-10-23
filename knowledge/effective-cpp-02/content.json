@@ -1,0 +1,1120 @@
+{
+  "title": "Effective C++ 02 · 자원·API·복사·swap",
+  "subtitle": "항목 13–25 · 소유권을 표현하고 잘못된 호출과 실패의 영향을 줄입니다",
+  "sections": [
+    {
+      "id": "start",
+      "title": "개념 지도 · 자원·API·복사·swap",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 교재는 Notion의 주제 지도를 바탕으로 새로 쓴 독립 한국어 해설입니다. 도서 본문을 재현하지 않으며, 역사적 조언의 목적과 C++20에서의 적용 조건을 나누어 읽습니다. C 기초의 메모리·포인터·함수 지식을 선수로 하고 C++ 클래스·참조·예외의 기본 문법을 함께 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 순서: 본문에서 계약을 정리하고 → 실습에서 실제 소유·실패 경로를 추적하고 → 출처·검증에서 실행한 범위를 확인합니다. 편집기의 코드 저장은 컴파일 실행이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/effective-cpp-02/assets/owner-observer.svg",
+          "alt": "같은 소유 상태에서 get, 이동 생성, release 중 하나를 선택한다. get은 비소유 관찰이며 이동과 release는 서로 이어지는 단계가 아니다.",
+          "caption": "같은 소유 상태에서 선택하는 대안 연산. get은 비소유 관찰이고 이동 생성과 release는 책임을 넘기는 방식이 다릅니다."
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/effective-cpp-02/assets/candidate-state.svg",
+          "alt": "기존 State는 아직 유지에서 독립 후보 준비·검증 후 실패하면 기존 State 보존, 성공하면 이전 State 정리. 두 결과 사이에는 화살표가 없습니다.",
+          "caption": "단일 스레드의 소유 메모리 상태만 다룹니다. 후보 준비에서 실패/성공으로 갈라집니다."
+        }
+      ]
+    },
+    {
+      "id": "item-01",
+      "title": "13 · 자원을 소유 객체에 연결",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "획득한 자원을 소멸 시 정리하는 객체에 즉시 연결하면 정상 반환뿐 아니라 예외 경로도 같은 수명 규칙으로 처리할 수 있다. 메모리뿐 아니라 파일·잠금에도 RAII의 질문을 적용할 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 팩은 메모리 소유 실험이다. 같은 원리를 설명한다고 실제 파일 시스템이나 잠금 경로까지 검증된 것은 아니다. raw 포인터를 받았을 때 관찰인지 소유권 인수인지 먼저 확인한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-02",
+      "title": "14 · 자원 관리 객체의 복사 정책",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "unique_ptr는 독점 소유를 이동으로 전달하고 복사는 금지한다. shared_ptr 복사는 동일 객체의 소유 수를 늘리며 weak_ptr는 소유 수를 늘리지 않는 관찰자다. 독립 값이 필요하면 별도 깊은 복사 정책이 필요하다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "shared_ptr를 썼다고 대상 객체의 멤버 동시 수정이 안전하지는 않다. 순환 소유는 소멸을 막을 수 있다. transaction.cpp의 weak_ptr 예제는 순차 실행에서 lock과 소멸 후 상태만 관찰한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-03",
+      "title": "15 · get, release, move를 구분",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "get은 소유를 유지한 채 주소를 관찰한다. release는 소유 객체에서 주소를 분리해 반환하므로 이후 해제 책임을 호출자가 이어받아야 한다. std::move는 소유권을 직접 옮기는 함수가 아니라 이동을 선택할 수 있는 표현식 변환이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "get 결과를 새 독점 소유자로 감싸면 중복 해제 위험이 있다. release 뒤 책임을 인계하지 않으면 누수다. 사용 중인 API가 borrow인지 adopt인지 이름·문서·타입으로 드러내자."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-04",
+      "title": "16 · 획득과 반환은 같은 계약의 한 쌍",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "new T는 delete, new T[]는 delete[]와 짝을 이룬다. malloc 계열은 free, 사용자 정의 자원은 그 자원이 요구하는 해제 함수를 사용한다. 스마트 포인터도 맞는 대상 형식이나 deleter가 필요하다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주소가 같은 비트 모양이라는 이유로 해제 방식을 바꾸면 안 된다. 이 장의 소유 예제는 범용 allocator 구현 검증이 아니다. 위치 지정 생성의 실패 정리와 정상 객체 정리는 06에서 따로 살핀다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-05",
+      "title": "17 · 인수 평가와 자원 획득의 역사적 맥락",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예전 언어 규칙의 평가 순서 문제를 현재 코드에 그대로 설명하면 오류가 된다. C++17 이후 서로 다른 매개변수 초기화는 서로에 대해 indeterminately sequenced이지만 왼쪽부터라는 순서는 보장하지 않는다. make_unique는 소유 객체를 함께 만드는 의도를 명확히 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Consume(make_unique<Resource>(), FailPriority())에서 Resource가 생성되기 전에 다른 인수가 실패할 수도 있다. 생성됐다면 소유자가 정리한다. alive가 0이라는 관찰은 두 순서를 모두 실행해 봤다는 증거가 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-06",
+      "title": "18 · 실수하기 어려운 인터페이스",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Seconds의 explicit 생성자는 double에서의 암시적 변환을 막는다. 생성자 내부의 범위 검사는 별도 역할이다. 단위를 타입에 담으면 의미 없는 조합을 컴파일 단계에서 줄일 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "explicit은 직접 생성 자체를 금지하지 않고 숫자의 유효성도 자동 검사하지 않는다. 이 소스는 음수·NaN·3600 초과를 거부하도록 작성됐지만 실제 실행 입력은 0.016과 -1.0이다. 모든 경계가 실행됐다고 쓰지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-07",
+      "title": "19 · 타입을 만들기 전 계약표",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "생성 가능한 상태, 복사·이동 의미, 비교 의미, 허용 변환, 실패 동작, 수명 의존성을 먼저 정한다. 구현 멤버를 먼저 고르면 그 표현이 우연히 외부 계약이 되기 쉽다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예를 들어 Label::View는 빌린 문자열이고 Copy는 소유 결과다. 호출자가 장기 저장해야 한다면 어떤 함수를 골라야 하는지 이름과 타입이 도와야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-08",
+      "title": "20 · const 참조는 만능 성능 규칙이 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "큰 객체를 읽기만 할 때 const T&는 복사를 피하는 유용한 선택이다. 작은 값은 값 전달이 단순하고, 함수가 값을 보관해야 한다면 값 인자와 이동이 더 자연스러울 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "참조는 호출자 수명과 별칭 관계를 만든다. 값·참조의 비용은 타입과 호출 맥락을 포함해 측정해야 한다. 이 실습은 실행 시간 벤치마크가 아니므로 더 빠르다고 결론 내리지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-09",
+      "title": "21 · 새 결과는 값, 빌린 결과는 유효한 수명",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "함수 안에서 새로 만든 결과는 값으로 반환한다. 지역 객체의 참조를 반환하면 함수 종료 뒤 사라진 객체를 가리킨다. 기존 객체의 참조를 돌려주려면 소유자가 얼마나 오래 살아야 하는지를 계약으로 남긴다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++17의 특정 prvalue 반환 보장과 이름 있는 지역 변수의 NRVO는 다르다. std::move를 반환에 붙인다고 항상 좋아지지 않는다. Label의 Copy는 결과 문자열이 자체 소유하므로 임시 Label 소멸 뒤에도 사용할 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-10",
+      "title": "22 · private은 불변식을 지킬 변경 통로",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부에서 값을 아무렇게나 바꾸면 불변식이 깨지는 타입은 상태를 감추고 유효한 연산만 제공한다. getter와 setter를 모든 필드에 기계적으로 만드는 것보다 타입의 의미에 맞는 연산이 중요하다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "모든 데이터 묶음이 캡슐화 클래스일 필요는 없다. 독립적인 공개 데이터로 충분한 구조체와 검증된 상태 전이가 필요한 타입을 구분한다. 접근 제어는 보안 경계가 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-11",
+      "title": "23 · 편의 함수가 꼭 멤버일 필요는 없다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 인터페이스만으로 구현 가능한 편의 연산은 비멤버로 두면 핵심 클래스가 알아야 할 책임을 줄일 수 있다. 내부 상태를 직접 만질 권한이 꼭 필요한지 먼저 묻는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "비멤버라고 자동으로 더 좋은 설계는 아니다. 연산의 발견 가능성, 네임스페이스, 오버로드 탐색과 일관성을 함께 고려한다. friend를 선언하면 접근 권한을 부여한 별도 비멤버라는 점도 구분한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-12",
+      "title": "24 · 대칭 연산과 변환",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Counter의 비멤버 operator+는 Counter가 포함된 양쪽 방향의 표현식에서 int 변환을 사용할 수 있다. +=를 재사용하면 핵심 변경 연산과 새 결과 생성 연산을 분리할 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "3+4처럼 Counter가 하나도 없는 표현식까지 hidden friend가 발견되는 것은 아니다. 예제는 작은 정수만 다루며 덧셈 오버플로 안전성을 검증하지 않는다. 모든 변환을 허용하기보다 의미 있는 변환만 남긴다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-13",
+      "title": "25 · swap의 발견과 실패 계약",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "일반 코드에서는 using std::swap; swap(a,b);로 표준 fallback과 ADL로 찾는 사용자 정의 교체를 함께 고려한다. 후보를 준비한 뒤 교체로 확정하려면 그 교체가 정말 실패하지 않는지 알아야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "무조건 noexcept를 적기보다 멤버와 allocator 계약을 확인한다. 교체가 실패하면 앞서 기대한 강한 예외 보장이 무너질 수 있다. Pimpl 예제는 소유 포인터 교체를 사용하지만 모든 컨테이너 조합에 같은 결론을 확대하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "flow",
+      "title": "경계를 따라 읽는 흐름",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[자원 획득] --> B[소유 객체에 연결]\n B --> C{동작 결과}\n C -->|정상| D[범위 종료]\n C -->|예외| E[스택 풀기]\n D --> F[소유자 정리]\n E --> F"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "도식은 개념 경계를 설명합니다. 실제 컴파일·링크 실패 또는 예외 경로는 아래 보존 소스와 로그에서 별도로 확인합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lab",
+      "title": "실습 · 빌드, 관찰, 오류 분리",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음은 재현용 명령이며 이번 집필에서 새로 실행한 결과가 아닙니다. 저장소 루트에서 CMake와 C++20 지원 컴파일러를 사용합니다. 다중 구성에서는 Build의 --config Debug와 CTest의 -C Debug를 맞춥니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S knowledge/shared/cpp-advanced-lab -B /tmp/atlas-effective -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=20\ncmake --build /tmp/atlas-effective --config Debug --target ownership_ko transaction_ko interfaces_ko pimpl_ko\nctest --test-dir /tmp/atlas-effective -C Debug -R '^(ownership_ko|transaction_ko|interfaces_ko|pimpl_ko)$' --output-on-failure\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 팩을 그대로 사용합니다. 같은 프로그램을 여러 단원에서 다시 읽어도 독립 검사 수가 증가하지 않습니다. Pimpl은 헤더·구현·main이 함께 필요하고 모든 실행 파일은 check.hpp를 사용합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공유 빌드 설정과 대상 이름",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습 원장 · 정상 출력과 검증 한계",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/README.md"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "프로그램"
+                  }
+                ],
+                [
+                  {
+                    "text": "보존된 정상 경로 출력"
+                  }
+                ],
+                [
+                  {
+                    "text": "따로 확인할 제한"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "ownership"
+                  }
+                ],
+                [
+                  {
+                    "text": "PASS ownership: 13 checks"
+                  }
+                ],
+                [
+                  {
+                    "text": "호출 횟수이며 완전한 속성 증명이 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "transaction"
+                  }
+                ],
+                [
+                  {
+                    "text": "PASS transaction: 8 checks"
+                  }
+                ],
+                [
+                  {
+                    "text": "호출 횟수이며 완전한 속성 증명이 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "interfaces"
+                  }
+                ],
+                [
+                  {
+                    "text": "PASS interfaces: 7 checks"
+                  }
+                ],
+                [
+                  {
+                    "text": "호출 횟수이며 완전한 속성 증명이 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "pimpl"
+                  }
+                ],
+                [
+                  {
+                    "text": "PASS pimpl: 6 checks"
+                  }
+                ],
+                [
+                  {
+                    "text": "호출 횟수이며 완전한 속성 증명이 아님"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "디버거에서 후보 생성 직전, 예외 발생 위치, 교체 직전·직후, 소멸자에 중단점을 둡니다. 예상 상태를 먼저 적고 실제 경로를 따라갑니다. 실패를 직접 주입하는 분기는 시스템 메모리 고갈과 다르며, 실행하지 않은 분기가 통과했다고 해석하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "complete-code",
+      "title": "전체 코드 · 한국어 주석판과 다운로드",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 전체 텍스트는 공유 한국어 주석판 파일을 바이트 내용 그대로 표시합니다. 도서 코드를 옮긴 것이 아니라 보존된 독립 실습 팩입니다. 원본과 주석판의 동작 동일성은 토큰·전처리 비교와 기존 실행 증거로 확인하며, 원본 파일은 바꾸지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "check.hpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/check.hpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "check.hpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#ifndef STUDY_CHECK_HPP\n#define STUDY_CHECK_HPP\n#include <exception>\n#include <functional>\n#include <iostream>\n#include <stdexcept>\n#include <utility>\n\n// 한 프로그램에서 실제로 확인한 조건의 수를 센다.\n// 이 카운터는 경로 커버리지나 독립 기능 수를 측정하지 않는다.\nclass Checks {\n    int count_{};\npublic:\n    void Expect(bool condition, const char* label) {\n        ++count_;\n        if (!condition) throw std::runtime_error(label);\n    }\n    template<class E, class F> void Throws(F&& f, const char* label) {\n        bool matched = false;\n        try { std::invoke(std::forward<F>(f)); }\n        catch (const E&) { matched = true; }\n        // 예외를 예상하는 실험도 Expect를 한 번 호출한다.\n        // E와 무관한 예외는 여기서 잡지 않고 바깥 실행 경계로 전달한다.\n        Expect(matched, label);\n    }\n    int Count() const noexcept { return count_; }\n};\n\ntemplate<class F> int Run(const char* name, F&& test) {\n    try {\n        Checks checks;\n        std::invoke(std::forward<F>(test), checks);\n        std::cout << \"PASS \" << name << \": \" << checks.Count() << \" checks\\n\";\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << \"FAIL \" << name << \": \" << e.what() << '\\n';\n        return 1;\n    }\n}\n#endif\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ownership.cpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/ownership.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "ownership.cpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"check.hpp\"\n#include <algorithm>\n#include <cstddef>\n#include <initializer_list>\n#include <memory>\n#include <new>\n#include <type_traits>\n#include <vector>\n\n// 실제 메모리를 고갈시키지 않고 다음 Copy 호출의 실패 경로를 선택한다.\nstruct FailPoint { inline static bool next_copy = false; };\n\n// 불변식: size가 0일 때에만 data가 null이다. int 전용 학습 구현이다.\n// 실제 프로젝트에서는 먼저 std::vector 같은 소유 타입을 선택한다.\nclass IntBuffer {\n    std::size_t size_{};\n    std::unique_ptr<int[]> data_;\n\n    static std::unique_ptr<int[]> Copy(const IntBuffer& source) {\n        // 플래그를 소비한 뒤 예외를 던진다. 대상 버퍼의 보장과 이 실험 플래그는 별개다.\n        if (std::exchange(FailPoint::next_copy, false)) throw std::bad_alloc{};\n        if (source.size_ == 0) return {};\n        auto result = std::make_unique<int[]>(source.size_);\n        std::copy_n(source.data_.get(), source.size_, result.get());\n        return result;\n    }\n\npublic:\n    IntBuffer() = default;\n    explicit IntBuffer(std::initializer_list<int> values)\n        : size_(values.size()), data_(size_ ? std::make_unique<int[]>(size_) : nullptr) {\n        if (size_ != 0) std::copy(values.begin(), values.end(), data_.get());\n    }\n    ~IntBuffer() = default;\n\n    // 서로 다른 배열을 소유하도록 깊은 복사한다.\n    IntBuffer(const IntBuffer& other) : size_(other.size_), data_(Copy(other)) {}\n    IntBuffer& operator=(const IntBuffer& other) {\n        if (this != &other) {\n            // 준비가 실패하면 이 객체는 그대로다. 성공한 임시값과만 상태를 교체한다.\n            IntBuffer temporary(other);\n            Swap(temporary);\n        }\n        return *this;\n    }\n\n    IntBuffer(IntBuffer&& other) noexcept\n        : size_(std::exchange(other.size_, 0)), data_(std::move(other.data_)) {}\n    IntBuffer& operator=(IntBuffer&& other) noexcept {\n        // 이 타입은 자기 이동에서도 기존 값을 유지하도록 직접 계약을 정했다.\n        if (this != &other) {\n            data_ = std::move(other.data_);\n            size_ = std::exchange(other.size_, 0);\n        }\n        return *this;\n    }\n\n    void Swap(IntBuffer& other) noexcept {\n        using std::swap;\n        swap(size_, other.size_);\n        data_.swap(other.data_);\n    }\n    friend void swap(IntBuffer& a, IntBuffer& b) noexcept { a.Swap(b); }\n    std::size_t Size() const noexcept { return size_; }\n    bool Valid() const noexcept { return (size_ == 0) == (data_ == nullptr); }\n    int& At(std::size_t index) {\n        if (index >= size_) throw std::out_of_range(\"index\");\n        return data_[index];\n    }\n    const int& At(std::size_t index) const {\n        if (index >= size_) throw std::out_of_range(\"index\");\n        return data_[index];\n    }\n};\n\n// vector가 소유권을 관리하므로 직접 복사·이동·소멸 코드를 작성하지 않는다.\nstruct RuleZero { std::vector<int> values; };\n\nstruct CopyOnly {\n    int* copies;\n    explicit CopyOnly(int& value) : copies(&value) {}\n    CopyOnly(const CopyOnly& other) : copies(other.copies) { ++*copies; }\n};\n\nstruct Immovable {\n    Immovable() = default;\n    Immovable(const Immovable&) = delete;\n    Immovable(Immovable&&) = delete;\n};\n\n// C++17 이후 같은 타입 prvalue로 결과 객체를 직접 만든다. 이름 붙은 지역값 NRVO와 다르다.\nImmovable Make() { return Immovable{}; }\nstatic_assert(std::is_nothrow_move_constructible_v<IntBuffer>);\nstatic_assert(std::is_nothrow_move_assignable_v<IntBuffer>);\n\nint main() {\n    return Run(\"ownership\", [](Checks& c) {\n        RuleZero a{{1,2,3}};\n        auto b = a;\n        b.values[0] = 9;\n        c.Expect(a.values[0] == 1, \"rule zero copies values\");\n\n        IntBuffer source({10,20,30});\n        IntBuffer copy(source);\n        copy.At(0) = 77;\n        c.Expect(source.At(0) == 10 && copy.At(0) == 77, \"deep copy\");\n\n        IntBuffer target({5});\n        FailPoint::next_copy = true;\n        c.Throws<std::bad_alloc>([&] { target = source; }, \"injected copy failure\");\n        c.Expect(target.Size() == 1 && target.At(0) == 5 && target.Valid(), \"strong guarantee\");\n        target = source;\n        c.Expect(target.At(2) == 30, \"copy assignment\");\n        IntBuffer& alias = target;\n        target = alias;\n        c.Expect(target.At(0) == 10, \"self copy\");\n\n        IntBuffer moved(std::move(target));\n        // 비어 있는 이동 원본은 이 IntBuffer의 명시적 계약이며 모든 타입의 공통 결과가 아니다.\n        c.Expect(target.Size() == 0 && target.Valid(), \"move source\");\n        c.Expect(moved.At(2) == 30 && moved.Valid(), \"move destination\");\n        IntBuffer& moved_alias = moved;\n        moved = std::move(moved_alias);\n        c.Expect(moved.At(2) == 30 && moved.Valid(), \"self move contract\");\n        IntBuffer empty;\n        empty = std::move(moved);\n        c.Expect(moved.Size() == 0 && empty.Size() == 3 && moved.Valid(), \"move assignment\");\n        c.Throws<std::out_of_range>([&] { (void)moved.At(0); }, \"moved source bounds\");\n\n        int copies{};\n        CopyOnly old(copies);\n        // std::move는 이동 생성자 호출을 강제하지 않는다. 여기서는 const& 복사 생성자가 선택된다.\n        CopyOnly copied(std::move(old));\n        (void)copied;\n        c.Expect(copies == 1, \"std::move can copy\");\n        auto elided = Make();\n        (void)elided;\n        // 삭제된 복사·이동으로도 위 선언이 컴파일되는 사실이 핵심 증거다.\n        // 이 Expect(true)는 원본 실행 카운터에 포함되며 추가 동작을 검증하지 않는다.\n        c.Expect(true, \"prvalue construction despite deleted copy and move\");\n    });\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "transaction.cpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/transaction.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "transaction.cpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"check.hpp\"\n#include <memory>\n#include <string>\n#include <vector>\n\nstruct State {\n    std::vector<int> inventory;\n    std::string scene;\n};\n\nclass GameState {\n    std::unique_ptr<State> state_ = std::make_unique<State>(State{{1,2},\"old\"});\npublic:\n    const State& Get() const noexcept { return *state_; }\n    void Transition(std::string scene, bool fail_validation = false) {\n        // 별도 후보에 변경을 준비한다. 실패 전에는 현재 소유 상태를 건드리지 않는다.\n        auto candidate = std::make_unique<State>(*state_);\n        candidate->inventory.push_back(3);\n        candidate->scene = std::move(scene);\n        if (fail_validation || candidate->scene.empty()) throw std::runtime_error(\"validation\");\n        // 준비·검증 뒤 noexcept인 소유권 교체를 한다. 이전 상태는 candidate가 정리한다.\n        // 파일·네트워크 롤백이나 스레드 사이의 원자적 공개를 구현한 것은 아니다.\n        state_.swap(candidate);\n    }\n};\n\nstruct Resource {\n    inline static int alive{};\n    Resource() { ++alive; }\n    ~Resource() { --alive; }\n};\nint FailPriority() { throw std::runtime_error(\"priority\"); }\nvoid Consume(std::unique_ptr<Resource>, int) {}\n\nint main() {\n    return Run(\"transaction\", [](Checks& c) {\n        GameState game;\n        c.Throws<std::runtime_error>([&] { game.Transition(\"new\", true); }, \"late failure\");\n        c.Expect(game.Get().scene == \"old\" && game.Get().inventory == std::vector<int>({1,2}), \"strong guarantee\");\n        game.Transition(\"new\");\n        c.Expect(game.Get().scene == \"new\" && game.Get().inventory.size() == 3, \"commit\");\n\n        // 인수 평가 순서는 고정하지 않는다. Resource가 생성되지 않을 수도 있다.\n        // 먼저 생성되었다면 unique_ptr 임시 객체가 예외 전파 중 자원을 정리한다.\n        c.Throws<std::runtime_error>([] { Consume(std::make_unique<Resource>(), FailPriority()); }, \"argument failure\");\n        c.Expect(Resource::alive == 0, \"RAII despite argument failure\");\n\n        auto owner = std::make_shared<Resource>();\n        std::weak_ptr<Resource> observer = owner;\n        // weak_ptr 자체는 소유 수를 늘리지 않는다. lock으로 얻은 shared_ptr은 소유한다.\n        c.Expect(!observer.expired() && observer.lock() != nullptr, \"weak lock\");\n        owner.reset();\n        c.Expect(observer.expired() && !observer.lock(), \"weak not owning\");\n        c.Expect(Resource::alive == 0, \"reclaimed\");\n    });\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "interfaces.cpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/interfaces.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "interfaces.cpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"check.hpp\"\n#include <string>\n#include <string_view>\n#include <type_traits>\n#include <vector>\n// 원본 동작을 보존하고 API 계약을 한국어로 설명한 주석판이다.\n// explicit은 double에서 Seconds로의 암시적 변환을 막고, 직접 생성은 허용한다.\n// 조건상 음수·NaN·3600 초과를 거부하지만 아래 실제 입력은 0.016과 -1.0뿐이다.\nclass Seconds {\n    double value_;\npublic:\n    explicit Seconds(double value) : value_(value) {\n        if (!(value >= 0.0) || value > 3600.0) throw std::invalid_argument(\"seconds\");\n    }\n    double Value() const noexcept { return value_; }\n};\n// 컴파일 시점 검사 한 개다. 런타임 7회와 별도로 집계한다.\nstatic_assert(!std::is_convertible_v<double, Seconds>);\n// View는 소유하지 않는 string_view다. 반환된 뷰의 수명은 Label 내부 문자열에 달려 있다.\n// 두 rvalue 오버로드 삭제로 임시 Label에서 View를 직접 얻는 호출을 막는다.\n// lvalue Label을 나중에 파괴하거나 문자열을 바꾸는 상황까지 자동으로 안전해지는 것은 아니다.\nclass Label {\n    std::string text_;\npublic:\n    explicit Label(std::string text) : text_(std::move(text)) {}\n    std::string_view View() const & noexcept { return text_; }\n    std::string_view View() && = delete;\n    std::string_view View() const && = delete;\n    // 소유 문자열을 값으로 반환하므로 임시 Label이 사라진 뒤에도 결과를 사용할 수 있다.\n    std::string Copy() const { return text_; }\n};\n// 아래 연산자는 작은 정수로만 실행한다. 산술 범위 검증은 이 실험의 목적이 아니다.\n// Small integers only: arithmetic-range validation is not this experiment's purpose.\nclass Counter {\n    int value_{};\npublic:\n    Counter(int value = 0) : value_(value) {}\n    int Value() const noexcept { return value_; }\n    Counter& operator+=(const Counter& rhs) { value_ += rhs.value_; return *this; }\n    // 왼쪽 피연산자는 값으로 복사하고 +=를 재사용한다.\n    // 비멤버 함수이므로 Counter가 포함된 표현식에서 양쪽 피연산자의 암시적 변환을 사용할 수 있다.\n    friend Counter operator+(Counter lhs, const Counter& rhs) { lhs += rhs; return lhs; }\n};\n// 각 Quantity<T>에 대응하는 비멤버 friend를 클래스 안에 정의한다.\n// 이 hidden friend는 Quantity가 인자로 등장할 때 ADL로 찾으며, int 인자의 Quantity 변환도 가능하다.\ntemplate<class T> class Quantity {\n    T value_;\npublic:\n    Quantity(T value) : value_(value) {}\n    T Value() const { return value_; }\n    friend Quantity operator+(Quantity a, Quantity b) { return Quantity(a.value_ + b.value_); }\n};\n// 정상 경로의 호출은 Expect 6회 + Throws 1회, 총 7회다.\nint main() { return Run(\"interfaces\", [](Checks& c) {\n    Seconds dt(0.016); c.Expect(dt.Value() == 0.016, \"explicit valid duration\");\n    c.Throws<std::invalid_argument>([] { Seconds invalid(-1.0); }, \"negative duration\");\n    // fixed는 iterator 객체가 const인 경우다. 위치는 못 바꾸지만 가리킨 int는 수정할 수 있다.\n    // readonly는 const_iterator이므로 원소를 수정할 수 없고, iterator 객체 자체는 이동할 수 있다.\n    std::vector<int> data{1,2}; const auto fixed = data.begin(); *fixed = 7;\n    auto readonly = data.cbegin(); ++readonly;\n    c.Expect(data.front() == 7 && *readonly == 2, \"const iterator vs const_iterator\");\n    Label label(\"player\"); c.Expect(label.View() == \"player\", \"borrow lvalue\");\n    // 임시 Label의 View 대신 소유한 Copy 결과를 받는다. 댕글링 뷰를 실제로 역참조하지 않는다.\n    const auto copy = Label(\"temporary\").Copy(); c.Expect(copy == \"temporary\", \"owned result\");\n    // 양쪽 방향을 작은 값으로 확인한다. signed overflow 같은 위험 입력은 실행하지 않는다.\n    Counter count(3); c.Expect((count+2).Value() == 5 && (2+count).Value() == 5, \"symmetric conversion\");\n    Quantity<int> q(4); c.Expect((q+3).Value() == 7 && (3+q).Value() == 7, \"hidden friend\");\n}); }\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "pimpl.hpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/pimpl.hpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "pimpl.hpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#ifndef STUDY_PIMPL_HPP\n#define STUDY_PIMPL_HPP\n#include <memory>\n#include <string>\n\n// 공개 선언은 Impl의 존재만 알리고, 구체적인 데이터 배치는 pimpl.cpp로 숨긴다.\n// 헤더 이용자가 Impl 정의 없이 Settings를 선언·사용하는 경계를 보여 준다.\n// 이 예제만으로 배포 라이브러리의 ABI 호환성까지 검증한 것은 아니다.\nclass Settings {\n    struct Impl;\n    // unique_ptr 멤버의 선언에는 불완전 타입을 사용할 수 있다.\n    // Impl의 삭제가 필요한 연산은 완전한 정의를 볼 수 있는 .cpp에 둔다.\n    std::unique_ptr<Impl> impl_;\npublic:\n    explicit Settings(std::string name);\n    // 이 헤더 안에서 = default로 정의하지 않고, Impl 정의 뒤에서 정의한다.\n    ~Settings();\n    Settings(Settings&&) noexcept;\n    Settings& operator=(Settings&&) noexcept;\n\n    // 소유 핸들만 복사하지 않고 별도 Impl을 만드는 값 복사 계약이다.\n    // unique_ptr 자체는 복사할 수 없으므로 구현에서 이 동작을 직접 정의한다.\n    Settings(const Settings&);\n    Settings& operator=(const Settings&);\n\n    // 새 Impl을 준비한 뒤 교체한다. 비어 있는 이동 후 객체도 다시 채울 수 있다.\n    void Rename(std::string name);\n    // 내부 문자열의 참조나 뷰가 아니라 소유하는 std::string 값을 반환한다.\n    // impl_가 없을 때는 logic_error를 던지는 계약을 구현에 둔다.\n    std::string Name() const;\n    bool Empty() const noexcept;\n    // ADL로 찾는 비멤버 swap은 두 소유 핸들만 교환한다.\n    friend void swap(Settings&, Settings&) noexcept;\n};\n#endif\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "pimpl.cpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/pimpl.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "pimpl.cpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"pimpl.hpp\"\n#include <stdexcept>\n#include <utility>\n\n// 실제 데이터 정의는 이 번역 단위에서만 보인다.\nstruct Settings::Impl { std::string name; };\n\nSettings::Settings(std::string name) : impl_(std::make_unique<Impl>(Impl{std::move(name)})) {}\n\n// 이 지점에서는 Impl이 완전하므로 unique_ptr의 삭제 동작을 구성할 수 있다.\nSettings::~Settings() = default;\n// 기본 이동은 unique_ptr의 소유권 이동이다. 정상적인 다른 객체로의 이동 뒤에는\n// 원본 핸들이 비게 된다. 테스트는 이동 생성 경로를 실행한다.\nSettings::Settings(Settings&&) noexcept = default;\nSettings& Settings::operator=(Settings&&) noexcept = default;\n\n// 원본이 차 있으면 별도 Impl과 문자열 값을 복사하고, 비었으면 비어 있게 복사한다.\n// 현재 정상 테스트가 확인하는 것은 차 있는 원본을 복사한 뒤 각 이름을 바꾸는 경로다.\nSettings::Settings(const Settings& other) : impl_(other.impl_ ? std::make_unique<Impl>(*other.impl_) : nullptr) {}\n\nSettings& Settings::operator=(const Settings& other) {\n    if (this != &other) {\n        // 후보 복사가 실패하면 아직 *this를 변경하지 않았다.\n        // 복사가 끝난 뒤 noexcept swap으로 교체하고, copy가 이전 상태를 정리한다.\n        // 이 구조의 강한 예외 보장을 설명하되, 해당 테스트에서 할당 실패를 주입하지는 않는다.\n        Settings copy(other);\n        swap(*this, copy);\n    }\n    return *this;\n}\n\nvoid Settings::Rename(std::string name) {\n    // 인자 준비와 후보 생성이 완료될 때까지 기존 impl_는 그대로다.\n    auto candidate = std::make_unique<Impl>(Impl{std::move(name)});\n    impl_.swap(candidate);\n    // candidate가 이전 Impl을 소유한 채 범위를 벗어나 정리한다.\n    // 파일·네트워크 부수 효과나 동시 접근을 다루는 트랜잭션은 아니다.\n}\n\nstd::string Settings::Name() const {\n    // 이동 후 비어 있는 상태를 유효한 상태로 인정하되, Name 접근은 명시적으로 거부한다.\n    if (!impl_) throw std::logic_error(\"empty moved-from settings\");\n    // 값 복사 반환이므로 호출자는 Settings와 별도의 문자열 수명을 갖는다.\n    return impl_->name;\n}\n\nbool Settings::Empty() const noexcept { return !impl_; }\n// Impl의 문자열을 하나씩 교환하지 않고, 두 소유 포인터를 교환한다.\nvoid swap(Settings& a, Settings& b) noexcept { a.impl_.swap(b.impl_); }\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "pimpl_main.cpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/pimpl_main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "pimpl_main.cpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"check.hpp\"\n#include \"pimpl.hpp\"\n#include <type_traits>\n\n// 실행 시 검사 여섯 회와 별개인 컴파일 시점 성질 확인이다.\n// 이 번역 단위는 Impl의 데이터 정의를 보지 않고 공개 헤더만 사용한다.\nstatic_assert(std::is_nothrow_move_constructible_v<Settings>);\n\nint main() { return Run(\"pimpl\", [](Checks& c) {\n    Settings a(\"old\");\n    Settings b = a;\n    b.Rename(\"new\");\n    // 1. Rename 뒤 b의 새 이름과 a의 기존 이름을 관찰한다.\n    // 복사 시 별도 Impl을 생성한다는 근거는 복사 생성자의 make_unique 코드다.\n    // Rename 자체도 후보 Impl로 교체하므로 이 결과만으로 포인터 분리를 증명하지 않는다.\n    c.Expect(a.Name() == \"old\" && b.Name() == \"new\", \"deep pimpl copy\");\n\n    // std::move 자체는 변환이다. 여기서는 선택된 이동 생성자가 소유권을 옮긴다.\n    Settings moved = std::move(a);\n    // 2. 이동 원본의 Empty와 대상의 이름을 함께 확인한다.\n    c.Expect(a.Empty() && moved.Name() == \"old\", \"move contract\");\n    // 3. 빈 객체에 Name을 호출하는 계약 위반은 logic_error로 보고한다.\n    c.Throws<std::logic_error>([&] { (void)a.Name(); }, \"empty contract\");\n\n    a.Rename(\"restored\");\n    // 4. 이동 후 객체도 새 이름으로 복구할 수 있다.\n    c.Expect(a.Name() == \"restored\", \"restore moved-from\");\n    // std::swap 후보를 열어 두고, 인자 타입과 연관된 비멤버 swap을 ADL로 찾는다.\n    using std::swap;\n    swap(a,b);\n    // 5. 두 객체의 이름이 바뀌었는지 확인한다.\n    c.Expect(a.Name() == \"new\" && b.Name() == \"restored\", \"ADL swap\");\n\n    b = moved;\n    // 6. 복사 대입의 정상 경로를 확인한다. 자기 대입·이동 대입·빈 원본 복사나\n    // 후보 복사 실패를 이 여섯 회에서 각각 실행했다고 해석하지 않는다.\n    c.Expect(b.Name() == \"old\", \"assignment\");\n}); }\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답한 뒤 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "1. get 결과를 다른 unique_ptr에 넣어도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "소유권 이전이 아니므로 일반적으로 안 된다. 두 소유자가 같은 객체를 해제할 수 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "2. C++17이면 인수는 왼쪽부터 평가하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 매개변수 초기화 사이의 순서가 고정되지 않는다. 자원 생성 자체가 일어나지 않은 실행도 가능하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "3. explicit이면 음수 입력도 자동 거부하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 암시적 변환 제한과 값의 범위 검사는 다른 계약이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "4. 참조 반환은 항상 복사보다 좋은가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 참조 대상의 수명이 충분해야 한다. 새 결과에는 값 반환이 자연스럽다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "5. weak_ptr를 lock하면 소유권이 생기는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "성공한 lock의 결과 shared_ptr는 소유한다. weak_ptr 자체는 소유 수를 늘리지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "6. swap에 noexcept만 쓰면 강한 보장인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 내부 교체가 실제로 실패하지 않아야 한다. 선언을 위반해 예외가 빠져나오면 종료할 수 있다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "references",
+      "title": "출처 · 원본과 언어 규칙",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "N4861은 공개 C++20 작업 초안의 HTML 열람본이며 출판된 ISO 표준 자체와 구분합니다. 언어 규칙은 이 1차 문서에서 확인하고, 설계 권고는 타입의 목적과 실패 계약에 맞춰 적용합니다. 조회일 2026-10-23."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 C++20 작업 초안 · 인수 초기화와 호출",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.call"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 C++20 작업 초안 · 저장 공간과 생성",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.new"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 C++20 작업 초안 · 생성·소멸 중 동작",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.cdtor"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 C++20 작업 초안 · inline",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/dcl.inline"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원의 Notion 원문",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f8a99703f408149b3edc2e5729e4106"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "55항목 원본 주제 지도",
+              "kind": "link",
+              "href": "/knowledge/shared/effective-cpp-01-06/source-index.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "독립 실습 원본 ZIP",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/archive/cpp_advanced_effective_lab_v1.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 작업 초안 · unique_ptr 관찰자 · get은 저장 포인터 반환",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/unique.ptr.single.observers"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 작업 초안 · unique_ptr 변경 연산 · release와 reset의 계약",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/unique.ptr.single.modifiers"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 작업 초안 · 복사·이동 생성 구별",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.copy.ctor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검증 · 새로운 표현과 재사용 실행 증거",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "검증 층"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이번 교재 JSON·그림·페이지"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 표현 검증 및 실제 배포 확인 대기"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "공유 코드 동일성"
+                  }
+                ],
+                [
+                  {
+                    "text": "별도 EC 원장에서 현재 12개 ko 파일 해시와 기존 두 CI 환경 기록 대조"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "재사용 CPU 실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "39571778548 · GCC13.3 / Clang18.1.3 ASan·UBSan · 각각 원본9+ko9 CTest"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "비교 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "기존 stdout9쌍 바이트 일치 · 컴파일 거부6개씩 별도"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원문 과거 로그"
+                  }
+                ],
+                [
+                  {
+                    "text": "2026-10-13 GCC14.2 / Clang17 기록은 별개"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이번 집필에서 CPU 재실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "없음 · 변경 없는 소스의 실행 증거 재사용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "미검증"
+                  }
+                ],
+                [
+                  {
+                    "text": "Windows/MSVC·GPU·게임 통합·성능·ABI·데이터 경쟁"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 팩의 89회는 정상 경로 런타임 검사 함수 호출 수입니다. static_assert, 의도적 컴파일 거부, 컴파일러별 반복을 합쳐 새 독립 조건으로 세지 않습니다. sanitizer 무진단도 실행하지 않은 입력까지 안전하다는 증명이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 소스 동일성과 기존 실행의 연결 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/effective-cpp-01-06/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 실행 원시 로그 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 실제 CPU CI",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·주석판 무결성",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/source-integrity.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문 보존과 재구성 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 원본 주제 지도를 보존하고 독립 해설, 설명 SVG 2개, Mermaid, 전체 공유 코드와 접힌 복습을 추가했습니다. 기존 실습 코드·원시 로그·Notion은 수정하지 않았습니다. 새 표현의 게시 여부는 발행 기록으로 별도 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 원문 Markdown",
+              "kind": "link",
+              "href": "/knowledge/effective-cpp-02/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 캡처 메타데이터",
+              "kind": "link",
+              "href": "/knowledge/effective-cpp-02/source-notion-capture.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 마지막 수정: 2026-10-18T04:05:25.230Z. 캡처 SHA-256: 88952e8bd591efe950c06caf654246292823e020851e651ac3e81b34dd281b42. 원문 13751바이트와 교재 JSON의 해시는 다릅니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "fetch가 명시하지 않은 truncated·unknown_block_count는 null로 기록했습니다. 닫는 content/page 태그를 확인했지만 이를 도구가 명시한 0 또는 false로 바꾸지 않았습니다. 원문 자체의 verification 상태와 CPU 실험 로그도 서로 다른 증거입니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

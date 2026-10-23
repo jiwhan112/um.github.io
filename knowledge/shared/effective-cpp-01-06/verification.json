@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "status": "pass_source_identity_prior_cpu_evidence_reused",
+  "checked_at_utc": "2026-10-23T02:09:58.431928+00:00",
+  "prior_run_url": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548",
+  "prior_source_commit": "f4ad911d6407d0b9740ad8c75dd40ef45b6929dc",
+  "prior_manifest": "knowledge/shared/cpp-advanced-lab/verification/github-39571778548/artifact-manifest.json",
+  "preserved_raw_files_verified": 85,
+  "annotated_source_files_verified": {
+    "ko/check.hpp": {
+      "bytes": 1324,
+      "sha256": "cbdfb68fe811f9844e42d31b15efa2501205cba4ae589cae0ba545f98de11c6a"
+    },
+    "ko/lifetime.cpp": {
+      "bytes": 3677,
+      "sha256": "9e9cb00612ed5878137d1f512d17e63513532108267c0f9833aa097e673adfe6"
+    },
+    "ko/ownership.cpp": {
+      "bytes": 5779,
+      "sha256": "ed6edcac568050fd6ade4dca8c7de4af3e9a1c69648829f4937280e111ccc455"
+    },
+    "ko/transaction.cpp": {
+      "bytes": 2516,
+      "sha256": "d172030d684991d6f40d9ec1ebe564fd5893e8326a7bc86429763f8c77995d96"
+    },
+    "ko/polymorphism.cpp": {
+      "bytes": 6209,
+      "sha256": "926d6a94ce56a14099c1eef078c92a92cda34de6e0876f906d941e16dd379121"
+    },
+    "ko/templates.cpp": {
+      "bytes": 4956,
+      "sha256": "2b9417700081a1b9338eed8f4aed41e2f28285586f8f0aa41099eba5facfd1e8"
+    },
+    "ko/interfaces.cpp": {
+      "bytes": 4101,
+      "sha256": "289abb8866a0b1832a63853dbb12805f3a0d982d7df379d998fa4b24ce1c7a70"
+    },
+    "ko/containers.cpp": {
+      "bytes": 5729,
+      "sha256": "53829b7414b36902b80cc3118acf338c22e0468ca3e6695d10619a83a7519510"
+    },
+    "ko/allocation.cpp": {
+      "bytes": 5024,
+      "sha256": "0da2100cd3151f74bbe4e5267f57d27e392a5c4848e26274ed58cda404ebb93e"
+    },
+    "ko/pimpl.hpp": {
+      "bytes": 1677,
+      "sha256": "b258a3cc2e85205fc7ffc9331b4976b80f7a63ef5cb2f381c2a25445a3ce03be"
+    },
+    "ko/pimpl.cpp": {
+      "bytes": 2533,
+      "sha256": "86d498321bf8996d4ebb34ade1850a24446f307a454e62bf9b734e38585d82a0"
+    },
+    "ko/pimpl_main.cpp": {
+      "bytes": 1957,
+      "sha256": "1d44a91f95ef0a9af961d9a5d5faacdb33618ac1c5a99dce6fe44ce60c35d1b0"
+    }
+  },
+  "new_cpu_compilation_or_execution": false,
+  "presentation_and_publication": "Separate gates; not established by this source-identity check.",
+  "limitations": [
+    "Reuses exact unchanged sources and preserved results, not new execution on a new compiler.",
+    "Prior run: GCC C++20; Clang C++20 ASan/UBSan. C++11 was unsupported and not executed.",
+    "89 runtime check calls are not 89 independent proven properties; repeated annotations/compilers are not additional conditions.",
+    "No Windows/MSVC, ABI, concurrency, performance or exhaustive input claims."
+  ]
+}

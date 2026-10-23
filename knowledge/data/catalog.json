@@ -1337,5 +1337,97 @@
       "디버깅",
       "트랜잭션"
     ]
+  },
+  {
+    "path": "effective-cpp-01",
+    "title": "Effective C++ 01 · 언어·초기화·특수 멤버",
+    "subtitle": "항목 1–12 · 생성 가능한 상태와 소유권 계약에서 복사·이동·소멸을 결정합니다",
+    "date": "2026-10-23",
+    "category": "Effective C++",
+    "tags": [
+      "Effective C++",
+      "C++20",
+      "초기화",
+      "특수 멤버",
+      "객체 수명"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f40816abc03e0fe7daf6deb"
+  },
+  {
+    "path": "effective-cpp-02",
+    "title": "Effective C++ 02 · 자원·API·복사·swap",
+    "subtitle": "항목 13–25 · 소유권을 표현하고 잘못된 호출과 실패의 영향을 줄입니다",
+    "date": "2026-10-23",
+    "category": "Effective C++",
+    "tags": [
+      "Effective C++",
+      "C++20",
+      "RAII",
+      "API 설계",
+      "복사",
+      "swap"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408149b3edc2e5729e4106"
+  },
+  {
+    "path": "effective-cpp-03",
+    "title": "Effective C++ 03 · 구현·예외·컴파일 의존성",
+    "subtitle": "항목 26–31 · 값의 수명, 실패 경계와 번역 단위의 경계를 함께 읽습니다",
+    "date": "2026-10-23",
+    "category": "Effective C++",
+    "tags": [
+      "Effective C++",
+      "C++20",
+      "예외 보장",
+      "Pimpl",
+      "빌린 뷰",
+      "컴파일 의존성"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f4081978c8ac4ae481f0b31"
+  },
+  {
+    "path": "effective-cpp-04",
+    "title": "Effective C++ 04 · 상속과 설계 대안",
+    "subtitle": "항목 32–40 · 대체 계약, 이름 탐색, NVI와 합성의 경계를 구분",
+    "date": "2026-10-23",
+    "category": "Effective C++",
+    "tags": [
+      "C++20",
+      "상속",
+      "NVI",
+      "다형성",
+      "합성"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f408165ab36f79f8376fba3"
+  },
+  {
+    "path": "effective-cpp-05",
+    "title": "Effective C++ 05 · 제네릭 프로그래밍",
+    "subtitle": "항목 41–48 · 제약, 의존 이름, 멤버 템플릿과 컴파일 시점 계산",
+    "date": "2026-10-23",
+    "category": "Effective C++",
+    "tags": [
+      "C++20",
+      "템플릿",
+      "concepts",
+      "의존 이름",
+      "constexpr"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f4081a3993ae737187e5928"
+  },
+  {
+    "path": "effective-cpp-06",
+    "title": "Effective C++ 06 · 할당·진단·라이브러리",
+    "subtitle": "항목 49–55 · 저장 공간과 객체 수명, 실패 정리와 검증 범위",
+    "date": "2026-10-23",
+    "category": "Effective C++",
+    "tags": [
+      "C++20",
+      "메모리 할당",
+      "PMR",
+      "객체 수명",
+      "검증"
+    ],
+    "notion_url": "https://app.notion.com/p/3f8a99703f4081798361fdbf4881b8c6"
   }
 ]

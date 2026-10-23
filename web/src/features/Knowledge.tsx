@@ -21,7 +21,7 @@ const areas: Area[] = [
     {id:'c',title:'C 언어',description:'C 언어 기본·포인터·메모리',phase:'legacy',category:'C 언어'},
     {id:'cpp-core',title:'C++ 기초·심화',description:'빌드·타입·함수·메모리에서 객체·STL·RAII까지',phase:'legacy',category:'C++ 기초·심화'},
     {id:'cpp-modern',title:'Modern C++',description:'C++11 이후 언어·표준 라이브러리의 버전별 변화',phase:'new'},
-    {id:'cpp-effective',title:'Effective C++',description:'올바른 자원 관리와 C++ 설계 원칙',phase:'legacy'},
+    {id:'cpp-effective',title:'Effective C++',description:'올바른 자원 관리와 C++ 설계 원칙',phase:'legacy',category:'Effective C++'},
     {id:'cpp-effective-modern',title:'Effective Modern C++',description:'Scott Meyers 저서 중심의 현대 C++ 관용구',phase:'new'}
   ]},
   {id:'windows',title:'Windows·그래픽스 프로그래밍',subtitle:'Windows SDK 기반 게임 클라이언트 · DirectX 구현',icon:Code2,topics:[

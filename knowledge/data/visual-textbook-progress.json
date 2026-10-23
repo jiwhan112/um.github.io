@@ -35,7 +35,7 @@
     {
       "id": "effective-cpp",
       "notion_url": "https://app.notion.com/p/8178c17f593b4f4e83a0b42544b8fe2b",
-      "state": "six_chapters_identified_capture_pending",
+      "state": "six_chapters_captured_and_authored_pending_publication",
       "note": "Existing 55-item revised notes; preserve shared code, use independently written explanations without mass copying the book.",
       "children": [
         {
@@ -68,7 +68,8 @@
           "title": "항목 49–55 — 할당·진단·표준 라이브러리",
           "notion_url": "https://app.notion.com/p/3f8a99703f4081798361fdbf4881b8c6"
         }
-      ]
+      ],
+      "source_index_capture": "knowledge/shared/effective-cpp-01-06/source-index-capture.json"
     },
     {
       "id": "computer-science",
@@ -96,22 +97,22 @@
     "worker": "interactive-continuous",
     "status": "source_prepared_pending_master_publication",
     "unit_ids": [
-      "c-basics-09",
-      "c-basics-10",
-      "c-basics-11",
-      "c-basics-12",
-      "c-basics-13",
-      "c-basics-14"
+      "effective-cpp-01",
+      "effective-cpp-02",
+      "effective-cpp-03",
+      "effective-cpp-04",
+      "effective-cpp-05",
+      "effective-cpp-06"
     ],
     "branch": "master",
     "lease_until_utc": null,
-    "phase": "source_and_cpu_complete_web_gate_pending",
+    "phase": "final_source_and_integrity_complete_web_gate_pending",
     "source_commit": null,
-    "base_master_sha": "877604242540b3fa7e9b3f41f32f21d6886e9ddc",
-    "verification": "knowledge/shared/c-basics-09-14/verification.json",
-    "note": "Exact source commit and actual workflow evidence are recorded by the subsequent batch, never inferred recursively."
+    "base_master_sha": "ac0376b11be5a537b24c5fcaffa3f5f3646ea38e",
+    "verification": "knowledge/shared/effective-cpp-01-06/verification.json",
+    "note": "Final finite batch. Resolve actual completion from exact source workflow and public build-info after this commit; do not recursively claim this commit already passed."
   },
-  "next_unit": "effective-cpp-01",
+  "next_unit": null,
   "units": [
     {
       "id": "dx11-frustum",
@@ -1597,99 +1598,189 @@
     },
     {
       "id": "effective-cpp-01",
-      "title": "항목 1–12 — 언어·초기화·특수 멤버",
+      "title": "Effective C++ 01 · 언어·초기화·특수 멤버",
       "notion_url": "https://app.notion.com/p/3f8a99703f40816abc03e0fe7daf6deb",
       "category": "Effective C++",
-      "route": null,
-      "state": "pending_source_capture",
+      "route": "/knowledge/effective-cpp-01/",
+      "state": "authored_source_verified_prior_cpu_evidence_reused_pending_publication",
       "evidence": {
-        "source_index_read": true
+        "content": "knowledge/effective-cpp-01/content.json",
+        "source_capture": "knowledge/effective-cpp-01/source-notion-capture.json",
+        "source_sha256": "e2e1e3346233e65f8496202145a8f235bb17a7b8d8a463b76378a33fbc0d6fe3",
+        "verification": "knowledge/shared/effective-cpp-01-06/verification.json",
+        "prior_cpu_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548",
+        "prior_cpu_source_commit": "f4ad911d6407d0b9740ad8c75dd40ef45b6929dc",
+        "new_cpu_execution": false,
+        "local_checks": "32unit, typecheck, content schema, production build,186routes and internal links pass",
+        "maintenance_scope": "One-line Effective C++ category binding and26focuseddesktop/mobile cases; no design or snapshots changed"
       },
       "remaining": [
-        "Capture latest full original and audit related source/log children",
-        "Author approved visual textbook and preserve full sources",
-        "Run appropriate code and PC/mobile publication verification"
-      ]
+        "Exact source commit React workflow with focused visual tests and public-origin gate; results cannot be known inside this pre-publication snapshot"
+      ],
+      "stages": {
+        "authored": true,
+        "source_captured": true,
+        "cpu_verified_by_unchanged_source_reuse": true,
+        "master_source": false,
+        "react_build_verified": false,
+        "pages_deployed": false,
+        "public_origin_verified": false
+      }
     },
     {
       "id": "effective-cpp-02",
-      "title": "항목 13–25 — 자원·API·복사·swap",
+      "title": "Effective C++ 02 · 자원·API·복사·swap",
       "notion_url": "https://app.notion.com/p/3f8a99703f408149b3edc2e5729e4106",
       "category": "Effective C++",
-      "route": null,
-      "state": "pending_source_capture",
+      "route": "/knowledge/effective-cpp-02/",
+      "state": "authored_source_verified_prior_cpu_evidence_reused_pending_publication",
       "evidence": {
-        "source_index_read": true
+        "content": "knowledge/effective-cpp-02/content.json",
+        "source_capture": "knowledge/effective-cpp-02/source-notion-capture.json",
+        "source_sha256": "88952e8bd591efe950c06caf654246292823e020851e651ac3e81b34dd281b42",
+        "verification": "knowledge/shared/effective-cpp-01-06/verification.json",
+        "prior_cpu_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548",
+        "prior_cpu_source_commit": "f4ad911d6407d0b9740ad8c75dd40ef45b6929dc",
+        "new_cpu_execution": false,
+        "local_checks": "32unit, typecheck, content schema, production build,186routes and internal links pass",
+        "maintenance_scope": "One-line Effective C++ category binding and26focuseddesktop/mobile cases; no design or snapshots changed"
       },
       "remaining": [
-        "Capture latest full original and audit related source/log children",
-        "Author approved visual textbook and preserve full sources",
-        "Run appropriate code and PC/mobile publication verification"
-      ]
+        "Exact source commit React workflow with focused visual tests and public-origin gate; results cannot be known inside this pre-publication snapshot"
+      ],
+      "stages": {
+        "authored": true,
+        "source_captured": true,
+        "cpu_verified_by_unchanged_source_reuse": true,
+        "master_source": false,
+        "react_build_verified": false,
+        "pages_deployed": false,
+        "public_origin_verified": false
+      }
     },
     {
       "id": "effective-cpp-03",
-      "title": "항목 26–31 — 구현·예외·컴파일 의존성",
+      "title": "Effective C++ 03 · 구현·예외·컴파일 의존성",
       "notion_url": "https://app.notion.com/p/3f8a99703f4081978c8ac4ae481f0b31",
       "category": "Effective C++",
-      "route": null,
-      "state": "pending_source_capture",
+      "route": "/knowledge/effective-cpp-03/",
+      "state": "authored_source_verified_prior_cpu_evidence_reused_pending_publication",
       "evidence": {
-        "source_index_read": true
+        "content": "knowledge/effective-cpp-03/content.json",
+        "source_capture": "knowledge/effective-cpp-03/source-notion-capture.json",
+        "source_sha256": "c1b0ce7bcb8c40e2bd91c49e9672cdc20e02410b6a63498c96e3b4841c47adb3",
+        "verification": "knowledge/shared/effective-cpp-01-06/verification.json",
+        "prior_cpu_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548",
+        "prior_cpu_source_commit": "f4ad911d6407d0b9740ad8c75dd40ef45b6929dc",
+        "new_cpu_execution": false,
+        "local_checks": "32unit, typecheck, content schema, production build,186routes and internal links pass",
+        "maintenance_scope": "One-line Effective C++ category binding and26focuseddesktop/mobile cases; no design or snapshots changed"
       },
       "remaining": [
-        "Capture latest full original and audit related source/log children",
-        "Author approved visual textbook and preserve full sources",
-        "Run appropriate code and PC/mobile publication verification"
-      ]
+        "Exact source commit React workflow with focused visual tests and public-origin gate; results cannot be known inside this pre-publication snapshot"
+      ],
+      "stages": {
+        "authored": true,
+        "source_captured": true,
+        "cpu_verified_by_unchanged_source_reuse": true,
+        "master_source": false,
+        "react_build_verified": false,
+        "pages_deployed": false,
+        "public_origin_verified": false
+      }
     },
     {
       "id": "effective-cpp-04",
-      "title": "항목 32–40 — 상속과 설계 대안",
+      "title": "Effective C++ 04 · 상속과 설계 대안",
       "notion_url": "https://app.notion.com/p/3f8a99703f408165ab36f79f8376fba3",
       "category": "Effective C++",
-      "route": null,
-      "state": "pending_source_capture",
+      "route": "/knowledge/effective-cpp-04/",
+      "state": "authored_source_verified_prior_cpu_evidence_reused_pending_publication",
       "evidence": {
-        "source_index_read": true
+        "content": "knowledge/effective-cpp-04/content.json",
+        "source_capture": "knowledge/effective-cpp-04/source-notion-capture.json",
+        "source_sha256": "36c1304c103b9b9812911041f47d2506f1a5512b5ff31c50729f5d586bbadb3f",
+        "verification": "knowledge/shared/effective-cpp-01-06/verification.json",
+        "prior_cpu_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548",
+        "prior_cpu_source_commit": "f4ad911d6407d0b9740ad8c75dd40ef45b6929dc",
+        "new_cpu_execution": false,
+        "local_checks": "32unit, typecheck, content schema, production build,186routes and internal links pass",
+        "maintenance_scope": "One-line Effective C++ category binding and26focuseddesktop/mobile cases; no design or snapshots changed"
       },
       "remaining": [
-        "Capture latest full original and audit related source/log children",
-        "Author approved visual textbook and preserve full sources",
-        "Run appropriate code and PC/mobile publication verification"
-      ]
+        "Exact source commit React workflow with focused visual tests and public-origin gate; results cannot be known inside this pre-publication snapshot"
+      ],
+      "stages": {
+        "authored": true,
+        "source_captured": true,
+        "cpu_verified_by_unchanged_source_reuse": true,
+        "master_source": false,
+        "react_build_verified": false,
+        "pages_deployed": false,
+        "public_origin_verified": false
+      }
     },
     {
       "id": "effective-cpp-05",
-      "title": "항목 41–48 — 제네릭 프로그래밍과 메타프로그래밍",
+      "title": "Effective C++ 05 · 제네릭 프로그래밍",
       "notion_url": "https://app.notion.com/p/3f8a99703f4081a3993ae737187e5928",
       "category": "Effective C++",
-      "route": null,
-      "state": "pending_source_capture",
+      "route": "/knowledge/effective-cpp-05/",
+      "state": "authored_source_verified_prior_cpu_evidence_reused_pending_publication",
       "evidence": {
-        "source_index_read": true
+        "content": "knowledge/effective-cpp-05/content.json",
+        "source_capture": "knowledge/effective-cpp-05/source-notion-capture.json",
+        "source_sha256": "15dcbf6e0950b1d88150bd14e4953cda679d5af03d9e365dca78c1a01de63630",
+        "verification": "knowledge/shared/effective-cpp-01-06/verification.json",
+        "prior_cpu_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548",
+        "prior_cpu_source_commit": "f4ad911d6407d0b9740ad8c75dd40ef45b6929dc",
+        "new_cpu_execution": false,
+        "local_checks": "32unit, typecheck, content schema, production build,186routes and internal links pass",
+        "maintenance_scope": "One-line Effective C++ category binding and26focuseddesktop/mobile cases; no design or snapshots changed"
       },
       "remaining": [
-        "Capture latest full original and audit related source/log children",
-        "Author approved visual textbook and preserve full sources",
-        "Run appropriate code and PC/mobile publication verification"
-      ]
+        "Exact source commit React workflow with focused visual tests and public-origin gate; results cannot be known inside this pre-publication snapshot"
+      ],
+      "stages": {
+        "authored": true,
+        "source_captured": true,
+        "cpu_verified_by_unchanged_source_reuse": true,
+        "master_source": false,
+        "react_build_verified": false,
+        "pages_deployed": false,
+        "public_origin_verified": false
+      }
     },
     {
       "id": "effective-cpp-06",
-      "title": "항목 49–55 — 할당·진단·표준 라이브러리",
+      "title": "Effective C++ 06 · 할당·진단·라이브러리",
       "notion_url": "https://app.notion.com/p/3f8a99703f4081798361fdbf4881b8c6",
       "category": "Effective C++",
-      "route": null,
-      "state": "pending_source_capture",
+      "route": "/knowledge/effective-cpp-06/",
+      "state": "authored_source_verified_prior_cpu_evidence_reused_pending_publication",
       "evidence": {
-        "source_index_read": true
+        "content": "knowledge/effective-cpp-06/content.json",
+        "source_capture": "knowledge/effective-cpp-06/source-notion-capture.json",
+        "source_sha256": "11123492f0476ce158c68c6146773429545765885f34eeb0f6080be1f6ae7d89",
+        "verification": "knowledge/shared/effective-cpp-01-06/verification.json",
+        "prior_cpu_workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548",
+        "prior_cpu_source_commit": "f4ad911d6407d0b9740ad8c75dd40ef45b6929dc",
+        "new_cpu_execution": false,
+        "local_checks": "32unit, typecheck, content schema, production build,186routes and internal links pass",
+        "maintenance_scope": "One-line Effective C++ category binding and26focuseddesktop/mobile cases; no design or snapshots changed"
       },
       "remaining": [
-        "Capture latest full original and audit related source/log children",
-        "Author approved visual textbook and preserve full sources",
-        "Run appropriate code and PC/mobile publication verification"
-      ]
+        "Exact source commit React workflow with focused visual tests and public-origin gate; results cannot be known inside this pre-publication snapshot"
+      ],
+      "stages": {
+        "authored": true,
+        "source_captured": true,
+        "cpu_verified_by_unchanged_source_reuse": true,
+        "master_source": false,
+        "react_build_verified": false,
+        "pages_deployed": false,
+        "public_origin_verified": false
+      }
     },
     {
       "id": "c-basics-01",
@@ -1932,150 +2023,204 @@
       "title": "C 기초 09 · 구조체·열거형·공용체",
       "category": "C 언어",
       "route": "/knowledge/c-basics-09/",
-      "state": "authored_cpu_verified_pending_publication",
+      "state": "published_verified",
       "stages": {
         "authored": true,
         "cpu_verified": true,
-        "master_source": false,
-        "react_build_verified": false,
-        "pages_deployed": false,
-        "public_origin_verified": false
+        "master_source": true,
+        "react_build_verified": true,
+        "pages_deployed": true,
+        "public_origin_verified": true
       },
       "evidence": {
         "content": "knowledge/c-basics-09/content.json",
         "source": "knowledge/c-basics-09/main.c",
         "verification": "knowledge/shared/c-basics-09-14/verification.json",
-        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed"
+        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed",
+        "release": {
+          "source_commit": "5258000237a606c74760f318d9f376321f3ba52e",
+          "runtime_commit": "ac0376b11be5a537b24c5fcaffa3f5f3646ea38e",
+          "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39894059200",
+          "workflow_result": "success",
+          "regression": "511 passed, 1 skipped",
+          "public_routes_verified": 180,
+          "public_build_info_source_match": true,
+          "new_c_resources_sha256_verified": 21,
+          "public_resource_checked_at_utc": "2026-10-23T03:23:54.763608+00:00",
+          "note": "All21newCsource/SVG/report resources matched; focused all12unit desktop/mobile visual tests are added by the Effective C++ maintenance integration."
+        }
       },
-      "remaining": [
-        "Commit source atomically to master",
-        "Successful exact-source React workflow and public-origin gate"
-      ]
+      "remaining": []
     },
     {
       "id": "c-basics-10",
       "title": "C 기초 10 · 동적 메모리와 소유권",
       "category": "C 언어",
       "route": "/knowledge/c-basics-10/",
-      "state": "authored_cpu_verified_pending_publication",
+      "state": "published_verified",
       "stages": {
         "authored": true,
         "cpu_verified": true,
-        "master_source": false,
-        "react_build_verified": false,
-        "pages_deployed": false,
-        "public_origin_verified": false
+        "master_source": true,
+        "react_build_verified": true,
+        "pages_deployed": true,
+        "public_origin_verified": true
       },
       "evidence": {
         "content": "knowledge/c-basics-10/content.json",
         "source": "knowledge/c-basics-10/main.c",
         "verification": "knowledge/shared/c-basics-09-14/verification.json",
-        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed"
+        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed",
+        "release": {
+          "source_commit": "5258000237a606c74760f318d9f376321f3ba52e",
+          "runtime_commit": "ac0376b11be5a537b24c5fcaffa3f5f3646ea38e",
+          "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39894059200",
+          "workflow_result": "success",
+          "regression": "511 passed, 1 skipped",
+          "public_routes_verified": 180,
+          "public_build_info_source_match": true,
+          "new_c_resources_sha256_verified": 21,
+          "public_resource_checked_at_utc": "2026-10-23T03:23:54.763608+00:00",
+          "note": "All21newCsource/SVG/report resources matched; focused all12unit desktop/mobile visual tests are added by the Effective C++ maintenance integration."
+        }
       },
-      "remaining": [
-        "Commit source atomically to master",
-        "Successful exact-source React workflow and public-origin gate"
-      ]
+      "remaining": []
     },
     {
       "id": "c-basics-11",
       "title": "C 기초 11 · 안전한 입력과 오류 처리",
       "category": "C 언어",
       "route": "/knowledge/c-basics-11/",
-      "state": "authored_cpu_verified_pending_publication",
+      "state": "published_verified",
       "stages": {
         "authored": true,
         "cpu_verified": true,
-        "master_source": false,
-        "react_build_verified": false,
-        "pages_deployed": false,
-        "public_origin_verified": false
+        "master_source": true,
+        "react_build_verified": true,
+        "pages_deployed": true,
+        "public_origin_verified": true
       },
       "evidence": {
         "content": "knowledge/c-basics-11/content.json",
         "source": "knowledge/c-basics-11/main.c",
         "verification": "knowledge/shared/c-basics-09-14/verification.json",
-        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed"
+        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed",
+        "release": {
+          "source_commit": "5258000237a606c74760f318d9f376321f3ba52e",
+          "runtime_commit": "ac0376b11be5a537b24c5fcaffa3f5f3646ea38e",
+          "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39894059200",
+          "workflow_result": "success",
+          "regression": "511 passed, 1 skipped",
+          "public_routes_verified": 180,
+          "public_build_info_source_match": true,
+          "new_c_resources_sha256_verified": 21,
+          "public_resource_checked_at_utc": "2026-10-23T03:23:54.763608+00:00",
+          "note": "All21newCsource/SVG/report resources matched; focused all12unit desktop/mobile visual tests are added by the Effective C++ maintenance integration."
+        }
       },
-      "remaining": [
-        "Commit source atomically to master",
-        "Successful exact-source React workflow and public-origin gate"
-      ]
+      "remaining": []
     },
     {
       "id": "c-basics-12",
       "title": "C 기초 12 · 파일 입출력·직렬화",
       "category": "C 언어",
       "route": "/knowledge/c-basics-12/",
-      "state": "authored_cpu_verified_pending_publication",
+      "state": "published_verified",
       "stages": {
         "authored": true,
         "cpu_verified": true,
-        "master_source": false,
-        "react_build_verified": false,
-        "pages_deployed": false,
-        "public_origin_verified": false
+        "master_source": true,
+        "react_build_verified": true,
+        "pages_deployed": true,
+        "public_origin_verified": true
       },
       "evidence": {
         "content": "knowledge/c-basics-12/content.json",
         "source": "knowledge/c-basics-12/main.c",
         "verification": "knowledge/shared/c-basics-09-14/verification.json",
-        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed"
+        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed",
+        "release": {
+          "source_commit": "5258000237a606c74760f318d9f376321f3ba52e",
+          "runtime_commit": "ac0376b11be5a537b24c5fcaffa3f5f3646ea38e",
+          "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39894059200",
+          "workflow_result": "success",
+          "regression": "511 passed, 1 skipped",
+          "public_routes_verified": 180,
+          "public_build_info_source_match": true,
+          "new_c_resources_sha256_verified": 21,
+          "public_resource_checked_at_utc": "2026-10-23T03:23:54.763608+00:00",
+          "note": "All21newCsource/SVG/report resources matched; focused all12unit desktop/mobile visual tests are added by the Effective C++ maintenance integration."
+        }
       },
-      "remaining": [
-        "Commit source atomically to master",
-        "Successful exact-source React workflow and public-origin gate"
-      ]
+      "remaining": []
     },
     {
       "id": "c-basics-13",
       "title": "C 기초 13 · 전처리기·다중 파일 빌드",
       "category": "C 언어",
       "route": "/knowledge/c-basics-13/",
-      "state": "authored_cpu_verified_pending_publication",
+      "state": "published_verified",
       "stages": {
         "authored": true,
         "cpu_verified": true,
-        "master_source": false,
-        "react_build_verified": false,
-        "pages_deployed": false,
-        "public_origin_verified": false
+        "master_source": true,
+        "react_build_verified": true,
+        "pages_deployed": true,
+        "public_origin_verified": true
       },
       "evidence": {
         "content": "knowledge/c-basics-13/content.json",
         "source": "knowledge/c-basics-13/main.c",
         "verification": "knowledge/shared/c-basics-09-14/verification.json",
-        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed"
+        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed",
+        "release": {
+          "source_commit": "5258000237a606c74760f318d9f376321f3ba52e",
+          "runtime_commit": "ac0376b11be5a537b24c5fcaffa3f5f3646ea38e",
+          "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39894059200",
+          "workflow_result": "success",
+          "regression": "511 passed, 1 skipped",
+          "public_routes_verified": 180,
+          "public_build_info_source_match": true,
+          "new_c_resources_sha256_verified": 21,
+          "public_resource_checked_at_utc": "2026-10-23T03:23:54.763608+00:00",
+          "note": "All21newCsource/SVG/report resources matched; focused all12unit desktop/mobile visual tests are added by the Effective C++ maintenance integration."
+        }
       },
-      "remaining": [
-        "Commit source atomically to master",
-        "Successful exact-source React workflow and public-origin gate"
-      ]
+      "remaining": []
     },
     {
       "id": "c-basics-14",
       "title": "C 기초 14 · 통합 프로젝트·디버깅",
       "category": "C 언어",
       "route": "/knowledge/c-basics-14/",
-      "state": "authored_cpu_verified_pending_publication",
+      "state": "published_verified",
       "stages": {
         "authored": true,
         "cpu_verified": true,
-        "master_source": false,
-        "react_build_verified": false,
-        "pages_deployed": false,
-        "public_origin_verified": false
+        "master_source": true,
+        "react_build_verified": true,
+        "pages_deployed": true,
+        "public_origin_verified": true
       },
       "evidence": {
         "content": "knowledge/c-basics-14/content.json",
         "source": "knowledge/c-basics-14/main.c",
         "verification": "knowledge/shared/c-basics-09-14/verification.json",
-        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed"
+        "local_web_validation": "32 unit tests, typecheck, schema, production build and180routes/link invariants passed; individual browser rendering not claimed",
+        "release": {
+          "source_commit": "5258000237a606c74760f318d9f376321f3ba52e",
+          "runtime_commit": "ac0376b11be5a537b24c5fcaffa3f5f3646ea38e",
+          "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39894059200",
+          "workflow_result": "success",
+          "regression": "511 passed, 1 skipped",
+          "public_routes_verified": 180,
+          "public_build_info_source_match": true,
+          "new_c_resources_sha256_verified": 21,
+          "public_resource_checked_at_utc": "2026-10-23T03:23:54.763608+00:00",
+          "note": "All21newCsource/SVG/report resources matched; focused all12unit desktop/mobile visual tests are added by the Effective C++ maintenance integration."
+        }
       },
-      "remaining": [
-        "Commit source atomically to master",
-        "Successful exact-source React workflow and public-origin gate"
-      ]
+      "remaining": []
     }
   ],
   "deferred_new_design": [
@@ -2088,34 +2233,39 @@
     "new Python/developer-tools curriculum"
   ],
   "completion": {
-    "final_audit": "pending_C09_14_and_effective_cpp_publication",
+    "final_audit": "all_approved_sources_authored_final_exact_source_workflow_pending_at_commit",
     "all_approved_units_published": false,
-    "automation_stop_confirmed": true
+    "automation_stop_confirmed": true,
+    "remaining_authoring_units": [],
+    "metadata_semantics": "This immutable source snapshot precedes its own CI/publication. Final success evidence is the exact-source workflow, public build-info and final release report; no unvalidated skip-ci completion mutation."
   },
-  "after_active_batch_next_unit": "effective-cpp-01",
+  "after_active_batch_next_unit": null,
   "inventory_note": "Inventory is not the live catalog count. C++ advanced 05–06 and C01 are published; C01 was reconciled against merged PR18 and successful public verification. Computer-science child/source audit and remaining collection scope are still pending.",
   "next_unit_after_verified_pr17": "c-language-01",
   "previous_released_batch": {
-    "worker": "interactive-recovery",
+    "worker": "interactive-continuous",
     "status": "released",
     "unit_ids": [
-      "c-basics-04",
-      "c-basics-05",
-      "c-basics-06",
-      "c-basics-07",
-      "c-basics-08"
+      "c-basics-09",
+      "c-basics-10",
+      "c-basics-11",
+      "c-basics-12",
+      "c-basics-13",
+      "c-basics-14"
     ],
     "phase": "published_verified",
-    "source_commit": "b589e4349e6711ebc67f773dc6996865d2a9faed",
-    "runtime_commit": "877604242540b3fa7e9b3f41f32f21d6886e9ddc",
-    "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39892700796",
+    "source_commit": "5258000237a606c74760f318d9f376321f3ba52e",
+    "runtime_commit": "ac0376b11be5a537b24c5fcaffa3f5f3646ea38e",
+    "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39894059200",
     "workflow_result": "success",
+    "regression": "511 passed, 1 skipped",
+    "public_routes_verified": 180,
     "public_build_info_source_match": true,
-    "public_routes_verified": 174,
-    "regression": "499 passed, 1 skipped",
-    "note": "Recovery workflow public-origin route/assets gate verified; not a claim of exhaustive individual new chapter visual coverage."
+    "new_c_resources_sha256_verified": 21,
+    "public_resource_checked_at_utc": "2026-10-23T03:23:54.763608+00:00",
+    "note": "All21newCsource/SVG/report resources matched; focused all12unit desktop/mobile visual tests are added by the Effective C++ maintenance integration."
   },
-  "continuation_gate": "C04–08 recovery released. Verify C09–14 exact-source React workflow and public origin before publishing Effective C++01–06.",
+  "continuation_gate": "Final scope authored. Stop after exact-source Effective C++01–06 React/browser/public gate succeeds; no further units authorized.",
   "c_regular_course": {
     "planned_chapters": 14,
     "sample_batch": [
@@ -2141,6 +2291,18 @@
       "state": "published_verified",
       "source_commit": "08724feac20f586112c4fbfc735cb403cd5d5955",
       "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39756113957"
+    },
+    "release": {
+      "source_commit": "5258000237a606c74760f318d9f376321f3ba52e",
+      "runtime_commit": "ac0376b11be5a537b24c5fcaffa3f5f3646ea38e",
+      "workflow": "https://github.com/jiwhan112/um.github.io/actions/runs/39894059200",
+      "workflow_result": "success",
+      "regression": "511 passed, 1 skipped",
+      "public_routes_verified": 180,
+      "public_build_info_source_match": true,
+      "new_c_resources_sha256_verified": 21,
+      "public_resource_checked_at_utc": "2026-10-23T03:23:54.763608+00:00",
+      "note": "All21newCsource/SVG/report resources matched; focused all12unit desktop/mobile visual tests are added by the Effective C++ maintenance integration."
     }
   },
   "approved_target_ids": [

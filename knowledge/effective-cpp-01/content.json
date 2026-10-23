@@ -1,0 +1,1045 @@
+{
+  "title": "Effective C++ 01 · 언어·초기화·특수 멤버",
+  "subtitle": "항목 1–12 · 생성 가능한 상태와 소유권 계약에서 복사·이동·소멸을 결정합니다",
+  "sections": [
+    {
+      "id": "start",
+      "title": "개념 지도 · 언어·초기화·특수 멤버",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 교재는 Notion의 주제 지도를 바탕으로 새로 쓴 독립 한국어 해설입니다. 도서 본문을 재현하지 않으며, 역사적 조언의 목적과 C++20에서의 적용 조건을 나누어 읽습니다. C 기초의 메모리·포인터·함수 지식을 선수로 하고 C++ 클래스·참조·예외의 기본 문법을 함께 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 순서: 본문에서 계약을 정리하고 → 실습에서 실제 소유·실패 경로를 추적하고 → 출처·검증에서 실행한 범위를 확인합니다. 편집기의 코드 저장은 컴파일 실행이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/effective-cpp-01/assets/lifetime-phases.svg",
+          "alt": "완성되는 순서와 정리되는 순서 — 기반 생성; 멤버 선언 순서; 생성자 본문; 완성 객체 사용",
+          "caption": "완성되는 순서와 정리되는 순서. 중간 실패 → 이미 완성된 부분만 정리 / 정상 소멸 → 본문, 멤버 역순, 기반 순서"
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/effective-cpp-01/assets/copy-commit.svg",
+          "alt": "기존 버퍼는 아직 유지에서 후보 복사 준비 후 실패하면 기존 버퍼 그대로, 성공하면 새 버퍼로 확정. 두 결과 사이에는 화살표가 없습니다.",
+          "caption": "실패와 성공은 대안 경로이며 순차 단계가 아닙니다. 후보 준비에서 실패/성공으로 갈라집니다."
+        }
+      ]
+    },
+    {
+      "id": "item-01",
+      "title": "1 · C++를 문제에 맞는 도구들의 집합으로 보기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "객체 지향만으로 모든 문제를 설명하지 않는다. 값 계산은 값 타입, 생명주기는 RAII, 반복되는 타입별 알고리즘은 템플릿으로 표현한다. C에서 배운 주소와 저장 공간 개념은 여전히 필요하지만 생성자·소멸자가 객체의 유효 구간을 추가한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 입력·출력·실패·소유권을 한 문장씩 적는다. 게임 상태를 바꾸는 함수라면 클래스 사용 여부보다 실패했을 때 기존 상태가 남는지가 더 중요한 계약이다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-02",
+      "title": "2 · 매크로보다 타입과 평가 규칙",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "상수는 constexpr, 작은 연산은 함수나 함수 템플릿으로 표현하면 타입 검사와 범위를 활용할 수 있다. 매크로는 토큰을 치환하므로 인자를 여러 번 사용하는 정의에 부작용 있는 표현식을 넣으면 뜻이 달라질 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전처리 조건부 컴파일까지 함수로 치환할 수 있다는 뜻은 아니다. 헤더 가드 같은 전처리 역할과 런타임 계산을 구분한다. constexpr 역시 모든 호출이 컴파일 시점에 계산됨을 보장하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-03",
+      "title": "3 · const는 무엇을 못 바꾸게 하는가",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "interfaces.cpp의 const auto fixed = data.begin()은 반복자 객체의 이동을 막지만 원소 수정은 허용한다. data.cbegin()이 반환한 반복자는 원소를 const 경로로 접근하지만 반복자 자체는 증가시킬 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "const 멤버 함수는 그 접근 경로의 계약이다. 포인터가 가리키는 외부 상태까지 깊게 불변이 되거나 여러 스레드의 접근이 자동으로 안전해지는 것은 아니다. 수정 가능성이 필요한지와 소유 여부를 따로 묻는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-04",
+      "title": "4 · 생성이 끝나면 불변식이 성립해야 한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "멤버는 초기화 목록에 쓴 순서가 아니라 선언 순서로 초기화된다. 기반 클래스와 멤버 준비 뒤 생성자 본문이 실행된다. lifetime.cpp의 Health는 유효한 초기값을 만드는 경계를 생성자에 둔다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "생성 도중 예외가 나면 이미 완성된 기반·멤버는 정리되지만 미완성인 전체 객체의 소멸자를 호출하는 것은 아니다. 함수 지역 static의 초기화 보호와 이후 가변 객체의 동시 접근 안전은 다른 문제다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-05",
+      "title": "5 · 자동 생성되는 연산도 실제로 확인하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복사·이동·소멸 중 하나를 선언하면 다른 특수 멤버의 암시적 선언이나 삭제 여부가 달라질 수 있다. 가능하면 vector·string·unique_ptr 같은 멤버가 책임을 맡는 Rule of Zero를 먼저 고려한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "is_move_constructible이 참이어도 이동 생성자가 존재한다는 증거는 아니다. const 참조를 받는 복사 생성자가 rvalue를 받아 표현식이 성립할 수도 있다. 타입 특성과 실제 오버로드를 함께 읽는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-06",
+      "title": "6 · 금지된 연산을 인터페이스에 드러내기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "= delete는 호출이 성립하지 않아야 하는 연산을 선언 단계에서 표현한다. unique_ptr의 복사 금지와 Label의 rvalue View 금지는 서로 다른 계약을 같은 언어 수단으로 드러낸다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "컴파일 거부 예제는 정상 실행 예제와 별도로 -c 단계에서 확인한다. main 부재로 링크가 실패한 것을 금지된 연산의 진단으로 오해하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-07",
+      "title": "7 · 기반 포인터로 삭제할 것인가",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "파생 객체를 기반 포인터로 소유하고 delete할 설계라면 기반 소멸자를 public virtual로 둔다. 기반 경로의 삭제를 허용하지 않는 설계라면 protected nonvirtual이라는 선택도 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "모든 클래스에 virtual을 붙이는 규칙이 아니다. 소유 경로를 먼저 결정한다. polymorphism.cpp의 기반 포인터 소유와 소멸 기록을 따라가며 인터페이스와 자원 정리 책임이 만나는 지점을 확인한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-08",
+      "title": "8 · 소멸자는 실패 보고의 마지막 창구가 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예외 전파 중 소멸자가 다시 예외를 내보내면 프로그램 종료로 이어질 수 있다. 호출자가 처리해야 하는 저장·닫기 실패는 명시적 Close 또는 Commit 동작으로 분리하고 소멸자는 최선의 정리를 담당하게 설계한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "noexcept라고 적는 것만으로 내부 작업이 실패하지 않게 되지 않는다. 실패 가능 호출을 감싸는 정책, 재시도 가능 여부와 로그의 실패까지 검토해야 한다. 이 실습 팩은 실제 파일 닫기 실패를 검증하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-09",
+      "title": "9 · 생성·소멸 중 가상 호출의 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기반 생성자가 실행되는 동안 아직 파생 부분의 불변식은 완성되지 않았다. 그 단계의 가상 호출을 완성된 파생 객체의 동작으로 기대하지 않는다. 소멸도 파생 부분부터 정리되므로 단계가 거꾸로 좁아진다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "생성자에서 순수 가상 함수 호출로 초기화를 위임하려는 설계는 피한다. 필요한 값은 생성 인자로 전달하거나 완성 후 명시적인 동작으로 분리한다. 관찰 로그와 일반적인 런타임 다형성을 혼동하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-10",
+      "title": "10 · 대입은 자기 자신의 참조를 반환",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사용자 정의 대입의 일반적인 계약은 T&를 반환하고 return *this로 끝나는 것이다. 그래야 연쇄 대입과 내장 타입에 가까운 사용법을 유지한다. 반환형이 올바르다는 사실만으로 복사 내용이 올바르지는 않다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ownership.cpp에서 반환형, 준비 단계, 자원 교체, 반환 순서를 별도로 읽는다. 값 반환은 불필요한 새 객체를 만들 수 있고 지역 임시 객체 참조 반환은 수명을 위반한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-11",
+      "title": "11 · 자기 대입과 실패를 동시에 생각하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 자원을 먼저 삭제한 뒤 새 자원을 복사하면 자기 대입이나 할당 실패에서 원본을 잃을 수 있다. 새 후보를 먼저 만들고 실패하지 않는 교체로 확정하면 기존 소유 상태를 보존하기 쉽다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "IntBuffer의 실패 주입은 실제 메모리 고갈이 아닌 통제된 분기다. 강한 보장은 버퍼의 관찰 가능한 상태에 관한 것이며 전역 실패 주입 플래그까지 되돌리는 것은 아니다. 모든 타입에 copy-and-swap이 최적이라는 뜻도 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-12",
+      "title": "12 · 복사는 멤버 목록이 아니라 의미를 복사",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "파생 타입의 복사 구현은 기반 부분과 각 멤버의 계약을 빠뜨리지 않아야 한다. 소유 버퍼라면 독립 사본, 공유 소유라면 공동 소유, 관찰 포인터라면 외부 수명 관계 등 의도에 맞는 의미를 정한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "깊은 복사를 무조건 적용하면 정체성이나 공유 계약이 깨질 수 있다. 복사 후 한쪽 수정이 다른 쪽에 영향을 줘야 하는지 먼저 답하고 테스트를 정한다. 이동 후 원본의 허용 연산도 별도로 문서화한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "flow",
+      "title": "경계를 따라 읽는 흐름",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[생성 시작] --> B[기반과 멤버 초기화]\n B --> C{준비 성공}\n C -->|예| D[본문 완료와 불변식]\n C -->|아니오| E[완성된 부분만 정리]\n D --> F[사용 후 소멸]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "도식은 개념 경계를 설명합니다. 실제 컴파일·링크 실패 또는 예외 경로는 아래 보존 소스와 로그에서 별도로 확인합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lab",
+      "title": "실습 · 빌드, 관찰, 오류 분리",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음은 재현용 명령이며 이번 집필에서 새로 실행한 결과가 아닙니다. 저장소 루트에서 CMake와 C++20 지원 컴파일러를 사용합니다. 다중 구성에서는 Build의 --config Debug와 CTest의 -C Debug를 맞춥니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S knowledge/shared/cpp-advanced-lab -B /tmp/atlas-effective -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=20\ncmake --build /tmp/atlas-effective --config Debug --target lifetime_ko ownership_ko interfaces_ko polymorphism_ko\nctest --test-dir /tmp/atlas-effective -C Debug -R '^(lifetime_ko|ownership_ko|interfaces_ko|polymorphism_ko)$' --output-on-failure\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 팩을 그대로 사용합니다. 같은 프로그램을 여러 단원에서 다시 읽어도 독립 검사 수가 증가하지 않습니다. Pimpl은 헤더·구현·main이 함께 필요하고 모든 실행 파일은 check.hpp를 사용합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공유 빌드 설정과 대상 이름",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습 원장 · 정상 출력과 검증 한계",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/README.md"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "프로그램"
+                  }
+                ],
+                [
+                  {
+                    "text": "보존된 정상 경로 출력"
+                  }
+                ],
+                [
+                  {
+                    "text": "따로 확인할 제한"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "lifetime"
+                  }
+                ],
+                [
+                  {
+                    "text": "PASS lifetime: 10 checks"
+                  }
+                ],
+                [
+                  {
+                    "text": "호출 횟수이며 완전한 속성 증명이 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "ownership"
+                  }
+                ],
+                [
+                  {
+                    "text": "PASS ownership: 13 checks"
+                  }
+                ],
+                [
+                  {
+                    "text": "호출 횟수이며 완전한 속성 증명이 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "interfaces"
+                  }
+                ],
+                [
+                  {
+                    "text": "PASS interfaces: 7 checks"
+                  }
+                ],
+                [
+                  {
+                    "text": "호출 횟수이며 완전한 속성 증명이 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "polymorphism"
+                  }
+                ],
+                [
+                  {
+                    "text": "PASS polymorphism: 12 checks"
+                  }
+                ],
+                [
+                  {
+                    "text": "호출 횟수이며 완전한 속성 증명이 아님"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "디버거에서 후보 생성 직전, 예외 발생 위치, 교체 직전·직후, 소멸자에 중단점을 둡니다. 예상 상태를 먼저 적고 실제 경로를 따라갑니다. 실패를 직접 주입하는 분기는 시스템 메모리 고갈과 다르며, 실행하지 않은 분기가 통과했다고 해석하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "complete-code",
+      "title": "전체 코드 · 한국어 주석판과 다운로드",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 전체 텍스트는 공유 한국어 주석판 파일을 바이트 내용 그대로 표시합니다. 도서 코드를 옮긴 것이 아니라 보존된 독립 실습 팩입니다. 원본과 주석판의 동작 동일성은 토큰·전처리 비교와 기존 실행 증거로 확인하며, 원본 파일은 바꾸지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "check.hpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/check.hpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "check.hpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#ifndef STUDY_CHECK_HPP\n#define STUDY_CHECK_HPP\n#include <exception>\n#include <functional>\n#include <iostream>\n#include <stdexcept>\n#include <utility>\n\n// 한 프로그램에서 실제로 확인한 조건의 수를 센다.\n// 이 카운터는 경로 커버리지나 독립 기능 수를 측정하지 않는다.\nclass Checks {\n    int count_{};\npublic:\n    void Expect(bool condition, const char* label) {\n        ++count_;\n        if (!condition) throw std::runtime_error(label);\n    }\n    template<class E, class F> void Throws(F&& f, const char* label) {\n        bool matched = false;\n        try { std::invoke(std::forward<F>(f)); }\n        catch (const E&) { matched = true; }\n        // 예외를 예상하는 실험도 Expect를 한 번 호출한다.\n        // E와 무관한 예외는 여기서 잡지 않고 바깥 실행 경계로 전달한다.\n        Expect(matched, label);\n    }\n    int Count() const noexcept { return count_; }\n};\n\ntemplate<class F> int Run(const char* name, F&& test) {\n    try {\n        Checks checks;\n        std::invoke(std::forward<F>(test), checks);\n        std::cout << \"PASS \" << name << \": \" << checks.Count() << \" checks\\n\";\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << \"FAIL \" << name << \": \" << e.what() << '\\n';\n        return 1;\n    }\n}\n#endif\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "lifetime.cpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/lifetime.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "lifetime.cpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"check.hpp\"\n#include <array>\n#include <cstddef>\n#include <initializer_list>\n\n// 소멸자에서도 예외 없이 순서를 기록할 수 있도록 고정 크기 배열을 사용한다.\nstruct Trace {\n    std::array<int, 32> values{};\n    std::size_t used{};\n    bool overflow{};\n    void Add(int value) noexcept {\n        if (used < values.size()) values[used++] = value;\n        else overflow = true;\n    }\n    bool Equals(std::initializer_list<int> expected) const {\n        if (overflow || used != expected.size()) return false;\n        std::size_t i{};\n        for (int value : expected) if (values[i++] != value) return false;\n        return true;\n    }\n};\n\nstruct Part {\n    Trace& trace;\n    int id;\n    Part(Trace& t, int value, bool fail = false) : trace(t), id(value) {\n        // 양수 기록은 생성자 본문에 들어왔다는 뜻이다. 생성 완료와는 구별한다.\n        trace.Add(id);\n        if (fail) throw std::runtime_error(\"part construction failed\");\n    }\n    ~Part() noexcept { trace.Add(-id); }\n};\n\nstruct Base {\n    Trace& trace;\n    explicit Base(Trace& t) : trace(t) { trace.Add(1); }\n    ~Base() noexcept { trace.Add(-1); }\n};\n\nstruct Whole : Base {\n    // 멤버는 초기화 목록을 읽는 순서가 아니라 이 선언 순서로 생성된다.\n    Part first;\n    Part second;\n    Whole(Trace& t, bool fail = false) : Base(t), first(t, 2), second(t, 3, fail) {\n        trace.Add(4);\n    }\n    // 본문 실행 후 멤버 second, first와 기반 Base가 역순으로 파괴된다.\n    ~Whole() noexcept { trace.Add(-4); }\n};\n\nclass Health {\n    int maximum_;\n    int current_;\npublic:\n    explicit Health(int maximum) : maximum_(maximum), current_(maximum) {\n        // 정상적으로 생성된 객체는 0 <= current <= maximum, maximum > 0을 만족한다.\n        if (maximum <= 0) throw std::invalid_argument(\"maximum must be positive\");\n    }\n    int Current() const noexcept { return current_; }\n    void Damage(int amount) {\n        // 잘못된 입력을 상태 변경 전에 거부한다.\n        if (amount < 0) throw std::invalid_argument(\"negative damage\");\n        current_ = amount >= current_ ? 0 : current_ - amount;\n    }\n    void Heal(int amount) {\n        if (amount < 0) throw std::invalid_argument(\"negative heal\");\n        // 먼저 남은 공간과 비교해 current + amount의 불필요한 범위 초과를 피한다.\n        const int room = maximum_ - current_;\n        current_ += amount >= room ? room : amount;\n    }\n};\n\nint main() {\n    return Run(\"lifetime\", [](Checks& c) {\n        Trace trace;\n        {\n            Whole whole(trace);\n            c.Expect(trace.Equals({1,2,3,4}), \"construction order\");\n        }\n        c.Expect(trace.Equals({1,2,3,4,-4,-3,-2,-1}), \"destruction order\");\n\n        Trace failed;\n        c.Throws<std::runtime_error>([&] { Whole whole(failed, true); }, \"constructor failure\");\n        // second는 본문 진입 뒤 실패하여 자신의 소멸자가 실행되지 않는다.\n        // Whole도 완성되지 않았다. 이미 완성한 first와 Base만 정리된다.\n        c.Expect(failed.Equals({1,2,3,-2,-1}), \"only completed subobjects destroyed\");\n\n        Health hp(100);\n        hp.Damage(30);\n        c.Expect(hp.Current() == 70, \"damage\");\n        hp.Heal(200);\n        c.Expect(hp.Current() == 100, \"heal clamp\");\n        hp.Damage(200);\n        c.Expect(hp.Current() == 0, \"damage clamp\");\n        c.Throws<std::invalid_argument>([&] { hp.Damage(-1); }, \"negative rejected\");\n        c.Expect(hp.Current() == 0, \"failure preserves state\");\n        c.Throws<std::invalid_argument>([] { Health invalid(0); }, \"invalid construction\");\n    });\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ownership.cpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/ownership.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "ownership.cpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"check.hpp\"\n#include <algorithm>\n#include <cstddef>\n#include <initializer_list>\n#include <memory>\n#include <new>\n#include <type_traits>\n#include <vector>\n\n// 실제 메모리를 고갈시키지 않고 다음 Copy 호출의 실패 경로를 선택한다.\nstruct FailPoint { inline static bool next_copy = false; };\n\n// 불변식: size가 0일 때에만 data가 null이다. int 전용 학습 구현이다.\n// 실제 프로젝트에서는 먼저 std::vector 같은 소유 타입을 선택한다.\nclass IntBuffer {\n    std::size_t size_{};\n    std::unique_ptr<int[]> data_;\n\n    static std::unique_ptr<int[]> Copy(const IntBuffer& source) {\n        // 플래그를 소비한 뒤 예외를 던진다. 대상 버퍼의 보장과 이 실험 플래그는 별개다.\n        if (std::exchange(FailPoint::next_copy, false)) throw std::bad_alloc{};\n        if (source.size_ == 0) return {};\n        auto result = std::make_unique<int[]>(source.size_);\n        std::copy_n(source.data_.get(), source.size_, result.get());\n        return result;\n    }\n\npublic:\n    IntBuffer() = default;\n    explicit IntBuffer(std::initializer_list<int> values)\n        : size_(values.size()), data_(size_ ? std::make_unique<int[]>(size_) : nullptr) {\n        if (size_ != 0) std::copy(values.begin(), values.end(), data_.get());\n    }\n    ~IntBuffer() = default;\n\n    // 서로 다른 배열을 소유하도록 깊은 복사한다.\n    IntBuffer(const IntBuffer& other) : size_(other.size_), data_(Copy(other)) {}\n    IntBuffer& operator=(const IntBuffer& other) {\n        if (this != &other) {\n            // 준비가 실패하면 이 객체는 그대로다. 성공한 임시값과만 상태를 교체한다.\n            IntBuffer temporary(other);\n            Swap(temporary);\n        }\n        return *this;\n    }\n\n    IntBuffer(IntBuffer&& other) noexcept\n        : size_(std::exchange(other.size_, 0)), data_(std::move(other.data_)) {}\n    IntBuffer& operator=(IntBuffer&& other) noexcept {\n        // 이 타입은 자기 이동에서도 기존 값을 유지하도록 직접 계약을 정했다.\n        if (this != &other) {\n            data_ = std::move(other.data_);\n            size_ = std::exchange(other.size_, 0);\n        }\n        return *this;\n    }\n\n    void Swap(IntBuffer& other) noexcept {\n        using std::swap;\n        swap(size_, other.size_);\n        data_.swap(other.data_);\n    }\n    friend void swap(IntBuffer& a, IntBuffer& b) noexcept { a.Swap(b); }\n    std::size_t Size() const noexcept { return size_; }\n    bool Valid() const noexcept { return (size_ == 0) == (data_ == nullptr); }\n    int& At(std::size_t index) {\n        if (index >= size_) throw std::out_of_range(\"index\");\n        return data_[index];\n    }\n    const int& At(std::size_t index) const {\n        if (index >= size_) throw std::out_of_range(\"index\");\n        return data_[index];\n    }\n};\n\n// vector가 소유권을 관리하므로 직접 복사·이동·소멸 코드를 작성하지 않는다.\nstruct RuleZero { std::vector<int> values; };\n\nstruct CopyOnly {\n    int* copies;\n    explicit CopyOnly(int& value) : copies(&value) {}\n    CopyOnly(const CopyOnly& other) : copies(other.copies) { ++*copies; }\n};\n\nstruct Immovable {\n    Immovable() = default;\n    Immovable(const Immovable&) = delete;\n    Immovable(Immovable&&) = delete;\n};\n\n// C++17 이후 같은 타입 prvalue로 결과 객체를 직접 만든다. 이름 붙은 지역값 NRVO와 다르다.\nImmovable Make() { return Immovable{}; }\nstatic_assert(std::is_nothrow_move_constructible_v<IntBuffer>);\nstatic_assert(std::is_nothrow_move_assignable_v<IntBuffer>);\n\nint main() {\n    return Run(\"ownership\", [](Checks& c) {\n        RuleZero a{{1,2,3}};\n        auto b = a;\n        b.values[0] = 9;\n        c.Expect(a.values[0] == 1, \"rule zero copies values\");\n\n        IntBuffer source({10,20,30});\n        IntBuffer copy(source);\n        copy.At(0) = 77;\n        c.Expect(source.At(0) == 10 && copy.At(0) == 77, \"deep copy\");\n\n        IntBuffer target({5});\n        FailPoint::next_copy = true;\n        c.Throws<std::bad_alloc>([&] { target = source; }, \"injected copy failure\");\n        c.Expect(target.Size() == 1 && target.At(0) == 5 && target.Valid(), \"strong guarantee\");\n        target = source;\n        c.Expect(target.At(2) == 30, \"copy assignment\");\n        IntBuffer& alias = target;\n        target = alias;\n        c.Expect(target.At(0) == 10, \"self copy\");\n\n        IntBuffer moved(std::move(target));\n        // 비어 있는 이동 원본은 이 IntBuffer의 명시적 계약이며 모든 타입의 공통 결과가 아니다.\n        c.Expect(target.Size() == 0 && target.Valid(), \"move source\");\n        c.Expect(moved.At(2) == 30 && moved.Valid(), \"move destination\");\n        IntBuffer& moved_alias = moved;\n        moved = std::move(moved_alias);\n        c.Expect(moved.At(2) == 30 && moved.Valid(), \"self move contract\");\n        IntBuffer empty;\n        empty = std::move(moved);\n        c.Expect(moved.Size() == 0 && empty.Size() == 3 && moved.Valid(), \"move assignment\");\n        c.Throws<std::out_of_range>([&] { (void)moved.At(0); }, \"moved source bounds\");\n\n        int copies{};\n        CopyOnly old(copies);\n        // std::move는 이동 생성자 호출을 강제하지 않는다. 여기서는 const& 복사 생성자가 선택된다.\n        CopyOnly copied(std::move(old));\n        (void)copied;\n        c.Expect(copies == 1, \"std::move can copy\");\n        auto elided = Make();\n        (void)elided;\n        // 삭제된 복사·이동으로도 위 선언이 컴파일되는 사실이 핵심 증거다.\n        // 이 Expect(true)는 원본 실행 카운터에 포함되며 추가 동작을 검증하지 않는다.\n        c.Expect(true, \"prvalue construction despite deleted copy and move\");\n    });\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "interfaces.cpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/interfaces.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "interfaces.cpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"check.hpp\"\n#include <string>\n#include <string_view>\n#include <type_traits>\n#include <vector>\n// 원본 동작을 보존하고 API 계약을 한국어로 설명한 주석판이다.\n// explicit은 double에서 Seconds로의 암시적 변환을 막고, 직접 생성은 허용한다.\n// 조건상 음수·NaN·3600 초과를 거부하지만 아래 실제 입력은 0.016과 -1.0뿐이다.\nclass Seconds {\n    double value_;\npublic:\n    explicit Seconds(double value) : value_(value) {\n        if (!(value >= 0.0) || value > 3600.0) throw std::invalid_argument(\"seconds\");\n    }\n    double Value() const noexcept { return value_; }\n};\n// 컴파일 시점 검사 한 개다. 런타임 7회와 별도로 집계한다.\nstatic_assert(!std::is_convertible_v<double, Seconds>);\n// View는 소유하지 않는 string_view다. 반환된 뷰의 수명은 Label 내부 문자열에 달려 있다.\n// 두 rvalue 오버로드 삭제로 임시 Label에서 View를 직접 얻는 호출을 막는다.\n// lvalue Label을 나중에 파괴하거나 문자열을 바꾸는 상황까지 자동으로 안전해지는 것은 아니다.\nclass Label {\n    std::string text_;\npublic:\n    explicit Label(std::string text) : text_(std::move(text)) {}\n    std::string_view View() const & noexcept { return text_; }\n    std::string_view View() && = delete;\n    std::string_view View() const && = delete;\n    // 소유 문자열을 값으로 반환하므로 임시 Label이 사라진 뒤에도 결과를 사용할 수 있다.\n    std::string Copy() const { return text_; }\n};\n// 아래 연산자는 작은 정수로만 실행한다. 산술 범위 검증은 이 실험의 목적이 아니다.\n// Small integers only: arithmetic-range validation is not this experiment's purpose.\nclass Counter {\n    int value_{};\npublic:\n    Counter(int value = 0) : value_(value) {}\n    int Value() const noexcept { return value_; }\n    Counter& operator+=(const Counter& rhs) { value_ += rhs.value_; return *this; }\n    // 왼쪽 피연산자는 값으로 복사하고 +=를 재사용한다.\n    // 비멤버 함수이므로 Counter가 포함된 표현식에서 양쪽 피연산자의 암시적 변환을 사용할 수 있다.\n    friend Counter operator+(Counter lhs, const Counter& rhs) { lhs += rhs; return lhs; }\n};\n// 각 Quantity<T>에 대응하는 비멤버 friend를 클래스 안에 정의한다.\n// 이 hidden friend는 Quantity가 인자로 등장할 때 ADL로 찾으며, int 인자의 Quantity 변환도 가능하다.\ntemplate<class T> class Quantity {\n    T value_;\npublic:\n    Quantity(T value) : value_(value) {}\n    T Value() const { return value_; }\n    friend Quantity operator+(Quantity a, Quantity b) { return Quantity(a.value_ + b.value_); }\n};\n// 정상 경로의 호출은 Expect 6회 + Throws 1회, 총 7회다.\nint main() { return Run(\"interfaces\", [](Checks& c) {\n    Seconds dt(0.016); c.Expect(dt.Value() == 0.016, \"explicit valid duration\");\n    c.Throws<std::invalid_argument>([] { Seconds invalid(-1.0); }, \"negative duration\");\n    // fixed는 iterator 객체가 const인 경우다. 위치는 못 바꾸지만 가리킨 int는 수정할 수 있다.\n    // readonly는 const_iterator이므로 원소를 수정할 수 없고, iterator 객체 자체는 이동할 수 있다.\n    std::vector<int> data{1,2}; const auto fixed = data.begin(); *fixed = 7;\n    auto readonly = data.cbegin(); ++readonly;\n    c.Expect(data.front() == 7 && *readonly == 2, \"const iterator vs const_iterator\");\n    Label label(\"player\"); c.Expect(label.View() == \"player\", \"borrow lvalue\");\n    // 임시 Label의 View 대신 소유한 Copy 결과를 받는다. 댕글링 뷰를 실제로 역참조하지 않는다.\n    const auto copy = Label(\"temporary\").Copy(); c.Expect(copy == \"temporary\", \"owned result\");\n    // 양쪽 방향을 작은 값으로 확인한다. signed overflow 같은 위험 입력은 실행하지 않는다.\n    Counter count(3); c.Expect((count+2).Value() == 5 && (2+count).Value() == 5, \"symmetric conversion\");\n    Quantity<int> q(4); c.Expect((q+3).Value() == 7 && (3+q).Value() == 7, \"hidden friend\");\n}); }\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "polymorphism.cpp 전체 소스 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/ko/polymorphism.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "polymorphism.cpp · 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"check.hpp\"\n#include <array>\n#include <memory>\n#include <string>\n#include <typeinfo>\n// 원본 프로그램의 토큰은 그대로 두고 한국어 설명만 추가한 학습용 주석판이다.\n// 기록 버퍼는 16칸이다. 넘친 이벤트는 조용히 버리므로 일반적인 추적 시스템의 완전성을 보장하지 않는다.\nstruct Events {\n    std::array<int, 16> data{};\n    std::size_t count{};\n    void Add(int value) noexcept { if (count < data.size()) data[count++] = value; }\n};\n// 생성자·소멸자 안의 가상 호출은 현재 생성·소멸 중인 클래스 단계에서 결정된다.\n// Effect 단계의 Kind()는 1이며, 가장 파생된 Fire의 구현까지 호출하지 않는다.\nclass Effect {\n    Events& events_;\npublic:\n    explicit Effect(Events& events) : events_(events) { events_.Add(Kind()); }\n    virtual ~Effect() noexcept { events_.Add(Kind()); }\n    virtual int Kind() const noexcept { return 1; }\n    virtual int Strength(int scale = 2) const noexcept { return scale; }\n    Effect(const Effect&) = delete;\n    Effect& operator=(const Effect&) = delete;\n};\n// Fire 생성자 본문과 소멸자 본문에서는 Kind()가 2를 반환한다.\n// 생성 기록은 1, 2이고 가상 소멸을 마친 기록은 1, 2, 2, 1이 된다.\n// Strength는 기본값 2·3으로만 실행한다. 임의의 큰 scale에 대한 곱셈 범위 검사는 없다.\nclass Fire final : public Effect {\n    Events& events_;\npublic:\n    explicit Fire(Events& events) : Effect(events), events_(events) { events_.Add(Kind()); }\n    ~Fire() noexcept override { events_.Add(Kind()); }\n    int Kind() const noexcept override { return 2; }\n    int Strength(int scale = 3) const noexcept override { return scale * 10; }\n};\n// Ice는 실패하는 RTTI 변환의 목표 타입이다. 이 테스트에서 실제 Ice 객체를 만들지는 않는다.\nclass Ice final : public Effect { public: using Effect::Effect; };\n// 이 최소 예시는 비가상 Kind()와 값 복사를 사용한다. 파생 데이터 멤버는 없다.\n// 기반 부분만 값으로 만드는 표현과 정적 타입에 따른 호출을 보여 주며, 파생 데이터 손실까지 검사하지 않는다.\nstruct ValueBase { int Kind() const { return 1; } };\nstruct ValueDerived : ValueBase { int Kind() const { return 2; } };\n// 파생 클래스에서 같은 이름을 선언하면 기반 이름이 가려진다. using으로 기반 오버로드도 후보에 넣는다.\nstruct Overloads { int F(int) const { return 1; } };\nstruct AddOverload : Overloads { using Overloads::F; int F(const std::string&) const { return 2; } };\n// NVI: 공개 비가상 Apply가 입력 계약을 확인하고, private 가상 훅에 계산을 위임한다.\n// 허용 범위는 0부터 1000까지다. 아래 실행은 정상값 10과 거부값 -1만 검사한다.\nclass Damage {\npublic:\n    int Apply(int amount) const {\n        if (amount < 0 || amount > 1000) throw std::invalid_argument(\"amount\");\n        return ApplyImpl(amount);\n    }\n    virtual ~Damage() = default;\nprivate:\n    virtual int ApplyImpl(int amount) const = 0;\n};\nclass HalfDamage final : public Damage { int ApplyImpl(int amount) const override { return amount / 2; } };\n// 가상 Clone은 소유권을 unique_ptr<Cloneable>로 돌려준다. 기반 소멸자도 가상이다.\n// 스마트 포인터 자체에 가상 반환형 공변성을 적용한 것이 아니라 두 선언의 반환형을 같게 두었다.\nstruct Cloneable {\n    virtual ~Cloneable() = default;\n    virtual std::unique_ptr<Cloneable> Clone() const = 0;\n    virtual int Value() const = 0;\n};\n// 정수 하나를 가진 실제 Number를 새로 만든다. 복잡한 객체 그래프의 깊은 복사까지 다루지는 않는다.\nstruct Number final : Cloneable {\n    int value;\n    explicit Number(int n) : value(n) {}\n    std::unique_ptr<Cloneable> Clone() const override { return std::make_unique<Number>(*this); }\n    int Value() const override { return value; }\n};\n// 정상 경로의 검사 호출은 Expect 10회 + Throws 2회, 총 12회다.\nint main() { return Run(\"polymorphism\", [](Checks& c) {\n    Events events;\n    {\n        auto concrete = std::make_unique<Fire>(events);\n        Effect& base = *concrete;\n        c.Expect(events.count == 2 && events.data[0] == 1 && events.data[1] == 2, \"construction dispatch\");\n        c.Expect(base.Kind() == 2, \"dynamic dispatch\");\n        // 가상 함수 본체는 Fire로 가지만 기본 인자는 호출식의 정적 타입에서 고른다.\n        // Effect&의 기본값 2는 20, Fire*의 기본값 3은 30을 만든다.\n        c.Expect(base.Strength() == 20 && concrete->Strength() == 30, \"static defaults\");\n        // 포인터 dynamic_cast 실패는 nullptr, 참조 dynamic_cast 실패는 bad_cast다.\n        c.Expect(dynamic_cast<Fire*>(&base) == concrete.get(), \"pointer cast success\");\n        c.Expect(dynamic_cast<Ice*>(&base) == nullptr, \"pointer cast failure\");\n        c.Throws<std::bad_cast>([&] { (void)dynamic_cast<Ice&>(base); }, \"reference cast failure\");\n        // unique_ptr의 이동은 소유 핸들을 넘긴다. Fire 객체를 값으로 복사·이동하지 않는다.\n        // 기반 포인터로 삭제해도 가상 소멸자 덕분에 Fire 다음 Effect 순서로 정리된다.\n        std::unique_ptr<Effect> owner = std::move(concrete); owner.reset();\n    }\n    // 위 스코프가 끝나기 전에 owner.reset()이 이미 객체를 파괴했다.\n    c.Expect(events.count == 4 && events.data[2] == 2 && events.data[3] == 1, \"virtual destruction\");\n    ValueDerived derived; ValueBase sliced = derived;\n    c.Expect(sliced.Kind() == 1 && derived.Kind() == 2, \"slicing illustration\");\n    AddOverload over; c.Expect(over.F(1) == 1 && over.F(std::string(\"x\")) == 2, \"using overloads\");\n    HalfDamage half; c.Expect(half.Apply(10) == 5, \"NVI\");\n    c.Throws<std::invalid_argument>([&] { (void)half.Apply(-1); }, \"NVI validation\");\n    // 복제본은 다른 객체이며 값 7을 보존한다. 이후 두 객체를 변경하는 독립성 테스트는 별도로 없다.\n    Number number(7); auto clone = number.Clone();\n    c.Expect(clone.get() != &number && clone->Value() == 7, \"polymorphic clone\");\n}); }\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답한 뒤 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "1. const 반복자면 원소도 수정 불가인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 반복자 객체의 const와 const_iterator의 원소 접근 제한은 다르다. interfaces.cpp의 fixed와 readonly를 비교한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "2. 생성자가 실패하면 전체 객체 소멸자가 실행되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "전체 객체는 완성되지 않았다. 완성된 기반·멤버가 정리되는 경로와 구분한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "3. move_constructible이 참이면 반드시 이동하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. rvalue로부터 복사 생성이 가능한 경우에도 참일 수 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "4. 모든 기반 클래스에 public virtual 소멸자가 필요한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기반 경로 삭제를 허용하는지에 따라 다르다. 삭제를 금지하는 protected nonvirtual 설계도 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "5. 실패 주입 뒤 플래그도 원래 값이어야 강한 보장인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 실험의 보장 대상은 버퍼 소유 상태다. 주입 장치의 전역 플래그는 소비된다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "6. 소유 포인터를 복사할 때 주소만 복사하면 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "독립 소유인지 공유 소유인지부터 정한다. 단독 소유 주소를 단순 복사해 두 소멸자가 해제하면 잘못이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "references",
+      "title": "출처 · 원본과 언어 규칙",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "N4861은 공개 C++20 작업 초안의 HTML 열람본이며 출판된 ISO 표준 자체와 구분합니다. 언어 규칙은 이 1차 문서에서 확인하고, 설계 권고는 타입의 목적과 실패 계약에 맞춰 적용합니다. 조회일 2026-10-23."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 C++20 작업 초안 · 인수 초기화와 호출",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.call"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 C++20 작업 초안 · 저장 공간과 생성",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/expr.new"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 C++20 작업 초안 · 생성·소멸 중 동작",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.cdtor"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 C++20 작업 초안 · inline",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/dcl.inline"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원의 Notion 원문",
+              "kind": "link",
+              "href": "https://app.notion.com/p/3f8a99703f40816abc03e0fe7daf6deb"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "55항목 원본 주제 지도",
+              "kind": "link",
+              "href": "/knowledge/shared/effective-cpp-01-06/source-index.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "독립 실습 원본 ZIP",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/archive/cpp_advanced_effective_lab_v1.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 작업 초안 · 복사·이동 생성자의 암시적 선언과 삭제",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.copy.ctor"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 작업 초안 · 복사·이동 대입과 멤버별 연산",
+              "kind": "link",
+              "href": "https://timsong-cpp.github.io/cppwp/n4861/class.copy.assign"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검증 · 새로운 표현과 재사용 실행 증거",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "검증 층"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 기록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이번 교재 JSON·그림·페이지"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 표현 검증 및 실제 배포 확인 대기"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "공유 코드 동일성"
+                  }
+                ],
+                [
+                  {
+                    "text": "별도 EC 원장에서 현재 12개 ko 파일 해시와 기존 두 CI 환경 기록 대조"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "재사용 CPU 실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "39571778548 · GCC13.3 / Clang18.1.3 ASan·UBSan · 각각 원본9+ko9 CTest"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "비교 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "기존 stdout9쌍 바이트 일치 · 컴파일 거부6개씩 별도"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원문 과거 로그"
+                  }
+                ],
+                [
+                  {
+                    "text": "2026-10-13 GCC14.2 / Clang17 기록은 별개"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "이번 집필에서 CPU 재실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "없음 · 변경 없는 소스의 실행 증거 재사용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "미검증"
+                  }
+                ],
+                [
+                  {
+                    "text": "Windows/MSVC·GPU·게임 통합·성능·ABI·데이터 경쟁"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 팩의 89회는 정상 경로 런타임 검사 함수 호출 수입니다. static_assert, 의도적 컴파일 거부, 컴파일러별 반복을 합쳐 새 독립 조건으로 세지 않습니다. sanitizer 무진단도 실행하지 않은 입력까지 안전하다는 증명이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 소스 동일성과 기존 실행의 연결 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/effective-cpp-01-06/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 실행 원시 로그 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/verification/github-39571778548/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 실제 CPU CI",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/actions/runs/39571778548"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·주석판 무결성",
+              "kind": "link",
+              "href": "/knowledge/shared/cpp-advanced-lab/source-integrity.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문 보존과 재구성 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 원본 주제 지도를 보존하고 독립 해설, 설명 SVG 2개, Mermaid, 전체 공유 코드와 접힌 복습을 추가했습니다. 기존 실습 코드·원시 로그·Notion은 수정하지 않았습니다. 새 표현의 게시 여부는 발행 기록으로 별도 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 원문 Markdown",
+              "kind": "link",
+              "href": "/knowledge/effective-cpp-01/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 캡처 메타데이터",
+              "kind": "link",
+              "href": "/knowledge/effective-cpp-01/source-notion-capture.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문 마지막 수정: 2026-10-18T04:05:23.275Z. 캡처 SHA-256: e2e1e3346233e65f8496202145a8f235bb17a7b8d8a463b76378a33fbc0d6fe3. 원문 14489바이트와 교재 JSON의 해시는 다릅니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "fetch가 명시하지 않은 truncated·unknown_block_count는 null로 기록했습니다. 닫는 content/page 태그를 확인했지만 이를 도구가 명시한 0 또는 false로 바꾸지 않았습니다. 원문 자체의 verification 상태와 CPU 실험 로그도 서로 다른 증거입니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
