@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-23",
+  "updated": "2026-10-24",
   "book": {
     "title": "Cracking the Coding Interview",
     "edition": 6,
@@ -8,18 +8,35 @@
   },
   "current": {
     "chapter": 2,
-    "number": "2.6",
-    "topic_en": "Palindrome",
-    "study_date": "2026-10-23",
-    "published_date": "2026-10-23"
+    "number": "2.7",
+    "topic_en": "Intersection",
+    "study_date": "2026-10-24",
+    "published_date": "2026-10-24"
   },
   "next": {
     "chapter": 2,
-    "number": "2.7",
-    "topic_en": "Intersection",
-    "study_date": "2026-10-24"
+    "number": "2.8",
+    "topic_en": "Loop Detection",
+    "study_date": "2026-10-25"
   },
   "episodes": [
+    {
+      "number": "2.7",
+      "chapter": 2,
+      "topic_en": "Intersection",
+      "title": "두 리플레이가 공유하는 첫 이벤트",
+      "summary": "값이 아닌 객체 주소로 교차를 판별하고 길이 정렬로 공통 꼬리의 시작점을 O(1) 추가 공간에 탐색",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "두 포인터",
+        "객체 동일성",
+        "공통 꼬리"
+      ],
+      "study_date": "2026-10-24",
+      "published_date": "2026-10-24",
+      "path": "ep-02-07-intersection/"
+    },
     {
       "number": "2.6",
       "chapter": 2,
