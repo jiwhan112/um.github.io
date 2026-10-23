@@ -30,7 +30,7 @@ jobs:
   build:
     if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master')
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     outputs:
       source: ${{ steps.source.outputs.sha }}
     steps:
@@ -57,9 +57,16 @@ jobs:
           npm run build
           node scripts/check-publication.mjs
           npm audit --audit-level=high
+      - name: Restore locked browser and OS package downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            ~/.cache/atlas-apt/*.deb
+          key: atlas-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24-v1-${{ hashFiles('web/package-lock.json', 'web/scripts/install-browser.sh') }}
       - name: Restore the reviewed Chromium and font environment
         working-directory: web
-        timeout-minutes: 8
+        timeout-minutes: 15
         run: bash scripts/install-browser.sh
       - name: Regression gate (never update snapshots automatically)
         working-directory: web
@@ -83,7 +90,7 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 35
     permissions:
       contents: write
       pages: write
@@ -100,10 +107,25 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
       - name: Extract only the distribution from the successful build job
         run: |
           mkdir -p web/dist
           tar -xzf /tmp/atlas-react-tested/atlas-react-dist.tar.gz -C web/dist
+      - name: Restore locked browser and OS package downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            ~/.cache/atlas-apt/*.deb
+          key: atlas-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24-v1-${{ hashFiles('web/package-lock.json', 'web/scripts/install-browser.sh') }}
+      - name: Install live-check browser
+        working-directory: web
+        timeout-minutes: 15
+        run: |
+          npm ci
+          bash scripts/install-browser.sh
       - name: Publish to the existing master-root Pages source
         id: publish
         working-directory: web
@@ -114,12 +136,6 @@ jobs:
         run: |
           gh api --method POST repos/${GITHUB_REPOSITORY}/pages/builds > /tmp/pages-request.json
           cat /tmp/pages-request.json
-      - name: Install live-check browser
-        working-directory: web
-        timeout-minutes: 8
-        run: |
-          npm ci
-          bash scripts/install-browser.sh
       - name: Verify the published React app on the real Pages URL
         working-directory: web
         env:

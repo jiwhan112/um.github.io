@@ -8,7 +8,7 @@
   "jobs": [
     {
       "id": "thinking",
-      "automationId": "6ac74151e0548191b7be75d5033dd6a9",
+      "automationId": "6adabd0fd42481918398a8d69f8f137b",
       "localTime": "06:00",
       "cadence": "daily",
       "allowedWritePatterns": [
@@ -31,7 +31,7 @@
     },
     {
       "id": "briefing",
-      "automationId": "6aa8a6a26f588191b275db98f9c4ecbf",
+      "automationId": "6adabd1be7908191b6974dbeea198ffe",
       "localTime": "08:00",
       "cadence": "daily",
       "allowedWritePatterns": [
@@ -44,7 +44,7 @@
     },
     {
       "id": "language",
-      "automationId": "6ac489bfc338819194bfaa599c41251a",
+      "automationId": "6adabd1d32008191b716f8a946b3cf00",
       "localTime": "09:00",
       "cadence": "daily",
       "allowedWritePatterns": [
@@ -83,14 +83,14 @@
     {
       "id": "game-design",
       "automationId": "6acf1deb981c819186542d9778e95021",
-      "status": "active",
+      "status": "completed",
       "targetEpisodes": 12,
       "allowedWritePatterns": [
         "^game-design/data/catalog\\.json$",
         "^game-design/ep-[a-z0-9-]+/content\\.json$",
         "^game-design/ep-[a-z0-9-]+/assets/[a-z0-9-]+\\.(svg|png|webp|jpg|jpeg)$"
       ],
-      "note": "Scheduled runs may author only content JSON, catalog JSON, and safe episode assets. UI/workflow/generated files remain immutable. Stop after 12 verified episodes.",
+      "note": "All 12 episodes completed. Original schedule paused by user; do not restart. Assets and existing lessons remain preserved.",
       "cadence": "hourly",
       "localTime": "HH:30",
       "timezone": "Asia/Seoul",
@@ -100,8 +100,8 @@
   "healthChecks": [
     {
       "id": "thinking-publish-watch",
-      "automationId": "6ad9b87794f0819185ab1fa31d22eb1a",
-      "primaryAutomationId": "6ac74151e0548191b7be75d5033dd6a9",
+      "automationId": "6adabd1af4d88191a4e650b62fdb5af2",
+      "primaryAutomationId": "6adabd0fd42481918398a8d69f8f137b",
       "localTime": "07:00",
       "cadence": "daily",
       "timingMode": "condition_watch",
@@ -111,10 +111,26 @@
         "^thinking-lab/ep-[a-z0-9-]+/content\\.json$"
       ],
       "silentWhenHealthy": true
+    },
+    {
+      "id": "site-publication-maintenance",
+      "automationId": "6adabd34505481918992c7e76e24a4bd",
+      "localTime": "HH:45",
+      "cadence": "hourly",
+      "timezone": "Asia/Seoul",
+      "purpose": "Inspect latest source, React validation and live Pages source identity; diagnose and repair authorized publication failures without duplicate lesson authoring or bypassing checks.",
+      "silentWhenHealthy": true
     }
   ],
   "failurePolicy": {
     "thinking": "Never self-disable on GitHub update_ref/PR or React Pages failure. Preserve actionable error details; 07:00 watchdog verifies the catalog, current KST date, source file, deployment and primary scheduler enabled status.",
     "publication": "Prefer atomic create_tree/create_commit/update_ref(expected_sha). If GitHub safely permits a non-atomic Contents API recovery, write source first, verify it, then catalog; do not claim publication until both files and React Pages validation succeed. Never force-push or modify generated UI."
+  },
+  "scheduleMigration": {
+    "date": "2026-10-23",
+    "timezone": "Asia/Seoul",
+    "originalSchedules": "paused_by_user_confirmation",
+    "dailyStartDate": "2026-10-24",
+    "note": "Replacement schedules were created and enabled. Actual automation tool state is authoritative; repository metadata does not execute schedules."
   }
 }

@@ -46,3 +46,13 @@ Functional tests use current content. Visual tests use fixed real source example
 Retain `jiwhan-briefing-v1` date:index IDs, the original `thinking-ctci-...-draft` raw-string keys, `atlas-reading-v1`, `atlas-language-sections-v1` and `atlas-review-v1`. Never clear localStorage. The worker retires only `language-study-*` caches. TTS uses device voices; the C++ editor is a saved draft editor, not a compiler. Cloud access additionally requires owner-authenticated RLS; a successful deployment is not proof of a real two-device sync.
 
 Use Git history for recovery rather than checked-in backup copies. Restore a complete compatible release and its publication pipeline together, never an isolated old stylesheet. The pre-React recovery branch is `backup/pre-react-20261012`.
+
+## Scheduled publication troubleshooting
+
+Treat source commit, React validation, generated runtime commit, and public-origin verification as separate stages. A successful CPU job or generic Pages deployment alone does not prove the latest content was compiled. Inspect the **React Pages validation and publication** run and compare its tested source SHA with the public `build-info.json` `sourceCommit`.
+
+Knowledge tests compare the complete authored route set with compiled routes (including duplicate detection) and derive C-course membership from the source catalog. Do not freeze a growing catalog's exact count or last chapter: this blocked C06–08 on 2026-10-23. Keep the independent chapter-order checks, existing-course floor, original-source hashes, typed blocks, visual/source checks, and reviewed screenshots intact.
+
+If publication refuses a stale head, re-read `master` and follow the latest queued run instead of force-pushing or repeatedly rebuilding the old SHA. Fix only the failed stage; do not rerun unchanged CPU experiments or rewrite lessons to repair a publication failure. Content authors must not change tests/workflows/UI to bypass a gate; an explicitly authorized maintenance task owns infrastructure fixes. Authentication/permission failures require reporting and appropriate authorization, never switching API routes to evade a denial or disabling the schedule.
+
+Browser setup caches Chromium and downloaded Ubuntu packages by OS, architecture, lockfile and installer hash. Every fresh runner still installs the complete dependency/font set; a cache hit never skips dependencies or verification. Cold installs retain bounded retries and deadlines because Azure Ubuntu mirror downloads previously exhausted the eight-minute setup budget. A warm cache reduces repeated downloads, but the first cold install still requires reachable package servers. The live-check browser is prepared before publication, so setup failure leaves the previous release untouched.

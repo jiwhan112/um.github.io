@@ -88,8 +88,11 @@ test('migrated knowledge corpus preserves routes, typed content and Notion origi
  const checked=catalogSchema.parse(catalog);
  const docs=checked.documents.filter(d=>d.kind==='knowledge');
  const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;notion_url:string;category:string}[];
- assert.equal(docs.length,89);
- assert.equal(sourceCatalog.length,89);
+ // The source catalog grows with scheduled lessons; compare identities, not a stale total.
+ assert.ok(sourceCatalog.length>=89,'preserve the established knowledge corpus');
+ const sourceRoutes=sourceCatalog.map(entry=>'/knowledge/'+entry.path+'/');
+ assert.equal(new Set(sourceRoutes).size,sourceRoutes.length,'source routes must be unique');
+ assert.deepEqual(docs.map(doc=>doc.route).sort(),[...sourceRoutes].sort(),'compile every authored route exactly once');
  for(const old of ['/knowledge/dx11-frustum/','/knowledge/algorithm-lis/','/knowledge/python-html/'])
   assert.ok(docs.some(d=>d.route===old),'preserve old prototype '+old);
  const imports=sourceCatalog.filter(x=>/^winapi-0[1-4]a?$|^game-math-0[1-5]$|^dx9-pipeline-0[1-5]$/.test(x.path));
@@ -544,7 +547,15 @@ test('advanced lessons preserve ZIP bytes, historical evidence, complete annotat
 
 test('C sample course keeps regular order, executable sources and honest new authorship',async()=>{
  const docs=catalog.documents.filter(d=>d.kind==='knowledge'&&d.category==='C 언어').sort(compareKnowledgeDocuments);
- assert.deepEqual(docs.map(d=>d.route),['/knowledge/c-basics-01/','/knowledge/c-basics-02/','/knowledge/c-basics-03/','/knowledge/c-basics-04/','/knowledge/c-basics-05/','/knowledge/c-language-01/']);
+ // Derive membership from authoring data, but check the pedagogical ordering independently.
+ const sourceCatalog=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;category:string}[];
+ const chapters=sourceCatalog.filter(entry=>entry.category==='C 언어'&&/^c-basics-\d+$/.test(entry.path))
+  .map(entry=>({route:'/knowledge/'+entry.path+'/',number:Number(entry.path.slice('c-basics-'.length))}))
+  .sort((a,b)=>a.number-b.number);
+ assert.ok(chapters.length>=5,'preserve the established C basics');
+ const expected=[...chapters.filter(chapter=>chapter.number<=11).map(chapter=>chapter.route),
+  '/knowledge/c-language-01/',...chapters.filter(chapter=>chapter.number>11).map(chapter=>chapter.route)];
+ assert.deepEqual(docs.map(doc=>doc.route),expected);
  const report=JSON.parse(await readFile('../knowledge/shared/c-basics-lab/verification.json','utf8'));
  assert.equal(report.status,'pass');assert.equal(report.distinct_addition_boundary_cases,9);
  assert.equal(report.commands.filter((c:{expected_success:boolean})=>!c.expected_success).length,2);
@@ -566,7 +577,7 @@ test('C sample course keeps regular order, executable sources and honest new aut
   for(const b of blocks)if(b.type==='image')assert.ok((await readFile('public/'+b.src.slice(1),'utf8')).includes('<svg'));
  }
  // New C11 lessons must retain full executable sources and real visual blocks.
- for(const slug of ['c-basics-04','c-basics-05']){
+ for(const slug of chapters.filter(chapter=>chapter.number>=4).map(chapter=>chapter.route.split('/')[2])){
   const doc=docs.find(d=>d.route==='/knowledge/'+slug+'/')!;
   assert.ok(doc,'missing new lesson '+slug);
   const full=documentSchema.parse(JSON.parse(await readFile('public/'+doc.file,'utf8')));

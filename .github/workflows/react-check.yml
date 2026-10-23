@@ -13,7 +13,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,9 +33,16 @@ jobs:
           npm run build
           node scripts/check-publication.mjs
           npm audit --audit-level=high
+      - name: Restore locked browser and OS package downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            ~/.cache/atlas-apt/*.deb
+          key: atlas-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24-v1-${{ hashFiles('web/package-lock.json', 'web/scripts/install-browser.sh') }}
       - name: Install the fixed browser and font environment
         working-directory: web
-        timeout-minutes: 8
+        timeout-minutes: 15
         run: bash scripts/install-browser.sh
       - name: Functional, offline and approved screenshot regression gate
         working-directory: web

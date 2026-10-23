@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 const slugs=['c-basics-01','c-basics-02','c-basics-03'];
+const authored=JSON.parse(await readFile('../knowledge/data/catalog.json','utf8')) as {path:string;category:string}[];
+const regular=authored.filter(entry=>entry.category==='C 언어'&&/^c-basics-\d+$/.test(entry.path))
+ .map(entry=>entry.path).sort((a,b)=>Number(a.slice('c-basics-'.length))-Number(b.slice('c-basics-'.length)));
+const course=[...regular.filter(slug=>Number(slug.slice('c-basics-'.length))<=11),'c-language-01',
+ ...regular.filter(slug=>Number(slug.slice('c-basics-'.length))>11)];
 for(const [index,slug] of slugs.entries())test(`${slug} opens tabs, images, review answers and exact C sources`,async({page,request},testInfo)=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(`knowledge/${slug}/`);
@@ -15,7 +20,8 @@ for(const [index,slug] of slugs.entries())test(`${slug} opens tabs, images, revi
   await diagram.scrollIntoViewIfNeeded();await expect(diagram).toHaveAttribute('data-diagram-state','ready');
  }
  const adjacent=page.getByRole('navigation',{name:'이전 다음 문서'});
- const expected=[index?slugs[index-1]:null,slugs[index+1]??'c-basics-04'].filter(Boolean).map(s=>`/um.github.io/knowledge/${s}/`);
+ const position=course.indexOf(slug);
+ const expected=[course[position-1],course[position+1]].filter(Boolean).map(s=>`/um.github.io/knowledge/${s}/`);
  expect(await adjacent.getByRole('link').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')))).toEqual(expected);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await page.evaluate(()=>document.fonts.ready);
@@ -39,11 +45,11 @@ for(const [index,slug] of slugs.entries())test(`${slug} opens tabs, images, revi
  await expect(page.locator('.prose')).toContainText('Notion 원문 이관본이 아니며');
  expect(errors).toEqual([]);
 });
-test('C curriculum includes five regular chapters before applied C01',async({page})=>{
+test('C curriculum includes every authored chapter with applied C01 after chapter 11',async({page})=>{
  await page.goto('knowledge/');
  const topic=page.locator('#knowledge-cpp .knowledge-topic').filter({has:page.getByText('C 언어',{exact:true})});
- await expect(topic.locator('.knowledge-topic-row')).toContainText('9개 공개');
- expect(await topic.locator('.knowledge-document-link').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')))).toEqual([...slugs,'c-basics-04','c-basics-05','c-basics-06','c-basics-07','c-basics-08','c-language-01'].map(s=>`/um.github.io/knowledge/${s}/`));
+ await expect(topic.locator('.knowledge-topic-row')).toContainText(`${course.length}개 공개`);
+ expect(await topic.locator('.knowledge-document-link').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')))).toEqual(course.map(s=>`/um.github.io/knowledge/${s}/`));
  for(const slug of slugs){
   await topic.locator(`a[href="/um.github.io/knowledge/${slug}/"]`).click();
   await expect(page.locator('main h1')).toContainText('C 기초');

@@ -3,6 +3,11 @@ import {readFileSync} from 'node:fs';
 import type {Catalog} from '../src/lib/types';
 const catalog=JSON.parse(readFileSync('public/data/atlas/catalog.json','utf8')) as Catalog;
 const routes=JSON.parse(readFileSync('public/data/atlas/routes.json','utf8')) as string[];
+const knowledgeDocs=catalog.documents.filter(doc=>doc.kind==='knowledge');
+const windowsCategories=['WinAPI','게임 수학','DirectX 9','DirectX 11'];
+const windowsCount=knowledgeDocs.filter(doc=>windowsCategories.includes(doc.category)).length;
+const treeCount=knowledgeDocs.filter(doc=>[...windowsCategories,'C 언어','C++ 기초·심화'].includes(doc.category)).length;
+const cCount=knowledgeDocs.filter(doc=>doc.category==='C 언어').length;
 for(const route of routes){test('direct route '+route,async({page,isMobile,request})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  const response=await request.get('/um.github.io'+route);expect(response.status()).toBe(200);expect(await response.text()).toContain('id="root"');expect(await response.text()).not.toContain('atlas-detail');
@@ -97,7 +102,7 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await expect(page.getByRole('heading',{name:'프로그래밍 지식 라이브러리'})).toBeVisible();
  await expect(page.locator('.knowledge-map-sidebar nav a')).toHaveCount(7);
  const tree=page.locator('.knowledge-tree');
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(87);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(treeCount);
  const cppTopics=page.locator('#knowledge-cpp .knowledge-topic-row strong');
  await expect(cppTopics).toHaveText(['C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++']);
  const windowsTopics=page.locator('#knowledge-windows .knowledge-topic-row strong');
@@ -115,14 +120,14 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await page.getByRole('button',{name:'모두 접기'}).click();
  await expect(tree.locator('.knowledge-document-link')).toHaveCount(0);
  await dx11.click();
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(70);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(windowsCount);
  await page.getByLabel('학습 목차 검색').fill('BeautifulSoup');
  await expect(tree.locator('.knowledge-document-link')).toHaveCount(0);
  await expect(page.locator('.knowledge-recent-list a')).toHaveCount(1);
  await expect(page.locator('.knowledge-recent-list a').first()).toContainText('BeautifulSoup');
  await page.getByRole('button',{name:'목차 검색 초기화'}).click();
  await page.getByRole('button',{name:'모두 펼치기'}).click();
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(87);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(treeCount);
  if(isMobile){
   await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
   await expect(page.getByRole('dialog').getByRole('link',{name:'프로그래밍 학습',exact:true})).toBeVisible();
@@ -138,7 +143,7 @@ test('WinAPI and game math migrated lessons are usable through the sitemap',asyn
  const section=page.locator('#knowledge-windows');
  await expect(section.getByRole('button',{name:/Windows·그래픽스 프로그래밍/})).toHaveAttribute('aria-expanded','true');
  const items=section.locator('.knowledge-document-link');
- await expect(items).toHaveCount(70);
+ await expect(items).toHaveCount(windowsCount);
  await expect(section.getByText('WinAPI 01 · 창·핸들·메시지·호출 규약')).toBeVisible();
  await section.getByRole('link',{name:/WinAPI 01/}).click();
  await expect(page).toHaveURL(/\/knowledge\/winapi-01\/$/);
@@ -272,7 +277,7 @@ test('DX11 Instancing, Geometry, QuadTree, Font and Deferred lessons stay browsa
 
 test('DX11 knowledge outline follows numeric chapter sequence despite migration history',async({page})=>{
  await page.goto('knowledge/');
- await expect(page.locator('#knowledge-windows .knowledge-document-link')).toHaveCount(70);
+ await expect(page.locator('#knowledge-windows .knowledge-document-link')).toHaveCount(windowsCount);
  const names=await page.locator('#knowledge-windows .knowledge-document-link').allTextContents();
  const indexOf=(title:string)=>names.findIndex(x=>x.includes(title));
  const idx13=indexOf('DX11 13 · Instancing —');
@@ -295,8 +300,8 @@ test('DX11 knowledge outline follows numeric chapter sequence despite migration 
 test('published C01 opens from the C language curriculum topic',async({page})=>{
  await page.goto('knowledge/');
  const topic=page.locator('#knowledge-cpp .knowledge-topic').filter({has:page.getByText('C 언어',{exact:true})});
- await expect(topic.locator('.knowledge-topic-row')).toContainText('6개 공개');
- await expect(topic.locator('.knowledge-document-link')).toHaveCount(6);
+ await expect(topic.locator('.knowledge-topic-row')).toContainText(`${cCount}개 공개`);
+ await expect(topic.locator('.knowledge-document-link')).toHaveCount(cCount);
  const link=topic.locator('.knowledge-document-link[href="/um.github.io/knowledge/c-language-01/"]');
  await expect(link).toHaveCount(1);
  await expect(link).toHaveAttribute('href','/um.github.io/knowledge/c-language-01/');
