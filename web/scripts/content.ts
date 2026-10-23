@@ -123,7 +123,7 @@ async function compileDocument(source:string,route:string,kind:Document['kind'],
 async function walk(path:string):Promise<string[]>{const entries=await readdir(path,{withFileTypes:true});const chunks=await Promise.all(entries.map(x=>x.isDirectory()?walk(join(path,x.name)):Promise.resolve([join(path,x.name)])));return chunks.flat();}
 async function copyResources(){
  for(const folder of ['daily-briefing/data','language-study/data','thinking-lab/data','opensource-lab/data','game-design/data','ai-asset-lab/experiments','knowledge']){
-  for(const file of await walk(join(root,folder))){const rel=relative(root,file);const preservedSourceArchive=rel==='knowledge/shared/cpp-advanced-lab/archive/cpp_advanced_effective_lab_v1.zip';if(!preservedSourceArchive&&!['.json','.png','.webp','.jpg','.jpeg','.svg','.wav','.ogg','.glb','.md','.c','.h','.cpp','.hpp','.py','.txt'].includes(extname(file)))continue;await mkdir(dirname(join(out,rel)),{recursive:true});await cp(file,join(out,rel));}
+  for(const file of await walk(join(root,folder))){const rel=relative(root,file);const preservedSourceArchive=rel==='knowledge/shared/cpp-advanced-lab/archive/cpp_advanced_effective_lab_v1.zip';const nativeTeachingSource=rel.startsWith('knowledge/')&&['.rc','.manifest','.hlsl','.fx'].includes(extname(file));if(!preservedSourceArchive&&!nativeTeachingSource&&!['.json','.png','.webp','.jpg','.jpeg','.svg','.wav','.ogg','.glb','.md','.c','.h','.cpp','.hpp','.py','.txt'].includes(extname(file)))continue;await mkdir(dirname(join(out,rel)),{recursive:true});await cp(file,join(out,rel));}
  }
  // Illustration assets are authored per lesson; JSON files remain catalog/content inputs.
  for(const file of await walk(join(root,'game-design'))){

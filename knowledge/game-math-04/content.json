@@ -20,23 +20,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
-                },
-                {
-                  "text": "원본 Notion 페이지",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f4081b1b3adeacf535ee6da"
-                },
-                {
-                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
-                }
-              ]
+              "text": "학습 지도: 이 장은 순수 수학 공식이 아니라 MFC 편집 도구의 문서·뷰·직렬화 설계를 다룬다. CPU 모델과 실제 GUI 구현의 범위를 구별한다."
             }
           ]
         },
@@ -88,6 +75,12 @@
       "title": "1. MFC와 Direct3D 9와 Direct2D는 다른 층입니다",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/game-math-04/assets/document-views.svg",
+          "alt": "문서는 하나, 뷰는 서로 다른 투영",
+          "caption": "문서는 하나, 뷰는 서로 다른 투영 · 이 장의 명시된 좌표·입력 계약을 그린 설명 그림이며 실행 화면이 아닙니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -347,6 +340,12 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "image",
+          "src": "/knowledge/game-math-04/assets/parse-commit.svg",
+          "alt": "읽기 실패가 기존 맵을 망가뜨리지 않게 한다",
+          "caption": "읽기 실패가 기존 맵을 망가뜨리지 않게 한다 · 이 장의 명시된 좌표·입력 계약을 그린 설명 그림이며 실행 화면이 아닙니다."
+        },
+        {
           "type": "paragraph",
           "content": [
             {
@@ -410,7 +409,7 @@
     {
       "id": "part-9",
       "title": "9. 검증과 이해 확인",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "table",
@@ -556,14 +555,78 @@
               ]
             }
           ]
+        },
+        {
+          "type": "details",
+          "title": "문서 데이터가 바뀌면 미니맵은 무엇을 해야 하나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 모델을 읽고 변경 알림에 따라 자기 좌표 변환으로 다시 그린다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CString 객체 메모리를 그대로 파일에 저장하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "내부 포인터와 구현 표현을 저장할 수 있다. 명시적인 버전·크기·타일 값을 직렬화한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "새 맵 파싱 전에 실행 취소 기록을 지워도 될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실패한 로드가 기존 문서 상태를 손상시킨다. 완성된 임시 모델 검증 후 교체와 기록 초기화를 진행한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CPU 모델 테스트가 MFC 대화상자 수명 검증인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. DDX·창 파괴·객체 해제·렌더링은 Windows 환경에서 별도로 검증해야 한다."
+                }
+              ]
+            }
+          ]
         }
       ]
     },
     {
       "id": "full-source-refs",
       "title": "전체 소스·CMake·재검증",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 구분: 기존 본문의 GCC·Clang·sanitizer 결과는 원문 및 2026-10-19 보존 기록이다. 새 한국어 주석본은 2026-10-23 클라우드 Linux/GCC 14.2에서 직접 빌드·실행하고 원본과 전처리 결과 동일성을 검사했다. 이번 주석본 검사에서 CMake/CTest·sanitizer·Windows/MFC/Direct3D/GPU는 실행하지 않았다. 웹 공개·브라우저 렌더링은 별도 발행 게이트다."
+            }
+          ]
+        },
         {
           "type": "callout",
           "blocks": [
@@ -624,6 +687,196 @@
               "text": "원본 무결성 및 2026-10-19 GitHub CPU 재검증",
               "kind": "link",
               "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본 실제 검사 범위·결과",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본/주석본 해시 및 삽입 주석 목록",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "지정 주석 줄 제거 후 원본 바이트 복원 검증기",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/verify_annotations.py"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guided-practice",
+      "title": "실습 · 먼저 예측하고 전체 소스로 대조",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "tile_document.cpp의 Paint→Undo→Redo와 Save→Load 흐름을 추적하세요. 올바른 맵 뒤에 여분 토큰을 붙이거나 타일 ID를 범위 밖으로 바꿨을 때 기존 맵과 실행 취소 기록이 유지되어야 하는 시점을 표시합니다. MFC 창 실행 결과로 해석하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스 탐색기 · 헤더/CMake 의존성 포함",
+              "kind": "link",
+              "href": "/knowledge/winapi-math-lab/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실행은 전체 프로젝트를 준비한 뒤 CMake/CTest 안내를 따른다. 본문의 짧은 발췌만 단독 프로그램으로 컴파일하지 않는다. 관찰 결과와 예상이 다르면 입력 단위·좌표 규약·경계 정책부터 비교한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 코드 · 의존성까지 함께 준비",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 파일은 main을 포함한 완전한 실행 예제지만 단독 한 파일 배포본은 아니다. 아래 공통 헤더와 같은 폴더 구조를 함께 준비한다. 삽입한 한국어 해설 주석 외의 원본 바이트는 보존했다. 구현 상세는 헤더, 이 파일은 사용·실패 사례 검사 중심으로 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "tile_document.cpp · 한국어 주석 전체 파일 내려받기",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/tile_document.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 주석을 포함한 전체 C++20 실행 파일",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"grid.hpp\"\n#include \"check.hpp\"\n#include <future>\nusing namespace study;\n// [한국어 해설] 그리기와 Undo/Redo, 직렬화 왕복, 실패한 로드가 기존 문서를 보존하는지 검사한다.\nint main() {\n    TileDocument doc(Grid(4,3));\n    doc.Paint({1,1},7); Check(doc.Data().Tile({1,1})==7,\"paint\");\n    Check(doc.Undo()&&doc.Data().Tile({1,1})==0,\"undo\");\n    Check(doc.Redo()&&doc.Data().Tile({1,1})==7,\"redo\");\n    Check(doc.Undo(),\"second undo\"); doc.Paint({0,0},5);\n    Check(!doc.Redo(),\"new edit discards redo\");\n    const std::string original=doc.Data().Serialize();\n    const auto copy=Grid::Parse(original);\n    Check(copy.Serialize()==original,\"map text roundtrip\");\n    for (std::string bad:{\"MAP2 1 1 0\",\"MAP1 0 2\",\"MAP1 257 1\",\"MAP1 1 1 -1\", \"MAP1 1 1 4096\",\"MAP1 2 1 0\",\"MAP1 1 1 0 junk\"}) {\n        Throws([&]{doc.Load(bad);});\n        Check(doc.Data().Serialize()==original,\"failed load preserves document\");\n    }\n    Throws([&]{doc.Paint({-1,0},2);});\n    Check(doc.Data().Serialize()==original,\"failed paint preserves document\");\n    doc.Load(\"MAP1 2 2\\n0 1\\n2 3\\n\"); Check(doc.Data().Tile({1,1})==3,\"valid load\");\n    Check(!doc.Undo()&&!doc.Redo(),\"load invalidates edit history\");\n    // Workers receive a value snapshot. Applying to UI/document is a separate action.\n// [한국어 해설] 작업자는 값 복사 스냅샷만 사용한다. 리비전 비교 예시이며 실제 UI 적용/취소 큐 구현은 아니다.\n    const int submittedRevision=1, currentRevision=2;\n    auto job=std::async(std::launch::async,[snapshot=Grid(3,3)]{return AStar(snapshot,{0,0},{2,2});});\n    const auto path=job.get();\n    Check(path&&path->size()==5,\"worker computes from snapshot\");\n    Check(submittedRevision!=currentRevision,\"stale result must be rejected\");\n    return Done(\"tile_document\");\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "필수 구현 헤더 include/grid.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/grid.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "필수 검사 도우미 include/check.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/check.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 빌드 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "폴더 구성·직접 GCC 빌드·CMake 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "# game-math-winapi-lab-ko 폴더에서 실행하는 Linux CPU 예시\ng++ -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -pthread -I include src/tile_document.cpp -o /tmp/tile_document\n/tmp/tile_document"
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·개편 이력",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f4081b1b3adeacf535ee6da"
+                },
+                {
+                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 원문 전체",
+              "kind": "link",
+              "href": "/knowledge/game-math-04/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 시각·학습 구성 개편: 원문·URL·기존 절 ID·코드·과거 검증 기록은 유지하고 설명 그림, 직접 풀어 보는 실습, 접힌 복습을 보완했다. 본문 Mermaid는 도식 렌더링과 원본 코드 확인을 함께 지원한다. 배포·브라우저 검증 결과는 발행 기록에서 별도로 확인한다."
             }
           ]
         }

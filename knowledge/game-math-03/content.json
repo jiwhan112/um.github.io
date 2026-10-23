@@ -20,23 +20,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
-                },
-                {
-                  "text": "원본 Notion 페이지",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f40814e905fe501f75cddc9"
-                },
-                {
-                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
-                }
-              ]
+              "text": "학습 지도: 벡터·좌표·충돌을 수치 예측 → 그림 → 코드 → 경계 사례로 연결한다."
             }
           ]
         },
@@ -78,6 +65,12 @@
       "title": "1. 검사의 결과와 게임의 반응을 분리합니다",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/game-math-03/assets/collision-boundary.svg",
+          "alt": "접촉과 타일 소속: 경계 정책은 다르다",
+          "caption": "접촉과 타일 소속: 경계 정책은 다르다 · 이 장의 명시된 좌표·입력 계약을 그린 설명 그림이며 실행 화면이 아닙니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -177,6 +170,12 @@
       "title": "4. 카메라는 월드 데이터를 직접 이동시키지 않습니다",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/game-math-03/assets/camera-inverse.svg",
+          "alt": "피킹은 그릴 때의 변환을 되돌린다",
+          "caption": "피킹은 그릴 때의 변환을 되돌린다 · 이 장의 명시된 좌표·입력 계약을 그린 설명 그림이며 실행 화면이 아닙니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -348,7 +347,7 @@
     {
       "id": "part-7",
       "title": "7. 검증 범위와 질문",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "table",
@@ -550,14 +549,78 @@
               "text": ". 카메라·타일 식은 이 실습이 명시적으로 선택한 모델에서 유도했습니다."
             }
           ]
+        },
+        {
+          "type": "details",
+          "title": "AABB가 모서리만 닿으면 이 실습 결과는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "충돌 참이다. 양의 겹침 면적만 요구하는 다른 정책과 구별한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "선분 A와 B가 같은 점이면 투영 분모는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0이다. 나눗셈을 하지 않고 A를 최근접점으로 반환한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "중심 기준 타일 좌표 u=−0.6의 소속은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "floor(u+0.5)=floor(−0.1)=−1이다. 정수 캐스팅의 0 방향 버림과 다르다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "화면을 스크롤할 때 모든 월드 위치를 바꾸면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "충돌·저장 값까지 달라진다. 월드 데이터는 유지하고 뷰 변환과 입력 역변환을 맞춘다."
+                }
+              ]
+            }
+          ]
         }
       ]
     },
     {
       "id": "full-source-refs",
       "title": "전체 소스와 실행 가능한 공통 실습",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 구분: 기존 본문의 GCC·Clang·sanitizer 결과는 원문 및 2026-10-19 보존 기록이다. 새 한국어 주석본은 2026-10-23 클라우드 Linux/GCC 14.2에서 직접 빌드·실행하고 원본과 전처리 결과 동일성을 검사했다. 이번 주석본 검사에서 CMake/CTest·sanitizer·Windows/MFC/Direct3D/GPU는 실행하지 않았다. 웹 공개·브라우저 렌더링은 별도 발행 게이트다."
+            }
+          ]
+        },
         {
           "type": "callout",
           "blocks": [
@@ -608,6 +671,196 @@
               "text": "보존 파일·SHA 무결성·새 CPU 테스트 원장",
               "kind": "link",
               "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본 실제 검사 범위·결과",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본/주석본 해시 및 삽입 주석 목록",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "지정 주석 줄 제거 후 원본 바이트 복원 검증기",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/verify_annotations.py"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guided-practice",
+      "title": "실습 · 먼저 예측하고 전체 소스로 대조",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "카메라 c=(10,5), 기준점 a=(100,100), 줌2에서 월드 (12,8)을 화면으로 바꾼 뒤 역변환해 보세요. 타일 경계 u=0.5/−0.6, 영길이 선분, AABB 접촉도 예측하고 geometry.cpp의 검사를 대조합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스 탐색기 · 헤더/CMake 의존성 포함",
+              "kind": "link",
+              "href": "/knowledge/winapi-math-lab/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실행은 전체 프로젝트를 준비한 뒤 CMake/CTest 안내를 따른다. 본문의 짧은 발췌만 단독 프로그램으로 컴파일하지 않는다. 관찰 결과와 예상이 다르면 입력 단위·좌표 규약·경계 정책부터 비교한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 코드 · 의존성까지 함께 준비",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 파일은 main을 포함한 완전한 실행 예제지만 단독 한 파일 배포본은 아니다. 아래 공통 헤더와 같은 폴더 구조를 함께 준비한다. 삽입한 한국어 해설 주석 외의 원본 바이트는 보존했다. 구현 상세는 헤더, 이 파일은 사용·실패 사례 검사 중심으로 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "geometry.cpp · 한국어 주석 전체 파일 내려받기",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/geometry.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 주석을 포함한 전체 C++20 실행 파일",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"math.hpp\"\n#include \"check.hpp\"\nusing namespace study;\n// [한국어 해설] 접촉 포함 충돌, 퇴화 선분, 모든 타일 중심의 왕복 변환과 반열린 경계를 검사한다.\nint main() {\n    Check(Overlap({{0,0},{2,2}},{{2,1},{3,3}}),\"AABB touching is contact\");\n    Check(!Overlap({{0,0},{2,2}},{{2.01,1},{3,3}}),\"AABB separated\");\n    Check(Overlap({{0,0},{2,2}},{{.5,.5},{1,1}}),\"AABB contained\");\n    Throws([]{ (void)Overlap({{2,0},{1,1}},{{0,0},{1,1}}); });\n    Check(CircleOverlap({0,0},1,{2,0},1),\"circle touching\");\n    Check(!CircleOverlap({0,0},1,{2.1,0},1),\"circle separated\");\n    Throws([]{ (void)CircleOverlap({},-1,{},1); });\n    const auto vertical=ClosestOnSegment({2,3},{0,0},{0,5});\n    Check(Near(vertical.x,0)&&Near(vertical.y,3),\"vertical segment\");\n    const auto endpoint=ClosestOnSegment({2,9},{0,0},{0,5});\n    Check(Near(endpoint.y,5),\"clamp segment\");\n    const auto degenerate=ClosestOnSegment({5,6},{1,2},{1,2});\n    Check(Near(degenerate.x,1)&&Near(degenerate.y,2),\"degenerate segment\");\n// [한국어 해설] 8×8 타일의 중심을 투영하고 다시 피킹하여 인덱스 보존을 확인한다.\n    for (int y=0;y<8;++y) for (int x=0;x<8;++x) {\n        const auto picked=PickIso(IsoCenter(x,y,32,16),8,8,32,16);\n        Check(picked&&picked->first==x&&picked->second==y,\"isometric center roundtrip\");\n    }\n    Check(!PickIso(IsoCenter(-.6,0,32,16),8,8,32,16),\"negative outside not truncated to zero\");\n    const auto edge=PickIso(IsoCenter(.5,0,32,16),8,8,32,16);\n    Check(edge&&edge->first==1,\"half-open shared boundary\");\n    Check(!PickIso(IsoCenter(7.5,0,32,16),8,8,32,16),\"right outer boundary excluded\");\n    Throws([]{ (void)PickIso({},2,2,0,16); });\n    return Done(\"geometry\");\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "필수 구현 헤더 include/math.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/math.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "필수 검사 도우미 include/check.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/check.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 빌드 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "폴더 구성·직접 GCC 빌드·CMake 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "# game-math-winapi-lab-ko 폴더에서 실행하는 Linux CPU 예시\ng++ -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -pthread -I include src/geometry.cpp -o /tmp/geometry\n/tmp/geometry"
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·개편 이력",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f40814e905fe501f75cddc9"
+                },
+                {
+                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 원문 전체",
+              "kind": "link",
+              "href": "/knowledge/game-math-03/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 시각·학습 구성 개편: 원문·URL·기존 절 ID·코드·과거 검증 기록은 유지하고 설명 그림, 직접 풀어 보는 실습, 접힌 복습을 보완했다. 본문 Mermaid는 도식 렌더링과 원본 코드 확인을 함께 지원한다. 배포·브라우저 검증 결과는 발행 기록에서 별도로 확인한다."
             }
           ]
         }

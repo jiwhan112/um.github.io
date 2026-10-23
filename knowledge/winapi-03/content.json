@@ -20,23 +20,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
-                },
-                {
-                  "text": "원본 Notion 페이지",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f4081a59040d64ecde49946"
-                },
-                {
-                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
-                }
-              ]
+              "text": "학습 경로: 개념·도식에서 계약을 읽고, 실습·복습에서 실패 경로를 추적한 다음, 출처·검증에서 실제 실행 범위를 확인한다. C/C++의 기본 소유권·정수·함수 문법은 기존 교재를 선수로 하며 여기서는 Windows 어댑터의 책임에 집중한다."
             }
           ]
         },
@@ -321,6 +308,12 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "image",
+          "src": "/knowledge/winapi-03/assets/buffer-replace.svg",
+          "alt": "버퍼 후보 준비가 실패하면 임시 자원만 정리하고, 성공할 때만 기존 버퍼를 교체한다.",
+          "caption": "버퍼 후보 준비가 실패하면 임시 자원만 정리하고, 성공할 때만 기존 버퍼를 교체한다."
+        },
+        {
           "type": "paragraph",
           "content": [
             {
@@ -408,6 +401,12 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "image",
+          "src": "/knowledge/winapi-03/assets/animation-remainder.svg",
+          "alt": "진행한 프레임의 몫과 다음 호출에 이월할 시간 나머지를 분리한다.",
+          "caption": "진행한 프레임의 몫과 다음 호출에 이월할 시간 나머지를 분리한다."
+        },
+        {
           "type": "paragraph",
           "content": [
             {
@@ -427,7 +426,7 @@
     {
       "id": "part-8",
       "title": "8. 확인과 검증 범위",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -477,7 +476,7 @@
     {
       "id": "full-source-refs",
       "title": "전체 소스와 실행 가능한 공통 실습",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "callout",
@@ -486,7 +485,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "이 단원에서 설명한 코드의 전체 파일을 같은 ATLAS NOTE에서 볼 수 있습니다. 사용자 라이브러리의 독립 소스 원본과 대조했고 Linux CPU 검사만 새로 수행했습니다. Windows/MSVC·실제 Win32 GUI/GPU 실측은 미검증입니다."
+                  "text": "이 단원에서 설명한 코드의 전체 파일을 같은 ATLAS NOTE에서 볼 수 있습니다. 사용자 라이브러리의 독립 소스 원본과 대조했고 2026-10-19 이관 단계에서 Linux CPU 검사만 수행했습니다. 이 문장은 2026-10-19 원본 실행을 가리킵니다. 2026-10-23 주석본 확인은 별도 기록입니다. Windows/MSVC·실제 Win32 GUI/GPU 실측은 미검증입니다."
                 }
               ]
             }
@@ -531,8 +530,564 @@
               "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래는 실제 원본 파일의 직접 링크다. GUI 전체 빌드에는 CPP뿐 아니라 헤더·리소스·CMake 설정이 필요하다. 공통 팩은 C++20이며 Win04A 정수 CPU 모델의 C++11/20 프로젝트와 구별한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · windows/winapi_demo.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/winapi_demo.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · windows/app.rc",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/app.rc"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · windows/app.manifest",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/app.manifest"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · include/loop.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/include/loop.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · include/math.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/include/math.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 전체 주석본은 다음 직접 링크와 공통 소스 도서관의 접힌 전체 코드에서 읽는다. GUI·CPU 헤더와 빌드 의존 파일을 함께 받는다. 원본 영어 주석·문자열은 보존하고 설명 주석만 추가했다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · windows/winapi_demo.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/winapi_demo.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · windows/app.rc",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/app.rc"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · windows/app.manifest",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/app.manifest"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · include/loop.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/loop.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · include/math.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/math.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · src/loop_input.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/loop_input.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · include/check.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/check.hpp"
+            }
+          ]
         }
       ]
+    },
+    {
+      "id": "visual-practice",
+      "title": "GDI 자원 장부와 실패 경로 실습",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "BackBuffer의 dc_, bitmap_, previous_를 각각 소유·빌림·선택 관계로 표기한다. Ensure의 각 조기 반환에서 새로 획득한 자원과 아직 유지되는 기존 자원을 적는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Paint에서 Ensure 실패와 BitBlt 실패가 어디로 가는지 서로 다른 색으로 추적한다. 두 경우 모두 화면 직접 그리기를 시도하지만 그것까지 무조건 성공한다는 보장은 없다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "AnimationClock의 간격 0.1, 프레임 수 4에서 0.25와 0.1을 차례로 입력했을 때 인덱스와 나머지를 계산한다. 파일 로더·알파 혼합·아틀라스 범위는 이 CPU 시계의 검증 범위가 아니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "전체 소스의 읽기 위치"
+                  }
+                ],
+                [
+                  {
+                    "text": "한국어 해설"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "BackBuffer::Ensure"
+                  }
+                ],
+                [
+                  {
+                    "text": "후보 DC·bitmap·선택 상태가 모두 준비된 뒤 Clear하고 교체한다."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Paint"
+                  }
+                ],
+                [
+                  {
+                    "text": "Ensure와 BitBlt 각각의 실패에서 직접 그리기로 전환한다."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "AnimationClock::Advance"
+                  }
+                ],
+                [
+                  {
+                    "text": "floor로 진행 수를 구하고 나머지를 보관한다."
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-review",
+      "title": "복습 · 먼저 답한 뒤 펼치기",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "BeginPaint로 받은 DC를 DeleteDC해도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. BeginPaint/EndPaint가 한 쌍이다. GetDC/ReleaseDC, CreateCompatibleDC/DeleteDC와 구별한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "비트맵을 삭제하기 전에 무엇을 복원하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "메모리 DC에 원래 선택되어 있던 객체를 다시 선택한다. 이후 소유 비트맵을 DeleteObject하고 소유 DC를 DeleteDC한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "새 메모리 DC로 컬러 비트맵을 만들면 항상 원하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "새 메모리 DC에는 단색 비트맵이 선택되어 있다. 예제는 표시 DC를 CreateCompatibleBitmap의 기준으로 사용한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "버퍼 교체 중 할당이 실패하면 기존 버퍼는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "새 자원이 완성되기 전 기존 버퍼를 지우지 않는다. 임시 자원을 정리하고 Paint의 직접 그리기 경로로 전환한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "WM_PAINT마다 게임 상태를 Update하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "노출·리사이즈 등 다시 그리기 사유에 따라 시뮬레이션이 진행될 수 있다. 상태 갱신과 상태 표시를 분리한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "0.25초, 간격 0.1초라면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "초기 나머지 0이면 두 프레임 진행하고 약 0.05초를 남긴다. 누적을 매번 0으로 만들면 시간 정보를 잃는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CPU 애니메이션 시험 통과는 GDI 누수 부재인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 시간 계산과 Windows 핸들 수명 관찰은 별개다. 반복 리사이즈·종료의 네이티브 시험이 필요하다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-evidence",
+      "title": "출처·검증 · 원본과 현재 표현을 분리",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본의 개정일·과거 CPU 결과·Notion 연결은 그대로 유지한다. 이번 변경은 네 탭, 설명 그림, 복습과 소스 탐색을 보강한 표현 계층 개편이다. Windows/MSVC·실제 GUI·DPI·GDI·GPU·FMOD를 새로 실행하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 팩의 보존된 검증 범위",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/docs/validation.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-19 소스 복원·CPU 검증 원장",
+              "kind": "link",
+              "href": "/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ReleaseDC",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DeleteDC",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DeleteObject",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Microsoft — BeginPaint",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Microsoft — CreateCompatibleBitmap",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "SelectObject 계약",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 전체 주석본은 원본을 대체하지 않는 별도 파생 파일이다. 지정된 한국어 주석 줄을 제거하면 원본 바이트가 복원되며 원본·주석본 해시는 manifest에 있다. 주석본 담당자의 2026-10-23 Linux GCC 14.2 직접 컴파일·실행 및 -E -P 비교 기록은 기존 CPU 결과와 분리한다. 공통 6개 프로그램과 Win04A를 확인했으며 이번 주석본 작업의 CMake/CTest·sanitizer·Windows GUI/MSVC/GPU 실행은 하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본 구성·빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·주석본 SHA와 삽입 줄 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 검증 결과와 미검증 범위",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 바이트 복원 검사 도구",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/verify_annotations.py"
+            }
+          ]
+        }
+      ],
+      "tab": "sources"
+    },
+    {
+      "id": "visual-history",
+      "title": "원문·변경 기록",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid 원본 코드도 보존하며 현재 페이지에서 도식으로 표시합니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f4081a59040d64ecde49946"
+                },
+                {
+                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 시각 교재 개편: 기존 주제·표·코드·복습·URL·과거 증거를 유지하고 도식·실습·복습을 보강했다. 원본 Notion Markdown과 공유 소스·로그는 변경하지 않았다. 아래 원본은 역사적 내용이며 새 실행 완료를 뜻하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존된 Notion 원문",
+              "kind": "link",
+              "href": "/knowledge/winapi-03/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 웹 저작 원본",
+              "kind": "link",
+              "href": "/knowledge/winapi-03/content.json"
+            }
+          ]
+        }
+      ],
+      "tab": "history"
     }
   ]
 }

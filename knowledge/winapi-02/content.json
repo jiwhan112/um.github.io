@@ -20,23 +20,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
-                },
-                {
-                  "text": "원본 Notion 페이지",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f408137ac5ed11df7858a5f"
-                },
-                {
-                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
-                }
-              ]
+              "text": "학습 경로: 개념·도식에서 계약을 읽고, 실습·복습에서 실패 경로를 추적한 다음, 출처·검증에서 실제 실행 범위를 확인한다. C/C++의 기본 소유권·정수·함수 문법은 기존 교재를 선수로 하며 여기서는 Windows 어댑터의 책임에 집중한다."
             }
           ]
         },
@@ -180,6 +167,12 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "image",
+          "src": "/knowledge/winapi-02/assets/input-edge.svg",
+          "alt": "held와 pressed는 다른 상태이며 pressed는 Update가 한 번 소비한다.",
+          "caption": "held와 pressed는 다른 상태이며 pressed는 Update가 한 번 소비한다."
+        },
+        {
           "type": "paragraph",
           "content": [
             {
@@ -240,6 +233,12 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "image",
+          "src": "/knowledge/winapi-02/assets/dpi-roundtrip.svg",
+          "alt": "논리 좌표→픽셀 출력과 픽셀→논리 입력은 반대 방향 변환이다.",
+          "caption": "논리 좌표→픽셀 출력과 픽셀→논리 입력은 반대 방향 변환이다."
+        },
+        {
           "type": "paragraph",
           "content": [
             {
@@ -276,7 +275,7 @@
     {
       "id": "part-7",
       "title": "7. 검증과 질문",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "paragraph",
@@ -323,7 +322,7 @@
     {
       "id": "full-source-refs",
       "title": "전체 소스와 실행 가능한 공통 실습",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "callout",
@@ -332,7 +331,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "이 단원에서 설명한 코드의 전체 파일을 같은 ATLAS NOTE에서 볼 수 있습니다. 사용자 라이브러리의 독립 소스 원본과 대조했고 Linux CPU 검사만 새로 수행했습니다. Windows/MSVC·실제 Win32 GUI/GPU 실측은 미검증입니다."
+                  "text": "이 단원에서 설명한 코드의 전체 파일을 같은 ATLAS NOTE에서 볼 수 있습니다. 사용자 라이브러리의 독립 소스 원본과 대조했고 2026-10-19 이관 단계에서 Linux CPU 검사만 수행했습니다. 이 문장은 2026-10-19 원본 실행을 가리킵니다. 2026-10-23 주석본 확인은 별도 기록입니다. Windows/MSVC·실제 Win32 GUI/GPU 실측은 미검증입니다."
                 }
               ]
             }
@@ -387,8 +386,574 @@
               "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래는 실제 원본 파일의 직접 링크다. GUI 전체 빌드에는 CPP뿐 아니라 헤더·리소스·CMake 설정이 필요하다. 공통 팩은 C++20이며 Win04A 정수 CPU 모델의 C++11/20 프로젝트와 구별한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · windows/winapi_demo.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/winapi_demo.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · windows/app.rc",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/app.rc"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · windows/app.manifest",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/app.manifest"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · include/loop.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/include/loop.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · include/math.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/include/math.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 전체 주석본은 다음 직접 링크와 공통 소스 도서관의 접힌 전체 코드에서 읽는다. GUI·CPU 헤더와 빌드 의존 파일을 함께 받는다. 원본 영어 주석·문자열은 보존하고 설명 주석만 추가했다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · windows/winapi_demo.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/winapi_demo.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · windows/app.rc",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/app.rc"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · windows/app.manifest",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/app.manifest"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · include/loop.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/loop.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · include/math.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/math.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · src/loop_input.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/loop_input.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · include/check.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/check.hpp"
+            }
+          ]
         }
       ]
+    },
+    {
+      "id": "visual-practice",
+      "title": "시간·입력·좌표를 따로 기록하는 실습",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한 루프의 이벤트를 key-down → Update 0회 → 다음 루프 Update 2회로 가정한다. 첫 Update만 pressed를 소비하고 두 Update 모두 held를 읽는다는 결과를 먼저 예상한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DPI 96·144·192에 대해 논리 좌표 (100,80)의 표시 픽셀을 계산하고 클릭 좌표 역변환을 확인한다. 정수 반올림 오차와 창 전체/클라이언트 기준 차이를 기록한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "큰 dt를 넣는 CPU 테스트와 최소화 복귀의 실제 메시지 순서를 구별한다. 후자는 Windows 실행 증거가 필요하다. 고정 시간 간격만으로 네트워크 리플레이 결정성을 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "전체 소스의 읽기 위치"
+                  }
+                ],
+                [
+                  {
+                    "text": "한국어 해설"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Input::Key / ConsumePressed"
+                  }
+                ],
+                [
+                  {
+                    "text": "상태 전이 기록과 소비 시점을 분리한다."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "FixedStepper::Advance"
+                  }
+                ],
+                [
+                  {
+                    "text": "허용 dt, 최대 step 수, 드롭, alpha 순서로 읽는다."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "WM_DPICHANGED / Scale"
+                  }
+                ],
+                [
+                  {
+                    "text": "출력 배율과 입력 역변환의 기준이 같은지 확인한다."
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-review",
+      "title": "복습 · 먼저 답한 뒤 펼치기",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "120Hz Update는 120FPS를 보장하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 고정 시뮬레이션 간격이고 표시·대기·스케줄링과는 다르다. GDI 데모에는 수직 동기화 보장이 없다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "QPC 차이를 그대로 초로 써도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 된다. QueryPerformanceFrequency로 나누어 초로 환산한다. 정수 나눗셈과 날짜/UTC 시각의 혼동도 피한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "갱신이 없는 프레임의 pressed를 지워도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "지우면 짧은 누름을 잃을 수 있다. 다음 Update가 ConsumePressed할 때까지 보관한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "키 반복 메시지가 매번 새 발사인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 예제는 false→true 전이만 pressed로 저장한다. 이미 held인 반복은 새 에지가 아니며, 여러 에지의 정확한 횟수가 필요하면 큐가 필요하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "최소화 뒤 긴 시간이 한 번에 반영되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "데모는 정지·복귀 시 시간 기준과 누적을 재설정한다. 이는 로컬 데모 정책이며 온라인 시뮬레이션에는 다른 요구가 있을 수 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "DPI 144에서 논리 100은 몇 픽셀인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 데모의 DPI/96 비율이면 150픽셀이다. 입력은 역변환하며 화면 좌표와 클라이언트 좌표를 먼저 맞춘다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "alpha가 있으니 화면도 보간되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 계수 계산과 보간 렌더링 구현은 별개다. 현재 GDI 데모는 현재 상태를 직접 그린다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-evidence",
+      "title": "출처·검증 · 원본과 현재 표현을 분리",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본의 개정일·과거 CPU 결과·Notion 연결은 그대로 유지한다. 이번 변경은 네 탭, 설명 그림, 복습과 소스 탐색을 보강한 표현 계층 개편이다. Windows/MSVC·실제 GUI·DPI·GDI·GPU·FMOD를 새로 실행하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 팩의 보존된 검증 범위",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/docs/validation.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-19 소스 복원·CPU 검증 원장",
+              "kind": "link",
+              "href": "/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Microsoft — 고해상도 시간 측정",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/acquiring-high-resolution-time-stamps"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "QueryPerformanceCounter",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "GetAsyncKeyState",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 대기 함수 계약",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-msgwaitformultipleobjectsex"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "GetDpiForWindow",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdpiforwindow"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "WM_DPICHANGED",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/hidpi/wm-dpichanged"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "manifest를 통한 DPI 설정 권고",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiawarenesscontext"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 전체 주석본은 원본을 대체하지 않는 별도 파생 파일이다. 지정된 한국어 주석 줄을 제거하면 원본 바이트가 복원되며 원본·주석본 해시는 manifest에 있다. 주석본 담당자의 2026-10-23 Linux GCC 14.2 직접 컴파일·실행 및 -E -P 비교 기록은 기존 CPU 결과와 분리한다. 공통 6개 프로그램과 Win04A를 확인했으며 이번 주석본 작업의 CMake/CTest·sanitizer·Windows GUI/MSVC/GPU 실행은 하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본 구성·빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·주석본 SHA와 삽입 줄 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 검증 결과와 미검증 범위",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 바이트 복원 검사 도구",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/verify_annotations.py"
+            }
+          ]
+        }
+      ],
+      "tab": "sources"
+    },
+    {
+      "id": "visual-history",
+      "title": "원문·변경 기록",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid 원본 코드도 보존하며 현재 페이지에서 도식으로 표시합니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f408137ac5ed11df7858a5f"
+                },
+                {
+                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 시각 교재 개편: 기존 주제·표·코드·복습·URL·과거 증거를 유지하고 도식·실습·복습을 보강했다. 원본 Notion Markdown과 공유 소스·로그는 변경하지 않았다. 아래 원본은 역사적 내용이며 새 실행 완료를 뜻하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존된 Notion 원문",
+              "kind": "link",
+              "href": "/knowledge/winapi-02/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 웹 저작 원본",
+              "kind": "link",
+              "href": "/knowledge/winapi-02/content.json"
+            }
+          ]
+        }
+      ],
+      "tab": "history"
     }
   ]
 }

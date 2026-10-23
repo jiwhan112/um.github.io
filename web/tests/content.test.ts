@@ -1,3 +1,4 @@
+import legacyVisualRollout from './fixtures/legacy-visual-rollout.json' with {type:'json'};
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
@@ -11,6 +12,19 @@ import {canSyncKey} from '../src/lib/cloud';
 import {filterDocuments,readLibraryFilter,matchesDocument} from '../src/lib/document-library';
 import {compareKnowledgeDocuments} from '../src/lib/knowledge-order';
 import {catalogSchema, documentSchema, type Block} from '../src/lib/types';
+
+type LegacyChapter=(typeof legacyVisualRollout.chapters)[number]&{sourceArchives?:{path:string;sha256:string}[];sourceViews?:{sourceLibrary:string;sourceTab:string;sourceSection:string;displayedCodeFiles:string[]}[]};
+const legacyChapters:LegacyChapter[]=legacyVisualRollout.chapters;
+function legacyNested(blocks:Block[]):Block[]{return blocks.flatMap(b=>[b,...('blocks'in b?legacyNested(b.blocks):b.type==='list'?b.items.flatMap(legacyNested):[])]);}
+function legacyCanonical(value:unknown):unknown{if(Array.isArray(value))return value.map(legacyCanonical);if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b,'en')).map(([key,item])=>[key,legacyCanonical(item)]));return value;}
+const legacyHash=(value:unknown)=>createHash('sha256').update(JSON.stringify(legacyCanonical(value))).digest('hex');
+function assertLegacyPayload(blocks:Block[],expected:LegacyChapter){
+ const available=legacyNested(blocks).map(legacyHash);
+ for(const fingerprint of [...expected.originalCodeSha256,...expected.originalCountBlocksSha256]){
+  const index=available.indexOf(fingerprint);assert.notEqual(index,-1,expected.slug+' original block '+fingerprint);available.splice(index,1);
+ }
+}
+
 const catalog=await buildContent();
 test('all source lessons and documents are compiled',()=>{assert.equal(catalog.version,2);assert.ok(catalog.documents.length>=9);assert.ok(catalog.languages.english.length>=9);assert.ok(catalog.languages.japanese.length>=9);assert.ok(catalog.articleCount>=135);});
 test('memo storage keys are preserved exactly',()=>{const expected:Record<string,string>={'1.1':'thinking-ctci-1-1-draft','1.2':'thinking-ctci-1-2-draft','1.3':'thinking-ctci-1.3-draft','1.4':'thinking-ctci-1.4-draft'};for(const [number,key]of Object.entries(expected))assert.equal(catalog.documents.find(d=>d.kind==='thinking'&&d.number===number)?.memoKey,key);});
@@ -361,9 +375,15 @@ test('DX11 13 through 18 migration preserves original diagram/table/review and i
   assert.ok(original.length>3800,'original incomplete '+slug);
   assert.ok(original.includes('```mermaid'),'original Mermaid missing '+slug);
   const blocks=page.sections.flatMap(s=>s.blocks);
+  const approved=legacyChapters.find(chapter=>chapter.slug===slug);
+  if(approved){
+   // Frozen original payloads retain multiplicity; added diagrams/tables/answers are independently exercised.
+   assertLegacyPayload(blocks,approved);
+  }else{
   assert.equal(blocks.filter(b=>b.type==='code'&&b.language==='mermaid').length,(original.match(/```mermaid/g)||[]).length,'diagram count '+slug);
   assert.equal(blocks.filter(b=>b.type==='table').length,(original.match(/<table\b/g)||[]).length,'table count '+slug);
   assert.equal(blocks.filter(b=>b.type==='details').length,(original.match(/<details>/g)||[]).length+1,'answer count + verification '+slug);
+  }
   assert.ok(page.sections.some(s=>s.id==='github-source'&&s.blocks.some(b=>b.type==='paragraph'&&b.content.some(n=>n.kind==='link'&&n.href?.startsWith('/knowledge/dx11-sources-')))),'source link '+slug);
  }
  for(const slug of explorers){
@@ -593,4 +613,48 @@ test('C sample course keeps regular order, executable sources and honest new aut
  }
  const future=[12,11,14].map(n=>({...docs[0],route:`/knowledge/c-basics-${n}/` }));
  assert.deepEqual([...future,docs.find(d=>d.route==='/knowledge/c-language-01/')!].sort(compareKnowledgeDocuments).map(d=>d.route),['/knowledge/c-basics-11/','/knowledge/c-language-01/','/knowledge/c-basics-12/','/knowledge/c-basics-14/']);
+});
+
+// Explicit rollout membership must not depend on the document already having four tabs.
+test('approved legacy visual rollout preserves original evidence and adds every four-tab lesson',async()=>{
+ for(const expected of legacyChapters){
+  const doc=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--'+expected.slug+'.json','utf8')));
+  assert.deepEqual([...new Set(doc.sections.map(s=>s.tab))],['document','practice','sources','history'],expected.slug);
+  for(const id of expected.originalSectionIds)assert.ok(doc.sections.some(s=>s.id===id),expected.slug+' original section '+id);
+  const blocks=legacyNested(doc.sections.flatMap(s=>s.blocks));
+  assertLegacyPayload(doc.sections.flatMap(s=>s.blocks),expected);
+  for(const archive of expected.sourceArchives??[{path:expected.sourceFile,sha256:expected.sourceSha256}]){
+   const source=await readFile('../'+archive.path);
+   assert.equal(createHash('sha256').update(source).digest('hex'),archive.sha256,archive.path);
+   assert.deepEqual(await readFile('public/'+archive.path),source,archive.path+' published bytes');
+  }
+  assert.equal(blocks.filter(b=>b.type==='image').length,expected.images,expected.slug);
+  assert.ok(blocks.some(b=>b.type==='code'&&b.language==='mermaid'),expected.slug+' diagrams');
+  const review=doc.sections.find(s=>s.id===expected.reviewSection)!;assert.ok(review,expected.slug+' review section');
+  assert.ok(review.blocks.filter(b=>b.type==='details').length>=6,expected.slug+' new review questions');
+  assert.ok(expected.koFiles.length>0,expected.slug+' complete Korean source links');
+  const sourceDocs=new Map([[expected.slug,doc]]);
+  for(const view of expected.sourceViews??[]){
+   const sourceDoc=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--'+view.sourceLibrary+'.json','utf8')));sourceDocs.set(view.sourceLibrary,sourceDoc);
+   const section=sourceDoc.sections.find(s=>s.id===view.sourceSection);assert.ok(section,view.sourceLibrary+' source section');assert.equal(section.tab,view.sourceTab);
+   const displayed=codeBlocks(section.blocks);
+   for(const href of view.displayedCodeFiles){assert.ok(expected.koFiles.includes(href));assert.ok(displayed.includes(await readFile('..'+href,'utf8')),view.sourceLibrary+' full displayed bytes '+href);}
+  }
+  const encoded=JSON.stringify([...sourceDocs.values()]);for(const href of expected.koFiles)assert.ok(encoded.includes(JSON.stringify(href)),expected.slug+' linked source '+href);
+ }
+});
+
+
+test('native teaching build resources are published as exact inert source bytes',async()=>{
+ const paths=[
+  'knowledge/shared/game-math-winapi-lab/windows/app.rc',
+  'knowledge/shared/game-math-winapi-lab/windows/app.manifest',
+  'knowledge/shared/dx9-pipeline-lab/examples/texture_sm3.hlsl',
+  'knowledge/shared/dx11-04/texture.hlsl',
+ ];
+ if(legacyChapters.some(chapter=>chapter.slug==='dx9-impl-10'))paths.push('knowledge/shared/dx9-impl-10-ko/shader_contract.fx');
+ for(const path of paths){
+  const original=await readFile('../'+path);assert.ok(original.length>0,path);
+  assert.deepEqual(await readFile('public/'+path),original,'native source byte preservation '+path);
+ }
 });

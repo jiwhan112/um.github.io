@@ -1,6 +1,17 @@
+import legacyVisualRollout from './fixtures/legacy-visual-rollout.json' with {type:'json'};
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
-import type {Catalog} from '../src/lib/types';
+import type {Block,Document,Catalog} from '../src/lib/types';
+const legacyTabLabels={document:'개념과 원리',practice:'실습·복습',sources:'출처·검증',history:'원문·변경기록'};
+function legacyBlocks(blocks:Block[]):Block[]{return blocks.flatMap(b=>[b,...('blocks'in b?legacyBlocks(b.blocks):b.type==='list'?b.items.flatMap(legacyBlocks):[])]);}
+async function revealLegacy(page:import('@playwright/test').Page,slug:string,kind:'section'|'code',needle:string){
+ if(!legacyVisualRollout.chapters.some(chapter=>chapter.slug===slug))return;
+ const authored=JSON.parse(readFileSync('../knowledge/'+slug+'/content.json','utf8')) as Document;
+ const section=authored.sections.find(section=>kind==='section'?section.id===needle:legacyBlocks(section.blocks).some(b=>b.type==='code'&&b.language!=='mermaid'&&b.text.includes(needle)));
+ expect(section,'approved content contract '+slug+' '+needle).toBeTruthy();
+ await page.getByRole('tab',{name:legacyTabLabels[section!.tab as keyof typeof legacyTabLabels],exact:true}).click();
+ await expect(page.locator('#'+section!.id)).toBeVisible();
+}
 const catalog=JSON.parse(readFileSync('public/data/atlas/catalog.json','utf8')) as Catalog;
 const routes=JSON.parse(readFileSync('public/data/atlas/routes.json','utf8')) as string[];
 const knowledgeDocs=catalog.documents.filter(doc=>doc.kind==='knowledge');
@@ -148,24 +159,39 @@ test('WinAPI and game math migrated lessons are usable through the sitemap',asyn
  await section.getByRole('link',{name:/WinAPI 01/}).click();
  await expect(page).toHaveURL(/\/knowledge\/winapi-01\/$/);
  await expect(page.locator('main h1')).toContainText('WinAPI 01');
- await expect(page.locator('main .prose table')).toHaveCount(1);
- await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
+ if(legacyVisualRollout.chapters.some(chapter=>chapter.slug==='winapi-01')){
+  await expect(page.getByRole('tab')).toHaveText(['개념과 원리','실습·복습','출처·검증','원문·변경기록']);
+  // Exact original table/answer payload preservation is checked against the frozen rollout fixture.
+  // Every new visual/review is exercised in legacy-visual-textbooks.spec.ts.
+ }else{
+  await expect(page.locator('main .prose table')).toHaveCount(1);
+  await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
+ }
  await page.goto('knowledge/dx9-pipeline-03/');
  await expect(page.locator('main h1')).toContainText('DX9 파이프라인 03');
+ if(legacyVisualRollout.chapters.some(chapter=>chapter.slug==='dx9-pipeline-03')){
+  await expect(page.getByRole('tab')).toHaveText(Object.values(legacyTabLabels));
+ }else{
  await expect(page.locator('main .prose table')).toHaveCount(2);
  await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
+ }
  await page.goto('knowledge/game-math-03/');
  await expect(page.locator('main h1')).toContainText('게임 수학 03');
  await expect(page.locator('main .prose code').first()).toBeVisible();
- await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
+ if(legacyVisualRollout.chapters.some(chapter=>chapter.slug==='game-math-03')){
+  await expect(page.getByRole('tab')).toHaveText(Object.values(legacyTabLabels));
+ }else await expect(page.locator('main .prose details.disclosure')).toHaveCount(2);
  await page.goto('knowledge/winapi-04a/');
- await expect(page.locator('main .code-block').filter({hasText:'int main()'})).toBeVisible();
+ if(legacyVisualRollout.chapters.some(chapter=>chapter.slug==='winapi-04a'))await page.getByRole('tab',{name:'실습·복습',exact:true}).click();
+ await expect(page.locator('#github-source .code-block').filter({hasText:'int main()'}).first()).toBeVisible();
  await expect(page.locator('main .code-block').filter({hasText:'add_test('})).toBeVisible();
  await page.goto('knowledge/winapi-math-lab/');
+ if(legacyVisualRollout.chapters.some(chapter=>chapter.slug==='winapi-math-lab'))await page.getByRole('tab',{name:'실습·복습',exact:true}).click();
  await expect(page.locator('main h1')).toContainText('공통 실습 전체 소스');
  await expect(page.locator('main .code-block').filter({hasText:'winapi_demo.cpp'}).first()).toBeVisible();
  await page.goto('knowledge/dx9-pipeline-lab/');
  await expect(page.locator('main h1')).toContainText('공통 실습 전체 소스');
+ await revealLegacy(page,'dx9-pipeline-lab','code','pipeline_trace');
  await expect(page.locator('main .code-block').filter({hasText:'pipeline_trace'}).first()).toBeVisible();
 });
 
@@ -176,15 +202,19 @@ test('DX9 implementation chapters and corrected full C++ source are linked insid
  await window.getByRole('link',{name:/DX9 03 · VB\/IB/}).click();
  await expect(page).toHaveURL(/\/knowledge\/dx9-impl-03\/$/);
  await expect(page.locator('main h1')).toContainText('DX9 03');
+ await revealLegacy(page,'dx9-impl-03','section','source-files');
  await expect(page.getByRole('link',{name:/DX9 03 · 전체 소스/})).toBeVisible().catch(async()=>{
   await expect(page.getByRole('link',{name:/전체 소스·CMake·원본 검증 페이지/}).first()).toBeVisible();
  });
  await page.goto('knowledge/dx9-impl-source-03a/');
  await expect(page.locator('main h1')).toContainText('03A');
+ await revealLegacy(page,'dx9-impl-source-03a','code','#include');
  await expect(page.locator('main .code-block').filter({hasText:'#include'}).first()).toBeVisible();
+ await revealLegacy(page,'dx9-impl-source-03a','code','project(dx9_resource_model');
  await expect(page.locator('main .code-block').filter({hasText:'project(dx9_resource_model'}).first()).toBeVisible();
  await page.goto('knowledge/dx9-impl-12/');
  await expect(page.locator('main h1')).toContainText('DX9 12');
+ await revealLegacy(page,'dx9-impl-12','code','// DX9 12: one complete source');
  await expect(page.locator('main .code-block').first()).toBeVisible();
 });
 
@@ -199,6 +229,7 @@ test('DX11 migrated chapter sitemap and raw diagrams are readable on the website
  await expect(page.locator('main .mermaid-canvas img').first()).toBeVisible();
  await page.goto('knowledge/dx11-06/');
  await expect(page.locator('main h1')).toContainText('DX11 06');
+ await revealLegacy(page,'dx11-06','section','visual-review');
  await expect(page.locator('main .prose details.disclosure').first()).toBeVisible();
 });
 
@@ -211,9 +242,11 @@ test('DX11 01, 07, 08 course chapters and recovered full C++ sources open',async
  await expect(page.locator('main h1')).toContainText('DX11 01');
  await expect(page.locator('main .mermaid-diagram').first()).toHaveAttribute('data-diagram-state','ready');
  await expect(page.locator('main .mermaid-canvas img').first()).toBeVisible();
+ await revealLegacy(page,'dx11-01','section','full-source');
  await expect(page.getByRole('link',{name:/GitHub Pages 전체 소스 교재에서 보기/})).toBeVisible();
  await page.goto('knowledge/dx11-sources-01/');
  await expect(page.locator('main h1')).toContainText('Device 초기화');
+ await revealLegacy(page,'dx11-sources-01','code','D3D11CreateDeviceAndSwapChain');
  await expect(page.locator('main .code-block').filter({hasText:'D3D11CreateDeviceAndSwapChain'}).first()).toBeVisible();
  await page.goto('knowledge/dx11-07/');
  await expect(page.locator('main h1')).toContainText('DX11 07');
@@ -221,6 +254,7 @@ test('DX11 01, 07, 08 course chapters and recovered full C++ sources open',async
  await expect(page.locator('main h1')).toContainText('DX11 08');
  await page.goto('knowledge/dx11-sources-05-08/');
  await expect(page.locator('main h1')).toContainText('05–08');
+ await revealLegacy(page,'dx11-sources-05-08','code','add_subdirectory(08_terrain)');
  await expect(page.locator('main .code-block').filter({hasText:'add_subdirectory(08_terrain)'}).first()).toBeVisible();
 });
 
@@ -234,8 +268,10 @@ test('DX11 Mesh/Animation/Collider/NavMesh navigation and full source links',asy
  await expect(page.locator('main h1')).toContainText('DX11 09');
  await expect(page.locator('main .mermaid-diagram').first()).toHaveAttribute('data-diagram-state','ready');
  await expect(page.locator('main .mermaid-canvas img').first()).toBeVisible();
+ await revealLegacy(page,'dx11-09','section','full-cpu-source');
  await page.getByRole('link',{name:'전체 C++ 및 CMake 파일 열기'}).click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-sources-09\/$/);
+ await revealLegacy(page,'dx11-sources-09','code','int main()');
  await expect(page.locator('main .code-block').filter({hasText:'int main()'}).first()).toBeVisible();
  await page.goto('knowledge/dx11-10/');
  await expect(page.locator('main h1')).toContainText('Skeletal Animation');
@@ -243,8 +279,10 @@ test('DX11 Mesh/Animation/Collider/NavMesh navigation and full source links',asy
  await expect(page.locator('main h1')).toContainText('Collider');
  await page.goto('knowledge/dx11-12/');
  await expect(page.locator('main h1')).toContainText('Navigation Mesh');
+ await revealLegacy(page,'dx11-12','section','full-cpu-source');
  await page.getByRole('link',{name:'전체 C++ 및 CMake 파일 열기'}).click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-sources-11-12\/$/);
+ await revealLegacy(page,'dx11-sources-11-12','code','add_subdirectory(12_navmesh)');
  await expect(page.locator('main .code-block').filter({hasText:'add_subdirectory(12_navmesh)'}).first()).toBeVisible();
 });
 
@@ -257,13 +295,16 @@ test('DX11 Instancing, Geometry, QuadTree, Font and Deferred lessons stay browsa
  await windows.locator('.knowledge-document-link[href$="/knowledge/dx11-13/"]').click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-13\/$/);
  await expect(page.locator('main h1')).toContainText('Instancing');
+ await revealLegacy(page,'dx11-13','section','github-source');
  await expect(page.getByRole('link',{name:/13 · GitHub 전체 소스 교재/})).toBeVisible();
  await page.goto('knowledge/dx11-sources-13/');
  await expect(page.locator('main h1')).toContainText('Instancing');
+ await revealLegacy(page,'dx11-sources-13','code','DynamicInstances');
  await expect(page.locator('main .code-block').filter({hasText:'DynamicInstances'}).first()).toBeVisible();
  await page.goto('knowledge/dx11-14/');
  await expect(page.locator('main h1')).toContainText('Geometry Shader');
  await page.goto('knowledge/dx11-sources-14/');
+ await revealLegacy(page,'dx11-sources-14','code','emitPointSprite');
  await expect(page.locator('main .code-block').filter({hasText:'emitPointSprite'}).first()).toBeVisible();
  await page.goto('knowledge/dx11-16/');
  await expect(page.locator('main h1')).toContainText('QuadTree');
@@ -272,6 +313,7 @@ test('DX11 Instancing, Geometry, QuadTree, Font and Deferred lessons stay browsa
  await page.goto('knowledge/dx11-18/');
  await expect(page.locator('main h1')).toContainText('Deferred');
  await page.goto('knowledge/dx11-sources-18/');
+ await revealLegacy(page,'dx11-sources-18','code','deferred');
  await expect(page.locator('main .code-block').filter({hasText:'deferred'}).first()).toBeVisible();
 });
 

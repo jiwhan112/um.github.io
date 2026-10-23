@@ -20,23 +20,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
-                },
-                {
-                  "text": "원본 Notion 페이지",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f408108847ded19eeeed81f"
-                },
-                {
-                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
-                }
-              ]
+              "text": "학습 경로: 개념·도식에서 계약을 읽고, 실습·복습에서 실패 경로를 추적한 다음, 출처·검증에서 실제 실행 범위를 확인한다. C/C++의 기본 소유권·정수·함수 문법은 기존 교재를 선수로 하며 여기서는 Windows 어댑터의 책임에 집중한다."
             }
           ]
         },
@@ -253,6 +240,12 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "image",
+          "src": "/knowledge/winapi-01/assets/app-lifetime.svg",
+          "alt": "App 객체의 수명 안에 창의 생성·사용·연결 해제를 배치한다.",
+          "caption": "App 객체의 수명 안에 창의 생성·사용·연결 해제를 배치한다."
+        },
+        {
           "type": "paragraph",
           "content": [
             {
@@ -322,6 +315,12 @@
       "title": "5. GetMessage는 세 가지 결과가 있습니다",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/winapi-01/assets/message-results.svg",
+          "alt": "GetMessageW의 양수·0·-1은 서로 다른 실행 경로다.",
+          "caption": "GetMessageW의 양수·0·-1은 서로 다른 실행 경로다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -417,7 +416,7 @@
     {
       "id": "part-8",
       "title": "8. 확인 질문과 검증 범위",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "details",
@@ -460,7 +459,7 @@
     {
       "id": "full-source-refs",
       "title": "전체 소스와 실행 가능한 공통 실습",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
         {
           "type": "callout",
@@ -469,7 +468,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "이 단원에서 설명한 코드의 전체 파일을 같은 ATLAS NOTE에서 볼 수 있습니다. 사용자 라이브러리의 독립 소스 원본과 대조했고 Linux CPU 검사만 새로 수행했습니다. Windows/MSVC·실제 Win32 GUI/GPU 실측은 미검증입니다."
+                  "text": "이 단원에서 설명한 코드의 전체 파일을 같은 ATLAS NOTE에서 볼 수 있습니다. 사용자 라이브러리의 독립 소스 원본과 대조했고 2026-10-19 이관 단계에서 Linux CPU 검사만 수행했습니다. 이 문장은 2026-10-19 원본 실행을 가리킵니다. 2026-10-23 주석본 확인은 별도 기록입니다. Windows/MSVC·실제 Win32 GUI/GPU 실측은 미검증입니다."
                 }
               ]
             }
@@ -524,8 +523,554 @@
               "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
             }
           ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래는 실제 원본 파일의 직접 링크다. GUI 전체 빌드에는 CPP뿐 아니라 헤더·리소스·CMake 설정이 필요하다. 공통 팩은 C++20이며 Win04A 정수 CPU 모델의 C++11/20 프로젝트와 구별한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · windows/winapi_demo.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/winapi_demo.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · windows/app.rc",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/app.rc"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · windows/app.manifest",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/app.manifest"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · include/loop.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/include/loop.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 · include/math.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/include/math.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 전체 주석본은 다음 직접 링크와 공통 소스 도서관의 접힌 전체 코드에서 읽는다. GUI·CPU 헤더와 빌드 의존 파일을 함께 받는다. 원본 영어 주석·문자열은 보존하고 설명 주석만 추가했다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · windows/winapi_demo.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/winapi_demo.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · windows/app.rc",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/app.rc"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · windows/app.manifest",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/app.manifest"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · include/loop.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/loop.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 학습 팩 전체 파일 · include/math.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/math.hpp"
+            }
+          ]
         }
       ]
+    },
+    {
+      "id": "visual-practice",
+      "title": "메시지·수명 추적 실습",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "종이에 RegisterClassExW → CreateWindowExW 진입 → WM_NCCREATE → 반환 순서를 적고, 각 순간 App과 HWND 중 무엇이 유효한지 표로 표시한다. 생성 중 콜백이라는 반례를 놓치지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "GetMessage 설명 루프의 반환값을 1·0·-1로 각각 가정하여 실행되는 줄을 표시한다. 실제 GUI는 PeekMessage 경로이므로 이 설명 조각을 실행 파일 전체로 오인하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "WindowProc에서 WM_NCCREATE, WM_NCDESTROY, catch 경계를 찾아 주소 연결·해제·실패 보고 책임을 적는다. 네이티브 중단점 실험은 Windows 환경이 준비된 뒤 수행할 계획이며 지금 실행한 기록이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "전체 소스의 읽기 위치"
+                  }
+                ],
+                [
+                  {
+                    "text": "한국어 해설"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "WindowProc / WM_NCCREATE"
+                  }
+                ],
+                [
+                  {
+                    "text": "CREATESTRUCTW에서 App*를 읽고 오류 표시를 구별해 저장한다."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "WM_NCDESTROY"
+                  }
+                ],
+                [
+                  {
+                    "text": "창에 연결한 관찰 포인터를 먼저 분리한다."
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "wWinMain"
+                  }
+                ],
+                [
+                  {
+                    "text": "App 지역 객체의 수명 안에서 창과 루프를 운영한다."
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-review",
+      "title": "복습 · 먼저 답한 뒤 펼치기",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "창 핸들과 프로세스 ID는 같은가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 한 프로세스 안에 여러 창이 있을 수 있다. HWND의 정리에는 창 API의 계약을 사용하고 CloseHandle을 기계적으로 적용하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CreateWindowExW가 돌아온 뒤에만 콜백이 실행되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 생성 중 WM_NCCREATE 등이 호출될 수 있다. 생성 인수에서 App 포인터를 꺼내 연결하는 순서를 이해해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "SetWindowLongPtrW의 반환 0은 항상 실패인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 이전 값이 0이었던 성공일 수 있다. 예제는 오류 상태를 먼저 지우고 반환값과 GetLastError를 함께 확인한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "GetMessageW의 -1을 참으로 보고 전달하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "오류 결과를 정상 메시지처럼 처리하게 된다. 양수·0·-1을 분리하고 오류 경로에서는 Translate/Dispatch를 실행하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "WM_QUIT는 WindowProc의 일반 case에서 처리하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 스레드 메시지 루프의 종료 신호다. 예제는 WM_DESTROY에서 PostQuitMessage로 이를 요청한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "GWLP_USERDATA에 저장하면 App의 수명도 늘어나는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 주소만 연결한다. App이 창보다 오래 살아야 하며 WM_NCDESTROY에서 연결을 해제한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "x86 stdcall의 스택 규칙을 x64에도 적용하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 플랫폼 ABI가 다르다. 요구된 CALLBACK/WINAPI 시그니처를 지키고 인수 평가 순서와 전달 위치도 구별한다."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tab": "practice"
+    },
+    {
+      "id": "visual-evidence",
+      "title": "출처·검증 · 원본과 현재 표현을 분리",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본의 개정일·과거 CPU 결과·Notion 연결은 그대로 유지한다. 이번 변경은 네 탭, 설명 그림, 복습과 소스 탐색을 보강한 표현 계층 개편이다. Windows/MSVC·실제 GUI·DPI·GDI·GPU·FMOD를 새로 실행하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공통 팩의 보존된 검증 범위",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/docs/validation.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-19 소스 복원·CPU 검증 원장",
+              "kind": "link",
+              "href": "/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Microsoft — 창 생성과 HWND",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/learnwin32/creating-a-window"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Microsoft — WinMain 진입점",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/learnwin32/winmain--the-application-entry-point"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Microsoft — SetWindowLongPtrW",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "GetMessageW",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "PeekMessageW",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "TranslateMessage 공식 문서",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Microsoft — x64 호출 규약",
+              "kind": "link",
+              "href": "https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 전체 주석본은 원본을 대체하지 않는 별도 파생 파일이다. 지정된 한국어 주석 줄을 제거하면 원본 바이트가 복원되며 원본·주석본 해시는 manifest에 있다. 주석본 담당자의 2026-10-23 Linux GCC 14.2 직접 컴파일·실행 및 -E -P 비교 기록은 기존 CPU 결과와 분리한다. 공통 6개 프로그램과 Win04A를 확인했으며 이번 주석본 작업의 CMake/CTest·sanitizer·Windows GUI/MSVC/GPU 실행은 하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본 구성·빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·주석본 SHA와 삽입 줄 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 검증 결과와 미검증 범위",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 바이트 복원 검사 도구",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/verify_annotations.py"
+            }
+          ]
+        }
+      ],
+      "tab": "sources"
+    },
+    {
+      "id": "visual-history",
+      "title": "원문·변경 기록",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid 원본 코드도 보존하며 현재 페이지에서 도식으로 표시합니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f408108847ded19eeeed81f"
+                },
+                {
+                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 시각 교재 개편: 기존 주제·표·코드·복습·URL·과거 증거를 유지하고 도식·실습·복습을 보강했다. 원본 Notion Markdown과 공유 소스·로그는 변경하지 않았다. 아래 원본은 역사적 내용이며 새 실행 완료를 뜻하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존된 Notion 원문",
+              "kind": "link",
+              "href": "/knowledge/winapi-01/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 웹 저작 원본",
+              "kind": "link",
+              "href": "/knowledge/winapi-01/content.json"
+            }
+          ]
+        }
+      ],
+      "tab": "history"
     }
   ]
 }

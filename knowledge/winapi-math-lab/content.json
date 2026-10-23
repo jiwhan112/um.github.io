@@ -21,6 +21,20 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "image",
+          "src": "/knowledge/winapi-math-lab/assets/source-map.svg",
+          "alt": "공통 헤더·CPU 프로그램·Windows 어댑터와 검증 원장을 분리해 찾는다.",
+          "caption": "공통 헤더·CPU 프로그램·Windows 어댑터와 검증 원장을 분리해 찾는다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 페이지는 거대한 강의를 반복하는 대신 18개 원본 파일을 찾는 소스 지도다. 개념 탭에서 빌드 경로를 고르고, 실습 탭에서 전체 코드를 읽고, 출처·검증과 원문·변경 기록을 분리해 확인한다."
+            }
+          ]
+        },
+        {
           "type": "callout",
           "blocks": [
             {
@@ -46,7 +60,7 @@
                 ],
                 [
                   {
-                    "text": "새 GitHub CI 결과"
+                    "text": "2026-10-19 GitHub CI 결과"
                   }
                 ],
                 [
@@ -149,7 +163,7 @@
               "type": "paragraph",
               "content": [
                 {
-                  "text": "아닙니다. Linux CPU 시뮬레이션 실행만 새로 검증했습니다. 코드 중 Windows SDK·Win32 GUI·HLSL은 해당 도구 및 GPU에서 실제 컴파일하지 않았으므로 결과를 별도로 표시합니다."
+                  "text": "아닙니다. 당시 이관 작업에서는 Linux CPU 시뮬레이션 실행만 검증했습니다. 원본의 당시 실행과 2026-10-23 주석본 확인은 별도 기록입니다. 코드 중 Windows SDK·Win32 GUI·HLSL은 해당 도구 및 GPU에서 실제 컴파일하지 않았으므로 결과를 별도로 표시합니다."
                 }
               ]
             }
@@ -168,14 +182,29 @@
               ]
             }
           ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[공통 CMake 프로젝트] --> B{플랫폼}\n B -->|Linux 등| C[CPU 프로그램 6개]\n B -->|Windows| D[CPU 프로그램과 GUI 타깃]\n C --> E[기존 CPU CTest 증거]\n D --> F[SDK·RC·user32·gdi32 필요]\n F --> G[네이티브 GUI 검증은 별도 대기]"
         }
       ]
     },
     {
       "id": "file-1",
       "title": "CMakeLists.txt",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/CMakeLists.txt"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -193,64 +222,174 @@
           "type": "code",
           "language": "cmake",
           "text": "cmake_minimum_required(VERSION 3.20)\nproject(GameMathWinApiLab LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\noption(ENABLE_SANITIZERS \"Enable ASan and UBSan for portable tests\" OFF)\nadd_library(study_options INTERFACE)\ntarget_include_directories(study_options INTERFACE \"${CMAKE_CURRENT_SOURCE_DIR}/include\")\nif(MSVC)\n  target_compile_options(study_options INTERFACE /W4 /permissive- /utf-8)\nelse()\n  target_compile_options(study_options INTERFACE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)\n  if(ENABLE_SANITIZERS)\n    target_compile_options(study_options INTERFACE -fsanitize=address,undefined -fno-omit-frame-pointer)\n    target_link_options(study_options INTERFACE -fsanitize=address,undefined)\n  endif()\nendif()\nfind_package(Threads REQUIRED)\nenable_testing()\nforeach(name IN ITEMS vector_motion transforms geometry loop_input tile_document pathfinding)\n  add_executable(${name} src/${name}.cpp)\n  target_link_libraries(${name} PRIVATE study_options Threads::Threads)\n  add_test(NAME ${name} COMMAND ${name})\nendforeach()\nif(WIN32)\n  enable_language(RC)\n  add_executable(winapi_demo WIN32 windows/winapi_demo.cpp windows/app.rc)\n  target_include_directories(winapi_demo PRIVATE windows)\n  target_compile_definitions(winapi_demo PRIVATE UNICODE _UNICODE NOMINMAX WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0A00)\n  target_link_libraries(winapi_demo PRIVATE study_options user32 gdi32)\n  if(MSVC)\n    target_link_options(winapi_demo PRIVATE /MANIFEST:NO)\n  elseif(MINGW)\n    target_link_options(winapi_demo PRIVATE -municode)\n  endif()\nendif()\n"
-        }
-      ]
-    },
-    {
-      "id": "file-2",
-      "title": "README.md",
-      "tab": "document",
-      "blocks": [
+        },
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "원본 경로: game-math-winapi-lab/README.md · 전체 코드. "
-            },
+              "text": "먼저 원하는 개념의 CPP와 include 의존성을 확인한다. 편집기에서 한 파일을 열 수 있다는 것과 완전한 빌드 입력을 갖췄다는 것은 다르다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
             {
-              "text": "GitHub에서 원본 파일 보기",
+              "text": "원본 파일·표시된 코드·과거 실행 로그의 세 층을 구별한다. 원본 해시가 유지되어도 새 페이지 렌더링은 별도 확인이 필요하다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows GUI가 목적이면 WIN32 조건 타깃과 리소스·SDK를 함께 준비한다. Linux에서 CPU 프로그램만 빌드한 결과를 GUI 성공으로 기록하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "전체 소스 18개면 실행 프로그램도 18개인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 헤더·빌드·문서·리소스·해시 파일을 포함한 수다. 공통 CPU 실행 프로그램은 6개이고 GUI는 Windows 조건의 별도 타깃이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "웹 코드 블록만으로 원본 무결성을 판정하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확한 바이트·해시는 공유 원본 파일과 무결성 원장을 기준으로 확인한다. 표시 계층과 원본 파일은 구별한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "loop_input.cpp만 받으면 독립 빌드가 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "include/loop.hpp와 include/check.hpp 등 실제 include 의존성, C++20 설정을 함께 보아야 한다. 전체 팩 구조와 CMake를 유지하는 것이 기본 경로다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Windows 타깃에 필요한 별도 파일은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "windows/winapi_demo.cpp, app.rc, app.manifest와 포함하는 loop/math 헤더, CMake의 정의·include·user32/gdi32 링크 설정을 함께 확인한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원본 ZIP 바이트도 확인되었는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기존 출처 원장은 원본 ZIP 및 Notion 첨부 바이너리 실물은 미확인이라고 명시한다. Markdown에서 복원한 소스와 이를 혼동하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "이번 시각 개편으로 CPU 성공 날짜를 갱신하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 과거 실행 기록과 이번 표시·탭·그림 변경을 분리한다. 새로운 Windows 네이티브 검증을 주장하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본과 동일한 빌드·리소스 파일 · CMakeLists.txt",
               "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/README.md"
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · CMakeLists.txt 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.20)\nproject(GameMathWinApiLab LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\noption(ENABLE_SANITIZERS \"Enable ASan and UBSan for portable tests\" OFF)\nadd_library(study_options INTERFACE)\ntarget_include_directories(study_options INTERFACE \"${CMAKE_CURRENT_SOURCE_DIR}/include\")\nif(MSVC)\n  target_compile_options(study_options INTERFACE /W4 /permissive- /utf-8)\nelse()\n  target_compile_options(study_options INTERFACE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)\n  if(ENABLE_SANITIZERS)\n    target_compile_options(study_options INTERFACE -fsanitize=address,undefined -fno-omit-frame-pointer)\n    target_link_options(study_options INTERFACE -fsanitize=address,undefined)\n  endif()\nendif()\nfind_package(Threads REQUIRED)\nenable_testing()\nforeach(name IN ITEMS vector_motion transforms geometry loop_input tile_document pathfinding)\n  add_executable(${name} src/${name}.cpp)\n  target_link_libraries(${name} PRIVATE study_options Threads::Threads)\n  add_test(NAME ${name} COMMAND ${name})\nendforeach()\nif(WIN32)\n  enable_language(RC)\n  add_executable(winapi_demo WIN32 windows/winapi_demo.cpp windows/app.rc)\n  target_include_directories(winapi_demo PRIVATE windows)\n  target_compile_definitions(winapi_demo PRIVATE UNICODE _UNICODE NOMINMAX WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0A00)\n  target_link_libraries(winapi_demo PRIVATE study_options user32 gdi32)\n  if(MSVC)\n    target_link_options(winapi_demo PRIVATE /MANIFEST:NO)\n  elseif(MINGW)\n    target_link_options(winapi_demo PRIVATE -municode)\n  endif()\nendif()\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 팩의 CMakeLists·RC·manifest는 원본과 동일하다. 헤더·CPP에는 설명 주석만 삽입했다. README·과거 검증 문서·원본 해시 원장은 역사적 원본 링크를 유지하며 새 주석본 README/검증 기록과 혼합하지 않는다."
             }
           ]
         },
         {
           "type": "code",
-          "language": "markdown",
-          "text": "# 게임 수학 · MFC · WinAPI 실습 팩 v1.0\n\n개정일: 2026-10-13. C++20 학습 기준. 회사 프로젝트나 외부 SDK의 원본 코드가 아닌 독립 학습 예제입니다.\n\n## 실행한 범위와 실행하지 않은 범위\n\nLinux x86-64 / GCC 14.2.0 / Clang 17.0.0 / CMake 3.31.6에서 플랫폼 독립 프로그램 6개를 빌드하고 실행했습니다. Clang ASan·UBSan 구성도 통과했습니다. `logs/`에는 실제 명령의 구성·빌드·CTest 로그가 있습니다.\n\n**Windows/MSVC와 windows/winapi_demo.cpp는 컴파일하거나 실행하지 않았습니다.** Windows SDK, MFC, GPU, DirectX, FMOD 실행 환경이 이 검증 환경에 없습니다. GUI 소스는 공식 API 계약을 대조한 정적 검토 결과입니다. 실행 확인 목록은 docs/validation.md에 있습니다. MFC GUI 프로젝트, D3DX 또는 FMOD 바이너리는 포함하지 않습니다.\n\n## 폴더\n\n- include/math.hpp: 벡터, 스칼라 행렬, 기하, 카메라, 타일 좌표.\n- include/loop.hpp: 입력 에지, 고정 시간 간격, 애니메이션.\n- include/grid.hpp: 맵 파싱, 편집/Undo/Redo, A*.\n- include/check.hpp: 정상 조건 검사 도우미.\n- src/: 독립 실행 가능한 프로그램 6개.\n- windows/: 별도의 Win32 GUI 예제와 DPI manifest.\n- docs/validation.md: 실제 결과와 미검증 항목.\n- logs/: 이번 실제 실행 로그.\n- verify.py: 임시 빌드 디렉터리에서 같은 테스트를 재실행하는 도구.\n\n## 빌드\n\n압축을 푼 이 폴더에서:\n\n```shell\ncmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build --config Debug\nctest --test-dir build -C Debug --output-on-failure\n```\n\nClang 검사기 사용:\n\n```shell\ncmake -S . -B build-san -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON\ncmake --build build-san --config Debug\nctest --test-dir build-san -C Debug --output-on-failure\n```\n\n선택 사항: Python 3으로 별도의 임시 빌드/로그 만들기.\n\n```shell\npython verify.py --compiler g++\npython verify.py --compiler clang++ --sanitizers\n```\n\nWindows에서는 MSVC C++ 도구와 Windows SDK를 준비하고 x64 개발자 터미널 또는 Visual Studio CMake 기능을 사용합니다. `cmake -S . -B build`와 `cmake --build build --config Debug`로 구성합니다. 자동 선택된 생성기에 따라 실행 파일은 `build/Debug/winapi_demo.exe` 또는 `build/winapi_demo.exe`에 있습니다. 다른 생성기로 이미 구성한 build 폴더는 재사용하지 마세요.\n\nWin32 예제는 Windows 10 version 1703 이상을 대상으로 작성했습니다. PMv2 manifest를 app.rc에 포함하고 MSVC의 자동 manifest 생성을 `/MANIFEST:NO`로 끕니다. 폰트의 정교한 DPI별 재구성은 구현하지 않았습니다.\n\n## GUI 조작과 설계\n\n방향키: 이동. 클릭: 목표를 향해 이동. Space: 위치 초기화. Esc: 종료.\n120Hz는 고정 Update 간격이지 화면 주사율 보장이 아닙니다. 한 루프에서 최대 8회, 프레임 경과 입력 최대 0.25초로 제한합니다. 밀린 시간을 일부 버리는 로컬 데모 정책이며 네트워크 결정적 시뮬레이션을 구현한 것이 아닙니다. 최소화·비활성·크기 조정 중에는 정지하고 복귀 시 시간 기준을 재설정합니다.\nApp 좌표는 x 오른쪽/y 아래쪽의 논리 단위이며 DPI/96으로 출력합니다. math.hpp의 Camera2D는 별도의 x 오른쪽/y 위쪽 월드를 화면으로 변환합니다. 두 규약을 무심코 혼용하지 마세요.\n\n## 수학 및 데이터 계약\n\n행 벡터 p*M, 행별 저장의 4x4 행렬을 사용합니다. Transform은 w를 포함한 4성분 원시 결과이며 자동 원근 나눗셈을 하지 않습니다. 행렬/벡터 기본 산술은 중간값이 유한 범위에 들어가는 보통 크기의 값에 대한 학습용이며 모든 함수가 모든 입력의 범위를 검사하지는 않습니다. 정규화 등 검사 함수도 전체 IEEE754 입력 공간에서 수치 안정성을 증명하는 것은 아닙니다.\n\n역행렬은 부분 피벗 Gauss–Jordan과 절대 임계값 1e-12를 사용합니다. 조건수·스케일 적응형 판정을 포함한 범용 수치 라이브러리가 아닙니다. AABB/원은 접촉도 충돌로 취급합니다. 마름모 타일 소속은 중심 주변 반열린 구간입니다. 카메라/타일 투영의 y축 규약은 헤더 주석과 문서를 함께 읽습니다.\n\n맵 포맷: `MAP1 width height` 뒤 정확히 width*height개의 정수. 폭/높이 1..256, ID 0..4095, 텍스트 4MiB 이하. 행 구분은 저장 출력 형식이며 파서는 공백 구분 토큰을 읽습니다. 임시 모델에 완전히 읽고 검증한 뒤 교체합니다. 파일 시스템 원자적 저장이나 전원 장애 복구까지 제공하지 않습니다.\n\nA*: 0은 통과 가능, 다른 ID는 막힘. 네 방향 이동 비용1, Manhattan 휴리스틱. 반환 경로는 시작과 목표를 포함합니다. 가중치·대각선·움직이는 장애물은 다루지 않습니다.\n\n## 학습 노트\n\n- 게임 수학·MFC: https://app.notion.com/p/3bde90ebffa44ef0a6455ca8e68a7886\n- WinAPI 게임 프로그래밍: https://app.notion.com/p/fffca9a4ce864ac7bade7efe90186be7\n\n## 참고 자료\n\n계산 구현과 테스트는 이 실습용으로 작성했습니다. 아래 자료는 API 계약과 알고리즘 설명을 대조한 근거입니다.\n\n- DirectXMath 규약: https://learn.microsoft.com/en-us/windows/win32/dxmath/pg-xnamath-getting-started\n- Win32 창: https://learn.microsoft.com/en-us/windows/win32/learnwin32/creating-a-window\n- QPC: https://learn.microsoft.com/en-us/windows/win32/sysinfo/acquiring-high-resolution-time-stamps\n- GDI bitmap: https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap\n- DPI: https://learn.microsoft.com/en-us/windows/win32/hidpi/wm-dpichanged\n- MFC: https://learn.microsoft.com/en-us/cpp/mfc/document-view-architecture\n- A*: https://inst.eecs.berkeley.edu/~cs188/textbook/search/informed.html\n- 시간 단계: https://gafferongames.com/post/fix_your_timestep/\n"
-        }
-      ]
-    },
-    {
-      "id": "file-3",
-      "title": "docs/validation.md",
-      "tab": "document",
-      "blocks": [
+          "language": "sh",
+          "text": "cmake -S knowledge/shared/game-math-winapi-lab-ko -B build-winapi-ko -DCMAKE_BUILD_TYPE=Debug\ncmake --build build-winapi-ko --config Debug\nctest --test-dir build-winapi-ko -C Debug --output-on-failure"
+        },
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "원본 경로: game-math-winapi-lab/docs/validation.md · 전체 코드. "
-            },
-            {
-              "text": "GitHub에서 원본 파일 보기",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/docs/validation.md"
+              "text": "위 CMake 명령은 재현용이며 이번 주석본 검증에서는 CMake/CTest가 없어 실행하지 않았다. 실제 확인한 직접 컴파일 명령은 한국어 팩 README와 validation.json에서 구별한다."
             }
           ]
-        },
-        {
-          "type": "code",
-          "language": "markdown",
-          "text": "# 게임 수학·WinAPI v1.0 — 실제 검증 기록\n\n날짜: 2026-10-13. 환경: Linux x86-64. GCC 14.2.0, Clang 17.0.0, CMake 3.31.6. C++20 / Debug. 경고 옵션: -Wall -Wextra -Wpedantic -Wconversion -Wshadow.\n\n| 프로그램 | 조건 검사 | 확인 대상 |\n|---|---:|---|\n| vector_motion | 19 | 내외적, 정규화 실패, 이동, 각도, 점프 |\n| transforms | 29 | SRT, 역행렬 왕복/실패, 법선, 카메라 |\n| geometry | 78 | 충돌 접촉, 선분, 8x8 타일 중심과 경계 |\n| loop_input | 484 | 고정 시간 단계, 입력 에지, 애니메이션 |\n| tile_document | 26 | 편집/Undo/Redo, 파싱 실패, 작업 스냅샷 |\n| pathfinding | 93,561 | A*와 독립 BFS 비교, 반환 경로의 유효성 |\n| 합계 | 94,197 | 반복 원소 검사 포함 |\n\nGCC, Clang, Clang ASan·UBSan 각각 6/6 프로그램 통과. 정상 빌드 로그에는 컴파일러 경고가 없었습니다. 검사기 실행에 ASAN_OPTIONS=detect_leaks=1, UBSAN_OPTIONS=halt_on_error=1을 적용했습니다. 실행 중 해당 검사기 진단을 관찰하지 않았습니다.\n\nA* 비교 범위: 3x3 격자의 장애물 배치 512개 × 시작9 × 도착9 = 41,472개 시나리오. BFS와 도달 가능성/최단 길이를 비교하며 경로 끝점, 통과 가능 여부, 연속 칸의 인접성도 검사했습니다. 이 검사를 대각선/가중치/이동 장애물/모든 크기의 지도에 대한 증명으로 확대하지 않습니다.\n\nmath.hpp, loop.hpp, grid.hpp를 각각 단독 include한 번역 단위를 GCC와 Clang에서 -Werror -fsyntax-only로 확인했습니다.\n\n## 검증하지 않은 범위\n\nWindows/MSVC에서의 컴파일, Win32 GUI, MFC DDX/스플리터/대화상자, DPI 모니터 이동, GDI 객체 수 안정성, GPU/DirectX/D3DX/FMOD 실행, ThreadSanitizer 경쟁 검사, 성능 벤치마크는 수행하지 않았습니다. Win32 소스는 정적 검토만 수행했습니다.\n\n## Windows 수동 확인 목록 (아직 실행하지 않음)\n\n1. 창 생성과 Esc/닫기 버튼 종료. 예외 메시지나 남는 프로세스 여부.\n2. 대각선과 수평 이동 거리 비교, 클릭 목표 도착 시 지나침 여부.\n3. 키를 누른 채 Alt+Tab한 뒤 복귀해 입력이 남지 않는지.\n4. 최소화 복구와 긴 리사이즈 이후 상태가 급격히 진행하지 않는지.\n5. 100/150/200% DPI, 모니터 간 이동 시 클릭과 도형 위치의 일치.\n6. 여러 차례 리사이즈 후 GDI 객체 수가 계속 증가하지 않는지.\n7. 버퍼 할당/복사 실패, 매우 작거나 큰 클라이언트 영역 처리.\n8. 창 파괴 이후 App에 접근하는 콜백이 없는지.\n\n## 결과의 해석\n\n동일 조건을 세 구성에서 반복한 것이며 이를 독립된 조건 282,591개로 표시하지 않습니다. ASan·UBSan 통과는 실행된 경로에 대한 관찰이고 모든 메모리 오류나 수치 오류가 없다는 증명이 아닙니다. 실습의 파일 포맷 검증은 문법/범위의 검증이며 원자적 디스크 저장은 구현하지 않았습니다.\n"
         }
       ]
     },
     {
       "id": "file-4",
       "title": "include/check.hpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · include/check.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/include/check.hpp"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -268,14 +407,45 @@
           "type": "code",
           "language": "cpp",
           "text": "#ifndef STUDY_CHECK_HPP\n#define STUDY_CHECK_HPP\n#include <algorithm>\n#include <cmath>\n#include <iostream>\n#include <stdexcept>\n#include <string>\ninline int checks=0;\ninline void Check(bool condition,const char* label) {\n    ++checks; if (!condition) throw std::runtime_error(label);\n}\ninline bool Near(double a,double b,double eps=1e-9) {\n    return std::isfinite(a)&&std::isfinite(b)&&std::abs(a-b)<=eps*std::max({1.0,std::abs(a),std::abs(b)});\n}\ntemplate<class F> void Throws(F&& f) {\n    bool threw=false; try { f(); } catch(const std::exception&) { threw=true; }\n    Check(threw,\"expected exception\");\n}\ninline int Done(const char* name) { std::cout<<name<<\": \"<<checks<<\" checks passed\\n\"; return 0; }\n#endif\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · include/check.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/check.hpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · include/check.hpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#ifndef STUDY_CHECK_HPP\n#define STUDY_CHECK_HPP\n#include <algorithm>\n#include <cmath>\n#include <iostream>\n#include <stdexcept>\n#include <string>\n// [한국어 해설] 학습용 검사 카운터다. 병렬 검사 실행용 원자 카운터는 아니다.\ninline int checks=0;\ninline void Check(bool condition,const char* label) {\n    ++checks; if (!condition) throw std::runtime_error(label);\n}\n// [한국어 해설] 상대 크기와 절대 오차를 함께 고려한다. NaN과 무한대는 근사 일치로 처리하지 않는다.\ninline bool Near(double a,double b,double eps=1e-9) {\n    return std::isfinite(a)&&std::isfinite(b)&&std::abs(a-b)<=eps*std::max({1.0,std::abs(a),std::abs(b)});\n}\n// [한국어 해설] 예외 발생 여부를 검사하지만 정확한 예외 종류까지 검증하지는 않는다.\ntemplate<class F> void Throws(F&& f) {\n    bool threw=false; try { f(); } catch(const std::exception&) { threw=true; }\n    Check(threw,\"expected exception\");\n}\ninline int Done(const char* name) { std::cout<<name<<\": \"<<checks<<\" checks passed\\n\"; return 0; }\n#endif\n"
+            }
+          ]
         }
       ]
     },
     {
       "id": "file-5",
       "title": "include/grid.hpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · include/grid.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/include/grid.hpp"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -293,14 +463,45 @@
           "type": "code",
           "language": "cpp",
           "text": "#ifndef STUDY_GRID_HPP\n#define STUDY_GRID_HPP\n#include <functional>\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <cstddef>\n#include <limits>\n#include <optional>\n#include <queue>\n#include <sstream>\n#include <stdexcept>\n#include <string>\n#include <string_view>\n#include <tuple>\n#include <utility>\n#include <vector>\nnamespace study {\nstruct Cell { int x{},y{}; bool operator==(const Cell&) const=default; };\nclass Grid {\n    int width_,height_;\n    std::vector<int> tiles_;\n    static std::size_t Count(int w,int h) {\n        if (w<=0||h<=0||w>256||h>256) throw std::invalid_argument(\"dimensions must be 1..256\");\n        return static_cast<std::size_t>(w)*static_cast<std::size_t>(h);\n    }\npublic:\n    Grid(int w,int h):width_(w),height_(h),tiles_(Count(w,h)) {}\n    int Width() const noexcept { return width_; }\n    int Height() const noexcept { return height_; }\n    bool Contains(Cell p) const noexcept { return p.x>=0&&p.y>=0&&p.x<width_&&p.y<height_; }\n    std::size_t Index(Cell p) const {\n        if (!Contains(p)) throw std::out_of_range(\"cell\");\n        return static_cast<std::size_t>(p.y)*static_cast<std::size_t>(width_)+static_cast<std::size_t>(p.x);\n    }\n    int Tile(Cell p) const { return tiles_[Index(p)]; }\n    void Set(Cell p,int tile) {\n        if (tile<0||tile>4095) throw std::invalid_argument(\"tile id must be 0..4095\");\n        tiles_[Index(p)]=tile;\n    }\n    // For pathfinding only: 0 = walkable; all other tile IDs are blocked.\n    bool Walkable(Cell p) const { return Contains(p)&&Tile(p)==0; }\n    std::string Serialize() const {\n        std::ostringstream out; out<<\"MAP1 \"<<width_<<' '<<height_<<'\\n';\n        for (int y=0;y<height_;++y) {\n            for (int x=0;x<width_;++x) out<<Tile({x,y})<<(x+1==width_?'\\n':' ');\n        }\n        if (!out) throw std::runtime_error(\"serialization failed\");\n        return out.str();\n    }\n    static Grid Parse(std::string_view text) {\n        if (text.size()>4*1024*1024) throw std::invalid_argument(\"map exceeds 4 MiB\");\n        std::istringstream in{std::string(text)};\n        std::string magic; int width{},height{};\n        if (!(in>>magic>>width>>height)||magic!=\"MAP1\") throw std::invalid_argument(\"map header\");\n        Grid candidate(width,height);\n        for (int y=0;y<height;++y) for (int x=0;x<width;++x) {\n            int tile{};\n            if (!(in>>tile)) throw std::invalid_argument(\"missing tile\");\n            candidate.Set({x,y},tile);\n        }\n        in>>std::ws;\n        if (!in.eof()) throw std::invalid_argument(\"trailing map data\");\n        return candidate;\n    }\n};\nstruct Edit { Cell cell; int before{},after{}; };\nclass TileDocument {\n    Grid grid_;\n    std::vector<Edit> undo_,redo_;\npublic:\n    explicit TileDocument(Grid grid):grid_(std::move(grid)) {}\n    const Grid& Data() const noexcept { return grid_; }\n    void Paint(Cell cell,int tile) {\n        if (tile<0||tile>4095) throw std::invalid_argument(\"tile\");\n        const int old=grid_.Tile(cell);\n        if (old==tile) return;\n        undo_.push_back(Edit{cell,old,tile}); // allocate history before modifying data\n        grid_.Set(cell,tile); redo_.clear();\n    }\n    bool Undo() {\n        if (undo_.empty()) return false;\n        const Edit edit=undo_.back(); redo_.push_back(edit);\n        grid_.Set(edit.cell,edit.before); undo_.pop_back(); return true;\n    }\n    bool Redo() {\n        if (redo_.empty()) return false;\n        const Edit edit=redo_.back(); undo_.push_back(edit);\n        grid_.Set(edit.cell,edit.after); redo_.pop_back(); return true;\n    }\n    void Load(std::string_view text) {\n        Grid candidate=Grid::Parse(text); // parse fully before committing\n        grid_=std::move(candidate); undo_.clear(); redo_.clear();\n    }\n};\ninline std::optional<std::vector<Cell>> AStar(const Grid& grid,Cell start,Cell goal) {\n    if (!grid.Walkable(start)||!grid.Walkable(goal)) return std::nullopt;\n    const int width=grid.Width(),count=width*grid.Height(); // bounded by 256*256\n    const auto id=[width](Cell p){return p.y*width+p.x;};\n    const auto point=[width](int n){return Cell{n%width,n/width};};\n    const auto h=[goal](Cell p){return std::abs(goal.x-p.x)+std::abs(goal.y-p.y);};\n    std::vector<int> distance(static_cast<std::size_t>(count),std::numeric_limits<int>::max());\n    std::vector<int> parent(static_cast<std::size_t>(count),-1);\n    using Entry=std::tuple<int,int,int>; // f, g, id; deterministic tiebreak\n    std::priority_queue<Entry,std::vector<Entry>,std::greater<Entry>> open;\n    distance[static_cast<std::size_t>(id(start))]=0;\n    open.emplace(h(start),0,id(start));\n    constexpr std::array<Cell,4> neighbors{{{1,0},{0,1},{-1,0},{0,-1}}};\n    while (!open.empty()) {\n        const auto [f,g,node]=open.top(); open.pop(); (void)f;\n        if (g!=distance[static_cast<std::size_t>(node)]) continue; // stale entry\n        const Cell at=point(node);\n        if (at==goal) {\n            std::vector<Cell> path;\n            for (int p=node;p!=-1;p=parent[static_cast<std::size_t>(p)]) path.push_back(point(p));\n            std::reverse(path.begin(),path.end()); return path;\n        }\n        for (Cell offset:neighbors) {\n            const Cell next{at.x+offset.x,at.y+offset.y};\n            if (!grid.Walkable(next)) continue;\n            const int n=id(next),candidate=g+1;\n            if (candidate>=distance[static_cast<std::size_t>(n)]) continue;\n            distance[static_cast<std::size_t>(n)]=candidate; parent[static_cast<std::size_t>(n)]=node;\n            open.emplace(candidate+h(next),candidate,n);\n        }\n    }\n    return std::nullopt;\n}\n}\n#endif\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · include/grid.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/grid.hpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · include/grid.hpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#ifndef STUDY_GRID_HPP\n#define STUDY_GRID_HPP\n#include <functional>\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <cstddef>\n#include <limits>\n#include <optional>\n#include <queue>\n#include <sstream>\n#include <stdexcept>\n#include <string>\n#include <string_view>\n#include <tuple>\n#include <utility>\n#include <vector>\nnamespace study {\nstruct Cell { int x{},y{}; bool operator==(const Cell&) const=default; };\n// [한국어 해설] 폭·높이 1..256, 타일 ID 0..4095 계약을 가진 행 우선 저장 모델이다.\nclass Grid {\n    int width_,height_;\n    std::vector<int> tiles_;\n    static std::size_t Count(int w,int h) {\n        if (w<=0||h<=0||w>256||h>256) throw std::invalid_argument(\"dimensions must be 1..256\");\n        return static_cast<std::size_t>(w)*static_cast<std::size_t>(h);\n    }\npublic:\n    Grid(int w,int h):width_(w),height_(h),tiles_(Count(w,h)) {}\n    int Width() const noexcept { return width_; }\n    int Height() const noexcept { return height_; }\n    bool Contains(Cell p) const noexcept { return p.x>=0&&p.y>=0&&p.x<width_&&p.y<height_; }\n// [한국어 해설] 범위를 검사한 뒤 y*폭+x로 선형 인덱스를 계산한다.\n    std::size_t Index(Cell p) const {\n        if (!Contains(p)) throw std::out_of_range(\"cell\");\n        return static_cast<std::size_t>(p.y)*static_cast<std::size_t>(width_)+static_cast<std::size_t>(p.x);\n    }\n    int Tile(Cell p) const { return tiles_[Index(p)]; }\n    void Set(Cell p,int tile) {\n        if (tile<0||tile>4095) throw std::invalid_argument(\"tile id must be 0..4095\");\n        tiles_[Index(p)]=tile;\n    }\n    // For pathfinding only: 0 = walkable; all other tile IDs are blocked.\n// [한국어 해설] 길찾기에서만 0을 통과 가능으로 해석한다. 모든 타일의 일반적인 의미를 정의한 것은 아니다.\n    bool Walkable(Cell p) const { return Contains(p)&&Tile(p)==0; }\n    std::string Serialize() const {\n        std::ostringstream out; out<<\"MAP1 \"<<width_<<' '<<height_<<'\\n';\n        for (int y=0;y<height_;++y) {\n            for (int x=0;x<width_;++x) out<<Tile({x,y})<<(x+1==width_?'\\n':' ');\n        }\n        if (!out) throw std::runtime_error(\"serialization failed\");\n        return out.str();\n    }\n// [한국어 해설] 4MiB 제한, 헤더, 셀 수, 타일 범위, 남는 토큰까지 검사한 임시 맵만 반환한다.\n    static Grid Parse(std::string_view text) {\n        if (text.size()>4*1024*1024) throw std::invalid_argument(\"map exceeds 4 MiB\");\n        std::istringstream in{std::string(text)};\n        std::string magic; int width{},height{};\n        if (!(in>>magic>>width>>height)||magic!=\"MAP1\") throw std::invalid_argument(\"map header\");\n        Grid candidate(width,height);\n        for (int y=0;y<height;++y) for (int x=0;x<width;++x) {\n            int tile{};\n            if (!(in>>tile)) throw std::invalid_argument(\"missing tile\");\n            candidate.Set({x,y},tile);\n        }\n        in>>std::ws;\n        if (!in.eof()) throw std::invalid_argument(\"trailing map data\");\n        return candidate;\n    }\n};\nstruct Edit { Cell cell; int before{},after{}; };\n// [한국어 해설] 모델과 Undo/Redo 이력을 소유한다. GUI 위젯이나 디스크 파일을 직접 소유하지 않는다.\nclass TileDocument {\n    Grid grid_;\n    std::vector<Edit> undo_,redo_;\npublic:\n    explicit TileDocument(Grid grid):grid_(std::move(grid)) {}\n    const Grid& Data() const noexcept { return grid_; }\n    void Paint(Cell cell,int tile) {\n        if (tile<0||tile>4095) throw std::invalid_argument(\"tile\");\n        const int old=grid_.Tile(cell);\n        if (old==tile) return;\n// [한국어 해설] 이력 메모리 할당에 실패하면 데이터가 바뀌지 않도록 기록을 먼저 추가한다.\n        undo_.push_back(Edit{cell,old,tile}); // allocate history before modifying data\n        grid_.Set(cell,tile); redo_.clear();\n    }\n// [한국어 해설] 되돌리기 전에 반대 이력에 기록하여 다음 Redo에 필요한 변경 정보를 보존한다.\n    bool Undo() {\n        if (undo_.empty()) return false;\n        const Edit edit=undo_.back(); redo_.push_back(edit);\n        grid_.Set(edit.cell,edit.before); undo_.pop_back(); return true;\n    }\n// [한국어 해설] 다시 실행한 변경은 Undo 이력으로 돌아간다. 새 편집은 기존 Redo 이력을 지운다.\n    bool Redo() {\n        if (redo_.empty()) return false;\n        const Edit edit=redo_.back(); undo_.push_back(edit);\n        grid_.Set(edit.cell,edit.after); redo_.pop_back(); return true;\n    }\n// [한국어 해설] 완전히 파싱한 후보로만 교체한다. 파일 시스템 원자적 저장이나 전원 장애 복구는 별개다.\n    void Load(std::string_view text) {\n        Grid candidate=Grid::Parse(text); // parse fully before committing\n        grid_=std::move(candidate); undo_.clear(); redo_.clear();\n    }\n};\n// [한국어 해설] 네 방향 비용 1과 맨해튼 휴리스틱 조합이다. 대각선·가중치 이동에는 계약을 다시 정해야 한다.\ninline std::optional<std::vector<Cell>> AStar(const Grid& grid,Cell start,Cell goal) {\n    if (!grid.Walkable(start)||!grid.Walkable(goal)) return std::nullopt;\n    const int width=grid.Width(),count=width*grid.Height(); // bounded by 256*256\n    const auto id=[width](Cell p){return p.y*width+p.x;};\n    const auto point=[width](int n){return Cell{n%width,n/width};};\n    const auto h=[goal](Cell p){return std::abs(goal.x-p.x)+std::abs(goal.y-p.y);};\n    std::vector<int> distance(static_cast<std::size_t>(count),std::numeric_limits<int>::max());\n    std::vector<int> parent(static_cast<std::size_t>(count),-1);\n// [한국어 해설] f=g+h 우선, 동률이면 g와 셀 ID로 비교하여 실행 순서를 일정하게 한다.\n    using Entry=std::tuple<int,int,int>; // f, g, id; deterministic tiebreak\n    std::priority_queue<Entry,std::vector<Entry>,std::greater<Entry>> open;\n    distance[static_cast<std::size_t>(id(start))]=0;\n    open.emplace(h(start),0,id(start));\n    constexpr std::array<Cell,4> neighbors{{{1,0},{0,1},{-1,0},{0,-1}}};\n    while (!open.empty()) {\n        const auto [f,g,node]=open.top(); open.pop(); (void)f;\n// [한국어 해설] 더 짧은 경로가 이미 발견된 큐 항목은 오래된 항목이므로 버린다.\n        if (g!=distance[static_cast<std::size_t>(node)]) continue; // stale entry\n        const Cell at=point(node);\n// [한국어 해설] 부모 인덱스를 역추적한 뒤 뒤집는다. 결과에는 시작과 목표 셀이 모두 포함된다.\n        if (at==goal) {\n            std::vector<Cell> path;\n            for (int p=node;p!=-1;p=parent[static_cast<std::size_t>(p)]) path.push_back(point(p));\n            std::reverse(path.begin(),path.end()); return path;\n        }\n        for (Cell offset:neighbors) {\n            const Cell next{at.x+offset.x,at.y+offset.y};\n            if (!grid.Walkable(next)) continue;\n            const int n=id(next),candidate=g+1;\n// [한국어 해설] 현재보다 짧아질 때만 거리와 부모를 바꾸고 새 우선순위 항목을 넣는다.\n            if (candidate>=distance[static_cast<std::size_t>(n)]) continue;\n            distance[static_cast<std::size_t>(n)]=candidate; parent[static_cast<std::size_t>(n)]=node;\n            open.emplace(candidate+h(next),candidate,n);\n        }\n    }\n    return std::nullopt;\n}\n}\n#endif\n"
+            }
+          ]
         }
       ]
     },
     {
       "id": "file-6",
       "title": "include/loop.hpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · include/loop.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/include/loop.hpp"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -318,14 +519,45 @@
           "type": "code",
           "language": "cpp",
           "text": "#ifndef STUDY_LOOP_HPP\n#define STUDY_LOOP_HPP\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <cstddef>\n#include <stdexcept>\nnamespace study {\nclass Input {\n    std::array<bool,256> held_{}, pressed_{};\npublic:\n    void Key(std::size_t code,bool down) {\n        if (code>=held_.size()) return;\n        if (down&&!held_[code]) pressed_[code]=true;\n        held_[code]=down;\n    }\n    bool Held(std::size_t code) const { return code<held_.size()&&held_[code]; }\n    bool ConsumePressed(std::size_t code) {\n        if (code>=pressed_.size()) return false;\n        const bool result=pressed_[code]; pressed_[code]=false; return result;\n    }\n    void Clear() noexcept { held_.fill(false); pressed_.fill(false); }\n};\nstruct StepResult { int steps{}; double alpha{}, discardedSeconds{}; };\nclass FixedStepper {\n    double accumulator_{};\npublic:\n    static constexpr double step=1.0/120.0;\n    static constexpr double maxFrame=0.25;\n    static constexpr int maxSteps=8;\n    void Reset() noexcept { accumulator_=0; }\n    template<class Update> StepResult Advance(double elapsed,Update&& update) {\n        if (!std::isfinite(elapsed)||elapsed<0) throw std::invalid_argument(\"invalid elapsed time\");\n        StepResult result;\n        const double admitted=std::min(elapsed,maxFrame);\n        result.discardedSeconds=elapsed-admitted;\n        accumulator_+=admitted;\n        while (accumulator_+1e-12>=step&&result.steps<maxSteps) {\n            update(step);\n            accumulator_=std::max(0.0,accumulator_-step);\n            ++result.steps;\n        }\n        if (accumulator_>=step) {\n            const double remainder=std::fmod(accumulator_,step);\n            result.discardedSeconds+=accumulator_-remainder;\n            accumulator_=remainder;\n        }\n        result.alpha=accumulator_/step;\n        return result;\n    }\n};\nclass AnimationClock {\n    int frames_,index_{}; double interval_,remainder_{};\npublic:\n    AnimationClock(int frames,double interval):frames_(frames),interval_(interval) {\n        if (frames<=0||!std::isfinite(interval)||interval<1e-6)\n            throw std::invalid_argument(\"invalid animation\");\n    }\n    void Advance(double seconds) {\n        if (!std::isfinite(seconds)||seconds<0||seconds>60)\n            throw std::invalid_argument(\"invalid animation delta\");\n        const double total=remainder_+seconds;\n        const double steps=std::floor((total+1e-12)/interval_);\n        remainder_=std::max(0.0,total-steps*interval_);\n        const int offset=static_cast<int>(std::fmod(steps,static_cast<double>(frames_)));\n        index_=static_cast<int>((static_cast<long long>(index_)+offset)%frames_);\n    }\n    int Index() const noexcept { return index_; }\n};\n}\n#endif\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · include/loop.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/loop.hpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · include/loop.hpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#ifndef STUDY_LOOP_HPP\n#define STUDY_LOOP_HPP\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <cstddef>\n#include <stdexcept>\nnamespace study {\n// [한국어 해설] held는 현재 눌림, pressed는 아직 소비하지 않은 눌림 에지다. 짧게 눌렀다 떼어도 에지는 남긴다.\nclass Input {\n    std::array<bool,256> held_{}, pressed_{};\npublic:\n    void Key(std::size_t code,bool down) {\n        if (code>=held_.size()) return;\n        if (down&&!held_[code]) pressed_[code]=true;\n        held_[code]=down;\n    }\n    bool Held(std::size_t code) const { return code<held_.size()&&held_[code]; }\n// [한국어 해설] 눌림 에지는 Update에서 한 번만 소비한다. 키 반복 메시지를 여러 번의 새 입력으로 세지 않는다.\n    bool ConsumePressed(std::size_t code) {\n        if (code>=pressed_.size()) return false;\n        const bool result=pressed_[code]; pressed_[code]=false; return result;\n    }\n// [한국어 해설] 포커스를 잃으면 입력을 비워 키가 계속 눌린 것처럼 남는 문제를 막는다.\n    void Clear() noexcept { held_.fill(false); pressed_.fill(false); }\n};\n// [한국어 해설] steps는 수행 횟수, alpha는 다음 단계까지 남은 비율, discardedSeconds는 정책상 버린 시간이다.\nstruct StepResult { int steps{}; double alpha{}, discardedSeconds{}; };\n// [한국어 해설] 120Hz 고정 Update 모델이다. 화면 주사율을 보장하지 않으며 밀린 시간을 일부 버리는 정책을 쓴다.\nclass FixedStepper {\n    double accumulator_{};\npublic:\n    static constexpr double step=1.0/120.0;\n    static constexpr double maxFrame=0.25;\n    static constexpr int maxSteps=8;\n    void Reset() noexcept { accumulator_=0; }\n// [한국어 해설] 경과 시간을 최대 0.25초로 제한하고 한 호출에서 최대 8단계까지만 따라잡는다.\n    template<class Update> StepResult Advance(double elapsed,Update&& update) {\n        if (!std::isfinite(elapsed)||elapsed<0) throw std::invalid_argument(\"invalid elapsed time\");\n        StepResult result;\n        const double admitted=std::min(elapsed,maxFrame);\n        result.discardedSeconds=elapsed-admitted;\n        accumulator_+=admitted;\n// [한국어 해설] update 성공 뒤 누적 시간을 줄인다. 콜백 예외에 대한 트랜잭션 보장은 별도로 구현하지 않는다.\n        while (accumulator_+1e-12>=step&&result.steps<maxSteps) {\n            update(step);\n            accumulator_=std::max(0.0,accumulator_-step);\n            ++result.steps;\n        }\n// [한국어 해설] 예산 이후 남은 완전한 단계는 버리고 소수 단계만 남겨 무한 따라잡기를 피한다.\n        if (accumulator_>=step) {\n            const double remainder=std::fmod(accumulator_,step);\n            result.discardedSeconds+=accumulator_-remainder;\n            accumulator_=remainder;\n        }\n        result.alpha=accumulator_/step;\n        return result;\n    }\n};\n// [한국어 해설] 애니메이션 프레임 수와 간격을 검증하고, 지나간 여러 프레임과 남은 시간을 함께 반영한다.\nclass AnimationClock {\n    int frames_,index_{}; double interval_,remainder_{};\npublic:\n    AnimationClock(int frames,double interval):frames_(frames),interval_(interval) {\n        if (frames<=0||!std::isfinite(interval)||interval<1e-6)\n            throw std::invalid_argument(\"invalid animation\");\n    }\n    void Advance(double seconds) {\n        if (!std::isfinite(seconds)||seconds<0||seconds>60)\n            throw std::invalid_argument(\"invalid animation delta\");\n        const double total=remainder_+seconds;\n        const double steps=std::floor((total+1e-12)/interval_);\n        remainder_=std::max(0.0,total-steps*interval_);\n// [한국어 해설] 전체 단계 수를 프레임 수로 나눈 나머지만 인덱스에 더해 반복 애니메이션을 만든다.\n        const int offset=static_cast<int>(std::fmod(steps,static_cast<double>(frames_)));\n        index_=static_cast<int>((static_cast<long long>(index_)+offset)%frames_);\n    }\n    int Index() const noexcept { return index_; }\n};\n}\n#endif\n"
+            }
+          ]
         }
       ]
     },
     {
       "id": "file-7",
       "title": "include/math.hpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · include/math.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/include/math.hpp"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -343,14 +575,45 @@
           "type": "code",
           "language": "cpp",
           "text": "#ifndef STUDY_GAME_MATH_HPP\n#define STUDY_GAME_MATH_HPP\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <limits>\n#include <numbers>\n#include <optional>\n#include <stdexcept>\n#include <utility>\n\nnamespace study {\n// Educational scalar math. Finite, moderate-magnitude game coordinates are assumed\n// by raw arithmetic operators; checked public algorithms reject invalid inputs.\nstruct Vec2 { double x{}, y{}; };\nstruct Vec3 { double x{}, y{}, z{}; };\ninline Vec2 operator+(Vec2 a, Vec2 b) { return {a.x+b.x, a.y+b.y}; }\ninline Vec2 operator-(Vec2 a, Vec2 b) { return {a.x-b.x, a.y-b.y}; }\ninline Vec2 operator*(Vec2 a, double s) { return {a.x*s, a.y*s}; }\ninline Vec3 operator+(Vec3 a, Vec3 b) { return {a.x+b.x, a.y+b.y, a.z+b.z}; }\ninline Vec3 operator-(Vec3 a, Vec3 b) { return {a.x-b.x, a.y-b.y, a.z-b.z}; }\ninline Vec3 operator*(Vec3 a, double s) { return {a.x*s, a.y*s, a.z*s}; }\ninline bool Finite(Vec2 v) { return std::isfinite(v.x)&&std::isfinite(v.y); }\ninline bool Finite(Vec3 v) { return std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z); }\ninline double Dot(Vec2 a, Vec2 b) { return a.x*b.x+a.y*b.y; }\ninline double Dot(Vec3 a, Vec3 b) { return a.x*b.x+a.y*b.y+a.z*b.z; }\ninline double Cross2(Vec2 a, Vec2 b) { return a.x*b.y-a.y*b.x; }\ninline Vec3 Cross(Vec3 a, Vec3 b) {\n    return {a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x};\n}\ninline std::optional<Vec3> Normalize(Vec3 v, double epsilon=1e-12) {\n    if (!Finite(v)||!std::isfinite(epsilon)||epsilon<0) return std::nullopt;\n    const double length=std::hypot(v.x,v.y,v.z);\n    if (!std::isfinite(length)||length<=epsilon) return std::nullopt;\n    return Vec3{v.x/length,v.y/length,v.z/length};\n}\ninline std::optional<Vec2> Normalize(Vec2 v, double epsilon=1e-12) {\n    if (!Finite(v)||!std::isfinite(epsilon)||epsilon<0) return std::nullopt;\n    const double length=std::hypot(v.x,v.y);\n    if (!std::isfinite(length)||length<=epsilon) return std::nullopt;\n    return Vec2{v.x/length,v.y/length};\n}\ninline void Nonnegative(double n) {\n    if (!std::isfinite(n)||n<0) throw std::invalid_argument(\"finite nonnegative value required\");\n}\ninline Vec2 MoveTowards(Vec2 p, Vec2 target, double speed, double dt) {\n    Nonnegative(speed); Nonnegative(dt);\n    if (!Finite(p)||!Finite(target)) throw std::invalid_argument(\"invalid point\");\n    const Vec2 d=target-p;\n    const double distance=std::hypot(d.x,d.y), step=speed*dt;\n    if (!std::isfinite(distance)||!std::isfinite(step)) throw std::overflow_error(\"motion range\");\n    if (distance<=step||distance==0) return target;\n    return p+d*(step/distance);\n}\ninline double WrapAngle(double radians) {\n    if (!std::isfinite(radians)) throw std::invalid_argument(\"invalid angle\");\n    constexpr double pi=std::numbers::pi;\n    double r=std::remainder(radians,2*pi);\n    if (r<=-pi) r+=2*pi; // deterministic choice at the opposite direction\n    return r;\n}\ninline double TurnTowards(double current,double target,double rate,double dt) {\n    Nonnegative(rate); Nonnegative(dt);\n    const double bound=rate*dt;\n    if (!std::isfinite(bound)) throw std::overflow_error(\"angular step\");\n    const double delta=WrapAngle(WrapAngle(target)-WrapAngle(current));\n    return WrapAngle(current+std::clamp(delta,-bound,bound));\n}\ninline double JumpHeight(double initialY,double initialSpeed,double acceleration,double time) {\n    Nonnegative(time);\n    if (!std::isfinite(initialY)||!std::isfinite(initialSpeed)||!std::isfinite(acceleration))\n        throw std::invalid_argument(\"invalid jump input\");\n    const double result=initialY+initialSpeed*time+0.5*acceleration*time*time;\n    if (!std::isfinite(result)) throw std::overflow_error(\"jump range\");\n    return result;\n}\nusing Vec4=std::array<double,4>;\nstruct Mat4 { std::array<std::array<double,4>,4> m{}; };\ninline Mat4 Identity() {\n    Mat4 a; for (std::size_t i=0;i<4;++i) a.m[i][i]=1; return a;\n}\ninline Mat4 operator*(const Mat4& a,const Mat4& b) {\n    Mat4 r;\n    for (std::size_t i=0;i<4;++i)\n        for (std::size_t j=0;j<4;++j)\n            for (std::size_t k=0;k<4;++k) r.m[i][j]+=a.m[i][k]*b.m[k][j];\n    return r;\n}\ninline Vec4 Transform(Vec4 v,const Mat4& m) {\n    Vec4 r{};\n    for (std::size_t j=0;j<4;++j)\n        for (std::size_t i=0;i<4;++i) r[j]+=v[i]*m.m[i][j];\n    return r; // row-vector v * M; no implicit perspective divide\n}\ninline Mat4 Scale(double x,double y,double z) {\n    Mat4 a=Identity(); a.m[0][0]=x; a.m[1][1]=y; a.m[2][2]=z; return a;\n}\ninline Mat4 Translation(double x,double y,double z) {\n    Mat4 a=Identity(); a.m[3][0]=x; a.m[3][1]=y; a.m[3][2]=z; return a;\n}\ninline Mat4 RotationZ(double angle) {\n    Mat4 a=Identity(); const double c=std::cos(angle),s=std::sin(angle);\n    a.m[0][0]=c; a.m[0][1]=s; a.m[1][0]=-s; a.m[1][1]=c; return a;\n}\ninline Mat4 Transpose(const Mat4& a) {\n    Mat4 r; for (std::size_t i=0;i<4;++i) for (std::size_t j=0;j<4;++j) r.m[i][j]=a.m[j][i];\n    return r;\n}\n// Partial pivoting, absolute pivot tolerance: suitable for these bounded examples,\n// not a condition-number-aware general-purpose numerical library.\ninline std::optional<Mat4> Inverse(Mat4 a,double tolerance=1e-12) {\n    if (!std::isfinite(tolerance)||tolerance<=0) return std::nullopt;\n    for (const auto& row:a.m) for (double v:row) if (!std::isfinite(v)) return std::nullopt;\n    Mat4 out=Identity();\n    for (std::size_t col=0;col<4;++col) {\n        std::size_t pivot=col;\n        for (std::size_t row=col+1;row<4;++row)\n            if (std::abs(a.m[row][col])>std::abs(a.m[pivot][col])) pivot=row;\n        if (std::abs(a.m[pivot][col])<=tolerance) return std::nullopt;\n        std::swap(a.m[col],a.m[pivot]); std::swap(out.m[col],out.m[pivot]);\n        const double divisor=a.m[col][col];\n        for (std::size_t j=0;j<4;++j) { a.m[col][j]/=divisor; out.m[col][j]/=divisor; }\n        for (std::size_t row=0;row<4;++row) if (row!=col) {\n            const double factor=a.m[row][col];\n            for (std::size_t j=0;j<4;++j) { a.m[row][j]-=factor*a.m[col][j]; out.m[row][j]-=factor*out.m[col][j]; }\n        }\n    }\n    for (const auto& row:out.m) for (double v:row) if (!std::isfinite(v)) return std::nullopt;\n    return out;\n}\nstruct Camera2D {\n    Vec2 position{}, anchor{}; double zoom{1};\n    void Validate() const {\n        if (!Finite(position)||!Finite(anchor)||!std::isfinite(zoom)||zoom<=0)\n            throw std::invalid_argument(\"invalid camera\");\n    }\n    Vec2 ToScreen(Vec2 world) const {\n        Validate(); if (!Finite(world)) throw std::invalid_argument(\"invalid world\");\n        return {anchor.x+(world.x-position.x)*zoom, anchor.y-(world.y-position.y)*zoom};\n    }\n    Vec2 ToWorld(Vec2 screen) const {\n        Validate(); if (!Finite(screen)) throw std::invalid_argument(\"invalid screen\");\n        return {position.x+(screen.x-anchor.x)/zoom,position.y-(screen.y-anchor.y)/zoom};\n    }\n};\nstruct Aabb { Vec2 min{},max{}; };\ninline bool Valid(Aabb b) { return Finite(b.min)&&Finite(b.max)&&b.min.x<=b.max.x&&b.min.y<=b.max.y; }\ninline bool Overlap(Aabb a,Aabb b) {\n    if (!Valid(a)||!Valid(b)) throw std::invalid_argument(\"invalid box\");\n    return a.min.x<=b.max.x&&b.min.x<=a.max.x&&a.min.y<=b.max.y&&b.min.y<=a.max.y;\n}\ninline bool CircleOverlap(Vec2 a,double ar,Vec2 b,double br) {\n    Nonnegative(ar); Nonnegative(br);\n    if (!Finite(a)||!Finite(b)) throw std::invalid_argument(\"invalid center\");\n    const double radius=ar+br;\n    if (!std::isfinite(radius)) throw std::overflow_error(\"radius range\");\n    return std::hypot(a.x-b.x,a.y-b.y)<=radius; // touching counts as contact\n}\ninline Vec2 ClosestOnSegment(Vec2 p,Vec2 a,Vec2 b) {\n    if (!Finite(p)||!Finite(a)||!Finite(b)) throw std::invalid_argument(\"invalid segment\");\n    const Vec2 ab=b-a; const double lengthSquared=Dot(ab,ab);\n    if (lengthSquared<=1e-24) return a;\n    const double t=std::clamp(Dot(p-a,ab)/lengthSquared,0.0,1.0);\n    return a+ab*t;\n}\n// Isometric projection plane uses right/down axes; do not mix it with Camera2D's\n// world-up coordinates without an explicit sign conversion.\ninline Vec2 IsoCenter(double u,double v,double halfWidth,double halfHeight) {\n    if (!std::isfinite(u)||!std::isfinite(v)||!std::isfinite(halfWidth)||!std::isfinite(halfHeight)||halfWidth<=0||halfHeight<=0)\n        throw std::invalid_argument(\"invalid isometric input\");\n    return {(u-v)*halfWidth,(u+v)*halfHeight};\n}\ninline std::optional<std::pair<int,int>> PickIso(Vec2 plane,int width,int height,double hw,double hh) {\n    if (!Finite(plane)||width<=0||height<=0||!std::isfinite(hw)||!std::isfinite(hh)||hw<=0||hh<=0)\n        throw std::invalid_argument(\"invalid picking input\");\n    const double u=(plane.x/hw+plane.y/hh)/2, v=(plane.y/hh-plane.x/hw)/2;\n    // Half-open cells [center-.5, center+.5), including negative outside positions.\n    const double col=std::floor(u+0.5), row=std::floor(v+0.5);\n    if (!std::isfinite(col)||!std::isfinite(row)||col<0||row<0||col>=width||row>=height) return std::nullopt;\n    return std::pair{static_cast<int>(col),static_cast<int>(row)};\n}\n} // namespace study\n#endif\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · include/math.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/math.hpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · include/math.hpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#ifndef STUDY_GAME_MATH_HPP\n#define STUDY_GAME_MATH_HPP\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <limits>\n#include <numbers>\n#include <optional>\n#include <stdexcept>\n#include <utility>\n\nnamespace study {\n// Educational scalar math. Finite, moderate-magnitude game coordinates are assumed\n// by raw arithmetic operators; checked public algorithms reject invalid inputs.\n// [한국어 해설] 유한한 보통 크기의 좌표를 전제로 한다. 기본 산술 자체가 모든 오버플로를 검사하지는 않는다.\nstruct Vec2 { double x{}, y{}; };\nstruct Vec3 { double x{}, y{}, z{}; };\ninline Vec2 operator+(Vec2 a, Vec2 b) { return {a.x+b.x, a.y+b.y}; }\ninline Vec2 operator-(Vec2 a, Vec2 b) { return {a.x-b.x, a.y-b.y}; }\ninline Vec2 operator*(Vec2 a, double s) { return {a.x*s, a.y*s}; }\ninline Vec3 operator+(Vec3 a, Vec3 b) { return {a.x+b.x, a.y+b.y, a.z+b.z}; }\ninline Vec3 operator-(Vec3 a, Vec3 b) { return {a.x-b.x, a.y-b.y, a.z-b.z}; }\ninline Vec3 operator*(Vec3 a, double s) { return {a.x*s, a.y*s, a.z*s}; }\ninline bool Finite(Vec2 v) { return std::isfinite(v.x)&&std::isfinite(v.y); }\ninline bool Finite(Vec3 v) { return std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z); }\ninline double Dot(Vec2 a, Vec2 b) { return a.x*b.x+a.y*b.y; }\ninline double Dot(Vec3 a, Vec3 b) { return a.x*b.x+a.y*b.y+a.z*b.z; }\ninline double Cross2(Vec2 a, Vec2 b) { return a.x*b.y-a.y*b.x; }\n// [한국어 해설] 외적은 두 벡터에 수직이며 입력 순서를 바꾸면 부호가 뒤집힌다.\ninline Vec3 Cross(Vec3 a, Vec3 b) {\n    return {a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x};\n}\n// [한국어 해설] 길이가 0에 가깝거나 NaN·무한대이면 방향을 정의하지 않고 nullopt를 반환한다.\ninline std::optional<Vec3> Normalize(Vec3 v, double epsilon=1e-12) {\n    if (!Finite(v)||!std::isfinite(epsilon)||epsilon<0) return std::nullopt;\n    const double length=std::hypot(v.x,v.y,v.z);\n    if (!std::isfinite(length)||length<=epsilon) return std::nullopt;\n    return Vec3{v.x/length,v.y/length,v.z/length};\n}\n// [한국어 해설] 2차원에서도 같은 실패 계약을 사용한다. 호출자는 optional을 확인한 뒤 역참조한다.\ninline std::optional<Vec2> Normalize(Vec2 v, double epsilon=1e-12) {\n    if (!Finite(v)||!std::isfinite(epsilon)||epsilon<0) return std::nullopt;\n    const double length=std::hypot(v.x,v.y);\n    if (!std::isfinite(length)||length<=epsilon) return std::nullopt;\n    return Vec2{v.x/length,v.y/length};\n}\ninline void Nonnegative(double n) {\n    if (!std::isfinite(n)||n<0) throw std::invalid_argument(\"finite nonnegative value required\");\n}\n// [한국어 해설] 속도×시간을 이동 거리로 바꾸되 남은 거리보다 크면 목표에 고정하여 지나침을 막는다.\ninline Vec2 MoveTowards(Vec2 p, Vec2 target, double speed, double dt) {\n    Nonnegative(speed); Nonnegative(dt);\n    if (!Finite(p)||!Finite(target)) throw std::invalid_argument(\"invalid point\");\n    const Vec2 d=target-p;\n    const double distance=std::hypot(d.x,d.y), step=speed*dt;\n    if (!std::isfinite(distance)||!std::isfinite(step)) throw std::overflow_error(\"motion range\");\n    if (distance<=step||distance==0) return target;\n    return p+d*(step/distance);\n}\n// [한국어 해설] 각도를 (-π, π] 범위로 정리하고 정반대 방향은 +π로 통일한다.\ninline double WrapAngle(double radians) {\n    if (!std::isfinite(radians)) throw std::invalid_argument(\"invalid angle\");\n    constexpr double pi=std::numbers::pi;\n    double r=std::remainder(radians,2*pi);\n    if (r<=-pi) r+=2*pi; // deterministic choice at the opposite direction\n    return r;\n}\n// [한국어 해설] 최단 각도 차를 이번 프레임의 최대 회전량 안으로 제한한다.\ninline double TurnTowards(double current,double target,double rate,double dt) {\n    Nonnegative(rate); Nonnegative(dt);\n    const double bound=rate*dt;\n    if (!std::isfinite(bound)) throw std::overflow_error(\"angular step\");\n    const double delta=WrapAngle(WrapAngle(target)-WrapAngle(current));\n    return WrapAngle(current+std::clamp(delta,-bound,bound));\n}\n// [한국어 해설] 등가속도 공식이다. 이 함수는 바닥 충돌이나 착지 상태 전이를 처리하지 않는다.\ninline double JumpHeight(double initialY,double initialSpeed,double acceleration,double time) {\n    Nonnegative(time);\n    if (!std::isfinite(initialY)||!std::isfinite(initialSpeed)||!std::isfinite(acceleration))\n        throw std::invalid_argument(\"invalid jump input\");\n    const double result=initialY+initialSpeed*time+0.5*acceleration*time*time;\n    if (!std::isfinite(result)) throw std::overflow_error(\"jump range\");\n    return result;\n}\n// [한국어 해설] 동차좌표의 w=1은 점, w=0은 방향이다. 행 벡터 v*M 규약을 끝까지 유지한다.\nusing Vec4=std::array<double,4>;\nstruct Mat4 { std::array<std::array<double,4>,4> m{}; };\ninline Mat4 Identity() {\n    Mat4 a; for (std::size_t i=0;i<4;++i) a.m[i][i]=1; return a;\n}\n// [한국어 해설] 합성 순서는 교환할 수 없다. 행 벡터 기준 Scale*Rotation*Translation은 왼쪽 변환부터 적용한다.\ninline Mat4 operator*(const Mat4& a,const Mat4& b) {\n    Mat4 r;\n    for (std::size_t i=0;i<4;++i)\n        for (std::size_t j=0;j<4;++j)\n            for (std::size_t k=0;k<4;++k) r.m[i][j]+=a.m[i][k]*b.m[k][j];\n    return r;\n}\n// [한국어 해설] 4성분 원시 결과만 계산한다. 원근 나눗셈이 필요하면 호출자가 w를 검사한 뒤 별도로 한다.\ninline Vec4 Transform(Vec4 v,const Mat4& m) {\n    Vec4 r{};\n    for (std::size_t j=0;j<4;++j)\n        for (std::size_t i=0;i<4;++i) r[j]+=v[i]*m.m[i][j];\n    return r; // row-vector v * M; no implicit perspective divide\n}\ninline Mat4 Scale(double x,double y,double z) {\n    Mat4 a=Identity(); a.m[0][0]=x; a.m[1][1]=y; a.m[2][2]=z; return a;\n}\n// [한국어 해설] 행 벡터 규약이므로 이동 성분은 마지막 열이 아닌 마지막 행에 들어간다.\ninline Mat4 Translation(double x,double y,double z) {\n    Mat4 a=Identity(); a.m[3][0]=x; a.m[3][1]=y; a.m[3][2]=z; return a;\n}\n// [한국어 해설] 양의 각도에서 x축 방향이 y축 방향으로 회전하는 행 벡터 행렬이다.\ninline Mat4 RotationZ(double angle) {\n    Mat4 a=Identity(); const double c=std::cos(angle),s=std::sin(angle);\n    a.m[0][0]=c; a.m[0][1]=s; a.m[1][0]=-s; a.m[1][1]=c; return a;\n}\n// [한국어 해설] 비균일 크기 변환의 법선에는 역행렬의 전치를 사용한다. 일반 방향 변환과 구별한다.\ninline Mat4 Transpose(const Mat4& a) {\n    Mat4 r; for (std::size_t i=0;i<4;++i) for (std::size_t j=0;j<4;++j) r.m[i][j]=a.m[j][i];\n    return r;\n}\n// Partial pivoting, absolute pivot tolerance: suitable for these bounded examples,\n// not a condition-number-aware general-purpose numerical library.\n// [한국어 해설] 부분 피벗 가우스-조던 소거다. 절대 임계값 판정이며 범용 수치 안정성을 보장하지 않는다.\ninline std::optional<Mat4> Inverse(Mat4 a,double tolerance=1e-12) {\n    if (!std::isfinite(tolerance)||tolerance<=0) return std::nullopt;\n    for (const auto& row:a.m) for (double v:row) if (!std::isfinite(v)) return std::nullopt;\n    Mat4 out=Identity();\n    for (std::size_t col=0;col<4;++col) {\n// [한국어 해설] 현재 열에서 절댓값이 큰 피벗을 골라 작은 수로 나누는 위험을 줄인다.\n        std::size_t pivot=col;\n        for (std::size_t row=col+1;row<4;++row)\n            if (std::abs(a.m[row][col])>std::abs(a.m[pivot][col])) pivot=row;\n        if (std::abs(a.m[pivot][col])<=tolerance) return std::nullopt;\n        std::swap(a.m[col],a.m[pivot]); std::swap(out.m[col],out.m[pivot]);\n        const double divisor=a.m[col][col];\n        for (std::size_t j=0;j<4;++j) { a.m[col][j]/=divisor; out.m[col][j]/=divisor; }\n        for (std::size_t row=0;row<4;++row) if (row!=col) {\n            const double factor=a.m[row][col];\n            for (std::size_t j=0;j<4;++j) { a.m[row][j]-=factor*a.m[col][j]; out.m[row][j]-=factor*out.m[col][j]; }\n        }\n    }\n    for (const auto& row:out.m) for (double v:row) if (!std::isfinite(v)) return std::nullopt;\n    return out;\n}\n// [한국어 해설] 월드는 y 위쪽, 화면은 y 아래쪽이다. 확대율은 양수이며 역변환에서도 같은 규약을 쓴다.\nstruct Camera2D {\n    Vec2 position{}, anchor{}; double zoom{1};\n    void Validate() const {\n        if (!Finite(position)||!Finite(anchor)||!std::isfinite(zoom)||zoom<=0)\n            throw std::invalid_argument(\"invalid camera\");\n    }\n    Vec2 ToScreen(Vec2 world) const {\n        Validate(); if (!Finite(world)) throw std::invalid_argument(\"invalid world\");\n        return {anchor.x+(world.x-position.x)*zoom, anchor.y-(world.y-position.y)*zoom};\n    }\n    Vec2 ToWorld(Vec2 screen) const {\n        Validate(); if (!Finite(screen)) throw std::invalid_argument(\"invalid screen\");\n        return {position.x+(screen.x-anchor.x)/zoom,position.y-(screen.y-anchor.y)/zoom};\n    }\n};\nstruct Aabb { Vec2 min{},max{}; };\ninline bool Valid(Aabb b) { return Finite(b.min)&&Finite(b.max)&&b.min.x<=b.max.x&&b.min.y<=b.max.y; }\n// [한국어 해설] AABB는 경계 접촉도 충돌이다. 최소/최대 좌표가 뒤집힌 상자는 예외로 거부한다.\ninline bool Overlap(Aabb a,Aabb b) {\n    if (!Valid(a)||!Valid(b)) throw std::invalid_argument(\"invalid box\");\n    return a.min.x<=b.max.x&&b.min.x<=a.max.x&&a.min.y<=b.max.y&&b.min.y<=a.max.y;\n}\n// [한국어 해설] 두 중심 거리와 반지름 합을 비교한다. 음수 반지름과 비유한 입력을 허용하지 않는다.\ninline bool CircleOverlap(Vec2 a,double ar,Vec2 b,double br) {\n    Nonnegative(ar); Nonnegative(br);\n    if (!Finite(a)||!Finite(b)) throw std::invalid_argument(\"invalid center\");\n    const double radius=ar+br;\n    if (!std::isfinite(radius)) throw std::overflow_error(\"radius range\");\n    return std::hypot(a.x-b.x,a.y-b.y)<=radius; // touching counts as contact\n}\n// [한국어 해설] 투영 계수를 [0,1]로 제한한다. 길이가 거의 0인 선분은 시작점을 반환한다.\ninline Vec2 ClosestOnSegment(Vec2 p,Vec2 a,Vec2 b) {\n    if (!Finite(p)||!Finite(a)||!Finite(b)) throw std::invalid_argument(\"invalid segment\");\n    const Vec2 ab=b-a; const double lengthSquared=Dot(ab,ab);\n    if (lengthSquared<=1e-24) return a;\n    const double t=std::clamp(Dot(p-a,ab)/lengthSquared,0.0,1.0);\n    return a+ab*t;\n}\n// Isometric projection plane uses right/down axes; do not mix it with Camera2D's\n// world-up coordinates without an explicit sign conversion.\n// [한국어 해설] 마름모 투영은 화면형 y 아래쪽 규약이다. Camera2D의 월드 좌표와 그대로 섞지 않는다.\ninline Vec2 IsoCenter(double u,double v,double halfWidth,double halfHeight) {\n    if (!std::isfinite(u)||!std::isfinite(v)||!std::isfinite(halfWidth)||!std::isfinite(halfHeight)||halfWidth<=0||halfHeight<=0)\n        throw std::invalid_argument(\"invalid isometric input\");\n    return {(u-v)*halfWidth,(u+v)*halfHeight};\n}\n// [한국어 해설] 역투영한 타일 좌표를 중심 기준 반열린 구간으로 분류한다. 음수는 정수 절삭 대신 floor가 필요하다.\ninline std::optional<std::pair<int,int>> PickIso(Vec2 plane,int width,int height,double hw,double hh) {\n    if (!Finite(plane)||width<=0||height<=0||!std::isfinite(hw)||!std::isfinite(hh)||hw<=0||hh<=0)\n        throw std::invalid_argument(\"invalid picking input\");\n    const double u=(plane.x/hw+plane.y/hh)/2, v=(plane.y/hh-plane.x/hw)/2;\n    // Half-open cells [center-.5, center+.5), including negative outside positions.\n    const double col=std::floor(u+0.5), row=std::floor(v+0.5);\n    if (!std::isfinite(col)||!std::isfinite(row)||col<0||row<0||col>=width||row>=height) return std::nullopt;\n    return std::pair{static_cast<int>(col),static_cast<int>(row)};\n}\n} // namespace study\n#endif\n"
+            }
+          ]
         }
       ]
     },
     {
       "id": "file-8",
       "title": "src/geometry.cpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · src/geometry.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/src/geometry.cpp"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -368,14 +631,45 @@
           "type": "code",
           "language": "cpp",
           "text": "#include \"math.hpp\"\n#include \"check.hpp\"\nusing namespace study;\nint main() {\n    Check(Overlap({{0,0},{2,2}},{{2,1},{3,3}}),\"AABB touching is contact\");\n    Check(!Overlap({{0,0},{2,2}},{{2.01,1},{3,3}}),\"AABB separated\");\n    Check(Overlap({{0,0},{2,2}},{{.5,.5},{1,1}}),\"AABB contained\");\n    Throws([]{ (void)Overlap({{2,0},{1,1}},{{0,0},{1,1}}); });\n    Check(CircleOverlap({0,0},1,{2,0},1),\"circle touching\");\n    Check(!CircleOverlap({0,0},1,{2.1,0},1),\"circle separated\");\n    Throws([]{ (void)CircleOverlap({},-1,{},1); });\n    const auto vertical=ClosestOnSegment({2,3},{0,0},{0,5});\n    Check(Near(vertical.x,0)&&Near(vertical.y,3),\"vertical segment\");\n    const auto endpoint=ClosestOnSegment({2,9},{0,0},{0,5});\n    Check(Near(endpoint.y,5),\"clamp segment\");\n    const auto degenerate=ClosestOnSegment({5,6},{1,2},{1,2});\n    Check(Near(degenerate.x,1)&&Near(degenerate.y,2),\"degenerate segment\");\n    for (int y=0;y<8;++y) for (int x=0;x<8;++x) {\n        const auto picked=PickIso(IsoCenter(x,y,32,16),8,8,32,16);\n        Check(picked&&picked->first==x&&picked->second==y,\"isometric center roundtrip\");\n    }\n    Check(!PickIso(IsoCenter(-.6,0,32,16),8,8,32,16),\"negative outside not truncated to zero\");\n    const auto edge=PickIso(IsoCenter(.5,0,32,16),8,8,32,16);\n    Check(edge&&edge->first==1,\"half-open shared boundary\");\n    Check(!PickIso(IsoCenter(7.5,0,32,16),8,8,32,16),\"right outer boundary excluded\");\n    Throws([]{ (void)PickIso({},2,2,0,16); });\n    return Done(\"geometry\");\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · src/geometry.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/geometry.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · src/geometry.cpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"math.hpp\"\n#include \"check.hpp\"\nusing namespace study;\n// [한국어 해설] 접촉 포함 충돌, 퇴화 선분, 모든 타일 중심의 왕복 변환과 반열린 경계를 검사한다.\nint main() {\n    Check(Overlap({{0,0},{2,2}},{{2,1},{3,3}}),\"AABB touching is contact\");\n    Check(!Overlap({{0,0},{2,2}},{{2.01,1},{3,3}}),\"AABB separated\");\n    Check(Overlap({{0,0},{2,2}},{{.5,.5},{1,1}}),\"AABB contained\");\n    Throws([]{ (void)Overlap({{2,0},{1,1}},{{0,0},{1,1}}); });\n    Check(CircleOverlap({0,0},1,{2,0},1),\"circle touching\");\n    Check(!CircleOverlap({0,0},1,{2.1,0},1),\"circle separated\");\n    Throws([]{ (void)CircleOverlap({},-1,{},1); });\n    const auto vertical=ClosestOnSegment({2,3},{0,0},{0,5});\n    Check(Near(vertical.x,0)&&Near(vertical.y,3),\"vertical segment\");\n    const auto endpoint=ClosestOnSegment({2,9},{0,0},{0,5});\n    Check(Near(endpoint.y,5),\"clamp segment\");\n    const auto degenerate=ClosestOnSegment({5,6},{1,2},{1,2});\n    Check(Near(degenerate.x,1)&&Near(degenerate.y,2),\"degenerate segment\");\n// [한국어 해설] 8×8 타일의 중심을 투영하고 다시 피킹하여 인덱스 보존을 확인한다.\n    for (int y=0;y<8;++y) for (int x=0;x<8;++x) {\n        const auto picked=PickIso(IsoCenter(x,y,32,16),8,8,32,16);\n        Check(picked&&picked->first==x&&picked->second==y,\"isometric center roundtrip\");\n    }\n    Check(!PickIso(IsoCenter(-.6,0,32,16),8,8,32,16),\"negative outside not truncated to zero\");\n    const auto edge=PickIso(IsoCenter(.5,0,32,16),8,8,32,16);\n    Check(edge&&edge->first==1,\"half-open shared boundary\");\n    Check(!PickIso(IsoCenter(7.5,0,32,16),8,8,32,16),\"right outer boundary excluded\");\n    Throws([]{ (void)PickIso({},2,2,0,16); });\n    return Done(\"geometry\");\n}\n"
+            }
+          ]
         }
       ]
     },
     {
       "id": "file-9",
       "title": "src/loop_input.cpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · src/loop_input.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/src/loop_input.cpp"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -393,14 +687,45 @@
           "type": "code",
           "language": "cpp",
           "text": "#include <limits>\n#include \"loop.hpp\"\n#include \"check.hpp\"\nusing namespace study;\nint main() {\n    for (int fps:{30,60,144}) {\n        FixedStepper stepper; int count{}; double position{};\n        for (int frame=0;frame<fps;++frame) {\n            const auto result=stepper.Advance(1.0/fps,[&](double dt){++count;position+=120*dt;});\n            Check(result.alpha>=0&&result.alpha<1.00000001,\"alpha range\");\n            Check(Near(result.discardedSeconds,0),\"ordinary frame not dropped\");\n        }\n        Check(count==120&&Near(position,120),\"same second different render rate\");\n    }\n    FixedStepper stepper;\n    const auto stalled=stepper.Advance(1.0,[](double){});\n    Check(stalled.steps==8&&stalled.discardedSeconds>.9,\"catch-up cap and discarded time\");\n    stepper.Reset(); Check(stepper.Advance(0,[](double){}).steps==0,\"pause reset\");\n    Throws([&]{ (void)stepper.Advance(-1,[](double){}); });\n    Throws([&]{ (void)stepper.Advance(std::numeric_limits<double>::quiet_NaN(),[](double){}); });\n    Input input; input.Key(32,true); input.Key(32,true);\n    Check(input.Held(32)&&input.ConsumePressed(32),\"press edge\");\n    Check(!input.ConsumePressed(32),\"edge consumed once\");\n    input.Key(32,false); input.Key(32,true); input.Key(32,false);\n    Check(!input.Held(32)&&input.ConsumePressed(32),\"short tap preserved\");\n    input.Key(32,true); input.Clear(); Check(!input.Held(32)&&!input.ConsumePressed(32),\"focus loss clears input\");\n    input.Key(999,true); Check(!input.Held(999),\"out of range key ignored\");\n    AnimationClock animation(4,.1); animation.Advance(.25);\n    Check(animation.Index()==2,\"animation handles multiple frames\");\n    animation.Advance(.05); Check(animation.Index()==3,\"animation keeps remainder\");\n    animation.Advance(.2); Check(animation.Index()==1,\"animation wraps\");\n    Throws([]{ AnimationClock bad(0,.1); });\n    return Done(\"loop_input\");\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · src/loop_input.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/loop_input.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · src/loop_input.cpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <limits>\n#include \"loop.hpp\"\n#include \"check.hpp\"\nusing namespace study;\n// [한국어 해설] 렌더 빈도를 30/60/144로 바꿔도 보통 1초 동안 120 Update와 같은 이동량을 얻는지 검사한다.\nint main() {\n    for (int fps:{30,60,144}) {\n        FixedStepper stepper; int count{}; double position{};\n        for (int frame=0;frame<fps;++frame) {\n            const auto result=stepper.Advance(1.0/fps,[&](double dt){++count;position+=120*dt;});\n            Check(result.alpha>=0&&result.alpha<1.00000001,\"alpha range\");\n            Check(Near(result.discardedSeconds,0),\"ordinary frame not dropped\");\n        }\n        Check(count==120&&Near(position,120),\"same second different render rate\");\n    }\n// [한국어 해설] 긴 정지 이후 최대 따라잡기 횟수와 버리는 시간, 초기화 및 잘못된 시간 입력을 확인한다.\n    FixedStepper stepper;\n    const auto stalled=stepper.Advance(1.0,[](double){});\n    Check(stalled.steps==8&&stalled.discardedSeconds>.9,\"catch-up cap and discarded time\");\n    stepper.Reset(); Check(stepper.Advance(0,[](double){}).steps==0,\"pause reset\");\n    Throws([&]{ (void)stepper.Advance(-1,[](double){}); });\n    Throws([&]{ (void)stepper.Advance(std::numeric_limits<double>::quiet_NaN(),[](double){}); });\n// [한국어 해설] 키 반복·짧은 탭·포커스 상실을 분리해 상태와 에지가 서로 다른 개념임을 검사한다.\n    Input input; input.Key(32,true); input.Key(32,true);\n    Check(input.Held(32)&&input.ConsumePressed(32),\"press edge\");\n    Check(!input.ConsumePressed(32),\"edge consumed once\");\n    input.Key(32,false); input.Key(32,true); input.Key(32,false);\n    Check(!input.Held(32)&&input.ConsumePressed(32),\"short tap preserved\");\n    input.Key(32,true); input.Clear(); Check(!input.Held(32)&&!input.ConsumePressed(32),\"focus loss clears input\");\n    input.Key(999,true); Check(!input.Held(999),\"out of range key ignored\");\n    AnimationClock animation(4,.1); animation.Advance(.25);\n    Check(animation.Index()==2,\"animation handles multiple frames\");\n    animation.Advance(.05); Check(animation.Index()==3,\"animation keeps remainder\");\n    animation.Advance(.2); Check(animation.Index()==1,\"animation wraps\");\n    Throws([]{ AnimationClock bad(0,.1); });\n    return Done(\"loop_input\");\n}\n"
+            }
+          ]
         }
       ]
     },
     {
       "id": "file-10",
       "title": "src/pathfinding.cpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · src/pathfinding.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/src/pathfinding.cpp"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -418,14 +743,45 @@
           "type": "code",
           "language": "cpp",
           "text": "#include \"grid.hpp\"\n#include \"check.hpp\"\nusing namespace study;\nint BfsDistance(const Grid& g,Cell start,Cell goal) {\n    if (!g.Walkable(start)||!g.Walkable(goal)) return -1;\n    const auto id=[&](Cell p){return p.y*g.Width()+p.x;};\n    std::vector<int> distance(static_cast<std::size_t>(g.Width()*g.Height()),-1);\n    std::queue<Cell> q; q.push(start); distance[static_cast<std::size_t>(id(start))]=0;\n    const std::array<Cell,4> offsets{{{0,-1},{-1,0},{0,1},{1,0}}};\n    while (!q.empty()) {\n        const Cell p=q.front();q.pop(); if (p==goal) return distance[static_cast<std::size_t>(id(p))];\n        for (auto d:offsets) {\n            Cell n{p.x+d.x,p.y+d.y};\n            if (!g.Walkable(n)||distance[static_cast<std::size_t>(id(n))]!=-1) continue;\n            distance[static_cast<std::size_t>(id(n))]=distance[static_cast<std::size_t>(id(p))]+1; q.push(n);\n        }\n    }\n    return -1;\n}\nint main() {\n    int scenarios{};\n    for (unsigned mask=0;mask<512;++mask) {\n        Grid grid(3,3);\n        for (unsigned bit=0;bit<9;++bit) if ((mask&(1u<<bit))!=0)\n            grid.Set({static_cast<int>(bit%3),static_cast<int>(bit/3)},1);\n        for (int s=0;s<9;++s) for (int t=0;t<9;++t) {\n            const Cell start{s%3,s/3},goal{t%3,t/3}; ++scenarios;\n            const auto path=AStar(grid,start,goal); const int distance=BfsDistance(grid,start,goal);\n            Check(path.has_value()==(distance>=0),\"A* reachability agrees with BFS\");\n            if (!path) continue;\n            Check(path->front()==start&&path->back()==goal,\"path endpoints\");\n            Check(path->size()==static_cast<std::size_t>(distance+1),\"A* optimal length\");\n            for (std::size_t i=0;i<path->size();++i) {\n                Check(grid.Walkable((*path)[i]),\"path avoids obstacle\");\n                if (i) Check(std::abs((*path)[i].x-(*path)[i-1].x)+std::abs((*path)[i].y-(*path)[i-1].y)==1,\"four-way path adjacency\");\n            }\n        }\n    }\n    Check(!AStar(Grid(3,3),{-1,0},{0,0}),\"outside endpoint rejected\");\n    std::cout<<scenarios<<\" exhaustive 3x3 map/start/goal scenarios\\n\";\n    return Done(\"pathfinding\");\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · src/pathfinding.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/pathfinding.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · src/pathfinding.cpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"grid.hpp\"\n#include \"check.hpp\"\nusing namespace study;\n// [한국어 해설] 비용이 모두 1인 그래프에서 BFS를 독립적인 최단거리 기준으로 사용한다.\nint BfsDistance(const Grid& g,Cell start,Cell goal) {\n    if (!g.Walkable(start)||!g.Walkable(goal)) return -1;\n    const auto id=[&](Cell p){return p.y*g.Width()+p.x;};\n    std::vector<int> distance(static_cast<std::size_t>(g.Width()*g.Height()),-1);\n    std::queue<Cell> q; q.push(start); distance[static_cast<std::size_t>(id(start))]=0;\n    const std::array<Cell,4> offsets{{{0,-1},{-1,0},{0,1},{1,0}}};\n    while (!q.empty()) {\n        const Cell p=q.front();q.pop(); if (p==goal) return distance[static_cast<std::size_t>(id(p))];\n        for (auto d:offsets) {\n            Cell n{p.x+d.x,p.y+d.y};\n            if (!g.Walkable(n)||distance[static_cast<std::size_t>(id(n))]!=-1) continue;\n            distance[static_cast<std::size_t>(id(n))]=distance[static_cast<std::size_t>(id(p))]+1; q.push(n);\n        }\n    }\n    return -1;\n}\n// [한국어 해설] 3×3 맵의 512개 장애물 배치와 시작/목표 81쌍을 모두 비교한다. 임의 크기 전체 공간의 증명은 아니다.\nint main() {\n    int scenarios{};\n    for (unsigned mask=0;mask<512;++mask) {\n        Grid grid(3,3);\n        for (unsigned bit=0;bit<9;++bit) if ((mask&(1u<<bit))!=0)\n            grid.Set({static_cast<int>(bit%3),static_cast<int>(bit/3)},1);\n        for (int s=0;s<9;++s) for (int t=0;t<9;++t) {\n            const Cell start{s%3,s/3},goal{t%3,t/3}; ++scenarios;\n            const auto path=AStar(grid,start,goal); const int distance=BfsDistance(grid,start,goal);\n            Check(path.has_value()==(distance>=0),\"A* reachability agrees with BFS\");\n// [한국어 해설] 경로가 있으면 끝점, 최단 길이, 장애물 회피와 네 방향 인접성을 각각 검사한다.\n            if (!path) continue;\n            Check(path->front()==start&&path->back()==goal,\"path endpoints\");\n            Check(path->size()==static_cast<std::size_t>(distance+1),\"A* optimal length\");\n            for (std::size_t i=0;i<path->size();++i) {\n                Check(grid.Walkable((*path)[i]),\"path avoids obstacle\");\n                if (i) Check(std::abs((*path)[i].x-(*path)[i-1].x)+std::abs((*path)[i].y-(*path)[i-1].y)==1,\"four-way path adjacency\");\n            }\n        }\n    }\n    Check(!AStar(Grid(3,3),{-1,0},{0,0}),\"outside endpoint rejected\");\n    std::cout<<scenarios<<\" exhaustive 3x3 map/start/goal scenarios\\n\";\n    return Done(\"pathfinding\");\n}\n"
+            }
+          ]
         }
       ]
     },
     {
       "id": "file-11",
       "title": "src/tile_document.cpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · src/tile_document.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/src/tile_document.cpp"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -443,14 +799,45 @@
           "type": "code",
           "language": "cpp",
           "text": "#include \"grid.hpp\"\n#include \"check.hpp\"\n#include <future>\nusing namespace study;\nint main() {\n    TileDocument doc(Grid(4,3));\n    doc.Paint({1,1},7); Check(doc.Data().Tile({1,1})==7,\"paint\");\n    Check(doc.Undo()&&doc.Data().Tile({1,1})==0,\"undo\");\n    Check(doc.Redo()&&doc.Data().Tile({1,1})==7,\"redo\");\n    Check(doc.Undo(),\"second undo\"); doc.Paint({0,0},5);\n    Check(!doc.Redo(),\"new edit discards redo\");\n    const std::string original=doc.Data().Serialize();\n    const auto copy=Grid::Parse(original);\n    Check(copy.Serialize()==original,\"map text roundtrip\");\n    for (std::string bad:{\"MAP2 1 1 0\",\"MAP1 0 2\",\"MAP1 257 1\",\"MAP1 1 1 -1\", \"MAP1 1 1 4096\",\"MAP1 2 1 0\",\"MAP1 1 1 0 junk\"}) {\n        Throws([&]{doc.Load(bad);});\n        Check(doc.Data().Serialize()==original,\"failed load preserves document\");\n    }\n    Throws([&]{doc.Paint({-1,0},2);});\n    Check(doc.Data().Serialize()==original,\"failed paint preserves document\");\n    doc.Load(\"MAP1 2 2\\n0 1\\n2 3\\n\"); Check(doc.Data().Tile({1,1})==3,\"valid load\");\n    Check(!doc.Undo()&&!doc.Redo(),\"load invalidates edit history\");\n    // Workers receive a value snapshot. Applying to UI/document is a separate action.\n    const int submittedRevision=1, currentRevision=2;\n    auto job=std::async(std::launch::async,[snapshot=Grid(3,3)]{return AStar(snapshot,{0,0},{2,2});});\n    const auto path=job.get();\n    Check(path&&path->size()==5,\"worker computes from snapshot\");\n    Check(submittedRevision!=currentRevision,\"stale result must be rejected\");\n    return Done(\"tile_document\");\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · src/tile_document.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/tile_document.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · src/tile_document.cpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"grid.hpp\"\n#include \"check.hpp\"\n#include <future>\nusing namespace study;\n// [한국어 해설] 그리기와 Undo/Redo, 직렬화 왕복, 실패한 로드가 기존 문서를 보존하는지 검사한다.\nint main() {\n    TileDocument doc(Grid(4,3));\n    doc.Paint({1,1},7); Check(doc.Data().Tile({1,1})==7,\"paint\");\n    Check(doc.Undo()&&doc.Data().Tile({1,1})==0,\"undo\");\n    Check(doc.Redo()&&doc.Data().Tile({1,1})==7,\"redo\");\n    Check(doc.Undo(),\"second undo\"); doc.Paint({0,0},5);\n    Check(!doc.Redo(),\"new edit discards redo\");\n    const std::string original=doc.Data().Serialize();\n    const auto copy=Grid::Parse(original);\n    Check(copy.Serialize()==original,\"map text roundtrip\");\n    for (std::string bad:{\"MAP2 1 1 0\",\"MAP1 0 2\",\"MAP1 257 1\",\"MAP1 1 1 -1\", \"MAP1 1 1 4096\",\"MAP1 2 1 0\",\"MAP1 1 1 0 junk\"}) {\n        Throws([&]{doc.Load(bad);});\n        Check(doc.Data().Serialize()==original,\"failed load preserves document\");\n    }\n    Throws([&]{doc.Paint({-1,0},2);});\n    Check(doc.Data().Serialize()==original,\"failed paint preserves document\");\n    doc.Load(\"MAP1 2 2\\n0 1\\n2 3\\n\"); Check(doc.Data().Tile({1,1})==3,\"valid load\");\n    Check(!doc.Undo()&&!doc.Redo(),\"load invalidates edit history\");\n    // Workers receive a value snapshot. Applying to UI/document is a separate action.\n// [한국어 해설] 작업자는 값 복사 스냅샷만 사용한다. 리비전 비교 예시이며 실제 UI 적용/취소 큐 구현은 아니다.\n    const int submittedRevision=1, currentRevision=2;\n    auto job=std::async(std::launch::async,[snapshot=Grid(3,3)]{return AStar(snapshot,{0,0},{2,2});});\n    const auto path=job.get();\n    Check(path&&path->size()==5,\"worker computes from snapshot\");\n    Check(submittedRevision!=currentRevision,\"stale result must be rejected\");\n    return Done(\"tile_document\");\n}\n"
+            }
+          ]
         }
       ]
     },
     {
       "id": "file-12",
       "title": "src/transforms.cpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · src/transforms.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/src/transforms.cpp"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -468,14 +855,45 @@
           "type": "code",
           "language": "cpp",
           "text": "#include \"math.hpp\"\n#include \"check.hpp\"\nusing namespace study;\nint main() {\n    const Mat4 s=Scale(2,2,1),r=RotationZ(std::numbers::pi/2),t=Translation(10,0,0);\n    const Mat4 world=s*r*t; const auto p=Transform({1,0,0,1},world);\n    Check(Near(p[0],10)&&Near(p[1],2)&&Near(p[3],1),\"row SRT\");\n    const auto reverse=Transform({1,0,0,1},t*r*s);\n    Check(Near(reverse[0],0)&&Near(reverse[1],22),\"noncommutative transform\");\n    const auto direction=Transform({1,0,0,0},world);\n    Check(Near(direction[0],0)&&Near(direction[1],2),\"direction ignores translation\");\n    const auto inverse=Inverse(world); Check(inverse.has_value(),\"inverse exists\");\n    const auto restored=Transform(p,*inverse);\n    Check(Near(restored[0],1)&&Near(restored[1],0)&&Near(restored[3],1),\"point roundtrip\");\n    const auto identity=world*(*inverse);\n    for (std::size_t i=0;i<4;++i) for (std::size_t j=0;j<4;++j)\n        Check(Near(identity.m[i][j],i==j?1.0:0.0),\"matrix identity\");\n    Check(!Inverse(Scale(1,0,1)),\"singular rejected\");\n    Mat4 bad=Identity(); bad.m[1][1]=std::numeric_limits<double>::quiet_NaN();\n    Check(!Inverse(bad),\"NaN inverse rejected\");\n    const auto hierarchy=Transform({0,0,0,1},Translation(2,0,0)*RotationZ(std::numbers::pi/2)*Translation(10,0,0));\n    Check(Near(hierarchy[0],10)&&Near(hierarchy[1],2),\"local then parent\");\n    const Mat4 nonuniform=Scale(2,1,1); const auto normalMatrix=Transpose(*Inverse(nonuniform));\n    const auto tangent=Transform({1,1,0,0},nonuniform);\n    const auto normal=Transform({-1,1,0,0},normalMatrix);\n    Check(Near(tangent[0]*normal[0]+tangent[1]*normal[1],0),\"inverse transpose normal\");\n    const auto wrong=Transform({-1,1,0,0},nonuniform);\n    Check(!Near(tangent[0]*wrong[0]+tangent[1]*wrong[1],0),\"ordinary normal transform fails\");\n    Camera2D camera{{10,20},{400,300},2};\n    const auto screen=camera.ToScreen({13,24});\n    Check(Near(screen.x,406)&&Near(screen.y,292),\"world up to screen down\");\n    const auto worldAgain=camera.ToWorld(screen);\n    Check(Near(worldAgain.x,13)&&Near(worldAgain.y,24),\"camera inverse\");\n    Throws([]{ Camera2D badCamera; badCamera.zoom=0; (void)badCamera.ToWorld({}); });\n    std::cout<<\"SRT(1,0,0,1) = (\"<<p[0]<<','<<p[1]<<','<<p[2]<<','<<p[3]<<\")\\n\";\n    return Done(\"transforms\");\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · src/transforms.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/transforms.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · src/transforms.cpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"math.hpp\"\n#include \"check.hpp\"\nusing namespace study;\n// [한국어 해설] 행 벡터 SRT, 역변환, 특이행렬 거부, 부모 변환, 법선과 카메라 좌표 계약을 검사한다.\nint main() {\n    const Mat4 s=Scale(2,2,1),r=RotationZ(std::numbers::pi/2),t=Translation(10,0,0);\n    const Mat4 world=s*r*t; const auto p=Transform({1,0,0,1},world);\n    Check(Near(p[0],10)&&Near(p[1],2)&&Near(p[3],1),\"row SRT\");\n    const auto reverse=Transform({1,0,0,1},t*r*s);\n    Check(Near(reverse[0],0)&&Near(reverse[1],22),\"noncommutative transform\");\n// [한국어 해설] w=0 방향에는 이동 성분이 적용되면 안 된다.\n    const auto direction=Transform({1,0,0,0},world);\n    Check(Near(direction[0],0)&&Near(direction[1],2),\"direction ignores translation\");\n    const auto inverse=Inverse(world); Check(inverse.has_value(),\"inverse exists\");\n    const auto restored=Transform(p,*inverse);\n    Check(Near(restored[0],1)&&Near(restored[1],0)&&Near(restored[3],1),\"point roundtrip\");\n    const auto identity=world*(*inverse);\n    for (std::size_t i=0;i<4;++i) for (std::size_t j=0;j<4;++j)\n        Check(Near(identity.m[i][j],i==j?1.0:0.0),\"matrix identity\");\n    Check(!Inverse(Scale(1,0,1)),\"singular rejected\");\n    Mat4 bad=Identity(); bad.m[1][1]=std::numeric_limits<double>::quiet_NaN();\n    Check(!Inverse(bad),\"NaN inverse rejected\");\n    const auto hierarchy=Transform({0,0,0,1},Translation(2,0,0)*RotationZ(std::numbers::pi/2)*Translation(10,0,0));\n    Check(Near(hierarchy[0],10)&&Near(hierarchy[1],2),\"local then parent\");\n// [한국어 해설] 비균일 확대에서 일반 변환한 법선은 접선과 직교하지 않을 수 있다. 역전치와 비교한다.\n    const Mat4 nonuniform=Scale(2,1,1); const auto normalMatrix=Transpose(*Inverse(nonuniform));\n    const auto tangent=Transform({1,1,0,0},nonuniform);\n    const auto normal=Transform({-1,1,0,0},normalMatrix);\n    Check(Near(tangent[0]*normal[0]+tangent[1]*normal[1],0),\"inverse transpose normal\");\n    const auto wrong=Transform({-1,1,0,0},nonuniform);\n    Check(!Near(tangent[0]*wrong[0]+tangent[1]*wrong[1],0),\"ordinary normal transform fails\");\n    Camera2D camera{{10,20},{400,300},2};\n    const auto screen=camera.ToScreen({13,24});\n    Check(Near(screen.x,406)&&Near(screen.y,292),\"world up to screen down\");\n    const auto worldAgain=camera.ToWorld(screen);\n    Check(Near(worldAgain.x,13)&&Near(worldAgain.y,24),\"camera inverse\");\n    Throws([]{ Camera2D badCamera; badCamera.zoom=0; (void)badCamera.ToWorld({}); });\n    std::cout<<\"SRT(1,0,0,1) = (\"<<p[0]<<','<<p[1]<<','<<p[2]<<','<<p[3]<<\")\\n\";\n    return Done(\"transforms\");\n}\n"
+            }
+          ]
         }
       ]
     },
     {
       "id": "file-13",
       "title": "src/vector_motion.cpp",
-      "tab": "document",
+      "tab": "practice",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · src/vector_motion.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/src/vector_motion.cpp"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -493,14 +911,314 @@
           "type": "code",
           "language": "cpp",
           "text": "#include \"math.hpp\"\n#include \"check.hpp\"\nusing namespace study;\nint main() {\n    Check(Near(Dot(Vec3{1,2,3},Vec3{4,5,6}),32),\"dot formula\");\n    const auto cross=Cross({1,0,0},{0,1,0});\n    Check(Near(cross.z,1)&&Near(cross.x,0)&&Near(cross.y,0),\"basis cross\");\n    const Vec3 a{2,-1,4},b{3,5,-2}; const Vec3 c=Cross(a,b);\n    Check(Near(Dot(a,c),0)&&Near(Dot(b,c),0),\"cross orthogonal\");\n    Check(Near(Cross(b,a).x,-c.x)&&Near(Cross(b,a).y,-c.y)&&Near(Cross(b,a).z,-c.z),\"anti commutative\");\n    Check(!Normalize(Vec3{}),\"zero rejected\");\n    Check(!Normalize(Vec3{std::numeric_limits<double>::infinity(),0,0}),\"infinity rejected\");\n    Check(!Normalize(Vec2{std::numeric_limits<double>::quiet_NaN(),0}),\"NaN rejected\");\n    const auto n=Normalize(Vec2{3,4});\n    Check(n&&Near(n->x,.6)&&Near(n->y,.8),\"3 4 normalization\");\n    const auto diagonal=Normalize(Vec2{1,1});\n    Check(diagonal&&Near(std::hypot(diagonal->x,diagonal->y),1),\"diagonal speed\");\n    const auto p=MoveTowards({0,0},{3,4},2,1);\n    Check(Near(p.x,1.2)&&Near(p.y,1.6),\"two units per second\");\n    const auto q=MoveTowards({0,0},{3,4},10,1);\n    Check(Near(q.x,3)&&Near(q.y,4),\"no overshoot\");\n    Check(Near(MoveTowards({1,2},{1,2},0,1).y,2),\"same target\");\n    Throws([]{ (void)MoveTowards({},{1,1},-1,1); });\n    Throws([]{ (void)MoveTowards({},{1,1},1,-1); });\n    constexpr double pi=std::numbers::pi;\n    Check(Near(WrapAngle(-pi),pi),\"opposite convention\");\n    Check(Near(TurnTowards(170*pi/180,-170*pi/180,5*pi/180,1),175*pi/180),\"shortest turn\");\n    Check(Near(JumpHeight(0,10,-10,1),5),\"jump apex\");\n    Check(Near(JumpHeight(0,10,-10,2),0),\"jump return\");\n    Check(Near(std::atan2(1.0,-1.0),3*pi/4),\"atan2 quadrant\");\n    return Done(\"vector_motion\");\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · src/vector_motion.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/vector_motion.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · src/vector_motion.cpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"math.hpp\"\n#include \"check.hpp\"\nusing namespace study;\n// [한국어 해설] 내적·외적, 영벡터/비유한 정규화, 대각선 속도, 목표 지나침, 최단 회전과 포물선의 계약을 검사한다.\nint main() {\n    Check(Near(Dot(Vec3{1,2,3},Vec3{4,5,6}),32),\"dot formula\");\n    const auto cross=Cross({1,0,0},{0,1,0});\n    Check(Near(cross.z,1)&&Near(cross.x,0)&&Near(cross.y,0),\"basis cross\");\n    const Vec3 a{2,-1,4},b{3,5,-2}; const Vec3 c=Cross(a,b);\n    Check(Near(Dot(a,c),0)&&Near(Dot(b,c),0),\"cross orthogonal\");\n    Check(Near(Cross(b,a).x,-c.x)&&Near(Cross(b,a).y,-c.y)&&Near(Cross(b,a).z,-c.z),\"anti commutative\");\n    Check(!Normalize(Vec3{}),\"zero rejected\");\n    Check(!Normalize(Vec3{std::numeric_limits<double>::infinity(),0,0}),\"infinity rejected\");\n    Check(!Normalize(Vec2{std::numeric_limits<double>::quiet_NaN(),0}),\"NaN rejected\");\n    const auto n=Normalize(Vec2{3,4});\n    Check(n&&Near(n->x,.6)&&Near(n->y,.8),\"3 4 normalization\");\n    const auto diagonal=Normalize(Vec2{1,1});\n    Check(diagonal&&Near(std::hypot(diagonal->x,diagonal->y),1),\"diagonal speed\");\n// [한국어 해설] 속도 2와 시간 1이면 3:4 방향으로 (1.2,1.6)만큼 이동해야 한다.\n    const auto p=MoveTowards({0,0},{3,4},2,1);\n    Check(Near(p.x,1.2)&&Near(p.y,1.6),\"two units per second\");\n    const auto q=MoveTowards({0,0},{3,4},10,1);\n    Check(Near(q.x,3)&&Near(q.y,4),\"no overshoot\");\n    Check(Near(MoveTowards({1,2},{1,2},0,1).y,2),\"same target\");\n    Throws([]{ (void)MoveTowards({},{1,1},-1,1); });\n    Throws([]{ (void)MoveTowards({},{1,1},1,-1); });\n// [한국어 해설] 정반대 각도 규약과 -π/π 경계를 넘는 최단 회전을 따로 확인한다.\n    constexpr double pi=std::numbers::pi;\n    Check(Near(WrapAngle(-pi),pi),\"opposite convention\");\n    Check(Near(TurnTowards(170*pi/180,-170*pi/180,5*pi/180,1),175*pi/180),\"shortest turn\");\n    Check(Near(JumpHeight(0,10,-10,1),5),\"jump apex\");\n    Check(Near(JumpHeight(0,10,-10,2),0),\"jump return\");\n    Check(Near(std::atan2(1.0,-1.0),3*pi/4),\"atan2 quadrant\");\n    return Done(\"vector_motion\");\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "file-15",
+      "title": "windows/app.manifest",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · windows/app.manifest",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/app.manifest"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: game-math-winapi-lab/windows/app.manifest · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/windows/app.manifest"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "xml",
+          "text": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<assembly xmlns=\"urn:schemas-microsoft-com:asm.v1\" manifestVersion=\"1.0\">\n  <assemblyIdentity version=\"1.0.0.0\" processorArchitecture=\"*\" name=\"Study.GameMathWinApiLab\" type=\"win32\"/>\n  <trustInfo xmlns=\"urn:schemas-microsoft-com:asm.v3\">\n    <security><requestedPrivileges><requestedExecutionLevel level=\"asInvoker\" uiAccess=\"false\"/></requestedPrivileges></security>\n  </trustInfo>\n  <application xmlns=\"urn:schemas-microsoft-com:asm.v3\">\n    <windowsSettings>\n      <dpiAwareness xmlns=\"http://schemas.microsoft.com/SMI/2016/WindowsSettings\">PerMonitorV2</dpiAwareness>\n    </windowsSettings>\n  </application>\n</assembly>\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본과 동일한 빌드·리소스 파일 · windows/app.manifest",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/app.manifest"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · windows/app.manifest 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "xml",
+              "text": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<assembly xmlns=\"urn:schemas-microsoft-com:asm.v1\" manifestVersion=\"1.0\">\n  <assemblyIdentity version=\"1.0.0.0\" processorArchitecture=\"*\" name=\"Study.GameMathWinApiLab\" type=\"win32\"/>\n  <trustInfo xmlns=\"urn:schemas-microsoft-com:asm.v3\">\n    <security><requestedPrivileges><requestedExecutionLevel level=\"asInvoker\" uiAccess=\"false\"/></requestedPrivileges></security>\n  </trustInfo>\n  <application xmlns=\"urn:schemas-microsoft-com:asm.v3\">\n    <windowsSettings>\n      <dpiAwareness xmlns=\"http://schemas.microsoft.com/SMI/2016/WindowsSettings\">PerMonitorV2</dpiAwareness>\n    </windowsSettings>\n  </application>\n</assembly>\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "file-16",
+      "title": "windows/app.rc",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · windows/app.rc",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/app.rc"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: game-math-winapi-lab/windows/app.rc · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/windows/app.rc"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "1 24 \"app.manifest\"\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본과 동일한 빌드·리소스 파일 · windows/app.rc",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/app.rc"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · windows/app.rc 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "text",
+              "text": "1 24 \"app.manifest\"\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "file-17",
+      "title": "windows/winapi_demo.cpp",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · windows/winapi_demo.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/windows/winapi_demo.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: game-math-winapi-lab/windows/winapi_demo.cpp · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/windows/winapi_demo.cpp"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "// Windows 10 version 1703+ / Windows SDK. Reviewed source; NOT compiled or run\n// in the Linux validation environment. No MFC, D3DX, or external assets needed.\n#include <windows.h>\n#include <windowsx.h>\n#include <algorithm>\n#include <cmath>\n#include <exception>\n#include <stdexcept>\n#include \"loop.hpp\"\n#include \"math.hpp\"\n\nnamespace {\nclass BackBuffer {\n    HDC dc_{};\n    HBITMAP bitmap_{};\n    HGDIOBJ previous_{};\n    int width_{}, height_{};\npublic:\n    BackBuffer() = default;\n    BackBuffer(const BackBuffer&) = delete;\n    BackBuffer& operator=(const BackBuffer&) = delete;\n    ~BackBuffer() { Clear(); }\n    void Clear() noexcept {\n        if (dc_ && previous_) SelectObject(dc_, previous_);\n        if (bitmap_) DeleteObject(bitmap_);\n        if (dc_) DeleteDC(dc_);\n        dc_ = nullptr; bitmap_ = nullptr; previous_ = nullptr;\n        width_ = height_ = 0;\n    }\n    bool Ensure(HDC display, int width, int height) noexcept {\n        if (width <= 0 || height <= 0) return false;\n        if (dc_ && width == width_ && height == height_) return true;\n        HDC nextDC = CreateCompatibleDC(display);\n        if (!nextDC) return false;\n        // Use the DISPLAY DC: a new memory DC initially has a monochrome bitmap.\n        HBITMAP nextBitmap = CreateCompatibleBitmap(display, width, height);\n        if (!nextBitmap) { DeleteDC(nextDC); return false; }\n        HGDIOBJ old = SelectObject(nextDC, nextBitmap);\n        if (!old || old == HGDI_ERROR) {\n            DeleteObject(nextBitmap); DeleteDC(nextDC); return false;\n        }\n        Clear(); // Commit only after the replacement is ready.\n        dc_ = nextDC; bitmap_ = nextBitmap; previous_ = old;\n        width_ = width; height_ = height;\n        return true;\n    }\n    HDC DC() const noexcept { return dc_; }\n};\nstruct App {\n    HWND hwnd{};\n    UINT dpi{96};\n    bool active{true}, minimized{}, sizing{}, resetClock{true}, fatal{}, following{};\n    study::Vec2 position{200, 160}, target{200, 160};\n    study::Input input;\n    study::FixedStepper stepper;\n    BackBuffer buffer;\n    bool Paused() const noexcept { return !active || minimized || sizing; }\n    double Scale() const noexcept { return static_cast<double>(dpi) / 96.0; }\n    void ResetTime() noexcept { resetClock = true; stepper.Reset(); }\n    void Update(double dt) {\n        if (input.ConsumePressed(VK_SPACE)) {\n            position = {200,160}; following = false;\n        }\n        study::Vec2 direction{\n            static_cast<double>(input.Held(VK_RIGHT)) - static_cast<double>(input.Held(VK_LEFT)),\n            static_cast<double>(input.Held(VK_DOWN)) - static_cast<double>(input.Held(VK_UP))};\n        if (const auto unit = study::Normalize(direction)) {\n            following = false;\n            position = position + *unit * (180.0 * dt);\n        } else if (following) {\n            position = study::MoveTowards(position, target, 180.0, dt);\n        }\n        RECT client{};\n        if (GetClientRect(hwnd, &client)) {\n            const double width = static_cast<double>(client.right) / Scale();\n            const double height = static_cast<double>(client.bottom) / Scale();\n            position.x = std::clamp(position.x, 0.0, width);\n            position.y = std::clamp(position.y, 0.0, height);\n        }\n    }\n};\nstruct PaintScope {\n    HWND hwnd;\n    PAINTSTRUCT ps{};\n    HDC dc;\n    explicit PaintScope(HWND window) : hwnd(window), dc(BeginPaint(window, &ps)) {}\n    ~PaintScope() { if (dc) EndPaint(hwnd, &ps); }\n    PaintScope(const PaintScope&) = delete;\n    PaintScope& operator=(const PaintScope&) = delete;\n};\nvoid DrawScene(HDC dc, const RECT& client, const App& app) {\n    const int saved = SaveDC(dc);\n    if (!saved) throw std::runtime_error(\"SaveDC failed\");\n    struct Restore { HDC dc; int state; ~Restore() { RestoreDC(dc, state); } } restore{dc, saved};\n    if (!FillRect(dc, &client, reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH))))\n        throw std::runtime_error(\"FillRect failed\");\n    SelectObject(dc, GetStockObject(DC_PEN));\n    SelectObject(dc, GetStockObject(DC_BRUSH));\n    SetDCPenColor(dc, RGB(35,55,90));\n    SetDCBrushColor(dc, RGB(90,155,225));\n    const double scale = app.Scale();\n    const auto pixel = [scale](double value) { return static_cast<int>(std::lround(value * scale)); };\n    const int x = pixel(app.position.x), y = pixel(app.position.y), radius = pixel(14);\n    Ellipse(dc, x-radius, y-radius, x+radius, y+radius);\n    if (app.following) {\n        SetDCPenColor(dc, RGB(190,60,60));\n        const int tx = pixel(app.target.x), ty = pixel(app.target.y), r = pixel(7);\n        MoveToEx(dc, tx-r, ty, nullptr); LineTo(dc, tx+r, ty);\n        MoveToEx(dc, tx, ty-r, nullptr); LineTo(dc, tx, ty+r);\n    }\n    // Stock font is borrowed. The shape/UI coordinate scale is demonstrated;\n    // full per-DPI typography and text layout are intentionally not implemented.\n    SelectObject(dc, GetStockObject(DEFAULT_GUI_FONT));\n    SetBkMode(dc, TRANSPARENT);\n    RECT text{12,12,client.right-12,70};\n    DrawTextW(dc, L\"Arrows: move | Click: follow | Space: reset | Esc: close\\nFixed update: 120 Hz; active-window input only\", -1,\n              &text, DT_LEFT | DT_WORDBREAK | DT_NOPREFIX);\n}\nvoid Paint(App& app) {\n    PaintScope paint(app.hwnd);\n    if (!paint.dc) throw std::runtime_error(\"BeginPaint failed\");\n    RECT client{};\n    if (!GetClientRect(app.hwnd, &client)) throw std::runtime_error(\"GetClientRect failed\");\n    const int width = static_cast<int>(client.right), height = static_cast<int>(client.bottom);\n    if (width <= 0 || height <= 0) return;\n    if (app.buffer.Ensure(paint.dc, width, height)) {\n        DrawScene(app.buffer.DC(), client, app);\n        if (!BitBlt(paint.dc,0,0,width,height,app.buffer.DC(),0,0,SRCCOPY))\n            DrawScene(paint.dc, client, app);\n    } else {\n        DrawScene(paint.dc, client, app); // Allocation failure fallback.\n    }\n}\nLRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept {\n    App* app = reinterpret_cast<App*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));\n    try {\n        if (message == WM_NCCREATE) {\n            const auto* create = reinterpret_cast<const CREATESTRUCTW*>(lParam);\n            app = static_cast<App*>(create->lpCreateParams);\n            if (!app) return FALSE;\n            SetLastError(0);\n            const LONG_PTR previous = SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(app));\n            if (previous == 0 && GetLastError() != 0) return FALSE;\n            app->hwnd = hwnd;\n            const UINT dpi = GetDpiForWindow(hwnd);\n            if (dpi) app->dpi = dpi;\n            return TRUE;\n        }\n        if (!app) return DefWindowProcW(hwnd, message, wParam, lParam);\n        switch (message) {\n        case WM_CLOSE:\n            DestroyWindow(hwnd); return 0;\n        case WM_DESTROY:\n            PostQuitMessage(app->fatal ? 1 : 0); return 0;\n        case WM_NCDESTROY:\n            SetWindowLongPtrW(hwnd, GWLP_USERDATA, 0);\n            app->hwnd = nullptr;\n            return DefWindowProcW(hwnd, message, wParam, lParam);\n        case WM_ACTIVATEAPP:\n            app->active = wParam != 0;\n            app->input.Clear(); app->ResetTime(); return 0;\n        case WM_KILLFOCUS:\n            app->input.Clear(); return 0;\n        case WM_ENTERSIZEMOVE:\n            app->sizing = true; app->ResetTime(); return 0;\n        case WM_EXITSIZEMOVE:\n            app->sizing = false; app->ResetTime(); return 0;\n        case WM_SIZE:\n            app->minimized = wParam == SIZE_MINIMIZED;\n            app->ResetTime(); InvalidateRect(hwnd, nullptr, FALSE); return 0;\n        case WM_DPICHANGED:\n            app->dpi = static_cast<UINT>(HIWORD(wParam));\n            if (app->dpi == 0) app->dpi = 96;\n            if (const auto* rect = reinterpret_cast<const RECT*>(lParam)) {\n                SetWindowPos(hwnd, nullptr, static_cast<int>(rect->left), static_cast<int>(rect->top),\n                             static_cast<int>(rect->right-rect->left), static_cast<int>(rect->bottom-rect->top),\n                             SWP_NOACTIVATE | SWP_NOZORDER);\n            }\n            InvalidateRect(hwnd, nullptr, FALSE); return 0;\n        case WM_KEYDOWN:\n            if (wParam == VK_ESCAPE) { PostMessageW(hwnd, WM_CLOSE, 0, 0); return 0; }\n            app->input.Key(static_cast<std::size_t>(wParam), true); return 0;\n        case WM_KEYUP:\n            app->input.Key(static_cast<std::size_t>(wParam), false); return 0;\n        case WM_LBUTTONDOWN:\n            SetFocus(hwnd);\n            app->target = {static_cast<double>(GET_X_LPARAM(lParam))/app->Scale(),\n                           static_cast<double>(GET_Y_LPARAM(lParam))/app->Scale()};\n            app->following = true; return 0;\n        case WM_ERASEBKGND:\n            return 1; // Paint() fills the complete client area.\n        case WM_PAINT:\n            Paint(*app); return 0;\n        default:\n            return DefWindowProcW(hwnd, message, wParam, lParam);\n        }\n    } catch (const std::exception& error) {\n        OutputDebugStringA(error.what());\n    } catch (...) {\n        OutputDebugStringW(L\"Unexpected exception in WindowProc\");\n    }\n    // No C++ exception is allowed to cross the OS callback boundary.\n    if (app) app->fatal = true;\n    PostQuitMessage(1);\n    return message == WM_NCCREATE ? FALSE : 0;\n}\n} // namespace\n\nint WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int showCommand) {\n    App app;\n    int exitCode = 0;\n    const wchar_t* className = L\"StudyMathWinApiDemoV1\";\n    WNDCLASSEXW windowClass{};\n    windowClass.cbSize = static_cast<UINT>(sizeof(windowClass));\n    windowClass.hInstance = instance;\n    windowClass.lpfnWndProc = WindowProc;\n    windowClass.hCursor = LoadCursorW(nullptr, IDC_ARROW);\n    windowClass.lpszClassName = className;\n    if (!RegisterClassExW(&windowClass)) return 1;\n    try {\n        LARGE_INTEGER frequency{}, previous{};\n        if (!QueryPerformanceFrequency(&frequency) || frequency.QuadPart <= 0 || !QueryPerformanceCounter(&previous))\n            throw std::runtime_error(\"Performance counter unavailable\");\n        HWND window = CreateWindowExW(0, className, L\"Game Math + WinAPI Lab\", WS_OVERLAPPEDWINDOW,\n                                      CW_USEDEFAULT, CW_USEDEFAULT, 900, 650, nullptr, nullptr, instance, &app);\n        if (!window) throw std::runtime_error(\"CreateWindowExW failed\");\n        // 800 x 600 logical units at the DPI of the newly created window.\n        const int width = static_cast<int>(std::lround(800.0 * app.Scale()));\n        const int height = static_cast<int>(std::lround(600.0 * app.Scale()));\n        RECT desired{0,0,width,height};\n        if (AdjustWindowRectExForDpi(&desired,WS_OVERLAPPEDWINDOW,FALSE,0,app.dpi))\n            SetWindowPos(window,nullptr,0,0,static_cast<int>(desired.right-desired.left),\n                         static_cast<int>(desired.bottom-desired.top),SWP_NOMOVE|SWP_NOZORDER|SWP_NOACTIVATE);\n        ShowWindow(window, showCommand);\n        UpdateWindow(window);\n        bool running = true;\n        while (running && !app.fatal) {\n            MSG message{};\n            int processed = 0;\n            while (processed < 256 && PeekMessageW(&message,nullptr,0,0,PM_REMOVE)) {\n                ++processed;\n                if (message.message == WM_QUIT) {\n                    exitCode = static_cast<int>(message.wParam); running = false; break;\n                }\n                TranslateMessage(&message);\n                DispatchMessageW(&message);\n            }\n            if (!running || app.fatal || !app.hwnd) break;\n            LARGE_INTEGER now{};\n            if (!QueryPerformanceCounter(&now)) throw std::runtime_error(\"Performance counter failed\");\n            double elapsed = static_cast<double>(now.QuadPart-previous.QuadPart) /\n                             static_cast<double>(frequency.QuadPart);\n            previous = now;\n            if (app.resetClock) { elapsed = 0.0; app.resetClock = false; }\n            if (app.Paused()) {\n                app.ResetTime();\n                if (MsgWaitForMultipleObjectsEx(0,nullptr,INFINITE,QS_ALLINPUT,MWMO_INPUTAVAILABLE)==WAIT_FAILED)\n                    throw std::runtime_error(\"Message wait failed\");\n                continue;\n            }\n            const auto frame = app.stepper.Advance(elapsed,[&app](double dt) { app.Update(dt); });\n            if (frame.discardedSeconds > 0.0) OutputDebugStringW(L\"Study demo dropped excess simulation time\\n\");\n            InvalidateRect(app.hwnd,nullptr,FALSE);\n            UpdateWindow(app.hwnd); // GDI presentation; not a display-vsync guarantee.\n            if (processed == 256) continue;\n            const double remainingMs = (1.0-frame.alpha)*study::FixedStepper::step*1000.0;\n            const DWORD timeout = static_cast<DWORD>(std::clamp(std::ceil(remainingMs),1.0,9.0));\n            if (MsgWaitForMultipleObjectsEx(0,nullptr,timeout,QS_ALLINPUT,MWMO_INPUTAVAILABLE)==WAIT_FAILED)\n                throw std::runtime_error(\"Frame wait failed\");\n        }\n    } catch (const std::exception& error) {\n        OutputDebugStringA(error.what());\n        MessageBoxW(app.hwnd,L\"The study example stopped after an API failure. See debugger output.\",\n                    L\"Study example\",MB_OK|MB_ICONERROR);\n        exitCode = 1;\n    } catch (...) {\n        exitCode = 1;\n    }\n    if (app.fatal) exitCode = 1;\n    if (app.hwnd) DestroyWindow(app.hwnd); // Before App and its callback data are destroyed.\n    UnregisterClassW(className, instance);\n    return exitCode;\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석을 추가한 전체 파일 · windows/winapi_demo.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/windows/winapi_demo.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 학습 팩 · windows/winapi_demo.cpp 전체 내용",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// Windows 10 version 1703+ / Windows SDK. Reviewed source; NOT compiled or run\n// in the Linux validation environment. No MFC, D3DX, or external assets needed.\n#include <windows.h>\n#include <windowsx.h>\n#include <algorithm>\n#include <cmath>\n#include <exception>\n#include <stdexcept>\n#include \"loop.hpp\"\n#include \"math.hpp\"\n\nnamespace {\n// [한국어 해설] 메모리 DC와 비트맵을 소유하는 RAII 객체다. 복사를 금지해 GDI 핸들의 이중 해제를 막는다.\nclass BackBuffer {\n    HDC dc_{};\n    HBITMAP bitmap_{};\n    HGDIOBJ previous_{};\n    int width_{}, height_{};\npublic:\n    BackBuffer() = default;\n    BackBuffer(const BackBuffer&) = delete;\n    BackBuffer& operator=(const BackBuffer&) = delete;\n    ~BackBuffer() { Clear(); }\n// [한국어 해설] 선택했던 이전 객체를 먼저 복원한 후 소유 비트맵과 DC를 해제한다.\n    void Clear() noexcept {\n        if (dc_ && previous_) SelectObject(dc_, previous_);\n        if (bitmap_) DeleteObject(bitmap_);\n        if (dc_) DeleteDC(dc_);\n        dc_ = nullptr; bitmap_ = nullptr; previous_ = nullptr;\n        width_ = height_ = 0;\n    }\n// [한국어 해설] 크기가 같으면 재사용한다. 대체 자원을 전부 만든 뒤 기존 버퍼를 교체한다.\n    bool Ensure(HDC display, int width, int height) noexcept {\n        if (width <= 0 || height <= 0) return false;\n        if (dc_ && width == width_ && height == height_) return true;\n        HDC nextDC = CreateCompatibleDC(display);\n        if (!nextDC) return false;\n        // Use the DISPLAY DC: a new memory DC initially has a monochrome bitmap.\n// [한국어 해설] 새 메모리 DC의 기본 비트맵은 단색이다. 화면 DC를 기준으로 호환 비트맵을 만든다.\n        HBITMAP nextBitmap = CreateCompatibleBitmap(display, width, height);\n        if (!nextBitmap) { DeleteDC(nextDC); return false; }\n        HGDIOBJ old = SelectObject(nextDC, nextBitmap);\n        if (!old || old == HGDI_ERROR) {\n            DeleteObject(nextBitmap); DeleteDC(nextDC); return false;\n        }\n        Clear(); // Commit only after the replacement is ready.\n        dc_ = nextDC; bitmap_ = nextBitmap; previous_ = old;\n        width_ = width; height_ = height;\n        return true;\n    }\n    HDC DC() const noexcept { return dc_; }\n};\n// [한국어 해설] 창보다 오래 살아야 하는 콜백 상태다. 화면 좌표는 오른쪽/아래쪽 논리 단위로 통일한다.\nstruct App {\n    HWND hwnd{};\n    UINT dpi{96};\n    bool active{true}, minimized{}, sizing{}, resetClock{true}, fatal{}, following{};\n    study::Vec2 position{200, 160}, target{200, 160};\n    study::Input input;\n    study::FixedStepper stepper;\n    BackBuffer buffer;\n    bool Paused() const noexcept { return !active || minimized || sizing; }\n    double Scale() const noexcept { return static_cast<double>(dpi) / 96.0; }\n    void ResetTime() noexcept { resetClock = true; stepper.Reset(); }\n// [한국어 해설] 고정 dt로 이동한다. 대각선 입력을 정규화하여 축 방향보다 빨라지지 않도록 한다.\n    void Update(double dt) {\n        if (input.ConsumePressed(VK_SPACE)) {\n            position = {200,160}; following = false;\n        }\n        study::Vec2 direction{\n            static_cast<double>(input.Held(VK_RIGHT)) - static_cast<double>(input.Held(VK_LEFT)),\n            static_cast<double>(input.Held(VK_DOWN)) - static_cast<double>(input.Held(VK_UP))};\n        if (const auto unit = study::Normalize(direction)) {\n            following = false;\n            position = position + *unit * (180.0 * dt);\n        } else if (following) {\n            position = study::MoveTowards(position, target, 180.0, dt);\n        }\n        RECT client{};\n        if (GetClientRect(hwnd, &client)) {\n            const double width = static_cast<double>(client.right) / Scale();\n            const double height = static_cast<double>(client.bottom) / Scale();\n            position.x = std::clamp(position.x, 0.0, width);\n            position.y = std::clamp(position.y, 0.0, height);\n        }\n    }\n};\n// [한국어 해설] BeginPaint와 EndPaint를 수명으로 묶는다. 예외 경로에서도 페인트 상태를 닫는다.\nstruct PaintScope {\n    HWND hwnd;\n    PAINTSTRUCT ps{};\n    HDC dc;\n    explicit PaintScope(HWND window) : hwnd(window), dc(BeginPaint(window, &ps)) {}\n    ~PaintScope() { if (dc) EndPaint(hwnd, &ps); }\n    PaintScope(const PaintScope&) = delete;\n    PaintScope& operator=(const PaintScope&) = delete;\n};\n// [한국어 해설] SaveDC로 저장한 그리기 상태를 복원한다. stock 객체는 빌린 핸들이므로 DeleteObject하지 않는다.\nvoid DrawScene(HDC dc, const RECT& client, const App& app) {\n    const int saved = SaveDC(dc);\n    if (!saved) throw std::runtime_error(\"SaveDC failed\");\n    struct Restore { HDC dc; int state; ~Restore() { RestoreDC(dc, state); } } restore{dc, saved};\n    if (!FillRect(dc, &client, reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH))))\n        throw std::runtime_error(\"FillRect failed\");\n    SelectObject(dc, GetStockObject(DC_PEN));\n    SelectObject(dc, GetStockObject(DC_BRUSH));\n    SetDCPenColor(dc, RGB(35,55,90));\n    SetDCBrushColor(dc, RGB(90,155,225));\n    const double scale = app.Scale();\n    const auto pixel = [scale](double value) { return static_cast<int>(std::lround(value * scale)); };\n    const int x = pixel(app.position.x), y = pixel(app.position.y), radius = pixel(14);\n    Ellipse(dc, x-radius, y-radius, x+radius, y+radius);\n    if (app.following) {\n        SetDCPenColor(dc, RGB(190,60,60));\n        const int tx = pixel(app.target.x), ty = pixel(app.target.y), r = pixel(7);\n        MoveToEx(dc, tx-r, ty, nullptr); LineTo(dc, tx+r, ty);\n        MoveToEx(dc, tx, ty-r, nullptr); LineTo(dc, tx, ty+r);\n    }\n    // Stock font is borrowed. The shape/UI coordinate scale is demonstrated;\n    // full per-DPI typography and text layout are intentionally not implemented.\n    SelectObject(dc, GetStockObject(DEFAULT_GUI_FONT));\n    SetBkMode(dc, TRANSPARENT);\n    RECT text{12,12,client.right-12,70};\n    DrawTextW(dc, L\"Arrows: move | Click: follow | Space: reset | Esc: close\\nFixed update: 120 Hz; active-window input only\", -1,\n              &text, DT_LEFT | DT_WORDBREAK | DT_NOPREFIX);\n}\n// [한국어 해설] 버퍼 생성이나 BitBlt가 실패하면 화면 DC에 직접 그린다. 실패를 무조건 정상 버퍼 출력이라 숨기지 않는다.\nvoid Paint(App& app) {\n    PaintScope paint(app.hwnd);\n    if (!paint.dc) throw std::runtime_error(\"BeginPaint failed\");\n    RECT client{};\n    if (!GetClientRect(app.hwnd, &client)) throw std::runtime_error(\"GetClientRect failed\");\n    const int width = static_cast<int>(client.right), height = static_cast<int>(client.bottom);\n    if (width <= 0 || height <= 0) return;\n    if (app.buffer.Ensure(paint.dc, width, height)) {\n        DrawScene(app.buffer.DC(), client, app);\n        if (!BitBlt(paint.dc,0,0,width,height,app.buffer.DC(),0,0,SRCCOPY))\n            DrawScene(paint.dc, client, app);\n    } else {\n        DrawScene(paint.dc, client, app); // Allocation failure fallback.\n    }\n}\n// [한국어 해설] 운영체제 콜백 경계 밖으로 C++ 예외를 넘기지 않는다. 오류는 종료 상태로 변환한다.\nLRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept {\n    App* app = reinterpret_cast<App*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));\n    try {\n// [한국어 해설] CreateWindow의 lpParam을 창별 상태 포인터로 연결한다. 반환값 0만으로 실패를 판단하지 않고 LastError도 본다.\n        if (message == WM_NCCREATE) {\n            const auto* create = reinterpret_cast<const CREATESTRUCTW*>(lParam);\n            app = static_cast<App*>(create->lpCreateParams);\n            if (!app) return FALSE;\n            SetLastError(0);\n            const LONG_PTR previous = SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(app));\n            if (previous == 0 && GetLastError() != 0) return FALSE;\n            app->hwnd = hwnd;\n            const UINT dpi = GetDpiForWindow(hwnd);\n            if (dpi) app->dpi = dpi;\n            return TRUE;\n        }\n        if (!app) return DefWindowProcW(hwnd, message, wParam, lParam);\n        switch (message) {\n        case WM_CLOSE:\n            DestroyWindow(hwnd); return 0;\n        case WM_DESTROY:\n            PostQuitMessage(app->fatal ? 1 : 0); return 0;\n// [한국어 해설] 창과 상태의 연결을 끊어 파괴된 HWND를 이후 루프에서 사용하지 않도록 한다.\n        case WM_NCDESTROY:\n            SetWindowLongPtrW(hwnd, GWLP_USERDATA, 0);\n            app->hwnd = nullptr;\n            return DefWindowProcW(hwnd, message, wParam, lParam);\n// [한국어 해설] 비활성 전환에서 입력과 누적 시간을 초기화하여 복귀 직후 긴 시간만큼 뛰는 현상을 막는다.\n        case WM_ACTIVATEAPP:\n            app->active = wParam != 0;\n            app->input.Clear(); app->ResetTime(); return 0;\n        case WM_KILLFOCUS:\n            app->input.Clear(); return 0;\n        case WM_ENTERSIZEMOVE:\n            app->sizing = true; app->ResetTime(); return 0;\n        case WM_EXITSIZEMOVE:\n            app->sizing = false; app->ResetTime(); return 0;\n        case WM_SIZE:\n            app->minimized = wParam == SIZE_MINIMIZED;\n            app->ResetTime(); InvalidateRect(hwnd, nullptr, FALSE); return 0;\n// [한국어 해설] 새 DPI와 운영체제가 제안한 사각형을 반영한다. 완전한 DPI별 글꼴 재구성 예제는 아니다.\n        case WM_DPICHANGED:\n            app->dpi = static_cast<UINT>(HIWORD(wParam));\n            if (app->dpi == 0) app->dpi = 96;\n            if (const auto* rect = reinterpret_cast<const RECT*>(lParam)) {\n                SetWindowPos(hwnd, nullptr, static_cast<int>(rect->left), static_cast<int>(rect->top),\n                             static_cast<int>(rect->right-rect->left), static_cast<int>(rect->bottom-rect->top),\n                             SWP_NOACTIVATE | SWP_NOZORDER);\n            }\n            InvalidateRect(hwnd, nullptr, FALSE); return 0;\n        case WM_KEYDOWN:\n            if (wParam == VK_ESCAPE) { PostMessageW(hwnd, WM_CLOSE, 0, 0); return 0; }\n            app->input.Key(static_cast<std::size_t>(wParam), true); return 0;\n        case WM_KEYUP:\n            app->input.Key(static_cast<std::size_t>(wParam), false); return 0;\n// [한국어 해설] 마우스 픽셀 좌표를 DPI 배율로 나누어 논리 좌표 목표로 변환한다.\n        case WM_LBUTTONDOWN:\n            SetFocus(hwnd);\n            app->target = {static_cast<double>(GET_X_LPARAM(lParam))/app->Scale(),\n                           static_cast<double>(GET_Y_LPARAM(lParam))/app->Scale()};\n            app->following = true; return 0;\n// [한국어 해설] Paint가 전체 배경을 채우므로 별도 배경 지우기를 생략한다.\n        case WM_ERASEBKGND:\n            return 1; // Paint() fills the complete client area.\n        case WM_PAINT:\n            Paint(*app); return 0;\n        default:\n            return DefWindowProcW(hwnd, message, wParam, lParam);\n        }\n    } catch (const std::exception& error) {\n        OutputDebugStringA(error.what());\n    } catch (...) {\n        OutputDebugStringW(L\"Unexpected exception in WindowProc\");\n    }\n    // No C++ exception is allowed to cross the OS callback boundary.\n    if (app) app->fatal = true;\n    PostQuitMessage(1);\n    return message == WM_NCCREATE ? FALSE : 0;\n}\n} // namespace\n\n// [한국어 해설] Windows 전용 진입점이다. Linux CPU 테스트 통과가 이 창의 실제 실행을 증명하지 않는다.\nint WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int showCommand) {\n    App app;\n    int exitCode = 0;\n    const wchar_t* className = L\"StudyMathWinApiDemoV1\";\n    WNDCLASSEXW windowClass{};\n    windowClass.cbSize = static_cast<UINT>(sizeof(windowClass));\n    windowClass.hInstance = instance;\n    windowClass.lpfnWndProc = WindowProc;\n    windowClass.hCursor = LoadCursorW(nullptr, IDC_ARROW);\n    windowClass.lpszClassName = className;\n    if (!RegisterClassExW(&windowClass)) return 1;\n    try {\n        LARGE_INTEGER frequency{}, previous{};\n        if (!QueryPerformanceFrequency(&frequency) || frequency.QuadPart <= 0 || !QueryPerformanceCounter(&previous))\n            throw std::runtime_error(\"Performance counter unavailable\");\n        HWND window = CreateWindowExW(0, className, L\"Game Math + WinAPI Lab\", WS_OVERLAPPEDWINDOW,\n                                      CW_USEDEFAULT, CW_USEDEFAULT, 900, 650, nullptr, nullptr, instance, &app);\n        if (!window) throw std::runtime_error(\"CreateWindowExW failed\");\n        // 800 x 600 logical units at the DPI of the newly created window.\n        const int width = static_cast<int>(std::lround(800.0 * app.Scale()));\n        const int height = static_cast<int>(std::lround(600.0 * app.Scale()));\n        RECT desired{0,0,width,height};\n        if (AdjustWindowRectExForDpi(&desired,WS_OVERLAPPEDWINDOW,FALSE,0,app.dpi))\n            SetWindowPos(window,nullptr,0,0,static_cast<int>(desired.right-desired.left),\n                         static_cast<int>(desired.bottom-desired.top),SWP_NOMOVE|SWP_NOZORDER|SWP_NOACTIVATE);\n        ShowWindow(window, showCommand);\n        UpdateWindow(window);\n        bool running = true;\n// [한국어 해설] 메시지 처리와 고정 Update를 분리한다. 메시지 폭주에도 Update 기회를 주도록 256개씩 제한한다.\n        while (running && !app.fatal) {\n            MSG message{};\n            int processed = 0;\n            while (processed < 256 && PeekMessageW(&message,nullptr,0,0,PM_REMOVE)) {\n                ++processed;\n                if (message.message == WM_QUIT) {\n                    exitCode = static_cast<int>(message.wParam); running = false; break;\n                }\n                TranslateMessage(&message);\n                DispatchMessageW(&message);\n            }\n            if (!running || app.fatal || !app.hwnd) break;\n            LARGE_INTEGER now{};\n            if (!QueryPerformanceCounter(&now)) throw std::runtime_error(\"Performance counter failed\");\n            double elapsed = static_cast<double>(now.QuadPart-previous.QuadPart) /\n                             static_cast<double>(frequency.QuadPart);\n            previous = now;\n            if (app.resetClock) { elapsed = 0.0; app.resetClock = false; }\n// [한국어 해설] 중지 중에는 메시지를 기다리고 시간 기준을 초기화한다. 바쁜 대기 루프로 CPU를 소모하지 않는다.\n            if (app.Paused()) {\n                app.ResetTime();\n                if (MsgWaitForMultipleObjectsEx(0,nullptr,INFINITE,QS_ALLINPUT,MWMO_INPUTAVAILABLE)==WAIT_FAILED)\n                    throw std::runtime_error(\"Message wait failed\");\n                continue;\n            }\n// [한국어 해설] 측정한 실제 경과 시간을 stepper에 전달한다. 버린 시뮬레이션 시간은 디버그 출력으로 알린다.\n            const auto frame = app.stepper.Advance(elapsed,[&app](double dt) { app.Update(dt); });\n            if (frame.discardedSeconds > 0.0) OutputDebugStringW(L\"Study demo dropped excess simulation time\\n\");\n            InvalidateRect(app.hwnd,nullptr,FALSE);\n            UpdateWindow(app.hwnd); // GDI presentation; not a display-vsync guarantee.\n            if (processed == 256) continue;\n// [한국어 해설] 다음 단계까지 남은 시간을 짧게 기다리되 메시지가 오면 먼저 깬다. 수직 동기화 보장은 아니다.\n            const double remainingMs = (1.0-frame.alpha)*study::FixedStepper::step*1000.0;\n            const DWORD timeout = static_cast<DWORD>(std::clamp(std::ceil(remainingMs),1.0,9.0));\n            if (MsgWaitForMultipleObjectsEx(0,nullptr,timeout,QS_ALLINPUT,MWMO_INPUTAVAILABLE)==WAIT_FAILED)\n                throw std::runtime_error(\"Frame wait failed\");\n        }\n    } catch (const std::exception& error) {\n        OutputDebugStringA(error.what());\n        MessageBoxW(app.hwnd,L\"The study example stopped after an API failure. See debugger output.\",\n                    L\"Study example\",MB_OK|MB_ICONERROR);\n        exitCode = 1;\n    } catch (...) {\n        exitCode = 1;\n    }\n    if (app.fatal) exitCode = 1;\n// [한국어 해설] App을 파괴하기 전에 창을 닫아 콜백이 이미 파괴된 상태 객체를 보지 않게 한다.\n    if (app.hwnd) DestroyWindow(app.hwnd); // Before App and its callback data are destroyed.\n    UnregisterClassW(className, instance);\n    return exitCode;\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "file-3",
+      "title": "docs/validation.md",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · docs/validation.md",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/docs/validation.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 경로: game-math-winapi-lab/docs/validation.md · 전체 코드. "
+            },
+            {
+              "text": "GitHub에서 원본 파일 보기",
+              "kind": "link",
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/docs/validation.md"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "markdown",
+          "text": "# 게임 수학·WinAPI v1.0 — 실제 검증 기록\n\n날짜: 2026-10-13. 환경: Linux x86-64. GCC 14.2.0, Clang 17.0.0, CMake 3.31.6. C++20 / Debug. 경고 옵션: -Wall -Wextra -Wpedantic -Wconversion -Wshadow.\n\n| 프로그램 | 조건 검사 | 확인 대상 |\n|---|---:|---|\n| vector_motion | 19 | 내외적, 정규화 실패, 이동, 각도, 점프 |\n| transforms | 29 | SRT, 역행렬 왕복/실패, 법선, 카메라 |\n| geometry | 78 | 충돌 접촉, 선분, 8x8 타일 중심과 경계 |\n| loop_input | 484 | 고정 시간 단계, 입력 에지, 애니메이션 |\n| tile_document | 26 | 편집/Undo/Redo, 파싱 실패, 작업 스냅샷 |\n| pathfinding | 93,561 | A*와 독립 BFS 비교, 반환 경로의 유효성 |\n| 합계 | 94,197 | 반복 원소 검사 포함 |\n\nGCC, Clang, Clang ASan·UBSan 각각 6/6 프로그램 통과. 정상 빌드 로그에는 컴파일러 경고가 없었습니다. 검사기 실행에 ASAN_OPTIONS=detect_leaks=1, UBSAN_OPTIONS=halt_on_error=1을 적용했습니다. 실행 중 해당 검사기 진단을 관찰하지 않았습니다.\n\nA* 비교 범위: 3x3 격자의 장애물 배치 512개 × 시작9 × 도착9 = 41,472개 시나리오. BFS와 도달 가능성/최단 길이를 비교하며 경로 끝점, 통과 가능 여부, 연속 칸의 인접성도 검사했습니다. 이 검사를 대각선/가중치/이동 장애물/모든 크기의 지도에 대한 증명으로 확대하지 않습니다.\n\nmath.hpp, loop.hpp, grid.hpp를 각각 단독 include한 번역 단위를 GCC와 Clang에서 -Werror -fsyntax-only로 확인했습니다.\n\n## 검증하지 않은 범위\n\nWindows/MSVC에서의 컴파일, Win32 GUI, MFC DDX/스플리터/대화상자, DPI 모니터 이동, GDI 객체 수 안정성, GPU/DirectX/D3DX/FMOD 실행, ThreadSanitizer 경쟁 검사, 성능 벤치마크는 수행하지 않았습니다. Win32 소스는 정적 검토만 수행했습니다.\n\n## Windows 수동 확인 목록 (아직 실행하지 않음)\n\n1. 창 생성과 Esc/닫기 버튼 종료. 예외 메시지나 남는 프로세스 여부.\n2. 대각선과 수평 이동 거리 비교, 클릭 목표 도착 시 지나침 여부.\n3. 키를 누른 채 Alt+Tab한 뒤 복귀해 입력이 남지 않는지.\n4. 최소화 복구와 긴 리사이즈 이후 상태가 급격히 진행하지 않는지.\n5. 100/150/200% DPI, 모니터 간 이동 시 클릭과 도형 위치의 일치.\n6. 여러 차례 리사이즈 후 GDI 객체 수가 계속 증가하지 않는지.\n7. 버퍼 할당/복사 실패, 매우 작거나 큰 클라이언트 영역 처리.\n8. 창 파괴 이후 App에 접근하는 콜백이 없는지.\n\n## 결과의 해석\n\n동일 조건을 세 구성에서 반복한 것이며 이를 독립된 조건 282,591개로 표시하지 않습니다. ASan·UBSan 통과는 실행된 경로에 대한 관찰이고 모든 메모리 오류나 수치 오류가 없다는 증명이 아닙니다. 실습의 파일 포맷 검증은 문법/범위의 검증이며 원자적 디스크 저장은 구현하지 않았습니다.\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 docs/validation.md는 2026-10-13 원본 기록이다. 2026-10-19 이관 CPU 실행은 별도 원장에 있으며 2026-10-23 한국어 주석본의 별도 직접 빌드 기록은 아래 연결 원장에서 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이관 CPU·출처 원장",
+              "kind": "link",
+              "href": "/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 전체 주석본은 원본을 대체하지 않는 별도 파생 파일이다. 지정된 한국어 주석 줄을 제거하면 원본 바이트가 복원되며 원본·주석본 해시는 manifest에 있다. 주석본 담당자의 2026-10-23 Linux GCC 14.2 직접 컴파일·실행 및 -E -P 비교 기록은 기존 CPU 결과와 분리한다. 공통 6개 프로그램과 Win04A를 확인했으며 이번 주석본 작업의 CMake/CTest·sanitizer·Windows GUI/MSVC/GPU 실행은 하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본 구성·빌드 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·주석본 SHA와 삽입 줄 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주석본 검증 결과와 미검증 범위",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 바이트 복원 검사 도구",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/verify_annotations.py"
+            }
+          ]
         }
       ]
     },
     {
       "id": "file-14",
       "title": "verify.py",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · verify.py",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/verify.py"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -522,85 +1240,55 @@
       ]
     },
     {
-      "id": "file-15",
-      "title": "windows/app.manifest",
-      "tab": "document",
+      "id": "file-2",
+      "title": "README.md",
+      "tab": "history",
       "blocks": [
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "원본 경로: game-math-winapi-lab/windows/app.manifest · 전체 코드. "
-            },
-            {
-              "text": "GitHub에서 원본 파일 보기",
+              "text": "원본 전체 파일 직접 다운로드 · README.md",
               "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/windows/app.manifest"
+              "href": "/knowledge/shared/game-math-winapi-lab/README.md"
             }
           ]
         },
-        {
-          "type": "code",
-          "language": "xml",
-          "text": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<assembly xmlns=\"urn:schemas-microsoft-com:asm.v1\" manifestVersion=\"1.0\">\n  <assemblyIdentity version=\"1.0.0.0\" processorArchitecture=\"*\" name=\"Study.GameMathWinApiLab\" type=\"win32\"/>\n  <trustInfo xmlns=\"urn:schemas-microsoft-com:asm.v3\">\n    <security><requestedPrivileges><requestedExecutionLevel level=\"asInvoker\" uiAccess=\"false\"/></requestedPrivileges></security>\n  </trustInfo>\n  <application xmlns=\"urn:schemas-microsoft-com:asm.v3\">\n    <windowsSettings>\n      <dpiAwareness xmlns=\"http://schemas.microsoft.com/SMI/2016/WindowsSettings\">PerMonitorV2</dpiAwareness>\n    </windowsSettings>\n  </application>\n</assembly>\n"
-        }
-      ]
-    },
-    {
-      "id": "file-16",
-      "title": "windows/app.rc",
-      "tab": "document",
-      "blocks": [
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "원본 경로: game-math-winapi-lab/windows/app.rc · 전체 코드. "
+              "text": "원본 경로: game-math-winapi-lab/README.md · 전체 코드. "
             },
             {
               "text": "GitHub에서 원본 파일 보기",
               "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/windows/app.rc"
+              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/README.md"
             }
           ]
         },
         {
           "type": "code",
-          "language": "text",
-          "text": "1 24 \"app.manifest\"\n"
-        }
-      ]
-    },
-    {
-      "id": "file-17",
-      "title": "windows/winapi_demo.cpp",
-      "tab": "document",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "text": "원본 경로: game-math-winapi-lab/windows/winapi_demo.cpp · 전체 코드. "
-            },
-            {
-              "text": "GitHub에서 원본 파일 보기",
-              "kind": "link",
-              "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/game-math-winapi-lab/windows/winapi_demo.cpp"
-            }
-          ]
-        },
-        {
-          "type": "code",
-          "language": "cpp",
-          "text": "// Windows 10 version 1703+ / Windows SDK. Reviewed source; NOT compiled or run\n// in the Linux validation environment. No MFC, D3DX, or external assets needed.\n#include <windows.h>\n#include <windowsx.h>\n#include <algorithm>\n#include <cmath>\n#include <exception>\n#include <stdexcept>\n#include \"loop.hpp\"\n#include \"math.hpp\"\n\nnamespace {\nclass BackBuffer {\n    HDC dc_{};\n    HBITMAP bitmap_{};\n    HGDIOBJ previous_{};\n    int width_{}, height_{};\npublic:\n    BackBuffer() = default;\n    BackBuffer(const BackBuffer&) = delete;\n    BackBuffer& operator=(const BackBuffer&) = delete;\n    ~BackBuffer() { Clear(); }\n    void Clear() noexcept {\n        if (dc_ && previous_) SelectObject(dc_, previous_);\n        if (bitmap_) DeleteObject(bitmap_);\n        if (dc_) DeleteDC(dc_);\n        dc_ = nullptr; bitmap_ = nullptr; previous_ = nullptr;\n        width_ = height_ = 0;\n    }\n    bool Ensure(HDC display, int width, int height) noexcept {\n        if (width <= 0 || height <= 0) return false;\n        if (dc_ && width == width_ && height == height_) return true;\n        HDC nextDC = CreateCompatibleDC(display);\n        if (!nextDC) return false;\n        // Use the DISPLAY DC: a new memory DC initially has a monochrome bitmap.\n        HBITMAP nextBitmap = CreateCompatibleBitmap(display, width, height);\n        if (!nextBitmap) { DeleteDC(nextDC); return false; }\n        HGDIOBJ old = SelectObject(nextDC, nextBitmap);\n        if (!old || old == HGDI_ERROR) {\n            DeleteObject(nextBitmap); DeleteDC(nextDC); return false;\n        }\n        Clear(); // Commit only after the replacement is ready.\n        dc_ = nextDC; bitmap_ = nextBitmap; previous_ = old;\n        width_ = width; height_ = height;\n        return true;\n    }\n    HDC DC() const noexcept { return dc_; }\n};\nstruct App {\n    HWND hwnd{};\n    UINT dpi{96};\n    bool active{true}, minimized{}, sizing{}, resetClock{true}, fatal{}, following{};\n    study::Vec2 position{200, 160}, target{200, 160};\n    study::Input input;\n    study::FixedStepper stepper;\n    BackBuffer buffer;\n    bool Paused() const noexcept { return !active || minimized || sizing; }\n    double Scale() const noexcept { return static_cast<double>(dpi) / 96.0; }\n    void ResetTime() noexcept { resetClock = true; stepper.Reset(); }\n    void Update(double dt) {\n        if (input.ConsumePressed(VK_SPACE)) {\n            position = {200,160}; following = false;\n        }\n        study::Vec2 direction{\n            static_cast<double>(input.Held(VK_RIGHT)) - static_cast<double>(input.Held(VK_LEFT)),\n            static_cast<double>(input.Held(VK_DOWN)) - static_cast<double>(input.Held(VK_UP))};\n        if (const auto unit = study::Normalize(direction)) {\n            following = false;\n            position = position + *unit * (180.0 * dt);\n        } else if (following) {\n            position = study::MoveTowards(position, target, 180.0, dt);\n        }\n        RECT client{};\n        if (GetClientRect(hwnd, &client)) {\n            const double width = static_cast<double>(client.right) / Scale();\n            const double height = static_cast<double>(client.bottom) / Scale();\n            position.x = std::clamp(position.x, 0.0, width);\n            position.y = std::clamp(position.y, 0.0, height);\n        }\n    }\n};\nstruct PaintScope {\n    HWND hwnd;\n    PAINTSTRUCT ps{};\n    HDC dc;\n    explicit PaintScope(HWND window) : hwnd(window), dc(BeginPaint(window, &ps)) {}\n    ~PaintScope() { if (dc) EndPaint(hwnd, &ps); }\n    PaintScope(const PaintScope&) = delete;\n    PaintScope& operator=(const PaintScope&) = delete;\n};\nvoid DrawScene(HDC dc, const RECT& client, const App& app) {\n    const int saved = SaveDC(dc);\n    if (!saved) throw std::runtime_error(\"SaveDC failed\");\n    struct Restore { HDC dc; int state; ~Restore() { RestoreDC(dc, state); } } restore{dc, saved};\n    if (!FillRect(dc, &client, reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH))))\n        throw std::runtime_error(\"FillRect failed\");\n    SelectObject(dc, GetStockObject(DC_PEN));\n    SelectObject(dc, GetStockObject(DC_BRUSH));\n    SetDCPenColor(dc, RGB(35,55,90));\n    SetDCBrushColor(dc, RGB(90,155,225));\n    const double scale = app.Scale();\n    const auto pixel = [scale](double value) { return static_cast<int>(std::lround(value * scale)); };\n    const int x = pixel(app.position.x), y = pixel(app.position.y), radius = pixel(14);\n    Ellipse(dc, x-radius, y-radius, x+radius, y+radius);\n    if (app.following) {\n        SetDCPenColor(dc, RGB(190,60,60));\n        const int tx = pixel(app.target.x), ty = pixel(app.target.y), r = pixel(7);\n        MoveToEx(dc, tx-r, ty, nullptr); LineTo(dc, tx+r, ty);\n        MoveToEx(dc, tx, ty-r, nullptr); LineTo(dc, tx, ty+r);\n    }\n    // Stock font is borrowed. The shape/UI coordinate scale is demonstrated;\n    // full per-DPI typography and text layout are intentionally not implemented.\n    SelectObject(dc, GetStockObject(DEFAULT_GUI_FONT));\n    SetBkMode(dc, TRANSPARENT);\n    RECT text{12,12,client.right-12,70};\n    DrawTextW(dc, L\"Arrows: move | Click: follow | Space: reset | Esc: close\\nFixed update: 120 Hz; active-window input only\", -1,\n              &text, DT_LEFT | DT_WORDBREAK | DT_NOPREFIX);\n}\nvoid Paint(App& app) {\n    PaintScope paint(app.hwnd);\n    if (!paint.dc) throw std::runtime_error(\"BeginPaint failed\");\n    RECT client{};\n    if (!GetClientRect(app.hwnd, &client)) throw std::runtime_error(\"GetClientRect failed\");\n    const int width = static_cast<int>(client.right), height = static_cast<int>(client.bottom);\n    if (width <= 0 || height <= 0) return;\n    if (app.buffer.Ensure(paint.dc, width, height)) {\n        DrawScene(app.buffer.DC(), client, app);\n        if (!BitBlt(paint.dc,0,0,width,height,app.buffer.DC(),0,0,SRCCOPY))\n            DrawScene(paint.dc, client, app);\n    } else {\n        DrawScene(paint.dc, client, app); // Allocation failure fallback.\n    }\n}\nLRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept {\n    App* app = reinterpret_cast<App*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));\n    try {\n        if (message == WM_NCCREATE) {\n            const auto* create = reinterpret_cast<const CREATESTRUCTW*>(lParam);\n            app = static_cast<App*>(create->lpCreateParams);\n            if (!app) return FALSE;\n            SetLastError(0);\n            const LONG_PTR previous = SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(app));\n            if (previous == 0 && GetLastError() != 0) return FALSE;\n            app->hwnd = hwnd;\n            const UINT dpi = GetDpiForWindow(hwnd);\n            if (dpi) app->dpi = dpi;\n            return TRUE;\n        }\n        if (!app) return DefWindowProcW(hwnd, message, wParam, lParam);\n        switch (message) {\n        case WM_CLOSE:\n            DestroyWindow(hwnd); return 0;\n        case WM_DESTROY:\n            PostQuitMessage(app->fatal ? 1 : 0); return 0;\n        case WM_NCDESTROY:\n            SetWindowLongPtrW(hwnd, GWLP_USERDATA, 0);\n            app->hwnd = nullptr;\n            return DefWindowProcW(hwnd, message, wParam, lParam);\n        case WM_ACTIVATEAPP:\n            app->active = wParam != 0;\n            app->input.Clear(); app->ResetTime(); return 0;\n        case WM_KILLFOCUS:\n            app->input.Clear(); return 0;\n        case WM_ENTERSIZEMOVE:\n            app->sizing = true; app->ResetTime(); return 0;\n        case WM_EXITSIZEMOVE:\n            app->sizing = false; app->ResetTime(); return 0;\n        case WM_SIZE:\n            app->minimized = wParam == SIZE_MINIMIZED;\n            app->ResetTime(); InvalidateRect(hwnd, nullptr, FALSE); return 0;\n        case WM_DPICHANGED:\n            app->dpi = static_cast<UINT>(HIWORD(wParam));\n            if (app->dpi == 0) app->dpi = 96;\n            if (const auto* rect = reinterpret_cast<const RECT*>(lParam)) {\n                SetWindowPos(hwnd, nullptr, static_cast<int>(rect->left), static_cast<int>(rect->top),\n                             static_cast<int>(rect->right-rect->left), static_cast<int>(rect->bottom-rect->top),\n                             SWP_NOACTIVATE | SWP_NOZORDER);\n            }\n            InvalidateRect(hwnd, nullptr, FALSE); return 0;\n        case WM_KEYDOWN:\n            if (wParam == VK_ESCAPE) { PostMessageW(hwnd, WM_CLOSE, 0, 0); return 0; }\n            app->input.Key(static_cast<std::size_t>(wParam), true); return 0;\n        case WM_KEYUP:\n            app->input.Key(static_cast<std::size_t>(wParam), false); return 0;\n        case WM_LBUTTONDOWN:\n            SetFocus(hwnd);\n            app->target = {static_cast<double>(GET_X_LPARAM(lParam))/app->Scale(),\n                           static_cast<double>(GET_Y_LPARAM(lParam))/app->Scale()};\n            app->following = true; return 0;\n        case WM_ERASEBKGND:\n            return 1; // Paint() fills the complete client area.\n        case WM_PAINT:\n            Paint(*app); return 0;\n        default:\n            return DefWindowProcW(hwnd, message, wParam, lParam);\n        }\n    } catch (const std::exception& error) {\n        OutputDebugStringA(error.what());\n    } catch (...) {\n        OutputDebugStringW(L\"Unexpected exception in WindowProc\");\n    }\n    // No C++ exception is allowed to cross the OS callback boundary.\n    if (app) app->fatal = true;\n    PostQuitMessage(1);\n    return message == WM_NCCREATE ? FALSE : 0;\n}\n} // namespace\n\nint WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int showCommand) {\n    App app;\n    int exitCode = 0;\n    const wchar_t* className = L\"StudyMathWinApiDemoV1\";\n    WNDCLASSEXW windowClass{};\n    windowClass.cbSize = static_cast<UINT>(sizeof(windowClass));\n    windowClass.hInstance = instance;\n    windowClass.lpfnWndProc = WindowProc;\n    windowClass.hCursor = LoadCursorW(nullptr, IDC_ARROW);\n    windowClass.lpszClassName = className;\n    if (!RegisterClassExW(&windowClass)) return 1;\n    try {\n        LARGE_INTEGER frequency{}, previous{};\n        if (!QueryPerformanceFrequency(&frequency) || frequency.QuadPart <= 0 || !QueryPerformanceCounter(&previous))\n            throw std::runtime_error(\"Performance counter unavailable\");\n        HWND window = CreateWindowExW(0, className, L\"Game Math + WinAPI Lab\", WS_OVERLAPPEDWINDOW,\n                                      CW_USEDEFAULT, CW_USEDEFAULT, 900, 650, nullptr, nullptr, instance, &app);\n        if (!window) throw std::runtime_error(\"CreateWindowExW failed\");\n        // 800 x 600 logical units at the DPI of the newly created window.\n        const int width = static_cast<int>(std::lround(800.0 * app.Scale()));\n        const int height = static_cast<int>(std::lround(600.0 * app.Scale()));\n        RECT desired{0,0,width,height};\n        if (AdjustWindowRectExForDpi(&desired,WS_OVERLAPPEDWINDOW,FALSE,0,app.dpi))\n            SetWindowPos(window,nullptr,0,0,static_cast<int>(desired.right-desired.left),\n                         static_cast<int>(desired.bottom-desired.top),SWP_NOMOVE|SWP_NOZORDER|SWP_NOACTIVATE);\n        ShowWindow(window, showCommand);\n        UpdateWindow(window);\n        bool running = true;\n        while (running && !app.fatal) {\n            MSG message{};\n            int processed = 0;\n            while (processed < 256 && PeekMessageW(&message,nullptr,0,0,PM_REMOVE)) {\n                ++processed;\n                if (message.message == WM_QUIT) {\n                    exitCode = static_cast<int>(message.wParam); running = false; break;\n                }\n                TranslateMessage(&message);\n                DispatchMessageW(&message);\n            }\n            if (!running || app.fatal || !app.hwnd) break;\n            LARGE_INTEGER now{};\n            if (!QueryPerformanceCounter(&now)) throw std::runtime_error(\"Performance counter failed\");\n            double elapsed = static_cast<double>(now.QuadPart-previous.QuadPart) /\n                             static_cast<double>(frequency.QuadPart);\n            previous = now;\n            if (app.resetClock) { elapsed = 0.0; app.resetClock = false; }\n            if (app.Paused()) {\n                app.ResetTime();\n                if (MsgWaitForMultipleObjectsEx(0,nullptr,INFINITE,QS_ALLINPUT,MWMO_INPUTAVAILABLE)==WAIT_FAILED)\n                    throw std::runtime_error(\"Message wait failed\");\n                continue;\n            }\n            const auto frame = app.stepper.Advance(elapsed,[&app](double dt) { app.Update(dt); });\n            if (frame.discardedSeconds > 0.0) OutputDebugStringW(L\"Study demo dropped excess simulation time\\n\");\n            InvalidateRect(app.hwnd,nullptr,FALSE);\n            UpdateWindow(app.hwnd); // GDI presentation; not a display-vsync guarantee.\n            if (processed == 256) continue;\n            const double remainingMs = (1.0-frame.alpha)*study::FixedStepper::step*1000.0;\n            const DWORD timeout = static_cast<DWORD>(std::clamp(std::ceil(remainingMs),1.0,9.0));\n            if (MsgWaitForMultipleObjectsEx(0,nullptr,timeout,QS_ALLINPUT,MWMO_INPUTAVAILABLE)==WAIT_FAILED)\n                throw std::runtime_error(\"Frame wait failed\");\n        }\n    } catch (const std::exception& error) {\n        OutputDebugStringA(error.what());\n        MessageBoxW(app.hwnd,L\"The study example stopped after an API failure. See debugger output.\",\n                    L\"Study example\",MB_OK|MB_ICONERROR);\n        exitCode = 1;\n    } catch (...) {\n        exitCode = 1;\n    }\n    if (app.fatal) exitCode = 1;\n    if (app.hwnd) DestroyWindow(app.hwnd); // Before App and its callback data are destroyed.\n    UnregisterClassW(className, instance);\n    return exitCode;\n}\n"
+          "language": "markdown",
+          "text": "# 게임 수학 · MFC · WinAPI 실습 팩 v1.0\n\n개정일: 2026-10-13. C++20 학습 기준. 회사 프로젝트나 외부 SDK의 원본 코드가 아닌 독립 학습 예제입니다.\n\n## 실행한 범위와 실행하지 않은 범위\n\nLinux x86-64 / GCC 14.2.0 / Clang 17.0.0 / CMake 3.31.6에서 플랫폼 독립 프로그램 6개를 빌드하고 실행했습니다. Clang ASan·UBSan 구성도 통과했습니다. `logs/`에는 실제 명령의 구성·빌드·CTest 로그가 있습니다.\n\n**Windows/MSVC와 windows/winapi_demo.cpp는 컴파일하거나 실행하지 않았습니다.** Windows SDK, MFC, GPU, DirectX, FMOD 실행 환경이 이 검증 환경에 없습니다. GUI 소스는 공식 API 계약을 대조한 정적 검토 결과입니다. 실행 확인 목록은 docs/validation.md에 있습니다. MFC GUI 프로젝트, D3DX 또는 FMOD 바이너리는 포함하지 않습니다.\n\n## 폴더\n\n- include/math.hpp: 벡터, 스칼라 행렬, 기하, 카메라, 타일 좌표.\n- include/loop.hpp: 입력 에지, 고정 시간 간격, 애니메이션.\n- include/grid.hpp: 맵 파싱, 편집/Undo/Redo, A*.\n- include/check.hpp: 정상 조건 검사 도우미.\n- src/: 독립 실행 가능한 프로그램 6개.\n- windows/: 별도의 Win32 GUI 예제와 DPI manifest.\n- docs/validation.md: 실제 결과와 미검증 항목.\n- logs/: 이번 실제 실행 로그.\n- verify.py: 임시 빌드 디렉터리에서 같은 테스트를 재실행하는 도구.\n\n## 빌드\n\n압축을 푼 이 폴더에서:\n\n```shell\ncmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build --config Debug\nctest --test-dir build -C Debug --output-on-failure\n```\n\nClang 검사기 사용:\n\n```shell\ncmake -S . -B build-san -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON\ncmake --build build-san --config Debug\nctest --test-dir build-san -C Debug --output-on-failure\n```\n\n선택 사항: Python 3으로 별도의 임시 빌드/로그 만들기.\n\n```shell\npython verify.py --compiler g++\npython verify.py --compiler clang++ --sanitizers\n```\n\nWindows에서는 MSVC C++ 도구와 Windows SDK를 준비하고 x64 개발자 터미널 또는 Visual Studio CMake 기능을 사용합니다. `cmake -S . -B build`와 `cmake --build build --config Debug`로 구성합니다. 자동 선택된 생성기에 따라 실행 파일은 `build/Debug/winapi_demo.exe` 또는 `build/winapi_demo.exe`에 있습니다. 다른 생성기로 이미 구성한 build 폴더는 재사용하지 마세요.\n\nWin32 예제는 Windows 10 version 1703 이상을 대상으로 작성했습니다. PMv2 manifest를 app.rc에 포함하고 MSVC의 자동 manifest 생성을 `/MANIFEST:NO`로 끕니다. 폰트의 정교한 DPI별 재구성은 구현하지 않았습니다.\n\n## GUI 조작과 설계\n\n방향키: 이동. 클릭: 목표를 향해 이동. Space: 위치 초기화. Esc: 종료.\n120Hz는 고정 Update 간격이지 화면 주사율 보장이 아닙니다. 한 루프에서 최대 8회, 프레임 경과 입력 최대 0.25초로 제한합니다. 밀린 시간을 일부 버리는 로컬 데모 정책이며 네트워크 결정적 시뮬레이션을 구현한 것이 아닙니다. 최소화·비활성·크기 조정 중에는 정지하고 복귀 시 시간 기준을 재설정합니다.\nApp 좌표는 x 오른쪽/y 아래쪽의 논리 단위이며 DPI/96으로 출력합니다. math.hpp의 Camera2D는 별도의 x 오른쪽/y 위쪽 월드를 화면으로 변환합니다. 두 규약을 무심코 혼용하지 마세요.\n\n## 수학 및 데이터 계약\n\n행 벡터 p*M, 행별 저장의 4x4 행렬을 사용합니다. Transform은 w를 포함한 4성분 원시 결과이며 자동 원근 나눗셈을 하지 않습니다. 행렬/벡터 기본 산술은 중간값이 유한 범위에 들어가는 보통 크기의 값에 대한 학습용이며 모든 함수가 모든 입력의 범위를 검사하지는 않습니다. 정규화 등 검사 함수도 전체 IEEE754 입력 공간에서 수치 안정성을 증명하는 것은 아닙니다.\n\n역행렬은 부분 피벗 Gauss–Jordan과 절대 임계값 1e-12를 사용합니다. 조건수·스케일 적응형 판정을 포함한 범용 수치 라이브러리가 아닙니다. AABB/원은 접촉도 충돌로 취급합니다. 마름모 타일 소속은 중심 주변 반열린 구간입니다. 카메라/타일 투영의 y축 규약은 헤더 주석과 문서를 함께 읽습니다.\n\n맵 포맷: `MAP1 width height` 뒤 정확히 width*height개의 정수. 폭/높이 1..256, ID 0..4095, 텍스트 4MiB 이하. 행 구분은 저장 출력 형식이며 파서는 공백 구분 토큰을 읽습니다. 임시 모델에 완전히 읽고 검증한 뒤 교체합니다. 파일 시스템 원자적 저장이나 전원 장애 복구까지 제공하지 않습니다.\n\nA*: 0은 통과 가능, 다른 ID는 막힘. 네 방향 이동 비용1, Manhattan 휴리스틱. 반환 경로는 시작과 목표를 포함합니다. 가중치·대각선·움직이는 장애물은 다루지 않습니다.\n\n## 학습 노트\n\n- 게임 수학·MFC: https://app.notion.com/p/3bde90ebffa44ef0a6455ca8e68a7886\n- WinAPI 게임 프로그래밍: https://app.notion.com/p/fffca9a4ce864ac7bade7efe90186be7\n\n## 참고 자료\n\n계산 구현과 테스트는 이 실습용으로 작성했습니다. 아래 자료는 API 계약과 알고리즘 설명을 대조한 근거입니다.\n\n- DirectXMath 규약: https://learn.microsoft.com/en-us/windows/win32/dxmath/pg-xnamath-getting-started\n- Win32 창: https://learn.microsoft.com/en-us/windows/win32/learnwin32/creating-a-window\n- QPC: https://learn.microsoft.com/en-us/windows/win32/sysinfo/acquiring-high-resolution-time-stamps\n- GDI bitmap: https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap\n- DPI: https://learn.microsoft.com/en-us/windows/win32/hidpi/wm-dpichanged\n- MFC: https://learn.microsoft.com/en-us/cpp/mfc/document-view-architecture\n- A*: https://inst.eecs.berkeley.edu/~cs188/textbook/search/informed.html\n- 시간 단계: https://gafferongames.com/post/fix_your_timestep/\n"
         }
       ]
     },
     {
       "id": "file-18",
       "title": "source_hashes.json",
-      "tab": "document",
+      "tab": "history",
       "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 전체 파일 직접 다운로드 · source_hashes.json",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab/source_hashes.json"
+            }
+          ]
+        },
         {
           "type": "paragraph",
           "content": [
@@ -618,6 +1306,24 @@
           "type": "code",
           "language": "json",
           "text": "{\n  \"CMakeLists.txt\": \"0d4ac2df5f5d72740e95ab14a448a97f87afd5cb82f3d07b2e5dd1114f6489bc\",\n  \"README.md\": \"831ba4a32321665c3688c5c8f0e0d12f9832dc2f5cfb6996a6dc61121f91f317\",\n  \"docs/validation.md\": \"cc9be22606f37f219903198f2ea2b68077e5582907a95124bf03e0ee0140be35\",\n  \"include/check.hpp\": \"8640c131fcd59efeb0250da50b7014f7503db155d7e70aa6d061330c1dfbbf2a\",\n  \"include/grid.hpp\": \"3ebe1bc309a4c071871e2674e1eb72cfe55710e2188c7eb25ac8795316a2acd1\",\n  \"include/loop.hpp\": \"827cbbb08ce3e008a1c8c9ab85d8d27595a004e43372179fb4a30ff6a8a09ad7\",\n  \"include/math.hpp\": \"1d5fecf1a62f79ba4010f12eda316e1e5d20cf80d1845e4c9427c2cc310dc612\",\n  \"logs/clang-build.log\": \"44aa39f171003e1afa6686b9aeadc658cb2e9883932bb304e297dd0f956be790\",\n  \"logs/clang-configure.log\": \"2c54c4953af93744f30ae4c5b978088bdfa92861ee1bec058652aa35c2a9ca67\",\n  \"logs/clang-ctest.log\": \"6a2aad866c6af4e22348ce2befe42b54a568f0c5f3c4a7187ffe8d4f53512d25\",\n  \"logs/gcc-build.log\": \"a786565e3f3ff373991f354b9ff21c9277cc5b4b515e867bee1688e8c8e2f1af\",\n  \"logs/gcc-configure.log\": \"5688a0bd3708956421e2d37298ba192690cc68489715ffd3c2b5581fd7cc8f6c\",\n  \"logs/gcc-ctest.log\": \"22ab860df88850d4d6819a90d891e922097ea6bfa61871f21d3fc8ec959e5136\",\n  \"logs/header-checks.log\": \"15e9be71189f6a8a73f0a87e33b5a5a1371fd8045ec1de1c9eb99b8c02d02c19\",\n  \"logs/sanitizer-build.log\": \"ec2963e977095a09708f6189163860690c3af08f07ae06db5acb5aced4817460\",\n  \"logs/sanitizer-configure.log\": \"ff2eaa1f32ba370b6898bd6c388ff77c5eaa770122ea2730d1352cc0a11f3a98\",\n  \"logs/sanitizer-ctest.log\": \"8095452169a775d3537c7ae358b58cea96b9edc7297134aae46e95051cdab7ec\",\n  \"src/geometry.cpp\": \"771f45f5aac44d7af138a49041d9f82169b281aa0b718accb250e8db01cdbc0d\",\n  \"src/loop_input.cpp\": \"af729b1f0b337cbb1beebdc3920c797aee8d584427bdf598730261ffed497733\",\n  \"src/pathfinding.cpp\": \"d51e3cd7c94d27dfd0c753593c2db80e42a13341b9129b99c18bbbf3919407cc\",\n  \"src/tile_document.cpp\": \"0fe520476ad9973ecf95d655bb1db720f8e3b5ffe550d70a570c09075e07b73b\",\n  \"src/transforms.cpp\": \"7cb07b8d1686faee69675e9311f288b2730f465aea0b809104169aad909041df\",\n  \"src/vector_motion.cpp\": \"9bd2387baa4fbc803fd1d4d0dae89367cf21f90ffe028d4698da8f7e03ace743\",\n  \"verify.py\": \"8daad603eeed8b0733894de878902f952298290dd805fae1aeb9399832732847\",\n  \"windows/app.manifest\": \"e53d17be3732a8f6d9407fd5133b992f425196301b306f1b9e1c355969b6ff7e\",\n  \"windows/app.rc\": \"dee796c28bae15cf5c74ac1ece175de1b3f91771a9bd2fe9a116990d9d6eb7c7\",\n  \"windows/winapi_demo.cpp\": \"1b847b552d96f79d0a26602d63b86c68a3b45af6296fbb754c2a87554808ee93\"\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23: 파일 원본·해시·기존 direct 코드 블록과 19개 섹션 ID를 보존하면서 네 탭과 소스 지도·복습을 추가했다. 원본 ZIP과 Notion 첨부 바이너리의 실물 미확인 상태를 해소했다고 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "소스 출처 보존 기록",
+              "kind": "link",
+              "href": "/knowledge/winapi-math-lab/SOURCE_PROVENANCE.md"
+            }
+          ]
         }
       ]
     }

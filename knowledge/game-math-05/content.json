@@ -20,23 +20,10 @@
       "tab": "document",
       "blocks": [
         {
-          "type": "callout",
-          "blocks": [
+          "type": "paragraph",
+          "content": [
             {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
-                },
-                {
-                  "text": "원본 Notion 페이지",
-                  "kind": "link",
-                  "href": "https://app.notion.com/p/3f8a99703f40814bb111e208530bf6b7"
-                },
-                {
-                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
-                }
-              ]
+              "text": "학습 지도: 이 장은 순수 수학 공식이 아니라 격자 길찾기와 비동기 결과의 반영 정책을 다룬다. CPU 모델과 실제 GUI 구현의 범위를 구별한다."
             }
           ]
         },
@@ -85,6 +72,12 @@
       "title": "1. 먼저 이동 규칙을 고정합니다",
       "tab": "document",
       "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/game-math-05/assets/astar-grid.svg",
+          "alt": "A*: 직선 거리가 아니라 실제 경로의 비용",
+          "caption": "A*: 직선 거리가 아니라 실제 경로의 비용 · 이 장의 명시된 좌표·입력 계약을 그린 설명 그림이며 실행 화면이 아닙니다."
+        },
         {
           "type": "paragraph",
           "content": [
@@ -207,6 +200,12 @@
       "tab": "document",
       "blocks": [
         {
+          "type": "image",
+          "src": "/knowledge/game-math-05/assets/revision-result.svg",
+          "alt": "비동기 결과는 제출 당시 버전을 가진다",
+          "caption": "비동기 결과는 제출 당시 버전을 가진다 · 이 장의 명시된 좌표·입력 계약을 그린 설명 그림이며 실행 화면이 아닙니다."
+        },
+        {
           "type": "paragraph",
           "content": [
             {
@@ -273,9 +272,229 @@
       ]
     },
     {
+      "id": "part-8",
+      "title": "8. 이해 확인과 다음 연결",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "A\\*가 반환한 길이가 BFS와 같은데 경로 모양이 다르면 오류일까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최단 경로가 여러 개일 수 있습니다. 비용과 이동 규칙이 맞고 각 단계가 유효한지 확인합니다. 정확히 같은 모양이 필요하다면 후보 순서와 동률 처리도 계약으로 정해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "길찾기 중 사용자가 벽을 추가했다면 결과를 그대로 써도 될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "계산 당시 스냅샷에는 새 벽이 없을 수 있습니다. 결과의 버전·현재 맵을 확인하고 폐기·재계산·경로 재검증 정책 중 하나를 적용해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 그래픽스 작업은 "
+            },
+            {
+              "text": "DX9 렌더링 파이프라인",
+              "kind": "strong"
+            },
+            {
+              "text": "입니다. 이 묶음의 행렬·좌표계를 정점 입력과 클립 공간, 뷰포트까지 이어서 다룹니다. 게임 엔진 아키텍처 책의 기존 장은 이 작업 범위가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "h에 시작점과 현재점의 거리를 넣으면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "h는 목표까지 남은 비용의 추정이다. g는 실제 발견 경로의 누적 비용이며 둘의 역할을 바꾸면 안 된다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "목표를 이웃으로 발견한 순간 종료할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 구현은 오래되지 않은 최소 큐 항목으로 목표를 꺼냈을 때 종료한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "대각선 이동을 추가해도 맨해튼 휴리스틱을 유지할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "대각선 비용에 따라 과대 추정할 수 있다. 이동 그래프·비용·휴리스틱 계약을 함께 다시 정한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "async 직후 get()을 호출하면 UI가 즉시 돌아오나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "작업이 끝나지 않았으면 기다릴 수 있다. 완료 확인·전달·취소·종료 정책을 별도로 설계한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guided-practice",
+      "title": "실습 · 먼저 예측하고 전체 소스로 대조",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "그림의 3×3 벽 배치에서 경로 원소 7개와 비용 6을 구분하세요. pathfinding.cpp의 독립 BFS 비교를 읽고 시작=목표·도달 불가·막힌 시작을 기록합니다. 이어 v7 작업 뒤 v8 편집이 발생했을 때 어떤 결과를 버릴지 설명합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스 탐색기 · 헤더/CMake 의존성 포함",
+              "kind": "link",
+              "href": "/knowledge/winapi-math-lab/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실행은 전체 프로젝트를 준비한 뒤 CMake/CTest 안내를 따른다. 본문의 짧은 발췌만 단독 프로그램으로 컴파일하지 않는다. 관찰 결과와 예상이 다르면 입력 단위·좌표 규약·경계 정책부터 비교한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 코드 · 의존성까지 함께 준비",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 파일은 main을 포함한 완전한 실행 예제지만 단독 한 파일 배포본은 아니다. 아래 공통 헤더와 같은 폴더 구조를 함께 준비한다. 삽입한 한국어 해설 주석 외의 원본 바이트는 보존했다. 구현 상세는 헤더, 이 파일은 사용·실패 사례 검사 중심으로 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "pathfinding.cpp · 한국어 주석 전체 파일 내려받기",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/src/pathfinding.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 주석을 포함한 전체 C++20 실행 파일",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"grid.hpp\"\n#include \"check.hpp\"\nusing namespace study;\n// [한국어 해설] 비용이 모두 1인 그래프에서 BFS를 독립적인 최단거리 기준으로 사용한다.\nint BfsDistance(const Grid& g,Cell start,Cell goal) {\n    if (!g.Walkable(start)||!g.Walkable(goal)) return -1;\n    const auto id=[&](Cell p){return p.y*g.Width()+p.x;};\n    std::vector<int> distance(static_cast<std::size_t>(g.Width()*g.Height()),-1);\n    std::queue<Cell> q; q.push(start); distance[static_cast<std::size_t>(id(start))]=0;\n    const std::array<Cell,4> offsets{{{0,-1},{-1,0},{0,1},{1,0}}};\n    while (!q.empty()) {\n        const Cell p=q.front();q.pop(); if (p==goal) return distance[static_cast<std::size_t>(id(p))];\n        for (auto d:offsets) {\n            Cell n{p.x+d.x,p.y+d.y};\n            if (!g.Walkable(n)||distance[static_cast<std::size_t>(id(n))]!=-1) continue;\n            distance[static_cast<std::size_t>(id(n))]=distance[static_cast<std::size_t>(id(p))]+1; q.push(n);\n        }\n    }\n    return -1;\n}\n// [한국어 해설] 3×3 맵의 512개 장애물 배치와 시작/목표 81쌍을 모두 비교한다. 임의 크기 전체 공간의 증명은 아니다.\nint main() {\n    int scenarios{};\n    for (unsigned mask=0;mask<512;++mask) {\n        Grid grid(3,3);\n        for (unsigned bit=0;bit<9;++bit) if ((mask&(1u<<bit))!=0)\n            grid.Set({static_cast<int>(bit%3),static_cast<int>(bit/3)},1);\n        for (int s=0;s<9;++s) for (int t=0;t<9;++t) {\n            const Cell start{s%3,s/3},goal{t%3,t/3}; ++scenarios;\n            const auto path=AStar(grid,start,goal); const int distance=BfsDistance(grid,start,goal);\n            Check(path.has_value()==(distance>=0),\"A* reachability agrees with BFS\");\n// [한국어 해설] 경로가 있으면 끝점, 최단 길이, 장애물 회피와 네 방향 인접성을 각각 검사한다.\n            if (!path) continue;\n            Check(path->front()==start&&path->back()==goal,\"path endpoints\");\n            Check(path->size()==static_cast<std::size_t>(distance+1),\"A* optimal length\");\n            for (std::size_t i=0;i<path->size();++i) {\n                Check(grid.Walkable((*path)[i]),\"path avoids obstacle\");\n                if (i) Check(std::abs((*path)[i].x-(*path)[i-1].x)+std::abs((*path)[i].y-(*path)[i-1].y)==1,\"four-way path adjacency\");\n            }\n        }\n    }\n    Check(!AStar(Grid(3,3),{-1,0},{0,0}),\"outside endpoint rejected\");\n    std::cout<<scenarios<<\" exhaustive 3x3 map/start/goal scenarios\\n\";\n    return Done(\"pathfinding\");\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "필수 구현 헤더 include/grid.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/grid.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "필수 검사 도우미 include/check.hpp",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/include/check.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 빌드 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "폴더 구성·직접 GCC 빌드·CMake 안내",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/README.md"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "# game-math-winapi-lab-ko 폴더에서 실행하는 Linux CPU 예시\ng++ -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -pthread -I include src/pathfinding.cpp -o /tmp/pathfinding\n/tmp/pathfinding"
+        }
+      ]
+    },
+    {
       "id": "part-7",
       "title": "7. 공통 실습 팩 구성과 실제 결과",
-      "tab": "document",
+      "tab": "sources",
       "blocks": [
         {
           "type": "table",
@@ -447,60 +666,18 @@
       ]
     },
     {
-      "id": "part-8",
-      "title": "8. 이해 확인과 다음 연결",
-      "tab": "document",
+      "id": "full-source-refs",
+      "title": "전체 소스·CMake·재검증",
+      "tab": "sources",
       "blocks": [
-        {
-          "type": "details",
-          "title": "A\\*가 반환한 길이가 BFS와 같은데 경로 모양이 다르면 오류일까?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "최단 경로가 여러 개일 수 있습니다. 비용과 이동 규칙이 맞고 각 단계가 유효한지 확인합니다. 정확히 같은 모양이 필요하다면 후보 순서와 동률 처리도 계약으로 정해야 합니다."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "details",
-          "title": "길찾기 중 사용자가 벽을 추가했다면 결과를 그대로 써도 될까?",
-          "blocks": [
-            {
-              "type": "paragraph",
-              "content": [
-                {
-                  "text": "계산 당시 스냅샷에는 새 벽이 없을 수 있습니다. 결과의 버전·현재 맵을 확인하고 폐기·재계산·경로 재검증 정책 중 하나를 적용해야 합니다."
-                }
-              ]
-            }
-          ]
-        },
         {
           "type": "paragraph",
           "content": [
             {
-              "text": "다음 그래픽스 작업은 "
-            },
-            {
-              "text": "DX9 렌더링 파이프라인",
-              "kind": "strong"
-            },
-            {
-              "text": "입니다. 이 묶음의 행렬·좌표계를 정점 입력과 클립 공간, 뷰포트까지 이어서 다룹니다. 게임 엔진 아키텍처 책의 기존 장은 이 작업 범위가 아닙니다."
+              "text": "검증 구분: 기존 본문의 GCC·Clang·sanitizer 결과는 원문 및 2026-10-19 보존 기록이다. 새 한국어 주석본은 2026-10-23 클라우드 Linux/GCC 14.2에서 직접 빌드·실행하고 원본과 전처리 결과 동일성을 검사했다. 이번 주석본 검사에서 CMake/CTest·sanitizer·Windows/MFC/Direct3D/GPU는 실행하지 않았다. 웹 공개·브라우저 렌더링은 별도 발행 게이트다."
             }
           ]
-        }
-      ]
-    },
-    {
-      "id": "full-source-refs",
-      "title": "전체 소스·CMake·재검증",
-      "tab": "document",
-      "blocks": [
+        },
         {
           "type": "callout",
           "blocks": [
@@ -551,6 +728,82 @@
               "text": "원본 무결성 및 2026-10-19 GitHub CPU 재검증",
               "kind": "link",
               "href": "https://github.com/jiwhan112/um.github.io/blob/master/knowledge/SOURCE_RESTORE_AND_CPU_20261019.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한국어 주석본 실제 검사 범위·결과",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본/주석본 해시 및 삽입 주석 목록",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "지정 주석 줄 제거 후 원본 바이트 복원 검증기",
+              "kind": "link",
+              "href": "/knowledge/shared/game-math-winapi-lab-ko/verify_annotations.py"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·개편 이력",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GitHub Pages 이관본 · 원본 Notion의 본문/표/접기/코드/수식을 보존했습니다. Mermaid는 원본 소스 코드로 제공합니다. "
+                },
+                {
+                  "text": "원본 Notion 페이지",
+                  "kind": "link",
+                  "href": "https://app.notion.com/p/3f8a99703f40814bb111e208530bf6b7"
+                },
+                {
+                  "text": ". 기존 CPU 시험 기록은 과거 기록이며 Windows/MSVC/D3D/GPU 실기기 실행은 별도 미검증입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존한 원문 전체",
+              "kind": "link",
+              "href": "/knowledge/game-math-05/source-notion.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 시각·학습 구성 개편: 원문·URL·기존 절 ID·코드·과거 검증 기록은 유지하고 설명 그림, 직접 풀어 보는 실습, 접힌 복습을 보완했다. 본문 Mermaid는 도식 렌더링과 원본 코드 확인을 함께 지원한다. 배포·브라우저 검증 결과는 발행 기록에서 별도로 확인한다."
             }
           ]
         }
