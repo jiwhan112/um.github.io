@@ -11,6 +11,15 @@ async function revealLegacy(page:import('@playwright/test').Page,slug:string,kin
  expect(section,'approved content contract '+slug+' '+needle).toBeTruthy();
  await page.getByRole('tab',{name:legacyTabLabels[section!.tab as keyof typeof legacyTabLabels],exact:true}).click();
  await expect(page.locator('#'+section!.id)).toBeVisible();
+ if(kind==='code'){
+  const code=page.locator('#'+section!.id+' .code-block').filter({hasText:needle}).first();
+  await expect(code).toHaveCount(1);
+  for(const disclosure of await code.locator('xpath=ancestor::details').all()){
+   if(await disclosure.getAttribute('open')===null)await disclosure.locator(':scope > summary').click();
+   await expect(disclosure).toHaveAttribute('open','');
+  }
+  await expect(code).toBeVisible();
+ }
 }
 const catalog=JSON.parse(readFileSync('public/data/atlas/catalog.json','utf8')) as Catalog;
 const routes=JSON.parse(readFileSync('public/data/atlas/routes.json','utf8')) as string[];
