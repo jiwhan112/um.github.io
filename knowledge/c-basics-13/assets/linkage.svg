@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="title desc"><title id="title">외부 연결과 내부 연결 · 같은 함수와 다른 함수</title><desc id="desc">main.c에서 선언을 보고 호출한 inventory_add는 inventory.c의 외부 정의와 연결된다. static fits는 다른 함수이며 inventory.c 안에서만 연결된다.</desc><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#f5c36b"/></marker></defs><rect width="960" height="480" rx="18" fill="#101b2d"/><g font-family="sans-serif">
+<text x="32" y="44" font-size="25" fill="#f2f6ff">외부 연결과 내부 연결 · 같은 함수와 다른 함수</text>
+<rect x="460" y="78" width="465" height="335" rx="14" fill="none" stroke="#849bb7" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="480" y="105" font-size="18" fill="#c6d4e8">inventory.c 번역 단위 경계</text>
+<rect x="32" y="132" width="300" height="120" rx="12" fill="#20344d" stroke="#5bd4c7"/><text x="50" y="164" font-size="20" fill="#5bd4c7">main.c의 호출</text><text x="50" y="197" font-size="18" fill="#f2f6ff">헤더로 본 선언:</text><text x="50" y="230" font-size="18" fill="#f2f6ff">inventory_add(...)</text>
+<rect x="490" y="132" width="405" height="110" rx="12" fill="#20344d" stroke="#5bd4c7"/><text x="508" y="164" font-size="20" fill="#5bd4c7">외부 함수 정의</text><text x="508" y="197" font-size="18" fill="#f2f6ff">inventory_add(...) 본체</text>
+<rect x="490" y="295" width="405" height="90" rx="12" fill="#20344d" stroke="#5bd4c7"/><text x="508" y="327" font-size="20" fill="#5bd4c7">내부 연결의 별도 보조 함수</text><text x="508" y="360" font-size="18" fill="#f2f6ff">static int fits(...)</text>
+<path d="M332 190 H483" stroke="#f5c36b" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<text x="340" y="170" font-size="16" fill="#f5c36b">외부 이름 연결</text>
+<path d="M695 242 V288" stroke="#f5c36b" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<text x="715" y="275" font-size="16" fill="#f5c36b">내부 호출</text>
+<text x="32" y="450" font-size="18" fill="#c6d4e8">fits는 inventory_add의 다른 정의가 아니다. 가드는 중복 외부 정의를 해결하지 않는다.</text>
+</g></svg>

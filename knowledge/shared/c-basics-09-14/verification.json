@@ -1,0 +1,393 @@
+{
+  "schema_version": 1,
+  "status": "pass_local_cpu_only",
+  "tested_at_utc": "2026-10-23T02:20:27.894008+00:00",
+  "host": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "compiler": "gcc (Debian 14.2.0-19) 14.2.0",
+  "language": "C11",
+  "configurations": {
+    "strict": [
+      "-std=c11",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-pedantic-errors",
+      "-fno-common"
+    ],
+    "ubsan": [
+      "-std=c11",
+      "-O1",
+      "-g",
+      "-fsanitize=undefined,bounds",
+      "-fno-sanitize-recover=all",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror"
+    ]
+  },
+  "programs": [
+    {
+      "id": "c-basics-09",
+      "sources": [
+        {
+          "path": "knowledge/c-basics-09/main.c",
+          "bytes": 2799,
+          "sha256": "b4a2a30b48701cc2389a0ff9dcda7b4c21dc8ab556978aa57b2ba528bf87d5b6"
+        }
+      ],
+      "runs": {
+        "strict": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-pedantic-errors",
+            "-fno-common",
+            "knowledge/c-basics-09/main.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "hero: hp=55 position=(3,4)\ninvalid events: unchanged; lethal damage: hp=0\nmember equality and layout invariants: ok\n",
+          "stderr": ""
+        },
+        "ubsan": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O1",
+            "-g",
+            "-fsanitize=undefined,bounds",
+            "-fno-sanitize-recover=all",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "knowledge/c-basics-09/main.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "hero: hp=55 position=(3,4)\ninvalid events: unchanged; lethal damage: hp=0\nmember equality and layout invariants: ok\n",
+          "stderr": ""
+        }
+      },
+      "tested_at_utc": "2026-10-23T02:13:49.813154+00:00",
+      "unchanged_source_evidence_reused": true
+    },
+    {
+      "id": "c-basics-10",
+      "sources": [
+        {
+          "path": "knowledge/c-basics-10/main.c",
+          "bytes": 2969,
+          "sha256": "a8397a798f3bbe395d5d4e9b6eb1a71a9169b3f704f4d7e2d00f1a9243e3e1ce"
+        }
+      ],
+      "runs": {
+        "strict": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-pedantic-errors",
+            "-fno-common",
+            "knowledge/c-basics-10/main.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "injected failure: count=2 capacity=2 values=10,20\nretry: count=3 capacity=4 values=10,20,30\ndestroy: empty owner\n",
+          "stderr": ""
+        },
+        "ubsan": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O1",
+            "-g",
+            "-fsanitize=undefined,bounds",
+            "-fno-sanitize-recover=all",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "knowledge/c-basics-10/main.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "injected failure: count=2 capacity=2 values=10,20\nretry: count=3 capacity=4 values=10,20,30\ndestroy: empty owner\n",
+          "stderr": ""
+        }
+      },
+      "tested_at_utc": "2026-10-23T02:13:49.813154+00:00",
+      "unchanged_source_evidence_reused": true
+    },
+    {
+      "id": "c-basics-11",
+      "sources": [
+        {
+          "path": "knowledge/c-basics-11/main.c",
+          "bytes": 4132,
+          "sha256": "9fbd2b284937b9b1ab7b0b56fdc6292526d5c3ef94f08be6383c6902029a8906"
+        }
+      ],
+      "runs": {
+        "strict": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-pedantic-errors",
+            "-fno-common",
+            "knowledge/c-basics-11/main.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "parse: boundaries 1,8 accepted; empty/junk/range rejected\nlines: long drained; NUL rejected; empty/exact/final accepted; EOF separate\n",
+          "stderr": ""
+        },
+        "ubsan": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O1",
+            "-g",
+            "-fsanitize=undefined,bounds",
+            "-fno-sanitize-recover=all",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "knowledge/c-basics-11/main.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "parse: boundaries 1,8 accepted; empty/junk/range rejected\nlines: long drained; NUL rejected; empty/exact/final accepted; EOF separate\n",
+          "stderr": ""
+        }
+      },
+      "tested_at_utc": "2026-10-23T02:13:49.813154+00:00",
+      "unchanged_source_evidence_reused": true
+    },
+    {
+      "id": "c-basics-12",
+      "sources": [
+        {
+          "path": "knowledge/c-basics-12/main.c",
+          "bytes": 4118,
+          "sha256": "da5bf7a4e89e8fed5e4650eb9e9ba9b5ba9f1ce7073d2ef3a3364ff92f71fe1e"
+        }
+      ],
+      "runs": {
+        "strict": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-pedantic-errors",
+            "-fno-common",
+            "knowledge/c-basics-12/main.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "save: round-trip, boundaries, rejection, rollback OK\n",
+          "stderr": ""
+        },
+        "ubsan": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O1",
+            "-g",
+            "-fsanitize=undefined,bounds",
+            "-fno-sanitize-recover=all",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "knowledge/c-basics-12/main.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "save: round-trip, boundaries, rejection, rollback OK\n",
+          "stderr": ""
+        }
+      },
+      "tested_at_utc": "2026-10-23T02:20:27.894008+00:00",
+      "unchanged_source_evidence_reused": false
+    },
+    {
+      "id": "c-basics-13",
+      "sources": [
+        {
+          "path": "knowledge/c-basics-13/main.c",
+          "bytes": 1425,
+          "sha256": "525b71ad8bee0a5bd68969458c193197307a4d2c9fe47b941f4d0cee6d0b22af"
+        },
+        {
+          "path": "knowledge/c-basics-13/inventory.c",
+          "bytes": 736,
+          "sha256": "92e6a59ae04247cc324ac8f493eccbce1a3a53dfbf1435189cb1c31100c8d44a"
+        },
+        {
+          "path": "knowledge/c-basics-13/inventory.h",
+          "bytes": 537,
+          "sha256": "40feee1f24e3d690b6c311fc5bbcead6c8f589c54d77b941397a54c4eaf4bd68"
+        }
+      ],
+      "runs": {
+        "strict": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-pedantic-errors",
+            "-fno-common",
+            "knowledge/c-basics-13/main.c",
+            "knowledge/c-basics-13/inventory.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "build: declarations, linkage, inventory contracts OK\n",
+          "stderr": ""
+        },
+        "ubsan": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O1",
+            "-g",
+            "-fsanitize=undefined,bounds",
+            "-fno-sanitize-recover=all",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "knowledge/c-basics-13/main.c",
+            "knowledge/c-basics-13/inventory.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "build: declarations, linkage, inventory contracts OK\n",
+          "stderr": ""
+        }
+      },
+      "tested_at_utc": "2026-10-23T02:13:49.813154+00:00",
+      "unchanged_source_evidence_reused": true
+    },
+    {
+      "id": "c-basics-14",
+      "sources": [
+        {
+          "path": "knowledge/c-basics-14/main.c",
+          "bytes": 5530,
+          "sha256": "2cc0bbf3ea06b5173ec5b3db303d2cf29afe70f802b9db80cabb0232d40264c5"
+        }
+      ],
+      "runs": {
+        "strict": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O0",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "-pedantic-errors",
+            "-fno-common",
+            "knowledge/c-basics-14/main.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "inventory: parse, overflow guards, atomic batches, rollback OK\n",
+          "stderr": ""
+        },
+        "ubsan": {
+          "command": [
+            "gcc",
+            "-std=c11",
+            "-O1",
+            "-g",
+            "-fsanitize=undefined,bounds",
+            "-fno-sanitize-recover=all",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+            "knowledge/c-basics-14/main.c",
+            "-o",
+            "<temporary-executable>"
+          ],
+          "compile_exit_code": 0,
+          "compile_stderr": "",
+          "exit_code": 0,
+          "stdout": "inventory: parse, overflow guards, atomic batches, rollback OK\n",
+          "stderr": ""
+        }
+      },
+      "tested_at_utc": "2026-10-23T02:13:49.813154+00:00",
+      "unchanged_source_evidence_reused": true
+    }
+  ],
+  "limitations": [
+    "Only the supplied test paths and rejection cases were executed; this is not exhaustive proof.",
+    "Assertions enabled; NDEBUG not defined. UBSan and bounds checks do not establish absence of all memory defects.",
+    "Windows/MSVC and other C implementations were not tested.",
+    "Browser rendering and public publication require separate CI and live evidence."
+  ]
+}

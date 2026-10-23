@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="title desc"><title id="title">realloc · 성공과 실패는 서로 다른 결과</title><desc id="desc">크기를 검사하고 0보다 큰 크기로 realloc을 호출한다. NULL이면 기존 소유권과 상태를 보존하고 성공이면 새 포인터로 갱신한다.</desc><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#f5c36b"/></marker></defs><rect width="960" height="480" rx="18" fill="#101b2d"/><g font-family="sans-serif">
+<text x="32" y="44" font-size="25" fill="#f2f6ff">realloc · 성공과 실패는 서로 다른 결과</text>
+<rect x="32" y="175" width="305" height="133" rx="12" fill="#20344d" stroke="#5bd4c7"/><text x="50" y="207" font-size="20" fill="#5bd4c7">요청: next = realloc(...)</text><text x="50" y="240" font-size="18" fill="#f2f6ff">크기 곱셈을 먼저 검사</text><text x="50" y="273" font-size="18" fill="#f2f6ff">0바이트 요청은 하지 않음</text>
+<rect x="565" y="90" width="360" height="120" rx="12" fill="#20344d" stroke="#5bd4c7"/><text x="583" y="122" font-size="20" fill="#5bd4c7">실패: next == NULL</text><text x="583" y="155" font-size="18" fill="#f2f6ff">기존 블록·소유권 유지</text><text x="583" y="188" font-size="18" fill="#f2f6ff">data/count/capacity 불변</text>
+<rect x="565" y="290" width="360" height="120" rx="12" fill="#20344d" stroke="#5bd4c7"/><text x="583" y="322" font-size="20" fill="#5bd4c7">성공: next != NULL</text><text x="583" y="355" font-size="18" fill="#f2f6ff">data와 capacity 갱신</text><text x="583" y="388" font-size="18" fill="#f2f6ff">옛 포인터·별칭 재사용 금지</text>
+<path d="M337 240 H430 V150 H558" stroke="#f5c36b" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<path d="M430 240 V350 H558" stroke="#f5c36b" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<text x="445" y="137" font-size="16" fill="#f5c36b">NULL</text>
+<text x="440" y="337" font-size="16" fill="#f5c36b">그 외</text>
+<text x="32" y="453" font-size="18" fill="#c6d4e8">두 갈래 중 하나만 실행한다. 실패 후에 성공 경로를 이어서 실행하지 않는다.</text>
+</g></svg>

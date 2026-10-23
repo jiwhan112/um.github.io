@@ -1,0 +1,677 @@
+{
+  "title": "C 기초 10 · 동적 메모리와 소유권",
+  "subtitle": "인벤토리 배열로 익히는 수명, 크기 오버플로, 재할당 실패 복구",
+  "sections": [
+    {
+      "id": "start",
+      "title": "10 · 주소를 얻는 것보다 해제 책임을 정하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 목표: 동적 배열의 소유자를 정의하고, 길이와 용량을 분리하며, 크기 계산과 재할당 실패를 다룹니다. 07 포인터·수명, 09 구조체 값 복사를 선수로 합니다. 게임 인벤토리에 정수 아이템 번호를 추가하는 작은 동적 배열을 만듭니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/c-basics-10/assets/owner-state.svg",
+          "alt": "소유자 하나가 수명과 유효 길이를 관리한다 — capacity는 저장 가능한 개수, count는 초기화하여 사용할 수 있는 개수입니다.",
+          "caption": "capacity는 저장 가능한 개수, count는 초기화하여 사용할 수 있는 개수입니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "자동 배열은 블록의 수명과 연결되지만 동적 저장 공간은 할당에 성공한 시점부터 해제까지 유지됩니다. 함수가 끝났다고 자동으로 free되는 것이 아닙니다. 누가 마지막으로 해제할지 정하지 않은 채 포인터를 여러 구조체에 복사하면 누수, 이중 해제, 해제 뒤 접근으로 이어집니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contract",
+      "title": "Inventory의 불변식",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "text": "typedef struct {\n    int *data;\n    size_t count;\n    size_t capacity;\n} Inventory;\nInventory bag = { 0 };",
+          "language": "c"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "필드/규칙"
+                  }
+                ],
+                [
+                  {
+                    "text": "의미"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "data"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 Inventory가 유일하게 해제할 할당 블록"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "count"
+                  }
+                ],
+                [
+                  {
+                    "text": "읽어도 되는 초기화된 원소 개수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "capacity"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 블록이 담을 수 있는 int 개수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "count ≤ capacity"
+                  }
+                ],
+                [
+                  {
+                    "text": "push 전후에 유지할 불변식"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "초기화·destroy 뒤"
+                  }
+                ],
+                [
+                  {
+                    "text": "NULL, 0, 0의 빈 상태"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "reserve가 공간을 늘려도 새 원소에 값이 저절로 들어가는 것은 아닙니다. push는 data[count]를 초기화한 다음 count를 늘립니다. 함수들은 유효하게 초기화된 Inventory를 입력으로 받는 계약입니다. NULL 검사는 임의로 손상된 구조체나 이미 해제된 포인터까지 검증하는 보안 장치가 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "allocation",
+      "title": "malloc·calloc·realloc·free를 구별하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "함수"
+                  }
+                ],
+                [
+                  {
+                    "text": "기본 역할"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 장의 주의점"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "malloc(bytes)"
+                  }
+                ],
+                [
+                  {
+                    "text": "초기화하지 않은 공간 확보"
+                  }
+                ],
+                [
+                  {
+                    "text": "성공 여부와 곱셈 크기 검사"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "calloc(count, size)"
+                  }
+                ],
+                [
+                  {
+                    "text": "공간 확보와 모든 비트 0으로 초기화"
+                  }
+                ],
+                [
+                  {
+                    "text": "모든 타입의 의미적 0 초기화라고 일반화하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "realloc(ptr, bytes)"
+                  }
+                ],
+                [
+                  {
+                    "text": "기존 블록 크기 변경"
+                  }
+                ],
+                [
+                  {
+                    "text": "실패와 성공의 포인터 수명 규칙 분리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "free(ptr)"
+                  }
+                ],
+                [
+                  {
+                    "text": "블록 해제"
+                  }
+                ],
+                [
+                  {
+                    "text": "NULL은 허용, 같은 블록 재해제는 안 됨"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 코드는 처음에는 realloc(NULL, 양수 크기)로 할당하고 이후 같은 함수로 성장시킵니다. C에서는 void * 반환값을 int *에 대입할 때 캐스트가 필요하지 않습니다. stdlib.h 선언을 포함해야 하며, 캐스트가 누락된 선언 문제를 해결해 주지는 않습니다. 0크기 할당의 구현별 차이를 피하려고 비우기는 destroy로 명시합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "overflow",
+      "title": "실패는 메모리 부족보다 먼저 발생할 수 있다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "text": "if (wanted > SIZE_MAX / sizeof *bag->data) return 0;\nint *next = try_resize(bag->data, wanted * sizeof *bag->data);",
+          "language": "c"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원소 수를 바이트 수로 바꾸는 곱셈이 size_t 범위를 넘으면 작은 값으로 감길 수 있습니다. 할당기가 그 작은 요청에 성공해도 원하는 수의 원소를 담을 수 없습니다. 그래서 곱셈 결과를 사후 검사하는 대신 곱하기 전에 나눗셈으로 상한을 확인합니다. sizeof *bag->data는 이 고정 타입 문맥에서 포인터 대상을 읽지 않고 int의 크기를 구합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "용량 두 배 증가도 먼저 capacity > SIZE_MAX / 2를 검사합니다. count 증가 역시 상한을 확인합니다. 시험은 sizeof(int)>1일 때 곱셈 상한 초과를 직접 거부합니다. sizeof(int)==1이 가능한 특수 C 구현에서는 표현 가능한 원소 수만으로 이 곱셈을 넘길 수 없으므로 해당 분기를 억지로 실행했다고 주장하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reallocation",
+      "title": "성공과 실패는 서로 다른 수명 사건",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/c-basics-10/assets/resize-transaction.svg",
+          "alt": "realloc 반환값을 임시 포인터로 받는다 — 그림의 실패·성공 카드는 순차 실행이 아닌 두 결과입니다. 0바이트 요청은 하지 않습니다.",
+          "caption": "그림의 실패·성공 카드는 순차 실행이 아닌 두 결과입니다. 0바이트 요청은 하지 않습니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "realloc에 양수 크기를 전달하여 NULL이 반환되면 이전 블록은 해제되지 않습니다. 임시 next를 쓰면 bag.data를 잃지 않아 실패 복구와 정리가 가능합니다. bag.data = realloc(...)로 바로 덮어쓰면 실패 때 유일한 주소를 잃을 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "성공하면 기존 블록의 수명은 끝나고 반환 포인터가 새 접근 기준입니다. 숫자로 같은 주소처럼 보여도 옛 포인터와 그 내부 원소 별칭을 계속 쓰거나 비교하지 않습니다. 인덱스를 보관하고 성공 후 bag.data에서 다시 원소 주소를 구하세요. 예제의 before는 실패 확인까지만 읽으며 재시도 성공 뒤에는 읽지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "text": "flowchart TD\n A[원소 추가] --> B{여유 용량 있음}\n B -->|예| G[새 원소 초기화 후 count 증가]\n B -->|아니오| C[두 배 증가와 바이트 크기 검사]\n C --> D{검사 통과}\n D -->|아니오| E[실패: 소유자 유지]\n D -->|예| F{realloc 성공}\n F -->|아니오| E\n F -->|예| H[새 포인터와 capacity 반영]\n H --> G",
+          "language": "mermaid"
+        }
+      ]
+    },
+    {
+      "id": "failure",
+      "title": "결정적 실패 주입과 해제 책임",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 OOM을 만들려고 거대한 할당을 반복하면 운영체제 정책에 따라 결과가 달라지고 다른 작업에 영향을 줄 수 있습니다. try_resize는 fail_next가 켜진 한 번만 NULL을 반환합니다. 이 경로는 “할당 실패를 받은 호출자가 이전 상태를 보존하는가”를 재현하며 실제 시스템 OOM을 재현했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "destroy는 free 후 소유 구조체를 빈 상태로 되돌립니다. 같은 소유자에 두 번 호출해도 두 번째 free(NULL)은 허용됩니다. 하지만 Inventory copy = bag으로 별도 소유자를 만든 뒤 두 객체를 각각 destroy하는 것은 안전하지 않습니다. 이 장은 소유 구조체 복사를 금지하고 빌려 쓰는 함수에는 포인터만 전달합니다. 복제가 필요하면 새 블록을 할당하는 clone, 이전이 필요하면 원 소유자를 비우는 move 계약을 따로 구현해야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "실패 위치"
+                  }
+                ],
+                [
+                  {
+                    "text": "반영된 변화"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "성장 크기 상한 초과"
+                  }
+                ],
+                [
+                  {
+                    "text": "없음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "시험용 재할당 실패"
+                  }
+                ],
+                [
+                  {
+                    "text": "없음: 포인터·길이·용량·값 유지"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "일반 환경의 실제 할당 실패"
+                  }
+                ],
+                [
+                  {
+                    "text": "오류 출력 후 정리하고 실패 종료"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "정상 push"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 원소 기록 후 길이 증가"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "직접 확인 · 정상 경로와 거부 경로",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실패 주입 직전의 count, capacity, 두 값을 적고 재시도 후 변화와 비교하세요. reserve에 현재 용량 이하를 주면 할당을 하지 않는 이유를 설명하세요. 이후 독립 clone을 설계한다면 할당 실패 때 대상 소유자를 변경하지 않는 규칙부터 작성하세요."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "text": "cc -std=c11 -Wall -Wextra -Wpedantic -Werror main.c -o lesson\n./lesson",
+          "language": "sh"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래는 이 소스에서 기대하는 표준 출력이며, 로컬의 두 검사 구성에서도 동일한 출력을 확인했다. 원시 결과는 출처 탭의 검증 기록에 보존한다. 다른 실행 환경에서 자원 오류가 발생하면 stderr 진단 또는 실패 종료가 가능하다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "text": "injected failure: count=2 capacity=2 values=10,20\nretry: count=3 capacity=4 values=10,20,30\ndestroy: empty owner",
+          "language": "text"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답하고 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "count와 capacity가 왜 별도인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "capacity는 공간의 개수이고 count는 초기화한 원소의 개수입니다. 여유 공간을 읽을 수 있다는 뜻은 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "realloc 결과를 원래 포인터에 직접 넣으면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실패 시 NULL로 덮어써서 기존 블록의 유일한 소유 주소를 잃을 수 있습니다. 임시 포인터를 사용합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "realloc 성공 후 주소가 같아 보이면 옛 별칭도 유효할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 성공 뒤에는 반환된 새 포인터를 기준으로 접근해야 합니다. 옛 포인터를 읽어 주소 비교하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "크기 곱셈은 언제 검사할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "곱셈 전에 wanted > SIZE_MAX / sizeof *data를 검사합니다. 이미 감긴 결과로 할당하면 작은 블록에 쓸 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "실패 주입은 실제 메모리 고갈 시험인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 실패 반환을 결정적으로 재현하여 호출자의 상태 보존을 시험하는 장치입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "destroy를 두 번 호출해도 되는 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 호출이 소유자를 NULL,0,0으로 바꾸기 때문입니다. 다른 복사본의 포인터까지 초기화되는 것은 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Inventory 대입으로 독립 복제가 될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 같은 주소를 복사하므로 두 소유자가 생기면 이중 해제 위험이 있습니다. 이 예제에서는 소유 구조체 복사를 하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "전체 소스 · 분리해서 실행하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.c 원본 내려받기",
+              "kind": "link",
+              "href": "/knowledge/c-basics-10/main.c"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 주석이 포함된 전체 C11 코드",
+          "blocks": [
+            {
+              "type": "code",
+              "text": "#include <assert.h>\n#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct { int *data; size_t count; size_t capacity; } Inventory;\n/* 결정적 실패 시험용입니다. 실제 메모리 고갈을 유발하지 않습니다. */\nstatic int fail_next = 0;\nstatic void *try_resize(void *ptr, size_t bytes)\n{\n    if (fail_next) { fail_next = 0; return NULL; }\n    return realloc(ptr, bytes);\n}\n\nstatic int reserve(Inventory *bag, size_t wanted)\n{\n    if (bag == NULL) return 0;\n    if (wanted <= bag->capacity) return 1;\n    if (wanted > SIZE_MAX / sizeof *bag->data) return 0;\n    int *next = try_resize(bag->data, wanted * sizeof *bag->data);\n    if (next == NULL) return 0; /* 기존 소유 포인터와 내용은 유지됩니다. */\n    bag->data = next; /* 성공 뒤 옛 포인터/별칭은 사용하지 않습니다. */\n    bag->capacity = wanted;\n    return 1;\n}\n\nstatic int push(Inventory *bag, int item)\n{\n    if (bag == NULL || bag->count == SIZE_MAX) return 0;\n    if (bag->count == bag->capacity) {\n        size_t wanted = bag->capacity == 0 ? 2 : bag->capacity;\n        if (bag->capacity != 0) {\n            if (wanted > SIZE_MAX / 2) return 0;\n            wanted *= 2;\n        }\n        if (!reserve(bag, wanted)) return 0;\n    }\n    bag->data[bag->count] = item;\n    ++bag->count;\n    return 1;\n}\n\nstatic void destroy(Inventory *bag)\n{\n    if (bag == NULL) return;\n    free(bag->data);\n    *bag = (Inventory){ 0 }; /* 이 소유자만 비웁니다. 다른 별칭은 복구하지 못합니다. */\n}\n\nint main(void)\n{\n    Inventory bag = { 0 };\n    int ok = push(&bag, 10);\n    if (!ok) { fputs(\"allocation failed\\n\", stderr); destroy(&bag); return 1; }\n    ok = push(&bag, 20);\n    if (!ok) { fputs(\"allocation failed\\n\", stderr); destroy(&bag); return 1; }\n    int *before = bag.data;\n    fail_next = 1;\n    ok = push(&bag, 30);\n    assert(!ok && bag.data == before && bag.count == 2 && bag.capacity == 2);\n    assert(bag.data[0] == 10 && bag.data[1] == 20);\n    puts(\"injected failure: count=2 capacity=2 values=10,20\");\n    /* SIZE_MAX 자체는 항상 표현됩니다. 곱셈은 검증 전에 하지 않습니다. */\n    if (sizeof *bag.data > 1) {\n        ok = reserve(&bag, SIZE_MAX / sizeof *bag.data + 1);\n        assert(!ok && bag.data == before && bag.count == 2);\n    }\n    /* 이후 성공한 realloc은 before를 무효화할 수 있으므로 다시 읽지 않습니다. */\n    ok = push(&bag, 30);\n    if (!ok) { fputs(\"allocation failed\\n\", stderr); destroy(&bag); return 1; }\n    assert(bag.count == 3 && bag.capacity == 4 && bag.data[2] == 30);\n    printf(\"retry: count=%zu capacity=%zu values=%d,%d,%d\\n\",\n           bag.count, bag.capacity, bag.data[0], bag.data[1], bag.data[2]);\n    destroy(&bag);\n    destroy(&bag); /* 초기 상태로 되돌렸기 때문에 반복 정리가 가능합니다. */\n    assert(bag.data == NULL && bag.count == 0 && bag.capacity == 0);\n    puts(\"destroy: empty owner\");\n    return 0;\n}\n",
+              "language": "c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처 · 언어 규칙과 실행 증거를 분리",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "WG14 N1570 · 공개 C11 위원회 초안",
+              "kind": "link",
+              "href": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "규칙 대조 위치: 7.22.3 메모리 관리, 7.22.3.5 realloc, 6.2.4 객체 수명, 7.20.3 SIZE_MAX 관련 정수 한계. 공개 위원회 초안이며 유료 최종 ISO 판본과 동일한 문서라고 표기하지 않습니다. 설명·그림·게임 예제는 이 교재에서 새로 구성했습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 상태: 로컬 CPU 검사 통과. 2026-10-23 Debian GCC 14.2.0에서 엄격 C11 경고 빌드와 UBSan·bounds 빌드로 이 단원의 전체 프로그램을 각각 실행했다. 두 구성의 종료 코드는 0이고 출력이 일치했다. 정확한 소스 SHA-256·명령·출력은 아래 기록에 보존한다. 웹 렌더·공개 게시 성공은 별도 배포 게이트이며 이 CPU 결과만으로 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C09–14 공통 실행·검증 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/c-basics-09-14/verification.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·변경기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 · C11 독립 교재 신규 작성. Notion 원문을 수정하거나 기존 책의 본문을 재현하지 않았습니다. C++ 객체 수명·컨테이너 규칙은 이 C 장의 근거로 사용하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C 기초 학습 순서",
+              "kind": "link",
+              "href": "/knowledge/CURRICULUM.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 장의 코드는 assert를 켠 시험 실행을 전제로 합니다. 외부 자원 실패와 입력 검증은 반환값으로 처리하고, assert는 개발 중 불변식 확인에 사용합니다. 공개 완료 여부는 배포 검증 기록에서 별도로 확인합니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

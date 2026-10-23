@@ -1,0 +1,703 @@
+{
+  "title": "C 기초 13 · 전처리기·다중 파일 빌드",
+  "subtitle": "헤더 계약과 구현을 나누고 전처리·컴파일·링크 실패를 구별하기",
+  "sections": [
+    {
+      "id": "start",
+      "title": "13 · 파일을 나누면 계약이 눈에 보인다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 목표: 헤더에 인터페이스를 두고 구현을 별도 번역 단위로 컴파일한다. 같은 코드라도 어느 단계에서 오류가 드러나는지 설명하고, 매크로와 함수의 평가 차이를 구별한다. 05 함수와 범위, 09 구조체를 선수로 한다. 예제는 수량 0..99를 지키는 작은 인벤토리 모듈이다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/c-basics-13/assets/translation-units.svg",
+          "alt": "main.c와 inventory.c가 각자 헤더를 포함하여 오브젝트 파일이 되고 링커에서 실행 파일로 연결된다",
+          "caption": "main.c와 inventory.c가 각자 헤더를 포함하여 오브젝트 파일이 되고 링커에서 실행 파일로 연결된다"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "헤더를 include하는 것은 이미 컴파일된 모듈을 가져오는 동작이 아니다. 전처리 단계에서 헤더의 토큰이 포함되고, 각 .c는 그 결과를 바탕으로 독립적으로 번역된다. 선언을 본 컴파일러는 인자와 반환 타입을 검사할 수 있지만 실제 함수 몸체를 그 파일에서 반드시 볼 필요는 없다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "header",
+      "title": "자기완결적인 헤더",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "c",
+          "text": "#ifndef ATLAS_C13_INVENTORY_H\n#define ATLAS_C13_INVENTORY_H\n/* 공개 타입과 함수 선언 */\n#endif"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가드 이름은 프로젝트와 단원을 포함해 충돌 가능성을 낮추고 예약된 밑줄 접두사는 피한다. 같은 번역 단위에서 두 번째로 포함되면 본문이 건너뛰어진다. 예제의 main.c는 의도적으로 헤더를 두 번 포함한다. 이 테스트는 한 번역 단위의 재포함만 다루며 다른 .c에 생긴 중복 정의를 막아 주지는 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "자기완결 헤더는 그 헤더가 필요한 표준 타입을 직접 포함한다. 이번 공개 인터페이스는 표준 라이브러리 타입을 쓰지 않아 추가 include가 필요 없다. 나중에 size_t를 공개하면 <stddef.h>를 헤더에 넣어야 한다. 호출자가 우연히 먼저 include한 순서에 의존하면 안 된다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "헤더에 둘 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "구현에 둘 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "공개 struct/enum 타입 정의"
+                  }
+                ],
+                [
+                  {
+                    "text": "외부 함수의 몸체"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "함수 프로토타입"
+                  }
+                ],
+                [
+                  {
+                    "text": "static 보조 함수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "문서화한 호출 계약"
+                  }
+                ],
+                [
+                  {
+                    "text": "구체적인 검증 순서와 계산"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "필요할 경우 extern 객체 선언"
+                  }
+                ],
+                [
+                  {
+                    "text": "그 객체의 실제 정의 한 곳"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "linkage",
+      "title": "범위·연결·정의를 분리한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/c-basics-13/assets/linkage.svg",
+          "alt": "공개 선언, 외부 함수 정의, 파일 내부 static 보조 함수의 연결 경계를 구별한다",
+          "caption": "공개 선언, 외부 함수 정의, 파일 내부 static 보조 함수의 연결 경계를 구별한다"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "범위(scope)는 소스의 어느 부분에서 이름을 사용할 수 있는지를 묻는다. 연결(linkage)은 서로 다른 선언이 같은 함수나 객체를 가리키는지를 묻는다. inventory_add는 헤더 선언과 구현 정의가 연결되는 외부 함수다. fits는 파일 범위 static으로 선언하여 내부 연결을 갖는다. static이 언제나 정적 지역 변수만 뜻한다고 외우면 이 차이를 놓친다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "c",
+          "text": "/* 헤더의 선언 예: 저장 공간을 여기서 만들지 않는다. */\nextern unsigned int inventory_revision;\n/* 구현 .c 한 곳의 정의 예 */\nunsigned int inventory_revision = 1u;"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "위 전역 변수 코드는 개념 설명용이며 전체 예제에는 전역 가변 상태가 없다. 헤더에 초기화된 전역 객체나 일반 외부 함수 몸체를 두면 여러 번역 단위가 각각 정의를 제공하게 된다. 가드가 있어도 링크 충돌을 피할 수 없다. 또한 C의 파일 범위 const를 C++의 기본 내부 연결 규칙과 혼동하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "macro",
+      "title": "매크로는 함수 호출이 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "c",
+          "text": "#define TWICE(x) ((x) + (x))\n/* TWICE(i++)를 쓰지 않는다: 같은 객체를 순서 없이 수정할 수 있다. */\nstatic int twice_small(int value) { return value + value; }"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "괄호는 우선순위 문제를 줄이지만 인자가 두 번 치환되는 문제를 해결하지 않는다. TWICE(i++)는 이 표현식에서 순서 없는 수정 때문에 정의되지 않은 동작이 될 수 있다. 함수 인자는 호출 전에 한 번 평가되므로 이 위험은 줄지만, twice_small도 value + value가 int 범위를 넘지 않는다는 전제가 별도로 필요하다. 함수로 바꾸었다고 모든 산술 문제가 사라지는 것은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 예제의 CHECK 매크로는 expression을 함수 인자로 한 번만 사용한다. 실패하면 줄 번호를 남겨 중단하는 학습용 검사다. #include, #ifndef, #define은 번역 전 처리를 제어한다. 조건부 컴파일로 플랫폼 구현을 고를 수 있지만 실행 시간 if문과 같지 않으며, 제외된 코드 경로도 별도 빌드하여 검증해야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "title": "오류가 난 단계를 먼저 찾는다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n A[main.c와 헤더] --> P[전처리]\n P --> C[컴파일·어셈블]\n C --> O[main.o]\n I[inventory.c와 헤더] --> Q[inventory.o]\n O --> L[링크]\n Q --> L\n L --> E[실행 및 계약 검사]"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "흔한 증상"
+                  }
+                ],
+                [
+                  {
+                    "text": "먼저 확인할 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "전처리"
+                  }
+                ],
+                [
+                  {
+                    "text": "헤더를 찾을 수 없음"
+                  }
+                ],
+                [
+                  {
+                    "text": "파일 위치·include 경로·파일명 대소문자"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "컴파일"
+                  }
+                ],
+                [
+                  {
+                    "text": "인자 타입·문법 오류"
+                  }
+                ],
+                [
+                  {
+                    "text": "같은 공개 헤더를 호출부와 구현부에서 포함했는가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "링크"
+                  }
+                ],
+                [
+                  {
+                    "text": "undefined reference"
+                  }
+                ],
+                [
+                  {
+                    "text": "inventory.o를 링크 입력에서 빠뜨렸는가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "링크"
+                  }
+                ],
+                [
+                  {
+                    "text": "multiple definition"
+                  }
+                ],
+                [
+                  {
+                    "text": "외부 정의를 헤더나 여러 .c에 중복 작성했는가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "검사 실패"
+                  }
+                ],
+                [
+                  {
+                    "text": "입력·상태·반환값 계약을 재현할 수 있는가"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "inventory.c도 자신의 헤더를 포함하므로 구현 시그니처가 공개 선언과 어긋나면 해당 번역 단위에서 진단할 수 있다. main.c 안에 함수를 수동으로 재선언하는 대신 동일한 헤더를 공유한다. 빌드가 통과해도 수량 제한 등 의미상의 계약은 실행 검사로 따로 확인한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "module",
+      "title": "모듈 경계에서 유지하는 불변식",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "c",
+          "text": "return current <= INVENTORY_LIMIT &&\n       amount <= INVENTORY_LIMIT - current;"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "더한 뒤 초과 여부를 보지 않고 더하기 전에 남은 공간과 비교한다. &&의 오른쪽은 왼쪽이 참일 때만 평가되므로 잘못된 current에서 제한값을 빼지 않는다. inventory_add는 NULL을 별도 오류로 거부하고, 범위를 벗어나면 원래 quantity를 바꾸지 않는다. 구조체가 공개되어 호출자가 직접 잘못된 값을 넣을 수 있으므로 모듈이 이를 다시 검사한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "불변식을 호출자가 깨지 못하도록 하려면 불완전 타입과 생성·파괴 API를 통한 캡슐화를 설계할 수 있다. 하지만 동적 수명과 소유권까지 추가되므로 이번 작은 값 타입 예제에는 도입하지 않는다. 파일 분할만으로 완전한 캡슐화가 생기지는 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "실습 · 관찰하고 경계를 바꾼다",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cc -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Werror main.c inventory.c -o inventory\n./inventory\n# 단계별 관찰 (각 명령을 같은 디렉터리에서 실행)\ncc -std=c11 -E main.c -o main.i\ncc -std=c11 -Wall -Wextra -Wpedantic -c main.c -o main.o\ncc -std=c11 -Wall -Wextra -Wpedantic -c inventory.c -o inventory.o\ncc main.o inventory.o -o inventory"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예상 출력: build: declarations, linkage, inventory contracts OK. 수량 0, 정확히 99, 1 초과, UINT_MAX, NULL, 이미 깨진 상태, 알려진/알 수 없는 상태 이름을 검사한다. CHECK는 NDEBUG에서도 실행된다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습 1: 별도 임시 폴더에서 inventory.o를 링크에서 빼고 오류 단계를 기록한다. 실습 2: 헤더의 인자 타입만 바꿔 구현과의 불일치를 찾아본 뒤 즉시 되돌린다. 실습 3: 외부 가변 전역 없이 inventory_remove 계약을 설계하고 실패 시 수량 불변 검사를 먼저 적는다. 의도적 오류 예제는 정상 제출 소스에 섞지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "헤더를 두 번 include하면 왜 안전한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "고유 가드가 첫 포함 뒤 정의되어 같은 번역 단위의 후속 포함에서 본문을 건너뛴다. 다른 번역 단위의 정의 중복과는 별개다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.c만 컴파일·링크하면 무슨 일이 생기는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "선언으로 컴파일은 가능해도 inventory_add 등의 구현이 링크 입력에 없으므로 보통 미해결 외부 이름 오류가 난다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "fits에 static을 붙인 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "파일 범위 함수에 내부 연결을 부여하여 inventory.c 안의 구현 세부로 제한한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "헤더에 extern 선언이 있으면 객체가 생기는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "초기화 없는 extern 객체 선언만으로 저장 공간 정의를 제공하지 않는다. 실제 정의는 적절한 구현 파일 한 곳에 둔다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "매크로 괄호가 부작용 중복도 막아 주는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 치환되는 횟수는 그대로다. TWICE(i++) 같은 식은 피하고 평가 횟수와 순서까지 확인한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "구조체 공개 API에 왜 범위 재검사가 필요한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "호출자가 필드에 직접 쓸 수 있다. 100인 수량도 거부하고 실패 시 상태를 보존해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "헤더 파일을 링크 입력에 넣는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일반적으로 .c를 컴파일해 만든 .o를 링크한다. 헤더는 각 번역 단위의 전처리 입력이며 독립 구현 파일을 대신하지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "전체 소스 · 부분 코드와 구별하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.c 다운로드",
+              "kind": "link",
+              "href": "/knowledge/c-basics-13/main.c"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.c 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "c",
+              "text": "#include \"inventory.h\"\n#include \"inventory.h\" /* 가드 덕분에 같은 번역 단위의 중복 포함은 안전하다. */\n#include <stdlib.h>\n#include <limits.h>\n#include <stddef.h>\n#include <stdio.h>\n#include <string.h>\n\n/* NDEBUG 설정과 무관하게 식을 한 번 평가하는 학습용 검사다. */\nstatic void check(int passed, int line)\n{\n    if (!passed) { fprintf(stderr, \"check failed at line %d\\n\", line); abort(); }\n}\n#define CHECK(expression) check((expression), __LINE__)\n\nint main(void)\n{\n    Inventory bag = {0u};\n    CHECK(inventory_add(&bag, 0u) == INV_OK);\n    CHECK(inventory_add(&bag, 40u) == INV_OK);\n    CHECK(inventory_add(&bag, 59u) == INV_OK);\n    CHECK(bag.quantity == INVENTORY_LIMIT);\n    CHECK(inventory_add(&bag, 1u) == INV_RANGE && bag.quantity == 99u);\n    CHECK(inventory_add(&bag, UINT_MAX) == INV_RANGE && bag.quantity == 99u);\n    CHECK(inventory_add(NULL, 1u) == INV_ARGUMENT);\n    bag.quantity = 100u; /* 깨진 외부 상태도 거부한다. */\n    CHECK(inventory_add(&bag, 0u) == INV_RANGE && bag.quantity == 100u);\n    CHECK(strcmp(inventory_result_name(INV_OK), \"ok\") == 0);\n    CHECK(strcmp(inventory_result_name(INV_RANGE), \"range\") == 0);\n    CHECK(strcmp(inventory_result_name(INV_ARGUMENT), \"argument\") == 0);\n    CHECK(strcmp(inventory_result_name((InventoryResult)99), \"unknown\") == 0);\n    puts(\"build: declarations, linkage, inventory contracts OK\");\n    return 0;\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "inventory.h 다운로드",
+              "kind": "link",
+              "href": "/knowledge/c-basics-13/inventory.h"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "inventory.h 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "c",
+              "text": "#ifndef ATLAS_C13_INVENTORY_H\n#define ATLAS_C13_INVENTORY_H\n\n/* enum 상수는 저장 공간을 만들지 않는다. 헤더는 계약을 공개한다. */\nenum { INVENTORY_LIMIT = 99 };\ntypedef struct { unsigned int quantity; } Inventory;\ntypedef enum { INV_OK, INV_RANGE, INV_ARGUMENT } InventoryResult;\n\n/* 유효한 객체의 수량은 0..INVENTORY_LIMIT. 실패 시 변경하지 않는다. */\nInventoryResult inventory_add(Inventory *inventory, unsigned int amount);\nconst char *inventory_result_name(InventoryResult result);\n\n#endif\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "inventory.c 다운로드",
+              "kind": "link",
+              "href": "/knowledge/c-basics-13/inventory.c"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "inventory.c 전체 코드 펼치기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "c",
+              "text": "#include \"inventory.h\"\n#include <stddef.h>\n\n/* 내부 연결: 다른 번역 단위에서 직접 호출하지 못한다. */\nstatic int fits(unsigned int current, unsigned int amount)\n{\n    return current <= INVENTORY_LIMIT && amount <= INVENTORY_LIMIT - current;\n}\n\nInventoryResult inventory_add(Inventory *inventory, unsigned int amount)\n{\n    if (inventory == NULL) return INV_ARGUMENT;\n    if (!fits(inventory->quantity, amount)) return INV_RANGE;\n    inventory->quantity += amount;\n    return INV_OK;\n}\n\nconst char *inventory_result_name(InventoryResult result)\n{\n    switch (result) {\n    case INV_OK: return \"ok\";\n    case INV_RANGE: return \"range\";\n    case INV_ARGUMENT: return \"argument\";\n    default: return \"unknown\";\n    }\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습용 CHECK는 식을 한 번 평가하고 실패 시 줄 번호를 출력한 뒤 abort한다. NDEBUG 설정으로 검사나 호출이 사라지지 않는다. 서비스 코드에서는 예상 가능한 실패를 종료시키기보다 반환값과 오류 정책으로 처리한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처와 검증 범위",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "독립적으로 집필한 C11 해설과 자체 예제다. N1570은 공개 위원회 초안이며 최종 유료 ISO 판본 자체는 아니다. 규칙 근거: 5.1.1.2 번역 단계, 6.2.1 범위, 6.2.2 연결, 6.9 외부 정의, 6.10.1 조건부 포함, 6.10.2 소스 포함, 6.10.3 매크로 치환. GCC 문서는 실제 -E/-c 및 링크 명령의 의미를 보완한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "WG14 N1570 · C11 공개 초안",
+              "kind": "link",
+              "href": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "GCC · 빌드 단계와 옵션",
+              "kind": "link",
+              "href": "https://gcc.gnu.org/onlinedocs/gcc/Overall-Options.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "GCC 전처리기 · 헤더 중복 포함 방지",
+              "kind": "link",
+              "href": "https://gcc.gnu.org/onlinedocs/cpp/Once-Only-Headers.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 상태: 로컬 CPU 검사 통과. 2026-10-23 Debian GCC 14.2.0에서 엄격 C11 경고 빌드와 UBSan·bounds 빌드로 이 단원의 전체 프로그램을 각각 실행했다. 두 구성의 종료 코드는 0이고 출력이 일치했다. 정확한 소스 SHA-256·명령·출력은 아래 기록에 보존한다. 웹 렌더·공개 게시 성공은 별도 배포 게이트이며 이 CPU 결과만으로 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C09–14 배치 실행·검증 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/c-basics-09-14/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증 한계: 유한한 입력의 실행 결과는 모든 입력의 안전성 증명이 아니다. 운영체제 I/O 장애, 저장 장치 고장, 모든 구현의 정수 폭과 문자 집합을 전부 시험하지 않는다. C++의 스트림·예외·클래스 규칙을 이 C11 코드에 그대로 적용하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문과 변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-23 C11 정규 과정 13 신규 집필. Notion 이관 원문이 없으며 content.json, 전체 C 소스 및 자체 SVG 2개가 저작 원본이다. 기존 C 응용 교재와 C++ 교재는 변경하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 typed JSON 원본",
+              "kind": "link",
+              "href": "/knowledge/c-basics-13/content.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전 정규 단원",
+              "kind": "link",
+              "href": "/knowledge/c-basics-12/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음: 명령 해석·수량 계약·오류 보고를 통합 프로젝트에서 연결한다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

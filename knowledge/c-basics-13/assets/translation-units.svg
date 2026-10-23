@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="title desc"><title id="title">번역 단위 두 개 · 각각 컴파일한 뒤 함께 링크</title><desc id="desc">main.c와 inventory.c는 각각 inventory.h를 포함하고 전처리·컴파일·어셈블을 거쳐 별도 오브젝트를 만든다. 링커가 두 오브젝트를 결합한다.</desc><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#f5c36b"/></marker></defs><rect width="960" height="480" rx="18" fill="#101b2d"/><g font-family="sans-serif">
+<text x="32" y="44" font-size="25" fill="#f2f6ff">번역 단위 두 개 · 각각 컴파일한 뒤 함께 링크</text>
+<rect x="32" y="90" width="365" height="125" rx="12" fill="#20344d" stroke="#5bd4c7"/><text x="50" y="122" font-size="20" fill="#5bd4c7">main.c + inventory.h</text><text x="50" y="155" font-size="18" fill="#f2f6ff">전처리 · 컴파일 · 어셈블</text><text x="50" y="188" font-size="18" fill="#f2f6ff">→ main.o</text>
+<rect x="32" y="280" width="365" height="125" rx="12" fill="#20344d" stroke="#5bd4c7"/><text x="50" y="312" font-size="20" fill="#5bd4c7">inventory.c + inventory.h</text><text x="50" y="345" font-size="18" fill="#f2f6ff">전처리 · 컴파일 · 어셈블</text><text x="50" y="378" font-size="18" fill="#f2f6ff">→ inventory.o</text>
+<rect x="620" y="180" width="300" height="140" rx="12" fill="#20344d" stroke="#5bd4c7"/><text x="638" y="212" font-size="20" fill="#5bd4c7">링커</text><text x="638" y="245" font-size="18" fill="#f2f6ff">main.o + inventory.o</text><text x="638" y="278" font-size="18" fill="#f2f6ff">→ 실행 파일</text>
+<path d="M397 153 H510 V225 H613" stroke="#f5c36b" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<path d="M397 343 H510 V280 H613" stroke="#f5c36b" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<text x="32" y="450" font-size="18" fill="#c6d4e8">두 .c는 서로를 순서대로 처리하는 단계가 아니라 독립적인 번역 입력이다.</text>
+</g></svg>
