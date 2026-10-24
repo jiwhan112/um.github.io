@@ -38,3 +38,5 @@ try{
  console.log('PUBLIC PAGES VERIFIED:',results.length,'React routes; source',expected);
 }finally{await browser.close();}
 await import('./check-c01-live.mjs');
+
+await import('./check-example-downloads-live.mjs');
