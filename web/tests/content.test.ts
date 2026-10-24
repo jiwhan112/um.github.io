@@ -217,7 +217,8 @@ test('shared WinAPI/math and DX9 source files match original archived Markdown b
 test('full shared source articles are published and reachable with CMake and complete code',async()=>{
  for(const [slug,expected] of [['winapi-math-lab',19],['dx9-pipeline-lab',13]] as const){
   const doc=documentSchema.parse(JSON.parse(await readFile('public/data/atlas/docs/knowledge--'+slug+'.json','utf8')));
-  assert.equal(doc.sections.length,expected);
+  assert.equal(doc.sections.length,expected+1,'original sections plus exactly one download section');
+  assert.equal(doc.sections.filter(section=>section.id==='example-downloads'&&section.tab==='practice').length,1);
   assert.ok(doc.sections.some(s=>s.title==='CMakeLists.txt'&&s.blocks.some(b=>b.type==='code'&&b.text.includes('project('))));
   assert.ok(doc.sections.some(s=>s.title.startsWith('src/')&&s.blocks.some(b=>b.type==='code'&&b.text.length>400)));
   assert.ok(doc.sections[0].blocks.some(b=>b.type==='table'),'verify environment comparison present');

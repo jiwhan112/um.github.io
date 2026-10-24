@@ -8,7 +8,7 @@
     "content": "tsx scripts/content.ts",
     "build": "npm run typecheck && npm run content && vite build && tsx scripts/routes.ts",
     "preview": "vite preview --host 0.0.0.0",
-    "test:unit": "tsx --test tests/content.test.ts && node --test tests/publish-reentry.test.mjs tests/live-navigation.test.mjs",
+    "test:unit": "tsx --test tests/content.test.ts tests/example-bundles.test.ts && node --test tests/publish-reentry.test.mjs tests/live-navigation.test.mjs",
     "test:e2e": "playwright test",
     "check": "npm run check:repo && npm run check:publishing && npm run test:unit && npm run build && node scripts/check-publication.mjs && npm run test:e2e",
     "check:repo": "node scripts/check-repository.mjs",

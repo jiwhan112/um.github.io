@@ -12,7 +12,7 @@ import { CppBitmaskLab } from './CppBitmaskLab';
 function ContentLink({href,children}:{href:string;children:React.ReactNode}){
  if(/^https?:\/\//.test(href))return <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>;
  if(href.startsWith('#'))return <a href={href}>{children}</a>;
- if(/\.(json|png|webp|jpe?g|gif|svg|md|zip|wav|glb|cpp|cxx|cc|c|hpp|hxx|hh|h|hlsl|txt|log|pdf)(?:$|[?#])/i.test(href))return <a href={asset(href)}>{children}</a>;
+ if(/\.(json|png|webp|jpe?g|gif|svg|md|zip|wav|glb|cpp|cxx|cc|c|hpp|hxx|hh|h|hlsl|py|rc|manifest|fx|sh|txt|log|pdf)(?:$|[?#])/i.test(href))return <a href={asset(href)}>{children}</a>;
  return <Link to={href}>{children}</Link>;
 }
 export function RichText({content}:{content:Inline[]}){return <>{content.map((n,i)=>n.kind==='strong'?<strong key={i}>{n.text}</strong>:n.kind==='em'?<em key={i}>{n.text}</em>:n.kind==='code'?<code key={i}>{n.text}</code>:n.kind==='br'?<br key={i}/>:n.kind==='link'&&n.href?<ContentLink key={i} href={n.href}>{n.text}</ContentLink>:<Fragment key={i}>{n.text}</Fragment>)}</>;}

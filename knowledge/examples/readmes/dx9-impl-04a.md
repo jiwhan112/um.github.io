@@ -1,0 +1,56 @@
+# dx9-impl-04a · 전체 예제 프로젝트
+
+## 어떤 파일인가요?
+
+기존 ATLAS NOTE 교재의 실행 가능한 소스/헤더/빌드 파일을 모은 다운로드입니다. 새로운 강의나 완성 게임/엔진이 아닙니다. 소스 바이트를 보존하고 다운로드에 필요한 안내만 별도로 작성했습니다.
+
+CMake는 renderer_components.cpp만 빌드합니다. notion_example.cpp는 별도 완전한 원문 비교 예제이며 두 main 함수를 합쳐 링크하지 마세요. 별도 실행 명령을 아래에 제공합니다.
+
+## 연결된 교재
+
+- [DX9 04 · Renderer·Transform·컴포넌트 수명](https://jiwhan112.github.io/um.github.io/knowledge/dx9-impl-04/)
+- [DX9 04A · Renderer·Transform 전체 소스](https://jiwhan112.github.io/um.github.io/knowledge/dx9-impl-source-04a/)
+
+## 압축을 푼 뒤 빌드·실행
+
+압축을 풀면 이 README.md 옆에 project/가 있습니다. 아래 명령은 압축을 푼 최상위 폴더에서 시작합니다. 다른 교재/저장소 폴더를 내려받을 필요는 없습니다. CMake 3.20 이상, C++20을 지원하는 GCC/Clang 또는 Windows MSVC 개발자 환경이 필요합니다(원본이 C++11을 지정한 타깃은 그대로 따릅니다).
+
+```sh
+cd project
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --config Debug
+ctest --test-dir build -C Debug --output-on-failure -V
+```
+
+CTest가 실행까지 수행하며 -V로 각 프로그램의 출력을 표시합니다. 성공 시 모든 등록 테스트가 통과하고 종료 코드는 0입니다. Debug 구성을 권장합니다. 일부 원문은 assert를 사용하므로 NDEBUG가 켜진 Release에서 검사 의미를 동일하다고 가정하지 마세요. Windows의 여러 구성 생성기는 --config Debug와 -C Debug를 함께 사용합니다.
+
+### 별도 원문 비교 예제
+
+project/에서 `g++ -std=c++20 notion_example.cpp -o notion_example` 후 `./notion_example`를 실행합니다. 이 별도 파일은 기본 CTest에 등록하지 않은 원문입니다.
+
+## 이번 패키지 CPU 실행의 기대 출력
+
+2026-10-23 Cloud Linux에서 이 파일 매핑 그대로 CMake 3.31.6 + GCC 14.2 Debug로 configure/build/CTest를 실행했습니다. 등록된 1개 실행 테스트가 통과했습니다. CTest 등록 수와 각 프로그램 내부 조건 수는 다릅니다. Windows/HLSL/GPU는 실행하지 않았습니다.
+
+### CTest `renderer_components`
+
+```text
+PASS: 26 conditions; groups=opaque(front-back),alpha(back-front),ui; CPU-only
+```
+
+별도 notion_example.cpp는 이번 CMake 등록 대상이 아닙니다. 위의 직접 실행 안내와 기존 소스 CPU 검증 기록을 구분해 읽으세요.
+
+## 포함 파일
+
+- `project/CMakeLists.txt`
+- `project/notion_example.cpp`
+- `project/renderer_components.cpp`
+
+## 검증 이력과 실행하지 않은 범위
+
+이번 다운로드 파일 매핑을 별도 폴더에 풀어 실제 CMake configure, Debug build, CTest를 모두 통과했습니다. 기존 소스의 직접 컴파일 기록과 이번 패키지 빌드 기록은 별개입니다. 소스 파일은 변경하지 않았습니다. Windows/MSVC, FXC/DXC/HLSL 컴파일, GPU 렌더링, 실제 장치 손실·Reset 및 sanitizer는 이번 패키지 검증에서 실행하지 않았습니다. Linux에서 제외된 Windows 전처리 분기의 컴파일 성공을 주장하지 않습니다.
+
+- [기존 소스의 설명·검증 범위](https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-04a-ko/README.md)
+- [기존 CPU 검증 기록](https://github.com/jiwhan112/um.github.io/blob/master/knowledge/shared/dx9-impl-04a-ko/validation.json)
+
+저장소 원본을 역참조하는 annotation verifier와 과거 캡처/로그는 이 실행 묶음에 복제하지 않았습니다. 위 링크는 온라인 참고이고 빌드 필수 입력이 아닙니다. HLSL 참고 파일만 있는 CPU 프로젝트는 화면이 열리지 않는 것이 정상입니다. GUI 타깃을 포함한 프로젝트라도 실제 Windows/GPU 성공은 별도 검증이 필요합니다. 사용자의 컴퓨터에서 실행한 결과를 대신 주장하지 않습니다.

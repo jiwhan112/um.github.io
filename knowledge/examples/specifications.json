@@ -1,0 +1,1575 @@
+{
+  "version": 1,
+  "bundles": [
+    {
+      "id": "c-basics-01",
+      "title": "C 기초 01 · 프로그램과 빌드",
+      "pages": [
+        "c-basics-01"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-01.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-01/main.c",
+          "path": "project/main.c"
+        },
+        {
+          "source": "knowledge/shared/c-basics-lab/compile-error.c",
+          "path": "project/negative/compile-error.c"
+        },
+        {
+          "source": "knowledge/shared/c-basics-lab/link-error.c",
+          "path": "project/negative/link-error.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-01.md"
+    },
+    {
+      "id": "c-basics-02",
+      "title": "C 기초 02 · 변수·자료형·초기화",
+      "pages": [
+        "c-basics-02"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-02.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-02/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-02.md"
+    },
+    {
+      "id": "c-basics-03",
+      "title": "C 기초 03 · 연산자와 형 변환",
+      "pages": [
+        "c-basics-03"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-03.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-03/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-03.md"
+    },
+    {
+      "id": "c-basics-04",
+      "title": "C 기초 04 · 조건문·반복문",
+      "pages": [
+        "c-basics-04"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-04.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-04/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-04.md"
+    },
+    {
+      "id": "c-basics-05",
+      "title": "C 기초 05 · 함수·범위·수명",
+      "pages": [
+        "c-basics-05"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-05.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-05/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-05.md"
+    },
+    {
+      "id": "c-basics-06",
+      "title": "C 기초 06 · 배열·문자열",
+      "pages": [
+        "c-basics-06"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-06.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-06/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-06.md"
+    },
+    {
+      "id": "c-basics-07",
+      "title": "C 기초 07 · 포인터 기초",
+      "pages": [
+        "c-basics-07"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-07.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-07/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-07.md"
+    },
+    {
+      "id": "c-basics-08",
+      "title": "C 기초 08 · 배열·포인터·함수 포인터",
+      "pages": [
+        "c-basics-08"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-08.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-08/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-08.md"
+    },
+    {
+      "id": "c-basics-09",
+      "title": "C 기초 09 · 구조체·열거형·공용체",
+      "pages": [
+        "c-basics-09"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-09.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-09/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-09.md"
+    },
+    {
+      "id": "c-basics-10",
+      "title": "C 기초 10 · 동적 메모리와 소유권",
+      "pages": [
+        "c-basics-10"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-10.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-10/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-10.md"
+    },
+    {
+      "id": "c-basics-11",
+      "title": "C 기초 11 · 안전한 입력과 오류 처리",
+      "pages": [
+        "c-basics-11"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-11.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-11/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-11.md"
+    },
+    {
+      "id": "c-basics-12",
+      "title": "C 기초 12 · 파일 입출력·직렬화",
+      "pages": [
+        "c-basics-12"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-12.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-12/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-12.md"
+    },
+    {
+      "id": "c-basics-13",
+      "title": "C 기초 13 · 전처리기·다중 파일 빌드",
+      "pages": [
+        "c-basics-13"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-13.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-13/main.c",
+          "path": "project/main.c"
+        },
+        {
+          "source": "knowledge/c-basics-13/inventory.c",
+          "path": "project/inventory.c"
+        },
+        {
+          "source": "knowledge/c-basics-13/inventory.h",
+          "path": "project/inventory.h"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-13.md"
+    },
+    {
+      "id": "c-basics-14",
+      "title": "C 기초 14 · 통합 프로젝트·디버깅",
+      "pages": [
+        "c-basics-14"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-basics-14.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/c-basics-14/main.c",
+          "path": "project/main.c"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-basics-14.md"
+    },
+    {
+      "id": "cpp-basics-lab",
+      "title": "C++ 기초 공통 실습",
+      "pages": [
+        "cpp-basics-01",
+        "cpp-basics-02",
+        "cpp-basics-03",
+        "cpp-basics-04",
+        "cpp-basics-05"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/cpp-basics-lab.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/CMakeLists.txt",
+          "path": "project/original/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/ko/buffer.cpp",
+          "path": "project/ko/buffer.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/ko/containers.cpp",
+          "path": "project/ko/containers.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/ko/flow.cpp",
+          "path": "project/ko/flow.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/ko/inventory.cpp",
+          "path": "project/ko/inventory.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/ko/inventory.hpp",
+          "path": "project/ko/inventory.hpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/ko/inventory_main.cpp",
+          "path": "project/ko/inventory_main.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/ko/memory.cpp",
+          "path": "project/ko/memory.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/ko/types.cpp",
+          "path": "project/ko/types.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/src/buffer.cpp",
+          "path": "project/original/src/buffer.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/src/check.hpp",
+          "path": "project/original/src/check.hpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/src/containers.cpp",
+          "path": "project/original/src/containers.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/src/flow.cpp",
+          "path": "project/original/src/flow.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/src/inventory.cpp",
+          "path": "project/original/src/inventory.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/src/inventory.hpp",
+          "path": "project/original/src/inventory.hpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/src/inventory_main.cpp",
+          "path": "project/original/src/inventory_main.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/src/memory.cpp",
+          "path": "project/original/src/memory.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/src/types.cpp",
+          "path": "project/original/src/types.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/negative/array_pointer.cpp",
+          "path": "project/original/negative/array_pointer.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/negative/const_write.cpp",
+          "path": "project/original/negative/const_write.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/negative/narrowing.cpp",
+          "path": "project/original/negative/narrowing.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/negative/reference_temporary.cpp",
+          "path": "project/original/negative/reference_temporary.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/diagnostics/signed_overflow.cpp",
+          "path": "project/original/diagnostics/signed_overflow.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-basics-lab/original/diagnostics/use_after_free.cpp",
+          "path": "project/original/diagnostics/use_after_free.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/cpp-basics-lab.md"
+    },
+    {
+      "id": "cpp-advanced-lab",
+      "title": "C++ 심화 · Effective C++ 공통 실습",
+      "pages": [
+        "cpp-advanced-01",
+        "cpp-advanced-02",
+        "cpp-advanced-03",
+        "cpp-advanced-04",
+        "cpp-advanced-05",
+        "cpp-advanced-06",
+        "effective-cpp-01",
+        "effective-cpp-02",
+        "effective-cpp-03",
+        "effective-cpp-04",
+        "effective-cpp-05",
+        "effective-cpp-06"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/cpp-advanced-lab.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/CMakeLists.txt",
+          "path": "project/original/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/allocation.cpp",
+          "path": "project/ko/allocation.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/check.hpp",
+          "path": "project/ko/check.hpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/containers.cpp",
+          "path": "project/ko/containers.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/interfaces.cpp",
+          "path": "project/ko/interfaces.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/lifetime.cpp",
+          "path": "project/ko/lifetime.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/ownership.cpp",
+          "path": "project/ko/ownership.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/pimpl.cpp",
+          "path": "project/ko/pimpl.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/pimpl.hpp",
+          "path": "project/ko/pimpl.hpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/pimpl_main.cpp",
+          "path": "project/ko/pimpl_main.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/polymorphism.cpp",
+          "path": "project/ko/polymorphism.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/templates.cpp",
+          "path": "project/ko/templates.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/ko/transaction.cpp",
+          "path": "project/ko/transaction.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/allocation.cpp",
+          "path": "project/original/src/allocation.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/check.hpp",
+          "path": "project/original/src/check.hpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/containers.cpp",
+          "path": "project/original/src/containers.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/interfaces.cpp",
+          "path": "project/original/src/interfaces.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/lifetime.cpp",
+          "path": "project/original/src/lifetime.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/ownership.cpp",
+          "path": "project/original/src/ownership.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/pimpl.cpp",
+          "path": "project/original/src/pimpl.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/pimpl.hpp",
+          "path": "project/original/src/pimpl.hpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/pimpl_main.cpp",
+          "path": "project/original/src/pimpl_main.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/polymorphism.cpp",
+          "path": "project/original/src/polymorphism.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/templates.cpp",
+          "path": "project/original/src/templates.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/src/transaction.cpp",
+          "path": "project/original/src/transaction.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/negative/constraint.cpp",
+          "path": "project/original/negative/constraint.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/negative/copy_by_value.cpp",
+          "path": "project/original/negative/copy_by_value.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/negative/copy_unique.cpp",
+          "path": "project/original/negative/copy_unique.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/negative/list_sort.cpp",
+          "path": "project/original/negative/list_sort.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/negative/temporary_view.cpp",
+          "path": "project/original/negative/temporary_view.cpp"
+        },
+        {
+          "source": "knowledge/shared/cpp-advanced-lab/original/negative/wrong_override.cpp",
+          "path": "project/original/negative/wrong_override.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/cpp-advanced-lab.md"
+    },
+    {
+      "id": "algorithm-lis",
+      "title": "LIS 길이와 경로 복원",
+      "pages": [
+        "algorithm-lis"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-lis.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/algorithm-lis/main.cpp",
+          "path": "project/main.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-lis.md"
+    },
+    {
+      "id": "python-html",
+      "title": "오프라인 HTML 카드 추출",
+      "pages": [
+        "python-html"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/python-html.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/python-html/main.py",
+          "path": "project/main.py"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/python-html.md"
+    },
+    {
+      "id": "c-language-01",
+      "title": "C 입력 계약과 C++ 검사 모델",
+      "pages": [
+        "c-language-01"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/c-language-01.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/c01-lab/original/c11/main.c",
+          "path": "project/original/c11/main.c"
+        },
+        {
+          "source": "knowledge/shared/c01-lab/original/c11/CMakeLists.txt",
+          "path": "project/original/c11/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/c01-lab/original/c01b/main.cpp",
+          "path": "project/original/c01b/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/c01-lab/original/c01b/CMakeLists.txt",
+          "path": "project/original/c01b/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/c01-lab/ko/c11/main.c",
+          "path": "project/ko/c11/main.c"
+        },
+        {
+          "source": "knowledge/shared/c01-lab/ko/c01b/main.cpp",
+          "path": "project/ko/c01b/main.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/c-language-01.md"
+    },
+    {
+      "id": "dx11-frustum",
+      "title": "dx11-frustum · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-frustum"
+      ],
+      "files": [
+        {
+          "source": "knowledge/dx11-frustum-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/dx11-frustum-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-frustum.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-frustum.md"
+    },
+    {
+      "id": "game-math-winapi",
+      "title": "game-math-winapi · 전체 예제 프로젝트",
+      "pages": [
+        "winapi-01",
+        "winapi-02",
+        "winapi-03",
+        "winapi-04",
+        "game-math-01",
+        "game-math-02",
+        "game-math-03",
+        "game-math-04",
+        "game-math-05",
+        "winapi-math-lab"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/include/check.hpp",
+          "path": "project/include/check.hpp"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/include/grid.hpp",
+          "path": "project/include/grid.hpp"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/include/loop.hpp",
+          "path": "project/include/loop.hpp"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/include/math.hpp",
+          "path": "project/include/math.hpp"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/src/geometry.cpp",
+          "path": "project/src/geometry.cpp"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/src/loop_input.cpp",
+          "path": "project/src/loop_input.cpp"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/src/pathfinding.cpp",
+          "path": "project/src/pathfinding.cpp"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/src/tile_document.cpp",
+          "path": "project/src/tile_document.cpp"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/src/transforms.cpp",
+          "path": "project/src/transforms.cpp"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/src/vector_motion.cpp",
+          "path": "project/src/vector_motion.cpp"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/windows/app.manifest",
+          "path": "project/windows/app.manifest"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/windows/app.rc",
+          "path": "project/windows/app.rc"
+        },
+        {
+          "source": "knowledge/shared/game-math-winapi-lab-ko/windows/winapi_demo.cpp",
+          "path": "project/windows/winapi_demo.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/game-math-winapi.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/game-math-winapi.md"
+    },
+    {
+      "id": "winapi-04a",
+      "title": "winapi-04a · 전체 예제 프로젝트",
+      "pages": [
+        "winapi-04a"
+      ],
+      "files": [
+        {
+          "source": "knowledge/winapi-04a/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/winapi-04a/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/winapi-04a/main.ko.cpp",
+          "path": "project/main.ko.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/winapi-04a.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/winapi-04a.md"
+    },
+    {
+      "id": "dx9-pipeline",
+      "title": "dx9-pipeline · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-pipeline-01",
+        "dx9-pipeline-02",
+        "dx9-pipeline-03",
+        "dx9-pipeline-04",
+        "dx9-pipeline-05",
+        "dx9-pipeline-lab"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-pipeline-lab-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-pipeline-lab-ko/examples/texture_sm3.hlsl",
+          "path": "project/examples/texture_sm3.hlsl"
+        },
+        {
+          "source": "knowledge/shared/dx9-pipeline-lab-ko/include/check.hpp",
+          "path": "project/include/check.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-pipeline-lab-ko/include/pipeline.hpp",
+          "path": "project/include/pipeline.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-pipeline-lab-ko/src/depth_blend.cpp",
+          "path": "project/src/depth_blend.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-pipeline-lab-ko/src/pipeline_trace.cpp",
+          "path": "project/src/pipeline_trace.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-pipeline-lab-ko/src/raster_uv.cpp",
+          "path": "project/src/raster_uv.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-pipeline-lab-ko/src/transform_clip.cpp",
+          "path": "project/src/transform_clip.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-pipeline-lab-ko/src/vertex_input.cpp",
+          "path": "project/src/vertex_input.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-pipeline.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-pipeline.md"
+    },
+    {
+      "id": "dx9-impl-01a",
+      "title": "dx9-impl-01a · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-01",
+        "dx9-impl-source-01a"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-01a-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-01a-ko/com_owner.h",
+          "path": "project/com_owner.h"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-01a-ko/com_owner_tests.cpp",
+          "path": "project/com_owner_tests.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-01a-ko/d3d9_window.cpp",
+          "path": "project/d3d9_window.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-01a.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-01a.md"
+    },
+    {
+      "id": "dx9-impl-02a",
+      "title": "dx9-impl-02a · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-02",
+        "dx9-impl-source-02a"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-02a-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-02a-ko/include/engine_api.h",
+          "path": "project/include/engine_api.h"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-02a-ko/src/client.cpp",
+          "path": "project/src/client.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-02a-ko/src/engine_api.cpp",
+          "path": "project/src/engine_api.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-02a-ko/tests/engine_contract_tests.cpp",
+          "path": "project/tests/engine_contract_tests.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-02a.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-02a.md"
+    },
+    {
+      "id": "dx9-impl-03a",
+      "title": "dx9-impl-03a · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-03",
+        "dx9-impl-source-03a"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-03a-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-03a-ko/resource_model.cpp",
+          "path": "project/resource_model.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-03a.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-03a.md"
+    },
+    {
+      "id": "dx9-impl-04a",
+      "title": "dx9-impl-04a · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-04",
+        "dx9-impl-source-04a"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-04a-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-04a-ko/notion_example.cpp",
+          "path": "project/notion_example.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-04a-ko/renderer_components.cpp",
+          "path": "project/renderer_components.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-04a.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-04a.md"
+    },
+    {
+      "id": "dx9-impl-05a",
+      "title": "dx9-impl-05a · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-05",
+        "dx9-impl-source-05a"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-05a-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-05a-ko/scene_loop.hpp",
+          "path": "project/scene_loop.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-05a-ko/tests.cpp",
+          "path": "project/tests.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-05a.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-05a.md"
+    },
+    {
+      "id": "dx9-impl-06a",
+      "title": "dx9-impl-06a · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-06",
+        "dx9-impl-source-06a"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-06a-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-06a-ko/mesh_texture_contract.cpp",
+          "path": "project/mesh_texture_contract.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-06a.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-06a.md"
+    },
+    {
+      "id": "dx9-impl-07b",
+      "title": "dx9-impl-07b · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-07",
+        "dx9-impl-source-07b"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-07b-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-07b-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-07b.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-07b.md"
+    },
+    {
+      "id": "dx9-impl-08",
+      "title": "dx9-impl-08 · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-08"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-08-ko/CMakeLists.txt",
+          "path": "project/reference/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-08-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/support/dx9-impl-08/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-08.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-08.md"
+    },
+    {
+      "id": "dx9-impl-09",
+      "title": "dx9-impl-09 · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-09"
+      ],
+      "files": [
+        {
+          "source": "knowledge/dx9-impl-09/lab/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/dx9-impl-09/lab/main.ko.cpp",
+          "path": "project/main.ko.cpp"
+        },
+        {
+          "source": "knowledge/dx9-impl-09/lab/original/CMakeLists.txt",
+          "path": "project/original/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/dx9-impl-09/lab/original/main.cpp",
+          "path": "project/original/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-09.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-09.md"
+    },
+    {
+      "id": "dx9-impl-10",
+      "title": "dx9-impl-10 · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-10"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-10-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-10-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-10-ko/shader_contract.fx",
+          "path": "project/shader_contract.fx"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-10.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-10.md"
+    },
+    {
+      "id": "dx9-impl-11a",
+      "title": "dx9-impl-11a · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-11",
+        "dx9-impl-source-11a"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-11a-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-11a-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-11a.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-11a.md"
+    },
+    {
+      "id": "dx9-impl-12",
+      "title": "dx9-impl-12 · 전체 예제 프로젝트",
+      "pages": [
+        "dx9-impl-12"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx9-impl-12-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx9-impl-12-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx9-impl-12.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx9-impl-12.md"
+    },
+    {
+      "id": "dx11-02",
+      "title": "dx11-02 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-02",
+        "dx11-sources-02"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-02-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-02-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-02.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-02.md"
+    },
+    {
+      "id": "dx11-03",
+      "title": "dx11-03 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-03",
+        "dx11-sources-03"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-03-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-03-ko/d3d11_triangle_window.cpp",
+          "path": "project/d3d11_triangle_window.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-03-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-03.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-03.md"
+    },
+    {
+      "id": "dx11-04",
+      "title": "dx11-04 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-04",
+        "dx11-sources-04"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-04-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-04-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-04-ko/texture.hlsl",
+          "path": "project/texture.hlsl"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-04.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-04.md"
+    },
+    {
+      "id": "dx11-05-08",
+      "title": "dx11-05-08 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-05",
+        "dx11-06",
+        "dx11-sources-05-08",
+        "dx11-07",
+        "dx11-08"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/05_textured_rect/CMakeLists.txt",
+          "path": "project/05_textured_rect/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/05_textured_rect/main.cpp",
+          "path": "project/05_textured_rect/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/05_textured_rect/quad.hlsl",
+          "path": "project/05_textured_rect/quad.hlsl"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/05_textured_rect/textured_quad_win.cpp",
+          "path": "project/05_textured_rect/textured_quad_win.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/06_transform_camera/CMakeLists.txt",
+          "path": "project/06_transform_camera/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/06_transform_camera/main.cpp",
+          "path": "project/06_transform_camera/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/07_skybox_lighting/CMakeLists.txt",
+          "path": "project/07_skybox_lighting/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/07_skybox_lighting/main.cpp",
+          "path": "project/07_skybox_lighting/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/07_skybox_lighting/skybox_lambert.hlsl",
+          "path": "project/07_skybox_lighting/skybox_lambert.hlsl"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/08_terrain/CMakeLists.txt",
+          "path": "project/08_terrain/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/08_terrain/main.cpp",
+          "path": "project/08_terrain/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-05-08-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-05-08.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-05-08.md"
+    },
+    {
+      "id": "dx11-01",
+      "title": "dx11-01 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-sources-01",
+        "dx11-01"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-01-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-01-ko/contract_model.cpp",
+          "path": "project/contract_model.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-01-ko/d3d11_init_window.cpp",
+          "path": "project/d3d11_init_window.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-01.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-01.md"
+    },
+    {
+      "id": "dx11-09",
+      "title": "dx11-09 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-sources-09",
+        "dx11-09"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-09-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-09-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-09.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-09.md"
+    },
+    {
+      "id": "dx11-10",
+      "title": "dx11-10 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-sources-10",
+        "dx11-10"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-10-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-10-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-10.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-10.md"
+    },
+    {
+      "id": "dx11-11-12",
+      "title": "dx11-11-12 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-sources-11-12",
+        "dx11-11",
+        "dx11-12"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-11-12-ko/11_collision/CMakeLists.txt",
+          "path": "project/11_collision/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-11-12-ko/11_collision/main.cpp",
+          "path": "project/11_collision/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-11-12-ko/12_navmesh/CMakeLists.txt",
+          "path": "project/12_navmesh/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-11-12-ko/12_navmesh/main.cpp",
+          "path": "project/12_navmesh/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-11-12-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-11-12.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-11-12.md"
+    },
+    {
+      "id": "dx11-13",
+      "title": "dx11-13 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-13",
+        "dx11-sources-13"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-13-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-13-ko/instancing_example.hlsl",
+          "path": "project/instancing_example.hlsl"
+        },
+        {
+          "source": "knowledge/shared/dx11-13-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-13.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-13.md"
+    },
+    {
+      "id": "dx11-13b-compact",
+      "title": "dx11-13b-compact · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-13b",
+        "dx11-sources-13b"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-13b-compact-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-13b-compact-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-13b-compact.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-13b-compact.md"
+    },
+    {
+      "id": "dx11-14",
+      "title": "dx11-14 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-14",
+        "dx11-sources-14"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-14-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-14-ko/geometry_sprite.hlsl",
+          "path": "project/geometry_sprite.hlsl"
+        },
+        {
+          "source": "knowledge/shared/dx11-14-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-14.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-14.md"
+    },
+    {
+      "id": "dx11-16",
+      "title": "dx11-16 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-16",
+        "dx11-sources-16"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-16-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-16-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-16.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-16.md"
+    },
+    {
+      "id": "dx11-17",
+      "title": "dx11-17 · 전체 예제 프로젝트 (원본 동작 보존)",
+      "pages": [
+        "dx11-17",
+        "dx11-sources-17"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-17-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-17-ko/fontlab.hpp",
+          "path": "project/fontlab.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-17-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-17.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-17.md"
+    },
+    {
+      "id": "dx11-18",
+      "title": "dx11-18 · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-18",
+        "dx11-sources-18"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-18-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-18-ko/geometry_pass.example.hlsl",
+          "path": "project/geometry_pass.example.hlsl"
+        },
+        {
+          "source": "knowledge/shared/dx11-18-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-18.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-18.md"
+    },
+    {
+      "id": "dx11-13b",
+      "title": "dx11-13b · 전체 예제 프로젝트",
+      "pages": [
+        "dx11-sources-13b"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-13b-ko/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-13b-ko/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-13b.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-13b.md"
+    },
+    {
+      "id": "dx11-17-reviewed",
+      "title": "dx11-17-reviewed · 전체 예제 프로젝트 (높이 경계 수정판 · 권장)",
+      "pages": [
+        "dx11-17",
+        "dx11-sources-17"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/dx11-17-reviewed/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx11-17-reviewed/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-17-reviewed/fontlab.hpp",
+          "path": "project/fontlab.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx11-17-reviewed/height-regression.cpp",
+          "path": "project/height-regression.cpp"
+        },
+        {
+          "source": "knowledge/examples/readmes/dx11-17-reviewed.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx11-17-reviewed.md"
+    }
+  ]
+}
