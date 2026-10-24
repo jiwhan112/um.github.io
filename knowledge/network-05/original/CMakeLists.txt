@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.16)
+project(NET05_mtu_budget LANGUAGES CXX)
+set(LAB_CXX_STANDARD 20 CACHE STRING "C++ standard: 20 or 11")
+enable_testing()
+add_executable(net05 main.cpp)
+set_target_properties(net05 PROPERTIES CXX_STANDARD ${LAB_CXX_STANDARD}
+  CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
+if(MSVC)
+  target_compile_options(net05 PRIVATE /W4 /EHsc)
+else()
+  target_compile_options(net05 PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+add_test(NAME NET05_mtu_budget COMMAND net05)

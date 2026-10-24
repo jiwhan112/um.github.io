@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-24T00:59:07.044003+00:00",
+  "platform": "Linux cloud CPU",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "cmake": "cmake version 3.31.6",
+  "original_checks": 30,
+  "added_checks": 8,
+  "not_run": [
+    "Windows/MSVC",
+    "Clang",
+    "ASan/UBSan",
+    "real sockets",
+    "route-table changes",
+    "PMTU discovery",
+    "GPU"
+  ],
+  "annotation_restoration_equal": true,
+  "preprocessor_equal": true,
+  "preprocessor_sha256": "7aef82c22cb46f28a7a2474adc89886993708bdff4322450f859d5284824813a",
+  "runs": [
+    {
+      "variant": "original",
+      "standard": 11,
+      "phase": "configure",
+      "exit_code": 0,
+      "raw_log_sha256": "b7de20fba83ea93b911a3c78a6ba1b81c7da95bfbce17149a71a1f6a142b36a4"
+    },
+    {
+      "variant": "original",
+      "standard": 11,
+      "phase": "build",
+      "exit_code": 0,
+      "raw_log_sha256": "a98b527842402218aadd683b4ff51a12b79f750816267fbc37b5714f6bea8df7"
+    },
+    {
+      "variant": "original",
+      "standard": 11,
+      "phase": "ctest",
+      "exit_code": 0,
+      "raw_log_sha256": "d72068f33d10e7e224534e203a6943d93d0d848c5906a183a8863d235a53b97e"
+    },
+    {
+      "variant": "original",
+      "standard": 20,
+      "phase": "configure",
+      "exit_code": 0,
+      "raw_log_sha256": "3d47f5ff4bb37d6b0ccdb1448e973764d0c373fcce828385ee26273889e6460a"
+    },
+    {
+      "variant": "original",
+      "standard": 20,
+      "phase": "build",
+      "exit_code": 0,
+      "raw_log_sha256": "a98b527842402218aadd683b4ff51a12b79f750816267fbc37b5714f6bea8df7"
+    },
+    {
+      "variant": "original",
+      "standard": 20,
+      "phase": "ctest",
+      "exit_code": 0,
+      "raw_log_sha256": "ac4a1162d59967e9b3506242e2c309494b967cd9416507be4d283c4f18906fee"
+    },
+    {
+      "variant": "project",
+      "standard": 11,
+      "phase": "configure",
+      "exit_code": 0,
+      "raw_log_sha256": "912ac0fde8bd6ac9de816b8b158a9c319be26adaaaec46b52c64b0d0e6b9944d"
+    },
+    {
+      "variant": "project",
+      "standard": 11,
+      "phase": "build",
+      "exit_code": 0,
+      "raw_log_sha256": "1885c919f98d63416cb04d28e7f25a875c9a8ba9f6d8777cedf47c4bfbe28555"
+    },
+    {
+      "variant": "project",
+      "standard": 11,
+      "phase": "ctest",
+      "exit_code": 0,
+      "raw_log_sha256": "828bfe2aaa533e7608b9a09b34afcd6763b6750febda0cb5ed3294eae4cafe55"
+    },
+    {
+      "variant": "project",
+      "standard": 20,
+      "phase": "configure",
+      "exit_code": 0,
+      "raw_log_sha256": "edfa0480d66feff7573d88e01abcdd1aff40f0761f6eff05c8e560d07d0745fd"
+    },
+    {
+      "variant": "project",
+      "standard": 20,
+      "phase": "build",
+      "exit_code": 0,
+      "raw_log_sha256": "81bce57510f7b892d9170f92fcf59f460c22caa76cb82bc759ea092d9c2cc7fb"
+    },
+    {
+      "variant": "project",
+      "standard": 20,
+      "phase": "ctest",
+      "exit_code": 0,
+      "raw_log_sha256": "f088e8813a5f59d68d5ac4521a10d5cb04a7fdda05e7f84981bcf809b8aac174"
+    }
+  ],
+  "inputs": {
+    "original/CMakeLists.txt": "1c00aab3e5c040aafb169505a0eff1850366e26e71540ce97fff4f060780f771",
+    "original/main.cpp": "7faa2e5a63cfe713ab031d3bf3034d717ab86df0ad48fe6d41f7679dc63a9987",
+    "project/CMakeLists.txt": "a0d19bf16da5f2ffab8265dd799fb4cd2976c236b19715ac70b369c678847761",
+    "project/edge_cases.cpp": "9e2685eb17eacbb42e01899092b99e31887c0945b32ee147a6c27fa21140771c",
+    "project/main.cpp": "06e836c5f5081ac59248b159139f16595c91e91df409c6710273a369ef247b69"
+  },
+  "evidence_policy": "Actual raw commands and raw logs are retained privately. The following commands are public reproduction instructions, not verbatim raw logs. No original result or hash was changed.",
+  "reproduction_commands": [
+    "cmake -S project -B build -DLAB_CXX_STANDARD=20 -DCMAKE_CXX_COMPILER=g++",
+    "cmake --build build --parallel 2",
+    "ctest --test-dir build -V --output-on-failure --timeout 10"
+  ],
+  "reproduction_note": "Original variant: use original instead of project. C++11: use a separate build directory and -DLAB_CXX_STANDARD=11. These are commands to reproduce; actual test environment and input hashes are recorded above."
+}

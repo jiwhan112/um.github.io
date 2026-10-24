@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-24",
+  "scope": "Cloud Linux deterministic CPU model only",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "commands": [
+    {
+      "stage": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        "project",
+        "-B",
+        "build",
+        "-DCMAKE_BUILD_TYPE=Debug"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "-j2"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "-V",
+        "--output-on-failure"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "source_sha256": {
+    "CMakeLists.txt": "9dc0eeb10bdf4af34994463fc41913a7b661d02e5db6af8ce39723c107b8a274",
+    "main.cpp": "6308815eecd050e6fd958035ae2595834fdd8ca6dc60c6febd1c9af28a5e1971"
+  },
+  "not_run": [
+    "real sockets",
+    "TCP/UDP transport",
+    "TLS",
+    "traffic capture",
+    "Windows",
+    "sanitizers"
+  ],
+  "original_status": "original full code not recovered; distinct new authored model",
+  "command_note": "Public reproduction commands use relative paths; original absolute command record and raw output remain private.",
+  "ctest": {
+    "passed": 1,
+    "total": 1,
+    "check_calls": 142073,
+    "stdout_summary": "PASS 142073 datagram CPU checks; 2048 roundtrips; 70000 sequence steps"
+  }
+}

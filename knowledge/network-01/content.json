@@ -1,0 +1,377 @@
+{
+  "title": "네트워크 01 · TCP 바이트 스트림과 길이 프레이밍",
+  "subtitle": "수신 조각이 아니라 프로토콜 길이로 메시지를 복원한다",
+  "sections": [
+    {
+      "id": "start",
+      "title": "목표·선수 지식·모델 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "수신 조각이 아니라 프로토콜 길이로 메시지를 복원한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: C의 정수·배열·경계 검사와 C++의 vector·예외·값 수명. 네트워크 01부터 03 순서로 앱 데이터 단위를 비교한다. 모든 예제는 유한 입력 CPU 모델이며 실제 연결을 열지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 완결 코드가 미복원되어 새 독립 예제를 작성했다. 원문과 과거 시험 주장을 새 코드의 증거로 사용하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "TCP가 전달하는 것",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/network-01/assets/stream.svg",
+          "alt": "전송 호출과 읽기 경계는 다르다",
+          "caption": "전송 호출과 읽기 경계는 다르다 · 독립 설명 그림, 실제 패킷 캡처 아님."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "TCP는 애플리케이션에 순서 있는 바이트 스트림을 제공한다. send 호출 경계가 상대 recv 호출 경계로 보존되지는 않는다. TCP 헤더의 세그먼트 길이와 앱 메시지 길이는 서로 다르므로 앱 프로토콜에서 경계를 정의한다. 이 예제의 Feed는 이미 수신한 바이트 조각을 받는 순수 함수형 입력이며 실제 recv의 0·오류·일시적 무가용성을 재현하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "길이 필드의 계약",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/network-01/assets/parser.svg",
+          "alt": "유효성 검사와 연결 상태를 분리",
+          "caption": "유효성 검사와 연결 상태를 분리 · 독립 설명 그림, 실제 패킷 캡처 아님."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "네트워크 바이트 순서로 읽는 4바이트 unsigned 길이 뒤에 정확히 N바이트 payload를 둔다. NUL과 FF도 데이터다. 새 예제의 maxPayload=32는 작은 시험을 위한 상한이고 원문 구현과 동일 상한이라고 주장하지 않는다. 0바이트 메시지는 허용한다. 헤더가 덜 왔을 때는 기다리고, 길이가 상한을 넘으면 본문을 할당하기 전에 거부한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "상태·자원·실패",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 예제는 한 Feed 최대64바이트, 현재 프레임 본문 최대32바이트를 허용한다. 모든 바이트를 큰 누적 배열에 무제한 붙이지 않는다. 출력 프레임 보관량은 호출자 책임이며, 큰 메시지·대량 프레임 서비스에 적합한 운영 구현이라는 뜻은 아니다. 잘못된 길이·Feed 상한 초과 뒤 parser는 terminal이다. 해당 Feed 도중 앞서 완성했던 프레임도 예외로 반환되지 않으므로 부분 성공 처리 계약은 없다. 할당 실패·동시 호출·타임아웃·백프레셔는 모델 밖이다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n H[\"헤더 4바이트를 모음\"] --> L{\"길이 0..32?\"}\n L -->|\"아니오\"| X[\"terminal 오류\"]\n L -->|\"0\"| E[\"빈 프레임 방출\"]\n L -->|\"1..32\"| B[\"본문 N바이트를 모음\"]\n B --> F[\"완성 프레임 방출\"]\n E --> H\n F --> H"
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "EOF와 앱 완료",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "빈 Feed는 새 바이트가 없다는 뜻일 뿐 연결 종료가 아니다. finish()를 별도로 호출하고 미완성 헤더/본문이면 오류다. 정상 종료 뒤에도 추가 Feed를 금지한다. TCP ACK는 게임 명령의 저장·반영 성공 응답이 아니므로 거래 요청의 중복 처리·응답 ID·영속성은 앱 차원에서 설계한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 다운로드 · 소스와 빌드 안내",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "전체 예제 ZIP",
+              "href": "/knowledge/examples/network-01.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "README · 준비 도구/명령/검증 경계",
+              "href": "/knowledge/examples/readmes/network-01.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP은 실행 소스와 코드 해시·검증 요약을 포함한다. 압축 해제 뒤 project/CMakeLists.txt를 기준으로 빌드한다. 실행 파일은 포함하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "실습 · 실행 전에 예측",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "00 00 00 02 00 FF 00 00 00 00을 원하는 위치에서 잘라 Feed에 넣기 전 출력 프레임 수를 예측한다. 헤더1/2/3바이트, 본문1바이트, 여러 프레임 합침을 구분한다. main의512개 분할 시험과 별도EOF·상한·terminal 시험을 읽고 왜 결과가 같은지 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build\nctest --test-dir build --output-on-failure -V"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답하고 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "send를 두 번 하면 recv도 두 번인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 읽기 경계를 앱 프레임으로 간주하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "payload의 첫 바이트가0이면 빈 메시지인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 길이 필드가2이면 00 FF도2바이트 메시지다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "헤더3바이트에서 종료되면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "finish는 잘린 프레임 오류를 반환한다. 빈 정상 스트림과 다르다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "0xFFFFFFFF 길이를 받으면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최대payload와 비교해 본문 할당 전에 거부하고 terminal로 전환한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "오류 Feed에서 이전 완성 프레임을 받을 수 있나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 모델은 반환값을 주지 않고 예외를 던진다. 부분 성공을 보장하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "525 검사 통과는 TCP 지연 검증인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 소켓 없는 바이트 파서 검사다.512개 분할은10바이트 예제의 가능한 경계를 순회한 횟수다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 코드·CMake",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "main.cpp 전체 파일",
+              "href": "/knowledge/shared/network-01-lab/project/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp · 전체 소스",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// 2026-10-24 신규 독립 CPU 모델. 미복원된 NET01 원본 코드가 아니다.\n#include <array>\n#include <cstdint>\n#include <iostream>\n#include <stdexcept>\n#include <vector>\nusing Bytes=std::vector<std::uint8_t>;\nusing Frames=std::vector<Bytes>;\nclass Framer {\n    std::array<std::uint8_t,4> header_{};\n    std::size_t used_=0;\n    std::uint32_t length_=0;\n    Bytes body_;\n    bool reading_body_=false, terminal_=false;\npublic:\n    static constexpr std::size_t max_payload=32, max_feed=64;\n    // 입력은 이미 받은 바이트 조각이다. 빈 Feed는 EOF가 아니다.\n    Frames feed(const Bytes& input) {\n        if(terminal_) throw std::logic_error(\"terminal parser\");\n        if(input.size()>max_feed){terminal_=true;throw std::length_error(\"feed cap\");}\n        Frames out;\n        for(std::uint8_t byte:input){\n            if(!reading_body_){\n                header_[used_++]=byte;\n                if(used_!=4)continue;\n                // 각 바이트를 unsigned로 올린 뒤 시프트해 BE32 길이를 읽는다.\n                length_=0;\n                for(auto b:header_)length_=(length_<<8)|b;\n                used_=0;\n                if(length_>max_payload){terminal_=true;throw std::length_error(\"payload cap\");}\n                if(length_==0){out.push_back({});continue;}\n                body_.clear();reading_body_=true;\n            }else{\n                body_.push_back(byte);\n                if(body_.size()==length_){out.push_back(body_);body_.clear();reading_body_=false;}\n            }\n        }\n        return out;\n    }\n    // 명시적 입력 종료. 미완성 헤더/본문은 조용히 성공시키지 않는다.\n    void finish(){\n        if(terminal_)throw std::logic_error(\"terminal parser\");\n        terminal_=true;\n        if(used_!=0 || reading_body_)throw std::runtime_error(\"truncated frame\");\n    }\n};\nBytes encode(const Bytes& p){\n    if(p.size()>Framer::max_payload)throw std::length_error(\"payload cap\");\n    auto n=static_cast<std::uint32_t>(p.size());\n    Bytes out{static_cast<std::uint8_t>(n>>24),static_cast<std::uint8_t>(n>>16),\n              static_cast<std::uint8_t>(n>>8),static_cast<std::uint8_t>(n)};\n    out.insert(out.end(),p.begin(),p.end());return out;\n}\nint checks=0;\nvoid check(bool v){++checks;if(!v)throw std::runtime_error(\"check failed\");}\ntemplate<class E,class F> bool raises(F f){try{f();}catch(const E&){return true;}return false;}\nint main(){\n    const Frames expected{{0,255},{}};\n    Bytes wire=encode(expected[0]);auto empty=encode(expected[1]);wire.insert(wire.end(),empty.begin(),empty.end());\n    // 10바이트 스트림의 9개 경계마다 자르기/유지: 가능한 분할 512가지를 모두 확인한다.\n    for(unsigned mask=0;mask<512;++mask){\n        Framer f;Frames got;Bytes chunk;\n        for(std::size_t i=0;i<wire.size();++i){\n            chunk.push_back(wire[i]);\n            if(i+1==wire.size() || (mask&(1u<<i))){auto v=f.feed(chunk);got.insert(got.end(),v.begin(),v.end());chunk.clear();}\n        }\n        check(got==expected);f.finish();\n    }\n    {Framer f;check(f.feed({}).empty());f.finish();check(raises<std::logic_error>([&]{f.feed({});}));}\n    for(std::size_t n=1;n<6;++n){Framer f;auto w=encode({1,2});f.feed(Bytes(w.begin(),w.begin()+static_cast<std::ptrdiff_t>(n)));check(raises<std::runtime_error>([&]{f.finish();}));}\n    {Framer f;check(f.feed(encode(Bytes(32,42)))==Frames{Bytes(32,42)});f.finish();}\n    {Framer f;check(raises<std::length_error>([&]{f.feed({255,255,255,255});}));check(raises<std::logic_error>([&]{f.feed({0});}));}\n    {Framer f;check(raises<std::length_error>([&]{f.feed(Bytes(65,0));}));}\n    check(raises<std::length_error>([]{encode(Bytes(33,0));}));\n    // 예외가 발생한 Feed의 결과는 반환되지 않는다. 복구/재전송 대신 연결 모델을 폐기한다.\n    {Framer f;Bytes w=encode({1});w.insert(w.end(),{0,0,0,33});check(raises<std::length_error>([&]{f.feed(w);}));}\n    std::cout<<\"PASS \"<<checks<<\" framing CPU checks; 512 partitions\\n\";\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CMakeLists.txt 전체 파일",
+              "href": "/knowledge/shared/network-01-lab/project/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt · 전체 소스",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(network_01_cpu LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(network_01_cpu main.cpp)\nif(CMAKE_CXX_COMPILER_ID MATCHES \"GNU|Clang\")\n  target_compile_options(network_01_cpu PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror)\nendif()\nenable_testing()\nadd_test(NAME network_01_cpu COMMAND network_01_cpu)\nset_tests_properties(network_01_cpu PROPERTIES TIMEOUT 15)\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·현재 검증",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-24 Cloud Linux GCC 14.2 C++20에서 CMake configure/build 및 CTest 1/1을 각 단원 실행했다. 출력: 525 검사(512 분할 포함). 조건 호출 수는 독립 요구사항 수가 아니다. 실제 소켓·Windows·TLS·패킷 캡처·RTT·sanitizer는 이번 검증에서 실행하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "정확한소스해시·명령·종료코드",
+              "href": "/knowledge/shared/network-01-lab/verification/results.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "RFC9293 · TCP바이트스트림",
+              "href": "https://www.rfc-editor.org/rfc/rfc9293.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 자료는 프로토콜의 기본 계약 대조용이다. 이 예제의 상한·wire format·오류 정책·그림·문제는 학습용 설계이며 RFC의 완성 구현을 재현한 것이 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "코드 변경·복원 상태",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 완결 소스 미복원. 2026-10-24에 새로 작성한 독립 CPU 모델이며 과거 원본 복원본이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "코드 상태·해시 요약",
+              "href": "/knowledge/shared/network-01-lab/provenance.json"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-24",
+  "scope": "Cloud Linux deterministic CPU model only",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "commands": [
+    {
+      "stage": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        "project",
+        "-B",
+        "build",
+        "-DCMAKE_BUILD_TYPE=Debug"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "-j2"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "-V",
+        "--output-on-failure"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "source_sha256": {
+    "CMakeLists.txt": "41591b5da17c57b268ea6f4618089ba2fd7a019e568e51933b6ec849054521d3",
+    "main.cpp": "a018170619882726d67c51f7aa93c286de76df55346268d81d6759bfcc30104c"
+  },
+  "not_run": [
+    "real sockets",
+    "TCP/UDP transport",
+    "TLS",
+    "traffic capture",
+    "Windows",
+    "sanitizers"
+  ],
+  "original_status": "restored code with Korean comment-only derivative",
+  "command_note": "Public reproduction commands use relative paths; original absolute command record and raw output remain private.",
+  "ctest": {
+    "passed": 1,
+    "total": 1,
+    "check_calls": 30,
+    "stdout_summary": "PASS 30 network-unit/packetization CPU checks"
+  }
+}

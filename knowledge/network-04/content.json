@@ -1,0 +1,828 @@
+{
+  "title": "네트워크 04 · IPv4 CIDR·최장 접두부 경로 선택",
+  "subtitle": "비트 마스크에서 LPM까지: 파싱·정규화·포인터 수명과 실제 라우팅의 경계",
+  "sections": [
+    {
+      "id": "start",
+      "title": "주소를 찾는 일과 경로를 고르는 일",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "게임 서버 주소를 알더라도 패킷이 어느 다음 홉으로 나갈지는 별도 문제입니다. 이 단원은 IPv4 문자열을 32비트 값으로 바꾸고, 이미 주어진 경로 집합에서 가장 구체적인 접두부를 찾는 과정만 다룹니다. DNS 조회, 라우팅 프로토콜, 실제 패킷 전달은 구현하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선행: C 기초 03 · 비트 연산과 정수 범위",
+              "href": "/knowledge/c-basics-03/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선행: C 기초 11 · 입력 검증",
+              "href": "/knowledge/c-basics-11/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 목표는 /24가 무엇을 비교하는지 손으로 설명하고, 기본 경로가 먼저 저장되어 있어도 /32가 이기는 이유를 코드에서 찾는 것입니다. CPU 실행 결과를 운영체제 라우팅 설정의 검증으로 읽지 마세요."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prefix",
+      "title": "주소/길이는 비트의 경계다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "10.2.3.77/24에서 /24는 상위 24비트를 비교하겠다는 뜻입니다. 마지막 8비트를 0으로 지운 10.2.3.0이 경로의 정규화된 network입니다. 문자열 앞 세 글자나 점의 개수를 비교하는 규칙이 아닙니다. /20처럼 옥텟 중간에서 경계가 갈릴 수도 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/network-04/assets/prefix-mask.svg",
+          "alt": "IPv4 주소 10.2.3.77에 /24 마스크를 적용하면 10.2.3.0",
+          "caption": "동일 위치의 비트끼리 AND합니다. 그림의 마지막 옥텟은 제거되지만 원래 목적지 주소 자체를 바꾸어 전송한다는 뜻은 아닙니다."
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "접두 길이"
+                  }
+                ],
+                [
+                  {
+                    "text": "마스크"
+                  }
+                ],
+                [
+                  {
+                    "text": "의미"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "/0"
+                  }
+                ],
+                [
+                  {
+                    "text": "0x00000000"
+                  }
+                ],
+                [
+                  {
+                    "text": "모든 목적지에 일치하는 기본 경로"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "/24"
+                  }
+                ],
+                [
+                  {
+                    "text": "0xffffff00"
+                  }
+                ],
+                [
+                  {
+                    "text": "상위 24비트만 비교"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "/32"
+                  }
+                ],
+                [
+                  {
+                    "text": "0xffffffff"
+                  }
+                ],
+                [
+                  {
+                    "text": "32비트가 모두 같은 단일 주소 경로"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정수 0xc0a8012a는 192.168.1.42의 옥텟을 상위 비트부터 넣은 수치 표현입니다. 이 정수의 주소를 소켓에 그대로 넘겨도 올바른 바이트 순서가 된다는 보장은 없습니다. 실습은 메모리 직렬화나 htons/htonl 호출을 하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lpm",
+      "title": "일치 여부를 판정한 뒤 길이를 비교한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/network-04/assets/longest-match.svg",
+          "alt": "목적지 10.2.3.77에 일치하는 /0 /16 /24 /32 중 /32 선택",
+          "caption": "막대 길이는 일치 접두부 길이이며 네트워크 성능이나 경로 거리의 척도가 아닙니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "각 Route에 대해 (ip & mask) == network를 먼저 검사합니다. 일치하는 경우에만 현재 best보다 prefix가 긴지 비교합니다. 처음 발견한 항목을 반환하면 기본 경로가 세부 경로를 가릴 수 있습니다. vector 순회는 경로 수 R에 대해 O(R), 조회의 추가 공간은 O(1)입니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[목적지 IPv4 파싱] --> B[best 없음 / 첫 경로]\n B --> C{남은 경로가 있는가}\n C -->|없음| G[best 또는 경로 없음 반환]\n C -->|있음| D{접두부가 일치하는가}\n D -->|아니오| F[다음 경로로 이동]\n D -->|예| E{best 없음 또는 더 긴 접두부}\n E -->|예| H[best 갱신]\n E -->|아니오| F\n H --> F\n F --> C"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "LPM은 이 한 테이블의 조회 규칙입니다. 실제 시스템의 정책 라우팅은 다른 테이블을 선택할 수도 있고, 같은 접두부의 후보는 메트릭·정책·ECMP에 따라 달라질 수 있습니다. 이 예제는 동일 network/prefix 중복을 오류로 막아 동률 정책 자체를 모델에서 제외합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contracts",
+      "title": "파서·등록·반환 포인터의 계약",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "경계"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 구현의 선택"
+                  }
+                ],
+                [
+                  {
+                    "text": "주의"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "IPv4 문자열"
+                  }
+                ],
+                [
+                  {
+                    "text": "네 옥텟, 0–255, 숫자만"
+                  }
+                ],
+                [
+                  {
+                    "text": "001, 공백, :80 등을 거부하는 엄격한 교육용 파서"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "prefix"
+                  }
+                ],
+                [
+                  {
+                    "text": "0–32만 허용"
+                  }
+                ],
+                [
+                  {
+                    "text": "/0 특수 분기: 32비트 폭 shift를 실행하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Add"
+                  }
+                ],
+                [
+                  {
+                    "text": "호스트 비트를 지운 뒤 중복 검사"
+                  }
+                ],
+                [
+                  {
+                    "text": "10.2.3.123/24도 10.2.3.0/24와 같은 키"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Lookup"
+                  }
+                ],
+                [
+                  {
+                    "text": "const Route* 또는 0 반환"
+                  }
+                ],
+                [
+                  {
+                    "text": "0을 확인한 뒤 역참조; 내부 vector의 주소를 빌림"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Lookup 결과는 소유권이 아닙니다. 테이블 파괴 또는 이후 Add가 vector를 재할당하면 기존 포인터를 사용할 수 없습니다. 원본 main은 테이블을 완성한 뒤 조회 결과를 즉시 읽습니다. nextHop 문자열은 IPv4 문법만 검사할 뿐, 그 홉이 실제로 도달 가능한지 확인하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주소가 접두부에 포함되는지와 해당 주소를 실제 인터페이스/호스트에 할당할 수 있는지는 다릅니다. /31 추가 검사는 단지 두 정숫값의 접두부 일치를 관찰합니다. 브로드캐스트·루프백·TTL·ARP·IPv6의 전체 동작을 검증한 것이 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "직접 추적한 뒤 실행으로 대조",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "1. 목적지 10.2.3.78에 대해 /0, /16, /24, /32 각각의 일치 여부와 best의 변화를 종이에 적으세요. 2. /32를 vector 맨 앞에 넣었을 때도 결과가 같은지 추가 코드와 대조하세요. 3. 10.2.3.123/24 등록 후 10.2.3.254/24를 넣으면 왜 중복인지 AND 결과로 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "실행 파일"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제로 관찰하는 조건"
+                  }
+                ],
+                [
+                  {
+                    "text": "기대 stdout"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "NET04"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 18회 검사: 파싱·마스크·조회·중복·빈 테이블"
+                  }
+                ],
+                [
+                  {
+                    "text": "PASS NET04 checks=18"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "network_edges"
+                  }
+                ],
+                [
+                  {
+                    "text": "추가 8회 검사: 역순·정규화·/31·공백·후행 점"
+                  }
+                ],
+                [
+                  {
+                    "text": "PASS NET04 added checks=8"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "의도한 실패는 invalid_argument를 잡은 뒤 실패가 발생했음을 검사합니다. 프로그램의 비정상 종료를 기대하는 테스트가 아닙니다. 할당 실패 주입이나 실제 운영체제 경로 변경은 수행하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답을 생각한 뒤 열기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "/24는 앞 세 옥텟만 가능한 규칙인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 상위 24비트라는 뜻입니다. /20처럼 옥텟 중간에서도 접두부를 나눌 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "/0에서 shift 식을 그대로 쓰면 무엇이 위험한가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "32비트 피연산자를 32만큼 이동시키는 연산은 유효하지 않습니다. 원본은 prefix가 0일 때 0을 먼저 반환하는 분기를 둡니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "기본 경로가 첫 번째면 바로 반환해도 되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 더 긴 일치 접두부가 뒤에 있을 수 있으므로 전체 경로를 검사해 최장 일치를 남깁니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "10.2.3.123/24와 10.2.3.254/24를 따로 등록할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 모델에서는 둘 다 10.2.3.0/24로 정규화되어 중복 오류입니다. 실제 ECMP 지원 여부와는 별개입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Lookup이 반환한 포인터를 Add 뒤에도 보관할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "재할당되면 무효화될 수 있습니다. 테이블이 살아 있는 동안 변경 없이 사용하거나 필요한 값을 복사하는 등 수명 계약이 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "18+8 검사가 실제 라우팅 성공을 보증하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 파싱과 정숫값 경로 선택의 정해진 조건만 확인합니다. 실제 패킷 전달, 메트릭, 정책, 홉 도달성은 미검증입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 내려받기 · 로컬 재현",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "전체 예제 ZIP",
+              "href": "/knowledge/examples/network-04.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "실습 README",
+              "href": "/knowledge/examples/readmes/network-04.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP은 한국어 주석 main.cpp, 추가 경계 검사, CMakeLists.txt, README를 함께 쓰는 프로젝트입니다. 원본 파일은 출처 탭의 별도 링크로 보존합니다. 빌드는 CPU 모델만 실행합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 코드 · 실행 파일과 동일",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.cpp는 원본에 // KO: 한국어 설명 줄만 삽입했습니다. edge_cases.cpp와 확장 CMake는 이번 교재가 별도로 작성한 추가 검사입니다. 주석 제거 후 원본 바이트 일치와 전처리 결과 일치를 확인합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "main.cpp 직접 내려받기",
+              "href": "/knowledge/network-04/project/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp 전체 코드",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <cstdint>\n#include <iostream>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\n// Portable IPv4 network-order integer representation, no socket API.\n// KO: 문자열은 정확히 네 개의 10진 옥텟만 허용합니다. 공백, 포트, 선행 0을 자동 보정하지 않습니다.\n// KO: 상위 옥텟부터 만든 정숫값이며 네트워크로 보낼 메모리 바이트열은 아닙니다.\nstatic std::uint32_t IPv4(const std::string& s) {\n    std::uint32_t ip = 0;\n    std::size_t pos = 0;\n    for (unsigned field = 0; field < 4; ++field) {\n        if (pos >= s.size()) throw std::invalid_argument(\"missing octet\");\n        unsigned value = 0, digits = 0;\n        const std::size_t begin = pos;\n        while (pos < s.size() && s[pos] >= '0' && s[pos] <= '9') {\n            if (++digits > 3) throw std::invalid_argument(\"long octet\");\n            value = value * 10 + static_cast<unsigned>(s[pos] - '0');\n            ++pos;\n        }\n        if (digits == 0 || value > 255 || (digits > 1 && s[begin] == '0'))\n            throw std::invalid_argument(\"invalid octet\");\n        ip = (ip << 8) | value;\n        if (field < 3) {\n            if (pos >= s.size() || s[pos] != '.') throw std::invalid_argument(\"missing dot\");\n            ++pos;\n        }\n    }\n    if (pos != s.size()) throw std::invalid_argument(\"extra text\");\n    return ip;\n}\n// KO: /0은 별도 분기로 처리하여 32비트 폭만큼 시프트하는 경로를 피합니다.\nstatic std::uint32_t PrefixMask(unsigned prefix) {\n    if (prefix > 32) throw std::invalid_argument(\"invalid CIDR prefix\");\n    return prefix == 0 ? 0U : (0xffffffffU << (32 - prefix));\n}\n// KO: network는 정규화한 접두부입니다. nextHop은 이 모델에서 단순한 IPv4 값입니다.\nstruct Route {\n    std::uint32_t network, nextHop;\n    unsigned prefix;\n    std::string label;\n};\nclass RoutingTable {\npublic:\n// KO: 먼저 파싱·중복 검사를 끝낸 뒤 vector에 넣습니다. 같은 network/prefix의 여러 경로는 지원하지 않습니다.\n    void Add(const std::string& cidrIP, unsigned prefix,\n             const std::string& hop, const std::string& label) {\n        const std::uint32_t net = IPv4(cidrIP) & PrefixMask(prefix);\n        for (std::size_t i = 0; i < routes_.size(); ++i)\n            if (routes_[i].network == net && routes_[i].prefix == prefix)\n                throw std::invalid_argument(\"duplicate prefix\");\n        routes_.push_back(Route{net, IPv4(hop), prefix, label});\n    }\n// KO: 전 경로를 검사하고 가장 긴 일치만 남깁니다. 결과 0은 경로 없음입니다.\n// KO: 반환 포인터는 내부 vector를 빌립니다. 이후 Add의 재할당 또는 테이블 파괴 후에는 사용하지 마세요.\n    const Route* Lookup(std::uint32_t ip) const {\n        const Route* best = 0;\n        for (std::size_t i = 0; i < routes_.size(); ++i) {\n            const Route& r = routes_[i];\n            if ((ip & PrefixMask(r.prefix)) == r.network &&\n                (!best || r.prefix > best->prefix)) best = &r;\n        }\n        return best;\n    }\nprivate:\n    std::vector<Route> routes_;\n};\nstatic unsigned checks = 0;\n// KO: assert와 달리 NDEBUG 빌드에서도 실행되는 검사입니다.\nstatic void Check(bool ok, const std::string& why) {\n    ++checks; if (!ok) throw std::runtime_error(why);\n}\ntemplate <typename F> static void Reject(F f) {\n    bool threw = false;\n    try { f(); } catch (const std::invalid_argument&) { threw = true; }\n    Check(threw, \"invalid address accepted\");\n}\n// KO: 소켓·OS 라우팅 테이블을 건드리지 않는 결정적 CPU 검사입니다.\nint main() {\n    try {\n        Check(IPv4(\"0.0.0.0\") == 0U, \"zero address\");\n        Check(IPv4(\"255.255.255.255\") == 0xffffffffU, \"highest address\");\n        Check(IPv4(\"192.168.1.42\") == 0xc0a8012aU, \"network order\");\n        Check(PrefixMask(0) == 0U, \"default mask\");\n        Check(PrefixMask(24) == 0xffffff00U, \"slash24 mask\");\n        Check(PrefixMask(32) == 0xffffffffU, \"slash32 mask\");\n        Reject([] { IPv4(\"192.168.1\"); });\n        Reject([] { IPv4(\"1.2.3.256\"); });\n        Reject([] { IPv4(\"001.2.3.4\"); });\n        Reject([] { IPv4(\"1.2.3.4:80\"); });\n        Reject([] { IPv4(\"1..2.3\"); });\n        Reject([] { PrefixMask(33); });\n        RoutingTable t;\n        t.Add(\"0.0.0.0\", 0, \"1.1.1.1\", \"default\");\n        t.Add(\"10.2.0.0\", 16, \"10.2.0.1\", \"zone\");\n        t.Add(\"10.2.3.0\", 24, \"10.2.3.1\", \"subnet\");\n        t.Add(\"10.2.3.77\", 32, \"10.2.3.254\", \"host\");\n        Check(std::string(t.Lookup(IPv4(\"10.2.3.77\"))->label) == \"host\", \"/32 wins\");\n        Check(std::string(t.Lookup(IPv4(\"10.2.3.78\"))->label) == \"subnet\", \"/24 wins\");\n        Check(std::string(t.Lookup(IPv4(\"10.2.99.5\"))->label) == \"zone\", \"/16 wins\");\n        Check(std::string(t.Lookup(IPv4(\"203.0.113.9\"))->label) == \"default\", \"/0 wins\");\n        Reject([&] { t.Add(\"10.2.3.123\", 24, \"1.1.1.1\", \"duplicate normalized\"); });\n        RoutingTable empty;\n        Check(empty.Lookup(IPv4(\"127.0.0.1\")) == 0, \"no route\");\n        std::cout << \"PASS NET04 checks=\" << checks << \"\\n\";\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << \"FAIL NET04: \" << e.what() << \"\\n\";\n        return 1;\n    }\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "edge_cases.cpp 직접 내려받기",
+              "href": "/knowledge/network-04/project/edge_cases.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "edge_cases.cpp 전체 코드",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// 기존 구현은 수정하지 않고 별도 번역 단위에서 경계 조건을 더 검사합니다.\n#define main source_main\n#include \"main.cpp\"\n#undef main\nint main() {\n    try {\n        checks = 0;\n        RoutingTable t;\n        // 삽입 순서를 뒤집어도 최장 접두부가 우선이어야 합니다.\n        t.Add(\"10.2.3.77\", 32, \"10.2.3.1\", \"host\");\n        t.Add(\"10.2.3.123\", 24, \"10.2.3.1\", \"subnet\");\n        t.Add(\"0.0.0.0\", 0, \"1.1.1.1\", \"default\");\n        Check(t.Lookup(IPv4(\"10.2.3.77\"))->label == \"host\", \"reverse insertion\");\n        Check(t.Lookup(IPv4(\"10.2.3.78\"))->network == IPv4(\"10.2.3.0\"), \"normalize host bits\");\n        Reject([&] { t.Add(\"10.2.3.254\", 24, \"1.1.1.1\", \"duplicate\"); });\n        RoutingTable tiny;\n        tiny.Add(\"192.0.2.0\", 31, \"192.0.2.1\", \"pair\");\n        Check(tiny.Lookup(IPv4(\"192.0.2.0\")) != 0, \"slash31 first\");\n        Check(tiny.Lookup(IPv4(\"192.0.2.1\")) != 0, \"slash31 second\");\n        Check(tiny.Lookup(IPv4(\"192.0.2.2\")) == 0, \"slash31 outside\");\n        // 이 모델은 접두부 일치만 다룹니다. 주소 사용 가능성·링크 동작은 별도입니다.\n        Reject([] { IPv4(\" 1.2.3.4\"); });\n        Reject([] { IPv4(\"1.2.3.4.\"); });\n        std::cout << \"PASS NET04 added checks=\" << checks << \"\\n\";\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << e.what() << \"\\n\";\n        return 1;\n    }\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CMakeLists.txt 직접 내려받기",
+              "href": "/knowledge/network-04/project/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt 전체 코드",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(NET04_Reference LANGUAGES CXX)\nif(NOT CMAKE_CXX_STANDARD)\n  set(CMAKE_CXX_STANDARD 20)\nendif()\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(NET04 main.cpp)\nif(MSVC)\n  target_compile_options(NET04 PRIVATE /W4)\nelse()\n  target_compile_options(NET04 PRIVATE -Wall -Wextra -Wpedantic -Wconversion)\nendif()\nenable_testing()\nadd_test(NAME NET04 COMMAND NET04)\n\n# 현재 교재가 추가한 경계 검사: 원본 main.cpp의 구현을 그대로 포함합니다.\nadd_executable(network_edges edge_cases.cpp)\nset_target_properties(network_edges PROPERTIES CXX_STANDARD ${CMAKE_CXX_STANDARD} CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)\nif(MSVC)\n  target_compile_options(network_edges PRIVATE /W4 /EHsc)\nelse()\n  target_compile_options(network_edges PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nadd_test(NAME network_edges COMMAND network_edges)\nset_tests_properties(network_edges NET04 PROPERTIES TIMEOUT 10)\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처 · 원본 보존과 현재 실행을 분리",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "RFC 4632 · CIDR와 접두부 집약",
+              "href": "https://www.rfc-editor.org/rfc/rfc4632"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "RFC 1812 §5.2.4 · IPv4 경로 선택",
+              "href": "https://www.rfc-editor.org/rfc/rfc1812#section-5.2.4"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 문서는 2026-10-24 읽기 전용으로 대조했습니다. 설명과 SVG는 독립 집필이며 RFC의 전체 규칙을 이 짧은 CPU 모델이 구현한다는 뜻이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "현재 실행 결과와 입력 SHA-256",
+              "href": "/knowledge/network-04/verification/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공개 원본·파생 소스 무결성 해시",
+              "href": "/knowledge/network-04/source-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "원본 main.cpp",
+              "href": "/knowledge/network-04/original/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "원본 CMakeLists.txt",
+              "href": "/knowledge/network-04/original/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "증거"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 확인한 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인하지 않은 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원본 SHA-256"
+                  }
+                ],
+                [
+                  {
+                    "text": "복원한 원본 2파일의 기록된 SHA-256 일치"
+                  }
+                ],
+                [
+                  {
+                    "text": "과거 실행환경의 재구성"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "한국어 주석판"
+                  }
+                ],
+                [
+                  {
+                    "text": "주석 제거 바이트 일치·전처리 결과 일치"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 전체 입력에 대한 완전성 증명"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "GCC 14.2 C++11 / C++20"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 CTest 1/1, 주석·추가판 CTest 2/2"
+                  }
+                ],
+                [
+                  {
+                    "text": "다른 컴파일러·Windows·sanitizer"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "CPU 검사"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 18회 + 추가 8회; 환경별 반복 중복 합산 안 함"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 소켓·OS 라우팅·PMTU 발견·GPU"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 실행은 2026-10-24 Linux cloud, CMake 3.31.6에서 수행합니다. 종료 코드·입력/원시 로그 해시와 공개 재현 명령은 validation.json에 기록합니다. 실제 원시 명령과 로그는 비공개 보존하며 재현 명령을 원시 로그로 표시하지 않습니다. 교재 웹 렌더링·공개 배포 검증은 별도 단계이며 이 CPU 로그가 대신하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-24: 네 탭 시각 교재, SVG 두 개, Mermaid, 한국어 주석판과 별도 경계 검사를 추가했습니다. 복원한 원본 알고리즘은 변경하지 않았으며 새 검사와 구분합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.cpp의 한국어 설명 줄을 제거하면 원본 바이트와 일치합니다. edge_cases.cpp와 확장 CMake는 새로 작성한 파생 코드입니다. 코드 무결성 확인과 현재 GCC C++11/20 실행 결과는 출처·검증 탭에서 각각 확인할 수 있습니다. 과거 실행을 이번에 재실행한 것으로 세지 않습니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

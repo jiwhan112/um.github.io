@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-24",
+  "scope": "Cloud Linux deterministic CPU model only",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "commands": [
+    {
+      "stage": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        "project",
+        "-B",
+        "build",
+        "-DCMAKE_BUILD_TYPE=Debug"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "-j2"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "-V",
+        "--output-on-failure"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "source_sha256": {
+    "CMakeLists.txt": "9608d94fb48d66666b7ae671aacfb2721c72cc179b27014eeacf943967b9ee41",
+    "main.cpp": "41d72ffc0f5a1df7de0d38c6dfc47a0c31d866e2e0bc7f6bdc64b2412c9d4c26"
+  },
+  "not_run": [
+    "real sockets",
+    "TCP/UDP transport",
+    "TLS",
+    "traffic capture",
+    "Windows",
+    "sanitizers"
+  ],
+  "original_status": "original full code not recovered; distinct new authored model",
+  "command_note": "Public reproduction commands use relative paths; original absolute command record and raw output remain private.",
+  "ctest": {
+    "passed": 1,
+    "total": 1,
+    "check_calls": 525,
+    "stdout_summary": "PASS 525 framing CPU checks; 512 partitions"
+  }
+}

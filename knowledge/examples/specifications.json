@@ -1797,6 +1797,160 @@
         }
       ],
       "readmeSource": "knowledge/examples/readmes/os-06.md"
+    },
+    {
+      "id": "network-01",
+      "title": "네트워크 01 · TCP 바이트 스트림과 길이 프레이밍",
+      "pages": [
+        "network-01"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/network-01-lab/README.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/network-01-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/network-01-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/network-01-lab/provenance.json",
+          "path": "provenance.json"
+        },
+        {
+          "source": "knowledge/shared/network-01-lab/verification/results.json",
+          "path": "verification/results.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/network-01.md"
+    },
+    {
+      "id": "network-02",
+      "title": "네트워크 02 · 전송량·단위·Chunk 비용",
+      "pages": [
+        "network-02"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/network-02-lab/README.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/network-02-lab/original/CMakeLists.txt",
+          "path": "original/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/network-02-lab/original/main.cpp",
+          "path": "original/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/network-02-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/network-02-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/network-02-lab/provenance.json",
+          "path": "provenance.json"
+        },
+        {
+          "source": "knowledge/shared/network-02-lab/verification/results.json",
+          "path": "verification/results.json"
+        },
+        {
+          "source": "knowledge/shared/network-02-lab/verification/source-identity.json",
+          "path": "verification/source-identity.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/network-02.md"
+    },
+    {
+      "id": "network-03",
+      "title": "네트워크 03 · UDP 데이터그램·검증·순서번호 Wrap",
+      "pages": [
+        "network-03"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/network-03-lab/README.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/network-03-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/network-03-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/network-03-lab/provenance.json",
+          "path": "provenance.json"
+        },
+        {
+          "source": "knowledge/shared/network-03-lab/verification/results.json",
+          "path": "verification/results.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/network-03.md"
+    },
+    {
+      "id": "network-04",
+      "title": "네트워크 04 · IPv4 CIDR·최장 접두부 경로 선택",
+      "pages": [
+        "network-04"
+      ],
+      "files": [
+        {
+          "source": "knowledge/network-04/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/network-04/project/edge_cases.cpp",
+          "path": "project/edge_cases.cpp"
+        },
+        {
+          "source": "knowledge/network-04/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/examples/readmes/network-04.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/network-04.md"
+    },
+    {
+      "id": "network-05",
+      "title": "네트워크 05 · MTU·IPv4/IPv6 헤더 예산",
+      "pages": [
+        "network-05"
+      ],
+      "files": [
+        {
+          "source": "knowledge/network-05/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/network-05/project/edge_cases.cpp",
+          "path": "project/edge_cases.cpp"
+        },
+        {
+          "source": "knowledge/network-05/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/examples/readmes/network-05.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/network-05.md"
     }
   ]
 }

@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-24",
+  "sha256": {
+    "original/main.cpp": "4a58b38a9c0a59f28ef779901a9f469cccc018949ccbe81dea856dc9f12bd23a",
+    "project/main.cpp": "a018170619882726d67c51f7aa93c286de76df55346268d81d6759bfcc30104c",
+    "original/CMakeLists.txt": "41591b5da17c57b268ea6f4618089ba2fd7a019e568e51933b6ec849054521d3",
+    "project/CMakeLists.txt": "41591b5da17c57b268ea6f4618089ba2fd7a019e568e51933b6ec849054521d3"
+  },
+  "comment_rule": "remove only lines starting // [한국어 해설] then exact original bytes",
+  "comment_removal_pass": true,
+  "preprocessor_command": "g++ -std=c++20 -E -P <original/main.cpp or project/main.cpp>",
+  "preprocessor_byte_equal": true
+}

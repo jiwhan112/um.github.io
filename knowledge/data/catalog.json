@@ -1537,5 +1537,68 @@
       "False Sharing"
     ],
     "topic": "os"
+  },
+  {
+    "path": "network-01",
+    "title": "네트워크 01 · TCP 바이트 스트림과 길이 프레이밍",
+    "subtitle": "수신 조각이 아니라 프로토콜 길이로 메시지를 복원한다",
+    "date": "2026-10-24",
+    "category": "네트워크",
+    "tags": [
+      "TCP",
+      "프레이밍",
+      "바이트 스트림"
+    ]
+  },
+  {
+    "path": "network-02",
+    "title": "네트워크 02 · 전송량·단위·Chunk 비용",
+    "subtitle": "계산한 직렬화 시간과 측정한 네트워크 지연을 구별한다",
+    "date": "2026-10-24",
+    "category": "네트워크",
+    "tags": [
+      "단위",
+      "오버플로",
+      "전송량"
+    ]
+  },
+  {
+    "path": "network-03",
+    "title": "네트워크 03 · UDP 데이터그램·검증·순서번호 Wrap",
+    "subtitle": "길이 검증 뒤에만 최신 Snapshot의 상태를 바꾼다",
+    "date": "2026-10-24",
+    "category": "네트워크",
+    "tags": [
+      "UDP",
+      "순서번호",
+      "입력 검증"
+    ]
+  },
+  {
+    "title": "네트워크 04 · IPv4 CIDR·최장 접두부 경로 선택",
+    "category": "네트워크",
+    "tags": [
+      "IPv4",
+      "CIDR",
+      "LPM",
+      "입력 검증"
+    ],
+    "path": "network-04",
+    "date": "2026-10-17",
+    "subtitle": "비트 마스크에서 LPM까지: 파싱·정규화·포인터 수명과 실제 라우팅의 경계"
+  },
+  {
+    "title": "네트워크 05 · MTU·IPv4/IPv6 헤더 예산",
+    "category": "네트워크",
+    "tags": [
+      "MTU",
+      "IPv6",
+      "TCP",
+      "UDP",
+      "프레이밍"
+    ],
+    "path": "network-05",
+    "date": "2026-10-18",
+    "subtitle": "패킷·전송 페이로드·게임 데이터 길이를 구별하는 CPU 산술 실습"
   }
 ]

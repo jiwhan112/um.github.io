@@ -1,0 +1,387 @@
+{
+  "title": "네트워크 03 · UDP 데이터그램·검증·순서번호 Wrap",
+  "subtitle": "길이 검증 뒤에만 최신 Snapshot의 상태를 바꾼다",
+  "sections": [
+    {
+      "id": "start",
+      "title": "목표·선수 지식·모델 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "길이 검증 뒤에만 최신 Snapshot의 상태를 바꾼다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: C의 정수·배열·경계 검사와 C++의 vector·예외·값 수명. 네트워크 01부터 03 순서로 앱 데이터 단위를 비교한다. 모든 예제는 유한 입력 CPU 모델이며 실제 연결을 열지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 완결 코드가 미복원되어 새 독립 예제를 작성했다. 원문과 과거 시험 주장을 새 코드의 증거로 사용하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "데이터그램 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/network-03/assets/wire.svg",
+          "alt": "앱 Wire Format: UDP 헤더와 구별",
+          "caption": "앱 Wire Format: UDP 헤더와 구별 · 독립 설명 그림, 실제 패킷 캡처 아님."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "UDP는 데이터그램 단위 전달을 제공하지만 전달 성공·순서·중복 제거를 보장하지 않는다. 새 예제는 이미 받은 데이터그램 바이트 배열 하나만 검사한다. OS 수신 버퍼가 작을 때의 잘림 신호·실제 소켓 오류는 호출자가 처리해야 하며 다음 데이터그램을 TCP처럼 붙여 복원하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "파싱 전에 확인할 것",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/network-03/assets/wrap.svg",
+          "alt": "16비트 순서: 차이가 정확히 반바퀴면 모호",
+          "caption": "16비트 순서: 차이가 정확히 반바퀴면 모호 · 독립 설명 그림, 실제 패킷 캡처 아님."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "최소 5바이트인지 확인한 뒤에만 인덱스로 헤더를 읽는다. 선언 길이와 실제 전체 길이가 정확히 일치하고 type이 0..3이며 payload가 1200 이하여야 한다. 새 모델의 1200은 앱 상한이지 경로 MTU 보증이나 IP 단편화 방지 증명이 아니다. 0바이트 payload는 허용하지만 빈 전체 데이터그램은 헤더 부족으로 거부한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "순서번호와 반범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "delta를 16비트로 환산해 mod 65536 차이를 구한다. 차이 1..32767만 newer, 0은 same, 32768은 ambiguous, 나머지는 older다. 이것은 bounded sequence window의 정책이지 전체 원소에 대한 전역 정렬 순서가 아니다. 첫 유효 패킷은 어느 번호든 기준으로 채택하므로 새 세션 초기화·인증·리플레이 방어가 필요하다. RFC 1982는 DNS serial 산술의 근거이며 UDP에 기본 16비트 번호가 있다는 뜻은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n D[\"데이터그램 한 개\"] --> V{\"크기·type·선언길이 유효?\"}\n V -->|\"아니오\"| X[\"거부: last 유지\"]\n V -->|\"예\"| S{\"첫 패킷 또는 delta 1..32767?\"}\n S -->|\"예\"| A[\"채택: last 갱신\"]\n S -->|\"아니오\"| R[\"중복·old·반범위: 거부\"]"
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "상태 변화의 안전 지점",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Receiver는 decode가 완료된 뒤 seq를 비교하고 채택한 경우에만 last를 바꾼다. 잘못된 길이의 seq 11을 거부한 뒤 정상 seq 11은 여전히 채택된다. 이 예제는 최신 Snapshot 선택용이며 아이템 획득·재화 지급의 정확히 한 번 처리, ACK·재전송·혼잡 제어를 구현하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 다운로드 · 소스와 빌드 안내",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "전체 예제 ZIP",
+              "href": "/knowledge/examples/network-03.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "README · 준비 도구/명령/검증 경계",
+              "href": "/knowledge/examples/readmes/network-03.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP은 실행 소스와 코드 해시·검증 요약을 포함한다. 압축 해제 뒤 project/CMakeLists.txt를 기준으로 빌드한다. 실행 파일은 포함하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "실습 · 실행 전에 예측",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "12 34 00 02 02 00 FF를 필드별로 해석하고, 한 바이트 삭제/추가·type 4·길이 1201을 거부할지 예측한다. last 65535와 candidate 0, last 0과 candidate 32768을 비교한다. decode 실패 뒤 last가 유지되는 시험을 찾고 첫 패킷 정책의 보안 한계를 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build\nctest --test-dir build --output-on-failure -V"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답하고 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "UDP에 이 앱 seq16이 자동으로 들어 있나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 이 교재가 정한 앱 헤더다. UDP 자체 헤더와 분리한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "payload 길이 2인데 3바이트가 남으면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확한 길이 일치를 요구하므로 여분 바이트도 거부한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "65535 뒤 0은 항상 오래된 번호인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "반범위 전제하에서 delta 1이므로 newer다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "차이 32768을 어느 방향으로 정렬하나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "모호하므로 둘 다 거부한다. 한쪽을 임의로 newer라고 정하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "순서번호는 인증·Replay 방어인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 공격자가 새 번호를 만들거나 옛 세션 번호가 섞일 수 있다. 세션과 인증은 별도다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "142073 검사는 독립 요구사항 142073개인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 2048 왕복과 70000 순차 번호·중복 검사가 포함된 동적 호출 수다. 실제 UDP 전송 횟수도 아니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 코드·CMake",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "main.cpp 전체 파일",
+              "href": "/knowledge/shared/network-03-lab/project/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp · 전체 소스",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// 2026-10-24 신규 독립 모델: NET03 미복원 원본과 같은 프로그램이라고 주장하지 않는다.\n#include <cstdint>\n#include <iostream>\n#include <stdexcept>\n#include <vector>\nusing Bytes=std::vector<std::uint8_t>;\nstruct Packet{std::uint16_t seq;std::uint8_t type;Bytes payload;};\nconstexpr std::size_t cap=1200;\nvoid be16(Bytes& b,std::uint16_t v){b.push_back(static_cast<std::uint8_t>(v>>8));b.push_back(static_cast<std::uint8_t>(v));}\nstd::uint16_t read16(const Bytes& b,std::size_t p){return static_cast<std::uint16_t>((static_cast<unsigned>(b[p])<<8)|b[p+1]);}\nBytes encode(const Packet& p){\n    if(p.type>3 || p.payload.size()>cap)throw std::invalid_argument(\"packet contract\");\n    Bytes out;be16(out,p.seq);be16(out,static_cast<std::uint16_t>(p.payload.size()));out.push_back(p.type);\n    out.insert(out.end(),p.payload.begin(),p.payload.end());return out;\n}\nPacket decode(const Bytes& b){\n    // UDP 헤더가 아니라 앱 헤더5바이트다. OS의 잘림 여부는 호출자 책임이다.\n    if(b.size()<5 || b.size()>5+cap)throw std::invalid_argument(\"datagram size\");\n    const auto length=read16(b,2);\n    if(length>cap || b[4]>3 || b.size()!=5+static_cast<std::size_t>(length))throw std::invalid_argument(\"header mismatch\");\n    return Packet{read16(b,0),b[4],Bytes(b.begin()+5,b.end())};\n}\nenum class Order {same,newer,older,ambiguous};\nOrder order(std::uint16_t candidate,std::uint16_t last){\n    // unsigned16 변환으로 modulo 65536 차이를 얻는다. signed narrowing에 기대지 않는다.\n    auto delta=static_cast<std::uint16_t>(candidate-last);\n    if(delta==0)return Order::same;\n    if(delta==32768)return Order::ambiguous;\n    return delta<32768?Order::newer:Order::older;\n}\nclass Receiver {\n    bool initialized_=false;std::uint16_t last_=0;\npublic:\n    bool accept(const Bytes& bytes){\n        Packet p=decode(bytes); // 검증 실패 시 last_는 변경되지 않는다.\n        if(initialized_ && order(p.seq,last_)!=Order::newer)return false;\n        last_=p.seq;initialized_=true;return true;\n    }\n};\nint checks=0;\nvoid check(bool v){++checks;if(!v)throw std::runtime_error(\"check failed\");}\ntemplate<class F>bool rejects(F f){try{f();}catch(const std::invalid_argument&){return true;}return false;}\nint main(){\n    // 결정적 다양한 길이/이진 값의 codec 왕복. 네트워크를 전송하지 않는다.\n    for(unsigned i=0;i<2048;++i){\n        Packet p{static_cast<std::uint16_t>(i*37),static_cast<std::uint8_t>(i%4),Bytes(i%1201)};\n        for(std::size_t j=0;j<p.payload.size();++j)p.payload[j]=static_cast<std::uint8_t>(j+i);\n        auto q=decode(encode(p));check(q.seq==p.seq && q.type==p.type && q.payload==p.payload);\n    }\n    check(encode({0x1234,2,{0,255}})==Bytes({0x12,0x34,0,2,2,0,255}));\n    for(std::size_t n=0;n<5;++n)check(rejects([&]{decode(Bytes(n));}));\n    check(decode(encode({0,0,Bytes(1200,1)})).payload.size()==1200);\n    check(rejects([]{encode({0,0,Bytes(1201)});}));\n    check(rejects([]{encode({0,4,{}});}));\n    for(const Bytes& b:std::vector<Bytes>{{0,1,0,1,0},{0,1,0,0,0,9},{0,1,0,0,4},{0,1,4,177,0}})check(rejects([&]{decode(b);}));\n    check(order(0,65535)==Order::newer);check(order(65535,0)==Order::older);\n    check(order(1,1)==Order::same);check(order(32768,0)==Order::ambiguous);check(order(0,32768)==Order::ambiguous);\n    check(order(32767,0)==Order::newer);check(order(32769,0)==Order::older);\n    // 70000개 순차 번호는 한 번 이상 wrap한다. 같은 패킷 재전달은 거부한다.\n    Receiver r;\n    for(unsigned i=0;i<70000;++i){auto b=encode({static_cast<std::uint16_t>(i),0,{}});check(r.accept(b));check(!r.accept(b));}\n    Receiver fresh;check(fresh.accept(encode({10,0,{}})));\n    check(rejects([&]{fresh.accept({0,11,0,1,0});}));check(fresh.accept(encode({11,0,{}})));\n    check(!fresh.accept(encode({10,0,{}})));check(!fresh.accept(encode({static_cast<std::uint16_t>(11+32768),0,{}})));\n    std::cout<<\"PASS \"<<checks<<\" datagram CPU checks; 2048 roundtrips; 70000 sequence steps\\n\";\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CMakeLists.txt 전체 파일",
+              "href": "/knowledge/shared/network-03-lab/project/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt · 전체 소스",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(network_03_cpu LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(network_03_cpu main.cpp)\nif(CMAKE_CXX_COMPILER_ID MATCHES \"GNU|Clang\")\n  target_compile_options(network_03_cpu PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror)\nendif()\nenable_testing()\nadd_test(NAME network_03_cpu COMMAND network_03_cpu)\nset_tests_properties(network_03_cpu PROPERTIES TIMEOUT 15)\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·현재 검증",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-24 Cloud Linux GCC 14.2 C++20에서 CMake configure/build 및 CTest 1/1을 각 단원 실행했다. 출력: 142073 검사(2048 왕복·70000 순차 번호 포함). 조건 호출 수는 독립 요구사항 수가 아니다. 실제 소켓·Windows·TLS·패킷 캡처·RTT·sanitizer는 이번 검증에서 실행하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "정확한소스해시·명령·종료코드",
+              "href": "/knowledge/shared/network-03-lab/verification/results.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "RFC768 · UDP기본계약",
+              "href": "https://www.rfc-editor.org/rfc/rfc768.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "RFC1982 · serial반범위산술(DNS문맥)",
+              "href": "https://www.rfc-editor.org/rfc/rfc1982.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 자료는 프로토콜의 기본 계약 대조용이다. 이 예제의 상한·wire format·오류 정책·그림·문제는 학습용 설계이며 RFC의 완성 구현을 재현한 것이 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "코드 변경·복원 상태",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 완결 소스 미복원. 2026-10-24에 새로 작성한 독립 CPU 모델이며 과거 원본 복원본이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "코드 상태·해시 요약",
+              "href": "/knowledge/shared/network-03-lab/provenance.json"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

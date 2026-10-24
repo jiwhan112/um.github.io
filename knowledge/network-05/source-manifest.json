@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-24",
+  "scope": "Integrity of the public original and derivative code files.",
+  "original_integrity": "The restored two original code files retain their recorded SHA-256 values. This is byte-preservation evidence, not proof of historical execution.",
+  "annotation_rule": "Remove complete lines beginning // KO: from project/main.cpp to recover original/main.cpp exactly. project/edge_cases.cpp and project/CMakeLists.txt are explicit new derivative additions.",
+  "files": [
+    {
+      "path": "original/CMakeLists.txt",
+      "bytes": 500,
+      "sha256": "1c00aab3e5c040aafb169505a0eff1850366e26e71540ce97fff4f060780f771"
+    },
+    {
+      "path": "original/main.cpp",
+      "bytes": 5063,
+      "sha256": "7faa2e5a63cfe713ab031d3bf3034d717ab86df0ad48fe6d41f7679dc63a9987"
+    },
+    {
+      "path": "project/CMakeLists.txt",
+      "bytes": 1060,
+      "sha256": "a0d19bf16da5f2ffab8265dd799fb4cd2976c236b19715ac70b369c678847761"
+    },
+    {
+      "path": "project/edge_cases.cpp",
+      "bytes": 1572,
+      "sha256": "9e2685eb17eacbb42e01899092b99e31887c0945b32ee147a6c27fa21140771c"
+    },
+    {
+      "path": "project/main.cpp",
+      "bytes": 6085,
+      "sha256": "06e836c5f5081ac59248b159139f16595c91e91df409c6710273a369ef247b69"
+    }
+  ]
+}
