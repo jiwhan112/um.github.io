@@ -1,0 +1,570 @@
+{
+  "title": "운영체제 01 · 프로세스·스레드와 닫을 수 있는 작업 큐",
+  "subtitle": "공유 상태, 조건 재검사, 종료 순서를 실제 표준 스레드 CPU 실습으로 연결",
+  "sections": [
+    {
+      "id": "start",
+      "title": "스레드를 늘리기 전에 무엇을 공유하는지 찾기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목표: 프로세스의 주소 공간과 스레드의 실행 상태를 구분하고, 유한 큐의 Push·Pop·Close가 어떤 조건에서 기다리고 끝나는지 설명합니다. C++ 함수·클래스·RAII·컨테이너를 먼저 익히세요. 이 실습은 실제 std::thread를 사용하지만 프로세스 생성, OS 스케줄러 구현 또는 성능 측정은 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/os-01/assets/process-thread.svg",
+          "alt": "프로세스는 주소 공간을, 스레드는 실행 상태를 구분한다",
+          "caption": "프로세스는 주소 공간을, 스레드는 실행 상태를 구분한다"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "같은 프로세스의 스레드는 큐 같은 객체를 공유할 수 있습니다. 각각의 스택과 레지스터 상태는 따로 유지합니다. 동시성은 여러 작업이 진행 중인 구조이고 병렬성은 실제로 동시에 실행되는 상황입니다. 스레드 개수와 CPU 코어 개수는 같을 필요가 없고, 작은 작업에서는 동기화 비용이 이익보다 클 수 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shared-state",
+      "title": "mutex가 보호하는 것은 함수 이름이 아니라 불변식",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "여기서는 closed_, items_, limit_의 관계가 계약입니다. 큐 크기는 용량을 넘지 않고, 닫힌 뒤 새 항목을 받지 않습니다. items_와 closed_의 읽기·쓰기는 같은 mutex 아래 수행합니다. 서로 충돌하는 비원자 접근에 필요한 happens-before가 없으면 C++ 데이터 경합이 됩니다. 두 함수를 각각 안전하게 만들었다고 Size() 확인 뒤 Push()까지 하나의 원자 동작이 되는 것은 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "관찰"
+                  }
+                ],
+                [
+                  {
+                    "text": "이 코드의 의미"
+                  }
+                ],
+                [
+                  {
+                    "text": "오해하지 말 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Size()"
+                  }
+                ],
+                [
+                  {
+                    "text": "잠금을 잡은 순간의 크기"
+                  }
+                ],
+                [
+                  {
+                    "text": "반환 직후에도 같은 크기 보장 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Close()"
+                  }
+                ],
+                [
+                  {
+                    "text": "닫힘 상태 기록과 대기자 통지"
+                  }
+                ],
+                [
+                  {
+                    "text": "큐 객체 파괴나 작업 강제 중단 아님"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "join()"
+                  }
+                ],
+                [
+                  {
+                    "text": "그 스레드 완료를 기다림"
+                  }
+                ],
+                [
+                  {
+                    "text": "잘못된 공유 접근을 자동 고치지 않음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "std::atomic으로 소비 개수와 합을 각각 누적해도 두 값의 중간 스냅샷 전체가 트랜잭션이 되는 것은 아닙니다. 이 테스트는 모든 소비자를 join한 뒤 최종 값만 확인하므로 종료 시점의 합을 비교할 수 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wait-contract",
+      "title": "통지를 기다리지 말고 상태가 참이 되기를 기다리기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"mutex 취득\"] --> B{\"닫힘 또는 원하는 상태인가?\"}\n B -->|아니오| C[\"wait: 잠금 해제와 대기\"]\n C --> D[\"깨어나 잠금 재획득\"]\n D --> B\n B -->|예| E[\"닫힘·큐 상태에 따라 작업 또는 종료\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Push는 closed_ || size < limit, Pop은 closed_ || !empty를 검사합니다. wait(lock, predicate)는 조건이 거짓일 때 잠금을 풀고 대기하며, 깨어난 뒤 잠금을 다시 잡고 조건을 재검사합니다. 통지 뒤 다른 소비자가 먼저 항목을 가져갈 수도 있고 이유 없이 깨어날 수도 있으므로 통지 하나를 작업 하나로 해석하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "생산자는 잠금 안에서 삽입하고 잠금을 푼 다음 notEmpty를 통지합니다. 공유 상태 변경과 조건 검사는 같은 mutex로 연결됩니다. 통지가 먼저 일어나도 조건이 이미 참이라면 다음 대기자는 잠들 필요가 없습니다. 이 구조를 통지만 저장하는 이벤트 큐로 바꾸어 설명하면 안 됩니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lifetime",
+      "title": "닫힘과 파괴 사이에 Drain과 join이 있다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/os-01/assets/queue-close.svg",
+          "alt": "Close는 삭제가 아니라 입력 차단과 남은 작업 배출이다",
+          "caption": "Close는 삭제가 아니라 입력 차단과 남은 작업 배출이다"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예를 들어 용량 2인 큐에 7과 −9를 넣으면 세 번째 Push는 공간을 기다립니다. Pop으로 7을 꺼내면 자리가 생깁니다. Close 뒤에는 Push가 false이고, 남아 있는 −9는 Pop할 수 있습니다. 닫힌 빈 큐에서 Pop은 기다리지 않고 false입니다. Close는 여러 번 호출해도 닫힌 상태를 유지합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정상 종료는 생산자 join → Close → 소비자 Drain 및 join → 큐 파괴 순서입니다. 모든 종료 정책이 생산자 완료를 기다려야 하는 것은 아니지만, 중단 정책을 쓸 때도 닫힘 뒤 거부된 작업의 책임과 스레드 수명을 따로 정해야 합니다. 실행 중인 스레드가 참조하는 큐를 먼저 파괴하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "experiment",
+      "title": "200개와 합 20100이 말해 주는 것",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "코드는 생산자 2개가 1..100, 101..200을 넣고 소비자 3개가 꺼냅니다. 최종 개수는 200, 합은 200×201/2=20100입니다. 처리 순서는 OS에 따라 달라질 수 있으므로 이 실습은 출력 순서나 스케줄링 시간을 성공 조건으로 삼지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "28개 명시 조건은 이 프로그램의 관찰치입니다. 개수와 합만으로 모든 메시지 ID의 유일성을 증명하지 못합니다. “blocked producer”라는 테스트 이름도 Close 이전에 실제 wait에 진입했다는 계측은 아닙니다. 메인 스레드가 먼저 Close할 수 있습니다. 이 경계를 숨기지 않고 종료 결과를 확인한 실험으로 읽습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예외 안전한 범용 스레드 풀은 아닙니다. 작업 스레드 안에서 처리하지 않은 예외는 std::terminate로 이어질 수 있고, 스레드 생성 실패 중간 정리도 별도 설계가 필요합니다. 원문의 Check와 생산자 join 줄에는 한 줄에 여러 문장이 있어 GCC misleading-indentation 경고가 발생합니다. 원문과 동일 주석본을 보존하며 무경고 빌드라고 주장하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "예측하고 확인하는 복습",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "Q1. Size()==0을 확인했다면 다음 Pop은 반드시 기다리나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 그 사이 생산자가 항목을 넣거나 Close할 수 있습니다. Size는 한 시점의 관찰이고 Pop은 자기 잠금 아래 조건을 다시 검사합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q2. notify_one을 받으면 Pop해도 되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "바로 꺼내지 않습니다. 잠금을 다시 잡고 closed_ || !empty를 확인한 다음, 실제 항목이 있을 때만 꺼냅니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q3. [7, −9]가 든 큐를 Close하면 항목은 사라지나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "사라지지 않습니다. 이후 Push는 거부하지만 Pop은 7, −9를 배출하고 닫힌 빈 상태가 된 다음 false를 반환합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q4. 소비자 join보다 큐 파괴를 먼저 해도 되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 됩니다. 아직 큐·mutex·조건 변수를 쓰는 스레드가 없어야 합니다. Close는 객체 수명 종료가 아니라 정상 종료를 가능하게 하는 상태 변화입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q5. 200개와 합 20100이면 모든 ID가 한 번씩 처리된 증명인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 서로 다른 중복·누락 조합도 같은 개수와 합을 만들 수 있습니다. ID별 방문 횟수 검사와는 다른 관찰입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q6. CTest 통과는 데이터 경합과 교착이 절대 없다는 뜻인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 제한된 실행의 결과이며 TSAN, 모든 스케줄, 공정성, 최악 지연 시간을 증명하지 않습니다. 이번 빌드는 ASan/UBSan도 실행하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "완전한 한국어 주석 코드와 빌드",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "조각을 이어 붙이지 말고 아래 전체 파일 또는 ZIP을 사용하세요. main.cpp는 캡처 조립본에 한국어 줄끝 주석만 덧붙였습니다. CMakeLists.txt는 이번 독립 실습용으로 작성했으며 원문 CMake와 구분합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "main.cpp · 한국어 전체 파일",
+              "href": "/knowledge/shared/os-01-lab/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "전체 코드 · main.cpp",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <atomic>\n#include <condition_variable>\n#include <cstddef>\n#include <iostream>\n#include <mutex>\n#include <queue>\n#include <stdexcept>\n#include <thread>\n#include <vector>\n\nclass BoundedQueue { // [한국어 해설] 정수 작업을 담는 유한 큐다. 상태와 두 대기 조건은 같은 mutex로 보호한다.\n public:\n  explicit BoundedQueue(std::size_t limit) : limit_(limit), closed_(false) { // [한국어 해설] 용량 0은 영원히 넣을 수 없는 큐이므로 생성 시 거부한다.\n    if (limit == 0) throw std::invalid_argument(\"queue capacity\");\n  }\n  bool Push(int x) { // [한국어 해설] 가득 차면 대기한다. 깨어나도 종료 또는 빈자리 조건을 락 아래 다시 검사한다.\n    std::unique_lock<std::mutex> lock(mutex_);\n    notFull_.wait(lock, [this]{ return closed_ || items_.size() < limit_; });\n    if (closed_) return false; // [한국어 해설] Close 이후 새 작업을 받지 않는다. 이 분기는 기존 대기자에도 적용된다.\n    items_.push(x); // [한국어 해설] 공유 상태 변경이 먼저다. 삽입 실패 예외는 호출자에게 전달되며 unique_lock이 잠금을 해제한다.\n    lock.unlock();\n    notEmpty_.notify_one();\n    return true;\n  }\n  bool Pop(int& out) { // [한국어 해설] 닫혔어도 남은 작업은 배출한다. 닫힘과 비어 있음이 함께 성립해야 false다.\n    std::unique_lock<std::mutex> lock(mutex_);\n    notEmpty_.wait(lock, [this]{ return closed_ || !items_.empty(); });\n    if (items_.empty()) return false; // [한국어 해설] wait의 조건과 합치면 닫힌 빈 큐임을 알 수 있다.\n    out = items_.front(); items_.pop();\n    lock.unlock();\n    notFull_.notify_one();\n    return true;\n  }\n  void Close() { // [한국어 해설] 상태 변경은 잠금 안에서, 두 종류 대기자의 깨움은 잠금 밖에서 수행한다.\n    { std::lock_guard<std::mutex> lock(mutex_); closed_ = true; }\n    notEmpty_.notify_all(); notFull_.notify_all();\n  }\n  std::size_t Size() const { // [한국어 해설] 이 순간의 크기일 뿐 다음 Push/Pop 성공을 예약하지 않는다.\n    std::lock_guard<std::mutex> lock(mutex_); return items_.size();\n  }\n  bool Closed() const { // [한국어 해설] 읽기도 같은 mutex로 보호한다. 호출 결과와 이후 연산은 별도 시점이다.\n    std::lock_guard<std::mutex> lock(mutex_); return closed_;\n  }\n private:\n  const std::size_t limit_;\n  bool closed_;\n  std::queue<int> items_;\n  mutable std::mutex mutex_;\n  std::condition_variable notEmpty_, notFull_;\n};\nstatic void Check(bool value, const char* name, int& count) { // [한국어 해설] 통과한 명시 조건을 센다. 컴파일러별 반복 실행을 독립 조건으로 더하지 않는다.\n  if (!value) throw std::runtime_error(name); ++count;\n}\nint main() {\n  int n = 0;\n  bool threw = false;\n  try { BoundedQueue invalid(0); } catch (const std::invalid_argument&) { threw = true; }\n  Check(threw, \"zero capacity rejected\", n);\n  BoundedQueue q(2);\n  Check(q.Size()==0, \"initial empty\", n);\n  Check(!q.Closed(), \"initial open\", n);\n  Check(q.Push(7), \"push first\", n);\n  Check(q.Push(-9), \"push second\", n);\n  Check(q.Size()==2, \"at capacity\", n);\n  int a=0;\n  Check(q.Pop(a), \"pop first\", n);\n  Check(a==7, \"FIFO\", n);\n  Check(q.Size()==1, \"size decremented\", n);\n  Check(q.Pop(a), \"pop second\", n);\n  Check(a==-9, \"negative preserved\", n);\n  Check(q.Size()==0, \"empty after pop\", n);\n  Check(q.Push(44), \"push before close\", n);\n  q.Close();\n  Check(q.Closed(), \"closed state\", n);\n  Check(!q.Push(3), \"push rejected after close\", n);\n  Check(q.Pop(a), \"drain after close\", n);\n  Check(a==44, \"drain value\", n);\n  Check(!q.Pop(a), \"drained queue returns false\", n);\n  q.Close();\n  Check(q.Closed(), \"close idempotent\", n);\n  BoundedQueue blocked(1); // [한국어 해설] 아래 테스트는 Close와 작업 스레드의 실행 순서를 고정하지 않는다. 실제 wait 진입 여부까지 증명하지 않는다.\n  blocked.Push(55);\n  std::atomic<bool> producerReturned(false), producerResult(true);\n  std::thread producer([&]{ producerResult.store(blocked.Push(66)); producerReturned.store(true); });\n  blocked.Close(); producer.join();\n  Check(producerReturned.load(), \"blocked producer woke\", n);\n  Check(!producerResult.load(), \"blocked producer declined closed queue\", n);\n  Check(blocked.Pop(a) && a==55, \"preclose element drain\", n);\n  Check(!blocked.Pop(a), \"closed empty no wait\", n);\n  BoundedQueue empty(1);\n  std::atomic<bool> popResult(true);\n  std::thread consumer([&]{int x=0; popResult.store(empty.Pop(x));});\n  empty.Close(); consumer.join();\n  Check(!popResult.load(), \"waiting consumer wakes on close\", n);\n  BoundedQueue multi(5); // [한국어 해설] 두 생산자가 1~200을 넣고 세 소비자가 배출한다. 개별 처리 순서는 비결정적이다.\n  std::atomic<int> consumedCount(0); std::atomic<long long> sum(0);\n  std::vector<std::thread> readers;\n  for (int i=0;i<3;++i) readers.emplace_back([&]{int value=0; while(multi.Pop(value)){sum.fetch_add(value); consumedCount.fetch_add(1);}});\n  std::vector<std::thread> writers;\n  for (int p=0;p<2;++p) writers.emplace_back([&,p]{for(int i=0;i<100;++i) if(!multi.Push(p*100+i+1)) throw std::runtime_error(\"premature close\");});\n  for(auto& th:writers) th.join(); multi.Close(); // [한국어 해설] 생산자 완료 후 닫고 소비자를 join한다. 큐가 스레드보다 먼저 파괴되면 안 된다.\n  for(auto& th:readers) th.join();\n  Check(consumedCount.load()==200, \"no lost messages\", n);\n  Check(sum.load()==20100, \"sum exact\", n); // [한국어 해설] 개수와 합은 이 실행의 관찰치다. 모든 가능한 스케줄이나 모든 메시지 고유성을 증명하지 않는다.\n  Check(multi.Size()==0, \"all drained\", n);\n  Check(multi.Closed(), \"multithread close persisted\", n);\n  std::cout<<\"PASS \"<<n<<\" OS queue CPU concurrency contract checks\\n\";\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CMakeLists.txt · 독립 프로젝트",
+              "href": "/knowledge/shared/os-01-lab/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "전체 빌드 · CMakeLists.txt",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "# 2026-10-24 독립 다운로드 빌드. 원문 CMake는 original/에 보존합니다.\ncmake_minimum_required(VERSION 3.16)\nproject(os_01_learning LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20 CACHE STRING \"C++ standard: 11 or 20\")\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nfind_package(Threads REQUIRED)\nenable_testing()\nadd_executable(os_01_korean main.cpp)\nadd_executable(os_01_captured original/main.cpp)\nforeach(target os_01_korean os_01_captured)\n  target_link_libraries(${target} PRIVATE Threads::Threads)\n  if(MSVC)\n    target_compile_options(${target} PRIVATE /W4 /utf-8)\n  else()\n    target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)\n  endif()\n  add_test(NAME ${target} COMMAND ${target})\n  set_tests_properties(${target} PROPERTIES TIMEOUT 30)\nendforeach()\n"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build --parallel 2\nctest --test-dir build --output-on-failure -V"
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "프로젝트 전체 내려받기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "전체 예제 ZIP",
+              "href": "/knowledge/examples/os-01.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "압축 해제·빌드·실행 README",
+              "href": "/knowledge/examples/readmes/os-01.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP의 project/에서 위 명령을 실행합니다. 한국어 주석본과 원본 코드은 같은 조건을 반복하므로 독립 검증 수를 두 배로 합산하지 않습니다. 각 CTest 실행은 30초 제한입니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "현재 실행과 과거 기록을 나누기",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-24 Cloud Linux GCC14.2/CMake3.31.6에서 별도 폴더에 필요한 파일만 복사하여 C++20 및 C++11 Debug configure/build/CTest를 실행했습니다. 각 구성은 한국어 주석본과 원본 코드 2개 실행 파일입니다. 줄끝 주석을 역제거한 바이트와 GCC -E -P 전처리 출력의 동일성도 확인했습니다. 결과는 아래 경로 비식별화 파생 로그와 validation.json을 기준으로 읽습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows/MSVC, ThreadSanitizer, 이번 ASan/UBSan, 실제 MMU/TLB·커널 스케줄링 지연 측정 및 GPU는 실행하지 않았습니다. 웹 페이지 렌더링과 배포 성공 여부 역시 이 CPU 검사와 별도입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "현재 검증 JSON",
+              "href": "/knowledge/shared/os-01-lab/verification/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "C++20 빌드 로그 · 경로 비식별화",
+              "href": "/knowledge/shared/os-01-lab/verification/cpp20-build.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "C++20 CTest 로그 · 경로 비식별화",
+              "href": "/knowledge/shared/os-01-lab/verification/cpp20-ctest.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "C++11 CTest 로그 · 경로 비식별화",
+              "href": "/knowledge/shared/os-01-lab/verification/cpp11-ctest.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "파일 SHA·주석 복원 기록",
+              "href": "/knowledge/shared/os-01-lab/provenance.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "official-sources",
+      "title": "공식 계약과 참고 범위",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 그림·수치 추적·설명은 원문을 읽고 독립적으로 작성한 학습 자료입니다. 아래 문서는 API/메모리 계약의 근거이며 해당 플랫폼에서 실행했다는 증거가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "C++ 작업 초안 · condition_variable 대기 계약",
+              "href": "https://eel.is/c++draft/thread.condition.condvar"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Microsoft · Processes and Threads",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문 보존·조립 한계·개편 이력",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "OS01A의 전체 코드 4055바이트 SHA-256이 원문에 적힌 96cf0966e8eed1d87fbfd90fb71d82953897d1de8367603a3c9b1b62bc8fba10과 일치합니다. 01B/C의 과거 공용빌드 로그와 01D 단독 CMake를 비공개 작업 기록에 보존했습니다. 새 CMake는 한국어 주석본과 원본 코드을 독립 실행하며 두 실행을 56개 독립 조건으로 집계하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-24 개편: 운영체제 원본은 읽기 전용으로 유지하고 네 탭, 그림, Mermaid, 전체 한국어 주석 코드, 접힌 복습 및 다운로드 안내를 추가했습니다. 과거 실행 기록과 현재 검증 결과는 구분합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "보존한 코드 조각의 조립본",
+              "href": "/knowledge/shared/os-01-lab/original/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "원문 CMake 보존본",
+              "href": "/knowledge/shared/os-01-lab/original/CMakeLists.txt"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

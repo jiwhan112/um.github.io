@@ -26,7 +26,8 @@ const routes=JSON.parse(readFileSync('public/data/atlas/routes.json','utf8')) as
 const knowledgeDocs=catalog.documents.filter(doc=>doc.kind==='knowledge');
 const windowsCategories=['WinAPI','게임 수학','DirectX 9','DirectX 11'];
 const windowsCount=knowledgeDocs.filter(doc=>windowsCategories.includes(doc.category)).length;
-const treeCount=knowledgeDocs.filter(doc=>[...windowsCategories,'C 언어','C++ 기초·심화','Effective C++'].includes(doc.category)).length;
+const initialTreeCount=knowledgeDocs.filter(doc=>[...windowsCategories,'C 언어','C++ 기초·심화','Effective C++'].includes(doc.category)).length;
+const treeCount=initialTreeCount+knowledgeDocs.filter(doc=>['컴퓨터 구조','운영체제','네트워크'].includes(doc.category)).length;
 const cCount=knowledgeDocs.filter(doc=>doc.category==='C 언어').length;
 for(const route of routes){test('direct route '+route,async({page,isMobile,request})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
@@ -122,7 +123,7 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await expect(page.getByRole('heading',{name:'프로그래밍 지식 라이브러리'})).toBeVisible();
  await expect(page.locator('.knowledge-map-sidebar nav a')).toHaveCount(7);
  const tree=page.locator('.knowledge-tree');
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(treeCount);
+ await expect(tree.locator('.knowledge-document-link')).toHaveCount(initialTreeCount);
  const cppTopics=page.locator('#knowledge-cpp .knowledge-topic-row strong');
  await expect(cppTopics).toHaveText(['C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++']);
  const windowsTopics=page.locator('#knowledge-windows .knowledge-topic-row strong');

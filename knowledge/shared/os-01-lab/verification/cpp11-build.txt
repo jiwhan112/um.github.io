@@ -1,0 +1,35 @@
+# Path-redacted derivative of the recorded CPU log. Internal absolute roots are replaced by <source>/<build>; diagnostics, program output and test results are otherwise preserved.
+[ 25%] Building CXX object CMakeFiles/os_01_korean.dir/main.cpp.o
+[ 50%] Building CXX object CMakeFiles/os_01_captured.dir/original/main.cpp.o
+<source>/main.cpp: In function ‘void Check(bool, const char*, int&)’:
+<source>/main.cpp:52:3: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   52 |   if (!value) throw std::runtime_error(name); ++count;
+      |   ^~
+<source>/main.cpp:52:47: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   52 |   if (!value) throw std::runtime_error(name); ++count;
+      |                                               ^~
+<source>/main.cpp: In function ‘int main()’:
+<source>/main.cpp:101:3: warning: this ‘for’ clause does not guard... [-Wmisleading-indentation]
+  101 |   for(auto& th:writers) th.join(); multi.Close(); // [한국어 해설] 생산자 완료 후 닫고 소비자를 join한다. 큐가 스레드보다 먼저 파괴되면 안 된다.
+      |   ^~~
+<source>/main.cpp:101:36: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘for’
+  101 |   for(auto& th:writers) th.join(); multi.Close(); // [한국어 해설] 생산자 완료 후 닫고 소비자를 join한다. 큐가 스레드보다 먼저 파괴되면 안 된다.
+      |                                    ^~~~~
+<source>/original/main.cpp: In function ‘void Check(bool, const char*, int&)’:
+<source>/original/main.cpp:52:3: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   52 |   if (!value) throw std::runtime_error(name); ++count;
+      |   ^~
+<source>/original/main.cpp:52:47: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   52 |   if (!value) throw std::runtime_error(name); ++count;
+      |                                               ^~
+<source>/original/main.cpp: In function ‘int main()’:
+<source>/original/main.cpp:101:3: warning: this ‘for’ clause does not guard... [-Wmisleading-indentation]
+  101 |   for(auto& th:writers) th.join(); multi.Close();
+      |   ^~~
+<source>/original/main.cpp:101:36: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘for’
+  101 |   for(auto& th:writers) th.join(); multi.Close();
+      |                                    ^~~~~
+[ 75%] Linking CXX executable os_01_korean
+[100%] Linking CXX executable os_01_captured
+[100%] Built target os_01_korean
+[100%] Built target os_01_captured

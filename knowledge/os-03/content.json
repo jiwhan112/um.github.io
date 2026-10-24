@@ -1,0 +1,610 @@
+{
+  "title": "운영체제 03 · 잠금 순서·교착 위험과 RAII",
+  "subtitle": "순서 그래프의 순환 거부와 두 mutex 취득을 서로 다른 실험으로 구분",
+  "sections": [
+    {
+      "id": "start",
+      "title": "순환 위험을 찾는 모델과 실제 전송을 구분하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목표: “A를 가진 채 B를 요청한다”는 순서 제약을 그래프로 표현하고, 순환을 거부하는 정책과 std::lock의 교착 회피 취득을 구분합니다. OS01의 mutex·join과 C++ RAII를 먼저 읽으세요. 이 단원은 실제 교착을 일부러 만들거나 무한 대기를 성능 실험으로 사용하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/os-03/assets/lock-cycle.svg",
+          "alt": "C → A를 넣기 전에 A → C 경로가 있는지 본다",
+          "caption": "C → A를 넣기 전에 A → C 경로가 있는지 본다"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "간선 A→B는 A를 보유한 상태에서 B를 얻으려는 가능한 취득 순서입니다. A→B, B→C가 있으면 C→A를 추가하기 전에 A에서 C로 가는 경로를 찾아야 합니다. 경로가 있으므로 새 간선을 거부합니다. 이 그래프는 모든 스레드의 현재 보유·대기 상태를 기록하는 실시간 wait-for graph가 아닙니다. 사이클이 있다는 사실만으로 실제 교착이 발생했다고 단정하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "graph",
+      "title": "검사하고 나서 변경하는 allow 계약",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"held와 next 범위 검사\"] --> B{\"같은 잠금인가?\"}\n B -->|예| C[\"false: 자기 취득 거부\"]\n B -->|아니오| D{\"이미 있는 간선인가?\"}\n D -->|예| E[\"true: 변화 없음\"]\n D -->|아니오| F{\"next에서 held로 경로 존재?\"}\n F -->|예| G[\"false: 그래프 그대로\"]\n F -->|아니오| H[\"held → next 삽입 후 true\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "LockOrderGraph::allow는 잘못된 ID에 예외를 던지고 자기 간선을 거부합니다. 기존 간선의 재등록은 true인 멱등 동작입니다. 새 간선이 순환을 만들 때는 저장 전에 false를 반환하므로 거부한 간선이 남지 않습니다. reachable(x,x)는 길이 0 경로 때문에 true이고, 이는 별도로 자기 잠금을 거부하는 정책과 일치합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전역 순서를 정해 모든 코드가 그 순서로만 잠근다면 해당 잠금 집합의 순환 대기를 예방할 수 있습니다. 하지만 이 그래프 클래스는 실제 mutex 호출에 자동 연결되지 않으며 동시 변경용으로 보호되지도 않습니다. 규약을 우회한 코드, 다른 종류의 동기화 또는 잘못된 객체 수명까지 해결하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "raii",
+      "title": "defer_lock, std::lock, 소멸자를 한 묶음으로 읽기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/os-03/assets/raii-transfer.svg",
+          "alt": "두 잠금의 수명과 잔액 변경의 경계를 맞춘다",
+          "caption": "두 잠금의 수명과 잔액 변경의 경계를 맞춘다"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "transfer는 같은 계정 또는 0 이하 금액을 먼저 거부합니다. 각 unique_lock을 defer_lock으로 만들 때는 잠그지 않고, std::lock에 두 객체를 넘겨 함께 필요한 잠금을 교착 회피 방식으로 취득합니다. 두 잠금을 가진 동안 잔액을 검사하고 이동합니다. 함수를 나가면 unique_lock 소멸자가 잠금을 해제합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "RAII는 자원 해제 책임이지 모든 상태 변경의 자동 롤백이 아닙니다. 두 필드 갱신 사이에 실패 가능한 연산을 추가한다면 그 연산의 예외 안전성은 별도로 설계해야 합니다. 이 코드의 정수 전송은 테스트의 초기 총액 40000 안에서 수행됩니다. 임의의 거대한 외부 잔액/금액에 대한 credit overflow 방어를 갖춘 금융 API가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "std::lock은 그 다중 취득 알고리즘에서 교착을 피하도록 계약되어 있지만 공정성, 기아 없음, 최악 지연 시간까지 보장하지 않습니다. 이 함수를 이미 다른 관련 잠금을 가진 채 호출하는 복잡한 엔진에서 전체 교착이 없다는 보증으로 확대하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evidence-counts",
+      "title": "153618은 독립 요구사항 수가 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "수치"
+                  }
+                ],
+                [
+                  {
+                    "text": "어디에서 생기는가"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "3072"
+                  }
+                ],
+                [
+                  {
+                    "text": "12개 고정 시드 × 256회"
+                  }
+                ],
+                [
+                  {
+                    "text": "간선 삽입 결정 시도"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "153600"
+                  }
+                ],
+                [
+                  {
+                    "text": "3072 × (결정 비교 1 + 7×7 간선 비교)"
+                  }
+                ],
+                [
+                  {
+                    "text": "반복 expect 호출"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "153618"
+                  }
+                ],
+                [
+                  {
+                    "text": "153600 + 고정 경계/전송 조건 18"
+                  }
+                ],
+                [
+                  {
+                    "text": "전체 expect 호출 수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "12000"
+                  }
+                ],
+                [
+                  {
+                    "text": "4스레드 × 1500반복 × 왕복 2"
+                  }
+                ],
+                [
+                  {
+                    "text": "transfer 호출 수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "40000"
+                  }
+                ],
+                [
+                  {
+                    "text": "초기 4계정 × 10000"
+                  }
+                ],
+                [
+                  {
+                    "text": "join 후 보존할 총액"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "그래프 결정은 반복 탐색 구현과 별도로 작성된 Floyd–Warshall 전이 폐쇄 오라클을 대조합니다. 고정 시드는 입력을 재현하지만 실제 스레드 스케줄까지 고정하지 않습니다. 4개 스레드의 전송은 끝난 뒤 계정별 비음수와 총액을 검사합니다. 그래프 실험과 전송 실험은 같은 main 안에 있어도 별개 경로이며 그래프가 transfer를 감시하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "join 뒤에 읽으므로 잔액 검사와 작업 스레드의 쓰기가 겹치지 않습니다. 작업 스레드에서 예상 밖 예외가 빠져나가거나 스레드 생성이 중간 실패하는 상황의 완전한 정리 정책은 이 실습에 없습니다. ThreadSanitizer, 엔진 통합, 모든 스케줄 및 공정성 검증도 수행하지 않았습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exercise-trace",
+      "title": "종이에 먼저 allow 결과를 예측하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "빈 3노드 그래프에 allow(0,1), allow(1,2), allow(2,0), allow(0,1)을 차례로 적용해 보세요. 결과는 true, true, false, true입니다. 세 번째 호출 후에도 2→0 간선은 없어야 합니다. 중복 간선의 true는 새로운 정보가 저장됐다는 뜻이 아니라 이미 허용된 제약이라는 뜻입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 전송에서는 두 계정이 같으면 std::lock에 같은 비재귀 mutex를 두 번 전달하지 않도록 먼저 거부합니다. 금액이 잔액보다 크면 예외 대신 아무 변화 없이 끝납니다. 호출 성공/실패를 반환하지 않는 현재 인터페이스의 한계도 함께 읽습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "예측하고 확인하는 복습",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "Q1. A→B, B→C 뒤 C→A를 왜 거부하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기존 A→C 경로에 새 C→A를 붙이면 순환이 됩니다. allow는 도달 가능성을 먼저 검사하고 거부한 간선을 저장하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q2. 그래프 사이클이 곧 현재 교착인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 가능한 취득 순서의 구조적 위험입니다. 실제 보유·대기와 실행 스케줄을 관측한 증거는 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q3. defer_lock으로 unique_lock을 만들면 잠금을 가진 상태인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 취득을 미룬 소유 관리 객체이며, 뒤의 std::lock 성공 후 두 잠금을 소유합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q4. RAII가 잔액도 자동 복원하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 여기서 RAII는 mutex 해제를 책임집니다. 임의의 데이터 갱신 롤백이나 트랜잭션은 별도 계약입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q5. 153618개의 독립 요구사항을 검증했나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 3072회 결정마다 50회 비교하는 반복 153600회와 고정 조건 18회를 합한 expect 호출 수입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "Q6. 12000회 전송 통과로 기아 없음과 TSan 통과를 주장할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 이번 유한 실행의 종료·잔액을 관찰했을 뿐 공정성·모든 스케줄·TSan 실행 결과를 얻은 것은 아닙니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "완전한 한국어 주석 코드와 빌드",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "조각을 이어 붙이지 말고 아래 전체 파일 또는 ZIP을 사용하세요. main.cpp는 캡처 조립본에 한국어 줄끝 주석만 덧붙였습니다. CMakeLists.txt는 이번 독립 실습용으로 작성했으며 원문 CMake와 구분합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "main.cpp · 한국어 전체 파일",
+              "href": "/knowledge/shared/os-03-lab/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "전체 코드 · main.cpp",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstddef>\n#include <exception>\n#include <iostream>\n#include <mutex>\n#include <stdexcept>\n#include <thread>\n#include <vector>\n\nstruct Checks { // [한국어 해설] expect 호출 횟수에는 반복 오라클 비교가 포함된다. 독립 요구사항 수와 다르다.\n    unsigned long long n;\n    Checks() : n(0) {}\n    void expect(bool good, const char* why) {\n        ++n;\n        if (!good) throw std::runtime_error(why);\n    }\n};\n\n// Models lock-order acquisition constraints, not operating system waiting.\nclass LockOrderGraph { // [한국어 해설] 잠금을 잡은 상태에서 다음 잠금을 요청하는 순서 제약을 저장한다. 실시간 대기 그래프가 아니다.\n    std::vector<std::vector<bool> > edge_;\npublic:\n    explicit LockOrderGraph(std::size_t count)\n        : edge_(count, std::vector<bool>(count, false)) {}\n\n    bool reachable(std::size_t from, std::size_t to) const { // [한국어 해설] 반복 탐색으로 경로 존재 여부를 구한다. from==to이면 길이 0 경로도 참이다.\n        if (from >= edge_.size() || to >= edge_.size())\n            throw std::out_of_range(\"lock ID\");\n        std::vector<bool> seen(edge_.size(), false);\n        std::vector<std::size_t> pending(1, from);\n        while (!pending.empty()) {\n            const std::size_t v = pending.back();\n            pending.pop_back();\n            if (v == to) return true;\n            if (seen[v]) continue;\n            seen[v] = true;\n            for (std::size_t w = 0; w < edge_.size(); ++w)\n                if (edge_[v][w] && !seen[w]) pending.push_back(w);\n        }\n        return false;\n    }\n    bool allow(std::size_t held, std::size_t next) { // [한국어 해설] 자기 잠금과 순환을 만드는 새 간선을 거부한다. 거부 전에 그래프를 변경하지 않는다.\n        if (held >= edge_.size() || next >= edge_.size())\n            throw std::out_of_range(\"lock ID\");\n        if (held == next) return false; // non-recursive mutex self-acquisition\n        if (edge_[held][next]) return true; // idempotent constraint\n        if (reachable(next, held)) return false; // would create a cycle // [한국어 해설] 기존 next→held 경로에 held→next를 추가하면 사이클이 생긴다.\n        edge_[held][next] = true;\n        return true;\n    }\n    bool has(std::size_t held, std::size_t next) const { return edge_.at(held).at(next); }\n    std::size_t size() const { return edge_.size(); }\n};\n\n// Independent transitive closure oracle for deterministic small graphs.\nstatic bool oracle_reachable(const std::vector<std::vector<bool> >& edge, // [한국어 해설] 별도의 Floyd–Warshall 전이 폐쇄를 비교 기준으로 사용한다. 실제 OS 스케줄러를 호출하지 않는다.\n                             std::size_t source, std::size_t target) {\n    std::vector<std::vector<bool> > reach = edge;\n    const std::size_t n = edge.size();\n    for (std::size_t i = 0; i < n; ++i) reach[i][i] = true;\n    for (std::size_t k = 0; k < n; ++k)\n        for (std::size_t i = 0; i < n; ++i)\n            for (std::size_t j = 0; j < n; ++j)\n                reach[i][j] = reach[i][j] || (reach[i][k] && reach[k][j]);\n    return reach[source][target];\n}\nstruct Account { // [한국어 해설] 계정 하나의 잔액과 mutex를 묶는다. 복사할 수 없으며 초기 잔액은 10000이다.\n    std::mutex mutex;\n    long long coins;\n    Account() : coins(10000) {}\n    Account(const Account&) = delete;\n    Account& operator=(const Account&) = delete;\n};\n\nstatic void transfer(Account& from, Account& to, long long amount) { // [한국어 해설] 서로 다른 계정과 양수 금액만 허용한다. 이 테스트의 총액 40000 범위에서 산술한다.\n    if (&from == &to || amount <= 0) throw std::invalid_argument(\"distinct account and positive amount required\");\n    std::unique_lock<std::mutex> lock1(from.mutex, std::defer_lock); // [한국어 해설] defer_lock은 아직 잠그지 않는다는 뜻이다. 두 락의 취득을 std::lock에 맡긴다.\n    std::unique_lock<std::mutex> lock2(to.mutex, std::defer_lock);\n    std::lock(lock1, lock2); // deadlock-avoiding acquisition of both mutexes // [한국어 해설] 동시에 필요한 두 락을 교착 회피 알고리즘으로 얻는다. 공정성이나 완료 시한은 보장하지 않는다.\n    if (from.coins >= amount) { // [한국어 해설] 잔액이 부족하면 아무 변화 없이 반환한다. 범용 은행 거래의 오버플로/오류 반환 API는 아니다.\n        from.coins -= amount;\n        to.coins += amount;\n    }\n}\n\nstatic unsigned int xorshift32(unsigned int& state) { // [한국어 해설] 고정 시드의 테스트 입력 생성기다. 암호학적 난수도 OS 실행 순서 제어도 아니다.\n    state ^= state << 13;\n    state ^= state >> 17;\n    state ^= state << 5;\n    return state;\n}\n\nint main() {\n    try {\n        Checks test;\n        LockOrderGraph graph(4);\n        test.expect(graph.allow(0, 1), \"0 -> 1\");\n        test.expect(graph.allow(1, 2), \"1 -> 2\");\n        test.expect(!graph.allow(2, 0), \"reject 2 -> 0 cycle\");\n        test.expect(!graph.has(2, 0), \"no rejected edge persisted\");\n        test.expect(!graph.allow(2, 2), \"self-loop must be rejected\");\n        test.expect(graph.allow(0, 1), \"duplicate is harmless\");\n        test.expect(graph.allow(2, 3), \"chain extension\");\n        test.expect(graph.reachable(0, 3), \"chain reachability\");\n        test.expect(!graph.reachable(3, 0), \"no reverse reachability\");\n        bool invalid = false;\n        try { (void)graph.allow(4, 0); }\n        catch (const std::out_of_range&) { invalid = true; }\n        test.expect(invalid, \"out of bounds ID\");\n        invalid = false;\n        try { (void)graph.reachable(0, 4); }\n        catch (const std::out_of_range&) { invalid = true; }\n        test.expect(invalid, \"out of bounds reach query\");\n\nconst std::size_t n = 7; // [한국어 해설] 7노드에서 12시드×256회=3072개의 간선 삽입 결정을 비교한다.\nfor (unsigned int seed = 1; seed <= 12; ++seed) {\n    LockOrderGraph actual(n);\n    std::vector<std::vector<bool> > oracle(n, std::vector<bool>(n, false));\n    unsigned int state = seed * 747796405u + 2891336453u;\n    for (int step = 0; step < 256; ++step) {\n        const std::size_t from = static_cast<std::size_t>(xorshift32(state)) % n;\n        const std::size_t to = static_cast<std::size_t>(xorshift32(state)) % n;\n        const bool expected = from != to && (oracle[from][to] || !oracle_reachable(oracle, to, from));\n        const bool accepted = actual.allow(from, to);\n        test.expect(accepted == expected, \"reference cycle oracle mismatch\");\n        if (accepted) oracle[from][to] = true;\n        for (std::size_t v = 0; v < n; ++v) // [한국어 해설] 각 결정 뒤 7×7 간선 상태까지 대조하므로 expect 호출 수가 크게 늘어난다.\n            for (std::size_t w = 0; w < n; ++w)\n                test.expect(actual.has(v, w) == oracle[v][w], \"edge persistence mismatch\");\n    }\n}\nstd::array<Account, 4> accounts;\nbool wrong_transfer = false;\ntry { transfer(accounts[0], accounts[0], 1); }\ncatch (const std::invalid_argument&) { wrong_transfer = true; }\ntest.expect(wrong_transfer, \"self-transfer rejected\");\nwrong_transfer = false;\ntry { transfer(accounts[0], accounts[1], 0); }\ncatch (const std::invalid_argument&) { wrong_transfer = true; }\ntest.expect(wrong_transfer, \"zero-transfer rejected\");\n\nstd::vector<std::thread> workers; // [한국어 해설] 4개 실제 표준 스레드가 왕복 전송한다. 잠금 그래프 모델을 런타임에 자동 적용하지는 않는다.\nfor (std::size_t i = 0; i < accounts.size(); ++i) {\n    workers.push_back(std::thread([&accounts, i]() {\n        for (int j = 0; j < 1500; ++j) {\n            transfer(accounts[i], accounts[(i + 1) % accounts.size()], 1);\n            transfer(accounts[(i + 1) % accounts.size()], accounts[i], 1);\n        }\n    }));\n}\n        for (std::size_t i = 0; i < workers.size(); ++i) workers[i].join(); // [한국어 해설] 모든 작업이 끝난 뒤 잔액을 읽는다. join 전에 잠금 없이 읽으면 같은 계약이 아니다.\n        long long total = 0;\n        for (std::size_t i = 0; i < accounts.size(); ++i) {\n            test.expect(accounts[i].coins >= 0, \"balance must be nonnegative\");\n            total += accounts[i].coins;\n        }\n        test.expect(total == 40000, \"concurrent transfers preserve total\");\n        std::cout << \"PASS OS03 checks=\" << test.n\n                  << \" random_order_attempts=\" << (12 * 256)\n                  << \" concurrent_transfers=\" << (4 * 1500 * 2) << '\\n';\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << \"FAIL OS03: \" << e.what() << '\\n';\n        return 1;\n    }\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CMakeLists.txt · 독립 프로젝트",
+              "href": "/knowledge/shared/os-03-lab/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "전체 빌드 · CMakeLists.txt",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "# 2026-10-24 독립 다운로드 빌드. 원문 CMake는 original/에 보존합니다.\ncmake_minimum_required(VERSION 3.16)\nproject(os_03_learning LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20 CACHE STRING \"C++ standard: 11 or 20\")\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nfind_package(Threads REQUIRED)\nenable_testing()\nadd_executable(os_03_korean main.cpp)\nadd_executable(os_03_captured original/main.cpp)\nforeach(target os_03_korean os_03_captured)\n  target_link_libraries(${target} PRIVATE Threads::Threads)\n  if(MSVC)\n    target_compile_options(${target} PRIVATE /W4 /utf-8)\n  else()\n    target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)\n  endif()\n  add_test(NAME ${target} COMMAND ${target})\n  set_tests_properties(${target} PROPERTIES TIMEOUT 30)\nendforeach()\n"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build --parallel 2\nctest --test-dir build --output-on-failure -V"
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "프로젝트 전체 내려받기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "전체 예제 ZIP",
+              "href": "/knowledge/examples/os-03.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "압축 해제·빌드·실행 README",
+              "href": "/knowledge/examples/readmes/os-03.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP의 project/에서 위 명령을 실행합니다. 한국어 주석본과 원본 코드은 같은 조건을 반복하므로 독립 검증 수를 두 배로 합산하지 않습니다. 각 CTest 실행은 30초 제한입니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "현재 실행과 과거 기록을 나누기",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-24 Cloud Linux GCC14.2/CMake3.31.6에서 별도 폴더에 필요한 파일만 복사하여 C++20 및 C++11 Debug configure/build/CTest를 실행했습니다. 각 구성은 한국어 주석본과 원본 코드 2개 실행 파일입니다. 줄끝 주석을 역제거한 바이트와 GCC -E -P 전처리 출력의 동일성도 확인했습니다. 결과는 아래 경로 비식별화 파생 로그와 validation.json을 기준으로 읽습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows/MSVC, ThreadSanitizer, 이번 ASan/UBSan, 실제 MMU/TLB·커널 스케줄링 지연 측정 및 GPU는 실행하지 않았습니다. 웹 페이지 렌더링과 배포 성공 여부 역시 이 CPU 검사와 별도입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "현재 검증 JSON",
+              "href": "/knowledge/shared/os-03-lab/verification/validation.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "C++20 빌드 로그 · 경로 비식별화",
+              "href": "/knowledge/shared/os-03-lab/verification/cpp20-build.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "C++20 CTest 로그 · 경로 비식별화",
+              "href": "/knowledge/shared/os-03-lab/verification/cpp20-ctest.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "C++11 CTest 로그 · 경로 비식별화",
+              "href": "/knowledge/shared/os-03-lab/verification/cpp11-ctest.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "파일 SHA·주석 복원 기록",
+              "href": "/knowledge/shared/os-03-lab/provenance.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "official-sources",
+      "title": "공식 계약과 참고 범위",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 그림·수치 추적·설명은 원문을 읽고 독립적으로 작성한 학습 자료입니다. 아래 문서는 API/메모리 계약의 근거이며 해당 플랫폼에서 실행했다는 증거가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "C++ 작업 초안 · std::lock 계약",
+              "href": "https://eel.is/c++draft/thread.lock.algorithm"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "C++ 작업 초안 · unique_lock 소멸",
+              "href": "https://eel.is/c++draft/thread.lock.unique"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문 보존·조립 한계·개편 이력",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원문의 PART1→5 다섯 페이지에는 실제 C++ 코드 블록이 6개입니다(PART5가 둘). 각 코드 본문과 LF를 표시 순서대로 이어 조립한 파일은 6700바이트, SHA-256 5bc3ead3eedf6a427b0a5f4812058ef7bb9e2d0ab58ffbf4bc0bf0a105411c63입니다. 원문에 적힌 과거 전체 파일 SHA de607332eff349facc3366ae347644463340cb68ade1d51bd08d02238b1a69da와 다릅니다. 과거 ZIP/원시 실행 로그는 회수하지 않았으며 미복원 상태도 명확히 기록합니다. 원본 ZIP 복원이라고 부르지 않고 코드 조각 조립본으로 제공·새 검증합니다. NET03을 요구하는 재구성 공용 CMake는 original/에 보존하고 새 단독 wrapper로 실행합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-24 개편: 운영체제 원본은 읽기 전용으로 유지하고 네 탭, 그림, Mermaid, 전체 한국어 주석 코드, 접힌 복습 및 다운로드 안내를 추가했습니다. 과거 실행 기록과 현재 검증 결과는 구분합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "보존한 코드 조각의 조립본",
+              "href": "/knowledge/shared/os-03-lab/original/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "원문 CMake 보존본",
+              "href": "/knowledge/shared/os-03-lab/original/CMakeLists.txt"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

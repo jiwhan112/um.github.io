@@ -1,0 +1,25 @@
+# Path-redacted derivative of an actual execution log; not byte-identical to the raw log.
+$ ctest --test-dir <build>/original-cpp20 --output-on-failure -V --timeout 20
+Internal ctest changing into directory: <build>/original-cpp20
+UpdateCTestConfiguration  from :<build>/original-cpp20/DartConfiguration.tcl
+UpdateCTestConfiguration  from :<build>/original-cpp20/DartConfiguration.tcl
+Test project <build>/original-cpp20
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: false_sharing_contract
+
+1: Test command: <build>/original-cpp20/os06_cpu "--test"
+1: Working Directory: <build>/original-cpp20
+1: Test timeout computed to be: 20
+1: OBSERVE ONLY near_ns=2362929 far_ns=2128716
+1: PASS 15 OS06 deterministic checks
+1/1 Test #1: false_sharing_contract ...........   Passed    0.03 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.05 sec

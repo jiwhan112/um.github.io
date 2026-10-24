@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-24",
+  "assembly": "Exact code-block bodies, including original LF, concatenated in displayed order. OS03 has six fragments; the fifth part contains two blocks.",
+  "restored_bytes": 6700,
+  "restored_sha256": "5bc3ead3eedf6a427b0a5f4812058ef7bb9e2d0ab58ffbf4bc0bf0a105411c63",
+  "historical_expected_sha256": "de607332eff349facc3366ae347644463340cb68ade1d51bd08d02238b1a69da",
+  "historical_zip_log_recovered": false,
+  "historical_identity": "MISMATCH: assembled code is not proven byte-identical to historical main.cpp; no claim of historical ZIP recovery",
+  "korean_sha256": "b59a6991cce6611ca37d073a32b6cd8e638aea8cd04f3d47f4bda1ca68eaa8b2",
+  "annotations": [
+    {
+      "line": 11,
+      "suffix": " // [한국어 해설] expect 호출 횟수에는 반복 오라클 비교가 포함된다. 독립 요구사항 수와 다르다."
+    },
+    {
+      "line": 21,
+      "suffix": " // [한국어 해설] 잠금을 잡은 상태에서 다음 잠금을 요청하는 순서 제약을 저장한다. 실시간 대기 그래프가 아니다."
+    },
+    {
+      "line": 27,
+      "suffix": " // [한국어 해설] 반복 탐색으로 경로 존재 여부를 구한다. from==to이면 길이 0 경로도 참이다."
+    },
+    {
+      "line": 43,
+      "suffix": " // [한국어 해설] 자기 잠금과 순환을 만드는 새 간선을 거부한다. 거부 전에 그래프를 변경하지 않는다."
+    },
+    {
+      "line": 48,
+      "suffix": " // [한국어 해설] 기존 next→held 경로에 held→next를 추가하면 사이클이 생긴다."
+    },
+    {
+      "line": 57,
+      "suffix": " // [한국어 해설] 별도의 Floyd–Warshall 전이 폐쇄를 비교 기준으로 사용한다. 실제 OS 스케줄러를 호출하지 않는다."
+    },
+    {
+      "line": 68,
+      "suffix": " // [한국어 해설] 계정 하나의 잔액과 mutex를 묶는다. 복사할 수 없으며 초기 잔액은 10000이다."
+    },
+    {
+      "line": 76,
+      "suffix": " // [한국어 해설] 서로 다른 계정과 양수 금액만 허용한다. 이 테스트의 총액 40000 범위에서 산술한다."
+    },
+    {
+      "line": 78,
+      "suffix": " // [한국어 해설] defer_lock은 아직 잠그지 않는다는 뜻이다. 두 락의 취득을 std::lock에 맡긴다."
+    },
+    {
+      "line": 80,
+      "suffix": " // [한국어 해설] 동시에 필요한 두 락을 교착 회피 알고리즘으로 얻는다. 공정성이나 완료 시한은 보장하지 않는다."
+    },
+    {
+      "line": 81,
+      "suffix": " // [한국어 해설] 잔액이 부족하면 아무 변화 없이 반환한다. 범용 은행 거래의 오버플로/오류 반환 API는 아니다."
+    },
+    {
+      "line": 87,
+      "suffix": " // [한국어 해설] 고정 시드의 테스트 입력 생성기다. 암호학적 난수도 OS 실행 순서 제어도 아니다."
+    },
+    {
+      "line": 116,
+      "suffix": " // [한국어 해설] 7노드에서 12시드×256회=3072개의 간선 삽입 결정을 비교한다."
+    },
+    {
+      "line": 128,
+      "suffix": " // [한국어 해설] 각 결정 뒤 7×7 간선 상태까지 대조하므로 expect 호출 수가 크게 늘어난다."
+    },
+    {
+      "line": 143,
+      "suffix": " // [한국어 해설] 4개 실제 표준 스레드가 왕복 전송한다. 잠금 그래프 모델을 런타임에 자동 적용하지는 않는다."
+    },
+    {
+      "line": 152,
+      "suffix": " // [한국어 해설] 모든 작업이 끝난 뒤 잔액을 읽는다. join 전에 잠금 없이 읽으면 같은 계약이 아니다."
+    }
+  ],
+  "source_document_title": "OS 03 · Lock Order와 RAII 동기화"
+}

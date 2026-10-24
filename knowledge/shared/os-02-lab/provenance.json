@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-24",
+  "assembly": "Exact code-block bodies, including original LF, concatenated in displayed order. OS03 has six fragments; the fifth part contains two blocks.",
+  "restored_bytes": 3378,
+  "restored_sha256": "fe5a725977e44857474fa58b85c6f9f85375da98f81e59d6015bd0815a5807e6",
+  "historical_expected_sha256": null,
+  "historical_zip_log_recovered": "Historical logs retained separately; historical and current execution evidence are distinct.",
+  "historical_identity": "not provided",
+  "korean_sha256": "14acf35deb4b5514d8f60f75ce388cbc0d62b895291895865c7b8ddf7a7a15ab",
+  "annotations": [
+    {
+      "line": 8,
+      "suffix": " // [한국어 해설] 프레임 번호와 존재/쓰기 권한만 담는 교육용 항목이다. 실제 MMU 비트 배치가 아니다."
+    },
+    {
+      "line": 12,
+      "suffix": " // [한국어 해설] 이 모델의 고정 4KiB 가정이다. 모든 시스템의 페이지 크기를 뜻하지 않는다."
+    },
+    {
+      "line": 13,
+      "suffix": " // [한국어 해설] 같은 VPN의 이전 항목을 덮어쓰며 다시 present로 만든다. 다른 VPN이 같은 PFN을 공유해도 허용한다."
+    },
+    {
+      "line": 16,
+      "suffix": " // [한국어 해설] 없는 VPN을 지워도 예외가 없는 멱등 연산이다."
+    },
+    {
+      "line": 17,
+      "suffix": " // [한국어 해설] 항목 자체는 유지하고 present만 끈다. 없는 항목에 호출하면 오류다."
+    },
+    {
+      "line": 22,
+      "suffix": " // [한국어 해설] 주소를 숫자로 변환할 뿐 해당 주소를 포인터로 역참조하지 않는다."
+    },
+    {
+      "line": 23,
+      "suffix": " // [한국어 해설] 4096으로 나눈 몫은 VPN이고 나머지는 페이지 내부 offset이다."
+    },
+    {
+      "line": 26,
+      "suffix": " // [한국어 해설] 미매핑과 present=false를 같은 예외로 표현한다. 실제 OS의 복구/종료 정책은 구현하지 않는다."
+    },
+    {
+      "line": 27,
+      "suffix": " // [한국어 해설] 읽기 전용 페이지에 대한 쓰기를 거부한다. COW를 수행하는 코드는 아니다."
+    },
+    {
+      "line": 29,
+      "suffix": " // [한국어 해설] 곱셈 전에 나눗셈으로 범위를 검사하여 unsigned wraparound를 주소로 반환하지 않는다."
+    },
+    {
+      "line": 35,
+      "suffix": " // [한국어 해설] 검사 호출 수를 세며 예외 메시지 문자열은 원본 그대로 보존한다."
+    },
+    {
+      "line": 36,
+      "suffix": " // [한국어 해설] 아무 std::exception이나 참으로 인정한다. 테스트가 정확한 예외 종류까지 확인하는 것은 아니다."
+    },
+    {
+      "line": 53,
+      "suffix": " // [한국어 해설] 별칭은 허용하되 두 매핑의 쓰기 권한은 서로 다를 수 있다."
+    },
+    {
+      "line": 65,
+      "suffix": " // [한국어 해설] 표현 가능한 최대 프레임에서 offset 4095까지 허용하고 그 다음 프레임을 거부한다."
+    }
+  ],
+  "source_document_title": "OS 02 · Virtual Memory·Page Table·Page Fault 주소 변환 계약"
+}

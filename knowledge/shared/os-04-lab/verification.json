@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "tested_at_utc": "2026-10-24T01:00:25.489810+00:00",
+  "status": "pass_bounded_cpu",
+  "environment": {
+    "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+    "cmake": "cmake version 3.31.6",
+    "platform": "Cloud Linux"
+  },
+  "original_and_korean": {
+    "C++11": "CTest 1/1 each",
+    "C++20": "CTest 1/1 each",
+    "preprocessed_output_identity": "exact for each standard"
+  },
+  "checks_per_program": 25,
+  "runs_are_repetitions_not_independent_conditions": true,
+  "new_runs": [
+    {
+      "variant": "original",
+      "standard": 11,
+      "action": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        "<source>/original",
+        "-B",
+        "<build>/original-cpp11",
+        "-DCMAKE_CXX_STANDARD=11",
+        "-DCMAKE_BUILD_TYPE=Debug"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc11-original-configure.txt",
+      "log_sha256": "78faa670cf06b2eee2f97f4ffeb987971c7a36308c06e03313fdacf90581332e"
+    },
+    {
+      "variant": "original",
+      "standard": 11,
+      "action": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "<build>/original-cpp11",
+        "-j2"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc11-original-build.txt",
+      "log_sha256": "4aac7aead60c62a6dffaae4381331cdf660eea4753ed1181d8b3aee9d8248fa1"
+    },
+    {
+      "variant": "original",
+      "standard": 11,
+      "action": "ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "<build>/original-cpp11",
+        "--output-on-failure",
+        "-V",
+        "--timeout",
+        "20"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc11-original-ctest.txt",
+      "log_sha256": "4304a2b37f5203e8a729cfae78b202f442394040f02b7962ed9fd4a39a5b21d2"
+    },
+    {
+      "variant": "ko",
+      "standard": 11,
+      "action": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        "<source>/ko",
+        "-B",
+        "<build>/ko-cpp11",
+        "-DCMAKE_CXX_STANDARD=11",
+        "-DCMAKE_BUILD_TYPE=Debug"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc11-ko-configure.txt",
+      "log_sha256": "df35e37782e302dbe35839fa8e0563395230ccee302e653183d8ba09b9b4ca6a"
+    },
+    {
+      "variant": "ko",
+      "standard": 11,
+      "action": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "<build>/ko-cpp11",
+        "-j2"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc11-ko-build.txt",
+      "log_sha256": "2d3e5a7c60e2309dc3ef1e2be8c9f186d02409ee2901b1fcc04af660e517e1a1"
+    },
+    {
+      "variant": "ko",
+      "standard": 11,
+      "action": "ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "<build>/ko-cpp11",
+        "--output-on-failure",
+        "-V",
+        "--timeout",
+        "20"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc11-ko-ctest.txt",
+      "log_sha256": "b1be484eb37e04d066b3e93a4e5cecb5eaa676be910f8c346f145a2f21c5175b"
+    },
+    {
+      "variant": "original",
+      "standard": 20,
+      "action": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        "<source>/original",
+        "-B",
+        "<build>/original-cpp20",
+        "-DCMAKE_CXX_STANDARD=20",
+        "-DCMAKE_BUILD_TYPE=Debug"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc20-original-configure.txt",
+      "log_sha256": "46d598c762655eea5f2c8fe29e75de2b166e938f4c8427ac1f098a1af2682155"
+    },
+    {
+      "variant": "original",
+      "standard": 20,
+      "action": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "<build>/original-cpp20",
+        "-j2"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc20-original-build.txt",
+      "log_sha256": "9944c9819b1b5de734a68711f9c1648f21100242df1385cfd4a89b8ea535a62b"
+    },
+    {
+      "variant": "original",
+      "standard": 20,
+      "action": "ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "<build>/original-cpp20",
+        "--output-on-failure",
+        "-V",
+        "--timeout",
+        "20"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc20-original-ctest.txt",
+      "log_sha256": "247f9ca4b34a671bcff2c95e8edd973543a3c3f005a72a1c3a440e13124efde2"
+    },
+    {
+      "variant": "ko",
+      "standard": 20,
+      "action": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        "<source>/ko",
+        "-B",
+        "<build>/ko-cpp20",
+        "-DCMAKE_CXX_STANDARD=20",
+        "-DCMAKE_BUILD_TYPE=Debug"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc20-ko-configure.txt",
+      "log_sha256": "8fb0d7f073193ff207ac23bf02a06834cebde5cf0837957938ed5d8b848e5948"
+    },
+    {
+      "variant": "ko",
+      "standard": 20,
+      "action": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "<build>/ko-cpp20",
+        "-j2"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc20-ko-build.txt",
+      "log_sha256": "c4144651dc1e57bae9f5359e8a3e1802e8652af14f1b00550635404062c6f8bc"
+    },
+    {
+      "variant": "ko",
+      "standard": 20,
+      "action": "ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "<build>/ko-cpp20",
+        "--output-on-failure",
+        "-V",
+        "--timeout",
+        "20"
+      ],
+      "exit_code": 0,
+      "log": "shared/os-04-lab/verification/gcc20-ko-ctest.txt",
+      "log_sha256": "5ae3ea3e0d4e27f2130e9fed4f2eacb43d12df8e3a39603e82a6a3a3c6d5774d"
+    }
+  ],
+  "limits": [
+    "No Windows/MSVC",
+    "No sanitizer/TSan in this run",
+    "No kernel scheduler/MMU/cache hardware/performance proof",
+    "No user computer",
+    "No ZIP extraction yet"
+  ],
+  "source_sha256": {
+    "ko/CMakeLists.txt": "c42b8625883166c20487d84a2b3be494285d40fcbd19cc6af00bc5040a96a847",
+    "ko/main.cpp": "c106efe0a0cf2980c3e5d0ffa76d8df736021b5abf2e315378d9c95462e830f0",
+    "original/CMakeLists.txt": "c42b8625883166c20487d84a2b3be494285d40fcbd19cc6af00bc5040a96a847",
+    "original/main.cpp": "eeb46d048f6140828844b80928ba2116d256861873ff48f20a218d312d15f963"
+  },
+  "log_policy": "Path-redacted derivatives, not byte-identical raw logs. <source> denotes project source; <build> denotes the isolated build tree. log_sha256 hashes the published derivative. Original raw logs retained privately."
+}

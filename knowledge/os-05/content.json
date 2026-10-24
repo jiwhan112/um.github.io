@@ -1,0 +1,760 @@
+{
+  "title": "OS 05 · 캐시 집합·연관도·LRU 모델",
+  "subtitle": "블록 번호를 집합에 매핑하고 충돌·빈 슬롯·교체를 구별",
+  "sections": [
+    {
+      "id": "start",
+      "title": "숫자로 확인하는 캐시 후보 선택",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 장은 메모리 접근열을 입력으로 삼는 교육용 캐시 모델이다. 블록이 어느 집합을 찾아가고, 이미 있는지, 없다면 빈 칸이나 가장 오래 사용하지 않은 칸 중 무엇을 고르는지 추적한다. 실제 CPU 캐시를 읽거나 제어하지 않으며 논리 miss를 DRAM 접근 횟수나 지연 시간으로 바꾸지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: 배열과 범위",
+              "kind": "link",
+              "href": "/knowledge/c-basics-06/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: 동적 저장과 실패",
+              "kind": "link",
+              "href": "/knowledge/c-basics-10/"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/os-05/assets/set-way-map.svg",
+          "alt": "총 4라인에서 직접 매핑은 4집합·1-way, 2-way는 2집합·2-way다. 블록 0과 4는 두 구성 모두 같은 집합에 가지만 2-way에서는 함께 남는다.",
+          "caption": "같은 총 용량이어도 한 집합의 수용력이 다르다 — 총 4라인에서 직접 매핑은 4집합·1-way, 2-way는 2집합·2-way다. 블록 0과 4는 두 구성 모두 같은 집합에 가지만 2-way에서는 함께 남는다."
+        }
+      ]
+    },
+    {
+      "id": "address",
+      "title": "주소를 어떤 단위로 받는지가 먼저다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "기호"
+                  }
+                ],
+                [
+                  {
+                    "text": "모델의 의미"
+                  }
+                ],
+                [
+                  {
+                    "text": "예"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "line_count"
+                  }
+                ],
+                [
+                  {
+                    "text": "전체 슬롯 수"
+                  }
+                ],
+                [
+                  {
+                    "text": "4"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "ways"
+                  }
+                ],
+                [
+                  {
+                    "text": "한 집합의 후보 슬롯 수"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "set_count"
+                  }
+                ],
+                [
+                  {
+                    "text": "line_count / ways"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "memory_block"
+                  }
+                ],
+                [
+                  {
+                    "text": "이미 계산된 블록 번호"
+                  }
+                ],
+                [
+                  {
+                    "text": "4 → 집합 0"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 바이트 주소에서 블록을 구하는 단순 개념식은 floor(byte_address / line_size)이다. 그러나 이 예제의 touch는 그 계산을 하지 않는다. 이미 정수 블록 번호를 받으며 block % set_count로 집합을 고른다. 블록 내 바이트 오프셋·물리 주소 변환·캐시 계층·태그 비트 추출을 구현했다고 덧붙이지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "라인 수와 ways는 양수이고 ways≤라인 수이며 나누어떨어져야 한다. 생성자는 ways 검증 뒤 집합을 만든다. 이 조건은 메모리를 무제한 확보할 수 있다는 보장이 아니다. 큰 입력의 할당 실패나 자원 상한은 별도 운영 정책이다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "transition",
+      "title": "miss와 eviction은 같은 사건이 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"memory_block 입력\"] --> B[\"집합=block % set_count\"]\n B --> C{\"유효한 동일 블록?\"}\n C -->|예| D[\"hit++ · 최근사용 갱신\"]\n C -->|아니오| E[\"miss++\"]\n E --> F{\"빈 웨이가 있나?\"}\n F -->|예| G[\"빈 슬롯에 설치 · eviction 없음\"]\n F -->|아니오| H[\"최소 최근사용 시각 선택\"]\n H --> I[\"eviction++ · 해당 슬롯 교체\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "빈 슬롯에 최초로 넣을 때도 miss지만 다른 블록을 잃지 않았으므로 eviction은 0 이다. 한 번의 접근은 hit 또는 miss 중 하나이고, eviction은 꽉 찬 집합의 miss에서만 생긴다. 이 모델의 카운터는 접근 결과 분류이며 쓰기 정책·dirty bit·메모리 버스 트래픽은 없다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "접근열 0,4,0,4"
+                  }
+                ],
+                [
+                  {
+                    "text": "hit"
+                  }
+                ],
+                [
+                  {
+                    "text": "miss"
+                  }
+                ],
+                [
+                  {
+                    "text": "eviction"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "4 라인 1way"
+                  }
+                ],
+                [
+                  {
+                    "text": "0"
+                  }
+                ],
+                [
+                  {
+                    "text": "4"
+                  }
+                ],
+                [
+                  {
+                    "text": "3"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "4 라인 2way"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "0"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2-way에서 두 블록도 같은 집합 0 으로 간다. 충돌이 사라진 이유는 서로 다른 집합이 되었기 때문이 아니라 같은 집합에 두 후보 슬롯이 생겼기 때문이다. 전체 용량은 4 로 같지만 집합 수는 4 에서 2 로 달라진다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "replacement",
+      "title": "LRU는 삽입 순서가 아니라 마지막 사용 순서다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/os-05/assets/lru-trace.svg",
+          "alt": "두 슬롯의 단일 집합에서 10,11,10,12,11을 접근한다. hit가 최근 사용을 갱신하므로 12는 11을, 다음 11은 10을 퇴출한다.",
+          "caption": "hit도 순서를 바꾼다: 10,11,10,12,11 — 두 슬롯의 단일 집합에서 10,11,10,12,11을 접근한다. hit가 최근 사용을 갱신하므로 12는 11을, 다음 11은 10을 퇴출한다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "recently_used는 매 접근의 논리 시계다. hit에서도 해당 슬롯의 시각을 바꿔야 한다. 처음 들어온 순서만 저장하고 hit를 무시하면 FIFO와 가까운 다른 정책이 된다. 모델은 가장 작은 시각을 가진 슬롯을 교체 대상으로 고른다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "clock_와 통계는 uint64_t이지만 무한하지 않다. 원본 코드도 유한한 교육용 접근열만 전제로 하며 래핑을 복구하지 않는다. 최대 블록 번호 UINT64_MAX를 접근하는 검사와 clock이 2⁶⁴회 증가하는 검사는 완전히 다르다. 여기서는 전자의 나머지 연산만 확인한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hardware-boundary",
+      "title": "모델의 miss를 실제 성능으로 확대하지 않는다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 캐시는 계층·라인 크기·주소 매핑·교체 정책·프리페치·동시 접근·일관성 상태와 상호작용한다. LRU는 이 모델의 정확한 정책이지 모든 CPU의 정책이 아니다. Intel 문서도 특정 아키텍처의 실제 동작을 따로 확인하는 출처로 사용한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "게임 오브젝트를 어떤 순서로 읽는지, stride가 같은 후보에 몰리는지 가설을 만들 때 모델이 유용하다. 다만 이 결과만 보고 구조체 패킹을 바꾸거나 FPS 향상을 단정하지 않는다. 실측하려면 실제 데이터·컴파일러 최적화·하드웨어 카운터와 반복 측정의 별도 설계가 필요하다. computer-02 와 같은 팩을 공유하며 똑같은 실험을 새 검증으로 중복 집계하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 · 원본과 한국어 주석판 함께 받기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스 ZIP · os-05",
+              "kind": "link",
+              "href": "/knowledge/examples/os-05.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축 해제·빌드·출력 안내 README",
+              "kind": "link",
+              "href": "/knowledge/examples/readmes/os-05.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP의 project/에는 original과 ko가 나란히 있습니다. 둘은 같은 프로그램의 보존 원본과 주석 파생본입니다. 페이지별로 같은 팩을 사용해도 새 성능 검증을 한 것으로 중복 집계하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "실습 · 빌드와 기대 결과",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축을 푼 폴더의 project/에서 실행합니다. CMake 3.16 이상과 지원되는 C++ 컴파일러가 필요합니다. 아래 명령은 한국어 주석판을 빌드합니다. -S에 original을 지정하면 보존 원본도 별도로 빌드할 수 있습니다. 입력 파일·API 키·외부 네트워크는 필요 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S ko -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=20\ncmake --build build --parallel 2\nctest --test-dir build --output-on-failure -V --timeout 20"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "OS05 CPU cache mapping: 34 distinct logical assertions; failed=0"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "과제"
+                  }
+                ],
+                [
+                  {
+                    "text": "수행"
+                  }
+                ],
+                [
+                  {
+                    "text": "경계"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "집합 선택"
+                  }
+                ],
+                [
+                  {
+                    "text": "4 라인 1way와 4 라인 2way의집합수를먼저계산"
+                  }
+                ],
+                [
+                  {
+                    "text": "같은 총 용량과같은 집합 수는별개"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "교체 추적"
+                  }
+                ],
+                [
+                  {
+                    "text": "10,11,10,12,11 의 LRU→MRU를한행씩기록"
+                  }
+                ],
+                [
+                  {
+                    "text": "hit갱신·빈슬롯·퇴출분리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "검증 범위"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본 34 검사에서큰블록 번호·잘못된구성의조건찾기"
+                  }
+                ],
+                [
+                  {
+                    "text": "시계 래핑·실제 하드웨어검증으로확대금지"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정상 종료 코드 0·CTest 1/1 이 기대값입니다. 이번 Cloud Linux GCC 14.2.0 / CMake 3.31.6 에서 원본과 ko를 각각 C++11/20 으로 새로 빌드하여 통과했습니다. 모든 구성은 같은 논리 조건의 반복이며 새 독립 조건을 늘린 것이 아닙니다. Windows/MSVC·sanitizer·TSan·하드웨어 성능은 이번 실행에 포함하지 않았습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답한 뒤 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "8 라인·4-way의 집합 수는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2 집합이다. 블록 번호를 2 로 나눈 나머지가 집합 인덱스다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "0 과 4 가 2-way에서 서로 다른 집합에 가는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "전체 4 라인·2-way이면 둘 다 집합 0 이다. 두 웨이가 있어 함께 저장된다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "miss가 4 이면 eviction도 4 인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 빈 슬롯에 설치하는 miss는 퇴출이 없다. 직접 매핑 예시의 첫 miss는 eviction을 늘리지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "10,11,10 뒤에 12 를 접근하면 무엇을 퇴출하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "11 이다. 10 의 hit가 최근 사용 시각을 갱신했기 때문이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "UINT64_MAX 블록 검사로 시계 래핑까지 검증했는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 큰 블록 번호의 나머지 연산과 2⁶⁴회 접근 후 clock 래핑은 다르다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "논리적 miss 한 번은 실제 DRAM 접근 한 번인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 다른 캐시 계층·프리페치·동시성을 모델링하지 않았다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "line_count3·ways2 를 반올림해서 허용할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 구현은 나누어떨어지지 않는 구성을 거부한다. 임의 반올림은 계약 변경이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스와 빌드 파일",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.cpp 전체 파일 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/os-05-lab/ko/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp · 한국어 주석 전체 코드",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// OS05: Deterministic CPU reference for cache line mapping and LRU replacement.\n// Portable C++11 / C++20. NOT a hardware cache, virtual-memory, or latency test.\n#include <cstddef>\n#include <cstdint>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nnamespace os05 {\nstruct Stats { // 한국어: hit·miss·교체를 별도로 집계한다. miss가 항상 교체인 것은 아니다.\n    std::uint64_t hits;\n    std::uint64_t misses;\n    std::uint64_t evictions;\n    Stats() : hits(0), misses(0), evictions(0) {}\n};\n\nstruct Line { // 한국어: valid가 false인 슬롯에는 아직 유효한 블록이 없다.\n    bool valid;\n    std::uint64_t block;\n    std::uint64_t recently_used;\n    Line() : valid(false), block(0), recently_used(0) {}\n};\n\nclass CacheModel {\npublic:\n    CacheModel(std::size_t line_count, std::size_t associativity) // 한국어: ways 검증이 먼저 수행되어 0으로 나누는 구성을 막는다.\n        : ways_(validate(line_count, associativity)),\n          sets_(line_count / ways_, std::vector<Line>(ways_)), clock_(0) {} // 한국어: 집합 수 × 웨이 수가 전체 라인 수가 된다.\n\n    bool touch(std::uint64_t memory_block) { // 한국어: 주소 바이트가 아니라 이미 계산된 메모리 블록 번호를 받는다.\n        // A real CPU first computes the block address from byte address/line size.\n        // Here the input IS an already-computed memory block number.\n        std::vector<Line>& bucket = sets_[memory_block % sets_.size()]; // 한국어: 나머지 연산으로 한 집합만 선택한다.\n        ++clock_; // Finite educational traces, not a wraparound-safe production clock. // 한국어: 교육용 유한 접근열만 다루며 시계 래핑은 해결하지 않는다.\n        for (std::size_t i = 0; i < bucket.size(); ++i) {\n            if (bucket[i].valid && bucket[i].block == memory_block) { // 한국어: 같은 집합에서 유효한 동일 블록을 찾아야 hit다.\n                ++stats_.hits;\n                bucket[i].recently_used = clock_; // 한국어: hit에서도 최근 사용 시각을 갱신해야 진짜 LRU가 된다.\n                return true;\n            }\n        }\n        ++stats_.misses; // 한국어: 없었던 블록의 접근은 miss로 기록한다.\n        std::size_t replacement = 0;\n        for (std::size_t i = 0; i < bucket.size(); ++i) {\n            if (!bucket[i].valid) { // 한국어: 빈 웨이가 있으면 퇴출 없이 먼저 사용한다.\n                replacement = i;\n                install(bucket[replacement], memory_block);\n                return false;\n            }\n            if (bucket[i].recently_used < bucket[replacement].recently_used) // 한국어: 가장 오래 사용하지 않은 유효 웨이를 후보로 고른다.\n                replacement = i;\n        }\n        ++stats_.evictions; // 한국어: 모든 웨이가 찬 miss만 기존 블록을 퇴출한다.\n        install(bucket[replacement], memory_block);\n        return false;\n    }\n\n    Stats stats() const { return stats_; }\n    std::size_t set_count() const { return sets_.size(); }\n    std::size_t associativity() const { return ways_; }\n\nprivate:\n    static std::size_t validate(std::size_t lines, std::size_t ways) { // 한국어: 양수·나눗셈 가능한 배치가 입력 계약이다.\n        if (lines == 0 || ways == 0 || ways > lines || lines % ways != 0)\n            throw std::invalid_argument(\"line_count and associativity must be positive and divisible\");\n        return ways;\n    }\n    void install(Line& line, std::uint64_t block) {\n        line.valid = true;\n        line.block = block;\n        line.recently_used = clock_;\n    }\n    std::size_t ways_;\n    std::vector<std::vector<Line> > sets_;\n    std::uint64_t clock_;\n    Stats stats_;\n};\n}  // namespace os05\n\nint main() {\n    unsigned checks = 0;\n    unsigned failed = 0;\n#define CHECK(expr) do { ++checks; if (!(expr)) { ++failed; std::cerr << \"FAIL \" << #expr << \" at line \" << __LINE__ << '\\n'; } } while (0)\n    using os05::CacheModel;\n    {\n        bool rejected = false;\n        try { CacheModel bad(0, 1); (void)bad; }\n        catch (const std::invalid_argument&) { rejected = true; }\n        CHECK(rejected);\n        rejected = false;\n        try { CacheModel bad(3, 2); (void)bad; }\n        catch (const std::invalid_argument&) { rejected = true; }\n        CHECK(rejected);\n        rejected = false;\n        try { CacheModel bad(4, 0); (void)bad; }\n        catch (const std::invalid_argument&) { rejected = true; }\n        CHECK(rejected);\n    }\n    {\n        CacheModel direct(4, 1); // 한국어: 전체4라인·1way면4집합이며 0과4는 같은 집합이다.\n        CHECK(direct.set_count() == 4);\n        CHECK(direct.associativity() == 1);\n        CHECK(!direct.touch(0));\n        CHECK(!direct.touch(4));\n        CHECK(!direct.touch(0));\n        CHECK(!direct.touch(4));\n        CHECK(direct.stats().hits == 0);\n        CHECK(direct.stats().misses == 4);\n        CHECK(direct.stats().evictions == 3);\n    }\n    {\n        CacheModel two_way(4, 2); // 한국어: 전체4라인·2way면2집합이지만 0과4를 함께 보관할 수 있다.\n        CHECK(two_way.set_count() == 2);\n        CHECK(!two_way.touch(0));\n        CHECK(!two_way.touch(4));\n        CHECK(two_way.touch(0));\n        CHECK(two_way.touch(4));\n        CHECK(two_way.stats().hits == 2);\n        CHECK(two_way.stats().misses == 2);\n        CHECK(two_way.stats().evictions == 0);\n    }\n    {\n        CacheModel lru(2, 2); // 한국어: 2라인·2way의 한 집합으로 최근 사용 갱신을 확인한다.\n        CHECK(!lru.touch(10));\n        CHECK(!lru.touch(11));\n        CHECK(lru.touch(10)); // 한국어: 10을 다시 읽어 11이 가장 오래된 블록이 된다.\n        CHECK(!lru.touch(12)); // 11 was least recently used.\n        CHECK(!lru.touch(11)); // 10 is evicted now.\n        CHECK(lru.stats().hits == 1);\n        CHECK(lru.stats().misses == 4);\n        CHECK(lru.stats().evictions == 2);\n        CHECK(lru.stats().hits + lru.stats().misses == 5);\n    }\n    {\n        CacheModel large(8, 4);\n        const std::uint64_t max_block = std::numeric_limits<std::uint64_t>::max(); // 한국어: 최대 블록 번호도 유효하며 바이트주소로 곱하지 않는다.\n        CHECK(!large.touch(max_block));\n        CHECK(large.touch(max_block));\n        CHECK(large.stats().hits == 1);\n        CHECK(large.stats().misses == 1);\n        CHECK(large.stats().evictions == 0);\n    }\n#undef CHECK\n    std::cout << \"OS05 CPU cache mapping: \" << checks << \" distinct logical assertions; failed=\" << failed << '\\n';\n    return failed == 0 ? 0 : 1;\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CMakeLists.txt 전체 파일 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/os-05-lab/ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt · 원본과 동일한 전체 빌드 설정",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(os05_cache_mapping LANGUAGES CXX)\nif(NOT DEFINED CMAKE_CXX_STANDARD)\n  set(CMAKE_CXX_STANDARD 20)\nendif()\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(os05_cache_mapping main.cpp)\nif(CMAKE_CXX_COMPILER_ID MATCHES \"GNU|Clang\")\n  target_compile_options(os05_cache_mapping PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME OS05_cache_mapping COMMAND os05_cache_mapping)\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·원본 무결성·새 실행을 분리한다",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 코드 조립·해시·공개 범위 요약",
+              "kind": "link",
+              "href": "/knowledge/shared/os-05-lab/source-index.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 코드 SHA256/FNV64·조립 무결성",
+              "kind": "link",
+              "href": "/knowledge/shared/os-05-lab/source-integrity.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "줄끝 한국어 주석 추가 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/os-05-lab/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 CPU 검증 · 환경·명령·경로 비식별화 로그",
+              "kind": "link",
+              "href": "/knowledge/shared/os-05-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 원본 main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/os-05-lab/original/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 원본 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/os-05-lab/original/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Intel · 실제 아키텍처·최적화 매뉴얼",
+              "kind": "link",
+              "href": "https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 참고 조회일: 2026-10-24. 표준 작업 초안은 판본에 따라 절 번호가 바뀔 수 있습니다. 과거 실행 기록과 이번 클라우드 실행을 구분합니다. 공개 실행 로그는 내부 경로를 치환한 파생본입니다. 과거 첨부 ZIP·이미지의 복구까지 확인한 것은 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-24: 한국어 설명·SVG 2개·Mermaid·실습·접힌 복습을 작성했습니다. 기존 코드 파일은 original에 보존했습니다. ko는 줄 끝 주석만 덧붙여 행 수와 코드 토큰을 유지했고, 주석 제거 복원과 GCC 전처리 결과 동일성을 확인했습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "OS05 는 문서에 명시된 2/6·5/6 의 비어 있지 않은 행에 공백 4 칸을 복원한 뒤 결합했습니다. 과거 두 실행은 별개이며 과거 ZIP·로그의 바이트 동일성은 확립되지 않았습니다. 관련 원시 기록은 비공개 보관합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·변경 경계 다시 읽기",
+              "kind": "link",
+              "href": "/knowledge/shared/os-05-lab/source-index.md"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -35,9 +35,9 @@ const areas: Area[] = [
     {id:'graphics-tech',title:'기술 연구 주제',description:'셰이더·그림자·Navigation Mesh·IK 등 — 실제 집필 전 세부 목차 재설계',phase:'replan'}
   ]},
   {id:'cs',title:'컴퓨터 과학',subtitle:'컴퓨터 구조·운영체제·네트워크 기초',icon:Network,topics:[
-    {id:'computer',title:'컴퓨터 구조',description:'캐시·CPU·메모리 계층',phase:'keep'},
-    {id:'os',title:'운영체제',description:'스레드·가상 메모리·동기화',phase:'keep'},
-    {id:'network',title:'네트워크',description:'TCP/UDP·패킷·프로토콜',phase:'keep'}
+    {id:'computer',title:'컴퓨터 구조',description:'캐시·CPU·메모리 계층',phase:'keep',category:'컴퓨터 구조'},
+    {id:'os',title:'운영체제',description:'스레드·가상 메모리·동기화',phase:'keep',category:'운영체제'},
+    {id:'network',title:'네트워크',description:'TCP/UDP·패킷·프로토콜',phase:'keep',category:'네트워크'}
   ]},
   {id:'algorithm',title:'자료구조 / 알고리즘',subtitle:'세부 학습 과정은 집필 시작 시 재설계',icon:Layers3,topics:[
     {id:'algorithm-plan',title:'학습 순서·단원 구성 재계획',description:'자료구조·탐색·알고리즘·문제풀이의 세부 구성을 작성 전에 확정',phase:'replan'}

@@ -1429,5 +1429,113 @@
       "검증"
     ],
     "notion_url": "https://app.notion.com/p/3f8a99703f4081798361fdbf4881b8c6"
+  },
+  {
+    "title": "컴퓨터 구조 01 · CPU·명령 실행·메모리·I/O",
+    "subtitle": "시스템 경계를 나누고 작은 명령 추적으로 상태 변화를 확인한다.",
+    "date": "2026-10-24",
+    "category": "컴퓨터 구조",
+    "tags": [
+      "컴퓨터 구조",
+      "CPU 모델",
+      "검증 범위"
+    ],
+    "topic": "computer",
+    "path": "computer-01"
+  },
+  {
+    "title": "컴퓨터 구조 02 · 메모리 계층·지역성·캐시",
+    "subtitle": "지연·대역폭·용량을 나누고 같은 캐시 예제를 다른 관점에서 읽는다.",
+    "date": "2026-10-24",
+    "category": "컴퓨터 구조",
+    "tags": [
+      "컴퓨터 구조",
+      "CPU 모델",
+      "검증 범위"
+    ],
+    "topic": "computer",
+    "path": "computer-02"
+  },
+  {
+    "path": "os-01",
+    "title": "운영체제 01 · 프로세스·스레드와 닫을 수 있는 작업 큐",
+    "subtitle": "공유 상태, 조건 재검사, 종료 순서를 실제 표준 스레드 CPU 실습으로 연결",
+    "date": "2026-10-24",
+    "category": "운영체제",
+    "tags": [
+      "프로세스",
+      "스레드",
+      "mutex",
+      "조건 변수"
+    ],
+    "topic": "os"
+  },
+  {
+    "path": "os-02",
+    "title": "운영체제 02 · 가상 주소·페이지 테이블과 접근 권한",
+    "subtitle": "VPN·offset 계산과 매핑·권한·정수 범위를 4KiB CPU 모형으로 추적",
+    "date": "2026-10-24",
+    "category": "운영체제",
+    "tags": [
+      "가상 메모리",
+      "페이지 테이블",
+      "Page Fault",
+      "주소 변환"
+    ],
+    "topic": "os"
+  },
+  {
+    "path": "os-03",
+    "title": "운영체제 03 · 잠금 순서·교착 위험과 RAII",
+    "subtitle": "순서 그래프의 순환 거부와 두 mutex 취득을 서로 다른 실험으로 구분",
+    "date": "2026-10-24",
+    "category": "운영체제",
+    "tags": [
+      "교착상태",
+      "잠금 순서",
+      "RAII",
+      "std::lock"
+    ],
+    "topic": "os"
+  },
+  {
+    "path": "os-04",
+    "title": "OS 04 · Round Robin과 논리 시간 스케줄링",
+    "subtitle": "준비 큐·quantum·완료 시각을 추적하고 실제 OS 선점과 구분",
+    "date": "2026-10-24",
+    "category": "운영체제",
+    "tags": [
+      "운영체제",
+      "스케줄링",
+      "Round Robin"
+    ],
+    "topic": "os"
+  },
+  {
+    "path": "os-05",
+    "title": "OS 05 · 캐시 집합·연관도·LRU 모델",
+    "subtitle": "블록 번호를 집합에 매핑하고 충돌·빈 슬롯·교체를 구별",
+    "date": "2026-10-24",
+    "category": "운영체제",
+    "tags": [
+      "운영체제",
+      "캐시",
+      "LRU"
+    ],
+    "topic": "os"
+  },
+  {
+    "path": "os-06",
+    "title": "OS 06 · False Sharing과 atomic 배치",
+    "subtitle": "원자적 카운터·join·정렬 계약과 성능 관찰의 한계를 분리",
+    "date": "2026-10-24",
+    "category": "운영체제",
+    "tags": [
+      "운영체제",
+      "동시성",
+      "atomic",
+      "False Sharing"
+    ],
+    "topic": "os"
   }
 ]

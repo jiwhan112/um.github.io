@@ -1,0 +1,765 @@
+{
+  "title": "OS 06 · False Sharing과 atomic 배치",
+  "subtitle": "원자적 카운터·join·정렬 계약과 성능 관찰의 한계를 분리",
+  "sections": [
+    {
+      "id": "start",
+      "title": "틀린 값과 비싼 실행은 다른 문제다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "서로 다른 데이터를 갱신하는 워커들이 같은 캐시 일관성 단위를 공유하면 불필요한 소유권 이동이나 무효화가 발생할 수 있다. 이를 false sharing이라고 부른다. 같은 변수에 동기화 없이 충돌 접근하여 생기는 데이터 레이스와는 다르다. 이 장의 실행은 두 스레드 카운터의 정확성과 배치 타입의 조건을 확인하지만 실제 캐시 트래픽을 관찰하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: 소유권과 동시성 경계",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-02/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: 캐시 매핑 모델의 한계",
+              "kind": "link",
+              "href": "/knowledge/os-05/"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/os-06/assets/layout-boundary.svg",
+          "alt": "64B 일관성 단위를 가정한 배치 그림이다. 인접한 두 atomic과 분리 의도의 정렬 슬롯을 비교한다. 실제 라인 크기나 공유 여부를 측정한 그림은 아니다.",
+          "caption": "atomic 정확성과 캐시 배치는 서로 다른 계약이다 — 64B 일관성 단위를 가정한 배치 그림이다. 인접한 두 atomic과 분리 의도의 정렬 슬롯을 비교한다. 실제 라인 크기나 공유 여부를 측정한 그림은 아니다."
+        }
+      ]
+    },
+    {
+      "id": "atomic",
+      "title": "atomic은 비용을 없애는 장치가 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "성질"
+                  }
+                ],
+                [
+                  {
+                    "text": "이번 예제에서 확인"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인하지 않은 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원자성"
+                  }
+                ],
+                [
+                  {
+                    "text": "각 atomic fetch_add의 카운터 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "일반 공유데이터의 게시"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "배치"
+                  }
+                ],
+                [
+                  {
+                    "text": "FarCell 최소 정렬 64·크기의배수"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 캐시라인크기·실주소동일라인"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "구현"
+                  }
+                ],
+                [
+                  {
+                    "text": "C++ atomic 인터페이스 사용"
+                  }
+                ],
+                [
+                  {
+                    "text": "항상 lock-free라는보장"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "실행시간"
+                  }
+                ],
+                [
+                  {
+                    "text": "near_ns/far_ns 한 회 관찰"
+                  }
+                ],
+                [
+                  {
+                    "text": "통계적성능우열·원인분리"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "memory_order_relaxed도 해당 atomic 접근의 불가분성은 유지한다. 다만 다른 메모리 접근에 필요한 순서를 이 선택만으로 제공하지 않는다. 값이 올라갔다는 사실을 다른 일반 데이터가 준비되었다는 게시 신호로 사용하려면 별도의 동기화 설계가 필요하다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 예제에서는 A가 a만, B가 b만 쓰고 main은 두 join 뒤에 읽는다. 따라서 독립적인 일반 정수 두 개라도 올바른 수명과 같은 join 경계를 유지하면 그 사실만으로 데이터 레이스가 되는 것은 아니다. atomic이 항상 필수라는 증명이 아니라 atomic 사용 중에도 배치 비용 문제가 별개로 남는다는 학습이다. 일반 정수 한 개를 여러 스레드가 무동기 갱신하는 위험 예제는 실행하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "completion",
+      "title": "relaxed만 읽지 말고 join까지 연결한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/os-06/assets/join-order.svg",
+          "alt": "각 워커의 완료는 해당 join의 성공 반환과 동기화된다. 두 join 뒤에 카운터를 읽는다. 두 워커 사이의 실행 순서나 relaxed의 데이터 게시를 보장하는 그림은 아니다.",
+          "caption": "완료를 기다린 뒤 읽는 이유 — 각 워커의 완료는 해당 join의 성공 반환과 동기화된다. 두 join 뒤에 카운터를 읽는다. 두 워커 사이의 실행 순서나 relaxed의 데이터 게시를 보장하는 그림은 아니다."
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"매사례 새 Near/Far · 카운터0\"] --> B[\"두 워커: 각자의 atomic을 n회증가\"]\n B --> C[\"a.join + b.join\"]\n C --> D[\"최종 a,b 값을 읽음\"]\n D --> E{\"둘 다 n이고 배치별결과같나?\"}\n E -->|예| F[\"정확성 조건통과\"]\n E -->|아니오| G[\"실패조건기록\"]\n C --> H[\"생성부터join까지 소요시간\"]\n H --> I[\"OBSERVE ONLY · 성능판정없음\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "성공한 join 반환은 그 스레드의 완료와 동기화된다. 이 실습은 두 join 뒤에 최종값을 읽는다. 워커끼리 특정 순서로 증가한다는 뜻도, join 없이 relaxed load를 한 번 읽으면 최종값을 반드시 본다는 뜻도 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "count는 인자로 받은 객체의 기존 카운터를 초기화하지 않는다. main이 매사례 새 Near와 Far를 만들어 0 에서 시작하기 때문에 결과가 n이 된다. 같은 객체에 count를 두 번 호출하면 누적값이므로 기존 검사의 전제를 바꾼다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "alignment",
+      "title": "alignas(64)의 정확한 뜻",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "FarCell에 64 바이트 최소 정렬을 요청하고 alignof≥64, sizeof가 64 의배수, Far가두셀을수용하는지 검사한다. 이는 컴파일러의 객체 배치 계약이다. 플랫폼이 요구 정렬을 지원해야 하며 실제 CPU가 모든 계층에서 64 바이트 일관성 단위를 쓴다는 증거는 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Near라는 이름도 두 atomic이 실제로 같은 캐시 라인에 놓였다는 관측을 대신하지 못한다. 객체의 시작주소와 하드웨어 단위 경계에 따라 달라질 수 있다. Far는 공간을 더 쓰며 working set·다른필드와의지역성도 달라질 수 있으므로 패딩을 모든 구조체에 무조건 적용하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "measurement",
+      "title": "시간 열은 PASS 조건이 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본은 반복 횟수 0, 1, 7, 10000 을 각 배치에 적용한다. 최대 10000 회는 유한한 정확성 검사다. 출력 near_ns와 far_ns는 스레드 생성부터 join까지의 한 회 시간이며 카운터 루프만의 비용이 아니다. 코어 배치·주파수·워밍업·실행 순서도 통제하지 않으므로 어느 값이 작든 빠르다는 결론을 PASS로 판정하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "정확성에사용"
+                  }
+                ],
+                [
+                  {
+                    "text": "관찰만함"
+                  }
+                ],
+                [
+                  {
+                    "text": "이실습에서미실행"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "정렬 3 조건 + 사례별 3 조건×4 =15"
+                  }
+                ],
+                [
+                  {
+                    "text": "near_ns, far_ns"
+                  }
+                ],
+                [
+                  {
+                    "text": "TSan·하드웨어 카운터·CPU affinity"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "각값=n, 두배치결과동일"
+                  }
+                ],
+                [
+                  {
+                    "text": "시간순서가바뀌어도정확성동일"
+                  }
+                ],
+                [
+                  {
+                    "text": "Windows/MSVC·GPU·실제 캐시성능증명"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본은 스레드 생성 실패를 안전하게 수습하는 라이브러리가 아니다. 예를 들어 첫 스레드 생성 뒤 두 번째 생성이 실패하면 joinable 스레드의 정리가 문제가 된다. 이번 bounded 정상 경로 검증을 장애 복구 보장으로 확대하지 않는다. 원본과 주석판의 동작은 그대로 보존하며 생산 코드에서는 별도 RAII 수명 설계가 필요하다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 · 원본과 한국어 주석판 함께 받기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전체 소스 ZIP · os-06",
+              "kind": "link",
+              "href": "/knowledge/examples/os-06.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축 해제·빌드·출력 안내 README",
+              "kind": "link",
+              "href": "/knowledge/examples/readmes/os-06.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP의 project/에는 original과 ko가 나란히 있습니다. 둘은 같은 프로그램의 보존 원본과 주석 파생본입니다. 페이지별로 같은 팩을 사용해도 새 성능 검증을 한 것으로 중복 집계하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "실습 · 빌드와 기대 결과",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축을 푼 폴더의 project/에서 실행합니다. CMake 3.16 이상과 지원되는 C++ 컴파일러가 필요합니다. 아래 명령은 한국어 주석판을 빌드합니다. -S에 original을 지정하면 보존 원본도 별도로 빌드할 수 있습니다. 입력 파일·API 키·외부 네트워크는 필요 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S ko -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=20\ncmake --build build --parallel 2\nctest --test-dir build --output-on-failure -V --timeout 20"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "OBSERVE ONLY near_ns=<환경별 관찰값> far_ns=<환경별 관찰값>\nPASS 15 OS06 deterministic checks"
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "과제"
+                  }
+                ],
+                [
+                  {
+                    "text": "수행"
+                  }
+                ],
+                [
+                  {
+                    "text": "경계"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "결과와시간분리"
+                  }
+                ],
+                [
+                  {
+                    "text": "--test 출력에서 PASS와 OBSERVE ONLY줄을구별"
+                  }
+                ],
+                [
+                  {
+                    "text": "타이밍 값을정답 숫자로고정하지않는다"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "동기화경계"
+                  }
+                ],
+                [
+                  {
+                    "text": "두 fetch_add에서각 join과최종 load까지경로표시"
+                  }
+                ],
+                [
+                  {
+                    "text": "relaxed 자체가게시를보장한다는오해금지"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "검사수계산"
+                  }
+                ],
+                [
+                  {
+                    "text": "정렬 3 조건+4 사례×3 조건을세기"
+                  }
+                ],
+                [
+                  {
+                    "text": "원본/ko·C++11/20 반복을 60 개독립 검사로세지않는다"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정상 종료 코드 0·CTest 1/1 이 기대값입니다. 이번 Cloud Linux GCC 14.2.0 / CMake 3.31.6 에서 원본과 ko를 각각 C++11/20 으로 새로 빌드하여 통과했습니다. 모든 구성은 같은 논리 조건의 반복이며 새 독립 조건을 늘린 것이 아닙니다. Windows/MSVC·sanitizer·TSan·하드웨어 성능은 이번 실행에 포함하지 않았습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "복습 · 먼저 답한 뒤 펼치기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "atomic이면 false sharing이 사라지는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 값의 원자성과 캐시 일관성 단위의 비용은 별개다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "relaxed가 다른 구조체 데이터의 게시를 보장하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 게시 대상의 동기화 계약을 별도로 설계해야 한다. 여기서는 join 뒤에 카운터를 읽는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "두 일반 정수를 각각 다른 워커만 쓰고 두 join 뒤에 읽으면 무조건 race인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 서로 다른 메모리 위치에 접근하고 join 경계가 맞으면 그 사실만으로 race가 되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "alignas(64) 검사 통과는 실제 캐시 라인 64B 측정인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 타입 정렬·크기 계약 검사이며 하드웨어 단위 탐지와 다르다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "near_ns가 더 작게 나오면 실패인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 시간은 관찰값뿐이고 성공 조건은 15 개 논리 검사다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "같은 Near 객체로 count를 두 번 호출해도 각 결과가 n인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. count는 초기화하지 않는다. 원본 main은 매번 새 객체를 만든다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "일반 정수 하나를 두 스레드가 경쟁해서 쓰는 반례를 실행해야 하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 미정의 동작을 실행할 필요 없이 원자성·메모리 위치·join 계약을 비교한다. 이번 테스트에도 그런 코드는 없다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스와 빌드 파일",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "main.cpp 전체 파일 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/os-06-lab/ko/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp · 한국어 주석 전체 코드",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <atomic>\n#include <chrono>\n#include <cstdint>\n#include <iostream>\n#include <string>\n#include <thread>\n#include <utility>\n\n// C++11 compatible. 64 bytes is a lab assumption, NOT detected cache-line size.\nstruct NearCell { std::atomic<unsigned> n; NearCell() : n(0) {} }; // 한국어: 서로 독립적인 atomic 카운터의 인접 배치를 구성한다.\nstruct alignas(64) FarCell { std::atomic<unsigned> n; FarCell() : n(0) {} }; // 한국어: 64바이트 최소 정렬을 요청할 뿐 실제 캐시 라인 크기를 측정하지 않는다.\nstruct Near { NearCell a,b; };\nstruct Far { FarCell a,b; }; // 한국어: 두 멤버의 간격은 타입 크기와 정렬 영향을 받는다.\n\ntemplate<class T>\nstd::pair<unsigned,unsigned> count(T& v, unsigned repetitions, long long& ns) { // 한국어: 호출마다 새로 0 초기화된 객체를 쓰는 것이 이 테스트의 전제다.\n    const auto start = std::chrono::steady_clock::now(); // 한국어: 시간에는 스레드 생성·스케줄링·join 비용도 포함된다.\n    std::thread a([&] { // 한국어: 첫 워커는 a 카운터만 변경한다. 스레드 생성 실패 복구는 이 예제 범위 밖이다.\n        for (unsigned i = 0; i < repetitions; ++i)\n            v.a.n.fetch_add(1, std::memory_order_relaxed); // 한국어: relaxed는 이 카운터의 원자성만 제공하며 다른 데이터를 게시하지 않는다.\n    });\n    std::thread b([&] { // 한국어: 두 번째 워커는 b 카운터만 변경한다.\n        for (unsigned i = 0; i < repetitions; ++i)\n            v.b.n.fetch_add(1, std::memory_order_relaxed); // 한국어: 다른 atomic 객체여도 하드웨어 일관성 단위를 공유할 수 있다.\n    });\n    a.join(); // 한국어: 워커 종료와 성공한 join 반환의 동기화를 먼저 확보한다.\n    b.join(); // 한국어: 두 워커가 모두 끝난 뒤 결과를 읽는다.\n    ns = std::chrono::duration_cast<std::chrono::nanoseconds>( // 한국어: 관찰 시간은 비교 조건을 통제한 성능 증거가 아니다.\n        std::chrono::steady_clock::now() - start).count();\n    return std::make_pair(v.a.n.load(std::memory_order_relaxed),\n                          v.b.n.load(std::memory_order_relaxed));\n}\n\nint main(int argc, char** argv) {\n    if (argc != 2 || std::string(argv[1]) != \"--test\") return 2; // 한국어: 반복 횟수를 외부 입력으로 늘리는 벤치마크 인터페이스가 아니다.\n    int checks = 0;\n    int failed = 0;\n    const auto verify = [&](bool ok) {\n        ++checks;\n        if (!ok) ++failed;\n    };\n    verify(alignof(FarCell) >= 64); // 한국어: 정렬 계약을 검사하며 실제 캐시의 라인 크기를 탐지하지 않는다.\n    verify(sizeof(FarCell) % 64 == 0);\n    verify(sizeof(Far) >= 2 * sizeof(FarCell));\n    const unsigned cases[] = {0, 1, 7, 10000}; // 한국어: 최대10000회로 제한된 정확성 검사이며 비용이 큰 벤치마크가 아니다.\n    for (unsigned n : cases) {\n        Near nearby; // 한국어: 매 사례마다 카운터를 새로 0으로 초기화한다.\n        Far separated;\n        long long near_ns = 0, far_ns = 0;\n        const auto x = count(nearby, n, near_ns);\n        const auto y = count(separated, n, far_ns);\n        verify(x.first == n && x.second == n); // 한국어: 각 워커의 최종 카운터가 반복 횟수와 같은지 확인한다.\n        verify(y.first == n && y.second == n);\n        verify(x == y); // 한국어: 배치가 달라도 논리 결과는 같아야 한다.\n        if (n == 10000) // 한국어: 시간은 기록만 하고 빠름/느림을 PASS 조건으로 삼지 않는다.\n            std::cout << \"OBSERVE ONLY near_ns=\" << near_ns\n                      << \" far_ns=\" << far_ns << '\\n';\n    }\n    std::cout << (failed ? \"FAIL \" : \"PASS \") << checks\n              << \" OS06 deterministic checks\\n\";\n    return failed ? 1 : 0;\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CMakeLists.txt 전체 파일 다운로드",
+              "kind": "link",
+              "href": "/knowledge/shared/os-06-lab/ko/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt · 원본과 동일한 전체 빌드 설정",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(os06_false_sharing LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20 CACHE STRING \"Use 11 or 20\")\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nfind_package(Threads REQUIRED)\nadd_executable(os06_cpu main.cpp)\ntarget_link_libraries(os06_cpu PRIVATE Threads::Threads)\nif(CMAKE_CXX_COMPILER_ID MATCHES \"GNU|Clang\")\n  target_compile_options(os06_cpu PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME false_sharing_contract COMMAND os06_cpu --test)\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·원본 무결성·새 실행을 분리한다",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 코드 조립·해시·공개 범위 요약",
+              "kind": "link",
+              "href": "/knowledge/shared/os-06-lab/source-index.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 코드 SHA256/FNV64·조립 무결성",
+              "kind": "link",
+              "href": "/knowledge/shared/os-06-lab/source-integrity.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "줄끝 한국어 주석 추가 원장",
+              "kind": "link",
+              "href": "/knowledge/shared/os-06-lab/annotation-manifest.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 CPU 검증 · 환경·명령·경로 비식별화 로그",
+              "kind": "link",
+              "href": "/knowledge/shared/os-06-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 원본 main.cpp",
+              "kind": "link",
+              "href": "/knowledge/shared/os-06-lab/original/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보존 원본 CMakeLists.txt",
+              "kind": "link",
+              "href": "/knowledge/shared/os-06-lab/original/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++ 작업 초안 · atomic 메모리 순서",
+              "kind": "link",
+              "href": "https://eel.is/c++draft/atomics.order"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++ 작업 초안 · thread::join 동기화",
+              "kind": "link",
+              "href": "https://eel.is/c++draft/thread.thread.member"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Intel · 아키텍처·최적화 참고 문서",
+              "kind": "link",
+              "href": "https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 참고 조회일: 2026-10-24. 표준 작업 초안은 판본에 따라 절 번호가 바뀔 수 있습니다. 과거 실행 기록과 이번 클라우드 실행을 구분합니다. 공개 실행 로그는 내부 경로를 치환한 파생본입니다. 과거 첨부 ZIP·이미지의 복구까지 확인한 것은 아닙니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "원문·변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-24: 한국어 설명·SVG 2개·Mermaid·실습·접힌 복습을 작성했습니다. 기존 코드 파일은 original에 보존했습니다. ko는 줄 끝 주석만 덧붙여 행 수와 코드 토큰을 유지했고, 주석 제거 복원과 GCC 전처리 결과 동일성을 확인했습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "OS06 의 시간값은 한 회 관찰일 뿐 실제 캐시 성능 우열을 입증하지 않습니다. 새 설명은 타이밍·정렬·원자성·join의 주장을 분리하고 원본 코드를 수정하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본·변경 경계 다시 읽기",
+              "kind": "link",
+              "href": "/knowledge/shared/os-06-lab/source-index.md"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

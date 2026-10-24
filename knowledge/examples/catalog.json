@@ -488,6 +488,39 @@
       ]
     },
     {
+      "id": "computer-01",
+      "title": "컴퓨터 구조01 · 명령 상태 추적",
+      "path": "knowledge/examples/computer-01.zip",
+      "sha256": "abd8ab2f9f296c9ea6d4ab76834aae59ac9c3b13a62c53e53f5cb3e6b6f75e04",
+      "bytes": 3707,
+      "files": [
+        "computer-01/README.md",
+        "computer-01/project/CMakeLists.txt",
+        "computer-01/project/main.cpp"
+      ],
+      "pages": [
+        "computer-01"
+      ],
+      "readme": "knowledge/examples/readmes/computer-01.md",
+      "sourceFiles": [
+        {
+          "path": "computer-01/README.md",
+          "source": "knowledge/examples/readmes/computer-01.md",
+          "sha256": "0206951234e49317c9d6012d125b22435783b026c44bb94766ae454c8d2070d2"
+        },
+        {
+          "path": "computer-01/project/CMakeLists.txt",
+          "source": "knowledge/shared/computer-01-lab/CMakeLists.txt",
+          "sha256": "3219952d2212b912232b5ef06964cabe30c24c3f678e9f480c41e7afb53abd5f"
+        },
+        {
+          "path": "computer-01/project/main.cpp",
+          "source": "knowledge/shared/computer-01-lab/main.cpp",
+          "sha256": "117657f0a8fe50d84202eb815cfb4f0ba21892c761cc8ed0fe789035b94cf15e"
+        }
+      ]
+    },
+    {
       "id": "cpp-advanced-lab",
       "title": "C++ 심화 · Effective C++ 공통 실습",
       "path": "knowledge/examples/cpp-advanced-lab.zip",
@@ -2259,6 +2292,313 @@
           "path": "game-math-winapi/project/windows/winapi_demo.cpp",
           "source": "knowledge/shared/game-math-winapi-lab-ko/windows/winapi_demo.cpp",
           "sha256": "12edffd0e46ddf7ab6d051da2098587f80fb46fec61e7af7e05c555ce5724601"
+        }
+      ]
+    },
+    {
+      "id": "os-01",
+      "title": "운영체제 01 · 프로세스·스레드와 닫을 수 있는 작업 큐 · 전체 예제",
+      "path": "knowledge/examples/os-01.zip",
+      "sha256": "ee9011b829ed31ce534c871e06ed33cf7d9b9373953affc5d5bfa83249b8701d",
+      "bytes": 8567,
+      "files": [
+        "os-01/README.md",
+        "os-01/project/CMakeLists.txt",
+        "os-01/project/main.cpp",
+        "os-01/project/original/CMakeLists.txt",
+        "os-01/project/original/main.cpp",
+        "os-01/project/provenance.json"
+      ],
+      "pages": [
+        "os-01"
+      ],
+      "readme": "knowledge/examples/readmes/os-01.md",
+      "sourceFiles": [
+        {
+          "path": "os-01/README.md",
+          "source": "knowledge/examples/readmes/os-01.md",
+          "sha256": "910000af086c4cccb289c0f1dd64f214fd058c3f3b83fa74b6b65a4bf32ec214"
+        },
+        {
+          "path": "os-01/project/CMakeLists.txt",
+          "source": "knowledge/shared/os-01-lab/CMakeLists.txt",
+          "sha256": "81b421c27bafb4ef7ae4258a805370ae43db87077897e525cfb840737fc4ee99"
+        },
+        {
+          "path": "os-01/project/main.cpp",
+          "source": "knowledge/shared/os-01-lab/main.cpp",
+          "sha256": "b7fd0a49fcb80e9ac3c50ec426756822820418fbcfb48d15cb3c34208dfb9527"
+        },
+        {
+          "path": "os-01/project/original/CMakeLists.txt",
+          "source": "knowledge/shared/os-01-lab/original/CMakeLists.txt",
+          "sha256": "68061385d511e3a82f095203b48267e6b78736a3c8d8533daa47587a391c5ad4"
+        },
+        {
+          "path": "os-01/project/original/main.cpp",
+          "source": "knowledge/shared/os-01-lab/original/main.cpp",
+          "sha256": "96cf0966e8eed1d87fbfd90fb71d82953897d1de8367603a3c9b1b62bc8fba10"
+        },
+        {
+          "path": "os-01/project/provenance.json",
+          "source": "knowledge/shared/os-01-lab/provenance.json",
+          "sha256": "b69a92c5c2b92bcb06185d42800a4fbc174623618eaca9354b7d6630c7af64aa"
+        }
+      ]
+    },
+    {
+      "id": "os-02",
+      "title": "운영체제 02 · 가상 주소·페이지 테이블과 접근 권한 · 전체 예제",
+      "path": "knowledge/examples/os-02.zip",
+      "sha256": "6466ce418ea3e8fd0b24b90cd24d6596322efe0fc3b6e1d74f214c8879c0c5d6",
+      "bytes": 7684,
+      "files": [
+        "os-02/README.md",
+        "os-02/project/CMakeLists.txt",
+        "os-02/project/main.cpp",
+        "os-02/project/original/CMakeLists.txt",
+        "os-02/project/original/main.cpp",
+        "os-02/project/provenance.json"
+      ],
+      "pages": [
+        "os-02"
+      ],
+      "readme": "knowledge/examples/readmes/os-02.md",
+      "sourceFiles": [
+        {
+          "path": "os-02/README.md",
+          "source": "knowledge/examples/readmes/os-02.md",
+          "sha256": "dc7158f7338756b3b792c29050ecfe9be3cece518a760401cc70ab2943f23e4f"
+        },
+        {
+          "path": "os-02/project/CMakeLists.txt",
+          "source": "knowledge/shared/os-02-lab/CMakeLists.txt",
+          "sha256": "4f29de3352b993c3e2ff5ffc2fd8f33704a8f63b07b9f5244f766061a7fe1601"
+        },
+        {
+          "path": "os-02/project/main.cpp",
+          "source": "knowledge/shared/os-02-lab/main.cpp",
+          "sha256": "14acf35deb4b5514d8f60f75ce388cbc0d62b895291895865c7b8ddf7a7a15ab"
+        },
+        {
+          "path": "os-02/project/original/CMakeLists.txt",
+          "source": "knowledge/shared/os-02-lab/original/CMakeLists.txt",
+          "sha256": "e1a6929e7d8950db15df111c9fa13e1075d0d6b156ed2e38df8d8dfb21b5a614"
+        },
+        {
+          "path": "os-02/project/original/main.cpp",
+          "source": "knowledge/shared/os-02-lab/original/main.cpp",
+          "sha256": "fe5a725977e44857474fa58b85c6f9f85375da98f81e59d6015bd0815a5807e6"
+        },
+        {
+          "path": "os-02/project/provenance.json",
+          "source": "knowledge/shared/os-02-lab/provenance.json",
+          "sha256": "15cedaa88a6b5fb193baa949486e91a1041b4d29144d30c630be7aba4aaadde5"
+        }
+      ]
+    },
+    {
+      "id": "os-03",
+      "title": "운영체제 03 · 잠금 순서·교착 위험과 RAII · 전체 예제",
+      "path": "knowledge/examples/os-03.zip",
+      "sha256": "93e43b61c48564e4e83c628570a1039c07ff25d128f3168c8ae096ac3bedc643",
+      "bytes": 10532,
+      "files": [
+        "os-03/README.md",
+        "os-03/project/CMakeLists.txt",
+        "os-03/project/main.cpp",
+        "os-03/project/original/CMakeLists.txt",
+        "os-03/project/original/main.cpp",
+        "os-03/project/provenance.json"
+      ],
+      "pages": [
+        "os-03"
+      ],
+      "readme": "knowledge/examples/readmes/os-03.md",
+      "sourceFiles": [
+        {
+          "path": "os-03/README.md",
+          "source": "knowledge/examples/readmes/os-03.md",
+          "sha256": "b00849bc7c2a15e353c3c7261ceb9efcac634f353b369a029d5b80431bb705e7"
+        },
+        {
+          "path": "os-03/project/CMakeLists.txt",
+          "source": "knowledge/shared/os-03-lab/CMakeLists.txt",
+          "sha256": "092217aba14f577d1947f88e7ce41fab92273e479f22b3dd81cb2a7accdaee58"
+        },
+        {
+          "path": "os-03/project/main.cpp",
+          "source": "knowledge/shared/os-03-lab/main.cpp",
+          "sha256": "b59a6991cce6611ca37d073a32b6cd8e638aea8cd04f3d47f4bda1ca68eaa8b2"
+        },
+        {
+          "path": "os-03/project/original/CMakeLists.txt",
+          "source": "knowledge/shared/os-03-lab/original/CMakeLists.txt",
+          "sha256": "775111e9fe8920aa6616b933daedcff5d9751be8aaf9d6e3f4f6aef55c67791f"
+        },
+        {
+          "path": "os-03/project/original/main.cpp",
+          "source": "knowledge/shared/os-03-lab/original/main.cpp",
+          "sha256": "5bc3ead3eedf6a427b0a5f4812058ef7bb9e2d0ab58ffbf4bc0bf0a105411c63"
+        },
+        {
+          "path": "os-03/project/provenance.json",
+          "source": "knowledge/shared/os-03-lab/provenance.json",
+          "sha256": "d5479659e2b5ad84ce341b149e534b4462c5e9e61086219ddff791a5db98d87d"
+        }
+      ]
+    },
+    {
+      "id": "os-04",
+      "title": "OS 04 · Round Robin과 논리 시간 스케줄링",
+      "path": "knowledge/examples/os-04.zip",
+      "sha256": "053eadb7ac2757db23ebc4fdf87227fde7a18b21c5eb0d690e24268e4bbe9e3e",
+      "bytes": 6939,
+      "files": [
+        "os-04/README.md",
+        "os-04/project/annotation-manifest.json",
+        "os-04/project/ko/CMakeLists.txt",
+        "os-04/project/ko/main.cpp",
+        "os-04/project/original/CMakeLists.txt",
+        "os-04/project/original/main.cpp"
+      ],
+      "pages": [
+        "os-04"
+      ],
+      "readme": "knowledge/examples/readmes/os-04.md",
+      "sourceFiles": [
+        {
+          "path": "os-04/README.md",
+          "source": "knowledge/examples/readmes/os-04.md",
+          "sha256": "001b4900dc052a14a78753acd5fe82e156688d6d60343400efcb83df05b4966a"
+        },
+        {
+          "path": "os-04/project/annotation-manifest.json",
+          "source": "knowledge/shared/os-04-lab/annotation-manifest.json",
+          "sha256": "8e0b6c1db1395ca7f397e874b96c593070dd7f67c26a714a7db3cf5ecac2e7c2"
+        },
+        {
+          "path": "os-04/project/ko/CMakeLists.txt",
+          "source": "knowledge/shared/os-04-lab/ko/CMakeLists.txt",
+          "sha256": "c42b8625883166c20487d84a2b3be494285d40fcbd19cc6af00bc5040a96a847"
+        },
+        {
+          "path": "os-04/project/ko/main.cpp",
+          "source": "knowledge/shared/os-04-lab/ko/main.cpp",
+          "sha256": "c106efe0a0cf2980c3e5d0ffa76d8df736021b5abf2e315378d9c95462e830f0"
+        },
+        {
+          "path": "os-04/project/original/CMakeLists.txt",
+          "source": "knowledge/shared/os-04-lab/original/CMakeLists.txt",
+          "sha256": "c42b8625883166c20487d84a2b3be494285d40fcbd19cc6af00bc5040a96a847"
+        },
+        {
+          "path": "os-04/project/original/main.cpp",
+          "source": "knowledge/shared/os-04-lab/original/main.cpp",
+          "sha256": "eeb46d048f6140828844b80928ba2116d256861873ff48f20a218d312d15f963"
+        }
+      ]
+    },
+    {
+      "id": "os-05",
+      "title": "OS 05 · 캐시 집합·연관도·LRU 모델",
+      "path": "knowledge/examples/os-05.zip",
+      "sha256": "8d11225b07380180527563480619926e5886f35f70f7fa30b2dee53214cf2918",
+      "bytes": 7773,
+      "files": [
+        "os-05/README.md",
+        "os-05/project/annotation-manifest.json",
+        "os-05/project/ko/CMakeLists.txt",
+        "os-05/project/ko/main.cpp",
+        "os-05/project/original/CMakeLists.txt",
+        "os-05/project/original/main.cpp"
+      ],
+      "pages": [
+        "os-05",
+        "computer-02"
+      ],
+      "readme": "knowledge/examples/readmes/os-05.md",
+      "sourceFiles": [
+        {
+          "path": "os-05/README.md",
+          "source": "knowledge/examples/readmes/os-05.md",
+          "sha256": "f245508a7ed7b175d73e78cf7657e17abcc57b9e1275d811f0c8e35f7b2ff7eb"
+        },
+        {
+          "path": "os-05/project/annotation-manifest.json",
+          "source": "knowledge/shared/os-05-lab/annotation-manifest.json",
+          "sha256": "8e029c8e4e17a112fde1bc31bb653b5ace3fc4f19999ef5bd75d7b800b3083d0"
+        },
+        {
+          "path": "os-05/project/ko/CMakeLists.txt",
+          "source": "knowledge/shared/os-05-lab/ko/CMakeLists.txt",
+          "sha256": "70db538671e405f48871fa7f40ada294ed2bcfe6723c8be939c242f6219dab9e"
+        },
+        {
+          "path": "os-05/project/ko/main.cpp",
+          "source": "knowledge/shared/os-05-lab/ko/main.cpp",
+          "sha256": "f413ed37517a17a4e6fe4472a203ac968628da9f5297e12b8096751942b45103"
+        },
+        {
+          "path": "os-05/project/original/CMakeLists.txt",
+          "source": "knowledge/shared/os-05-lab/original/CMakeLists.txt",
+          "sha256": "70db538671e405f48871fa7f40ada294ed2bcfe6723c8be939c242f6219dab9e"
+        },
+        {
+          "path": "os-05/project/original/main.cpp",
+          "source": "knowledge/shared/os-05-lab/original/main.cpp",
+          "sha256": "e5959a649eeb386637fa3d62c492f1c6ffa15ce502c5d5bf4053c31e84631822"
+        }
+      ]
+    },
+    {
+      "id": "os-06",
+      "title": "OS 06 · False Sharing과 atomic 배치",
+      "path": "knowledge/examples/os-06.zip",
+      "sha256": "d5a63233b47e8ceeda9aa814fa1af72b062557a754eb65191cd8f89b795524bb",
+      "bytes": 6842,
+      "files": [
+        "os-06/README.md",
+        "os-06/project/annotation-manifest.json",
+        "os-06/project/ko/CMakeLists.txt",
+        "os-06/project/ko/main.cpp",
+        "os-06/project/original/CMakeLists.txt",
+        "os-06/project/original/main.cpp"
+      ],
+      "pages": [
+        "os-06"
+      ],
+      "readme": "knowledge/examples/readmes/os-06.md",
+      "sourceFiles": [
+        {
+          "path": "os-06/README.md",
+          "source": "knowledge/examples/readmes/os-06.md",
+          "sha256": "3c71601a32c96c8666e0e1d3ce78a3e140c01b34088395c619db51c9ca3aad9a"
+        },
+        {
+          "path": "os-06/project/annotation-manifest.json",
+          "source": "knowledge/shared/os-06-lab/annotation-manifest.json",
+          "sha256": "148501aa18a53c3ad985911aaa076aa3621664c572524da8ecb9cb02e76113b0"
+        },
+        {
+          "path": "os-06/project/ko/CMakeLists.txt",
+          "source": "knowledge/shared/os-06-lab/ko/CMakeLists.txt",
+          "sha256": "f81dac5162a5890faca923eacdc0b280db06af568b153dc5e1e3731119abf045"
+        },
+        {
+          "path": "os-06/project/ko/main.cpp",
+          "source": "knowledge/shared/os-06-lab/ko/main.cpp",
+          "sha256": "60e99ae28c5607dbc060e2bdfb5242f39d30a1d51c35ac4a19efb94bd87f44cd"
+        },
+        {
+          "path": "os-06/project/original/CMakeLists.txt",
+          "source": "knowledge/shared/os-06-lab/original/CMakeLists.txt",
+          "sha256": "f81dac5162a5890faca923eacdc0b280db06af568b153dc5e1e3731119abf045"
+        },
+        {
+          "path": "os-06/project/original/main.cpp",
+          "source": "knowledge/shared/os-06-lab/original/main.cpp",
+          "sha256": "e00525ff40a02001c216ca81b866763eaec23a3914de8470589c59d2a6b1a631"
         }
       ]
     },

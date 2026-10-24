@@ -1,0 +1,24 @@
+# Path-redacted derivative of an actual execution log; not byte-identical to the raw log.
+$ ctest --test-dir <build>/ko-cpp11 --output-on-failure -V --timeout 20
+Internal ctest changing into directory: <build>/ko-cpp11
+UpdateCTestConfiguration  from :<build>/ko-cpp11/DartConfiguration.tcl
+UpdateCTestConfiguration  from :<build>/ko-cpp11/DartConfiguration.tcl
+Test project <build>/ko-cpp11
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: OS05_cache_mapping
+
+1: Test command: <build>/ko-cpp11/os05_cache_mapping
+1: Working Directory: <build>/ko-cpp11
+1: Test timeout computed to be: 20
+1: OS05 CPU cache mapping: 34 distinct logical assertions; failed=0
+1/1 Test #1: OS05_cache_mapping ...............   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.01 sec

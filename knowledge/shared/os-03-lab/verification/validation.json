@@ -1,0 +1,110 @@
+{
+  "date": "2026-10-24",
+  "environment": "Cloud Linux GCC14.2 CMake3.31.6; clean mapped standalone projects",
+  "raw_capture_assembly_sha256": "5bc3ead3eedf6a427b0a5f4812058ef7bb9e2d0ab58ffbf4bc0bf0a105411c63",
+  "korean_sha256": "b59a6991cce6611ca37d073a32b6cd8e638aea8cd04f3d47f4bda1ca68eaa8b2",
+  "historical_identity": "MISMATCH: captured assembly is not proven byte-identical to historical main.cpp; no claim of historical ZIP recovery",
+  "annotation_exact_reversal": "passed",
+  "gcc20_preprocessor_identity": "passed (-E -P byte equality)",
+  "commands": [
+    {
+      "step": "configure",
+      "standard": 20,
+      "command": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DCMAKE_CXX_STANDARD=20"
+      ],
+      "exit_code": 0,
+      "log": "cpp20-configure.txt",
+      "log_sha256": "6bfc6590b9648bf0924285fb057d12e23cfaf668bb7d3e0537d5e880d35db8d3"
+    },
+    {
+      "step": "build",
+      "standard": 20,
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--parallel",
+        "2"
+      ],
+      "exit_code": 0,
+      "log": "cpp20-build.txt",
+      "log_sha256": "3880507c358a0b5a27fb923358a5cf7a49aee6527dec23f7170c19f22cde62aa"
+    },
+    {
+      "step": "ctest",
+      "standard": 20,
+      "command": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure",
+        "-V"
+      ],
+      "exit_code": 0,
+      "log": "cpp20-ctest.txt",
+      "log_sha256": "1dca48faa222f3d0b0e730f1762c888042020cefe416418ff7ac6a4a47882c76"
+    },
+    {
+      "step": "configure",
+      "standard": 11,
+      "command": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DCMAKE_CXX_STANDARD=11"
+      ],
+      "exit_code": 0,
+      "log": "cpp11-configure.txt",
+      "log_sha256": "cab4eec95b1146588f7e8c77dad7a5834bbc249d4d396c6164bfbf53730b9b1c"
+    },
+    {
+      "step": "build",
+      "standard": 11,
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--parallel",
+        "2"
+      ],
+      "exit_code": 0,
+      "log": "cpp11-build.txt",
+      "log_sha256": "350bed07703302f637bed15101795e33c7c2664e046923659d27582c9f38eadc"
+    },
+    {
+      "step": "ctest",
+      "standard": 11,
+      "command": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure",
+        "-V"
+      ],
+      "exit_code": 0,
+      "log": "cpp11-ctest.txt",
+      "log_sha256": "21a9a9d675e161cc69b480fb939c9751574d36a5a7d8b0538e92a7add9e4f0a0"
+    }
+  ],
+  "not_run": [
+    "Windows/MSVC",
+    "ThreadSanitizer",
+    "ASan/UBSan",
+    "actual MMU/TLB/kernel scheduler measurements",
+    "GPU"
+  ],
+  "limits": "C++11/20 each run same captured and Korean programs; 2 CTest executables are not doubled logical coverage. Timeouts bound tests, not a fairness proof.",
+  "log_representation": "Path-redacted derivatives, not byte-identical raw logs. Internal absolute roots are replaced with <source>/<build>; a label is prepended. Original raw logs are retained privately.",
+  "privacy": "No private source-page locators or internal workspace roots are required to reproduce the public project.",
+  "log_hash_scope": "SHA-256 refers to the public path-redacted log bytes including their explanatory label."
+}

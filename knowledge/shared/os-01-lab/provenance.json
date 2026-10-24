@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-24",
+  "assembly": "Exact code-block bodies, including original LF, concatenated in displayed order. OS03 has six fragments; the fifth part contains two blocks.",
+  "restored_bytes": 4055,
+  "restored_sha256": "96cf0966e8eed1d87fbfd90fb71d82953897d1de8367603a3c9b1b62bc8fba10",
+  "historical_expected_sha256": "96cf0966e8eed1d87fbfd90fb71d82953897d1de8367603a3c9b1b62bc8fba10",
+  "historical_zip_log_recovered": "Historical logs retained separately; historical and current execution evidence are distinct.",
+  "historical_identity": "matched",
+  "korean_sha256": "b7fd0a49fcb80e9ac3c50ec426756822820418fbcfb48d15cb3c34208dfb9527",
+  "annotations": [
+    {
+      "line": 11,
+      "suffix": " // [한국어 해설] 정수 작업을 담는 유한 큐다. 상태와 두 대기 조건은 같은 mutex로 보호한다."
+    },
+    {
+      "line": 13,
+      "suffix": " // [한국어 해설] 용량 0은 영원히 넣을 수 없는 큐이므로 생성 시 거부한다."
+    },
+    {
+      "line": 16,
+      "suffix": " // [한국어 해설] 가득 차면 대기한다. 깨어나도 종료 또는 빈자리 조건을 락 아래 다시 검사한다."
+    },
+    {
+      "line": 19,
+      "suffix": " // [한국어 해설] Close 이후 새 작업을 받지 않는다. 이 분기는 기존 대기자에도 적용된다."
+    },
+    {
+      "line": 20,
+      "suffix": " // [한국어 해설] 공유 상태 변경이 먼저다. 삽입 실패 예외는 호출자에게 전달되며 unique_lock이 잠금을 해제한다."
+    },
+    {
+      "line": 25,
+      "suffix": " // [한국어 해설] 닫혔어도 남은 작업은 배출한다. 닫힘과 비어 있음이 함께 성립해야 false다."
+    },
+    {
+      "line": 28,
+      "suffix": " // [한국어 해설] wait의 조건과 합치면 닫힌 빈 큐임을 알 수 있다."
+    },
+    {
+      "line": 34,
+      "suffix": " // [한국어 해설] 상태 변경은 잠금 안에서, 두 종류 대기자의 깨움은 잠금 밖에서 수행한다."
+    },
+    {
+      "line": 38,
+      "suffix": " // [한국어 해설] 이 순간의 크기일 뿐 다음 Push/Pop 성공을 예약하지 않는다."
+    },
+    {
+      "line": 41,
+      "suffix": " // [한국어 해설] 읽기도 같은 mutex로 보호한다. 호출 결과와 이후 연산은 별도 시점이다."
+    },
+    {
+      "line": 51,
+      "suffix": " // [한국어 해설] 통과한 명시 조건을 센다. 컴파일러별 반복 실행을 독립 조건으로 더하지 않는다."
+    },
+    {
+      "line": 81,
+      "suffix": " // [한국어 해설] 아래 테스트는 Close와 작업 스레드의 실행 순서를 고정하지 않는다. 실제 wait 진입 여부까지 증명하지 않는다."
+    },
+    {
+      "line": 95,
+      "suffix": " // [한국어 해설] 두 생산자가 1~200을 넣고 세 소비자가 배출한다. 개별 처리 순서는 비결정적이다."
+    },
+    {
+      "line": 101,
+      "suffix": " // [한국어 해설] 생산자 완료 후 닫고 소비자를 join한다. 큐가 스레드보다 먼저 파괴되면 안 된다."
+    },
+    {
+      "line": 104,
+      "suffix": " // [한국어 해설] 개수와 합은 이 실행의 관찰치다. 모든 가능한 스케줄이나 모든 메시지 고유성을 증명하지 않는다."
+    }
+  ],
+  "source_document_title": "OS 01 · Process/Thread·Mutex·Condition Variable·작업 큐"
+}

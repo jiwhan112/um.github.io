@@ -1,0 +1,82 @@
+{
+  "id": "os-04",
+  "original_sha256": "eeb46d048f6140828844b80928ba2116d256861873ff48f20a218d312d15f963",
+  "korean_sha256": "c106efe0a0cf2980c3e5d0ffa76d8df736021b5abf2e315378d9c95462e830f0",
+  "line_count_preserved": 77,
+  "appended_comments": [
+    {
+      "line": 10,
+      "appended": " // 한국어: 한 구간은 [begin,end)이며 실제 밀리초가 아닌 논리 틱이다."
+    },
+    {
+      "line": 11,
+      "appended": " // 한국어: 완료 시각과 실행 구간을 분리해 결과를 보존한다."
+    },
+    {
+      "line": 13,
+      "appended": " // 한국어: 입력은 도착 시각이 모두 0인 양의 burst 목록이다."
+    },
+    {
+      "line": 14,
+      "appended": " // 한국어: quantum과 작업 수부터 검증하여 무한 순환 입력을 막는다."
+    },
+    {
+      "line": 17,
+      "appended": " // 한국어: 총 작업량 상한으로 이후 clock 덧셈 범위를 제한한다."
+    },
+    {
+      "line": 19,
+      "appended": " // 한국어: burst 상한 확인 뒤 뺄셈 형태로 누적 상한을 검사한다."
+    },
+    {
+      "line": 21,
+      "appended": " // 한국어: 입력 순서가 최초 준비 큐 순서다."
+    },
+    {
+      "line": 25,
+      "appended": " // 한국어: 원본 burst를 바꾸지 않고 남은 작업량을 따로 추적한다."
+    },
+    {
+      "line": 28,
+      "appended": " // 한국어: 큐 맨 앞에서 하나를 선택한다."
+    },
+    {
+      "line": 29,
+      "appended": " // 한국어: 남은 양이 작으면 quantum 전체를 채우지 않는다."
+    },
+    {
+      "line": 30,
+      "appended": " // 한국어: 실행 구간을 기록한 뒤 논리 시각을 전진시킨다."
+    },
+    {
+      "line": 32,
+      "appended": " // 한국어: 끝나지 않은 작업만 뒤로 보낸다."
+    },
+    {
+      "line": 33,
+      "appended": " // 한국어: 남은 양이 0이 된 시각이 완료 시각이다."
+    },
+    {
+      "line": 35,
+      "appended": " // 한국어: 모든 입력 작업량이 정확히 소진되었는지 보존식을 확인한다."
+    },
+    {
+      "line": 43,
+      "appended": " // 한국어: 잘못된 입력은 정상 결과가 아니라 명시적 거부가 기대값이다."
+    },
+    {
+      "line": 53,
+      "appended": " // 한국어: 이 시각들은 실행 측정이 아니라 손으로 재현 가능한 정답이다."
+    },
+    {
+      "line": 61,
+      "appended": " // 한국어: 짧은 작업의 남는 quantum을 대기로 채우지 않는 반례다."
+    },
+    {
+      "line": 69,
+      "appended": " // 한국어: 합계 초과를 실행 전에 거부한다."
+    }
+  ],
+  "restored_original_exact": true,
+  "cmake": "unchanged exact copy"
+}

@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-24",
+  "origin": "new_authored_teaching_model_not_recovered_ISA_implementation",
+  "environment": {
+    "compiler": "GCC 14.2.0",
+    "cmake": "3.31.6",
+    "standard": "C++11",
+    "platform": "cloud Linux",
+    "build_type": "Debug"
+  },
+  "source_sha256": {
+    "main.cpp": "117657f0a8fe50d84202eb815cfb4f0ba21892c761cc8ed0fe789035b94cf15e",
+    "CMakeLists.txt": "3219952d2212b912232b5ef06964cabe30c24c3f678e9f480c41e7afb53abd5f"
+  },
+  "ctest": {
+    "registered_tests": 1,
+    "passed": 1,
+    "asserted_conditions": 19,
+    "conditions_are_not_independent_experiments": true,
+    "log": "verification/ctest.txt",
+    "log_sha256": "ef1a904fbf72615bf33c7e66fa29d782c2a8ec2093c9be8bc9bc301c668b192d",
+    "log_scope": "Public derivative: internal absolute paths redacted; raw log retained privately. Not a byte-identical raw log."
+  },
+  "expected_stdout": "LOAD[2]=7 ADD=14 STORE[3]=14 HALT\nPASS: 19 contract checks\n",
+  "not_verified": [
+    "Windows/MSVC",
+    "C++20 build",
+    "actual ISA encoding/execution",
+    "hardware performance",
+    "kernel privilege transitions",
+    "GPU"
+  ]
+}

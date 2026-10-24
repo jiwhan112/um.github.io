@@ -1570,6 +1570,233 @@
         }
       ],
       "readmeSource": "knowledge/examples/readmes/dx11-17-reviewed.md"
+    },
+    {
+      "id": "computer-01",
+      "title": "컴퓨터 구조01 · 명령 상태 추적",
+      "pages": [
+        "computer-01"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/computer-01.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/computer-01-lab/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/computer-01-lab/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/computer-01.md"
+    },
+    {
+      "id": "os-01",
+      "title": "운영체제 01 · 프로세스·스레드와 닫을 수 있는 작업 큐 · 전체 예제",
+      "pages": [
+        "os-01"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/os-01-lab/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-01-lab/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-01-lab/original/main.cpp",
+          "path": "project/original/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-01-lab/original/CMakeLists.txt",
+          "path": "project/original/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-01-lab/provenance.json",
+          "path": "project/provenance.json"
+        },
+        {
+          "source": "knowledge/examples/readmes/os-01.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/os-01.md"
+    },
+    {
+      "id": "os-02",
+      "title": "운영체제 02 · 가상 주소·페이지 테이블과 접근 권한 · 전체 예제",
+      "pages": [
+        "os-02"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/os-02-lab/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-02-lab/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-02-lab/original/main.cpp",
+          "path": "project/original/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-02-lab/original/CMakeLists.txt",
+          "path": "project/original/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-02-lab/provenance.json",
+          "path": "project/provenance.json"
+        },
+        {
+          "source": "knowledge/examples/readmes/os-02.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/os-02.md"
+    },
+    {
+      "id": "os-03",
+      "title": "운영체제 03 · 잠금 순서·교착 위험과 RAII · 전체 예제",
+      "pages": [
+        "os-03"
+      ],
+      "files": [
+        {
+          "source": "knowledge/shared/os-03-lab/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-03-lab/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-03-lab/original/main.cpp",
+          "path": "project/original/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-03-lab/original/CMakeLists.txt",
+          "path": "project/original/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-03-lab/provenance.json",
+          "path": "project/provenance.json"
+        },
+        {
+          "source": "knowledge/examples/readmes/os-03.md",
+          "path": "README.md"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/os-03.md"
+    },
+    {
+      "id": "os-04",
+      "title": "OS 04 · Round Robin과 논리 시간 스케줄링",
+      "pages": [
+        "os-04"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/os-04.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/os-04-lab/original/main.cpp",
+          "path": "project/original/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-04-lab/original/CMakeLists.txt",
+          "path": "project/original/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-04-lab/ko/main.cpp",
+          "path": "project/ko/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-04-lab/ko/CMakeLists.txt",
+          "path": "project/ko/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-04-lab/annotation-manifest.json",
+          "path": "project/annotation-manifest.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/os-04.md"
+    },
+    {
+      "id": "os-05",
+      "title": "OS 05 · 캐시 집합·연관도·LRU 모델",
+      "pages": [
+        "os-05",
+        "computer-02"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/os-05.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/os-05-lab/original/main.cpp",
+          "path": "project/original/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-05-lab/original/CMakeLists.txt",
+          "path": "project/original/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-05-lab/ko/main.cpp",
+          "path": "project/ko/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-05-lab/ko/CMakeLists.txt",
+          "path": "project/ko/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-05-lab/annotation-manifest.json",
+          "path": "project/annotation-manifest.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/os-05.md"
+    },
+    {
+      "id": "os-06",
+      "title": "OS 06 · False Sharing과 atomic 배치",
+      "pages": [
+        "os-06"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/os-06.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/os-06-lab/original/main.cpp",
+          "path": "project/original/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-06-lab/original/CMakeLists.txt",
+          "path": "project/original/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-06-lab/ko/main.cpp",
+          "path": "project/ko/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/os-06-lab/ko/CMakeLists.txt",
+          "path": "project/ko/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/os-06-lab/annotation-manifest.json",
+          "path": "project/annotation-manifest.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/os-06.md"
     }
   ]
 }
