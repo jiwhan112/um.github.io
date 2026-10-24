@@ -7,6 +7,13 @@ const groups=[{category:'컴퓨터 구조',pattern:/^computer-0[12]$/},{category
 const chapters=catalog.filter(doc=>groups.some(group=>group.pattern.test(doc.path)));
 const labels={document:'개념과 원리',practice:'실습·복습',sources:'출처·검증',history:'원문·변경기록'};
 function flatten(blocks:Block[]):Block[]{return blocks.flatMap(block=>[block,...('blocks'in block?flatten(block.blocks):block.type==='list'?block.items.flatMap(flatten):[])]);}
+function technicalEvidenceLinks(value:unknown):string[]{
+ if(Array.isArray(value))return value.flatMap(technicalEvidenceLinks);
+ if(!value||typeof value!=='object')return [];
+ const object=value as Record<string,unknown>;
+ const href=object.href;
+ return [...(typeof href==='string'&&/^\/knowledge\/.*\/(?:verification|validation|results)\.json$/.test(href)?[href]:[]),...Object.values(object).flatMap(technicalEvidenceLinks)];
+}
 test('CS curriculum exposes exactly the authored approved chapters',async({page})=>{
  await page.goto('knowledge/');
  const area=page.locator('#knowledge-cs');
@@ -53,12 +60,16 @@ for(const chapter of chapters)test(`${chapter.path} CS visual lesson, original f
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await page.screenshot({path:testInfo.outputPath(chapter.path+'-practice.png'),fullPage:true});
  await page.getByRole('tab',{name:labels.sources,exact:true}).click();
- const verification=page.locator('a[href$="verification.json"]').first();await expect(verification).toBeVisible();
- const verificationHref=await verification.getAttribute('href');
- expect(verificationHref).toMatch(/^\/um\.github\.io\/knowledge\/[a-zA-Z0-9_./-]+\/verification\.json$/);
- expect(verificationHref!.split('/')).not.toContain('..');
- const verificationResponse=await request.get(verificationHref!);expect(verificationResponse.status()).toBe(200);
- expect(await verificationResponse.body()).toEqual(await readFile('..'+verificationHref!.replace('/um.github.io','')));
+ const evidenceHrefs=[...new Set(technicalEvidenceLinks(authored.sections.filter(section=>section.tab==='sources')))];
+ expect(evidenceHrefs.length,'authored technical verification JSON').toBeGreaterThan(0);
+ for(const href of evidenceHrefs){
+  expect(href).toMatch(/^\/knowledge\/[a-zA-Z0-9_./-]+\/(?:verification|validation|results)\.json$/);
+  expect(href.split('/')).not.toContain('..');
+  const publicHref='/um.github.io'+href;
+  await expect(page.locator(`a[href="${publicHref}"]`).first()).toBeVisible();
+  const response=await request.get(publicHref);expect(response.status()).toBe(200);
+  expect(await response.body()).toEqual(await readFile('..'+href));
+ }
  await page.getByRole('tab',{name:labels.history,exact:true}).click();
  const historySections=authored.sections.filter(section=>section.tab==='history');expect(historySections.length).toBeGreaterThan(0);
  for(const section of historySections){
