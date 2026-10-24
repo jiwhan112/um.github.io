@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-24",
+  "updated": "2026-10-25",
   "book": {
     "title": "Cracking the Coding Interview",
     "edition": 6,
@@ -8,18 +8,35 @@
   },
   "current": {
     "chapter": 2,
-    "number": "2.7",
-    "topic_en": "Intersection",
-    "study_date": "2026-10-24",
-    "published_date": "2026-10-24"
-  },
-  "next": {
-    "chapter": 2,
     "number": "2.8",
     "topic_en": "Loop Detection",
-    "study_date": "2026-10-25"
+    "study_date": "2026-10-25",
+    "published_date": "2026-10-25"
+  },
+  "next": {
+    "chapter": 3,
+    "number": "3.1",
+    "topic_en": "Three in One",
+    "study_date": "2026-10-26"
   },
   "episodes": [
+    {
+      "number": "2.8",
+      "chapter": 2,
+      "topic_en": "Loop Detection",
+      "title": "전투 리플레이의 반복 진입점",
+      "summary": "두 포인터의 속도 차이로 순환을 검출하고 원본 링크 변경 없이 반복 구간의 입구를 O(n) 시간·O(1) 공간에 복원",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "두 포인터",
+        "순환 검출",
+        "객체 동일성"
+      ],
+      "study_date": "2026-10-25",
+      "published_date": "2026-10-25",
+      "path": "ep-02-08-loop-detection/"
+    },
     {
       "number": "2.7",
       "chapter": 2,

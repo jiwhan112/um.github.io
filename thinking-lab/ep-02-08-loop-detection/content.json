@@ -1,0 +1,745 @@
+{
+  "title": "2.8 Loop Detection — 전투 리플레이의 반복 진입점",
+  "subtitle": "값의 중복이 아니라 같은 객체의 재방문을 검출하고, 원본 연결을 보존하며 순환 입구를 찾습니다.",
+  "memoKey": "thinking-ctci-2.8-draft",
+  "starter": "struct EventNode { int code; const EventNode* next; };\nconst EventNode* FindLoopEntry(const EventNode* head) {\n    // 원본 code와 next를 바꾸지 않고 순환 입구 주소를 반환하세요.\n    return nullptr;\n}\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제 · 계약 · 예시",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 제6판의 2장 연결 리스트, 2.8 Loop Detection이라는 주제와 순서만 참고했습니다. 게임 상황·지문·예시·설명·코드는 자체 제작 자료이며 도서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "멈추지 않는 전투 이벤트 리플레이"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전투 리플레이의 이벤트 객체는 다음 이벤트를 가리키는 next를 하나씩 갖습니다. 정상 기록은 nullptr에서 끝나지만, 잘못 연결된 기록은 이미 지나온 이벤트 객체로 돌아가 영원히 반복될 수 있습니다. 검사 도구는 head에서 시작해 반복 구간에 처음 진입하는 원본 노드 주소를 찾아야 합니다. 순환이 없으면 nullptr를 반환하세요. 같은 code 값의 다른 객체는 반복 방문이 아닙니다. 진단 함수는 값이나 링크를 바꾸거나 노드를 삭제하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "struct EventNode { int code; const EventNode* next; };\nconst EventNode* FindLoopEntry(const EventNode* head);"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "입력·인코딩·버퍼·자료 범위 계약"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "입력은 이미 연결된 head 포인터 하나입니다. 문자열 파싱, 입력 문자 배열, 출력 문자열 버퍼는 없습니다. 교재 JSON과 C++ 소스의 한글 주석은 UTF-8입니다. 출력은 원본 노드의 주소 또는 nullptr이며 새 노드를 만들지 않습니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "head에서 도달 가능한 서로 다른 노드 수 n은 0~100,000입니다. 각 next는 nullptr 또는 유효한 EventNode 객체를 가리킵니다. 한 노드에서 나가는 링크는 하나이므로 도달 경로는 비순환 체인 또는 접두부와 단일 순환으로 구성됩니다. 도달하지 않는 다른 순환은 검사 대상이 아닙니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "code는 int가 표현할 수 있는 모든 값을 허용하며 중복·음수도 가능합니다. 값의 덧셈이나 주소의 대소 비교는 필요하지 않습니다. 노드의 같음은 포인터 == 비교로만 판단합니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "모든 도달 가능한 노드는 함수 호출과 반환 포인터를 사용하는 동안 살아 있어야 합니다. 링크를 수정하거나 해제하는 다른 스레드와 동시에 실행하지 않습니다. 잘못된 주소나 경쟁 상태를 이 알고리즘이 자동 복구한다고 가정하지 않습니다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "원본을 표시용으로 덮어쓰거나 링크를 끊지 말고, 알고리즘의 추가 공간을 O(1)로 제한하세요. 테스트의 vector와 주소 집합은 입력 소유·검증용이며 풀이의 추가 공간과 구분합니다. vector로 소유할 때는 링크 설정 후 크기를 늘려 재할당하지 않습니다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "주소 라벨로 읽는 예시"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "head → H(7) → A(7) → B(7) → C(7) → D(7)\n                         ↑                 │\n                         └─────────────────┘\nD.next = B, 반환 = B의 주소\n\nhead → U(7) → V(7) → null : 반환 null\nhead → S(7), S.next = S   : 반환 S의 주소\nhead = null              : 반환 null"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "첫 예시에서 H·A·B·C·D의 code가 모두 7이어도 다섯 개의 별도 객체입니다. 반복 구간의 입구는 B이며, 검사 도중 두 포인터가 처음 만나는 노드가 반드시 B인 것은 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "먼저 생각할 질문"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "방문한 주소를 집합에 저장하면 답을 찾을 수 있습니다. 그 방법의 메모리 비용을 없애려면 무엇을 비교할 수 있을까요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "끝을 찾기 위해 먼저 길이를 세던 2.7의 방법을 그대로 사용하면 어떤 입력에서 끝나지 않을까요?"
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "단순히 순환이 있다는 사실을 알아내는 것과 정확한 입구를 반환하는 것은 왜 다른 문제일까요?"
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "힌트 3단계",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1 · 값의 반복과 객체의 재방문",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "code가 아니라 주소를 비교하세요. 방문 주소 집합에서 삽입이 처음 실패한 노드가 입구가 됩니다. 이 기준 풀이를 떠올린 다음 집합 없이 같은 정보를 얻는 방법을 고민하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2 · 서로 다른 속도로 걷기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 포인터는 한 번에 한 링크, 다른 포인터는 두 링크를 따라갑니다. 두 포인터가 순환 안에 있으면 상대 위치가 매번 한 칸씩 변합니다. 빠른 쪽이 null에 닿는 경우와, 이동한 뒤 두 주소가 같은 경우를 구분하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3 · 만난 뒤 다시 같은 속도로",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "접두부 길이를 μ, 순환 길이를 λ, 느린 포인터의 이동 횟수를 t라고 두세요. 만나는 순간 빠른 포인터는 2t칸 이동했습니다. t가 λ의 배수라는 사실에서 시작해, 한 포인터를 head로 옮기고 두 포인터를 한 칸씩 이동하면 어디서 만날지 계산해 보세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이 · 증명 · 실제 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 해설 펼치기",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "사고 과정: 검출과 입구 찾기를 분리"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "주소 집합은 가장 직접적인 기준 풀이지만 O(n) 공간이 필요합니다. Floyd의 두 포인터 방법은 방문 기록 대신 속도 차이를 사용합니다. 먼저 slow는 한 칸, fast는 두 칸씩 움직여 순환 여부를 알아냅니다. 순환 안에서 만났다면 포인터 하나만 head로 되돌린 뒤 둘 다 한 칸씩 이동합니다. 두 번째 만남이 우리가 반환해야 할 입구입니다."
+                }
+              ]
+            },
+            {
+              "type": "diagram",
+              "items": [
+                "1. slow 1칸 · fast 2칸으로 이동",
+                "2. fast가 null에 도달하면 순환 없음",
+                "3. 이동 후 주소가 같다면 순환 검출",
+                "4. 한 포인터를 head로 되돌림",
+                "5. 둘 다 1칸씩 이동 → 같은 주소가 입구"
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart LR\n  H[\"H · 시작\"] --> A[\"A · 접두부\"]\n  A --> B[\"B · 순환 입구\"]\n  B --> C[\"C\"]\n  C --> D[\"D\"]\n  D --> B\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "한 번의 만남으로 끝내면 틀리는 예"
+                }
+              ]
+            },
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "검출 단계 이동 횟수 t"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "slow 위치"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "fast 위치"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0 · 비교하지 않음"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "H"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "H"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "1"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "A"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "B"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "2"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "B"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "D"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "3 · 이동 후 일치"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "C"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "C"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "위 그림은 μ=2, λ=3입니다. 첫 만남 C를 바로 반환하면 틀립니다. entry를 H로 놓고 slow를 C에 남겨 두면 두 번째 단계는 (H,C) → (A,D) → (B,B)입니다. 입구 B가 복원됩니다. head가 입구인 μ=0이라면 두 번째 단계에서 추가 이동 없이 바로 반환할 수도 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "전체 C++11 풀이와 실행 가능한 검증"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <cassert>\n#include <cstddef>\n#include <iostream>\n#include <limits>\n#include <unordered_set>\n#include <vector>\n\nstruct EventNode { int code; const EventNode* next; };\n\n// 순환이 있다면 head에서 처음 진입하는 원본 노드 주소를 반환합니다.\n// 전제: 도달 가능한 노드는 살아 있으며, 호출 도중 연결이 바뀌지 않습니다.\nconst EventNode* FindLoopEntry(const EventNode* head) {\n    const EventNode* slow = head;\n    const EventNode* fast = head;\n    while (fast != nullptr && fast->next != nullptr) {\n        slow = slow->next;             // 한 칸 이동\n        fast = fast->next->next;       // 두 칸 이동: 앞의 조건이 접근을 보호\n        if (slow == fast) {            // 시작 시가 아니라 이동 후 주소 비교\n            const EventNode* entry = head;\n            while (entry != slow) {    // 이제 두 포인터 모두 한 칸씩 이동\n                entry = entry->next;\n                slow = slow->next;\n            }\n            return entry;\n        }\n    }\n    return nullptr;                    // 끝에 닿으면 순환이 없습니다.\n}\n\n// 검증 전용 기준 풀이: 주소를 처음 다시 만나는 지점이 순환 입구입니다.\n// 이 함수의 O(n) 추가 메모리는 위 풀이의 O(1) 공간과 별개입니다.\nconst EventNode* Oracle(const EventNode* head) {\n    std::unordered_set<const EventNode*> seen;\n    for (const EventNode* p = head; p != nullptr; p = p->next)\n        if (!seen.insert(p).second) return p;\n    return nullptr;\n}\n\nvoid CheckUnchanged(const std::vector<EventNode>& nodes,\n                    const std::vector<EventNode>& before) {\n    assert(nodes.size() == before.size());\n    for (std::size_t i = 0; i < nodes.size(); ++i) {\n        assert(nodes[i].code == before[i].code);\n        assert(nodes[i].next == before[i].next);\n    }\n}\n\n// entry == n이면 비순환, entry < n이면 마지막 노드가 entry로 돌아갑니다.\nvoid CheckChain(std::size_t n, std::size_t entry) {\n    assert(entry <= n);\n    std::vector<EventNode> nodes(n); // 먼저 확정 크기로 확보한 뒤 주소를 연결\n    for (std::size_t i = 0; i < n; ++i) {\n        nodes[i].code = 7;          // 모든 값이 같아도 객체 주소는 다릅니다.\n        nodes[i].next = i + 1 < n ? &nodes[i + 1] : nullptr;\n    }\n    if (n != 0 && entry < n) nodes[n - 1].next = &nodes[entry];\n    const std::vector<EventNode> before = nodes;\n    const EventNode* head = n == 0 ? nullptr : &nodes[0];\n    const EventNode* expected = entry < n ? &nodes[entry] : nullptr;\n    assert(FindLoopEntry(head) == expected);\n    assert(Oracle(head) == expected);\n    CheckUnchanged(nodes, before);\n    // vector가 각 원소를 소유합니다. next를 따라 삭제하면 안 됩니다.\n}\n\nint main() {\n    assert(FindLoopEntry(nullptr) == nullptr);\n    // 값의 최솟값/최댓값은 허용되지만 순환 판정에는 영향을 주지 않습니다.\n    EventNode b = {std::numeric_limits<int>::max(), nullptr};\n    EventNode a = {std::numeric_limits<int>::min(), &b};\n    assert(FindLoopEntry(&a) == nullptr);\n    b.next = &a;\n    assert(FindLoopEntry(&a) == &a);\n    assert(a.code == std::numeric_limits<int>::min() && a.next == &b);\n    assert(b.code == std::numeric_limits<int>::max() && b.next == &a);\n\n    std::size_t chains = 0;\n    for (std::size_t n = 0; n <= 128; ++n) {\n        CheckChain(n, n);\n        ++chains;\n    }\n    // 접두부 길이 mu=0..64, 순환 길이 lambda=1..64의 모든 조합\n    for (std::size_t mu = 0; mu <= 64; ++mu)\n        for (std::size_t lambda = 1; lambda <= 64; ++lambda) {\n            CheckChain(mu + lambda, mu);\n            ++chains;\n        }\n\n    // 0..5개 노드 각각의 next를 null 또는 임의 노드로 지정합니다.\n    // 도달 불가능한 순환도 포함하며, 모든 시작점(null 포함)을 비교합니다.\n    std::size_t graphCases = 0;\n    for (std::size_t n = 0; n <= 5; ++n) {\n        std::size_t configs = 1;\n        for (std::size_t i = 0; i < n; ++i) configs *= n + 1;\n        for (std::size_t c = 0; c < configs; ++c) {\n            std::vector<EventNode> nodes(n);\n            std::size_t digits = c;\n            for (std::size_t i = 0; i < n; ++i) {\n                const std::size_t target = digits % (n + 1);\n                digits /= n + 1;\n                nodes[i].code = 7;\n                nodes[i].next = target == n ? nullptr : &nodes[target];\n            }\n            const std::vector<EventNode> before = nodes;\n            for (std::size_t start = 0; start <= n; ++start) {\n                const EventNode* head = start == n ? nullptr : &nodes[start];\n                assert(FindLoopEntry(head) == Oracle(head));\n                CheckUnchanged(nodes, before);\n                ++graphCases;\n            }\n        }\n    }\n    CheckChain(100000, 100000); // 긴 비순환\n    CheckChain(100000, 0);      // head가 순환 입구\n    CheckChain(100000, 1);      // 짧은 접두부와 긴 순환\n    CheckChain(100000, 50000);  // 중간 입구\n    CheckChain(100000, 99999);  // 긴 접두부와 자기 순환\n    std::cout << \"PASS: \" << chains << \" chain shapes, \" << graphCases\n              << \" functional-graph head cases, 5 x 100000-node cases; values/links preserved\\n\";\n}\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "정확성: 왜 종료하며 왜 입구인가"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "비순환인 경우: fast는 매 반복 두 링크를 따라가다가 nullptr에 닿거나 다음 링크가 nullptr인 노드에 닿습니다. while 조건의 단락 평가가 fast->next 접근을 보호하며, fast->next가 유효할 때만 두 번째 링크를 읽습니다. slow는 fast보다 앞서 끝을 지나갈 수 없으므로 slow->next도 안전합니다. 순환이 없으면 이동 후 두 포인터가 같은 살아 있는 노드에서 만날 수 없습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "순환 검출: 접두부 길이 μ 이후 두 포인터는 순환 안에 있습니다. 순환 안에서 fast와 slow의 상대 위치는 반복마다 한 칸씩 변하므로 길이 λ의 순환에서 λ번 이내에 같은 주소를 만납니다. 처음부터 head에서 같다는 이유로 반환하지 않고, 반드시 한 번 이상 이동한 뒤 비교합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "만남의 관계: 처음 만난 양의 이동 횟수를 t라고 하면 slow의 이동 거리는 t, fast의 이동 거리는 2t입니다. 둘 다 같은 순환 노드에 있으므로 차이 t는 λ의 배수입니다. 만남 지점의 입구 기준 위치는 (t−μ) mod λ입니다. μ나 λ를 코드에서 세거나 저장할 필요는 없습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "입구 복원: entry를 head에 놓고 slow는 만남 지점에 두어 같은 속도로 움직입니다. μ번 뒤 entry는 입구에, slow는 입구 기준 (t−μ+μ) mod λ = t mod λ = 0에 도착합니다. μ>0일 때 그 전 entry는 순환 밖에 있고 slow는 순환 안에 있으므로 더 일찍 같은 객체를 만날 수 없습니다. μ=0이면 만남 지점 자체가 head여서 즉시 반환합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "원본 보존: 풀이 함수는 지역 포인터만 바꾸고 code·next에는 대입하지 않습니다. 반환한 주소는 입력에 있던 객체의 주소입니다. const 포인터는 함수가 필드를 쓰지 않는다는 의도를 드러내지만, 다른 스레드의 변경이나 해제를 막아 주는 수명·동기화 장치는 아닙니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "시간·공간 복잡도"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비순환은 O(n) 시간입니다. 순환이 있으면 검출 O(μ+λ), 입구 복원 O(μ)이므로 전체 O(n), 추가 공간 O(1)입니다. n은 head에서 도달 가능한 서로 다른 노드 수입니다. 재귀·방문 배열·해시 집합은 풀이 함수에 없습니다. 검증용 Oracle과 테스트 입력 저장은 각각 O(n) 공간을 사용하며 알고리즘의 O(1) 주장과 별도로 취급합니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "경계·반례 테스트가 잡는 실수"
+                }
+              ]
+            },
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "입력 또는 검사"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "기대 및 잡아내는 오류"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 리스트 / 단일 비순환 / 길이 2 비순환"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "null 반환. null 검사 없이 fast->next->next에 접근하는 오류"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "단일 노드 자기 순환 / head가 순환 입구"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "head 반환. 처음부터 같다는 이유로 모든 리스트를 순환 처리하는 오류"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "긴 접두부 뒤 자기 순환"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "마지막 객체 반환. 순환 길이 1 처리와 두 번째 단계 종료"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "모든 code=7인 비순환 또는 순환"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "주소 기준 판단. 값이 같다고 순환으로 오판하는 오류"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "μ=2, λ=3, 첫 만남 C, 입구 B"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "첫 만남 노드를 곧바로 정답으로 반환하는 오류"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "도달하지 않는 다른 순환"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "head에서 끝나면 null. 저장 공간 전체를 검색하는 잘못된 문제 해석"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "모든 검사 후 원본 code·next 비교"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "진단 중 원본을 표시하거나 링크를 절단하는 부작용"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "실제로 실행한 로컬 검증"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2026-10-25 KST에 이 페이지에 포함된 코드 그대로 GCC 14.2.0, C++11 엄격 경고(-Wall -Wextra -Werror -pedantic)로 컴파일했습니다. -O0/-O1/-O2/-O3/-Os 각각 실행했고, -O1 AddressSanitizer·UndefinedBehaviorSanitizer 실행도 모두 통과했습니다. 환경상 LeakSanitizer는 비활성화했으므로 누수 검증을 주장하지 않습니다. 각 실행은 비순환 길이 0~128과 μ=0~64·λ=1~64 조합의 4,289가지 체인, 0~5노드의 가능한 모든 next 배치와 시작점(null 포함) 50,069건, 100,000노드 입력 5종을 확인했습니다. 포인터 주소 집합 기준 풀이와 비교했고 code·next가 보존되는지도 검사했습니다. 이 기록은 C++ CPU 검증 결과이며 웹 React CI나 실제 공개 확인의 성공을 대신하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "PASS: 4289 chain shapes, 50069 functional-graph head cases, 5 x 100000-node cases; values/links preserved"
+            },
+            {
+              "type": "code",
+              "language": "bash",
+              "text": "g++ -std=c++11 -Wall -Wextra -Werror -pedantic -O2 solution.cpp -o solution\n./solution\ng++ -std=c++11 -Wall -Wextra -Werror -pedantic -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all solution.cpp -o solution-sanitized\nASAN_OPTIONS=detect_leaks=0 ./solution-sanitized"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "확장·누적 복습"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "첫 만남에서 한 바퀴 돌아 순환 길이 λ를 구하고, 입구까지 걸어 접두부 길이 μ를 구하는 함수를 설계해 보세요. 필요한 카운터 자료형과 최대값을 명시하세요."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "2.7 Intersection의 비순환 전제가 사라지면 두 리스트의 공통 노드 탐색을 어떻게 분류해야 할까요? 둘 다 비순환, 한쪽만 순환, 같은 순환 공유를 나누어 보세요. 순환 위의 첫 공통 노드는 시작점에 따라 하나로 정해지지 않을 수 있습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "fast를 세 칸씩 이동하게 바꾸어도 검출 뒤 head 재시작 방법을 그대로 쓸 수 있을까요? μ=0, λ=4인 순환에서 직접 추적하세요."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "게임 엔진의 노드 풀에서 삭제 후 같은 주소가 재사용된다면, 수명 고정 없이 이 진단을 실행해도 안전할까요? 세대 번호 핸들만 붙이면 동시 접근 문제까지 모두 해결되는지 따져 보세요."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "2.6 Palindrome의 값 대칭, 2.7 Intersection의 객체 공유, 2.8 Loop Detection의 같은 객체 재방문을 각각 한 문장으로 구별하세요."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "details",
+              "title": "확장 문제 핵심 확인",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "순환 길이는 만남 노드의 next에서 출발해 다시 같은 주소에 도착할 때까지 세면 됩니다. 입구가 구해지면 head에서 입구까지 센 길이가 μ입니다. 최대 도달 노드 수 100,000을 담는 std::size_t를 사용하면 충분합니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "속도를 1 대 3으로 바꾸면 만남 조건은 2t가 λ의 배수라는 것뿐입니다. μ=0, λ=4에서는 t=2에 만나지만 t는 λ의 배수가 아닙니다. 그 뒤 같은 속도로 이동하는 두 포인터가 영원히 어긋날 수 있어 입구 복원 증명이 깨집니다. 1 대 2라는 속도 관계는 단순한 임의 선택이 아닙니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "세대 번호는 오래된 핸들 재사용을 식별하는 데 도움이 되지만, 검증과 접근 사이의 해제를 자동으로 막지 않습니다. 동기화·안전한 수명 확보가 먼저 필요합니다. 이 교재의 함수는 살아 있는 고정 연결을 전제로 합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
