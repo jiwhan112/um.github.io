@@ -1,25 +1,43 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-25",
+  "updated": "2026-10-26",
   "book": {
     "title": "Cracking the Coding Interview",
     "edition": 6,
     "author": "Gayle Laakmann McDowell"
   },
   "current": {
-    "chapter": 2,
-    "number": "2.8",
-    "topic_en": "Loop Detection",
-    "study_date": "2026-10-25",
-    "published_date": "2026-10-25"
-  },
-  "next": {
     "chapter": 3,
     "number": "3.1",
     "topic_en": "Three in One",
-    "study_date": "2026-10-26"
+    "study_date": "2026-10-26",
+    "published_date": "2026-10-26"
+  },
+  "next": {
+    "chapter": 3,
+    "number": "3.2",
+    "topic_en": "Stack Min",
+    "study_date": "2026-10-27"
   },
   "episodes": [
+    {
+      "number": "3.1",
+      "chapter": 3,
+      "topic_en": "Three in One",
+      "title": "세 편집 도구의 실행 취소 버퍼",
+      "summary": "단 하나의 연속 값 배열을 고정 분할해 세 독립 스택의 LIFO·경계 검사·실패 시 상태 보존을 구현",
+      "category": "스택과 큐",
+      "tags": [
+        "스택",
+        "배열",
+        "인덱스 변환",
+        "경계 검사",
+        "불변식"
+      ],
+      "study_date": "2026-10-26",
+      "published_date": "2026-10-26",
+      "path": "ep-03-01-three-in-one/"
+    },
     {
       "number": "2.8",
       "chapter": 2,
