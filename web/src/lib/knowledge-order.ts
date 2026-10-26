@@ -14,7 +14,14 @@ export function compareKnowledgeDocuments(a: DocumentMeta,b: DocumentMeta):numbe
   if(a.category==='DirectX 11')return dx11ChapterSortKey(a)-dx11ChapterSortKey(b);
   if(a.category==='C 언어')return cChapterSortKey(a)-cChapterSortKey(b);
   if(a.category==='C++ 기초·심화')return cppChapterSortKey(a)-cppChapterSortKey(b);
+  if(['Modern C++','Effective Modern C++','DirectX 12','그래픽스 기술','알고리즘'].includes(a.category))return newCourseSortKey(a)-newCourseSortKey(b);
   return 0;
+}
+
+function newCourseSortKey(doc: DocumentMeta): number {
+  const match=doc.route.match(/^\/knowledge\/(?:modern-cpp|effective-modern-cpp|dx12|graphics-tech|algorithm-core)-(\d+)\/$/);
+  // Preserve the LIS prototype URL as a reference after the numbered regular course.
+  return match?Number(match[1]):Number.MAX_SAFE_INTEGER;
 }
 
 function cppChapterSortKey(doc: DocumentMeta): number {

@@ -1,0 +1,569 @@
+{
+  "id": "knowledge--modern-cpp-03",
+  "route": "/knowledge/modern-cpp-03/",
+  "kind": "knowledge",
+  "title": "Modern C++ 03 · 초기화·nullptr·범위 있는 enum",
+  "subtitle": "초기화 문법의 생성자 선택과 외부 정수의 유효성 검사를 분리한다",
+  "date": "2026-10-26",
+  "category": "Modern C++",
+  "tags": [
+    "초기화",
+    "nullptr",
+    "enum class"
+  ],
+  "topic": "Modern C++",
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표와 선수 지식",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인벤토리 슬롯 생성 코드와 네트워크 상태 코드를 예로, 짧은 문법 변경이 의미를 바꾸는 지점을 찾는다. 이미 배운 자료형 문법을 반복하기보다 안전한 경계 설계에 집중한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 교재: 기존 개념을 먼저 확인",
+              "href": "/knowledge/cpp-basics-04/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예제 공통 전제: UTF-8 소스, 작은 고정 입력, 표준입력·네트워크·파일 쓰기 없음. 문자 파싱을 제외한 한국어는 주석과 설명이며 실행 출력은 ASCII다. C++20 기준으로 빌드하고 10장만 C++23 추가 검증을 제공한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-map",
+      "title": "먼저 흐름을 그림으로 읽기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/modern-cpp-03/assets/flow.svg",
+          "alt": "코드 0 / 1 / 256 → 정수 범위·허용 코드 확인 → 성공이면 Mode → 그 외 nullopt",
+          "caption": "명령을 실행하기 전에 예상 상태를 순서대로 적어 보세요."
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  N0[\"코드 0 / 1 / 256\"] --> N1\n  N1[\"정수 범위·허용 코드 확인\"] --> N2\n  N2[\"성공이면 Mode\"] --> N3\n  N3[\"그 외 nullopt\"]"
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "괄호와 중괄호는 완전한 대체물이 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "vector<int> repeated(3,7)은 값 7을 가진 원소 세 개를 만든다. vector<int> listed{3,7}은 원소 3과 7 두 개를 만든다. initializer_list를 받는 후보가 개입하기 때문이다. 팀 전체 코드를 기계적으로 중괄호로 바꾸기 전에 생성자 집합과 실제 의도를 확인한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "좁히기 검출과 데이터 검증",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "중괄호 초기화는 여러 좁히기 변환을 컴파일 단계에서 막는다. 하지만 외부 입력의 논리적 범위까지 모두 알지는 못한다. static_cast로 오류를 없애는 것과 값이 계약 안인지 검사하는 것은 다르다. 예제의 double→int 변환은 유한한 작은 값 3.5라는 고정 전제 안에서만 사용한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "0과 nullptr가 선택하는 호출",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정수 0을 넘기면 int overload가 선택되고 nullptr는 포인터 overload에 맞는다. 오래된 NULL 매크로는 구현 형태에 따라 뜻을 혼동하기 쉬우므로 새 포인터 API의 비어 있음은 nullptr로 표현한다. nullptr 자체가 포인터 대상의 유효성이나 수명을 보장하지는 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "enum class는 파서가 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "enum class Mode는 정수와의 우연한 섞임을 줄이지만, 네트워크 바이트를 static_cast한 뒤 바로 신뢰하는 방식을 정당화하지 않는다. decode_mode는 인정한 코드 0과 1만 변환한다. 2와 256은 먼저 거절하여 잘못된 값을 작은 기저형으로 잘라 우연히 Walk가 되는 일을 막는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-example",
+      "title": "작동 예: 슬롯 세 개와 상태 코드 하나",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "슬롯 생성 요구가 “세 칸을 모두7로 채워라”라면 괄호 생성자 호출이 그 요구를 직접 나타낸다. 중괄호로 바꾸고도 컴파일되기 때문에 오류를 놓치기 쉽다. 길이와 첫 값만 보는 대신 마지막 원소의 값까지 확인하면 다른 생성자 선택을 더 명확하게 발견할 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "상태 코드는 별도의 경계다. 외부 unsigned값256을 바로 uint8_t로 줄이면 원래의 범위를 잃는다. 따라서 decode_mode는 넓은 입력을 그대로 받아 허용 코드0/1을 확인한 뒤 enum값을 만든다. 반환 optional을 확인한 호출자만 게임 상태를 변경하도록 만들면 파싱 실패가 기본 상태로 조용히 바뀌는 것을 막을 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "문법 선택은 팀 규칙으로 단순화할 수 있지만, 예외를 이해한 규칙이어야 한다. 컨테이너의 개수 생성과 원소 나열, 포인터의 빈 값, 명시적 숫자 변환은 각각 의도가 다르다. 검증 함수의 이름과 테스트가 이 차이를 보여 주면 스타일 규칙에만 의존하는 것보다 리뷰가 쉬워진다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "입력 표현"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ],
+                [
+                  {
+                    "text": "검사"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "vector<int>(3,7)"
+                  }
+                ],
+                [
+                  {
+                    "text": "개수3, 값7"
+                  }
+                ],
+                [
+                  {
+                    "text": "길이3·마지막7"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "vector<int>{3,7}"
+                  }
+                ],
+                [
+                  {
+                    "text": "두 원소 나열"
+                  }
+                ],
+                [
+                  {
+                    "text": "길이2·첫값3"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "decode_mode(1)"
+                  }
+                ],
+                [
+                  {
+                    "text": "허용된 Run 코드"
+                  }
+                ],
+                [
+                  {
+                    "text": "Mode::Run"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "decode_mode(256)"
+                  }
+                ],
+                [
+                  {
+                    "text": "축소 이전에 거절"
+                  }
+                ],
+                [
+                  {
+                    "text": "빈 optional"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contracts",
+      "title": "실수하기 쉬운 경계와 반례",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/modern-cpp-03/assets/contracts.svg",
+          "alt": "(3,7): 7 7 7 / {3,7}: 3 7 / 256: 캐스팅 전 거절",
+          "caption": "문법의 표면보다 실제 보장하는 계약을 구분합니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "중괄호와 auto를 함께 쓰면 auto x{7}과 auto y={7}도 같은 타입이 아니다. 현재 검증 모드에서는 x가 int, y가 initializer_list<int>임을 static_assert로 확인한다. 리스트의 내부 저장소를 장기 보관하는 API는 그 수명도 따로 검토해야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 프로젝트 다운로드",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/modern-cpp-03.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "빌드·실행·기대 출력 README",
+              "href": "/knowledge/examples/readmes/modern-cpp-03.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다운로드에는 소스와 CMake 설정만 포함한다. 실행 파일이 없으며 브라우저에서 자동 실행하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "예측 → 실행 → 경계 바꾸기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 아래 출력에 도달하는 상태 변화를 종이에 적는다. 각 check는 Release에서도 예외로 실패를 보고하여 NDEBUG에 의해 사라지지 않는다. 컴파일 시 static_assert는 런타임 check 횟수와 별개다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "parentheses=3-elements braces=2-elements invalid-mode=rejected\nPASS: 7 contract checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "상태 코드 2를 Dash로 추가한다고 가정하자. enum 선언과 decode_mode 허용 분기, 성공 검사와 거절 검사를 함께 바꾸고, 257처럼 기저형을 넘는 값이 여전히 거절되는지 확인하자."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습·확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · vector<int>{3,7}의 길이는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2다. 개수·초깃값 생성자와 initializer_list 초기화를 구분한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · 중괄호가 모든 잘못된 입력을 막는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 런타임 값의 게임 규칙·프로토콜 허용 범위는 별도 검사다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · select(0)과 select(nullptr)는 같은가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 예제에서는 각각 정수와 포인터 overload가 선택된다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · enum의 기저형을 uint8_t로 하면 검증이 끝나는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 표현 크기 선택과 허용 값 검사는 서로 다르다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · 256을 uint8_t로 변환한 후 검증하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원래 입력 정보를 잃어 허용 코드와 구별하지 못할 수 있다. 축소 전에 검사한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 파서의 복잡도와 확장 방향은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "고정 두 코드 비교는 O(1)이다. 코드가 많아지면 명시적 switch와 프로토콜 버전 규칙을 설계한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "main.cpp 전체",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "main.cpp 파일",
+                  "href": "/knowledge/shared/modern-cpp-03-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// 초기화 문법이 생성자 선택을 바꾼다. 외부 정수는 enum으로 무조건 캐스팅하지 않는다.\n#include <cstdint>\n#include <initializer_list>\n#include <iostream>\n#include <optional>\n#include <stdexcept>\n#include <type_traits>\n#include <vector>\nenum class Mode : std::uint8_t { Walk = 0, Run = 1 };\nstd::optional<Mode> decode_mode(unsigned value) {\n    if (value == 0) return Mode::Walk;\n    if (value == 1) return Mode::Run;\n    return std::nullopt;\n}\nint select(int) {\n    return 1;\n}\nint select(const char*) {\n    return 2;\n}\nint main() {\n    unsigned checks = 0;\n    auto check = [&](bool ok) {\n        ++checks;\n        if (!ok) throw std::runtime_error(\"initialization contract\");\n    };\n    // 괄호는 개수/초깃값, 중괄호는 원소 나열을 선택한다.\n    std::vector<int> repeated(3, 7);\n    std::vector<int> listed{3, 7};\n    check(repeated.size() == 3 && repeated[2] == 7);\n    check(listed.size() == 2 && listed[0] == 3);\n    auto single{7};\n    auto many = {7};\n    static_assert(std::is_same_v<decltype(single), int>);\n    static_assert(std::is_same_v<decltype(many), std::initializer_list<int>>);\n    check(select(0) == 1 && select(nullptr) == 2);\n    check(decode_mode(0) == Mode::Walk);\n    check(decode_mode(1) == Mode::Run);\n    check(!decode_mode(2) && !decode_mode(256));\n    // int bad{3.5}; 는 의도적인 컴파일 오류. 실행 가능한 코드에는 넣지 않는다.\n    const double speed = 3.5;\n    const int truncated = static_cast<int>(speed);\n    // 작은 유한 값이라는 전제의 명시적 변환.\n    check(truncated == 3);\n    std::cout << \"parentheses=3-elements braces=2-elements invalid-mode=rejected\\nPASS: \" << checks << \" contract checks\\n\";\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt 전체",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "CMakeLists.txt 파일",
+                  "href": "/knowledge/shared/modern-cpp-03-lab/project/CMakeLists.txt"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(modern_cpp_03 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20 CACHE STRING \"C++ language standard (20 or 23)\")\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nfind_package(Threads REQUIRED)\nadd_executable(modern_cpp_03 main.cpp)\ntarget_link_libraries(modern_cpp_03 PRIVATE Threads::Threads)\nif(MSVC)\n  target_compile_options(modern_cpp_03 PRIVATE /W4 /utf-8 /Zc:__cplusplus)\nelse()\n  target_compile_options(modern_cpp_03 PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME modern_cpp_03_contract COMMAND modern_cpp_03)\nset_tests_properties(modern_cpp_03_contract PROPERTIES TIMEOUT 10)\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·현재 실행·검증 한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Microsoft 초기화 형식",
+              "href": "https://learn.microsoft.com/en-us/cpp/cpp/initializers?view=msvc-170"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "실제 실행 기록과 소스 SHA-256",
+              "href": "/knowledge/shared/modern-cpp-03-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 Linux GCC 14.2.0: C++20 -O0 빌드/실행, -O2 UBSan 빌드/실행, CMake 3.31.6 Release 구성/빌드/CTest 1/1 통과. 기본 실행의 check 호출은 7회다. 서로 다른 최적화의 반복 실행을 독립 기능 수로 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows/MSVC, Clang/libc++, ThreadSanitizer, 실제 엔진 통합·GPU·성능 수치는 검증하지 않았다. UBSan의 성공은 모든 미정의 동작이나 데이터 경쟁의 부재를 증명하지 않는다. 공식 문서는 언어/도구 계약 대조에 사용하며 이 예제를 해당 업체가 인증한 것은 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "독립 집필·범위·학습 연결",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 신규 집필. 기존 Notion 문서의 이관·복구본이 아니라, 게임 개발 학습을 위해 새 설명·코드·SVG·복습을 작성했다. 기존 C/C++ 교재의 URL과 원본을 수정하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 장은 기본 문법을 다시 늘어놓는 대신 표준 기능의 선택 조건·수명·실패 계약을 연결한다. 전체 C++ 표준을 빠짐없이 다루는 레퍼런스가 아니라 검증 가능한 핵심 학습 과정이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 단원",
+              "href": "/knowledge/modern-cpp-04/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

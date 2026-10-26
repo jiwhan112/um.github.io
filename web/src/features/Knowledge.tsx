@@ -20,27 +20,27 @@ const areas: Area[] = [
   {id:'cpp',title:'C / C++',subtitle:'언어 원리부터 최신 C++까지 단계적으로 학습',icon:Braces,topics:[
     {id:'c',title:'C 언어',description:'C 언어 기본·포인터·메모리',phase:'legacy',category:'C 언어'},
     {id:'cpp-core',title:'C++ 기초·심화',description:'빌드·타입·함수·메모리에서 객체·STL·RAII까지',phase:'legacy',category:'C++ 기초·심화'},
-    {id:'cpp-modern',title:'Modern C++',description:'C++11 이후 언어·표준 라이브러리의 버전별 변화',phase:'new'},
+    {id:'cpp-modern',title:'Modern C++',description:'C++11 이후 언어·표준 라이브러리의 버전별 변화',phase:'new',category:'Modern C++'},
     {id:'cpp-effective',title:'Effective C++',description:'올바른 자원 관리와 C++ 설계 원칙',phase:'legacy',category:'Effective C++'},
-    {id:'cpp-effective-modern',title:'Effective Modern C++',description:'Scott Meyers 저서 중심의 현대 C++ 관용구',phase:'new'}
+    {id:'cpp-effective-modern',title:'Effective Modern C++',description:'현대 C++ 관용구를 자체 예제와 설계 판단으로 학습',phase:'new',category:'Effective Modern C++'}
   ]},
   {id:'windows',title:'Windows·그래픽스 프로그래밍',subtitle:'Windows SDK 기반 게임 클라이언트 · DirectX 구현',icon:Code2,topics:[
     {id:'winapi',title:'WinAPI',description:'메시지 루프·윈도우·입력·시스템 API',phase:'legacy',category:'WinAPI'},
     {id:'game-math',title:'게임 수학',description:'벡터·행렬·변환·충돌 수학',phase:'legacy',category:'게임 수학'},
     {id:'dx9',title:'DirectX 9',description:'기존 DX9 엔진과 렌더링 파이프라인',phase:'legacy',category:'DirectX 9'},
     {id:'dx11',title:'DirectX 11',description:'자원·렌더링 파이프라인·엔진 기능',phase:'legacy',category:'DirectX 11'},
-    {id:'dx12',title:'DirectX 12',description:'명시적 GPU 자원·명령 기록·동기화 (추후 집필)',phase:'new'}
+    {id:'dx12',title:'DirectX 12',description:'명시적 GPU 자원·명령 기록·동기화와 검증 경계',phase:'new',category:'DirectX 12'}
   ]},
   {id:'graphics',title:'그래픽스 기술',subtitle:'프레임워크 구현과 분리해 개별 기법을 깊게 연구',icon:Cpu,topics:[
-    {id:'graphics-tech',title:'기술 연구 주제',description:'셰이더·그림자·Navigation Mesh·IK 등 — 실제 집필 전 세부 목차 재설계',phase:'replan'}
+    {id:'graphics-tech',title:'그래픽스 기법·탐색·애니메이션',description:'색·조명·그림자·시간축 처리·Navigation Mesh·IK의 원리와 실험',phase:'new',category:'그래픽스 기술'}
   ]},
   {id:'cs',title:'컴퓨터 과학',subtitle:'컴퓨터 구조·운영체제·네트워크 기초',icon:Network,topics:[
     {id:'computer',title:'컴퓨터 구조',description:'캐시·CPU·메모리 계층',phase:'keep',category:'컴퓨터 구조'},
     {id:'os',title:'운영체제',description:'스레드·가상 메모리·동기화',phase:'keep',category:'운영체제'},
     {id:'network',title:'네트워크',description:'TCP/UDP·패킷·프로토콜',phase:'keep',category:'네트워크'}
   ]},
-  {id:'algorithm',title:'자료구조 / 알고리즘',subtitle:'세부 학습 과정은 집필 시작 시 재설계',icon:Layers3,topics:[
-    {id:'algorithm-plan',title:'학습 순서·단원 구성 재계획',description:'자료구조·탐색·알고리즘·문제풀이의 세부 구성을 작성 전에 확정',phase:'replan'}
+  {id:'algorithm',title:'자료구조 / 알고리즘',subtitle:'불변식·복잡도에서 게임 데이터와 경로 탐색까지',icon:Layers3,topics:[
+    {id:'algorithm-plan',title:'자료구조·탐색·알고리즘',description:'정규 과정과 기존 LIS 심화 실습 · 경계 조건과 정확성 검증',phase:'new',category:'알고리즘'}
   ]},
   {id:'engine',title:'게임 엔진 개발',subtitle:'기존 Notion 설계 패턴·Unity 노트를 이관하지 않고 새로 집필',icon:Wrench,topics:[
     {id:'engine-systems',title:'엔진 파츠·시스템 설계',description:'새로운 게임 엔진 학습 교재로 기획 · 세부 목차는 작성 시 확정',phase:'new'}
@@ -75,12 +75,12 @@ export default function Knowledge() {
     <header className="knowledge-hero">
       <div className="knowledge-kicker"><ListTree size={15}/> PROGRAMMING KNOWLEDGE / ATLAS NOTE</div>
       <h1>프로그래밍 지식 라이브러리</h1>
-      <p>사이트의 장기 학습 목차입니다. 기존 공개 교재를 유지하면서 신규 집필 과정은 계획 단계로 표시합니다.</p>
+      <p>기존 개편 교재와 신규 집필 과정을 함께 안내합니다. 실제 공개된 단원만 펼쳐서 읽을 수 있습니다.</p>
       <div className="knowledge-hero-meta">
         <span><strong>{areas.length}</strong>개 주요 분야</span>
         <span><strong>{totalTopics}</strong>개 하위 주제</span>
-        <span><strong>{docs.length}</strong>개 기존 공개 교재</span>
-        <span className="knowledge-prototype">목차 설계 v3 · C++ 기초부터 순서대로</span>
+        <span><strong>{docs.length}</strong>개 공개 교재</span>
+        <span className="knowledge-prototype">언어 → 그래픽스 → 컴퓨터 과학 · 알고리즘</span>
       </div>
     </header>
     <div className="knowledge-layout">
@@ -131,11 +131,11 @@ export default function Knowledge() {
         <section className="knowledge-recent" aria-label="기존 공개 프로토타입">
           <div className="section-heading"><h2><FolderOpen size={19}/> 공개 학습 교재 · 검색</h2><span className="muted text-xs">{archived.length} / {docs.length}개</span></div>
           <div className="knowledge-recent-list">{archived.map(d=><Link key={d.id} to={d.route}><span className="knowledge-recent-icon"><FileText size={17}/></span><span><small>{d.category}</small><strong>{d.title}</strong></span><ArrowRight size={16}/></Link>)}</div>
-          <p className="knowledge-catalog-note">WinAPI·게임 수학 기존 본문을 단계별로 이관하고 있습니다. DX11·LIS·BeautifulSoup 시범 교재의 URL도 유지됩니다. 공통 Win32 GUI 소스 텍스트는 복원했지만 Windows 실기기 실행과 원본 ZIP·첨부 바이너리는 아직 미검증입니다.</p>
+          <p className="knowledge-catalog-note">기존 교재와 DX11·LIS·BeautifulSoup 시범 교재의 URL을 유지합니다. 새 교재의 CPU 실험과 Windows·GPU 실행 여부는 각 단원의 출처·검증 탭에서 구별합니다.</p>
         </section>
         <DocumentLibrary docs={docs} thinking={false}/>
       </div>
     </div>
-    <p className="knowledge-footnote">기존 Notion 본문을 순차적으로 읽어 GitHub에 독립 보관합니다. 실제 게시 문서만 공개 숫자에 포함하며, 신규 교재 집필 예정 항목은 이관 완료로 간주하지 않습니다. Windows/MSVC·DirectX/GPU 실행은 별도 검증 대상입니다.</p>
+    <p className="knowledge-footnote">실제 게시 문서만 공개 숫자에 포함합니다. 신규 교재는 기존 자료 이관 실적과 구별하며, Windows/MSVC·DirectX/GPU 실행은 별도 검증 대상입니다.</p>
   </div>;
 }

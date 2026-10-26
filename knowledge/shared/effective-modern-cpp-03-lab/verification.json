@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-26",
+  "kind": "new-original-educational-example",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "cmake": "cmake version 3.31.6",
+  "standard": "C++20",
+  "platform": "Linux x86_64",
+  "tests": [
+    {
+      "command": "<cmake-bin>/cmake -S project -B <validation>/build-3 -DCMAKE_BUILD_TYPE=Debug",
+      "exit_code": 0,
+      "output": "-- Configuring done (0.0s)\n-- Generating done (0.0s)\n-- Build files have been written to: <validation>/build-3\n"
+    },
+    {
+      "command": "<cmake-bin>/cmake --build <validation>/build-3",
+      "exit_code": 0,
+      "output": "[ 50%] Building CXX object CMakeFiles/lesson.dir/main.cpp.o\n[100%] Linking CXX executable lesson\n[100%] Built target lesson\n"
+    },
+    {
+      "command": "<cmake-bin>/ctest --test-dir <validation>/build-3 --output-on-failure",
+      "exit_code": 0,
+      "output": "Internal ctest changing into directory: <validation>/build-3\nTest project <validation>/build-3\n    Start 1: lesson_contract\n1/1 Test #1: lesson_contract ..................   Passed    0.01 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.01 sec\n"
+    },
+    {
+      "command": "g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread -O2 -DNDEBUG project/main.cpp -o <validation>/lesson3-optimized",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "<validation>/lesson3-optimized",
+      "exit_code": 0,
+      "output": "ownership: strong resource / weak observer\nPASS: 9 checks\n"
+    },
+    {
+      "command": "g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread -O1 -g -fsanitize=undefined -fno-sanitize-recover=all project/main.cpp -o <validation>/lesson3-ubsan",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "<validation>/lesson3-ubsan",
+      "exit_code": 0,
+      "output": "ownership: strong resource / weak observer\nPASS: 9 checks\n"
+    }
+  ],
+  "source_sha256": {
+    "project/CMakeLists.txt": "28edad3a89d7ffa47b31560c0e33ea5c35f634b55f1907f375d59b92f7be380e",
+    "project/main.cpp": "cfd225256e134abad7a14b2890082fe6361b4777d3b24fa0308cb2d831385e59"
+  },
+  "limitations": [
+    "Windows/MSVC not run",
+    "No GPU or game-engine integration",
+    "No performance benchmark",
+    "ASan+UBSan attempt for chapter01 blocked by LeakSanitizer fatal ptrace restriction; ASan not claimed as passed for this course. No checks disabled.",
+    "UBSan is not proof for unexecuted inputs",
+    "ThreadSanitizer and exhaustive scheduler exploration not run"
+  ],
+  "stdout": "ownership: strong resource / weak observer\nPASS: 9 checks\n"
+}

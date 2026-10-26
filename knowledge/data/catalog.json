@@ -1600,5 +1600,261 @@
     "path": "network-05",
     "date": "2026-10-18",
     "subtitle": "패킷·전송 페이로드·게임 데이터 길이를 구별하는 CPU 산술 실습"
+  },
+  {
+    "title": "Modern C++ 01 · 표준 버전·컴파일러·기능 검사",
+    "subtitle": "언어 모드, 표준 라이브러리, 실제 빌드 성공을 세 가지 증거로 나눈다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "C++20",
+      "표준 버전",
+      "기능 검사"
+    ],
+    "path": "modern-cpp-01"
+  },
+  {
+    "title": "Modern C++ 02 · auto·decltype와 참조 추론",
+    "subtitle": "복사·별칭·프록시를 반환식의 타입과 값 범주로 구별한다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "타입 추론",
+      "decltype",
+      "프록시"
+    ],
+    "path": "modern-cpp-02"
+  },
+  {
+    "title": "Modern C++ 03 · 초기화·nullptr·범위 있는 enum",
+    "subtitle": "초기화 문법의 생성자 선택과 외부 정수의 유효성 검사를 분리한다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "초기화",
+      "nullptr",
+      "enum class"
+    ],
+    "path": "modern-cpp-03"
+  },
+  {
+    "title": "Modern C++ 04 · 값 범주·이동·noexcept",
+    "subtitle": "std::move는 허가 표현이며 실제 자원 이동 여부는 선택된 연산이 결정한다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "이동 의미론",
+      "noexcept",
+      "값 범주"
+    ],
+    "path": "modern-cpp-04"
+  },
+  {
+    "title": "Modern C++ 05 · unique·shared·weak 소유 관계",
+    "subtitle": "포인터 문법보다 해제 책임과 관찰 관계를 먼저 그린다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "스마트 포인터",
+      "소유권",
+      "weak_ptr"
+    ],
+    "path": "modern-cpp-05"
+  },
+  {
+    "title": "Modern C++ 06 · 람다·캡처·호출 객체",
+    "subtitle": "콜백이 무엇을 복사하고 무엇을 빌리며 언제까지 살아야 하는지 추적한다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "람다",
+      "캡처",
+      "콜백"
+    ],
+    "path": "modern-cpp-06"
+  },
+  {
+    "title": "Modern C++ 07 · constexpr·consteval·if constexpr",
+    "subtitle": "컴파일 시 계산의 의무와 가능성, 인스턴스별 분기를 구분한다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "constexpr",
+      "consteval",
+      "if constexpr"
+    ],
+    "path": "modern-cpp-07"
+  },
+  {
+    "title": "Modern C++ 08 · 가변 인자·fold·인덱스 팩",
+    "subtitle": "타입을 보존하는 인자 묶음에 순서와 빈 입력 계약을 부여한다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "가변 템플릿",
+      "fold",
+      "오버플로"
+    ],
+    "path": "modern-cpp-08"
+  },
+  {
+    "title": "Modern C++ 09 · string_view·span과 빌린 범위",
+    "subtitle": "주소·길이·소유자·무효화 시점을 한꺼번에 확인한다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "string_view",
+      "span",
+      "수명"
+    ],
+    "path": "modern-cpp-09"
+  },
+  {
+    "title": "Modern C++ 10 · optional·variant·expected의 오류 모델",
+    "subtitle": "없음·상태 선택·이유 있는 실패를 같은 bool로 눌러 담지 않는다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "optional",
+      "variant",
+      "expected"
+    ],
+    "path": "modern-cpp-10"
+  },
+  {
+    "title": "Modern C++ 11 · concepts·ranges·지연 평가",
+    "subtitle": "타입 제약과 값의 의미, view와 소유 결과를 구별한다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "concepts",
+      "ranges",
+      "지연 평가"
+    ],
+    "path": "modern-cpp-11"
+  },
+  {
+    "title": "Modern C++ 12 · jthread·협력적 취소·도입 경계",
+    "subtitle": "종료 요청, 대기 해제, 완료 확인과 자원 수명을 하나의 프로토콜로 만든다",
+    "date": "2026-10-26",
+    "category": "Modern C++",
+    "tags": [
+      "jthread",
+      "stop_token",
+      "동시성"
+    ],
+    "path": "modern-cpp-12"
+  },
+  {
+    "path": "effective-modern-cpp-01",
+    "title": "Effective Modern C++ 01 · 타입 추론은 저장 정책이다",
+    "subtitle": "auto·decltype(auto)·대리 객체를 체력 UI의 복사와 관찰 계약으로 구분한다",
+    "date": "2026-10-26",
+    "category": "Effective Modern C++",
+    "tags": [
+      "C++20",
+      "타입 추론",
+      "auto",
+      "프록시",
+      "수명"
+    ]
+  },
+  {
+    "path": "effective-modern-cpp-02",
+    "title": "Effective Modern C++ 02 · 초기화와 인터페이스에서 실수를 거절하기",
+    "subtitle": "중괄호·nullptr·삭제 함수·override를 피해량 API의 허용 범위로 연결한다",
+    "date": "2026-10-26",
+    "category": "Effective Modern C++",
+    "tags": [
+      "C++20",
+      "초기화",
+      "오버로드",
+      "인터페이스",
+      "타입 안전성"
+    ]
+  },
+  {
+    "path": "effective-modern-cpp-03",
+    "title": "Effective Modern C++ 03 · 소유권 그래프와 약한 관찰자",
+    "subtitle": "리소스 공유와 엔티티 참조를 서로 다른 간선으로 설계한다",
+    "date": "2026-10-26",
+    "category": "Effective Modern C++",
+    "tags": [
+      "C++20",
+      "unique_ptr",
+      "shared_ptr",
+      "weak_ptr",
+      "자원 수명"
+    ]
+  },
+  {
+    "path": "effective-modern-cpp-04",
+    "title": "Effective Modern C++ 04 · 이동은 호출 계약이고 forward는 보존이다",
+    "subtitle": "복사·이동 횟수를 직접 추적하며 const와 이름 있는 참조의 함정을 구분한다",
+    "date": "2026-10-26",
+    "category": "Effective Modern C++",
+    "tags": [
+      "C++20",
+      "move",
+      "forward",
+      "값 범주",
+      "noexcept"
+    ]
+  },
+  {
+    "path": "effective-modern-cpp-05",
+    "title": "Effective Modern C++ 05 · 완벽 전달의 불완전한 경계",
+    "subtitle": "forwarding 생성자의 복사 가로채기와 타입 없는 중괄호 입력을 제약으로 다룬다",
+    "date": "2026-10-26",
+    "category": "Effective Modern C++",
+    "tags": [
+      "C++20",
+      "제약",
+      "forwarding",
+      "생성자",
+      "오버로드"
+    ]
+  },
+  {
+    "path": "effective-modern-cpp-06",
+    "title": "Effective Modern C++ 06 · 콜백이 기다리는 동안 누가 살아 있는가",
+    "subtitle": "값 캡처·참조 캡처·weak_ptr·이동 캡처를 HUD와 일회성 작업으로 비교한다",
+    "date": "2026-10-26",
+    "category": "Effective Modern C++",
+    "tags": [
+      "C++20",
+      "람다",
+      "캡처",
+      "콜백",
+      "수명"
+    ]
+  },
+  {
+    "path": "effective-modern-cpp-07",
+    "title": "Effective Modern C++ 07 · 작업·결과·원자성을 각각 설계하기",
+    "subtitle": "async 정책, future 오류, const 캐시의 mutex와 relaxed 카운터를 분리한다",
+    "date": "2026-10-26",
+    "category": "Effective Modern C++",
+    "tags": [
+      "C++20",
+      "async",
+      "future",
+      "atomic",
+      "동기화"
+    ]
+  },
+  {
+    "path": "effective-modern-cpp-08",
+    "title": "Effective Modern C++ 08 · Pimpl·삽입·비용의 통합 판단",
+    "subtitle": "새 문법을 모으는 대신 자원 캐시의 빌드 경계·오류 계약·측정 계획을 완성한다",
+    "date": "2026-10-26",
+    "category": "Effective Modern C++",
+    "tags": [
+      "C++20",
+      "Pimpl",
+      "예외 안전성",
+      "try_emplace",
+      "통합 설계"
+    ]
   }
 ]

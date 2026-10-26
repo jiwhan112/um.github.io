@@ -1,0 +1,592 @@
+{
+  "id": "knowledge--modern-cpp-10",
+  "route": "/knowledge/modern-cpp-10/",
+  "kind": "knowledge",
+  "title": "Modern C++ 10 · optional·variant·expected의 오류 모델",
+  "subtitle": "없음·상태 선택·이유 있는 실패를 같은 bool로 눌러 담지 않는다",
+  "date": "2026-10-26",
+  "category": "Modern C++",
+  "tags": [
+    "optional",
+    "variant",
+    "expected"
+  ],
+  "topic": "Modern C++",
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표와 선수 지식",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "자원 조회, 로딩 상태, 입력 실패에 서로 다른 반환 모델을 선택한다. 타입 이름보다 호출자가 무엇을 해야 하는지에서 출발한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 교재: 기존 개념을 먼저 확인",
+              "href": "/knowledge/modern-cpp-03/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예제 공통 전제: UTF-8 소스, 작은 고정 입력, 표준입력·네트워크·파일 쓰기 없음. 문자 파싱을 제외한 한국어는 주석과 설명이며 실행 출력은 ASCII다. C++20 기준으로 빌드하고 10장만 C++23 추가 검증을 제공한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-map",
+      "title": "먼저 흐름을 그림으로 읽기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/modern-cpp-10/assets/flow.svg",
+          "alt": "조회: 값 또는 없음 → 로딩: 세 대안 중 하나 → 파싱: 값 또는 오류 → C++23 경로 별도 검증",
+          "caption": "명령을 실행하기 전에 예상 상태를 순서대로 적어 보세요."
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  N0[\"조회: 값 또는 없음\"] --> N1\n  N1[\"로딩: 세 대안 중 하나\"] --> N2\n  N2[\"파싱: 값 또는 오류\"] --> N3\n  N3[\"C++23 경로 별도 검증\"]"
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "정상적인 없음은 optional",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "키7의 자원은100이고 키8은 찾지 못한다. 이 API가 없음의 이유를 구분할 필요가 없다면 optional<int>로 충분하다. 값이 있다고 확인하지 않고 역참조하는 대신 has_value·bool·value_or 등 적합한 인터페이스를 선택한다. 값0과 없음은 다른 상태다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "여러 합법 상태는 variant",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "로딩이 Waiting, Ready, Failed 중 하나라는 모델은 variant로 나타낼 수 있다. Ready의 texture를 읽으려면 현재 활성 대안을 확인해야 한다. 예제는 get_if의 포인터를 검사하고 visit로 상태별 메시지를 만든다. 예외를 던지는 타입 전환에서 valueless_by_exception이 가능하다는 일반 규칙도 기억한다. 이번 고정 실행에서는 그 상태를 강제로 만들지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "실패 이유가 필요하면 expected",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++23의 expected<int,string>은 성공한 수량과 실패 설명을 같은 반환값에서 구분한다. 빈 문자열, 음수, 잘못된 정수는 다른 진단을 가질 수 있다. 이 타입을 쓰면 모든 예외가 사라지는 것은 아니다. string의 할당이나 접근 방식 등 별도 실패 가능성은 남는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "지원하지 않는 경로를 성공으로 꾸미지 않기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예제 파일은 C++20에서 optional·variant 부분을 실행하고 expected 부분은 기능 매크로로 제외한다. C++23 추가 빌드에서는 실제 expected를 컴파일하고 검사한다. stdout에 expected=executed인지 not-compiled인지 명확히 남겨 “파일 전체 실행”을 “모든 기능 실행”으로 혼동하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-example",
+      "title": "작동 예: 로더의 반환 계약을 호출자에서 읽기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "lookup(8)의 없음은 이유를 구분하지 않는 정상 결과다. 호출자는 기본 자원을 선택하거나 다시 조회할 수 있다. 반면 Failed{\"missing asset\"}는 로더가 실패 상태로 전환했다는 유한 상태 모델의 한 대안이다. optional과 variant를 같은 문제에 습관적으로 쓰기보다 가능한 상태와 필요한 데이터를 먼저 표로 적는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "parse_count(\"-1\")은 정수 문법 자체는 읽을 수 있지만 게임의 개수 규칙을 위반한다. 따라서 숫자 파싱의 성공과 도메인 검증의 성공은 다른 단계다. 예상 실패 결과의 error 문자열을 읽을 때는 먼저 !result를 확인한다. 성공한 result에서 error를 읽는 코드를 방어적으로 보이게 작성해도 계약 밖의 접근이라는 사실은 달라지지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++20 실행의 check5회와 C++23의 check8회는 서로 다른 기능 경로다. 기본 배포 환경을20으로 유지하는 팀은 optional·variant 수업을 실행하고,23지원 실험 환경에서 expected만 추가 평가할 수 있다. 지원되지 않는 길을 숨긴 채 “새 타입 검증 완료”라고 주장하지 않는 것도 API 실험의 중요한 결과다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "문제"
+                  }
+                ],
+                [
+                  {
+                    "text": "반환 모델"
+                  }
+                ],
+                [
+                  {
+                    "text": "호출자가 확인할 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "조회 대상 없음"
+                  }
+                ],
+                [
+                  {
+                    "text": "optional<int>"
+                  }
+                ],
+                [
+                  {
+                    "text": "값 존재 여부"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "로딩 중/성공/실패"
+                  }
+                ],
+                [
+                  {
+                    "text": "variant"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 활성 대안"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "문법/범위 오류 설명"
+                  }
+                ],
+                [
+                  {
+                    "text": "expected<int,string>"
+                  }
+                ],
+                [
+                  {
+                    "text": "성공 여부와 해당 값/오류"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "C++20 모드"
+                  }
+                ],
+                [
+                  {
+                    "text": "expected 분기 제외"
+                  }
+                ],
+                [
+                  {
+                    "text": "stdout의 not-compiled"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contracts",
+      "title": "실수하기 쉬운 경계와 반례",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/modern-cpp-10/assets/contracts.svg",
+          "alt": "optional: 값 / 없음 / variant: Waiting / Ready / Failed / expected: 성공값 / 실패이유",
+          "caption": "문법의 표면보다 실제 보장하는 계약을 구분합니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "expected.error()를 성공 상태에서 읽거나 optional의 빈 값을 무검사 역참조하지 않는다. 오류 타입에 enum·구조체를 쓰면 분기와 지역화가 더 명확해질 수 있다. 이 수업의 string 오류는 작은 콘솔 설명을 위한 선택이며 대형 엔진의 표준 오류 정책으로 제시하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 프로젝트 다운로드",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/modern-cpp-10.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "빌드·실행·기대 출력 README",
+              "href": "/knowledge/examples/readmes/modern-cpp-10.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다운로드에는 소스와 CMake 설정만 포함한다. 실행 파일이 없으며 브라우저에서 자동 실행하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "예측 → 실행 → 경계 바꾸기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 아래 출력에 도달하는 상태 변화를 종이에 적는다. 각 check는 Release에서도 예외로 실패를 보고하여 NDEBUG에 의해 사라지지 않는다. 컴파일 시 static_assert는 런타임 check 횟수와 별개다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "expected=not-compiled (requires C++23 library)\nvariant=failed optional=missing\nPASS: 5 contract checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "parse_count의 오류를 enum class ParseError로 바꾸고 메시지 변환은 UI 계층으로 옮겨 보자. 음수와 범위 초과를 구분하려면 from_chars의 errc와 문법 오류를 어떤 순서로 처리해야 할까?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습·확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · optional<int>{0}은 없음인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 값0을 포함한 성공 상태다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · variant에서 Ready가 아니면 texture를 읽어도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 된다. get_if 결과나 visit의 타입별 분기를 확인한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · expected를 쓰면 예외가 절대 없는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 내부 타입의 생성·할당 등 다른 예외 가능성은 별개다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · C++20 실행이 expected 검증인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 그 실행에서는 해당 코드가 제외되며 출력에 이를 적는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · C++23 실행에서 실제 추가한 조건은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정상15, 음수 오류 이유, 빈 값과 큰 정수 실패를 확인한다. 상세 출력은 verification.json에 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 오류 모델은 어떤 기준으로 고르나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정상적인 없음, 유한 상태 중 하나, 실패 이유 전달이라는 호출자 계약을 먼저 정한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "main.cpp 전체",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "main.cpp 파일",
+                  "href": "/knowledge/shared/modern-cpp-10-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "// 값 없음, 여러 상태 중 하나, 설명 가능한 실패를 서로 다른 타입으로 표현한다.\n#include <charconv>\n#include <iostream>\n#include <optional>\n#include <stdexcept>\n#include <string>\n#include <string_view>\n#include <system_error>\n#include <variant>\n#include <type_traits>\n#include <version>\n#if defined(__cpp_lib_expected) && __cpp_lib_expected >= 202202L\n#include <expected>\n#define LESSON_HAS_EXPECTED 1\n#else\n#define LESSON_HAS_EXPECTED 0\n#endif\nstruct Waiting {\n};\nstruct Ready {\n    int texture;\n};\nstruct Failed {\n    std::string reason;\n};\nusing State = std::variant<Waiting, Ready, Failed>;\nstd::optional<int> lookup(int key) {\n    if (key == 7) return 100;\n    return std::nullopt;\n}\n#if LESSON_HAS_EXPECTED\nstd::expected<int, std::string> parse_count(std::string_view text) {\n    if (text.empty()) return std::unexpected(\"empty\");\n    int count = 0;\n    auto [end, ec] = std::from_chars(text.data(), text.data()+text.size(), count);\n    if (ec != std::errc{} || end != text.data()+text.size()) return std::unexpected(\"invalid integer\");\n    if (count<0) return std::unexpected(\"negative\");\n    return count;\n}\n#endif\nint main() {\n    unsigned checks = 0;\n    auto check = [&](bool ok) {\n        ++checks;\n        if (!ok) throw std::runtime_error(\"result contract\");\n    };\n    check(lookup(7) == 100 && !lookup(8));\n    // 현재 활성 대안을 확인한 뒤에만 해당 멤버를 읽는다.\n    State state = Waiting{};\n    check(std::holds_alternative<Waiting>(state));\n    state = Ready{23};\n    auto ready = std::get_if<Ready>(&state);\n    check(ready && ready->texture == 23);\n    state = Failed{\"missing asset\"};\n    check(std::get_if<Ready>(&state) == nullptr);\n    const auto message = std::visit([](const auto& item)->std::string {\n    using T = std::decay_t<decltype(item)>;\n    if constexpr(std::is_same_v<T, Waiting>) return \"waiting\";\n    else if constexpr(std::is_same_v<T, Ready>) return \"ready\";\n    else return item.reason;\n    }, state);\n    check(message == \"missing asset\");\n#if LESSON_HAS_EXPECTED\n    check(parse_count(\"15\") == 15);\n    auto negative = parse_count(\"-1\");\n    check(!negative && negative.error() == \"negative\");\n    check(!parse_count(\"99999999999999999999999\") && !parse_count(\"\"));\n    std::cout << \"expected=executed\\n\";\n#else\n    std::cout << \"expected=not-compiled (requires C++23 library)\\n\";\n#endif\n    std::cout << \"variant=failed optional=missing\\nPASS: \" << checks << \" contract checks\\n\";\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt 전체",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "CMakeLists.txt 파일",
+                  "href": "/knowledge/shared/modern-cpp-10-lab/project/CMakeLists.txt"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(modern_cpp_10 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20 CACHE STRING \"C++ language standard (20 or 23)\")\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nfind_package(Threads REQUIRED)\nadd_executable(modern_cpp_10 main.cpp)\ntarget_link_libraries(modern_cpp_10 PRIVATE Threads::Threads)\nif(MSVC)\n  target_compile_options(modern_cpp_10 PRIVATE /W4 /utf-8 /Zc:__cplusplus)\nelse()\n  target_compile_options(modern_cpp_10 PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME modern_cpp_10_contract COMMAND modern_cpp_10)\nset_tests_properties(modern_cpp_10_contract PROPERTIES TIMEOUT 10)\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·현재 실행·검증 한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Microsoft optional 클래스",
+              "href": "https://learn.microsoft.com/en-us/cpp/standard-library/optional-class?view=msvc-170"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "WG21 P0323R12 expected 설계 제안",
+              "href": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p0323r12.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "실제 실행 기록과 소스 SHA-256",
+              "href": "/knowledge/shared/modern-cpp-10-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 Linux GCC 14.2.0: C++20 -O0 빌드/실행, -O2 UBSan 빌드/실행, CMake 3.31.6 Release 구성/빌드/CTest 1/1 통과. 기본 실행의 check 호출은 5회다. 서로 다른 최적화의 반복 실행을 독립 기능 수로 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows/MSVC, Clang/libc++, ThreadSanitizer, 실제 엔진 통합·GPU·성능 수치는 검증하지 않았다. UBSan의 성공은 모든 미정의 동작이나 데이터 경쟁의 부재를 증명하지 않는다. 공식 문서는 언어/도구 계약 대조에 사용하며 이 예제를 해당 업체가 인증한 것은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++23 -O2 UBSan 추가 빌드에서는 expected 분기를 실제 실행했다. C++20 출력은 expected 미컴파일을 명시하므로 서로 다른 경로의 성공을 합쳐 표시하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "expected=executed\nvariant=failed optional=missing\nPASS: 8 contract checks\n"
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "독립 집필·범위·학습 연결",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 신규 집필. 기존 Notion 문서의 이관·복구본이 아니라, 게임 개발 학습을 위해 새 설명·코드·SVG·복습을 작성했다. 기존 C/C++ 교재의 URL과 원본을 수정하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 장은 기본 문법을 다시 늘어놓는 대신 표준 기능의 선택 조건·수명·실패 계약을 연결한다. 전체 C++ 표준을 빠짐없이 다루는 레퍼런스가 아니라 검증 가능한 핵심 학습 과정이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 단원",
+              "href": "/knowledge/modern-cpp-11/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

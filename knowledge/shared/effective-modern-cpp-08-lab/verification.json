@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-26",
+  "kind": "new-original-educational-example",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "cmake": "cmake version 3.31.6",
+  "standard": "C++20",
+  "platform": "Linux x86_64",
+  "tests": [
+    {
+      "command": "<cmake-bin>/cmake -S project -B <validation>/build-8 -DCMAKE_BUILD_TYPE=Debug",
+      "exit_code": 0,
+      "output": "-- Configuring done (0.0s)\n-- Generating done (0.0s)\n-- Build files have been written to: <validation>/build-8\n"
+    },
+    {
+      "command": "<cmake-bin>/cmake --build <validation>/build-8",
+      "exit_code": 0,
+      "output": "[100%] Built target lesson\n"
+    },
+    {
+      "command": "<cmake-bin>/ctest --test-dir <validation>/build-8 --output-on-failure",
+      "exit_code": 0,
+      "output": "Internal ctest changing into directory: <validation>/build-8\nTest project <validation>/build-8\n    Start 1: lesson_contract\n1/1 Test #1: lesson_contract ..................   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.00 sec\n"
+    },
+    {
+      "command": "g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread -O2 -DNDEBUG project/asset_cache.cpp project/main.cpp -o <validation>/lesson8-optimized",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "<validation>/lesson8-optimized",
+      "exit_code": 0,
+      "output": "integration: explicit ownership and narrow build boundary\nPASS: 9 checks\n"
+    },
+    {
+      "command": "g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread -O1 -g -fsanitize=undefined -fno-sanitize-recover=all project/asset_cache.cpp project/main.cpp -o <validation>/lesson8-ubsan",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "<validation>/lesson8-ubsan",
+      "exit_code": 0,
+      "output": "integration: explicit ownership and narrow build boundary\nPASS: 9 checks\n"
+    }
+  ],
+  "source_sha256": {
+    "project/asset_cache.hpp": "642baba40abe04bdbfc0da44fcf84edc6fa95e95bfc235d2734e17594d98a5c4",
+    "project/asset_cache.cpp": "585ad4b258710d6d71f6088ee9fa1e12d6f639fa72b7aef900023b217831e378",
+    "project/CMakeLists.txt": "f0d2000b00f74db5586892d29cb2472b1f95ae68c3c2312fb4321abfa846a093",
+    "project/main.cpp": "cfb3a92853e145e94256e42903414f354907d3b559b5997c0e0563d3d622d13a"
+  },
+  "limitations": [
+    "Windows/MSVC not run",
+    "No GPU or game-engine integration",
+    "No performance benchmark",
+    "ASan+UBSan attempt for chapter01 blocked by LeakSanitizer fatal ptrace restriction; ASan not claimed as passed for this course. No checks disabled.",
+    "UBSan is not proof for unexecuted inputs",
+    "ThreadSanitizer and exhaustive scheduler exploration not run"
+  ],
+  "stdout": "integration: explicit ownership and narrow build boundary\nPASS: 9 checks\n"
+}

@@ -1,0 +1,47 @@
+{
+  "chapter": "modern-cpp-04",
+  "date": "2026-10-26",
+  "environment": "Linux x86_64",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "cmake": "3.31.6",
+  "runs": [
+    {
+      "standard": "c++20",
+      "optimization": "-O0",
+      "ubsan": false,
+      "exit_code": 0,
+      "stdout": "unique-owner-transferred copies=2 moves=0\nPASS: 5 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "standard": "c++20",
+      "optimization": "-O2",
+      "ubsan": true,
+      "exit_code": 0,
+      "stdout": "unique-owner-transferred copies=2 moves=0\nPASS: 5 contract checks\n",
+      "stderr": ""
+    }
+  ],
+  "cmake_release_ctest": {
+    "passed": 1,
+    "total": 1
+  },
+  "source_sha256": "4bbd62a34bde17f282b077c414977f1b65750e1b421cd519057c9a8baa2c50ca",
+  "not_verified": [
+    "Windows/MSVC",
+    "Clang/libc++",
+    "ThreadSanitizer",
+    "hardware performance",
+    "C++26 feature execution"
+  ],
+  "files_sha256": {
+    "project/main.cpp": "4bbd62a34bde17f282b077c414977f1b65750e1b421cd519057c9a8baa2c50ca",
+    "project/CMakeLists.txt": "8b1e43e005bfa8e943adebeea19fae666df5cfbca09938d145ae349c3eb202c8"
+  },
+  "msvc_configuration_review": {
+    "flag": "/Zc:__cplusplus",
+    "reason": "Enable __cplusplus to reflect /std:c++20 for the chapter01 standard guard.",
+    "source": "https://learn.microsoft.com/en-us/cpp/build/reference/zc-cplusplus",
+    "executed": false
+  }
+}

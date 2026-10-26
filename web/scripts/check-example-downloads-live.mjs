@@ -28,7 +28,7 @@ for(let start=0;start<manifest.bundles.length;start+=5){
  }));
 }
 const representativeIds=['c-basics-13','cpp-basics-lab','cpp-advanced-lab','dx9-impl-08','dx11-17-reviewed','python-html'];
-for(const id of ['computer-01','os-01','network-01'])if(manifest.bundles.some(bundle=>bundle.id===id))representativeIds.push(id);
+for(const id of ['computer-01','os-01','network-01','modern-cpp-01','effective-modern-cpp-01','dx12-01','graphics-tech-01','algorithm-core-01'])if(manifest.bundles.some(bundle=>bundle.id===id))representativeIds.push(id);
 const browser=await chromium.launch();
 try{
  for(const width of [1440,390]){

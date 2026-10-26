@@ -1,0 +1,55 @@
+{
+  "chapter": "modern-cpp-10",
+  "date": "2026-10-26",
+  "environment": "Linux x86_64",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "cmake": "3.31.6",
+  "runs": [
+    {
+      "standard": "c++20",
+      "optimization": "-O0",
+      "ubsan": false,
+      "exit_code": 0,
+      "stdout": "expected=not-compiled (requires C++23 library)\nvariant=failed optional=missing\nPASS: 5 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "standard": "c++20",
+      "optimization": "-O2",
+      "ubsan": true,
+      "exit_code": 0,
+      "stdout": "expected=not-compiled (requires C++23 library)\nvariant=failed optional=missing\nPASS: 5 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "standard": "c++23",
+      "optimization": "-O2",
+      "ubsan": true,
+      "exit_code": 0,
+      "stdout": "expected=executed\nvariant=failed optional=missing\nPASS: 8 contract checks\n",
+      "stderr": ""
+    }
+  ],
+  "cmake_release_ctest": {
+    "passed": 1,
+    "total": 1
+  },
+  "source_sha256": "2e23aa008d6fcce32a57b6701c50a17df955381296b73a8d22ebaf500d0df959",
+  "not_verified": [
+    "Windows/MSVC",
+    "Clang/libc++",
+    "ThreadSanitizer",
+    "hardware performance",
+    "C++26 feature execution"
+  ],
+  "files_sha256": {
+    "project/main.cpp": "2e23aa008d6fcce32a57b6701c50a17df955381296b73a8d22ebaf500d0df959",
+    "project/CMakeLists.txt": "63ec2686a6178c35eea2b1cad57acb6d285893fbabb707f33570a9cebb5668a9"
+  },
+  "msvc_configuration_review": {
+    "flag": "/Zc:__cplusplus",
+    "reason": "Enable __cplusplus to reflect /std:c++20 for the chapter01 standard guard.",
+    "source": "https://learn.microsoft.com/en-us/cpp/build/reference/zc-cplusplus",
+    "executed": false
+  }
+}

@@ -508,6 +508,16 @@ test('C++ course order keeps foundations before advanced lessons in both navigat
  ]);
 });
 
+test('new numbered courses sort numerically and keep the original LIS reference last',()=>{
+ const template=catalog.documents.find(d=>d.kind==='knowledge')!;
+ for(const [category,prefix] of [['Modern C++','modern-cpp'],['Effective Modern C++','effective-modern-cpp'],['DirectX 12','dx12'],['그래픽스 기술','graphics-tech'],['알고리즘','algorithm-core']]){
+  const docs=['12','02','01','10'].map(n=>({...template,category,route:'/knowledge/'+prefix+'-'+n+'/'}));
+  assert.deepEqual(docs.sort(compareKnowledgeDocuments).map(d=>d.route),['01','02','10','12'].map(n=>'/knowledge/'+prefix+'-'+n+'/'));
+ }
+ const items=[{...template,category:'알고리즘',route:'/knowledge/algorithm-lis/'},{...template,category:'알고리즘',route:'/knowledge/algorithm-core-12/'}];
+ assert.deepEqual(items.sort(compareKnowledgeDocuments).map(d=>d.route),['/knowledge/algorithm-core-12/','/knowledge/algorithm-lis/']);
+});
+
 test('advanced lessons preserve ZIP bytes, historical evidence, complete annotated code and visual assets',async()=>{
  function allBlocks(blocks:Block[]):Block[]{return blocks.flatMap(block=>[block,...('blocks'in block?allBlocks(block.blocks):block.type==='list'?block.items.flatMap(allBlocks):[])]);}
  function hasHref(value:unknown,href:string):boolean{

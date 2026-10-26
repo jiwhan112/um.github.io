@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-26",
+  "kind": "new-original-educational-example",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "cmake": "cmake version 3.31.6",
+  "standard": "C++20",
+  "platform": "Linux x86_64",
+  "tests": [
+    {
+      "command": "<cmake-bin>/cmake -S project -B <validation>/build-4 -DCMAKE_BUILD_TYPE=Debug",
+      "exit_code": 0,
+      "output": "-- Configuring done (0.0s)\n-- Generating done (0.0s)\n-- Build files have been written to: <validation>/build-4\n"
+    },
+    {
+      "command": "<cmake-bin>/cmake --build <validation>/build-4",
+      "exit_code": 0,
+      "output": "[100%] Built target lesson\n"
+    },
+    {
+      "command": "<cmake-bin>/ctest --test-dir <validation>/build-4 --output-on-failure",
+      "exit_code": 0,
+      "output": "Internal ctest changing into directory: <validation>/build-4\nTest project <validation>/build-4\n    Start 1: lesson_contract\n1/1 Test #1: lesson_contract ..................   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.00 sec\n"
+    },
+    {
+      "command": "g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread -O2 -DNDEBUG project/main.cpp -o <validation>/lesson4-optimized",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "<validation>/lesson4-optimized",
+      "exit_code": 0,
+      "output": "move: casts select operations, const is retained\nPASS: 6 checks\n"
+    },
+    {
+      "command": "g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread -O1 -g -fsanitize=undefined -fno-sanitize-recover=all project/main.cpp -o <validation>/lesson4-ubsan",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "<validation>/lesson4-ubsan",
+      "exit_code": 0,
+      "output": "move: casts select operations, const is retained\nPASS: 6 checks\n"
+    }
+  ],
+  "source_sha256": {
+    "project/CMakeLists.txt": "6c9ba14077b4b1f4e0f7e9fd10fe813b7f72de385966ac3813e56a3c928b076a",
+    "project/main.cpp": "831a060ebe761f5ffc3d874fe6d68f17342c22b92b8593adb49bd4bf95049e3a"
+  },
+  "limitations": [
+    "Windows/MSVC not run",
+    "No GPU or game-engine integration",
+    "No performance benchmark",
+    "ASan+UBSan attempt for chapter01 blocked by LeakSanitizer fatal ptrace restriction; ASan not claimed as passed for this course. No checks disabled.",
+    "UBSan is not proof for unexecuted inputs",
+    "ThreadSanitizer and exhaustive scheduler exploration not run"
+  ],
+  "stdout": "move: casts select operations, const is retained\nPASS: 6 checks\n"
+}

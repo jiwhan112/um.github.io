@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-26",
+  "kind": "new-original-educational-example",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "cmake": "cmake version 3.31.6",
+  "standard": "C++20",
+  "platform": "Linux x86_64",
+  "tests": [
+    {
+      "command": "<cmake-bin>/cmake -S project -B <validation>/build-5 -DCMAKE_BUILD_TYPE=Debug",
+      "exit_code": 0,
+      "output": "-- Configuring done (0.0s)\n-- Generating done (0.0s)\n-- Build files have been written to: <validation>/build-5\n"
+    },
+    {
+      "command": "<cmake-bin>/cmake --build <validation>/build-5",
+      "exit_code": 0,
+      "output": "[100%] Built target lesson\n"
+    },
+    {
+      "command": "<cmake-bin>/ctest --test-dir <validation>/build-5 --output-on-failure",
+      "exit_code": 0,
+      "output": "Internal ctest changing into directory: <validation>/build-5\nTest project <validation>/build-5\n    Start 1: lesson_contract\n1/1 Test #1: lesson_contract ..................   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.01 sec\n"
+    },
+    {
+      "command": "g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread -O2 -DNDEBUG project/main.cpp -o <validation>/lesson5-optimized",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "<validation>/lesson5-optimized",
+      "exit_code": 0,
+      "output": "forwarding: constrain inputs and materialize exceptions\nPASS: 6 checks\n"
+    },
+    {
+      "command": "g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread -O1 -g -fsanitize=undefined -fno-sanitize-recover=all project/main.cpp -o <validation>/lesson5-ubsan",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "<validation>/lesson5-ubsan",
+      "exit_code": 0,
+      "output": "forwarding: constrain inputs and materialize exceptions\nPASS: 6 checks\n"
+    }
+  ],
+  "source_sha256": {
+    "project/CMakeLists.txt": "5cd555c1ec54045bb0d57fa775fab289761990cdca56551cf31b8927c11a8d74",
+    "project/main.cpp": "4f91b42f0853c33321636b3a69de3fdd343e9885099d0166eaeb7b9920fb1d61"
+  },
+  "limitations": [
+    "Windows/MSVC not run",
+    "No GPU or game-engine integration",
+    "No performance benchmark",
+    "ASan+UBSan attempt for chapter01 blocked by LeakSanitizer fatal ptrace restriction; ASan not claimed as passed for this course. No checks disabled.",
+    "UBSan is not proof for unexecuted inputs",
+    "ThreadSanitizer and exhaustive scheduler exploration not run"
+  ],
+  "stdout": "forwarding: constrain inputs and materialize exceptions\nPASS: 6 checks\n"
+}

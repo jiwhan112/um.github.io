@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-26",
+  "kind": "new-original-educational-example",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "cmake": "cmake version 3.31.6",
+  "standard": "C++20",
+  "platform": "Linux x86_64",
+  "tests": [
+    {
+      "command": "<cmake-bin>/cmake -S project -B <validation>/build-1 -DCMAKE_BUILD_TYPE=Debug",
+      "exit_code": 0,
+      "output": "-- Configuring done (0.0s)\n-- Generating done (0.0s)\n-- Build files have been written to: <validation>/build-1\n"
+    },
+    {
+      "command": "<cmake-bin>/cmake --build <validation>/build-1",
+      "exit_code": 0,
+      "output": "[100%] Built target lesson\n"
+    },
+    {
+      "command": "<cmake-bin>/ctest --test-dir <validation>/build-1 --output-on-failure",
+      "exit_code": 0,
+      "output": "Internal ctest changing into directory: <validation>/build-1\nTest project <validation>/build-1\n    Start 1: lesson_contract\n1/1 Test #1: lesson_contract ..................   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.00 sec\n"
+    },
+    {
+      "command": "g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread -O2 -DNDEBUG project/main.cpp -o <validation>/lesson1-optimized",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "<validation>/lesson1-optimized",
+      "exit_code": 0,
+      "output": "deduction: value / reference / proxy separated\nPASS: 7 checks\n"
+    },
+    {
+      "command": "g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -pthread -O1 -g -fsanitize=undefined -fno-sanitize-recover=all project/main.cpp -o <validation>/lesson1-ubsan",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "<validation>/lesson1-ubsan",
+      "exit_code": 0,
+      "output": "deduction: value / reference / proxy separated\nPASS: 7 checks\n"
+    }
+  ],
+  "source_sha256": {
+    "project/CMakeLists.txt": "a3b442796073c96fbf2d0d4beccd64bc435275eafb25bc15b5995a7a1ffb943d",
+    "project/main.cpp": "21bb9b506153db89efd0af0fae7b8af0cc73bf18994676ebf9eb9f9c634db66a"
+  },
+  "limitations": [
+    "Windows/MSVC not run",
+    "No GPU or game-engine integration",
+    "No performance benchmark",
+    "ASan+UBSan attempt for chapter01 blocked by LeakSanitizer fatal ptrace restriction; ASan not claimed as passed for this course. No checks disabled.",
+    "UBSan is not proof for unexecuted inputs",
+    "ThreadSanitizer and exhaustive scheduler exploration not run"
+  ],
+  "stdout": "deduction: value / reference / proxy separated\nPASS: 7 checks\n",
+  "blocked_attempts": [
+    {
+      "stage": "ASan+UBSan execution with LeakSanitizer enabled by default",
+      "exit_code": 1,
+      "error": "LeakSanitizer has encountered a fatal error. LeakSanitizer does not work under ptrace (strace, gdb, etc)",
+      "disposition": "Not passed. No sanitizer option disabled. UBSan-only independent run passed."
+    }
+  ]
+}

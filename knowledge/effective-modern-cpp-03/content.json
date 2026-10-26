@@ -1,0 +1,565 @@
+{
+  "title": "Effective Modern C++ 03 · 소유권 그래프와 약한 관찰자",
+  "subtitle": "리소스 공유와 엔티티 참조를 서로 다른 간선으로 설계한다",
+  "sections": [
+    {
+      "id": "goals",
+      "title": "목표 · 게임 클라이언트에서 왜 필요한가",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "스마트 포인터를 일괄 치환하는 대신 누가 자원의 생존을 책임지는지 그래프로 설명한다. 단독 전송·공유 소유·비소유 관찰의 종료 시점을 직접 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 게임 엔티티가 같은 텍스처를 사용하고 서로를 타깃으로 바라본다. 텍스처는 사용자가 남아 있는 동안 살아 있어야 하지만, 타깃 관계 때문에 제거된 엔티티가 영원히 남으면 안 된다. 리소스 공유와 게임 관계는 생존 정책이 다르므로 같은 shared_ptr로 표현할 이유가 없다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 과정의 예제 기준은 C++20이다. 책의 C++11/14 시대 권고를 출발점으로 삼되, requires·jthread·try_emplace처럼 이후에 추가된 도구는 해당 단원에서 구분한다. 기존 C++ 기초·심화와 Modern C++ 과정은 언어 기능의 선수 학습이며, 여기서는 선택 이유와 실패 경계를 중심으로 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: C++ 심화의 객체·템플릿·소유권",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-02/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전 단원",
+              "kind": "link",
+              "href": "/knowledge/effective-modern-cpp-02/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "단독 전송과 공유를 먼저 나누기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "업로드 대기 자원을 한 단계가 넘겨받는 경우 unique_ptr의 이동은 책임자가 하나라는 계약과 잘 맞는다. 예제의 staging을 upload로 옮기면 staging은 빈 상태가 되고 upload만 Texture를 삭제한다. 이 결과는 unique_ptr의 이동 계약이며 임의의 사용자 정의 타입도 반드시 빈 상태가 된다는 규칙이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "여러 엔티티가 한 리소스의 생존에 참여할 때 shared_ptr를 고려한다. 마지막 소유자가 사라지면 객체가 정리된다. 참조 카운터가 있다는 사실만으로 Texture의 멤버가 스레드 안전해지지는 않는다. 서로 다른 shared_ptr 인스턴스의 소유권 처리와 pointee의 데이터 접근을 분리해서 검토한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가능하면 make_unique나 make_shared로 생성과 소유권 연결을 한 표현 안에 둔다. 다만 make_shared가 언제나 최선은 아니다. 큰 객체와 오래 남는 weak_ptr의 저장 공간 회수 특성, 사용자 정의 삭제자, allocator 정책이 중요할 수 있다. 이 예제는 그런 메모리 비용을 측정하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "관찰자는 객체를 살려야 하는가",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "엔티티의 target은 weak_ptr다. a가 b를 보고 b가 a를 보더라도 두 관찰 간선은 강한 소유권 순환을 만들지 않는다. b.reset() 후 a->target.expired()가 true인지를 검사한다. 강한 간선으로 바꾸어 누수를 일으키는 코드를 일부러 실행하지 않고 그래프에서 순환의 의미를 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Read는 weak_ptr를 lock하여 지역 shared_ptr 하나를 만든 뒤에만 id를 읽는다. expired 확인 후 다른 시점에 raw pointer를 사용하려는 두 단계 설계는 수명 확보가 아니다. lock 성공은 이 지역 소유자가 살아 있는 동안 객체를 보유한다는 뜻이지 다른 스레드의 객체 변경을 잠그는 mutex라는 뜻은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "weak_ptr가 만료되면 Read는 -1을 반환한다. 실제 게임에서는 빈 선택 결과, 삭제된 타깃 상태, 재시도 정책 중 무엇인지 API에 더 명확히 표현할 수 있다. 이번 id의 유효 범위는 양수로 고정되어 -1과 겹치지 않는다. 모든 리소스 식별자 규약에 그대로 복사하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "제어 블록과 포인터를 혼동하지 않기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "shared_ptr.get()으로 얻은 주소를 다시 독립 shared_ptr의 생성자에 넣으면 같은 객체에 제어 블록이 둘 생길 수 있다. 각각 자신이 마지막 소유자라고 판단하여 이중 삭제를 일으킬 위험이 있다. 소유권을 공유할 때는 기존 shared_ptr를 복사하거나 적절한 변환을 사용한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "자신을 비동기 콜백에 넘기는 객체라면 enable_shared_from_this 같은 도구도 있지만, 생성자에서 아직 공유 소유권이 성립하지 않은 시점에 사용하면 안 된다. 이번 예제는 그 복잡도를 피하고 외부 소유자가 weak_ptr를 만든다. 수명 정책이 단순하다면 항상 shared_ptr를 도입할 필요는 없다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검사에서는 Texture::alive로 생성·소멸 균형을 확인한다. 이는 단일 스레드 예제에서의 객체 개수이며 실제 GPU 메모리 해제나 드라이버 fence 완료를 뜻하지 않는다. GPU 자원은 CPU 포인터가 사라진 뒤에도 명령 실행 완료까지 지연 해제가 필요할 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-contracts",
+      "title": "그림으로 추적하는 책임과 상태",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/effective-modern-cpp-03/assets/trace.svg",
+          "alt": "실행 흐름에서 변하는 계약 · 소유권 그래프와 약한 관찰자",
+          "caption": "staging → upload : 소유권 전송; a + b → Texture : 강한 공유; a ↔ b : 약한 타깃; 마지막 a 제거 → Texture 소멸"
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/effective-modern-cpp-03/assets/decision.svg",
+          "alt": "표현을 고를 때 분리할 책임 · 소유권 그래프와 약한 관찰자",
+          "caption": "unique_ptr / 단독 책임 / 이동으로 소유자 변경; shared_ptr / 공동 생존 책임 / 마지막 강한 소유자 종료; weak_ptr / 수명 연장 없는 관찰 / lock 성공 때만 임시 보유"
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart LR\n A[\"Entity a\"] -->|strong| T[\"Texture\"]\n B[\"Entity b\"] -->|strong| T\n A -. weak target .-> B\n B -. weak target .-> A\n O[\"observer\"] -. weak .-> T\n O --> L{\"lock 성공?\"}\n L -->|예| R[\"지역 strong으로 읽기\"]\n L -->|아니오| X[\"만료 처리\"]"
+        }
+      ]
+    },
+    {
+      "id": "assumptions",
+      "title": "전제 · 입력과 검증 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Texture id는 예제에서 7과 42만 사용한다. alive는 단일 스레드에서만 변경한다. 동시 소멸·allocator 실패 주입·실제 GPU 리소스 지연 해제는 검증하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "항목"
+                  }
+                ],
+                [
+                  {
+                    "text": "이번 계약"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "고정된 작은 테스트 데이터. 표준 입력·외부 서버·실제 게임 파일 없음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "코드 인코딩"
+                  }
+                ],
+                [
+                  {
+                    "text": "UTF-8 소스와 한국어 주석. 데이터 문자열은 ASCII 실습"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "오류 처리"
+                  }
+                ],
+                [
+                  {
+                    "text": "Check 실패는 예외로 비정상 종료. Release에서도 검사가 사라지지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "학습 원칙"
+                  }
+                ],
+                [
+                  {
+                    "text": "미정의 동작을 일부러 실행하지 않고 거절 조건·수명 전제를 설명"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 직접 빌드",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "kind": "link",
+              "href": "/knowledge/examples/effective-modern-cpp-03.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "준비 도구·실행·기대 출력 README",
+              "kind": "link",
+              "href": "/knowledge/examples/readmes/effective-modern-cpp-03.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP에는 실행 파일이 아니라 이 단원의 독립 소스와 빌드 설정이 들어 있다. 새 폴더에 푼 뒤 README를 읽고 직접 실행한다. 다른 단원의 예제를 복사해야 실행되는 구조가 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "먼저 예측하고 경계를 확인하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "asset.reset(), b.reset(), a.reset() 세 위치에서 Texture::alive와 observer.lock()의 성공 여부를 먼저 예상한다. b가 제거되어도 a가 텍스처를 보유한다는 점과 target만 만료되는 점을 별도로 확인한다. 리소스 수명과 엔티티 수명은 같은 타임라인이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build\nctest --test-dir build --output-on-failure\n# Linux에서 직접 실행\n./build/lesson"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "ownership: strong resource / weak observer\nPASS: 9 checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "PASS의 9는 이 프로그램의 Check 호출 수다. static_assert와 여러 빌드 모드의 반복 실행을 더해 독립 사례 수처럼 표시하지 않는다. CTest는 프로그램 하나를 실행하는 테스트 1개다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "전체 코드 · 화면과 다운로드 원본 일치",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "main.cpp · 한국어 주석 전체 코드",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "소스 파일 열기",
+                  "kind": "link",
+                  "href": "/knowledge/shared/effective-modern-cpp-03-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <utility>\n#include <iostream>\n#include <memory>\n#include <stdexcept>\nint checks = 0;\nvoid Check(bool b, const char * w) {\n  ++ checks;\n  if (! b) throw std::runtime_error(w);\n}\n// 단일 스레드 실습에서 살아 있는 CPU 객체 수만 추적한다.\nstruct Texture {\n  static inline int alive = 0;\n  int id;\n  explicit Texture(int n) : id(n) {\n    ++ alive;\n  }\n  ~ Texture() {\n    -- alive;\n  }\n};\n// 리소스는 공유 소유하고 타깃은 생존을 연장하지 않는 관찰자로 둔다.\nstruct Entity {\n  std::shared_ptr < Texture > texture;\n  std::weak_ptr < Entity > target;\n};\nint Read(const std::weak_ptr < Texture > & ref) {\n  // lock 한 번으로 살아 있는 동안의 임시 소유권을 얻는다.\n  auto strong = ref.lock();\n  return strong ? strong->id : - 1;\n}\nint main() {\n  // 단독 소유자를 옮기면 원래 포인터는 비워진다.\n  {\n    auto staging = std::make_unique < Texture >(7);\n    auto upload = std::move(staging);\n    Check(! staging && upload->id == 7, \"exclusive transfer\");\n  }\n  Check(Texture::alive == 0, \"exclusive lifetime ends\");\n  std::weak_ptr < Texture > observer;\n  {\n    auto asset = std::make_shared < Texture >(42);\n    observer = asset;\n    auto a = std::make_shared < Entity >();\n    auto b = std::make_shared < Entity >();\n    a->texture = asset;\n    b->texture = asset;\n    a->target = b;\n    b->target = a;\n    Check(Read(observer) == 42, \"observer promotes\");\n    // 지역 asset을 비워도 엔티티의 강한 소유권은 남아 있다.\n    asset.reset();\n    Check(Read(observer) == 42, \"entities keep resource alive\");\n    // 약한 타깃 간선은 제거되는 엔티티를 붙잡지 않는다.\n    b.reset();\n    Check(a->target.expired(), \"weak graph edge does not retain entity\");\n    Check(Read(observer) == 42, \"remaining owner retains asset\");\n    // 마지막 강한 리소스 소유자가 사라지면 Texture가 소멸한다.\n    a.reset();\n    Check(observer.expired(), \"last owner releases texture\");\n  }\n  Check(Read(observer) == - 1, \"expired handled\");\n  Check(Texture::alive == 0, \"all resources released\");\n  // get() 주소에서 별도 shared_ptr를 만들면 제어 블록이 둘이 된다. 여기서는 실행하지 않는다.\n  std::cout << \"ownership: strong resource / weak observer\\nPASS: \" << checks << \" checks\\n\";\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · weak_ptr 두 개가 서로 연결되면 순환 누수가 생기는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그 약한 간선 자체는 강한 참조 수를 늘리지 않는다. 그래프의 다른 강한 소유 경로가 있는지는 별도 확인한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · lock이 성공하면 Texture의 데이터 경쟁도 해결되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 객체 생존만 확보한다. mutable 데이터의 동시 접근은 mutex나 별도의 동기화가 필요하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · asset.reset() 직후에도 Texture가 살아 있는 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "a와 b의 texture 멤버가 강한 소유자이기 때문이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · get() 주소로 새 shared_ptr를 만들면 안전하게 공유되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 별도 제어 블록과 이중 삭제 위험이 있다. 기존 shared_ptr의 복사로 공유한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · alive=0이면 GPU 작업도 끝났다는 뜻인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 이 실습의 Texture는 CPU 객체다. 실제 D3D 리소스와 fence 완료는 검사하지 않았다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장: 엔티티 저장소가 이미 수명을 책임진다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "타깃에는 세대 번호가 있는 핸들 등 다른 비소유 표현도 고려한다. 모든 관계에 스마트 포인터가 필요한 것은 아니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "references",
+      "title": "직접 확인한 자료와 독립 설명",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 확인. 아래 표준 초안은 현재 편집본이므로 추가된 최신 선언을 C++20에서 모두 사용할 수 있다는 뜻이 아니다. 본문과 소스에서 사용하는 기능의 기준 버전을 구별한다. 책 원문·공식 예제를 복사하지 않고, 게임 상황·코드·그림·복습을 새로 구성했다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공유 소유권 계약",
+              "kind": "link",
+              "href": "https://eel.is/c++draft/util.smartptr.shared"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "약한 포인터 lock",
+              "kind": "link",
+              "href": "https://eel.is/c++draft/util.smartptr.weak.obs"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Scott Meyers의 저자 공개 목차: 주제 범위 참고",
+              "kind": "link",
+              "href": "https://scottmeyers.blogspot.com/2014/08/near-final-draft-of-effective-modern-c.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "실제로 실행한 검사와 남은 한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Linux x86_64, g++ (Debian 14.2.0-19) 14.2.0, cmake version 3.31.6. Debug CMake 구성·빌드·CTest 1/1, GCC C++20 -O2 -DNDEBUG 실행, UBSan 실행을 각각 통과했다. 최적화 빌드와 sanitizer 빌드의 stdout은 같으며 각 실행에서 9개 Check를 확인했다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ASan+UBSan 시도는 01에서 LeakSanitizer의 ptrace 환경 제한으로 실패했다. 이를 성공으로 처리하지 않았고 검사 옵션을 꺼서 숨기지 않았다. 이 과정의 메모리 검사 완료를 주장하지 않으며, 별도로 실행한 UBSan 결과만 통과로 기록한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows/MSVC, GPU, 실제 게임 통합, 성능, ThreadSanitizer와 모든 입력·스케줄 검사는 하지 않았다. 로컬 코드 검증은 React 페이지 검사·배포·실제 공개 확인과 별개다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명령·출력·소스 SHA-256 검증 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/effective-modern-cpp-03-lab/verification.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "독립 집필·변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26: 사용자가 승인한 새 Effective Modern C++ 정규 과정으로 독립 집필했다. 기존 교재 이관 실적으로 세지 않으며, 기존 URL·학습 기록·원문 파일은 변경하지 않았다. 도서의 문장과 예제를 대체 복제한 요약본이 아니라 원칙을 자체 게임 예제에 적용하는 학습 자료다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "코드와 그림은 이 단원을 위해 새로 작성했다. 공개 여부와 배포 커밋은 발행 담당의 검증 기록으로 확인하며, 본문에 확인하지 않은 배포 성공을 미리 적지 않는다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

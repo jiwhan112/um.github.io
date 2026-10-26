@@ -1,0 +1,856 @@
+{
+  "title": "Effective Modern C++ 08 · Pimpl·삽입·비용의 통합 판단",
+  "subtitle": "새 문법을 모으는 대신 자원 캐시의 빌드 경계·오류 계약·측정 계획을 완성한다",
+  "sections": [
+    {
+      "id": "goals",
+      "title": "목표 · 게임 클라이언트에서 왜 필요한가",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "앞선 타입·소유권·이동·전달 규칙을 작은 다중 파일 라이브러리에 적용한다. 구현 숨김, 값 유효성, 중복 삽입과 이동 후 재사용을 실제 코드 계약으로 연결한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "게임 리소스 캐시의 내부 컨테이너를 바꾸려 할 때 모든 사용자가 unordered_map 헤더와 구현에 의존하면 변경 범위가 커진다. 그러나 Pimpl을 넣으면 할당과 간접 참조 비용이 생긴다. 유지보수와 실행 비용을 서로 다른 항목으로 비교하고 무조건 빠르다는 설명을 피한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 과정의 예제 기준은 C++20이다. 책의 C++11/14 시대 권고를 출발점으로 삼되, requires·jthread·try_emplace처럼 이후에 추가된 도구는 해당 단원에서 구분한다. 기존 C++ 기초·심화와 Modern C++ 과정은 언어 기능의 선수 학습이며, 여기서는 선택 이유와 실패 경계를 중심으로 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: C++ 심화의 객체·템플릿·소유권",
+              "kind": "link",
+              "href": "/knowledge/cpp-advanced-02/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전 단원",
+              "kind": "link",
+              "href": "/knowledge/effective-modern-cpp-07/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "헤더가 약속하는 것만 남기기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "asset_cache.hpp는 Impl의 선언과 unique_ptr만 알고 컨테이너 정의는 cpp로 보낸다. 사용자 코드는 Add, Find, Size의 의미만 본다. 헤더 의존성을 줄일 수 있지만 이것만으로 컴파일 시간 단축이나 ABI 안정성이 실측·보장된 것은 아니다. 컴파일러·빌드 옵션·라이브러리 경계가 추가로 관여한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "unique_ptr의 기본 삭제자는 삭제할 시점에 완전한 타입이 필요하다. 그래서 소멸자를 헤더에서 선언하고 Impl을 정의한 cpp에서 default 정의한다. 이동 특수 멤버도 같은 구현 파일에서 정의하여 불완전 타입과의 경계를 명확히 한다. 헤더 한 파일 안에 모든 default를 넣는 것과 다르다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사용자 선언 소멸자와 특수 멤버 생성 규칙의 상호작용 때문에 이동 가능성이 자동으로 남는다고 추측하지 않는다. 예제는 복사를 delete하고 이동을 명시한다. static_assert가 복사 불가와 noexcept 이동 생성 가능이라는 인터페이스 계약을 확인한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "삽입은 생성과 상태 변경의 순서다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Add는 빈 키나 음수 값을 먼저 거절한다. 검증 실패 후에도 기존 Size가 바뀌지 않는지를 검사한다. 입력 검사를 앞에 둔 것과 모든 가능한 할당 실패에 강한 예외 보장을 증명한 것은 다르다. 예제는 메모리 할당 실패를 주입하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "try_emplace는 키가 이미 있으면 기존 값을 유지하는 정책을 표현한다. hero를 4로 넣은 뒤 9로 다시 넣으면 false이고 Find는 4를 반환한다. operator[]를 쓰면 조회 과정에서 없는 항목이 생성될 수 있어 Find의 읽기 전용 계약에 맞지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Add는 key를 값으로 받으므로 입력을 어차피 소유해야 하는 경계가 명확하다. lvalue 호출자는 복사 비용을 내고 rvalue 호출자는 이동 기회를 준다. const reference 오버로드와 rvalue reference 오버로드를 두는 설계보다 단순하지만 언제나 가장 적은 작업이라는 보장은 없다. 재사용 가능한 기존 문자열 버퍼나 할당자 조건까지 대표 데이터로 비교해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "raw pointer를 생성해 컨테이너의 emplace 인수로 직접 넘기면, 컨테이너가 실제 소유 객체를 만들기 전에 할당·비교 등에서 실패하는 경로를 검토해야 한다. 먼저 unique_ptr 같은 RAII 소유자를 만든 뒤 이동해 넘기면 임시 단계에서도 삭제 책임이 끊기지 않는다. 예제는 안전한 정수 값을 쓰므로 원시 포인터 누수나 할당 실패를 실제로 발생시키는 실험을 하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "emplace 계열이 항상 push_back이나 insert보다 빠른 것은 아니다. 잘못된 생성자 선택, 자원 획득과 소유권 연결, 중복 키 비용 등을 함께 봐야 한다. C++17 try_emplace는 책의 C++11/14 배경 이후에 추가된 도구이므로 시대 구분을 명시한다. 이번 코드에서 int 값의 생성 비용 절감을 과장하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "이동 후 상태와 측정할 항목",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "unique_ptr 기반의 이동 후 cache는 impl_이 빈 상태다. Size는 0, Find는 -1을 반환하도록 정했고 Add는 새 Impl을 만들어 재사용한다. 표준의 일반적인 이동 후 상태 설명에만 기대지 않고 우리 클래스가 호출자에게 허용할 연산을 구체적으로 결정한 것이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Find의 -1은 유효 값이 음수가 아니도록 제한한 이 작은 API에서만 사용할 수 있다. 실제 엔진에서는 optional, expected, 핸들 등 오류와 값이 섞이지 않는 표현을 비교한다. 함수를 바꾸기 전에 기존 호출자가 부재·로딩 중·실패를 어떻게 구분하는지 요구를 적는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 성능 실험은 기존 직접 멤버 구현과 Pimpl 구현의 할당 수·캐시 조회 비용·증분 빌드 시간을 각각 측정하는 것이다. 입력 크기, 최적화 옵션, 워밍업, 반복 수를 고정해야 한다. 현재 검증은 기능 계약만 확인했으므로 수치가 없는 성능 개선 결론을 쓰지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "과정의 끝: 원칙을 상황에 적용하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "01의 타입 추론은 값을 보관할지 빌릴지를 드러냈고, 03의 스마트 포인터는 수명 책임을 분리했다. 04와 05는 이동과 전달의 목적이 다름을 보여 주었고, 06과 07은 호출이 늦어질 때 수명과 동기화 계약이 추가됨을 보여 주었다. 이 통합 예제는 작은 API에도 그 질문들이 동시에 필요하다는 것을 보여 준다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "책의 항목 번호를 외우는 대신 코드 리뷰에서 입력 도메인, 소유자, 실패 후 상태, 동시 접근, 검증 증거를 순서대로 묻는다. C++20 이후 도구를 적용할 때도 오래된 권고의 전제가 남아 있는지 확인한다. 한 규칙을 모든 프레임워크에 적용하는 체크박스로 만들지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual-contracts",
+      "title": "그림으로 추적하는 책임과 상태",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/effective-modern-cpp-08/assets/trace.svg",
+          "alt": "실행 흐름에서 변하는 계약 · Pimpl·삽입·비용의 통합 판단",
+          "caption": "헤더 → Impl 전방 선언; cpp → 컨테이너 실제 정의; Add → 검증 후 삽입; 이동 후 → 빈 상태·재생성"
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/effective-modern-cpp-08/assets/decision.svg",
+          "alt": "표현을 고를 때 분리할 책임 · Pimpl·삽입·비용의 통합 판단",
+          "caption": "기능 계약 / 중복 키 / 부재 / 실패 / 현재 CPU 테스트 완료; 수명 계약 / unique_ptr / 이동 후 재사용 / 명시한 후조건 검사; 비용 가설 / 할당 / 간접 접근 / 빌드 / 측정 계획이며 결과 아님"
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"Add(key,value)\"] --> B{\"키·값 유효?\"}\n B -->|아니오| C[\"예외: 기존 상태 유지\"]\n B -->|예| D{\"Impl 존재?\"}\n D -->|아니오| E[\"Impl 생성\"]\n D -->|예| F[\"try_emplace\"]\n E --> F\n F --> G{\"새 키?\"}\n G -->|예| H[\"삽입 true\"]\n G -->|아니오| I[\"기존 값 유지 false\"]"
+        }
+      ]
+    },
+    {
+      "id": "assumptions",
+      "title": "전제 · 입력과 검증 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CPU 문자열→정수 맵일 뿐 GPU 리소스 캐시가 아니다. C++20 빌드에서 C++17 try_emplace를 사용한다. 동시 접근·할당 실패 주입·실제 ABI 호환·컴파일 시간·프레임 성능은 미검증이다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "항목"
+                  }
+                ],
+                [
+                  {
+                    "text": "이번 계약"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "고정된 작은 테스트 데이터. 표준 입력·외부 서버·실제 게임 파일 없음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "코드 인코딩"
+                  }
+                ],
+                [
+                  {
+                    "text": "UTF-8 소스와 한국어 주석. 데이터 문자열은 ASCII 실습"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "오류 처리"
+                  }
+                ],
+                [
+                  {
+                    "text": "Check 실패는 예외로 비정상 종료. Release에서도 검사가 사라지지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "학습 원칙"
+                  }
+                ],
+                [
+                  {
+                    "text": "미정의 동작을 일부러 실행하지 않고 거절 조건·수명 전제를 설명"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 직접 빌드",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "kind": "link",
+              "href": "/knowledge/examples/effective-modern-cpp-08.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "준비 도구·실행·기대 출력 README",
+              "kind": "link",
+              "href": "/knowledge/examples/readmes/effective-modern-cpp-08.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP에는 실행 파일이 아니라 이 단원의 독립 소스와 빌드 설정이 들어 있다. 새 폴더에 푼 뒤 README를 읽고 직접 실행한다. 다른 단원의 예제를 복사해야 실행되는 구조가 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "먼저 예측하고 경계를 확인하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "세 파일을 별도로 읽고 헤더에 unordered_map이 없는 이유를 설명한다. 중복 hero 삽입, 없는 키 조회, 음수 값 거절, 이동 후 재사용 순서대로 객체 상태를 표로 적는다. cpp를 빼고 main만 빌드하면 링크할 구현이 없다는 점도 다중 파일 프로젝트의 일부다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build\nctest --test-dir build --output-on-failure\n# Linux에서 직접 실행\n./build/lesson"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "integration: explicit ownership and narrow build boundary\nPASS: 9 checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "PASS의 9는 이 프로그램의 Check 호출 수다. static_assert와 여러 빌드 모드의 반복 실행을 더해 독립 사례 수처럼 표시하지 않는다. CTest는 프로그램 하나를 실행하는 테스트 1개다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "전체 코드 · 화면과 다운로드 원본 일치",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "asset_cache.cpp · 한국어 주석 전체 코드",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "소스 파일 열기",
+                  "kind": "link",
+                  "href": "/knowledge/shared/effective-modern-cpp-08-lab/project/asset_cache.cpp"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"asset_cache.hpp\"\n#include <unordered_map>\n#include <stdexcept>\n#include <utility>\n// 구현 파일만 컨테이너 정의를 포함하여 헤더 의존성을 제한한다.\nstruct AssetCache::Impl {\n  std::unordered_map < std::string, int > entries;\n};\nAssetCache::AssetCache() : impl_(std::make_unique < Impl >()) {\n}\nAssetCache::~ AssetCache() = default;\nAssetCache::AssetCache(AssetCache &&) noexcept = default;\nAssetCache & AssetCache::operator =(AssetCache &&) noexcept = default;\nbool AssetCache::Add(std::string key, int value) {\n  // 도메인 오류를 먼저 검사하므로 기존 맵을 건드리지 않는다.\n  if (key.empty() || value < 0) throw std::invalid_argument(\"invalid asset\");\n  if (! impl_) impl_ = std::make_unique < Impl >();\n  // 이동 후 재사용 계약\n  // 이미 있는 키는 값을 덮어쓰지 않는 삽입 정책이다.\n  return impl_->entries.try_emplace(std::move(key), value).second;\n}\nint AssetCache::Find(const std::string & key) const {\n  if (! impl_) return - 1;\n  const auto it = impl_->entries.find(key);\n  return it == impl_->entries.end() ? - 1 : it->second;\n}\nstd::size_t AssetCache::Size() const noexcept {\n  return impl_ ? impl_->entries.size() : 0;\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "asset_cache.hpp · 한국어 주석 전체 코드",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "소스 파일 열기",
+                  "kind": "link",
+                  "href": "/knowledge/shared/effective-modern-cpp-08-lab/project/asset_cache.hpp"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#pragma once\n#include <memory>\n#include <string>\n#include <cstddef>\nclass AssetCache {\n  struct Impl;\n  std::unique_ptr < Impl > impl_;\n  public : AssetCache();\n  ~ AssetCache();\n  // 불완전한 Impl의 삭제는 정의가 보이는 cpp에서 수행한다.\n  AssetCache(AssetCache &&) noexcept;\n  AssetCache & operator =(AssetCache &&) noexcept;\n  AssetCache(const AssetCache &) = delete;\n  AssetCache & operator =(const AssetCache &) = delete;\n  bool Add(std::string key, int value);\n  int Find(const std::string & key) const;\n  std::size_t Size() const noexcept;\n};\n"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp · 한국어 주석 전체 코드",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "소스 파일 열기",
+                  "kind": "link",
+                  "href": "/knowledge/shared/effective-modern-cpp-08-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"asset_cache.hpp\"\n#include <iostream>\n#include <stdexcept>\n#include <type_traits>\n#include <utility>\nint checks = 0;\nvoid Check(bool b, const char * w) {\n  ++ checks;\n  if (! b) throw std::runtime_error(w);\n}\nint main() {\n  // 빈 캐시에서 시작해 중복 삽입과 조회 정책을 확인한다.\n  AssetCache cache;\n  Check(cache.Size() == 0, \"empty\");\n  Check(cache.Add(\"hero\", 4), \"first insert\");\n  Check(! cache.Add(\"hero\", 9), \"duplicate keeps original\");\n  Check(cache.Find(\"hero\") == 4 && cache.Size() == 1, \"map invariant\");\n  Check(cache.Find(\"none\") == - 1, \"missing key\");\n  // 실패한 값은 기존 원소 수를 바꾸지 않아야 한다.\n  bool rejected = false;\n  try {\n    cache.Add(\"bad\", - 1);\n  } catch (const std::invalid_argument &) {\n    rejected = true;\n  }\n  Check(rejected && cache.Size() == 1, \"validation before mutation\");\n  // 이동 후 원본의 허용 연산도 클래스 계약으로 검사한다.\n  AssetCache moved(std::move(cache));\n  Check(moved.Find(\"hero\") == 4, \"pimpl moved\");\n  Check(cache.Size() == 0, \"moved-from query contract\");\n  Check(cache.Add(\"rebuilt\", 2), \"moved-from object reusable\");\n  // 복사 불가와 예외 없는 이동은 컴파일 시점의 별도 검사다.\n  static_assert(! std::is_copy_constructible_v < AssetCache >);\n  static_assert(std::is_nothrow_move_constructible_v < AssetCache >);\n  std::cout << \"integration: explicit ownership and narrow build boundary\\nPASS: \" << checks << \" checks\\n\";\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · Pimpl이면 ABI와 컴파일 시간 개선이 자동 보장되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 의존성을 숨기는 설계 효과와 실제 도구·빌드 구성의 안정성 및 성능은 별도로 검증한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · 소멸자를 cpp에서 정의하는 핵심 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기본 삭제자가 Impl을 삭제할 때 완전한 타입 정의가 보이도록 하기 위해서다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · hero를 두 번 넣으면 왜 9로 바뀌지 않는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 API는 try_emplace로 중복을 거절하고 기존 값을 유지하는 정책을 선택했다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · Size가 0인 이동 후 cache에 Add를 허용한 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "재사용 계약을 명시하기 위해 필요하면 새 Impl을 생성한다. 다른 API는 이동 후 재대입만 허용하도록 설계할 수도 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · 기능 테스트 성공을 성능 개선으로 보고할 수 있는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 할당 수·조회 시간·증분 빌드 시간은 현재 측정하지 않았다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장: 실제 캐시에 로딩 중 상태가 추가되면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "부재와 실패, 로딩 중을 -1 하나로 합치지 말고 명시적 상태 타입을 설계한다. 동시에 접근할 경우 잠금과 작업 수명까지 다시 검토한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coverage",
+      "title": "42개 항목의 주제 대응과 과정 경계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "저자가 공개한 42개 항목의 주제 범위를 이 8단원에 대응시켰다. 아래는 번호별 독서 위치를 찾는 지도이며 도서의 원문·모든 예외 사례·전체 증명을 대체하는 완전 재현본이라는 뜻은 아니다. 실제 실행한 것은 단원별 자체 예제이고, 원저 코드의 테스트 완료를 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "새 단원"
+                  }
+                ],
+                [
+                  {
+                    "text": "참고 항목 번호"
+                  }
+                ],
+                [
+                  {
+                    "text": "독립 학습 주제"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "01"
+                  }
+                ],
+                [
+                  {
+                    "text": "1–6"
+                  }
+                ],
+                [
+                  {
+                    "text": "추론·관찰·값 저장"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "02"
+                  }
+                ],
+                [
+                  {
+                    "text": "7–13, 15"
+                  }
+                ],
+                [
+                  {
+                    "text": "생성·타입 경계·정적 계약"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "03"
+                  }
+                ],
+                [
+                  {
+                    "text": "18–21"
+                  }
+                ],
+                [
+                  {
+                    "text": "소유와 관찰의 그래프"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "04"
+                  }
+                ],
+                [
+                  {
+                    "text": "14, 23–25, 28–29"
+                  }
+                ],
+                [
+                  {
+                    "text": "이동·전달·실패 계약"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "05"
+                  }
+                ],
+                [
+                  {
+                    "text": "26–27, 30"
+                  }
+                ],
+                [
+                  {
+                    "text": "범용 API의 입력 경계"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "06"
+                  }
+                ],
+                [
+                  {
+                    "text": "31–34"
+                  }
+                ],
+                [
+                  {
+                    "text": "지연 호출의 캡처 정책"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "07"
+                  }
+                ],
+                [
+                  {
+                    "text": "16, 35–40"
+                  }
+                ],
+                [
+                  {
+                    "text": "동기화·작업·종료·통지"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "08"
+                  }
+                ],
+                [
+                  {
+                    "text": "17, 22, 41–42"
+                  }
+                ],
+                [
+                  {
+                    "text": "특수 멤버·빌드 경계·삽입 비용"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "references",
+      "title": "직접 확인한 자료와 독립 설명",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 확인. 아래 표준 초안은 현재 편집본이므로 추가된 최신 선언을 C++20에서 모두 사용할 수 있다는 뜻이 아니다. 본문과 소스에서 사용하는 기능의 기준 버전을 구별한다. 책 원문·공식 예제를 복사하지 않고, 게임 상황·코드·그림·복습을 새로 구성했다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "default_delete의 완전한 타입 요구",
+              "kind": "link",
+              "href": "https://eel.is/c++draft/unique.ptr.dltr.dflt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "unordered_map 삽입 계약",
+              "kind": "link",
+              "href": "https://eel.is/c++draft/unord.map.modifiers"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "특수 멤버 생성 규칙",
+              "kind": "link",
+              "href": "https://eel.is/c++draft/class.copy.ctor"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Scott Meyers의 저자 공개 목차: 주제 범위 참고",
+              "kind": "link",
+              "href": "https://scottmeyers.blogspot.com/2014/08/near-final-draft-of-effective-modern-c.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "실제로 실행한 검사와 남은 한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Linux x86_64, g++ (Debian 14.2.0-19) 14.2.0, cmake version 3.31.6. Debug CMake 구성·빌드·CTest 1/1, GCC C++20 -O2 -DNDEBUG 실행, UBSan 실행을 각각 통과했다. 최적화 빌드와 sanitizer 빌드의 stdout은 같으며 각 실행에서 9개 Check를 확인했다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ASan+UBSan 시도는 01에서 LeakSanitizer의 ptrace 환경 제한으로 실패했다. 이를 성공으로 처리하지 않았고 검사 옵션을 꺼서 숨기지 않았다. 이 과정의 메모리 검사 완료를 주장하지 않으며, 별도로 실행한 UBSan 결과만 통과로 기록한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows/MSVC, GPU, 실제 게임 통합, 성능, ThreadSanitizer와 모든 입력·스케줄 검사는 하지 않았다. 로컬 코드 검증은 React 페이지 검사·배포·실제 공개 확인과 별개다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명령·출력·소스 SHA-256 검증 기록",
+              "kind": "link",
+              "href": "/knowledge/shared/effective-modern-cpp-08-lab/verification.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "독립 집필·변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26: 사용자가 승인한 새 Effective Modern C++ 정규 과정으로 독립 집필했다. 기존 교재 이관 실적으로 세지 않으며, 기존 URL·학습 기록·원문 파일은 변경하지 않았다. 도서의 문장과 예제를 대체 복제한 요약본이 아니라 원칙을 자체 게임 예제에 적용하는 학습 자료다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "코드와 그림은 이 단원을 위해 새로 작성했다. 공개 여부와 배포 커밋은 발행 담당의 검증 기록으로 확인하며, 본문에 확인하지 않은 배포 성공을 미리 적지 않는다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

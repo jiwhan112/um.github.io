@@ -24,10 +24,10 @@ async function revealLegacy(page:import('@playwright/test').Page,slug:string,kin
 const catalog=JSON.parse(readFileSync('public/data/atlas/catalog.json','utf8')) as Catalog;
 const routes=JSON.parse(readFileSync('public/data/atlas/routes.json','utf8')) as string[];
 const knowledgeDocs=catalog.documents.filter(doc=>doc.kind==='knowledge');
-const windowsCategories=['WinAPI','게임 수학','DirectX 9','DirectX 11'];
+const windowsCategories=['WinAPI','게임 수학','DirectX 9','DirectX 11','DirectX 12'];
 const windowsCount=knowledgeDocs.filter(doc=>windowsCategories.includes(doc.category)).length;
-const initialTreeCount=knowledgeDocs.filter(doc=>[...windowsCategories,'C 언어','C++ 기초·심화','Effective C++'].includes(doc.category)).length;
-const treeCount=initialTreeCount+knowledgeDocs.filter(doc=>['컴퓨터 구조','운영체제','네트워크'].includes(doc.category)).length;
+const initialTreeCount=knowledgeDocs.filter(doc=>[...windowsCategories,'C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++','알고리즘'].includes(doc.category)).length;
+const treeCount=initialTreeCount+knowledgeDocs.filter(doc=>['컴퓨터 구조','운영체제','네트워크','그래픽스 기술'].includes(doc.category)).length;
 const cCount=knowledgeDocs.filter(doc=>doc.category==='C 언어').length;
 for(const route of routes){test('direct route '+route,async({page,isMobile,request})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
@@ -128,8 +128,12 @@ test('homepage opens the Notion-style knowledge sitemap with searchable chapter 
  await expect(cppTopics).toHaveText(['C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++']);
  const windowsTopics=page.locator('#knowledge-windows .knowledge-topic-row strong');
  await expect(windowsTopics).toHaveText(['WinAPI','게임 수학','DirectX 9','DirectX 11','DirectX 12']);
- await expect(page.getByText('집필 시 설계').first()).toBeVisible();
- await expect(page.getByText('신규 집필 예정').first()).toBeVisible();
+ // The approved five tracks now connect actual source-catalog chapters. Engine/Python
+ // remain separate plans; a completed course must not be asserted to look unwritten.
+ await page.locator('#knowledge-engine').getByRole('button').click();
+ await expect(page.locator('#knowledge-engine .knowledge-topic-row')).toContainText('신규 집필 예정');
+ await expect(page.locator('#knowledge-engine .knowledge-document-link')).toHaveCount(0);
+ await page.locator('#knowledge-engine').getByRole('button').click();
  const publishedKnowledgeRoutes=catalog.documents.filter(d=>d.kind==='knowledge').map(d=>d.route).sort();
  const recentLinks=page.locator('.knowledge-recent-list a');
  await expect(recentLinks).toHaveCount(publishedKnowledgeRoutes.length);
