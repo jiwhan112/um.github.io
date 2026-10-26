@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-26",
+  "updated": "2026-10-27",
   "book": {
     "title": "Cracking the Coding Interview",
     "edition": 6,
@@ -8,18 +8,36 @@
   },
   "current": {
     "chapter": 3,
-    "number": "3.1",
-    "topic_en": "Three in One",
-    "study_date": "2026-10-26",
-    "published_date": "2026-10-26"
+    "number": "3.2",
+    "topic_en": "Stack Min",
+    "study_date": "2026-10-27",
+    "published_date": "2026-10-27"
   },
   "next": {
     "chapter": 3,
-    "number": "3.2",
-    "topic_en": "Stack Min",
-    "study_date": "2026-10-27"
+    "number": "3.3",
+    "topic_en": "Stack of Plates",
+    "study_date": "2026-10-28"
   },
   "episodes": [
+    {
+      "number": "3.2",
+      "chapter": 3,
+      "topic_en": "Stack Min",
+      "title": "전투 밸런스 기록의 최솟값 되돌리기",
+      "summary": "깊이별 접두 최솟값을 저장해 중복 최소·LIFO 복원·실패 시 상태 보존을 최악 O(1) 연산으로 구현",
+      "category": "스택과 큐",
+      "tags": [
+        "스택",
+        "최솟값",
+        "전처리",
+        "경계 검사",
+        "불변식"
+      ],
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-03-02-stack-min/"
+    },
     {
       "number": "3.1",
       "chapter": 3,
