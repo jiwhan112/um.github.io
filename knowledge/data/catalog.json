@@ -1856,5 +1856,469 @@
       "try_emplace",
       "통합 설계"
     ]
+  },
+  {
+    "title": "DirectX 12 01 · DX11에서 명시적 API로 · 장치와 디버그 경계",
+    "subtitle": "기능 수준과 선택 기능, 하드웨어와 WARP, 초기화 실패를 분리한다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "장치 생성",
+      "DX11 이식",
+      "Feature Level"
+    ],
+    "path": "dx12-01"
+  },
+  {
+    "title": "DirectX 12 02 · Command Queue·Allocator·List · 기록과 완료",
+    "subtitle": "Close는 완료가 아니며 allocator 재사용은 fence 이후다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "Command List",
+      "Fence",
+      "수명"
+    ],
+    "path": "dx12-02"
+  },
+  {
+    "title": "DirectX 12 03 · Swap Chain·Present · 프레임 슬롯의 수명",
+    "subtitle": "현재 backbuffer 인덱스와 재사용 가능한 allocator를 분리한다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "Swap Chain",
+      "Present",
+      "프레임 버퍼링"
+    ],
+    "path": "dx12-03"
+  },
+  {
+    "title": "DirectX 12 04 · Resource·Heap · Upload와 Readback의 방향",
+    "subtitle": "주소를 얻는 Map과 실행 완료를 보장하는 fence는 다르다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "Heap",
+      "Upload",
+      "Readback"
+    ],
+    "path": "dx12-04"
+  },
+  {
+    "title": "DirectX 12 05 · Descriptor Heap·View · 슬롯도 자원이다",
+    "subtitle": "CPU/GPU handle, 장치별 stride, in-flight descriptor 수명을 구분한다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "Descriptor",
+      "SRV",
+      "수명"
+    ],
+    "path": "dx12-05"
+  },
+  {
+    "title": "DirectX 12 06 · Root Signature·Shader Register · 바인딩 계약",
+    "subtitle": "root 슬롯 번호와 b/t/u/s 레지스터, 64 DWORD 비용을 분리한다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "Root Signature",
+      "HLSL",
+      "바인딩"
+    ],
+    "path": "dx12-06"
+  },
+  {
+    "title": "DirectX 12 07 · PSO·HLSL·Draw · 상태를 미리 묶기",
+    "subtitle": "고정 파이프라인 상태와 매 Draw 동적 바인딩의 경계를 읽는다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "PSO",
+      "HLSL",
+      "Draw"
+    ],
+    "path": "dx12-07"
+  },
+  {
+    "title": "DirectX 12 08 · Resource Barrier · 상태와 순서의 계약",
+    "subtitle": "transition·UAV·aliasing barrier와 queue fence의 책임을 나눈다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "Resource Barrier",
+      "자원 상태",
+      "동기화"
+    ],
+    "path": "dx12-08"
+  },
+  {
+    "title": "DirectX 12 09 · Frames in Flight·Upload Page · 안전한 재사용",
+    "subtitle": "프레임 번호가 아니라 마지막 GPU 참조 값으로 바이트를 회수한다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "Frames in Flight",
+      "Ring Buffer",
+      "Upload"
+    ],
+    "path": "dx12-09"
+  },
+  {
+    "title": "DirectX 12 10 · Texture Upload·Footprint·Mip · 행 간격의 함정",
+    "subtitle": "픽셀 바이트 수, row pitch, placed offset, mip subresource를 분리한다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "Texture",
+      "Footprint",
+      "Mip"
+    ],
+    "path": "dx12-10"
+  },
+  {
+    "title": "DirectX 12 11 · Compute·Multi-Queue · 의존성 그래프",
+    "subtitle": "Dispatch 범위, queue Wait, readback fence를 한 흐름으로 묶는다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "Compute",
+      "Multi Queue",
+      "Readback"
+    ],
+    "path": "dx12-11"
+  },
+  {
+    "title": "DirectX 12 12 · Debug Layer·PIX·Device Removal · 통합 점검",
+    "subtitle": "검증 실패를 숨기지 않고 재현 조건과 실행 한계를 남긴다",
+    "date": "2026-10-26",
+    "category": "DirectX 12",
+    "topic": "dx12",
+    "tags": [
+      "DirectX 12",
+      "디버깅",
+      "PIX",
+      "Device Removal"
+    ],
+    "path": "dx12-12"
+  },
+  {
+    "path": "graphics-tech-01",
+    "title": "그래픽스 기술 01 · 색 공간·sRGB·선형 합성·HDR 경계",
+    "subtitle": "0.5라는 숫자의 의미부터 분리하고, 빛을 섞는 공간과 저장하는 신호를 구별한다.",
+    "date": "2026-10-26",
+    "category": "그래픽스 기술",
+    "topic": "graphics-tech",
+    "tags": [
+      "색 공간",
+      "sRGB",
+      "선형 합성",
+      "HDR"
+    ]
+  },
+  {
+    "path": "graphics-tech-02",
+    "title": "그래픽스 기술 02 · 법선·역전치·TBN·노멀 맵",
+    "subtitle": "점, 접선, 법선의 변환 계약을 분리하고 비균일 스케일과 미러 UV 반례를 추적한다.",
+    "date": "2026-10-26",
+    "category": "그래픽스 기술",
+    "topic": "graphics-tech",
+    "tags": [
+      "법선",
+      "TBN",
+      "노멀 맵",
+      "역전치"
+    ]
+  },
+  {
+    "path": "graphics-tech-03",
+    "title": "그래픽스 기술 03 · BRDF·GGX·거칠기·금속도",
+    "subtitle": "광원 세기와 반사 함수와 화면 신호를 나누고 하나의 스칼라 재질 모델을 검증한다.",
+    "date": "2026-10-26",
+    "category": "그래픽스 기술",
+    "topic": "graphics-tech",
+    "tags": [
+      "PBR",
+      "BRDF",
+      "GGX",
+      "거칠기"
+    ]
+  },
+  {
+    "path": "graphics-tech-04",
+    "title": "그래픽스 기술 04 · Shadow Map·깊이 비교·Bias·PCF",
+    "subtitle": "깊이를 평균하지 않고 비교 결과를 평균하며 self-shadowing과 light leak의 균형을 찾는다.",
+    "date": "2026-10-26",
+    "category": "그래픽스 기술",
+    "topic": "graphics-tech",
+    "tags": [
+      "그림자",
+      "Shadow Map",
+      "PCF",
+      "Depth Bias"
+    ]
+  },
+  {
+    "path": "graphics-tech-05",
+    "title": "그래픽스 기술 05 · Cascaded Shadow Map·분할·Texel 안정화",
+    "subtitle": "카메라 깊이 구간과 광원 투영 격자를 나누고 흔들림의 두 원인을 분리한다.",
+    "date": "2026-10-26",
+    "category": "그래픽스 기술",
+    "topic": "graphics-tech",
+    "tags": [
+      "CSM",
+      "그림자",
+      "Texel Snapping",
+      "안정화"
+    ]
+  },
+  {
+    "path": "graphics-tech-06",
+    "title": "그래픽스 기술 06 · Bloom·분리형 Blur·Tone Mapping",
+    "subtitle": "밝은 신호를 추출하고 두 방향 필터를 거쳐 HDR에서 더한 뒤 표시 범위로 옮긴다.",
+    "date": "2026-10-26",
+    "category": "그래픽스 기술",
+    "topic": "graphics-tech",
+    "tags": [
+      "Bloom",
+      "Blur",
+      "HDR",
+      "Tone Mapping"
+    ]
+  },
+  {
+    "path": "graphics-tech-07",
+    "title": "그래픽스 기술 07 · Temporal AA·재투영·History 거절",
+    "subtitle": "이전 프레임을 어디서 읽고 언제 버릴지 결정하는 작은 시간 누적 실험",
+    "date": "2026-10-26",
+    "category": "그래픽스 기술",
+    "topic": "graphics-tech",
+    "tags": [
+      "TAA",
+      "재투영",
+      "History",
+      "Disocclusion"
+    ]
+  },
+  {
+    "path": "graphics-tech-08",
+    "title": "그래픽스 기술 08 · NavMesh Corridor·Portal·Funnel",
+    "subtitle": "폴리곤 탐색이 만든 통로에서 불필요한 꺾임을 줄이는 기하 단계",
+    "date": "2026-10-26",
+    "category": "그래픽스 기술",
+    "topic": "graphics-tech",
+    "tags": [
+      "NavMesh",
+      "Funnel",
+      "경로 평활화",
+      "Portal"
+    ]
+  },
+  {
+    "path": "graphics-tech-09",
+    "title": "그래픽스 기술 09 · Two-Bone IK·도달 영역·CCD",
+    "subtitle": "관절 길이를 보존하며 목표를 향하는 해석해와 반복해의 조건·실패를 비교한다.",
+    "date": "2026-10-26",
+    "category": "그래픽스 기술",
+    "topic": "graphics-tech",
+    "tags": [
+      "IK",
+      "Two-Bone",
+      "CCD",
+      "애니메이션"
+    ]
+  },
+  {
+    "path": "graphics-tech-10",
+    "title": "그래픽스 기술 10 · 가시성·LOD·히스테리시스·성능 검증",
+    "subtitle": "그릴 후보를 안전하게 줄이고 전환 떨림을 막되 연산 횟수를 GPU 시간으로 오해하지 않는다.",
+    "date": "2026-10-26",
+    "category": "그래픽스 기술",
+    "topic": "graphics-tech",
+    "tags": [
+      "가시성",
+      "Frustum Culling",
+      "LOD",
+      "프로파일링"
+    ]
+  },
+  {
+    "path": "algorithm-core-01",
+    "title": "자료구조·알고리즘 01 · 비용 모델·복잡도·루프 불변식",
+    "subtitle": "프레임 이벤트 합산과 모든 쌍 검사를 같은 자로 비교한다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "복잡도",
+      "불변식",
+      "비용 모델"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-02",
+    "title": "자료구조·알고리즘 02 · 동적 배열·용량·분할 상환",
+    "subtitle": "재할당 한 번의 지연과 긴 삽입 시퀀스의 비용을 분리한다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "동적 배열",
+      "분할 상환",
+      "메모리"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-03",
+    "title": "자료구조·알고리즘 03 · 연결 리스트·링크·소유권",
+    "subtitle": "노드를 가리키는 포인터보다 노드를 소유하는 링크를 추적한다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "연결 리스트",
+      "unique_ptr",
+      "소유권"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-04",
+    "title": "자료구조·알고리즘 04 · 스택·큐·링 버퍼",
+    "subtitle": "LIFO와 FIFO 계약을 고정 용량의 상태 변화로 읽는다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "스택",
+      "큐",
+      "링 버퍼"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-05",
+    "title": "자료구조·알고리즘 05 · 해시 테이블·충돌·동등성",
+    "subtitle": "같은 버킷에 들어간 키도 마지막에는 실제 키로 구분한다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "해시 테이블",
+      "충돌",
+      "동등성"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-06",
+    "title": "자료구조·알고리즘 06 · 이진 탐색 트리·정렬 맵",
+    "subtitle": "정렬 불변식과 균형 높이를 서로 다른 보장으로 구분한다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "이진 탐색 트리",
+      "정렬 맵",
+      "중위 순회"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-07",
+    "title": "자료구조·알고리즘 07 · 힙·우선순위 큐",
+    "subtitle": "전체 정렬 없이 다음 최소 우선순위만 빠르게 꺼낸다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "힙",
+      "우선순위 큐",
+      "불변식"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-08",
+    "title": "자료구조·알고리즘 08 · 정렬·안정성·비교자 계약",
+    "subtitle": "같은 우선순위의 도착 순서를 보존하는 병합 정렬",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "병합 정렬",
+      "안정성",
+      "비교자"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-09",
+    "title": "자료구조·알고리즘 09 · 이분 탐색·반열린 구간",
+    "subtitle": "값 하나를 찾기보다 처음 참이 되는 경계를 찾는다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "이분 탐색",
+      "경계",
+      "lower_bound"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-10",
+    "title": "자료구조·알고리즘 10 · 그래프·BFS·DFS",
+    "subtitle": "도달 가능성과 최소 간선 수를 같은 답으로 취급하지 않는다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "그래프",
+      "BFS",
+      "DFS"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-11",
+    "title": "자료구조·알고리즘 11 · 다익스트라·A*·휴리스틱 계약",
+    "subtitle": "현재 거리와 예상 남은 비용을 구분하고 오래된 후보를 버린다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "다익스트라",
+      "A*",
+      "최단 경로"
+    ],
+    "topic": "algorithm"
+  },
+  {
+    "path": "algorithm-core-12",
+    "title": "자료구조·알고리즘 12 · 동적 계획법·0/1 배낭·상태 압축",
+    "subtitle": "아이템을 한 번만 쓰는 조건을 반복 방향으로 보존한다",
+    "date": "2026-10-26",
+    "category": "알고리즘",
+    "tags": [
+      "동적 계획법",
+      "0/1 배낭",
+      "상태 압축"
+    ],
+    "topic": "algorithm"
   }
 ]

@@ -1,0 +1,554 @@
+{
+  "id": "knowledge--dx12-03",
+  "route": "/knowledge/dx12-03/",
+  "kind": "knowledge",
+  "title": "DirectX 12 03 · Swap Chain·Present · 프레임 슬롯의 수명",
+  "subtitle": "현재 backbuffer 인덱스와 재사용 가능한 allocator를 분리한다",
+  "date": "2026-10-26",
+  "category": "DirectX 12",
+  "topic": "dx12",
+  "tags": [
+    "DirectX 12",
+    "Swap Chain",
+    "Present",
+    "프레임 버퍼링"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표와 구현 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "화면에 보여줄 버퍼, CPU 기록 슬롯, GPU 완료 값의 연결을 표로 그린다. fixed-size flip-model swapchain의 실제 렌더 경로를 읽고 resize가 추가되면 바뀌는 수명 경계를 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원의 실행 경계: CreateSwapChainForHwnd, GetBuffer, GetCurrentBackBufferIndex, RTV, Present, 슬롯별 fence를 실제 renderer에서 사용한다. Resize/HDR/MSAA는 미구현이다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "title": "CPU 통과와 Windows/GPU 미검증을 구분합니다",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Linux의 C++17 CPU 계약 검사는 실제 실행했습니다. 공유 Windows 소스는 전체 구현을 제공하지만 Windows/MSVC·HLSL 컴파일·WARP·하드웨어 GPU·debug layer·PIX/DRED 실행은 아직 확인하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 교재: DirectX 11 카탈로그",
+              "href": "/knowledge/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이전 단원 DX12 02",
+              "href": "/knowledge/dx12-02/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "두 장의 그림판으로 생각하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "backbuffer 0을 화면에 내보내는 동안 다음 그림은 backbuffer 1에 준비할 수 있다. 그러나 번호가 다시 0으로 돌아왔다는 정보만으로 CPU가 보유한 allocator나 임시 업로드 구간의 모든 GPU 참조가 끝났다고 결론 내리지 않는다. 각 슬롯에 연결한 fence를 같이 확인해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예제는 DXGI_SWAP_EFFECT_FLIP_DISCARD, BufferCount=2, RGBA8 UNORM, sample count=1의 고정 960×540 swapchain이다. MSAA resolve, HDR, tearing, 가변 주사율 정책, resize는 넣지 않는다. 단순한 창 하나를 먼저 성립시키기 위한 선택이지 모든 게임의 권장 설정이라는 뜻이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/dx12-03/assets/flow.svg",
+          "alt": "현재 backbuffer 조회 · 슬롯 fence 대기 · RTV 선택 · Draw · Present · retirement 저장",
+          "caption": "자체 제작 책임 흐름도. 실제 GPU 배치나 실행 캡처가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "GetCurrentBackBufferIndex로 올바른 RTV 선택",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "renderer는 매 프레임 swap->GetCurrentBackBufferIndex를 읽고 그 번호의 backbuffer와 allocator, lastUse를 사용한다. CPU 변수를 무조건 modulo 2로 늘려 실제 swapchain 인덱스를 대체하지 않는다. RTV handle은 heap 시작 주소에 frame×device가 반환한 stride를 더해 계산한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "그리기 전 PRESENT→RENDER_TARGET, 그린 뒤 RENDER_TARGET→PRESENT 상태 전환을 기록한다. Present는 GPU 상태 전환을 대신 작성해 주는 명령이 아니다. PRESENT와 COMMON의 legacy enum 값 관계는 존재하지만, 학습 흐름에서는 화면에 제출하는 의도를 PRESENT 이름으로 표현한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "시간표를 직접 읽기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "슬롯 0의 retirement가 7이고 슬롯 1이 8이라고 하자. completed=7일 때 0은 재사용 가능하지만 1은 아직 아니다. FramePool 테스트는 정확히 이 비대칭을 검사한다. 전체 GPU가 완전히 idle할 때만 다음 프레임을 만드는 방식보다 대기 범위를 좁히되, 각 슬롯의 증거는 잃지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "프레임 제출 뒤 Present(1,0)을 호출하고 마지막에 queue Signal을 넣어 lastUse를 갱신한다. 현재 예제는 처리량 벤치마크가 아니라 수명 관찰용이다. Present의 성공 코드가 실제 사용자가 화면을 보았다는 증거가 되는 것도 아니다. 창이 가려지거나 최소화된 경우와 화면 캡처 검증을 구분한다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/dx12-03/assets/trace.svg",
+          "alt": "slot 0 → retire 7 · slot 1 → retire 8 · completed 7 → slot 0만 안전 · resize는 이전 참조 정리 후",
+          "caption": "수업에서 비교하는 조건과 반례. GPU 성능 수치가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "Resize와 종료는 별도 설계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "창 스타일은 크기 변경과 최대화를 허용하지 않는다. 최소화 때는 Draw를 쉬고 메시지를 계속 처리한다. DPI별 실제 화면 크기·전체화면 전환은 구현하지 않았다. ResizeBuffers를 덧붙이려면 먼저 모든 관련 GPU 작업을 완료하고 이전 backbuffer 참조와 RTV 연결을 정리한 뒤 새 버퍼를 취득해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정상 종료는 Drain 후 객체를 해제한다. 실패 경로의 소멸자에서는 예외를 던지지 않고 정리 대기 실패를 로그에 남긴다. 장치 제거에서 완전한 복구 renderer를 다시 만드는 기능은 없다. 창 닫기, 최소화, 장치 오류를 실제 Windows에서 따로 검증해야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contract-map",
+      "title": "구현 순서와 확인 지점",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  N0[\"현재 backbuffer 조회\"] --> N1\n  N1[\"슬롯 fence 대기\"] --> N2\n  N2[\"RTV 선택 · Draw\"] --> N3\n  N3[\"Present · retirement 저장\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "그림을 API 이름으로만 외우지 말고 각 화살표가 요구하는 상태·수명·완료 근거를 한 문장씩 적는다. 생략한 기능은 검증된 기능으로 표시하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · CPU와 Windows 프로젝트",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/dx12-03.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "준비·빌드·기대 결과·미검증 범위 README",
+              "href": "/knowledge/examples/readmes/dx12-03.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP의 project/는 이 단원 CPU 테스트, windows/는 12단원이 공유하는 실제 D3D12 프로그램 전체 소스다. 같은 Windows 소스를 여러 단원에서 재사용하며 서로 다른 GPU 실행 실적 12개로 세지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "직접 실행하고 반례를 설명하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 코드의 각 Reject 조건이 왜 실패해야 하는지 예상한다. 정상 값뿐 아니라 경계·잘못된 입력·실패 후 상태 보존을 확인한다. API와 다른 모델의 제한을 적고 Windows 프로그램의 대응 함수와 비교한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build --config Release\nctest --test-dir build -C Release --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "PASS DX12-03: 10 CPU contract checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출력의 조건 수는 한 프로그램 안의 결정적 검사 횟수다. CTest 케이스 수·GPU 작업 수·성능 표본 수가 아니다. UBSan 별도 실행도 같은 조건을 다시 확인한 것이며 조건 수를 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows 검증은 별도 단계다. Developer PowerShell에서 cmake -S windows -B win-build -A x64 후 cmake --build win-build --config Debug를 실행하고 README의 renderer/compute 명령을 사용한다. 이번 환경에서는 이 명령을 실행하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · swapchain 번호가 0이면 allocator도 즉시 안전한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "별도 lastUse fence를 확인해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · Present가 상태 barrier를 대신하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 예제는 RENDER_TARGET에서 PRESENT로 되돌리는 명령을 기록한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · buffer count=2면 지연이 항상 정확히 2프레임인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 큐 적체·Present 정책·디스플레이 경로 등 다른 요인이 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 이 창에서 ResizeBuffers 검증을 했는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 고정 크기 창이며 resize 경로는 구현하지 않았다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · completed=7, slot1 retire=8이면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "slot1의 allocator 재사용은 아직 금지한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장 과제: 세 슬롯 표 만들기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "버퍼 인덱스와 각 lastUse를 나누고, 다음으로 선택된 슬롯만 기다리는 순서를 작성한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "CPU 계약 검사 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CPU 계약 검사 전체 소스",
+              "href": "/knowledge/shared/dx12-03-lab/project/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 주석 CPU 전체 코드 보기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <cstddef>\n#include <utility>\n#include <cstring>\n#include <iostream>\n#include <limits>\n#include <map>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\n// GPU 호출이 아닌, 이 단원의 명시적 계약을 검증하는 결정적 CPU 모델이다.\nstatic unsigned checks = 0;\nvoid Check(bool condition, const char* name) {\n    ++checks;\n    if (!condition) throw std::runtime_error(name); // Release에서도 검사를 유지한다.\n}\ntemplate < class F > void Reject(F action, const char* name) {\n    bool rejected = false;\n    try {\n        action();\n    } catch (const std::exception&) {\n        rejected = true;\n    }\n    Check(rejected, name);\n}\n\n// 현재 backbuffer 번호와 각 슬롯의 마지막 GPU 참조 값을 함께 사용한다.\nstruct FramePool {\n    std::array < std::uint64_t, 2 > retire{{0, 0}};\n    bool CanUse(unsigned backBuffer, std::uint64_t completed) const {\n        if (backBuffer >= retire.size()) throw std::out_of_range(\"swapchain index\");\n        return completed >= retire[backBuffer];\n    }\n    void Mark(unsigned index, std::uint64_t value) {\n        if (index >= retire.size() || value == 0 || value <= retire[index])\n            throw std::invalid_argument(\"bad retirement\");\n        retire[index] = value;\n    }\n};\nint main() {\n    try {\n        FramePool p;\n        Check(p.CanUse(0, 0), \"initial0\");\n        Check(p.CanUse(1, 0), \"initial1\");\n        p.Mark(0, 7);\n        p.Mark(1, 8);\n        Check(!p.CanUse(0, 6), \"index returned is not completion\");\n        Check(p.CanUse(0, 7), \"exact completion\");\n        Check(!p.CanUse(1, 7), \"other slot pending\");\n        Check(p.CanUse(1, 8), \"second complete\");\n        Reject([&] { p.CanUse(2, 100); }, \"index bounds\");\n        Reject([&] { p.Mark(0, 0); }, \"zero retire\");\n        Reject([&] { p.Mark(0, 6); }, \"backward timeline\");\n        Check(p.retire[0] == 7, \"rejected mark unchanged\");\n        std::cout << \"PASS DX12-03: \" << checks << \" CPU contract checks\\n\";\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << e.what() << '\\n';\n        return 1;\n    }\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "windows-source",
+      "title": "Windows 실제 API 발췌와 전체 파일",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows/MSVC·HLSL 컴파일·WARP·하드웨어 GPU·debug layer 실행은 미검증이다. 아래 발췌는 탐색용이며 독립 실행 가능한 전체 소스가 아니다. 전체 파일 링크와 ZIP의 windows/ 프로젝트를 함께 사용한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음은 아래 전체 Windows 파일에서 해당 경로를 찾기 위한 발췌다. 독립 실행 파일이 아니며 전체 CMake 프로젝트와 함께 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "실제 API 경로 발췌 · renderer.cpp",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "    void Draw() {\n        const UINT frame = swap->GetCurrentBackBufferIndex();\n        WaitForFence(fence.Get(), lastUse[frame], event.value);\n        Check(allocators[frame]->Reset(), \"Reset frame allocator\");\n        Check(list->Reset(allocators[frame].Get(), pipeline.Get()), \"Reset frame list\");\n        list->SetGraphicsRootSignature(root.Get());\n        ID3D12DescriptorHeap* heaps[] = {srvHeap.Get()}; list->SetDescriptorHeaps(1, heaps);\n        list->SetGraphicsRootDescriptorTable(0, srvHeap->GetGPUDescriptorHandleForHeapStart());\n        const float tint[4] = {1, 1, 1, 1}; list->SetGraphicsRoot32BitConstants(1, 4, tint, 0);\n        const D3D12_VIEWPORT viewport{0, 0, 960, 540, 0, 1};\n        const D3D12_RECT scissor{0, 0, 960, 540};\n        list->RSSetViewports(1, &viewport); list->RSSetScissorRects(1, &scissor);\n        Transition(list.Get(), backBuffers[frame].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);\n        auto rtv = rtvHeap->GetCPUDescriptorHandleForHeapStart(); rtv.ptr += static_cast<SIZE_T>(frame) * rtvStride;\n        list->OMSetRenderTargets(1, &rtv, FALSE, nullptr);\n        const float clear[4] = {0.04f, 0.06f, 0.10f, 1}; list->ClearRenderTargetView(rtv, clear, 0, nullptr);\n        list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);\n        list->DrawInstanced(3, 1, 0, 0);\n        Transition(list.Get(), backBuffers[frame].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);\n        Check(list->Close(), \"Close frame list\");\n        ID3D12CommandList* lists[] = {list.Get()}; queue->ExecuteCommandLists(1, lists);\n        const HRESULT present = swap->Present(1, 0);\n        if (FAILED(present)) {\n            Check(context.device->GetDeviceRemovedReason(), \"GetDeviceRemovedReason\");\n            Check(present, \"Present\");\n        }\n        lastUse[frame] = Signal();\n    }\n};\n\nLRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM w, LPARAM l) {\n    if (message == WM_DESTROY) { PostQuitMessage(0); return 0; }\n    if (message == WM_PAINT) { PAINTSTRUCT ps{}; BeginPaint(window, &ps); EndPaint(window, &ps); return 0; }\n    return DefWindowProcW(window, message, w, l);\n}\nint WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR commandLine, int show) {\n    HWND window = nullptr;\n    try {\n        WNDCLASSW wc{}; wc.lpfnWndProc = WindowProc; wc.hInstance = instance;\n        wc.lpszClassName = L\"AtlasDx12Original\"; wc.hCursor = LoadCursorW(nullptr, IDC_ARROW);\n        if (!RegisterClassW(&wc)) throw std::runtime_error(\"RegisterClass failed\");\n        const DWORD style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;\n        RECT rect{0, 0, 960, 540}; if (!AdjustWindowRect(&rect, style, FALSE)) throw std::runtime_error(\"AdjustWindowRect failed\");\n        window = CreateWindowW(wc.lpszClassName, L\"ATLAS DX12 - original texture/fence lab\", style,\n            CW_USEDEFAULT, CW_USEDEFAULT, rect.right - rect.left, rect.bottom - rect.top,"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · CMakeLists.txt",
+              "href": "/knowledge/shared/dx12-core-lab/project/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · dx12_common.hpp",
+              "href": "/knowledge/shared/dx12-core-lab/project/dx12_common.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · renderer.cpp",
+              "href": "/knowledge/shared/dx12-core-lab/project/renderer.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · compute.cpp",
+              "href": "/knowledge/shared/dx12-core-lab/project/compute.cpp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처와 검증 범위",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "기본 렌더 생성 흐름",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d12/creating-a-basic-direct3d-12-component"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Hello frame buffering 예제 안내",
+              "href": "https://learn.microsoft.com/en-us/samples/microsoft/directx-graphics-samples/d3d12-hello-world-samples-win32"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이 단원 실제 CPU 검증 기록",
+              "href": "/knowledge/shared/dx12-03-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 소스·미검증 기록",
+              "href": "/knowledge/shared/dx12-core-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 문서는 API 계약 확인에 사용했고 설명·게임 상황·CPU 모델·SVG·Windows 소스는 새로 작성했다. 공식 샘플의 전체 코드나 도서 지문을 복제하지 않았다. 2026-10-26에 문서를 확인했으며 기본 legacy D3D12 경로를 가르친다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실행 확인: g++ (Debian 14.2.0-19) 14.2.0 / cmake version 3.31.6 / C++17 Release CTest 1/1 및 UBSan. ASan/LeakSanitizer는 첫 시도에서 ptrace 환경 오류로 중단되어 통과로 집계하지 않았다. Windows/MSVC, HLSL, GPU, WARP, PIX/DRED, 성능은 미검증이다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "새 집필과 변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26: 신규 DirectX 12 정규 과정으로 독립 집필했다. 기존 DX9/DX11 교재를 삭제하거나 이관 실적으로 중복 집계하지 않는다. 원리 그림·Mermaid·CPU 반례·실제 Windows API 소스와 실행 한계를 함께 제공한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CreateSwapChainForHwnd, GetBuffer, GetCurrentBackBufferIndex, RTV, Present, 슬롯별 fence를 실제 renderer에서 사용한다. Resize/HDR/MSAA는 미구현이다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

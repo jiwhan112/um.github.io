@@ -1,0 +1,507 @@
+{
+  "id": "knowledge--graphics-tech-02",
+  "route": "/knowledge/graphics-tech-02/",
+  "kind": "knowledge",
+  "title": "그래픽스 기술 02 · 법선·역전치·TBN·노멀 맵",
+  "subtitle": "점, 접선, 법선의 변환 계약을 분리하고 비균일 스케일과 미러 UV 반례를 추적한다.",
+  "date": "2026-10-26",
+  "category": "그래픽스 기술",
+  "topic": "graphics-tech",
+  "tags": [
+    "법선",
+    "TBN",
+    "노멀 맵",
+    "역전치"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·전제·검증 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "모델의 비균일 scale 뒤에도 표면 법선과 접선이 수직이어야 한다는 불변식을 코드로 확인한다. 노멀 맵의 세 성분이 어떤 기저에서 표현되는지와 미러 UV의 handedness를 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: 기존 게임 수학과 DirectX 11의 좌표·자원·파이프라인 기초. 본 과정은 API 호출 순서를 반복하는 대신 개별 기법의 수치 계약과 실패 사례에 집중한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "오른손 3차원 벡터와 열벡터 관점으로 설명한다. 실습의 ScaleNormal은 대각 스케일만 처리하며 일반 4×4 행렬 역행렬 구현이 아니다. 입력 법선·접선은 유한하고 길이가 0이 아니어야 한다. TBN의 tangent는 법선과 평행할 수 없다. 노멀 맵 입력은 이미 [-1,1]로 디코딩된 벡터다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이전 단원",
+              "href": "/knowledge/graphics-tech-01/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "w=0과 역전치는 다른 질문",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "방향에 평행이동을 적용하지 않는 것만으로 올바른 법선 변환이 완성되지 않는다. 접선 t가 M에 의해 Mt가 되면 법선 n은 (M^-1)^T n이어야 내적 0이 유지된다. 이때 ((M^-1)^T n)·(Mt)=n·t라는 대수 관계가 핵심이지 특정 API 함수 이름이 핵심이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "비균일 scale (2,1,3)을 t=(1,-1,0), n=(1,1,0)에 적용해 보자. 둘 다 같은 scale을 적용하면 내적이 0이 아니게 된다. 법선만 각 scale로 나눈 뒤 정규화하면 다시 수직이다. 실습은 이 틀린 변환을 의도적으로 계산해 올바른 값과 다름을 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/graphics-tech-02/assets/inverse-transpose.svg",
+          "alt": "길이 정규화만으로 수직 관계를 복원할 수 없다 — 점, 접선, 법선의 변환 계약을 분리하고 비균일 스케일과 미러 UV 반례를 추적한다.",
+          "caption": "길이 정규화만으로 수직 관계를 복원할 수 없다 · 자체 제작 개념도, 실제 GPU 화면이나 측정 결과가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "역행렬이 없는 모델은 별도 정책",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "scale.x=0이면 표면이 축 방향으로 무너지고 일반 역전치를 만들 수 없다. 작은 epsilon을 무조건 나눗셈에 더하면 오류를 숨길 뿐이다. 이 예제는 유효하지 않은 변환을 거절한다. 실제 엔진은 퇴화 mesh를 숨기거나 이전 프레임의 정규화된 법선을 쓰는 정책을 명시해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정규화는 방향의 길이를 1로 돌릴 뿐, 잘못된 방향 자체를 복구하지 않는다. normal을 World 행렬로 변환한 뒤 normalize해도 비균일 scale 반례는 남는다. vertex interpolation 뒤에도 길이가 달라지므로 pixel 단계 정규화의 목적과 행렬 선택의 목적을 구분한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "TBN은 세 벡터를 나란히 외우는 것이 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "접선 공간 normal의 x, y, z는 각각 T, B, N 방향의 계수다. world normal은 T*x+B*y+N*z를 정규화한 것이다. 기본 보라색 normal map이 (0,0,1)로 디코딩되면 결과는 N이 되어야 한다. 이 검사는 UV 방향에 따른 오류를 찾기 전 가장 쉬운 기준점이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "T를 N에 수직인 평면으로 투영한 뒤 정규화하는 Gram–Schmidt 한 단계를 사용한다. B=cross(N,T)*handedness로 만든다. 원래 tangent가 N과 평행하면 투영 결과가 0이므로 임의 축을 넣지 않고 거절한다. 이것은 교육용 API 계약이며 mesh tangent 생성기의 모든 예외 처리는 아니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/graphics-tech-02/assets/tangent-parity.svg",
+          "alt": "미러 UV는 B 방향을 바꿀 수 있다 — 점, 접선, 법선의 변환 계약을 분리하고 비균일 스케일과 미러 UV 반례를 추적한다.",
+          "caption": "미러 UV는 B 방향을 바꿀 수 있다 · 자체 제작 개념도, 실제 GPU 화면이나 측정 결과가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "미러 UV와 녹색 채널",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "같은 기하라도 UV가 반사되면 접선 기저의 방향성이 바뀔 수 있다. handedness가 -1이면 B의 부호가 반전된다. 노멀 맵의 y성분을 언제 뒤집는지와 UV tangent의 parity를 한꺼번에 수정하면 우연히 특정 면만 맞는 상태가 생긴다. 기준 plane과 미러 plane을 나눠 검사한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "텍스처를 sRGB로 읽으면 normal 성분이 비선형 변환되어 기저를 정확히 계산해도 잘못된 표면이 나온다. 01장의 색/데이터 구분을 이어받는다. 이 실습은 MikkTSpace 생성, skinning, 압축 normal의 재구성을 구현하지 않으므로 제작 도구와 tangent 호환성을 보장하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "숫자로 추적하는 한 경로",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "t=(1,-1,0)/√2, n=(1,1,0)/√2를 사용한다. Mt=(√2,-1/√2,0). 올바른 법선은 normalize(1/(2√2),1/√2,0)이므로 내적은 0이다. 잘못된 normalize(Mn)은 수직 조건을 깨뜨린다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  N0[\"모델 접선·법선\"]\n  N1[\"접선은 M · 법선은 역전치\"]\n  N2[\"법선 정규화\"]\n  N3[\"접선 직교화와 handedness\"]\n  N4[\"TBN으로 sampled normal 변환\"]\n  N0 --> N1\n  N1 --> N2\n  N2 --> N3\n  N3 --> N4"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "3차원 벡터와 대각 scale만 처리하므로 각 호출 O(1)이다. mesh의 V개 정점에 적용하면 O(V). 실제 vertex shader 처리량이나 normal-map 대역폭은 측정하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/graphics-tech-02.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "준비 도구·실행·기대 출력 README",
+              "href": "/knowledge/examples/readmes/graphics-tech-02.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다운로드는 실행이 아닙니다. CPU C++17 실습이며 실제 GPU 렌더러를 실행하지 않습니다. ZIP에는 소스와 빌드 설정만 포함합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "직접 계산하고 반례를 추가하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "첫 실행 전 위의 수치 추적을 손으로 계산한다. Run()에서 정상 입력, 경계, 거절 입력을 분류한 뒤 한 조건씩 수정하고 예상 결과를 먼저 적는다. 테스트를 삭제하지 말고 새 조건으로 추가한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "correct transformed normal dot tangent=0\nPASS: 12 contract checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 실행당 12회 조건 평가가 통과했다. 반복문 sweep을 포함하며 여러 빌드 모드에서의 동일 조건 재실행을 별도 검증 개수로 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확장: 숫자 정확성 테스트를 유지한 채 시각화 버전을 만든다면 좌표·색·시간 단위를 화면에 함께 표시한다. 실제 장치와 장면으로 확인하기 전에는 GPU 품질·성능 검증 완료라고 기록하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 여섯 복습 문제",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · w=0이면 법선 변환이 항상 맞는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 평행이동 제거와 역전치 선택은 별개의 문제다. 비균일 scale 반례가 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · 법선을 마지막에 정규화하면 잘못된 행렬도 보정되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이만 보정한다. 방향과 표면의 수직 조건은 복구하지 못한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · 중립 normal map의 기대 결과는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "[-1,1] 디코딩 후 (0,0,1)이면 TBN 결과는 N이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · T가 N과 평행하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "직교화한 T가 0이 된다. 이 예제는 거절하며 제작 단계에서 유효 tangent를 준비해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · 미러 UV에서 어떤 정보가 더 필요한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기저 handedness와 제작 도구의 tangent 규칙이 필요하다. 무조건 녹색 채널 반전으로 해결되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 대각 scale 테스트가 일반 행렬을 검증하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. shear·skinning·일반 inverse 구현 및 GPU interpolation은 별도 검증 대상이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "main.cpp 원본 파일",
+              "href": "/knowledge/shared/graphics-tech-02-lab/project/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp 전체 소스 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 블록은 연결된 파일의 정확한 텍스트입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cmath>\n#include <cstddef>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <string>\n#include <vector>\nnamespace {\n    int checks = 0;\n    void Check(bool ok, const char* why) {\n        ++checks;\n        if (!ok) throw std::runtime_error(why);\n        // Release에서도 검사가 사라지지 않는다.\n    }\n    bool Near(double a, double b, double e=1e-9) {\n        return std::abs(a-b) <= e;\n    }\n    void Require(bool ok, const char* why) {\n        if (!ok) throw std::invalid_argument(why);\n    }\n    void Finite(double x) {\n        Require(std::isfinite(x), \"finite input required\");\n    }\n    template<class F> void Reject(F fn) {\n        bool rejected=false;\n        try {\n            fn();\n        } catch(const std::invalid_argument&) {\n            rejected=true;\n        }\n        Check(rejected, \"invalid input was not rejected\");\n    }\n    constexpr double PI=3.14159265358979323846;\n    struct V {\n        double x,y,z;\n    };\n    V operator+(V a,V b) {\n        return {\n            a.x+b.x,a.y+b.y,a.z+b.z\n        };\n    }\n    V operator-(V a,V b) {\n        return {\n            a.x-b.x,a.y-b.y,a.z-b.z\n        };\n    }\n    V operator*(V a,double s) {\n        return {\n            a.x*s,a.y*s,a.z*s\n        };\n    }\n    double Dot(V a,V b) {\n        return a.x*b.x+a.y*b.y+a.z*b.z;\n    }\n    V Cross(V a,V b) {\n        return {\n            a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x\n        };\n    }\n    V Unit(V a) {\n        Finite(a.x);\n        Finite(a.y);\n        Finite(a.z);\n        const double l=std::sqrt(Dot(a,a));\n        Require(std::isfinite(l)&&l>1e-12,\"nonzero finite vector\");\n        return a*(1/l);\n    }\n    struct Frame {\n        V t,b,n;\n    };\n    // N을 기준으로 T의 법선 성분을 제거하고 UV 방향성으로 B를 정한다.\n    Frame MakeFrame(V normal,V tangent,double handedness) {\n        Require(handedness==1 || handedness==-1,\"handedness is +1 or -1\");\n        V n=Unit(normal);\n        V t=Unit(tangent-n*Dot(tangent,n));\n        // 접선을 법선 평면에 투영한다.\n        return {\n            t,Cross(n,t)*handedness,n\n        };\n    }\n    // sampled의 성분은 월드 좌표가 아니라 T/B/N 기저의 계수다.\n    V ToWorld(Frame f,V sampled) {\n        V n=Unit(sampled);\n        return Unit(f.t*n.x+f.b*n.y+f.n*n.z);\n    }\n    V ScaleDirection(V v,V scale) {\n        return {\n            v.x*scale.x,v.y*scale.y,v.z*scale.z\n        };\n    }\n    V ScaleNormal(V n,V scale) {\n        Finite(scale.x);\n        Finite(scale.y);\n        Finite(scale.z);\n        Require(std::abs(scale.x)>1e-12&&std::abs(scale.y)>1e-12&&std::abs(scale.z)>1e-12,\"invertible diagonal scale\");\n        // 이 실습은 대각 scale만 다룬다. 일반 행렬 역전치 구현이 아니다.\n        return Unit( {\n            n.x/scale.x,n.y/scale.y,n.z/scale.z\n        });\n    }\n    // 비균일 scale의 반례와 중립 normal map, 미러 UV를 비교한다.\n    void Run() {\n        const V n=Unit( {\n            1,1,0\n        }), t=Unit( {\n            1,-1,0\n        }), s= {\n            2,1,3\n        };\n        const V tn=ScaleNormal(n,s), tt=ScaleDirection(t,s);\n        Check(Near(Dot(tn,tt),0),\"normal remains perpendicular\");\n        Check(std::abs(Dot(Unit(ScaleDirection(n,s)),tt))>0.5,\"wrong transform counterexample\");\n        const Frame f=MakeFrame( {\n            0,0,2\n        }, {\n            2,0,1\n        },1);\n        Check(Near(Dot(f.t,f.n),0),\"orthogonal tangent\");\n        Check(Near(Dot(f.b,f.n),0),\"orthogonal bitangent\");\n        Check(Near(Dot(f.t,f.t),1)&&Near(Dot(f.b,f.b),1),\"unit axes\");\n        const V neutral=ToWorld(f, {\n            0,0,1\n        });\n        Check(Near(neutral.z,1),\"neutral normal map\");\n        Check(Near(ToWorld(f, {\n            0,1,0\n        }).y,1),\"positive green\");\n        Check(Near(ToWorld(MakeFrame( {\n            0,0,1\n        }, {\n            1,0,0\n        },-1), {\n            0,1,0\n        }).y,-1),\"mirrored UV parity\");\n        Reject([] {\n            MakeFrame( {\n                0,0,1\n            }, {\n                0,0,4\n            },1);\n        });\n        Reject([] {\n            ScaleNormal( {\n                1,0,0\n            }, {\n                0,1,1\n            });\n        });\n        Reject([] {\n            MakeFrame( {\n                0,0,0\n            }, {\n                1,0,0\n            },1);\n        });\n        Reject([] {\n            MakeFrame( {\n                0,0,1\n            }, {\n                1,0,0\n            },0);\n        });\n        std::cout<<\"correct transformed normal dot tangent=\"<<Dot(tn,tt)<<\"\\n\";\n    }\n}\n// namespace\nint main() {\n    try {\n        Run();\n        std::cout<<\"PASS: \"<<checks<<\" contract checks\\n\";\n        return 0;\n    }catch(const std::exception& e) {\n        std::cerr<<\"FAIL: \"<<e.what()<<\"\\n\";\n        return 1;\n    }\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CMakeLists.txt 원본 파일",
+              "href": "/knowledge/shared/graphics-tech-02-lab/project/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt 전체 소스 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 블록은 연결된 파일의 정확한 텍스트입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(graphics_tech_02 LANGUAGES CXX)\nadd_executable(graphics_lab main.cpp)\ntarget_compile_features(graphics_lab PRIVATE cxx_std_17)\nset_target_properties(graphics_lab PROPERTIES CXX_EXTENSIONS OFF)\nif(MSVC)\n  target_compile_options(graphics_lab PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(graphics_lab PRIVATE -Wall -Wextra -Wpedantic)\nendif()\nenable_testing()\nadd_test(NAME contracts COMMAND graphics_lab)\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "공식 자료·검증 기록·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Microsoft · 법선 변환과 역전치 주의 사항",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d10/d3d10-d3dxvec3transformnormal"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Filament · tangent frame과 normal mapping의 실무 맥락",
+              "href": "https://google.github.io/filament/main/filament.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "현재 CPU 검증 로그와 파일 SHA-256",
+              "href": "/knowledge/shared/graphics-tech-02-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 공개 공식 문서·저장소를 개념과 계약 대조에 사용했습니다. 오래된 API 자료는 현재 권장 API나 성능 수치로 일반화하지 않습니다. 설명·예제·SVG는 본 교재를 위해 독립 작성했습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확인: Linux GCC 14.2.0 C++17, CMake Debug/Release CTest, UBSan. 미확인: Windows/MSVC, GPU 셰이더·실제 장면·시각 품질·GPU 성능. CPU 테스트 통과는 이 미확인 항목의 성공을 뜻하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "신규 집필·변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26: 사용자가 승인한 그래픽스 기술 정규 과정의 신규 집필입니다. 기존 문서 이관이나 예전 프로그램 복구로 집계하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 게임 수학·DirectX 교재와 URL·학습 저장 키를 변경하지 않았습니다. 본 예제는 수치 계약을 분리해 설명하는 자체 제작 CPU 실습입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문·코드·그림 작성, 로컬 검증, 저장소 반영, React 검사, Pages 배포, 실제 공개 확인은 서로 다른 단계입니다. 이 원고의 로컬 검증 기록만으로 공개 배포 완료를 선언하지 않습니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

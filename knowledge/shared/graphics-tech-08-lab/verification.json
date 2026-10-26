@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-26",
+  "environment": "Linux x86_64, GCC 14.2.0, CMake 3.31.6",
+  "language": "C++17",
+  "tested": [
+    "CMake Debug build and CTest",
+    "CMake Release build and CTest",
+    "GCC UndefinedBehaviorSanitizer"
+  ],
+  "not_tested": [
+    "Windows/MSVC",
+    "GPU shaders and rasterization",
+    "real-time visual quality",
+    "GPU performance"
+  ],
+  "checks_per_execution": 110,
+  "note": "Repeated build modes run the same conditions; counts are not added as independent tests. Looped sweeps are included in condition count.",
+  "files": {
+    "project/main.cpp": "216e3fd8b414eab7657d0261222ca7c607f46a3f71e514fdabb856d7bb730739",
+    "project/CMakeLists.txt": "02c797da1ca671e385a5cb1785cbaaaa26e8bff7979116207acfc50f5f2b074c"
+  },
+  "runs": [
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake -S <repository>/knowledge/shared/graphics-tech-08-lab/project -B <build>/cmake-08-Debug -DCMAKE_BUILD_TYPE=Debug",
+      "exit_code": 0,
+      "stdout": "-- The CXX compiler identification is GNU 14.2.0\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: /usr/bin/c++ - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring done (0.3s)\n-- Generating done (0.0s)\n-- Build files have been written to: <build>/cmake-08-Debug\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake --build <build>/cmake-08-Debug",
+      "exit_code": 0,
+      "stdout": "[ 50%] Building CXX object CMakeFiles/graphics_lab.dir/main.cpp.o\n[100%] Linking CXX executable graphics_lab\n[100%] Built target graphics_lab\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/ctest --test-dir <build>/cmake-08-Debug --output-on-failure",
+      "exit_code": 0,
+      "stdout": "Internal ctest changing into directory: <build>/cmake-08-Debug\nTest project <build>/cmake-08-Debug\n    Start 1: contracts\n1/1 Test #1: contracts ........................   Passed    0.01 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.01 sec\n",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/cmake-08-Debug/graphics_lab",
+      "exit_code": 0,
+      "stdout": "L-corridor corners=3 length=5.84162\nPASS: 110 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake -S <repository>/knowledge/shared/graphics-tech-08-lab/project -B <build>/cmake-08-Release -DCMAKE_BUILD_TYPE=Release",
+      "exit_code": 0,
+      "stdout": "-- The CXX compiler identification is GNU 14.2.0\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: /usr/bin/c++ - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring done (0.3s)\n-- Generating done (0.0s)\n-- Build files have been written to: <build>/cmake-08-Release\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake --build <build>/cmake-08-Release",
+      "exit_code": 0,
+      "stdout": "[ 50%] Building CXX object CMakeFiles/graphics_lab.dir/main.cpp.o\n[100%] Linking CXX executable graphics_lab\n[100%] Built target graphics_lab\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/ctest --test-dir <build>/cmake-08-Release --output-on-failure",
+      "exit_code": 0,
+      "stdout": "Internal ctest changing into directory: <build>/cmake-08-Release\nTest project <build>/cmake-08-Release\n    Start 1: contracts\n1/1 Test #1: contracts ........................   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.01 sec\n",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/cmake-08-Release/graphics_lab",
+      "exit_code": 0,
+      "stdout": "L-corridor corners=3 length=5.84162\nPASS: 110 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": "g++ -std=c++17 -O1 -g -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wpedantic <repository>/knowledge/shared/graphics-tech-08-lab/project/main.cpp -o <build>/ubsan-08",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/ubsan-08",
+      "exit_code": 0,
+      "stdout": "L-corridor corners=3 length=5.84162\nPASS: 110 contract checks\n",
+      "stderr": ""
+    }
+  ]
+}

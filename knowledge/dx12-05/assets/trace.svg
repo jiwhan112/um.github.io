@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="620" viewBox="0 0 1080 620" role="img">
+<title>DirectX 12 05 · 실행 계약 시각화</title>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#34d399"/></marker></defs>
+<rect width="1080" height="620" rx="18" fill="#0f172a"/>
+<text x="36" y="53" fill="#f8fafc" font-family="sans-serif" font-size="29">Descriptor 슬롯의 retirement</text>
+<text x="50" y="110" fill="#e2e8f0" font-family="sans-serif" font-size="24">shader-visible heap</text>
+<rect x="60" y="145" width="420" height="120" rx="9" fill="#14532d" stroke="#64748b"/>
+<text x="74" y="213.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">slot 0 · retire 4</text>
+<rect x="520" y="145" width="420" height="120" rx="9" fill="#7f1d1d" stroke="#64748b"/>
+<text x="534" y="213.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">slot 1 · retire 5</text>
+<text x="50" y="330" fill="#34d399" font-family="sans-serif" font-size="29">completed=4</text>
+<path d="M270 285 L270 365" stroke="#34d399" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="60" y="385" width="420" height="90" rx="9" fill="#14532d" stroke="#64748b"/>
+<text x="74" y="438.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">새 SRV로 교체 가능</text>
+<rect x="520" y="385" width="420" height="90" rx="9" fill="#7f1d1d" stroke="#64748b"/>
+<text x="534" y="438.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">기존 SRV를 보존</text>
+<text x="60" y="540" fill="#e2e8f0" font-family="sans-serif" font-size="26">handle(i) = heapStart + i × device stride</text>
+<text x="35" y="603" fill="#94a3b8" font-family="sans-serif" font-size="17">자체 제작 개념도 · 실제 GPU 캡처 또는 측정 결과가 아닙니다</text>
+</svg>

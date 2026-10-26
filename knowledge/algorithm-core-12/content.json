@@ -1,0 +1,656 @@
+{
+  "id": "knowledge--algorithm-core-12",
+  "route": "/knowledge/algorithm-core-12/",
+  "kind": "knowledge",
+  "title": "자료구조·알고리즘 12 · 동적 계획법·0/1 배낭·상태 압축",
+  "subtitle": "아이템을 한 번만 쓰는 조건을 반복 방향으로 보존한다",
+  "date": "2026-10-26",
+  "category": "알고리즘",
+  "topic": "algorithm",
+  "tags": [
+    "동적 계획법",
+    "0/1 배낭",
+    "상태 압축"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·게임 개발 상황",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "상태의 의미와 전이의 참조 시점을 정의하고 역순 갱신이 필요한 이유를 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "장비 무게 제한 안에서 가치 합을 최대화하되 같은 장비를 두 번 선택할 수 없다고 하자. 각 장비의 선택/미선택을 모두 열거하면2^n가지다. 작은 용량 정수라는 조건을 이용해 같은 하위 문제를 재사용할 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 학습",
+              "href": "/knowledge/algorithm-core-11/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전제: C++20 단일 스레드 CPU 실습. 문자·파일·네트워크 입력은 없고 정수 ID와 메모리 안의 고정 시드 데이터를 사용한다. 외부 라이브러리나 실행 파일 다운로드는 필요하지 않다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "상태를 문장으로 정의한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "i번째 장비까지 고려했을 때 용량 c 이하에서 얻는 최대 가치를 DP(i,c)로 둔다. 정확히 c 무게를 채우는 문제가 아니므로 선택하지 않아도 값0이 가능하다. 이 차이를 놓치면 초기값과 불가능 상태 처리가 달라진다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "선택과 미선택의 두 경우",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 장비를 안 쓰면 이전 DP(i−1,c), 쓸 수 있으면 DP(i−1,c−w)+value다. 두 후보의 최대를 택하면 모든 가능한 최적 선택을 포함한다. 다른 장비의 선택 순서는 가치 합에 영향을 주지 않는다는 전제를 쓴다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "한 줄 압축의 시간 의미",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한 차원 배열 best[c]만 쓰려면 참조하는 best[c−w]가 아직 이전 i−1층이어야 한다. c를 큰 값부터 줄이면 작은 인덱스는 이번 장비로 갱신되기 전이다. 작은 값부터 늘리면 이번 장비를 다시 사용하는 완전 배낭 의미가 된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "반례 한 개가 전이 방향을 드러낸다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "장비 하나(무게2,가치3), 용량4의 답은3이다. 정방향 갱신은 best[2]=3을 만든 뒤 best[4]가 이를 다시 읽어6이 될 수 있다. 그래서 이 작은 입력을 필수 회귀 테스트로 둔다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-5",
+      "title": "수치 범위와 의사 다항 시간",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "n≤20, capacity≤100, 양의 무게≤100, 가치0..1000으로 제한한다. 최대 가치20000은 int에 안전하다. 시간 O(nC)는 입력 숫자 C의 값에 비례하므로 비트 길이에 대한 다항 시간과 같지 않다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-6",
+      "title": "작은 전수 열거를 오라클로",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "테스트는 최대9개 장비의 모든 부분집합을 열거해 DP와 비교한다. 오라클가 느려도 작은 입력에서는 구현 오류를 강하게 찾는다. 실전 알고리즘과 같은 전이를 복사한 검사보다 독립적인 방식이 유리하다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-7",
+      "title": "LIS와의 연결",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "LIS도 상태 의미와 전이의 후보 집합을 정하는 DP 사고로 시작할 수 있다. 기존 LIS 교재는 O(n²) 기준 해법과 tails 최적화·경로 복원을 다룬다. 이 단원의 배낭을 LIS 코드로 억지로 일반화하지 않고 상태 설계 공통점을 연결한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-1",
+      "title": "작업 예제 · 두 장비의 이차원 상태를 먼저 만든다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "용량0..5의 초기 값은 모두0이다. 무게2·가치3장비를 고려하면 용량2이상은3이다. 다음 무게3·가치4장비를 고려할 때 용량5는 이전 층의 best[2]=3에4를 더해7이 된다. 용량3과4는 장비 하나의4가 최선이다. 이 표를 손으로 만든 뒤 한 줄 압축으로 옮긴다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-2",
+      "title": "작업 예제 · 역순이 보존하는 이전 층",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 번째 장비를 넣을 때 c=5에서2를 읽고, c=4에서1을 읽고, c=3에서0을 읽는다. 작은 위치들은 아직 이번 장비로 갱신되지 않았으므로 이전 장비만 사용하는 상태다. 참조하는 상태의 시간 의미가 보존돼 각 장비를 최대 한 번만 쓴다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-3",
+      "title": "작업 예제 · 정방향의 작은 반례",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "장비가(2,3) 하나뿐인데 c를0부터 증가시키면 c=2에서3을 기록한 뒤 c=4에서 방금 쓴 best[2]를 다시 읽어6을 만든다. 무게가4라서 한도 안에는 들어가지만 같은 장비를 두 번 사용했으므로 요구 위반이다. 출력이 커졌다고 더 좋은 최적화가 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-4",
+      "title": "작업 예제 · 최적성을 두 경우로 나눈다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "최적 선택은 현재 장비를 포함하거나 포함하지 않는다. 포함하지 않으면 이전 best[c], 포함하면 그 장비를 빼고 남은 용량c−w의 이전 최적값에value를 더한다. 두 경우를 빠짐없이 비교하고 중복 사용을 막았으므로 전이가 최적값을 보존한다. 가중치·가치 범위 검증은 이 수학적 설명을 기계 정수에서 안전하게 실행하기 위한 별도 조건이다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-5",
+      "title": "작업 예제 · 복원과 최적값은 다른 산출물",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "best.back()은 숫자 하나다. 어떤 장비를 골랐는지 알려면 이차원 선택 기록이나 안전한 재계산 전략이 필요하다. 압축 배열에 부모 하나를 무작정 덧붙이면 후속 갱신이 이전 결정 정보를 덮어쓸 수 있다. 기존 LIS 교재의 parent복원과 비슷해 보여도 상태 갱신의 의미가 다르므로 그대로 복사하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "상태를 손으로 추적하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-12/assets/trace.svg",
+          "alt": "시작 best[0..5]=0 아무 장비도 선택 안 함; 무게2·가치3 best[2..5]=3 한 번만 사용; 무게3·가치4 best[5]=7 이전 best[2]=3 참조",
+          "caption": "자체 제작 상태 추적. 실행 시간 측정 그래프가 아니라 논리 상태의 변화다."
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "상태"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "시작"
+                  }
+                ],
+                [
+                  {
+                    "text": "best[0..5]=0"
+                  }
+                ],
+                [
+                  {
+                    "text": "아무 장비도 선택 안 함"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "무게2·가치3"
+                  }
+                ],
+                [
+                  {
+                    "text": "best[2..5]=3"
+                  }
+                ],
+                [
+                  {
+                    "text": "한 번만 사용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "무게3·가치4"
+                  }
+                ],
+                [
+                  {
+                    "text": "best[5]=7"
+                  }
+                ],
+                [
+                  {
+                    "text": "이전 best[2]=3 참조"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-12/assets/invariant.svg",
+          "alt": "이전 층 best[c−w] → 현재 장비 value 추가 → 기존 best[c]와 비교 → c를 큰 값부터 감소",
+          "caption": "코드에서 유지하거나 구별해야 하는 핵심 상태."
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"입력 계약과 현재 상태 확인\"] --> B[\"이전 층 best[c−w]\"]\n B --> C[\"현재 장비 value 추가\"]\n C --> D[\"기존 best[c]와 비교\"]\n D --> E[\"c를 큰 값부터 감소\"]\n E --> F[\"오라클·경계 조건과 결과 비교\"]"
+        }
+      ]
+    },
+    {
+      "id": "complexity",
+      "title": "복잡도와 적용 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DP 시간 O(nC), 추가 공간 O(C). 전수 열거 오라클 O(n2^n)는 테스트용이다. 최적 가치만 반환하며 선택한 장비 목록 복원은 추가 상태가 필요하다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정방향 순회로 바꾸면 같은 장비가 여러 번 선택될 수 있다. 무게0이나 음수를 이 구현에 넣지 않는다. 무게0을 지원하는 별도 문제도 가능하지만 검증·전이 정책을 다시 정해야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/algorithm-core-12.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "빌드·실행 README",
+              "href": "/knowledge/examples/readmes/algorithm-core-12.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축 안의 project/main.cpp와 CMakeLists.txt를 함께 사용한다. 공개 전 파일·ZIP 검증은 발행 단계에서 별도로 수행한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "0/1 loadout optimum=7; 300 item sets against exhaustive subsets\nPASS: 4804 contract checks\n"
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "예측 → 실행 → 반례 만들기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 위 상태 표의 다음 줄을 가리고 종이에 결과를 예측한다. 전체 소스의 Check를 읽어 정상 입력뿐 아니라 빈 값·중복·최댓값·부재 상태 중 이 자료구조에 해당하는 경계를 찾는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습 1: 테스트의 작은 입력을 한 곳 바꾸고 기대 결과를 직접 계산한 뒤 실행한다. 실습 2: 본문의 실패 사례를 설명하는 입력을 추가한다. 실습 3: 알고리즘을 수정했다면 원래 검사와 독립 오라클을 모두 다시 실행한다. 실패한 검사를 지워 통과시키지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "결과가 같다는 사실과 구현의 성능·모든 입력에 대한 정확성은 다르다. 출력의 Check 수는 루프 반복을 포함한 실행 호출 수이며 CTest에는 한 프로그램이 등록된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · best[c]는 정확히 c를 채운 값인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 용량 c 이하에서 최대 가치를 뜻한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · 왜 큰 용량부터 갱신하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "참조하는 더 작은 용량이 이전 장비층 상태를 유지하도록 해서 같은 장비 재사용을 막는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · 장비(2,3) 하나와 용량4의 답은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "3이다.6이면0/1조건을 깨뜨린 것이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 가치가 음수일 때 이 예제를 바로 쓰면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "입력 정책이0이상이라 거절한다. 음수 허용과 반드시 선택 조건을 새로 설계해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · 선택 장비 목록도 지금 반환하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 최적 가치만 반환한다. 복원 정보와 상태 압축 간의 관계를 별도로 설계한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장: LIS와 공통되는 사고는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "상태가 무엇을 의미하는지 먼저 정의하고, 이전 상태에서 현재 최적값으로 이어지는 후보를 빠짐없이 비교한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "전체 C++20 코드와 실제 파일 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "main.cpp 원본 파일",
+                  "href": "/knowledge/shared/algorithm-core-12-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "CMakeLists.txt",
+                  "href": "/knowledge/shared/algorithm-core-12-lab/project/CMakeLists.txt"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(algorithm_core_12 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(lesson main.cpp)\nif(MSVC)\n  target_compile_options(lesson PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(lesson PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME contract_tests COMMAND lesson)\n"
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <deque>\n#include <functional>\n#include <iostream>\n#include <limits>\n#include <map>\n#include <memory>\n#include <numeric>\n#include <optional>\n#include <queue>\n#include <random>\n#include <set>\n#include <stdexcept>\n#include <string>\n#include <utility>\n#include <vector>\n\n// Release 빌드에서도 사라지지 않는 계약 검사입니다.\nstatic std::size_t checks = 0;\nvoid Check(bool condition, const char* label) {\n    ++checks;\n    if (!condition) throw std::runtime_error(label);\n}\n\nstruct Item {\n    int weight;\n    int value;\n};\n\nint BestLoadout(const std::vector<Item>& items, int capacity) {\n    if (items.size() > 20 || capacity < 0 || capacity > 100) {\n        throw std::invalid_argument(\"bounds\");\n    }\n    for (auto item : items) {\n        if (item.weight < 1 || item.weight > 100 || item.value < 0 || item.value > 1000) {\n            throw std::invalid_argument(\"item\");\n        }\n    }\n    std::vector<int> best(static_cast<std::size_t>(capacity) + 1, 0);\n    for (auto item : items) {\n        // 역순이므로 참조하는 상태는 아직 이번 아이템을 사용하지 않았습니다.\n        for (int remaining = capacity; remaining >= item.weight; --remaining) {\n            const auto current = static_cast<std::size_t>(remaining);\n            const auto previous = static_cast<std::size_t>(remaining - item.weight);\n            best[current] = std::max(best[current], best[previous] + item.value);\n        }\n    }\n    return best.back();\n}\n\n// 테스트 오라클 전용: 호출자는 최대 9개 장비와 유효 범위를 제공합니다.\nint Exhaustive(const std::vector<Item>& items, int capacity) {\n    int answer = 0;\n    const auto end = std::uint32_t{1} << items.size();\n    for (std::uint32_t mask = 0; mask < end; ++mask) {\n        int weight = 0;\n        int value = 0;\n        for (std::size_t index = 0; index < items.size(); ++index) {\n            if (mask & (std::uint32_t{1} << index)) {\n                weight += items[index].weight;\n                value += items[index].value;\n            }\n        }\n        if (weight <= capacity) {\n            answer = std::max(answer, value);\n        }\n    }\n    return answer;\n}\n\nint main() {\n    Check(BestLoadout({}, 0) == 0, \"empty capacity\");\n    Check(BestLoadout({{2, 3}}, 4) == 3, \"single use not unbounded\");\n    Check(BestLoadout({{2, 3}, {3, 4}, {4, 5}}, 5) == 7, \"combined optimum\");\n    std::mt19937 rng(1200);\n    for (int trial = 0; trial < 300; ++trial) {\n        std::vector<Item> items;\n        for (int index = 0; index < trial % 10; ++index) {\n            items.push_back({1 + static_cast<int>(rng() % 8), static_cast<int>(rng() % 15)});\n        }\n        for (int capacity = 0; capacity <= 15; ++capacity) {\n            Check(BestLoadout(items, capacity) == Exhaustive(items, capacity), \"subset oracle\");\n        }\n    }\n    bool rejected = false;\n    try {\n        BestLoadout({{0, 1}}, 5);\n    } catch (const std::invalid_argument&) {\n        rejected = true;\n    }\n    Check(rejected, \"zero weight policy\");\n    std::cout << \"0/1 loadout optimum=7; 300 item sets against exhaustive subsets\\n\";\n    std::cout << \"PASS: \" << checks << \" contract checks\\n\";\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·실행 검증·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "개념·계약 확인에 사용한 공개 자료",
+              "href": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/7232b0ff982f501556118a8552654762_MIT6_006S20_r19.pdf"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부 자료는 용어와 계약 확인용이다. 게임 상황·설명·그림·C++ 구현과 테스트는 독립 작성했으며 특정 책의 지문·공식 해설을 옮기지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "실제 실행 결과와 소스 SHA-256",
+              "href": "/knowledge/shared/algorithm-core-12-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 Linux GCC 14.2.0 C++20 Release CMake/CTest 1/1 및 별도 UBSan 실행을 확인했다. Windows/MSVC·Clang·GPU·성능 벤치마크·다중 스레드는 검증하지 않았다. 원고의 로컬 검증과 웹 공개 검증은 서로 다른 단계다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "집필 이력·다음 연결",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 신규 정규 과정으로 독립 집필. 기존 교재·URL·학습 저장 식별자를 대체하거나 삭제하지 않는다. 알고리즘 정규 과정은 비용 모델→저장 구조→정렬/탐색→그래프→동적 계획법으로 이어진다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "기존 LIS 심화·복원 교재",
+              "href": "/knowledge/algorithm-lis/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정규 기초 과정을 마쳤다면 자신의 게임 데이터에 맞는 입력 계약·오라클·프로파일링 계획을 먼저 작성하고 최적화를 비교한다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

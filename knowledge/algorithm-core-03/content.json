@@ -1,0 +1,628 @@
+{
+  "id": "knowledge--algorithm-core-03",
+  "route": "/knowledge/algorithm-core-03/",
+  "kind": "knowledge",
+  "title": "자료구조·알고리즘 03 · 연결 리스트·링크·소유권",
+  "subtitle": "노드를 가리키는 포인터보다 노드를 소유하는 링크를 추적한다",
+  "date": "2026-10-26",
+  "category": "알고리즘",
+  "topic": "algorithm",
+  "tags": [
+    "연결 리스트",
+    "unique_ptr",
+    "소유권"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·게임 개발 상황",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "머리·중간·꼬리 삭제를 같은 소유 링크 갱신으로 설명하고 탐색 비용을 구분한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이벤트 대기열에서 특정 ID의 첫 항목을 취소하는 상황을 생각하자. 연결 리스트는 노드를 이어 붙이기 쉽지만 취소 대상을 찾는 시간이 사라지는 것은 아니다. 이 단원은 raw 포인터의 주소 퍼즐보다 객체 수명과 소유권 변경을 중심으로 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 학습",
+              "href": "/knowledge/algorithm-core-02/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전제: C++20 단일 스레드 CPU 실습. 문자·파일·네트워크 입력은 없고 정수 ID와 메모리 안의 고정 시드 데이터를 사용한다. 외부 라이브러리나 실행 파일 다운로드는 필요하지 않다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "노드와 링크는 다른 객체다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Node는 id와 다음 노드를 소유하는 unique_ptr를 가진다. head도 첫 노드를 소유하는 unique_ptr다. EraseFirst의 link는 Node*가 아니라 unique_ptr<Node>*이므로 현재 노드로 들어오는 소유 링크를 바꿀 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "머리를 별도 예외로 만들지 않는다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "처음 link=&head로 시작하고 일치하지 않으면 현재 next의 주소로 이동한다. 일치하는 노드가 머리든 중간이든 *link가 그 노드의 소유권을 가진다. 하나의 갱신 규칙으로 처리해 경계 분기를 줄인다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "삭제의 안전한 순서",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "removed에 현재 노드를 옮겨 두고 removed->next를 *link로 옮긴다. 제거 노드의 next가 비워져 뒤의 사슬이 함께 소멸하지 않는다. removed가 범위를 나갈 때 딱 그 노드만 소멸한다. 이동 뒤 기존 포인터를 다시 역참조하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "중복 ID 정책은 명시한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 함수는 처음 나타난 ID 하나만 삭제한다. 모든 중복을 지우는 함수와 결과가 다르다. 테스트는 [9,4,2,4]에서4를 지우면 [9,2,4]가 되는지 확인하고, 부재 삭제는 false이며 상태 변화가 없어야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-5",
+      "title": "큰 사슬의 소멸도 작업이다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "unique_ptr로 next를 재귀 소멸시키면 사슬 길이만큼 호출 깊이가 생길 수 있다. Clear는 머리를 한 번씩 분리해 반복적으로 제거한다. RAII를 사용했다고 실행 자원 상한이 자동으로 사라지는 것은 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-6",
+      "title": "배열보다 무조건 빠르지 않다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "노드별 할당·포인터 추적·캐시 지역성 비용이 있다. 원하는 노드의 위치를 이미 알고 링크를 고칠 때와 ID를 검색한 뒤 삭제할 때의 복잡도를 구분한다. 여기서는 전체 엔티티 수명 관리나 동시 접근을 구현하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-1",
+      "title": "작업 예제 · 취소 이벤트가 중간과 머리에 걸친다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "PushFront로4,2,4,9를 넣으면 실제 목록은 [9,4,2,4]다. EraseFirst(4)의 link는 처음 head를 가리킨다.9가 다르므로 node9.next의 주소로 이동한다. 여기서 *link가 첫4를 소유한다. removed에4를 옮긴 뒤 removed.next의2를 node9.next로 옮기면 [9,2,4]가 된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-2",
+      "title": "작업 예제 · 같은 동작으로 머리 삭제하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 EraseFirst(9)는 link=&head에서 바로 일치한다. head의9를 분리하고9.next의2를 head로 옮기면 [2,4]다. 중간 삭제와 식은 같고 소유 링크의 위치만 다르다. 빈 목록에서도 *link가 비었는지 먼저 검사하므로 id 필드를 읽지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-3",
+      "title": "작업 예제 · 노드 주소는 증명에 필요하지만 출력 ID와 다르다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ID4가 두 번 있어도 서로 다른 노드다. 첫4를 지운 뒤 남은4의 위치와 수명이 보존돼야 한다. vector 오라클도 find로 첫 일치만 지우므로 이 의미를 비교할 수 있다. ID가 같다는 이유로 두 노드를 하나의 객체로 합쳐 판단하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-4",
+      "title": "작업 예제 · 탐색 비용을 정직하게 센다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목록 길이가n이고 삭제 대상이 끝에 있거나 없다면 최대n개 노드를 비교한다. 들어오는 링크를 이미 확보했다면 실제 연결 변경은 상수번 이동으로 끝나지만 EraseFirst는 그런 핸들을 받지 않는다. 따라서 제품 API의 전체 비용은 O(n)이고, 포인터 변경 O(1)만 보고 전체 삭제가 상수라고 설명하면 안 된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "상태를 손으로 추적하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-03/assets/trace.svg",
+          "alt": "초기 head → 9 → 4 → 2 → 4 첫4의 소유 링크 탐색; 분리 removed=4, next=2 삭제 노드의 next 이전; 완료 head → 9 → 2 → 4 size 4→3",
+          "caption": "자체 제작 상태 추적. 실행 시간 측정 그래프가 아니라 논리 상태의 변화다."
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "상태"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "초기"
+                  }
+                ],
+                [
+                  {
+                    "text": "head → 9 → 4 → 2 → 4"
+                  }
+                ],
+                [
+                  {
+                    "text": "첫4의 소유 링크 탐색"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "분리"
+                  }
+                ],
+                [
+                  {
+                    "text": "removed=4, next=2"
+                  }
+                ],
+                [
+                  {
+                    "text": "삭제 노드의 next 이전"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "완료"
+                  }
+                ],
+                [
+                  {
+                    "text": "head → 9 → 2 → 4"
+                  }
+                ],
+                [
+                  {
+                    "text": "size 4→3"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-03/assets/invariant.svg",
+          "alt": "head 소유권 → 노드9의 next 소유권 → 노드2의 next 소유권 → 노드4 → null",
+          "caption": "코드에서 유지하거나 구별해야 하는 핵심 상태."
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"입력 계약과 현재 상태 확인\"] --> B[\"head 소유권\"]\n B --> C[\"노드9의 next 소유권\"]\n C --> D[\"노드2의 next 소유권\"]\n D --> E[\"노드4 → null\"]\n E --> F[\"오라클·경계 조건과 결과 비교\"]"
+        }
+      ]
+    },
+    {
+      "id": "complexity",
+      "title": "복잡도와 적용 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "PushFront O(1). EraseFirst는 탐색 O(n), 찾은 후 링크 갱신 O(1). Values와 Clear O(n). 노드 저장 O(n); Values는 복사 결과 O(n)을 추가로 사용한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전 노드의 raw 포인터만 가지고 머리 삭제를 같은 방식으로 처리하려 하면 별도 분기가 필요하다. 삭제 뒤 해제된 노드를 읽거나, next를 옮기기 전에 노드를 지우는 use-after-free를 피한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/algorithm-core-03.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "빌드·실행 README",
+              "href": "/knowledge/examples/readmes/algorithm-core-03.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축 안의 project/main.cpp와 CMakeLists.txt를 함께 사용한다. 공개 전 파일·ZIP 검증은 발행 단계에서 별도로 수행한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "head/middle/tail/duplicate erase and 1000 model operations\nPASS: 1523 contract checks\n"
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "예측 → 실행 → 반례 만들기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 위 상태 표의 다음 줄을 가리고 종이에 결과를 예측한다. 전체 소스의 Check를 읽어 정상 입력뿐 아니라 빈 값·중복·최댓값·부재 상태 중 이 자료구조에 해당하는 경계를 찾는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습 1: 테스트의 작은 입력을 한 곳 바꾸고 기대 결과를 직접 계산한 뒤 실행한다. 실습 2: 본문의 실패 사례를 설명하는 입력을 추가한다. 실습 3: 알고리즘을 수정했다면 원래 검사와 독립 오라클을 모두 다시 실행한다. 실패한 검사를 지워 통과시키지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "결과가 같다는 사실과 구현의 성능·모든 입력에 대한 정확성은 다르다. 출력의 Check 수는 루프 반복을 포함한 실행 호출 수이며 CTest에는 한 프로그램이 등록된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · link의 타입은 왜 Node*가 아닌가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 노드를 소유하는 unique_ptr 자체를 바꿔야 해서 unique_ptr<Node>*를 사용한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · 첫 노드 삭제도 같은 코드인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그렇다. 최초 link는 head의 주소라서 *link 갱신이 바로 머리 갱신이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · removed->next를 옮기지 않으면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "removed가 사라질 때 다음 노드까지 소유 사슬로 함께 소멸할 수 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 없는 ID를 삭제하면 size는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "변하지 않는다. false 반환과 전체 시퀀스 보존을 함께 확인한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · 1000회 무작위 검사는 모든 입력 증명인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 고정 시드 재현 실험이며 소유 링크 불변식에 대한 논증을 보완한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장: 모든 중복을 삭제하려면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "삭제 성공 후에는 같은 소유 링크에서 새 노드를 다시 검사하고, 실패한 비교 때만 다음 링크로 이동한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "전체 C++20 코드와 실제 파일 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "main.cpp 원본 파일",
+                  "href": "/knowledge/shared/algorithm-core-03-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "CMakeLists.txt",
+                  "href": "/knowledge/shared/algorithm-core-03-lab/project/CMakeLists.txt"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(algorithm_core_03 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(lesson main.cpp)\nif(MSVC)\n  target_compile_options(lesson PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(lesson PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME contract_tests COMMAND lesson)\n"
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <deque>\n#include <functional>\n#include <iostream>\n#include <limits>\n#include <map>\n#include <memory>\n#include <numeric>\n#include <optional>\n#include <queue>\n#include <random>\n#include <set>\n#include <stdexcept>\n#include <string>\n#include <utility>\n#include <vector>\n// Release 빌드에서도 사라지지 않는 계약 검사입니다.\nstatic std::size_t checks = 0;\nvoid Check(bool condition, const char* label) {\n    ++checks;\n    if (!condition)\n        throw std::runtime_error(label);\n}\nclass EventList {\n    struct Node {\n        int id;\n        std::unique_ptr<Node> next;\n        explicit Node(int v) : id(v) {}\n    };\n    std::unique_ptr<Node> head_;\n    std::size_t size_ = 0;\n    public:\n    EventList() = default;\n    EventList(const EventList &) = delete;\n    EventList & operator =(const EventList &) = delete;\n    ~ EventList() {\n        Clear();\n    }\n    void PushFront(int id) {\n        auto node = std::make_unique<Node>(id);\n        node->next = std::move(head_);\n        head_ = std::move(node);\n        ++size_;\n    }\n    bool EraseFirst(int id) {\n        auto* link = & head_;\n        while (* link &&(* link)->id != id) link = &((* link)->next);\n        if (! * link)\n            return false;\n        // 지울 노드의 소유권을 분리한 후 다음 노드를 연결합니다.\n        auto removed = std::move(* link);\n        * link = std::move(removed->next);\n        --size_;\n        return true;\n    }\n    void Clear() noexcept {\n        // 긴 사슬의 재귀 소멸을 피합니다.\n        while (head_) {\n            auto node = std::move(head_);\n            head_ = std::move(node->next);\n        }\n        size_ = 0;\n    }\n    std::vector<int> Values() const {\n        std::vector<int> values;\n        for (const Node* p = head_.get(); p; p = p->next.get()) values.push_back(p->id);\n        return values;\n    }\n    std::size_t Size() const {\n        return size_;\n    }\n};\nint main() {\n    EventList list;\n    std::vector<int> oracle;\n    Check(!list.EraseFirst(4), \"empty erase\");\n    for (int id : {4, 2, 4, 9}) {\n        list.PushFront(id);\n        oracle.insert(oracle.begin(), id);\n    }\n    for (int id : {4, 9, 4, 77, 2}) {\n        auto it = std::find(oracle.begin(), oracle.end(), id);\n        bool exists = it != oracle.end();\n        if (exists) oracle.erase(it);\n        Check(list.EraseFirst(id) == exists, \"erase existence\");\n        Check(list.Values() == oracle && list.Size() == oracle.size(), \"ownership chain\");\n    }\n    std::mt19937 rng(301);\n    for (int i = 0; i < 1000; ++i) {\n        int id = static_cast<int>(rng() % 20);\n        if (rng() % 2) {\n            list.PushFront(id);\n            oracle.insert(oracle.begin(), id);\n        } else {\n            auto it = std::find(oracle.begin(), oracle.end(), id);\n            bool exists = it != oracle.end();\n            if (exists) oracle.erase(it);\n            Check(list.EraseFirst(id) == exists, \"random erase\");\n        }\n        Check(list.Values() == oracle && list.Size() == oracle.size(), \"random sequence\");\n    }\n    list.Clear();\n    Check(list.Size() == 0 && list.Values().empty(), \"clear\");\n    std::cout << \"head/middle/tail/duplicate erase and 1000 model operations\\nPASS: \" << checks << \" contract checks\\n\";\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·실행 검증·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "개념·계약 확인에 사용한 공개 자료",
+              "href": "https://opendatastructures.org/ods-cpp/3_Linked_Lists.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부 자료는 용어와 계약 확인용이다. 게임 상황·설명·그림·C++ 구현과 테스트는 독립 작성했으며 특정 책의 지문·공식 해설을 옮기지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "실제 실행 결과와 소스 SHA-256",
+              "href": "/knowledge/shared/algorithm-core-03-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 Linux GCC 14.2.0 C++20 Release CMake/CTest 1/1 및 별도 UBSan 실행을 확인했다. Windows/MSVC·Clang·GPU·성능 벤치마크·다중 스레드는 검증하지 않았다. 원고의 로컬 검증과 웹 공개 검증은 서로 다른 단계다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "집필 이력·다음 연결",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 신규 정규 과정으로 독립 집필. 기존 교재·URL·학습 저장 식별자를 대체하거나 삭제하지 않는다. 알고리즘 정규 과정은 비용 모델→저장 구조→정렬/탐색→그래프→동적 계획법으로 이어진다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "기존 LIS 심화·복원 교재",
+              "href": "/knowledge/algorithm-lis/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 정규 단원",
+              "href": "/knowledge/algorithm-core-04/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

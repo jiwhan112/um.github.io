@@ -2479,6 +2479,1090 @@
         }
       ],
       "readmeSource": "knowledge/examples/readmes/effective-modern-cpp-08.md"
+    },
+    {
+      "id": "dx12-01",
+      "title": "DirectX 12 01 · DX11에서 명시적 API로 · 장치와 디버그 경계",
+      "pages": [
+        "dx12-01"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-01.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-01-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-01-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-01-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-01.md"
+    },
+    {
+      "id": "dx12-02",
+      "title": "DirectX 12 02 · Command Queue·Allocator·List · 기록과 완료",
+      "pages": [
+        "dx12-02"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-02.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-02-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-02-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-02-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-02.md"
+    },
+    {
+      "id": "dx12-03",
+      "title": "DirectX 12 03 · Swap Chain·Present · 프레임 슬롯의 수명",
+      "pages": [
+        "dx12-03"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-03.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-03-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-03-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-03-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-03.md"
+    },
+    {
+      "id": "dx12-04",
+      "title": "DirectX 12 04 · Resource·Heap · Upload와 Readback의 방향",
+      "pages": [
+        "dx12-04"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-04.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-04-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-04-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-04-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-04.md"
+    },
+    {
+      "id": "dx12-05",
+      "title": "DirectX 12 05 · Descriptor Heap·View · 슬롯도 자원이다",
+      "pages": [
+        "dx12-05"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-05.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-05-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-05-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-05-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-05.md"
+    },
+    {
+      "id": "dx12-06",
+      "title": "DirectX 12 06 · Root Signature·Shader Register · 바인딩 계약",
+      "pages": [
+        "dx12-06"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-06.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-06-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-06-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-06-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-06.md"
+    },
+    {
+      "id": "dx12-07",
+      "title": "DirectX 12 07 · PSO·HLSL·Draw · 상태를 미리 묶기",
+      "pages": [
+        "dx12-07"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-07.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-07-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-07-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-07-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-07.md"
+    },
+    {
+      "id": "dx12-08",
+      "title": "DirectX 12 08 · Resource Barrier · 상태와 순서의 계약",
+      "pages": [
+        "dx12-08"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-08.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-08-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-08-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-08-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-08.md"
+    },
+    {
+      "id": "dx12-09",
+      "title": "DirectX 12 09 · Frames in Flight·Upload Page · 안전한 재사용",
+      "pages": [
+        "dx12-09"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-09.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-09-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-09-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-09-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-09.md"
+    },
+    {
+      "id": "dx12-10",
+      "title": "DirectX 12 10 · Texture Upload·Footprint·Mip · 행 간격의 함정",
+      "pages": [
+        "dx12-10"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-10.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-10-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-10-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-10-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-10.md"
+    },
+    {
+      "id": "dx12-11",
+      "title": "DirectX 12 11 · Compute·Multi-Queue · 의존성 그래프",
+      "pages": [
+        "dx12-11"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-11.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-11-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-11-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-11-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-11.md"
+    },
+    {
+      "id": "dx12-12",
+      "title": "DirectX 12 12 · Debug Layer·PIX·Device Removal · 통합 점검",
+      "pages": [
+        "dx12-12"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/dx12-12.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/dx12-12-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-12-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-12-lab/verification.json",
+          "path": "verification.json"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "path": "windows/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "path": "windows/compute.cpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "path": "windows/dx12_common.hpp"
+        },
+        {
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "path": "windows/renderer.cpp"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/dx12-12.md"
+    },
+    {
+      "id": "graphics-tech-01",
+      "title": "그래픽스 기술 01 · 색 공간·sRGB·선형 합성·HDR 경계",
+      "pages": [
+        "graphics-tech-01"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/graphics-tech-01.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-01-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-01-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-01-lab/project/reference.hlsl",
+          "path": "project/reference.hlsl"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-01-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/graphics-tech-01.md"
+    },
+    {
+      "id": "graphics-tech-02",
+      "title": "그래픽스 기술 02 · 법선·역전치·TBN·노멀 맵",
+      "pages": [
+        "graphics-tech-02"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/graphics-tech-02.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-02-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-02-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-02-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/graphics-tech-02.md"
+    },
+    {
+      "id": "graphics-tech-03",
+      "title": "그래픽스 기술 03 · BRDF·GGX·거칠기·금속도",
+      "pages": [
+        "graphics-tech-03"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/graphics-tech-03.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-03-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-03-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-03-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/graphics-tech-03.md"
+    },
+    {
+      "id": "graphics-tech-04",
+      "title": "그래픽스 기술 04 · Shadow Map·깊이 비교·Bias·PCF",
+      "pages": [
+        "graphics-tech-04"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/graphics-tech-04.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-04-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-04-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-04-lab/project/reference.hlsl",
+          "path": "project/reference.hlsl"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-04-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/graphics-tech-04.md"
+    },
+    {
+      "id": "graphics-tech-05",
+      "title": "그래픽스 기술 05 · Cascaded Shadow Map·분할·Texel 안정화",
+      "pages": [
+        "graphics-tech-05"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/graphics-tech-05.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-05-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-05-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-05-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/graphics-tech-05.md"
+    },
+    {
+      "id": "graphics-tech-06",
+      "title": "그래픽스 기술 06 · Bloom·분리형 Blur·Tone Mapping",
+      "pages": [
+        "graphics-tech-06"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/graphics-tech-06.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-06-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-06-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-06-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/graphics-tech-06.md"
+    },
+    {
+      "id": "graphics-tech-07",
+      "title": "그래픽스 기술 07 · Temporal AA·재투영·History 거절",
+      "pages": [
+        "graphics-tech-07"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/graphics-tech-07.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-07-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-07-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-07-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/graphics-tech-07.md"
+    },
+    {
+      "id": "graphics-tech-08",
+      "title": "그래픽스 기술 08 · NavMesh Corridor·Portal·Funnel",
+      "pages": [
+        "graphics-tech-08"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/graphics-tech-08.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-08-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-08-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-08-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/graphics-tech-08.md"
+    },
+    {
+      "id": "graphics-tech-09",
+      "title": "그래픽스 기술 09 · Two-Bone IK·도달 영역·CCD",
+      "pages": [
+        "graphics-tech-09"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/graphics-tech-09.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-09-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-09-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-09-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/graphics-tech-09.md"
+    },
+    {
+      "id": "graphics-tech-10",
+      "title": "그래픽스 기술 10 · 가시성·LOD·히스테리시스·성능 검증",
+      "pages": [
+        "graphics-tech-10"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/graphics-tech-10.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-10-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-10-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/graphics-tech-10-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/graphics-tech-10.md"
+    },
+    {
+      "id": "algorithm-core-01",
+      "title": "자료구조·알고리즘 01 · 비용 모델·복잡도·루프 불변식",
+      "pages": [
+        "algorithm-core-01"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-01.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-01-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-01-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-01-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-01.md"
+    },
+    {
+      "id": "algorithm-core-02",
+      "title": "자료구조·알고리즘 02 · 동적 배열·용량·분할 상환",
+      "pages": [
+        "algorithm-core-02"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-02.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-02-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-02-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-02-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-02.md"
+    },
+    {
+      "id": "algorithm-core-03",
+      "title": "자료구조·알고리즘 03 · 연결 리스트·링크·소유권",
+      "pages": [
+        "algorithm-core-03"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-03.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-03-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-03-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-03-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-03.md"
+    },
+    {
+      "id": "algorithm-core-04",
+      "title": "자료구조·알고리즘 04 · 스택·큐·링 버퍼",
+      "pages": [
+        "algorithm-core-04"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-04.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-04-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-04-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-04-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-04.md"
+    },
+    {
+      "id": "algorithm-core-05",
+      "title": "자료구조·알고리즘 05 · 해시 테이블·충돌·동등성",
+      "pages": [
+        "algorithm-core-05"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-05.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-05-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-05-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-05-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-05.md"
+    },
+    {
+      "id": "algorithm-core-06",
+      "title": "자료구조·알고리즘 06 · 이진 탐색 트리·정렬 맵",
+      "pages": [
+        "algorithm-core-06"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-06.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-06-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-06-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-06-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-06.md"
+    },
+    {
+      "id": "algorithm-core-07",
+      "title": "자료구조·알고리즘 07 · 힙·우선순위 큐",
+      "pages": [
+        "algorithm-core-07"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-07.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-07-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-07-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-07-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-07.md"
+    },
+    {
+      "id": "algorithm-core-08",
+      "title": "자료구조·알고리즘 08 · 정렬·안정성·비교자 계약",
+      "pages": [
+        "algorithm-core-08"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-08.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-08-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-08-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-08-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-08.md"
+    },
+    {
+      "id": "algorithm-core-09",
+      "title": "자료구조·알고리즘 09 · 이분 탐색·반열린 구간",
+      "pages": [
+        "algorithm-core-09"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-09.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-09-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-09-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-09-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-09.md"
+    },
+    {
+      "id": "algorithm-core-10",
+      "title": "자료구조·알고리즘 10 · 그래프·BFS·DFS",
+      "pages": [
+        "algorithm-core-10"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-10.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-10-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-10-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-10-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-10.md"
+    },
+    {
+      "id": "algorithm-core-11",
+      "title": "자료구조·알고리즘 11 · 다익스트라·A*·휴리스틱 계약",
+      "pages": [
+        "algorithm-core-11"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-11.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-11-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-11-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-11-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-11.md"
+    },
+    {
+      "id": "algorithm-core-12",
+      "title": "자료구조·알고리즘 12 · 동적 계획법·0/1 배낭·상태 압축",
+      "pages": [
+        "algorithm-core-12"
+      ],
+      "files": [
+        {
+          "source": "knowledge/examples/readmes/algorithm-core-12.md",
+          "path": "README.md"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-12-lab/project/CMakeLists.txt",
+          "path": "project/CMakeLists.txt"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-12-lab/project/main.cpp",
+          "path": "project/main.cpp"
+        },
+        {
+          "source": "knowledge/shared/algorithm-core-12-lab/verification.json",
+          "path": "verification.json"
+        }
+      ],
+      "readmeSource": "knowledge/examples/readmes/algorithm-core-12.md"
     }
   ]
 }

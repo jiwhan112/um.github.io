@@ -2,6 +2,474 @@
   "version": 1,
   "bundles": [
     {
+      "id": "algorithm-core-01",
+      "title": "자료구조·알고리즘 01 · 비용 모델·복잡도·루프 불변식",
+      "path": "knowledge/examples/algorithm-core-01.zip",
+      "sha256": "426d8b96488337a5465887d1c78df880fae3c33c9cf018b4292c1d5afa2a70d8",
+      "bytes": 4061,
+      "files": [
+        "algorithm-core-01/README.md",
+        "algorithm-core-01/project/CMakeLists.txt",
+        "algorithm-core-01/project/main.cpp",
+        "algorithm-core-01/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-01"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-01.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-01/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-01.md",
+          "sha256": "c9fae4eb162de24024ee0b8b47b482ae6448b2a67c52139c012f273bb7a00b73"
+        },
+        {
+          "path": "algorithm-core-01/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-01-lab/project/CMakeLists.txt",
+          "sha256": "3633b1665a955efa5f7acf85171d6248d5efb75f3710d8bdd300fe0ca517febe"
+        },
+        {
+          "path": "algorithm-core-01/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-01-lab/project/main.cpp",
+          "sha256": "6826544e1b2d55d05f8e037b1357638b95144c704dc57231b127fcc23886d4a6"
+        },
+        {
+          "path": "algorithm-core-01/verification.json",
+          "source": "knowledge/shared/algorithm-core-01-lab/verification.json",
+          "sha256": "7692d6d235a8aa639fc4b034f0733805075197abdf9f658e68f477375bca5c93"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-02",
+      "title": "자료구조·알고리즘 02 · 동적 배열·용량·분할 상환",
+      "path": "knowledge/examples/algorithm-core-02.zip",
+      "sha256": "45c5d5ab2fc0ed8a60a70de6cf1f9441e86c1625f4cb272715e1bf7b0c123434",
+      "bytes": 5035,
+      "files": [
+        "algorithm-core-02/README.md",
+        "algorithm-core-02/project/CMakeLists.txt",
+        "algorithm-core-02/project/main.cpp",
+        "algorithm-core-02/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-02"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-02.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-02/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-02.md",
+          "sha256": "d8122486f49db212fcbcfbfc43daecfd42a25c0b97318474a9c8a0f418fca636"
+        },
+        {
+          "path": "algorithm-core-02/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-02-lab/project/CMakeLists.txt",
+          "sha256": "15382134cd2e90f13695587532307f5d5e56d7b099d575e8560225f685e5899f"
+        },
+        {
+          "path": "algorithm-core-02/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-02-lab/project/main.cpp",
+          "sha256": "0abb06dc33296c748c93d42bc8a1d62690986068213ea73f6a2e34c2db7e275f"
+        },
+        {
+          "path": "algorithm-core-02/verification.json",
+          "source": "knowledge/shared/algorithm-core-02-lab/verification.json",
+          "sha256": "b1d644043b3fa241df457b16f375e5f97fdaa244db92648e30af064d94105b55"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-03",
+      "title": "자료구조·알고리즘 03 · 연결 리스트·링크·소유권",
+      "path": "knowledge/examples/algorithm-core-03.zip",
+      "sha256": "f7334f173be8ff23fc69dedfb1b4f2ad67197d78b0c56177a6e01124730c578f",
+      "bytes": 4383,
+      "files": [
+        "algorithm-core-03/README.md",
+        "algorithm-core-03/project/CMakeLists.txt",
+        "algorithm-core-03/project/main.cpp",
+        "algorithm-core-03/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-03"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-03.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-03/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-03.md",
+          "sha256": "0dc9c36c63859e99b1218f7782be31826ee3d612b3df8ea6624b6dcaf4fd97ef"
+        },
+        {
+          "path": "algorithm-core-03/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-03-lab/project/CMakeLists.txt",
+          "sha256": "b60bc098966be40c5d1fc1941db47b3e2fbc45586c61851bdf3b0684c4da2aec"
+        },
+        {
+          "path": "algorithm-core-03/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-03-lab/project/main.cpp",
+          "sha256": "ab6870a4180dc3a8f2044bea8a23c00d8cdf52813125481331cc59d6fb766a02"
+        },
+        {
+          "path": "algorithm-core-03/verification.json",
+          "source": "knowledge/shared/algorithm-core-03-lab/verification.json",
+          "sha256": "8ee98e98cb8ab90a06dab813e0e19483f6e8c47526ba57f94fd6d586896281cd"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-04",
+      "title": "자료구조·알고리즘 04 · 스택·큐·링 버퍼",
+      "path": "knowledge/examples/algorithm-core-04.zip",
+      "sha256": "6dac254108868cde2bfd0744f27f3f0830fb67b9343a057729564c9f86d8b7b9",
+      "bytes": 5287,
+      "files": [
+        "algorithm-core-04/README.md",
+        "algorithm-core-04/project/CMakeLists.txt",
+        "algorithm-core-04/project/main.cpp",
+        "algorithm-core-04/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-04"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-04.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-04/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-04.md",
+          "sha256": "3d3d446beb4df98ac9725bc0847cb16ee41ee54c88a5599028a2f6f0eac3c67f"
+        },
+        {
+          "path": "algorithm-core-04/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-04-lab/project/CMakeLists.txt",
+          "sha256": "5822e441e2d9315826846e65a8f4f4a3cd1041987d264e0239e62b5768ebc8c5"
+        },
+        {
+          "path": "algorithm-core-04/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-04-lab/project/main.cpp",
+          "sha256": "43c069b6ee9362d7841d3411b7a8895eede42f7580795df706cca64856f610da"
+        },
+        {
+          "path": "algorithm-core-04/verification.json",
+          "source": "knowledge/shared/algorithm-core-04-lab/verification.json",
+          "sha256": "6a45e42942f9033f2d2962cfcaa63ce3207428006c98c2795480c98137d4ad2f"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-05",
+      "title": "자료구조·알고리즘 05 · 해시 테이블·충돌·동등성",
+      "path": "knowledge/examples/algorithm-core-05.zip",
+      "sha256": "f803eced4b563a2bdb49a3032042076a123d6949bfa5e472bf0c8bc59734f178",
+      "bytes": 4221,
+      "files": [
+        "algorithm-core-05/README.md",
+        "algorithm-core-05/project/CMakeLists.txt",
+        "algorithm-core-05/project/main.cpp",
+        "algorithm-core-05/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-05"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-05.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-05/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-05.md",
+          "sha256": "1938d692522be1061a0f89454f07d2e973c8694be295df4b2bbfc2a0dd7274b2"
+        },
+        {
+          "path": "algorithm-core-05/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-05-lab/project/CMakeLists.txt",
+          "sha256": "74c0ba5ee96d0d22338e29f29724221a9fa38d48fc9b52d41cddbb4a433e7e4d"
+        },
+        {
+          "path": "algorithm-core-05/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-05-lab/project/main.cpp",
+          "sha256": "5fce9f46bc6b5662941a8954baf6a83c0357c2d9188e79ccec7fe51c68b1ebab"
+        },
+        {
+          "path": "algorithm-core-05/verification.json",
+          "source": "knowledge/shared/algorithm-core-05-lab/verification.json",
+          "sha256": "0478ed5dca86c10e67704367ad79eb0706fcf562c2edde98245e6c49496008c3"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-06",
+      "title": "자료구조·알고리즘 06 · 이진 탐색 트리·정렬 맵",
+      "path": "knowledge/examples/algorithm-core-06.zip",
+      "sha256": "c0157f2d56a78e0c12b63a9f24bf549b48cd092eeac6c99ef92295acd874fc7e",
+      "bytes": 5148,
+      "files": [
+        "algorithm-core-06/README.md",
+        "algorithm-core-06/project/CMakeLists.txt",
+        "algorithm-core-06/project/main.cpp",
+        "algorithm-core-06/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-06"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-06.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-06/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-06.md",
+          "sha256": "322c0482b088ec1a033f028c92322fad5a3967f2b36d7df9fa4a15698fca7b3d"
+        },
+        {
+          "path": "algorithm-core-06/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-06-lab/project/CMakeLists.txt",
+          "sha256": "54fd0c0469b32a5be600d71c81a9ed10cadc5bdec266ffc13fa430c7981127a9"
+        },
+        {
+          "path": "algorithm-core-06/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-06-lab/project/main.cpp",
+          "sha256": "0a06777d67a020f7b44f4c271603e91ab72bb08cae4940e0dae1ecee5907bb71"
+        },
+        {
+          "path": "algorithm-core-06/verification.json",
+          "source": "knowledge/shared/algorithm-core-06-lab/verification.json",
+          "sha256": "be5d4a12b6f62ae397f095355fb6e2d7f9794908899a9f93cd00be56d2b68c5c"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-07",
+      "title": "자료구조·알고리즘 07 · 힙·우선순위 큐",
+      "path": "knowledge/examples/algorithm-core-07.zip",
+      "sha256": "1bbbb05cbb150dcca8cfc346a4d89b5df025658f6f9b3a44c5cf8b74611e1353",
+      "bytes": 4163,
+      "files": [
+        "algorithm-core-07/README.md",
+        "algorithm-core-07/project/CMakeLists.txt",
+        "algorithm-core-07/project/main.cpp",
+        "algorithm-core-07/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-07"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-07.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-07/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-07.md",
+          "sha256": "c897f261ca485e380f81608330bbe1bb069dc93ad65381d946786bf0a50e1614"
+        },
+        {
+          "path": "algorithm-core-07/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-07-lab/project/CMakeLists.txt",
+          "sha256": "2abb885b00e0eb2633dfea68c6e039d6878e20768918fdc0f934bca7e03f5e58"
+        },
+        {
+          "path": "algorithm-core-07/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-07-lab/project/main.cpp",
+          "sha256": "36a82c2eae254b7303607d63ee53beafab8486611405a4c6bc824f0ac846d102"
+        },
+        {
+          "path": "algorithm-core-07/verification.json",
+          "source": "knowledge/shared/algorithm-core-07-lab/verification.json",
+          "sha256": "2754d26e8ff3707dd629ea160c28c69c600253e9ed930e852deb71b16538383d"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-08",
+      "title": "자료구조·알고리즘 08 · 정렬·안정성·비교자 계약",
+      "path": "knowledge/examples/algorithm-core-08.zip",
+      "sha256": "d5bd38e822b7cb1b33227344693b771ecfe851c96077dd33e8dbcb9085e3a61e",
+      "bytes": 4094,
+      "files": [
+        "algorithm-core-08/README.md",
+        "algorithm-core-08/project/CMakeLists.txt",
+        "algorithm-core-08/project/main.cpp",
+        "algorithm-core-08/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-08"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-08.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-08/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-08.md",
+          "sha256": "f095967fa19c1d97dbc045ccf42cdf799023e08e91dc1c09a701c12281a61b08"
+        },
+        {
+          "path": "algorithm-core-08/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-08-lab/project/CMakeLists.txt",
+          "sha256": "1ea219a32393dbd4adc5f2958005cac581609bdf56e41843907a570b3d567cf3"
+        },
+        {
+          "path": "algorithm-core-08/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-08-lab/project/main.cpp",
+          "sha256": "d62587cf250557a99d0205cf2322ab2f4a4e245a2b67429e1fca15bb51626a76"
+        },
+        {
+          "path": "algorithm-core-08/verification.json",
+          "source": "knowledge/shared/algorithm-core-08-lab/verification.json",
+          "sha256": "7a523b0f76718d5f67c0254a751b58ab33b9519f429df34a19c366525cd6f803"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-09",
+      "title": "자료구조·알고리즘 09 · 이분 탐색·반열린 구간",
+      "path": "knowledge/examples/algorithm-core-09.zip",
+      "sha256": "bc694f7cb52078601e9ea1111bc578b9cc68d11aab64f431a15d8eeedf8230ef",
+      "bytes": 3985,
+      "files": [
+        "algorithm-core-09/README.md",
+        "algorithm-core-09/project/CMakeLists.txt",
+        "algorithm-core-09/project/main.cpp",
+        "algorithm-core-09/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-09"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-09.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-09/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-09.md",
+          "sha256": "a19e53b6af2025c212c286352e34d59d2a61e0b1b58ab6a9d2ce645d2a650183"
+        },
+        {
+          "path": "algorithm-core-09/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-09-lab/project/CMakeLists.txt",
+          "sha256": "8a834345927e66cd93753fc7ff157ba6f8a04506d3d83c5bd741f95318bc3b74"
+        },
+        {
+          "path": "algorithm-core-09/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-09-lab/project/main.cpp",
+          "sha256": "eeb80c8bcb50032799b43f19d8cb960c0181732bc1027f07ec62d1bc19856353"
+        },
+        {
+          "path": "algorithm-core-09/verification.json",
+          "source": "knowledge/shared/algorithm-core-09-lab/verification.json",
+          "sha256": "51dd7cf033e90f4ca5c277b737cff72ddbb57733057768cdbaeb4c03f15f588a"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-10",
+      "title": "자료구조·알고리즘 10 · 그래프·BFS·DFS",
+      "path": "knowledge/examples/algorithm-core-10.zip",
+      "sha256": "a67011be043dc67ec17994d133354ae0539c94cf26faff926cc7bce3346a2202",
+      "bytes": 4499,
+      "files": [
+        "algorithm-core-10/README.md",
+        "algorithm-core-10/project/CMakeLists.txt",
+        "algorithm-core-10/project/main.cpp",
+        "algorithm-core-10/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-10"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-10.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-10/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-10.md",
+          "sha256": "40e4747298c096e5bb6889f3b395de26d0ece88ef6de7bf1d3bbecfb15b81454"
+        },
+        {
+          "path": "algorithm-core-10/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-10-lab/project/CMakeLists.txt",
+          "sha256": "a11f33f8daadbcb04e0e0ba37a174c5bd1de1be297845fb905c8a24e3a925f9e"
+        },
+        {
+          "path": "algorithm-core-10/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-10-lab/project/main.cpp",
+          "sha256": "a3fcb4a49eb5b0a782117f3f87abf9946194f6a5f6dfbb75145a0484afefcbc0"
+        },
+        {
+          "path": "algorithm-core-10/verification.json",
+          "source": "knowledge/shared/algorithm-core-10-lab/verification.json",
+          "sha256": "54cf8af9b68c00be58dc5bcd851ad1af512be8fe4e853111af533cf9b5dbb4dd"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-11",
+      "title": "자료구조·알고리즘 11 · 다익스트라·A*·휴리스틱 계약",
+      "path": "knowledge/examples/algorithm-core-11.zip",
+      "sha256": "36c50a98c2ec892c53e286c3169237668de43f6d1836a87d4b14fc1f895519a4",
+      "bytes": 4976,
+      "files": [
+        "algorithm-core-11/README.md",
+        "algorithm-core-11/project/CMakeLists.txt",
+        "algorithm-core-11/project/main.cpp",
+        "algorithm-core-11/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-11"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-11.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-11/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-11.md",
+          "sha256": "6eaf2c3b8098462c8e1111f56bb7b8ff0e264cbe742dfd3cf659be4f8bc94874"
+        },
+        {
+          "path": "algorithm-core-11/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-11-lab/project/CMakeLists.txt",
+          "sha256": "b8f6c0e96cec28793278f32675c80c74d9ec9a20d9fd8ce9c6e58332a55cdfa8"
+        },
+        {
+          "path": "algorithm-core-11/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-11-lab/project/main.cpp",
+          "sha256": "558b84cebbcabbfa82b9de92243bc1c17710d81bb0fbcfbe696139c176693039"
+        },
+        {
+          "path": "algorithm-core-11/verification.json",
+          "source": "knowledge/shared/algorithm-core-11-lab/verification.json",
+          "sha256": "ec252c521bcb8fc41c8131a9b5d75e9439fe55e03a62d8af344a4d2cf012bcb1"
+        }
+      ]
+    },
+    {
+      "id": "algorithm-core-12",
+      "title": "자료구조·알고리즘 12 · 동적 계획법·0/1 배낭·상태 압축",
+      "path": "knowledge/examples/algorithm-core-12.zip",
+      "sha256": "8256861440f2d109dcad0626fe7a0df1aed65156da4eac55a8f88c7160423bfc",
+      "bytes": 4494,
+      "files": [
+        "algorithm-core-12/README.md",
+        "algorithm-core-12/project/CMakeLists.txt",
+        "algorithm-core-12/project/main.cpp",
+        "algorithm-core-12/verification.json"
+      ],
+      "pages": [
+        "algorithm-core-12"
+      ],
+      "readme": "knowledge/examples/readmes/algorithm-core-12.md",
+      "sourceFiles": [
+        {
+          "path": "algorithm-core-12/README.md",
+          "source": "knowledge/examples/readmes/algorithm-core-12.md",
+          "sha256": "a90d6037f9c1e5a9556891f32d930bfb60a76309e6a30c905bcc66d216471c56"
+        },
+        {
+          "path": "algorithm-core-12/project/CMakeLists.txt",
+          "source": "knowledge/shared/algorithm-core-12-lab/project/CMakeLists.txt",
+          "sha256": "4f34e9053a5efa55890bc1c9ed5678f1dfd4108b22aec774bde57a065bb5f2b4"
+        },
+        {
+          "path": "algorithm-core-12/project/main.cpp",
+          "source": "knowledge/shared/algorithm-core-12-lab/project/main.cpp",
+          "sha256": "661e7c8858a5ca066634176de46972ddc019316fd4a064bd405ae88e7d211d37"
+        },
+        {
+          "path": "algorithm-core-12/verification.json",
+          "source": "knowledge/shared/algorithm-core-12-lab/verification.json",
+          "sha256": "f582e4102927cd5e2afaecbf7c140745c46aedd878b15dc91bc396675aa6f6d9"
+        }
+      ]
+    },
+    {
       "id": "algorithm-lis",
       "title": "LIS 길이와 경로 복원",
       "path": "knowledge/examples/algorithm-lis.zip",
@@ -1632,6 +2100,762 @@
       ]
     },
     {
+      "id": "dx12-01",
+      "title": "DirectX 12 01 · DX11에서 명시적 API로 · 장치와 디버그 경계",
+      "path": "knowledge/examples/dx12-01.zip",
+      "sha256": "faeb742d6769b3f677ad92ebcf0bb8f369ca484c78ffb6ea1f1bd1fa7b1d6c4f",
+      "bytes": 15274,
+      "files": [
+        "dx12-01/README.md",
+        "dx12-01/project/CMakeLists.txt",
+        "dx12-01/project/main.cpp",
+        "dx12-01/verification.json",
+        "dx12-01/windows/CMakeLists.txt",
+        "dx12-01/windows/compute.cpp",
+        "dx12-01/windows/dx12_common.hpp",
+        "dx12-01/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-01"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-01.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-01/README.md",
+          "source": "knowledge/examples/readmes/dx12-01.md",
+          "sha256": "f7bb13876a9c0eaca7dbc9c9f85595a6900989ff62b7d063d803af9d081b8b12"
+        },
+        {
+          "path": "dx12-01/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-01-lab/project/CMakeLists.txt",
+          "sha256": "c3ae06a24c0512004d6a7c6c797aaa49954b27d82f19e4f97542ad8d1a361487"
+        },
+        {
+          "path": "dx12-01/project/main.cpp",
+          "source": "knowledge/shared/dx12-01-lab/project/main.cpp",
+          "sha256": "935a8246dd487ea3dd72422020e534e31aee785e621a25cbe51710b3142992f9"
+        },
+        {
+          "path": "dx12-01/verification.json",
+          "source": "knowledge/shared/dx12-01-lab/verification.json",
+          "sha256": "562fa19effedf80df8b91589e464e391da7d9c20217e2b26419af9ea8a60f0f9"
+        },
+        {
+          "path": "dx12-01/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-01/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-01/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-01/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-02",
+      "title": "DirectX 12 02 · Command Queue·Allocator·List · 기록과 완료",
+      "path": "knowledge/examples/dx12-02.zip",
+      "sha256": "4562cec342c40655c621c6ba74f9ff21f288999d4e6f5e72fef5970ba411f20a",
+      "bytes": 15225,
+      "files": [
+        "dx12-02/README.md",
+        "dx12-02/project/CMakeLists.txt",
+        "dx12-02/project/main.cpp",
+        "dx12-02/verification.json",
+        "dx12-02/windows/CMakeLists.txt",
+        "dx12-02/windows/compute.cpp",
+        "dx12-02/windows/dx12_common.hpp",
+        "dx12-02/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-02"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-02.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-02/README.md",
+          "source": "knowledge/examples/readmes/dx12-02.md",
+          "sha256": "035fa3b2b23d29558ff60399c8357f8fd768fbe7e9a2c72f74c0fba51e49507b"
+        },
+        {
+          "path": "dx12-02/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-02-lab/project/CMakeLists.txt",
+          "sha256": "e5354d2155667c66b1faf3906d535dc15ee2771b73a956842e3cbc596c1a6344"
+        },
+        {
+          "path": "dx12-02/project/main.cpp",
+          "source": "knowledge/shared/dx12-02-lab/project/main.cpp",
+          "sha256": "871021260fa003ef816cdac68c3479ee6d0d02c06de0f9d1b98151f936c805cc"
+        },
+        {
+          "path": "dx12-02/verification.json",
+          "source": "knowledge/shared/dx12-02-lab/verification.json",
+          "sha256": "a0892abba7a4c823a3dfd34a43b999a7650b0e71e94077e44a8aaa0056bfb816"
+        },
+        {
+          "path": "dx12-02/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-02/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-02/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-02/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-03",
+      "title": "DirectX 12 03 · Swap Chain·Present · 프레임 슬롯의 수명",
+      "path": "knowledge/examples/dx12-03.zip",
+      "sha256": "e86c22f54396d50fb2153eac78b76b7c936633b25496bc263e0879cf390c89ec",
+      "bytes": 15258,
+      "files": [
+        "dx12-03/README.md",
+        "dx12-03/project/CMakeLists.txt",
+        "dx12-03/project/main.cpp",
+        "dx12-03/verification.json",
+        "dx12-03/windows/CMakeLists.txt",
+        "dx12-03/windows/compute.cpp",
+        "dx12-03/windows/dx12_common.hpp",
+        "dx12-03/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-03"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-03.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-03/README.md",
+          "source": "knowledge/examples/readmes/dx12-03.md",
+          "sha256": "aec261f09a5050b4ae73748592f37ca5a47aaddc0e640f2fd2ae5940d6627495"
+        },
+        {
+          "path": "dx12-03/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-03-lab/project/CMakeLists.txt",
+          "sha256": "3de0cdcd6656a29a3aa9bc4379d9d4cd6a8b7f06a2baf9a0d840704eeadbe89b"
+        },
+        {
+          "path": "dx12-03/project/main.cpp",
+          "source": "knowledge/shared/dx12-03-lab/project/main.cpp",
+          "sha256": "0be3b193d37b6d86ebf927dacefb4973d64e80ca03fff442846b21650083c543"
+        },
+        {
+          "path": "dx12-03/verification.json",
+          "source": "knowledge/shared/dx12-03-lab/verification.json",
+          "sha256": "de337e94d9b84fb42197ce3b58fa98efa8416d3775736a97ee9544ed80015a66"
+        },
+        {
+          "path": "dx12-03/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-03/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-03/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-03/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-04",
+      "title": "DirectX 12 04 · Resource·Heap · Upload와 Readback의 방향",
+      "path": "knowledge/examples/dx12-04.zip",
+      "sha256": "d6080931514d10ab59f2434fb37375c87f8af9c8b4148d55ad83312d471d4dcf",
+      "bytes": 15380,
+      "files": [
+        "dx12-04/README.md",
+        "dx12-04/project/CMakeLists.txt",
+        "dx12-04/project/main.cpp",
+        "dx12-04/verification.json",
+        "dx12-04/windows/CMakeLists.txt",
+        "dx12-04/windows/compute.cpp",
+        "dx12-04/windows/dx12_common.hpp",
+        "dx12-04/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-04"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-04.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-04/README.md",
+          "source": "knowledge/examples/readmes/dx12-04.md",
+          "sha256": "bb3b97967f416bb78a8d92f30964f6aa38f1e50dc9d1355d6ae40442bd739de6"
+        },
+        {
+          "path": "dx12-04/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-04-lab/project/CMakeLists.txt",
+          "sha256": "a9337bb8d42ba0c00bde4fbc33f04aa8e7daba39a821a8aad412267f34e575c4"
+        },
+        {
+          "path": "dx12-04/project/main.cpp",
+          "source": "knowledge/shared/dx12-04-lab/project/main.cpp",
+          "sha256": "132588943ae85e895ea439203ddfd465b0c5e97de2666f1d9db4076c4fc2acd6"
+        },
+        {
+          "path": "dx12-04/verification.json",
+          "source": "knowledge/shared/dx12-04-lab/verification.json",
+          "sha256": "931b56c9093c37715742bb1a42cdcbd7292b5394e69ccaf56f4e20408b691e3c"
+        },
+        {
+          "path": "dx12-04/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-04/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-04/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-04/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-05",
+      "title": "DirectX 12 05 · Descriptor Heap·View · 슬롯도 자원이다",
+      "path": "knowledge/examples/dx12-05.zip",
+      "sha256": "0eca66dac1f9fa1c734921cd74060ef508057f66063808ed6a243ae84dc3536b",
+      "bytes": 15353,
+      "files": [
+        "dx12-05/README.md",
+        "dx12-05/project/CMakeLists.txt",
+        "dx12-05/project/main.cpp",
+        "dx12-05/verification.json",
+        "dx12-05/windows/CMakeLists.txt",
+        "dx12-05/windows/compute.cpp",
+        "dx12-05/windows/dx12_common.hpp",
+        "dx12-05/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-05"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-05.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-05/README.md",
+          "source": "knowledge/examples/readmes/dx12-05.md",
+          "sha256": "c31988fa0227994c9e8bc6231b0c98b4e3a20f693ea1c43e5821ba7fbb09cc1f"
+        },
+        {
+          "path": "dx12-05/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-05-lab/project/CMakeLists.txt",
+          "sha256": "7916a2f30605a89e4275236bee0c90a51c065f39e410d19c16808e484bad8250"
+        },
+        {
+          "path": "dx12-05/project/main.cpp",
+          "source": "knowledge/shared/dx12-05-lab/project/main.cpp",
+          "sha256": "7a95cdbf582ca8dfcb603100d688caeb7d54dde10c73b7fe47296b1cde0ef008"
+        },
+        {
+          "path": "dx12-05/verification.json",
+          "source": "knowledge/shared/dx12-05-lab/verification.json",
+          "sha256": "820e959df5ac1304037bb7256dac61502e286e4d63a9e8fd4a8311734b03600a"
+        },
+        {
+          "path": "dx12-05/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-05/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-05/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-05/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-06",
+      "title": "DirectX 12 06 · Root Signature·Shader Register · 바인딩 계약",
+      "path": "knowledge/examples/dx12-06.zip",
+      "sha256": "93b32b1a739c7fff9a9658f98bf5bbe8377674d4b9b69f7dd2b389701be26a9d",
+      "bytes": 15378,
+      "files": [
+        "dx12-06/README.md",
+        "dx12-06/project/CMakeLists.txt",
+        "dx12-06/project/main.cpp",
+        "dx12-06/verification.json",
+        "dx12-06/windows/CMakeLists.txt",
+        "dx12-06/windows/compute.cpp",
+        "dx12-06/windows/dx12_common.hpp",
+        "dx12-06/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-06"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-06.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-06/README.md",
+          "source": "knowledge/examples/readmes/dx12-06.md",
+          "sha256": "c06fd62b3c81bea3cb8ef5fa1405a2d5e5fe12f4d4c48d3c3694e3f0e933f869"
+        },
+        {
+          "path": "dx12-06/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-06-lab/project/CMakeLists.txt",
+          "sha256": "c747ebe0adbebfdeaf73c34917be1116ed80964ae0f360016a18929a6bf72c90"
+        },
+        {
+          "path": "dx12-06/project/main.cpp",
+          "source": "knowledge/shared/dx12-06-lab/project/main.cpp",
+          "sha256": "8c69393961a86a60da5042e81dc85d2a992892a5b62520e59ba2051d30ec30e1"
+        },
+        {
+          "path": "dx12-06/verification.json",
+          "source": "knowledge/shared/dx12-06-lab/verification.json",
+          "sha256": "00dfa7b0d02939d7f5b10f8497efb2e0cc06f4c100aa49c1519ae27e8b7ab36d"
+        },
+        {
+          "path": "dx12-06/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-06/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-06/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-06/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-07",
+      "title": "DirectX 12 07 · PSO·HLSL·Draw · 상태를 미리 묶기",
+      "path": "knowledge/examples/dx12-07.zip",
+      "sha256": "a2f51b6dfc03c73a286d41fa16baa7416ba44aad6d8e98c36672ea4537c626f6",
+      "bytes": 15376,
+      "files": [
+        "dx12-07/README.md",
+        "dx12-07/project/CMakeLists.txt",
+        "dx12-07/project/main.cpp",
+        "dx12-07/verification.json",
+        "dx12-07/windows/CMakeLists.txt",
+        "dx12-07/windows/compute.cpp",
+        "dx12-07/windows/dx12_common.hpp",
+        "dx12-07/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-07"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-07.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-07/README.md",
+          "source": "knowledge/examples/readmes/dx12-07.md",
+          "sha256": "5d54e59b4cd7557135c95bbbe478b7218948c2acb3bf852b7b78f37db028f9d3"
+        },
+        {
+          "path": "dx12-07/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-07-lab/project/CMakeLists.txt",
+          "sha256": "895ce5a97db38c38c26cf74f55a51a9b72b71696bdd2e61dcb099e04bf5fdef1"
+        },
+        {
+          "path": "dx12-07/project/main.cpp",
+          "source": "knowledge/shared/dx12-07-lab/project/main.cpp",
+          "sha256": "524b1f7beaa549a12cd8dcb06f7760eec94a3fc44e10b809fc89332ed53c0e78"
+        },
+        {
+          "path": "dx12-07/verification.json",
+          "source": "knowledge/shared/dx12-07-lab/verification.json",
+          "sha256": "bba0774d121bda928e1e42668684e49a756c1bb66420fd88ddb3d8ecaf1e55e3"
+        },
+        {
+          "path": "dx12-07/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-07/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-07/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-07/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-08",
+      "title": "DirectX 12 08 · Resource Barrier · 상태와 순서의 계약",
+      "path": "knowledge/examples/dx12-08.zip",
+      "sha256": "3138fe5fa3d103fcb9a531978aae42bf22a69fcc9fac74cec5f9b572c02709b3",
+      "bytes": 15195,
+      "files": [
+        "dx12-08/README.md",
+        "dx12-08/project/CMakeLists.txt",
+        "dx12-08/project/main.cpp",
+        "dx12-08/verification.json",
+        "dx12-08/windows/CMakeLists.txt",
+        "dx12-08/windows/compute.cpp",
+        "dx12-08/windows/dx12_common.hpp",
+        "dx12-08/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-08"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-08.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-08/README.md",
+          "source": "knowledge/examples/readmes/dx12-08.md",
+          "sha256": "47ad078d0646f3cf25f07991c3d90f63d87e5dcd4b7e8b2b9a8322876f01d0cb"
+        },
+        {
+          "path": "dx12-08/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-08-lab/project/CMakeLists.txt",
+          "sha256": "8351aa1f661250bb2d7e726b39f8e39884777922e7029ec6f31400f378416861"
+        },
+        {
+          "path": "dx12-08/project/main.cpp",
+          "source": "knowledge/shared/dx12-08-lab/project/main.cpp",
+          "sha256": "3ab5f23b8b441a32aff19a17e6ed055822e364ebb7a19511d4384b02fcb6c164"
+        },
+        {
+          "path": "dx12-08/verification.json",
+          "source": "knowledge/shared/dx12-08-lab/verification.json",
+          "sha256": "6b591a7f87e997c542d29b7224c80e3679372e16e0a2dc379995d4c93f3450c7"
+        },
+        {
+          "path": "dx12-08/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-08/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-08/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-08/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-09",
+      "title": "DirectX 12 09 · Frames in Flight·Upload Page · 안전한 재사용",
+      "path": "knowledge/examples/dx12-09.zip",
+      "sha256": "87aabaecdf23104d8c0d9b4280d4515d869c89a283b7ab7850b2d1e5caa58274",
+      "bytes": 15336,
+      "files": [
+        "dx12-09/README.md",
+        "dx12-09/project/CMakeLists.txt",
+        "dx12-09/project/main.cpp",
+        "dx12-09/verification.json",
+        "dx12-09/windows/CMakeLists.txt",
+        "dx12-09/windows/compute.cpp",
+        "dx12-09/windows/dx12_common.hpp",
+        "dx12-09/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-09"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-09.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-09/README.md",
+          "source": "knowledge/examples/readmes/dx12-09.md",
+          "sha256": "6ff28139737aa95417ce9fb7f6191b32c32919dee911729a3e0cf5a50f7082e5"
+        },
+        {
+          "path": "dx12-09/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-09-lab/project/CMakeLists.txt",
+          "sha256": "f84941b9aaf87437024f12c1a87689ace3baa6e85fe7f64f36d01c256eee2389"
+        },
+        {
+          "path": "dx12-09/project/main.cpp",
+          "source": "knowledge/shared/dx12-09-lab/project/main.cpp",
+          "sha256": "f8bd073c098ca19b873742c3080ec16a0e62bd6df786f3f72f584ef5f4b06fbc"
+        },
+        {
+          "path": "dx12-09/verification.json",
+          "source": "knowledge/shared/dx12-09-lab/verification.json",
+          "sha256": "dfd03bd23a38a3572b792dfb7c581fc1f1e78e2f4641e00ac7abeacbcf7822fe"
+        },
+        {
+          "path": "dx12-09/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-09/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-09/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-09/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-10",
+      "title": "DirectX 12 10 · Texture Upload·Footprint·Mip · 행 간격의 함정",
+      "path": "knowledge/examples/dx12-10.zip",
+      "sha256": "c3afb0c1b0d388dbdc2ba813f701b31bb474411736b8130286825752f136b39e",
+      "bytes": 15352,
+      "files": [
+        "dx12-10/README.md",
+        "dx12-10/project/CMakeLists.txt",
+        "dx12-10/project/main.cpp",
+        "dx12-10/verification.json",
+        "dx12-10/windows/CMakeLists.txt",
+        "dx12-10/windows/compute.cpp",
+        "dx12-10/windows/dx12_common.hpp",
+        "dx12-10/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-10"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-10.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-10/README.md",
+          "source": "knowledge/examples/readmes/dx12-10.md",
+          "sha256": "9f5714770100588b5955a96a0ba91badc6e3e5c043dcb6370228f3096f239246"
+        },
+        {
+          "path": "dx12-10/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-10-lab/project/CMakeLists.txt",
+          "sha256": "390e264b6b935b163aeff46cca15ce7c92cb31e41e6a1c5872f430ef5e57ae4e"
+        },
+        {
+          "path": "dx12-10/project/main.cpp",
+          "source": "knowledge/shared/dx12-10-lab/project/main.cpp",
+          "sha256": "a17e5a45c8764f64585066a64ba5064a052bdacdb2ba5373787ec6b3634eb709"
+        },
+        {
+          "path": "dx12-10/verification.json",
+          "source": "knowledge/shared/dx12-10-lab/verification.json",
+          "sha256": "549029c3a6c8d6765bf9cbbbcd13d378bac773920cb07394e72dd22c5adf5952"
+        },
+        {
+          "path": "dx12-10/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-10/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-10/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-10/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-11",
+      "title": "DirectX 12 11 · Compute·Multi-Queue · 의존성 그래프",
+      "path": "knowledge/examples/dx12-11.zip",
+      "sha256": "60a6702e565e03cd065edf6807a6381e068782d3a3b58838cfacae35b17edf7c",
+      "bytes": 15328,
+      "files": [
+        "dx12-11/README.md",
+        "dx12-11/project/CMakeLists.txt",
+        "dx12-11/project/main.cpp",
+        "dx12-11/verification.json",
+        "dx12-11/windows/CMakeLists.txt",
+        "dx12-11/windows/compute.cpp",
+        "dx12-11/windows/dx12_common.hpp",
+        "dx12-11/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-11"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-11.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-11/README.md",
+          "source": "knowledge/examples/readmes/dx12-11.md",
+          "sha256": "01266d60d803077518ba7d31f3a990b0cbbeec525c0f99346bb9dc10359f3639"
+        },
+        {
+          "path": "dx12-11/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-11-lab/project/CMakeLists.txt",
+          "sha256": "e7556e0bb6d57188009da51cb70971d8b92d436f0e6b475adf7d5e51a30ebf04"
+        },
+        {
+          "path": "dx12-11/project/main.cpp",
+          "source": "knowledge/shared/dx12-11-lab/project/main.cpp",
+          "sha256": "d967540403b8ce031613a7b94fe477d3b9ae7e4f9e389e50bd46120d6750d3ca"
+        },
+        {
+          "path": "dx12-11/verification.json",
+          "source": "knowledge/shared/dx12-11-lab/verification.json",
+          "sha256": "f2abbfa8c027ee5e5de815ce6190917710e56b39f5ee887313050066d0ff4ead"
+        },
+        {
+          "path": "dx12-11/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-11/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-11/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-11/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
+      "id": "dx12-12",
+      "title": "DirectX 12 12 · Debug Layer·PIX·Device Removal · 통합 점검",
+      "path": "knowledge/examples/dx12-12.zip",
+      "sha256": "4c27e495c9ab19342e1009943ac86cac8cbbd89e23e18d8ba68b0ad248711d2c",
+      "bytes": 15468,
+      "files": [
+        "dx12-12/README.md",
+        "dx12-12/project/CMakeLists.txt",
+        "dx12-12/project/main.cpp",
+        "dx12-12/verification.json",
+        "dx12-12/windows/CMakeLists.txt",
+        "dx12-12/windows/compute.cpp",
+        "dx12-12/windows/dx12_common.hpp",
+        "dx12-12/windows/renderer.cpp"
+      ],
+      "pages": [
+        "dx12-12"
+      ],
+      "readme": "knowledge/examples/readmes/dx12-12.md",
+      "sourceFiles": [
+        {
+          "path": "dx12-12/README.md",
+          "source": "knowledge/examples/readmes/dx12-12.md",
+          "sha256": "543bbdf0ef866363129f456aa98d9688158985d08779d671f516bd4563229d74"
+        },
+        {
+          "path": "dx12-12/project/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-12-lab/project/CMakeLists.txt",
+          "sha256": "0dc829a33977938c8bd3d71e24118f8706105d303e70a12eb038e9652d9d8cc1"
+        },
+        {
+          "path": "dx12-12/project/main.cpp",
+          "source": "knowledge/shared/dx12-12-lab/project/main.cpp",
+          "sha256": "ff02a442d458b251ac2b8e077751821932201bb113fc6b842553a81a337f096d"
+        },
+        {
+          "path": "dx12-12/verification.json",
+          "source": "knowledge/shared/dx12-12-lab/verification.json",
+          "sha256": "17b1ca1eebd2985ec30d9425b12cac91e4a3fbb65f9a1cca0d7f0a2a76de0eae"
+        },
+        {
+          "path": "dx12-12/windows/CMakeLists.txt",
+          "source": "knowledge/shared/dx12-core-lab/project/CMakeLists.txt",
+          "sha256": "d738bfa1c3100110576f9e40e20ce2e99700efc9fd9f06960d47756afa5ef246"
+        },
+        {
+          "path": "dx12-12/windows/compute.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/compute.cpp",
+          "sha256": "c33fb974f31f15393a7dbf7c470a0a5cabd9a178036d8b357265fa5216b7f43a"
+        },
+        {
+          "path": "dx12-12/windows/dx12_common.hpp",
+          "source": "knowledge/shared/dx12-core-lab/project/dx12_common.hpp",
+          "sha256": "7d4f6aa41e64c4af55b5433d5d7b6455d1cf5469b5c1566a72acf70e5bb3938e"
+        },
+        {
+          "path": "dx12-12/windows/renderer.cpp",
+          "source": "knowledge/shared/dx12-core-lab/project/renderer.cpp",
+          "sha256": "77358305f72b0cfe6b0f612d21d8ff20cda2829c9505c1d934048fd6e380e9a5"
+        }
+      ]
+    },
+    {
       "id": "dx9-impl-01a",
       "title": "dx9-impl-01a · 전체 예제 프로젝트",
       "path": "knowledge/examples/dx9-impl-01a.zip",
@@ -2616,6 +3840,408 @@
           "path": "game-math-winapi/project/windows/winapi_demo.cpp",
           "source": "knowledge/shared/game-math-winapi-lab-ko/windows/winapi_demo.cpp",
           "sha256": "12edffd0e46ddf7ab6d051da2098587f80fb46fec61e7af7e05c555ce5724601"
+        }
+      ]
+    },
+    {
+      "id": "graphics-tech-01",
+      "title": "그래픽스 기술 01 · 색 공간·sRGB·선형 합성·HDR 경계",
+      "path": "knowledge/examples/graphics-tech-01.zip",
+      "sha256": "f0f6d1c3e4898ac605c4128883c8a561a933f10f262bb9eef7707ba532244799",
+      "bytes": 6371,
+      "files": [
+        "graphics-tech-01/README.md",
+        "graphics-tech-01/project/CMakeLists.txt",
+        "graphics-tech-01/project/main.cpp",
+        "graphics-tech-01/project/reference.hlsl",
+        "graphics-tech-01/verification.json"
+      ],
+      "pages": [
+        "graphics-tech-01"
+      ],
+      "readme": "knowledge/examples/readmes/graphics-tech-01.md",
+      "sourceFiles": [
+        {
+          "path": "graphics-tech-01/README.md",
+          "source": "knowledge/examples/readmes/graphics-tech-01.md",
+          "sha256": "648f94225069c88a66f6f16a5f9f1f9c386c9bb4943bb231eb20d7915a598337"
+        },
+        {
+          "path": "graphics-tech-01/project/CMakeLists.txt",
+          "source": "knowledge/shared/graphics-tech-01-lab/project/CMakeLists.txt",
+          "sha256": "f73b2d27658f1b418fdfca3e9fa9702fe51e33f10d6ab32d7530c3211b04c3e3"
+        },
+        {
+          "path": "graphics-tech-01/project/main.cpp",
+          "source": "knowledge/shared/graphics-tech-01-lab/project/main.cpp",
+          "sha256": "cc51df3d1b5fbd9c6d5acf14675bd3bada61ed517bb52d107f250b70ec226f90"
+        },
+        {
+          "path": "graphics-tech-01/project/reference.hlsl",
+          "source": "knowledge/shared/graphics-tech-01-lab/project/reference.hlsl",
+          "sha256": "75fd983c16002e8737974b1bf2b65920bab1e863ccc660e47062a860eefbe5e6"
+        },
+        {
+          "path": "graphics-tech-01/verification.json",
+          "source": "knowledge/shared/graphics-tech-01-lab/verification.json",
+          "sha256": "0bb5511e376d5aaa8328323102a8029b379c05a271b543795b3d0be49f3c3f5f"
+        }
+      ]
+    },
+    {
+      "id": "graphics-tech-02",
+      "title": "그래픽스 기술 02 · 법선·역전치·TBN·노멀 맵",
+      "path": "knowledge/examples/graphics-tech-02.zip",
+      "sha256": "574f88e37be1ff3f2aef3b130bdfcd1b91af39fba85a55ab2748a8730e85880a",
+      "bytes": 5659,
+      "files": [
+        "graphics-tech-02/README.md",
+        "graphics-tech-02/project/CMakeLists.txt",
+        "graphics-tech-02/project/main.cpp",
+        "graphics-tech-02/verification.json"
+      ],
+      "pages": [
+        "graphics-tech-02"
+      ],
+      "readme": "knowledge/examples/readmes/graphics-tech-02.md",
+      "sourceFiles": [
+        {
+          "path": "graphics-tech-02/README.md",
+          "source": "knowledge/examples/readmes/graphics-tech-02.md",
+          "sha256": "87bf2fde7002c13f13df985ddf746eb00e2ea30c7d334d8d2e8cce040e1e5674"
+        },
+        {
+          "path": "graphics-tech-02/project/CMakeLists.txt",
+          "source": "knowledge/shared/graphics-tech-02-lab/project/CMakeLists.txt",
+          "sha256": "3883371634915d15dd3e4c36a3758cbd00080455f5c24f8d1c39759c15554508"
+        },
+        {
+          "path": "graphics-tech-02/project/main.cpp",
+          "source": "knowledge/shared/graphics-tech-02-lab/project/main.cpp",
+          "sha256": "bce4dd8caa1343f5d4fbdc8bedb48ba1c0cc38149ba892b9d0b85e9c580fa042"
+        },
+        {
+          "path": "graphics-tech-02/verification.json",
+          "source": "knowledge/shared/graphics-tech-02-lab/verification.json",
+          "sha256": "5d10a61483e0f0884fc84a1e7571da16a06fadc2f96c98bcf84e0b88e1d72bb1"
+        }
+      ]
+    },
+    {
+      "id": "graphics-tech-03",
+      "title": "그래픽스 기술 03 · BRDF·GGX·거칠기·금속도",
+      "path": "knowledge/examples/graphics-tech-03.zip",
+      "sha256": "1beccc663059aa6a13f176fc1e4959e9644de9761bc1970700bfece5f08e05ca",
+      "bytes": 6004,
+      "files": [
+        "graphics-tech-03/README.md",
+        "graphics-tech-03/project/CMakeLists.txt",
+        "graphics-tech-03/project/main.cpp",
+        "graphics-tech-03/verification.json"
+      ],
+      "pages": [
+        "graphics-tech-03"
+      ],
+      "readme": "knowledge/examples/readmes/graphics-tech-03.md",
+      "sourceFiles": [
+        {
+          "path": "graphics-tech-03/README.md",
+          "source": "knowledge/examples/readmes/graphics-tech-03.md",
+          "sha256": "6abedabb0c93f0318d5926d3629ff86d1f9ecde40f1a94b24b5e7fdb96998d2e"
+        },
+        {
+          "path": "graphics-tech-03/project/CMakeLists.txt",
+          "source": "knowledge/shared/graphics-tech-03-lab/project/CMakeLists.txt",
+          "sha256": "f451d958bddb10ddfb0718c71ec1edb04fea5fd25f31a9b5372ff3517a3584ee"
+        },
+        {
+          "path": "graphics-tech-03/project/main.cpp",
+          "source": "knowledge/shared/graphics-tech-03-lab/project/main.cpp",
+          "sha256": "8baba457b401c75149f3beca078977e85e08bb2bb04f6eb0a11740b89047bba5"
+        },
+        {
+          "path": "graphics-tech-03/verification.json",
+          "source": "knowledge/shared/graphics-tech-03-lab/verification.json",
+          "sha256": "d57c84238529bd1ba4494c9ef1372531d55f7405216bee1560f820ab028f76fc"
+        }
+      ]
+    },
+    {
+      "id": "graphics-tech-04",
+      "title": "그래픽스 기술 04 · Shadow Map·깊이 비교·Bias·PCF",
+      "path": "knowledge/examples/graphics-tech-04.zip",
+      "sha256": "005b6809261cda53b54b7e4d111a8c8b851520636e86f395df0c3cac9d7f0096",
+      "bytes": 6510,
+      "files": [
+        "graphics-tech-04/README.md",
+        "graphics-tech-04/project/CMakeLists.txt",
+        "graphics-tech-04/project/main.cpp",
+        "graphics-tech-04/project/reference.hlsl",
+        "graphics-tech-04/verification.json"
+      ],
+      "pages": [
+        "graphics-tech-04"
+      ],
+      "readme": "knowledge/examples/readmes/graphics-tech-04.md",
+      "sourceFiles": [
+        {
+          "path": "graphics-tech-04/README.md",
+          "source": "knowledge/examples/readmes/graphics-tech-04.md",
+          "sha256": "efc23ad248560f36a75e4fb582d53569aef825192e45cd04e6a190cc9bb8630c"
+        },
+        {
+          "path": "graphics-tech-04/project/CMakeLists.txt",
+          "source": "knowledge/shared/graphics-tech-04-lab/project/CMakeLists.txt",
+          "sha256": "bafabe23f26e077cfdc65426134000b3c26070d2bdb99acecb1be573d5e74da0"
+        },
+        {
+          "path": "graphics-tech-04/project/main.cpp",
+          "source": "knowledge/shared/graphics-tech-04-lab/project/main.cpp",
+          "sha256": "3ae9b20f02e01551b98c8089d0d0325303acfa03c988709ee8453f7cb550fe14"
+        },
+        {
+          "path": "graphics-tech-04/project/reference.hlsl",
+          "source": "knowledge/shared/graphics-tech-04-lab/project/reference.hlsl",
+          "sha256": "f91d4bacaeee52f577325f2f269b55c456061442c00c91d879712489f291367a"
+        },
+        {
+          "path": "graphics-tech-04/verification.json",
+          "source": "knowledge/shared/graphics-tech-04-lab/verification.json",
+          "sha256": "b2de3e34752bf254e005ddb1d61a7671e33a867ac26a8841a79f693b513dc41b"
+        }
+      ]
+    },
+    {
+      "id": "graphics-tech-05",
+      "title": "그래픽스 기술 05 · Cascaded Shadow Map·분할·Texel 안정화",
+      "path": "knowledge/examples/graphics-tech-05.zip",
+      "sha256": "42d7bee4a1ef8a004e79fdc507e053f5d3644df08755c5e56139062b9242cc65",
+      "bytes": 5853,
+      "files": [
+        "graphics-tech-05/README.md",
+        "graphics-tech-05/project/CMakeLists.txt",
+        "graphics-tech-05/project/main.cpp",
+        "graphics-tech-05/verification.json"
+      ],
+      "pages": [
+        "graphics-tech-05"
+      ],
+      "readme": "knowledge/examples/readmes/graphics-tech-05.md",
+      "sourceFiles": [
+        {
+          "path": "graphics-tech-05/README.md",
+          "source": "knowledge/examples/readmes/graphics-tech-05.md",
+          "sha256": "c1525afc324186ec71516b3a5458623314887b2f308b2a22f1d137d6c9861211"
+        },
+        {
+          "path": "graphics-tech-05/project/CMakeLists.txt",
+          "source": "knowledge/shared/graphics-tech-05-lab/project/CMakeLists.txt",
+          "sha256": "9b25856499df52c1046aca6bdf94fa3c3102a60d272d97da3d5e661f2cadbf39"
+        },
+        {
+          "path": "graphics-tech-05/project/main.cpp",
+          "source": "knowledge/shared/graphics-tech-05-lab/project/main.cpp",
+          "sha256": "2bc22a29526c7277de9270c1584c262a6166954e7621e04b9427ec9fae3a9267"
+        },
+        {
+          "path": "graphics-tech-05/verification.json",
+          "source": "knowledge/shared/graphics-tech-05-lab/verification.json",
+          "sha256": "1c1595d6d72a9a0e6a821b3db2f94cbbe45d9584f51b6e6d731679aa078d038b"
+        }
+      ]
+    },
+    {
+      "id": "graphics-tech-06",
+      "title": "그래픽스 기술 06 · Bloom·분리형 Blur·Tone Mapping",
+      "path": "knowledge/examples/graphics-tech-06.zip",
+      "sha256": "d85b241e6d43d0e6ee2d85b4872a23f688a8f2f9d77751f8013358ca56f148f5",
+      "bytes": 5528,
+      "files": [
+        "graphics-tech-06/README.md",
+        "graphics-tech-06/project/CMakeLists.txt",
+        "graphics-tech-06/project/main.cpp",
+        "graphics-tech-06/verification.json"
+      ],
+      "pages": [
+        "graphics-tech-06"
+      ],
+      "readme": "knowledge/examples/readmes/graphics-tech-06.md",
+      "sourceFiles": [
+        {
+          "path": "graphics-tech-06/README.md",
+          "source": "knowledge/examples/readmes/graphics-tech-06.md",
+          "sha256": "1bcef25d6d7512b5a60647890aa45d8f40c7b4902ab8997f973716a7dd0dcea3"
+        },
+        {
+          "path": "graphics-tech-06/project/CMakeLists.txt",
+          "source": "knowledge/shared/graphics-tech-06-lab/project/CMakeLists.txt",
+          "sha256": "862fc28296b0dc09ebc792be99a4b62487e6cdcdbac5ef106faeb5ea190e6c77"
+        },
+        {
+          "path": "graphics-tech-06/project/main.cpp",
+          "source": "knowledge/shared/graphics-tech-06-lab/project/main.cpp",
+          "sha256": "ed285e7c20bc2e34de9c03fecfd03e453c760c464a28ec2d9c9258bdad5eb451"
+        },
+        {
+          "path": "graphics-tech-06/verification.json",
+          "source": "knowledge/shared/graphics-tech-06-lab/verification.json",
+          "sha256": "2ad303be6c9c7c57ea8e5224848be829c543ab3638bebfef7f7b288535dec1eb"
+        }
+      ]
+    },
+    {
+      "id": "graphics-tech-07",
+      "title": "그래픽스 기술 07 · Temporal AA·재투영·History 거절",
+      "path": "knowledge/examples/graphics-tech-07.zip",
+      "sha256": "113a8b609e577b66dfa1f48d0dc38937582bb876d7f474b6183b67ace9231c31",
+      "bytes": 5545,
+      "files": [
+        "graphics-tech-07/README.md",
+        "graphics-tech-07/project/CMakeLists.txt",
+        "graphics-tech-07/project/main.cpp",
+        "graphics-tech-07/verification.json"
+      ],
+      "pages": [
+        "graphics-tech-07"
+      ],
+      "readme": "knowledge/examples/readmes/graphics-tech-07.md",
+      "sourceFiles": [
+        {
+          "path": "graphics-tech-07/README.md",
+          "source": "knowledge/examples/readmes/graphics-tech-07.md",
+          "sha256": "15d9cbce92d52b1190706aaad45dc9d49bd2fca807ffaac6b6966e666ee1a3f8"
+        },
+        {
+          "path": "graphics-tech-07/project/CMakeLists.txt",
+          "source": "knowledge/shared/graphics-tech-07-lab/project/CMakeLists.txt",
+          "sha256": "7ebce649c359835333f3bc3bfd6ec10303bf868080949953cd25876ae795dcc6"
+        },
+        {
+          "path": "graphics-tech-07/project/main.cpp",
+          "source": "knowledge/shared/graphics-tech-07-lab/project/main.cpp",
+          "sha256": "ff203102b45ba8ddb5ed673054a555e8f03b376cad48c5d2a3b6ac98204cc36b"
+        },
+        {
+          "path": "graphics-tech-07/verification.json",
+          "source": "knowledge/shared/graphics-tech-07-lab/verification.json",
+          "sha256": "10fa3c08204591b80fede6db2bbfb839ef02e36f2201bcf5ad918277c7015c09"
+        }
+      ]
+    },
+    {
+      "id": "graphics-tech-08",
+      "title": "그래픽스 기술 08 · NavMesh Corridor·Portal·Funnel",
+      "path": "knowledge/examples/graphics-tech-08.zip",
+      "sha256": "466d2f274e4700ab1e7fdaa99ec4bd86bb8e1aed3ddbfe26d01da7f2b091389c",
+      "bytes": 6145,
+      "files": [
+        "graphics-tech-08/README.md",
+        "graphics-tech-08/project/CMakeLists.txt",
+        "graphics-tech-08/project/main.cpp",
+        "graphics-tech-08/verification.json"
+      ],
+      "pages": [
+        "graphics-tech-08"
+      ],
+      "readme": "knowledge/examples/readmes/graphics-tech-08.md",
+      "sourceFiles": [
+        {
+          "path": "graphics-tech-08/README.md",
+          "source": "knowledge/examples/readmes/graphics-tech-08.md",
+          "sha256": "a2648b16f7f9c48a8eaf84ef6cb9c68dd3b2a7043b1c66556210cd1c1d78be90"
+        },
+        {
+          "path": "graphics-tech-08/project/CMakeLists.txt",
+          "source": "knowledge/shared/graphics-tech-08-lab/project/CMakeLists.txt",
+          "sha256": "02c797da1ca671e385a5cb1785cbaaaa26e8bff7979116207acfc50f5f2b074c"
+        },
+        {
+          "path": "graphics-tech-08/project/main.cpp",
+          "source": "knowledge/shared/graphics-tech-08-lab/project/main.cpp",
+          "sha256": "216e3fd8b414eab7657d0261222ca7c607f46a3f71e514fdabb856d7bb730739"
+        },
+        {
+          "path": "graphics-tech-08/verification.json",
+          "source": "knowledge/shared/graphics-tech-08-lab/verification.json",
+          "sha256": "5755c822622c2a83c7e6e316820f59b97d273ff28e8294e4b3849bf20530d9c2"
+        }
+      ]
+    },
+    {
+      "id": "graphics-tech-09",
+      "title": "그래픽스 기술 09 · Two-Bone IK·도달 영역·CCD",
+      "path": "knowledge/examples/graphics-tech-09.zip",
+      "sha256": "00fe6ab183692adb1c66ed6685c72fdea18f6514f208388b929866ecbbb30d4c",
+      "bytes": 6764,
+      "files": [
+        "graphics-tech-09/README.md",
+        "graphics-tech-09/project/CMakeLists.txt",
+        "graphics-tech-09/project/main.cpp",
+        "graphics-tech-09/verification.json"
+      ],
+      "pages": [
+        "graphics-tech-09"
+      ],
+      "readme": "knowledge/examples/readmes/graphics-tech-09.md",
+      "sourceFiles": [
+        {
+          "path": "graphics-tech-09/README.md",
+          "source": "knowledge/examples/readmes/graphics-tech-09.md",
+          "sha256": "8c76cbf0465f758ad9edd123618e5847ca185b10f9be87250112670582cfc908"
+        },
+        {
+          "path": "graphics-tech-09/project/CMakeLists.txt",
+          "source": "knowledge/shared/graphics-tech-09-lab/project/CMakeLists.txt",
+          "sha256": "b0c5af3f19a4773695627fe4f1c88f31aee3e2a94bf232655edcb3ab24407ab7"
+        },
+        {
+          "path": "graphics-tech-09/project/main.cpp",
+          "source": "knowledge/shared/graphics-tech-09-lab/project/main.cpp",
+          "sha256": "d8c795febd887afe403a23f3bf1f1e386e8beb4cdd0a605676f52856a74f35c3"
+        },
+        {
+          "path": "graphics-tech-09/verification.json",
+          "source": "knowledge/shared/graphics-tech-09-lab/verification.json",
+          "sha256": "4b6708f64a228c6b229aeb226ddc72aeef511538f62af13b0412c4d49e55e910"
+        }
+      ]
+    },
+    {
+      "id": "graphics-tech-10",
+      "title": "그래픽스 기술 10 · 가시성·LOD·히스테리시스·성능 검증",
+      "path": "knowledge/examples/graphics-tech-10.zip",
+      "sha256": "4942124210eb3e45b0705f5522da2429e70a42495e97ef9ac786c80d63a40024",
+      "bytes": 5986,
+      "files": [
+        "graphics-tech-10/README.md",
+        "graphics-tech-10/project/CMakeLists.txt",
+        "graphics-tech-10/project/main.cpp",
+        "graphics-tech-10/verification.json"
+      ],
+      "pages": [
+        "graphics-tech-10"
+      ],
+      "readme": "knowledge/examples/readmes/graphics-tech-10.md",
+      "sourceFiles": [
+        {
+          "path": "graphics-tech-10/README.md",
+          "source": "knowledge/examples/readmes/graphics-tech-10.md",
+          "sha256": "58cf6bce6f301fe9e78eb799626dd1ed9e5318df455674e8ea941fde9871d994"
+        },
+        {
+          "path": "graphics-tech-10/project/CMakeLists.txt",
+          "source": "knowledge/shared/graphics-tech-10-lab/project/CMakeLists.txt",
+          "sha256": "9cd90db82fc627296ed48d19bbfa28df888aaeb094e0c3686f00b85d1f601b8f"
+        },
+        {
+          "path": "graphics-tech-10/project/main.cpp",
+          "source": "knowledge/shared/graphics-tech-10-lab/project/main.cpp",
+          "sha256": "ddc1cb664263e7b645ad8eee21d16a746635a8ffe08a0d0e2ef3122a12e64aef"
+        },
+        {
+          "path": "graphics-tech-10/verification.json",
+          "source": "knowledge/shared/graphics-tech-10-lab/verification.json",
+          "sha256": "1c9f6c68cc1bd5a2c9427b35fb776bc2bc32abe56a462e49d130193adba9d54b"
         }
       ]
     },

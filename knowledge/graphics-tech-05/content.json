@@ -1,0 +1,507 @@
+{
+  "id": "knowledge--graphics-tech-05",
+  "route": "/knowledge/graphics-tech-05/",
+  "kind": "knowledge",
+  "title": "그래픽스 기술 05 · Cascaded Shadow Map·분할·Texel 안정화",
+  "subtitle": "카메라 깊이 구간과 광원 투영 격자를 나누고 흔들림의 두 원인을 분리한다.",
+  "date": "2026-10-26",
+  "category": "그래픽스 기술",
+  "topic": "graphics-tech",
+  "tags": [
+    "CSM",
+    "그림자",
+    "Texel Snapping",
+    "안정화"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·전제·검증 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "near/far 구간을 여러 cascade로 나누는 이유와 각 shadow texel의 월드 크기를 계산한다. 카메라가 조금 움직일 때 projection 위치를 고정하는 것과 projection 크기를 안정화하는 것이 다름을 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: 기존 게임 수학과 DirectX 11의 좌표·자원·파이프라인 기초. 본 과정은 API 호출 순서를 반복하는 대신 개별 기법의 수치 계약과 실패 사례에 집중한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "카메라 앞의 양수 view depth, 10^-4≤near<far≤10^6를 사용한다. split은 최대16개, lambda∈[0,1]이다. Snap의 extent는 고정된 광원 orthographic 반폭, resolution은 해당 축의 texel 수다. 실제 frustum corner 생성·caster bounds·광원 행렬·GPU 렌더링은 구현하지 않는 산술 실습이다. Snap은 |center|≤10^6, 10^-4≤extent≤10^6, 1≤resolution≤16384의 교육용 수치 범위만 지원한다. 이 범위를 벗어난 유한값도 거절한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이전 단원",
+              "href": "/knowledge/graphics-tech-04/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "단일 맵에 모든 거리를 넣는 비용",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "카메라 가까운 물체는 많은 화면 픽셀을 차지하는데 먼 거리와 같은 shadow texel 밀도를 쓰면 근처가 쉽게 계단져 보인다. CSM은 카메라 깊이 구간별로 shadow map을 준비해 분해능을 배분한다. 카메라 depth를 나누지만 shadow map은 각 구간을 포함하는 광원 투영이라는 점을 놓치지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기하가 cascade 경계를 가로지르면 여러 맵에 그려질 수 있다. cascade 수를 늘리면 그림자 해상도만 좋아지는 게 아니라 caster draw, atlas 메모리, 샘플 선택·블렌딩 비용도 늘 수 있다. 현재 실습은 이 비용을 측정하지 않고 구간과 좌표만 검증한다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/graphics-tech-05/assets/cascade-splits.svg",
+          "alt": "같은 4개 맵에 다른 거리 구간을 배분한다 — 카메라 깊이 구간과 광원 투영 격자를 나누고 흔들림의 두 원인을 분리한다.",
+          "caption": "같은 4개 맵에 다른 거리 구간을 배분한다 · 자체 제작 개념도, 실제 GPU 화면이나 측정 결과가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "선형과 로그를 섞는 split",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "t=i/N일 때 선형 분할은 near+(far-near)t이고 로그 분할은 near*(far/near)^t다. 실습은 (1-lambda)*linear+lambda*log로 섞는다. lambda=0과 1의 정확한 기준값을 먼저 테스트하고 중간값의 단조 증가를 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "near=1, far=81, N=4의 로그 분할은 1,3,9,27,81이다. near=0을 허용하면 비율과 로그 의미가 무너지므로 거절한다. 이것은 view depth 계약이며 normalized depth-buffer의 비선형 값을 그대로 넣는 공식이 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "Snapping은 격자의 원점을 양자화한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "orthographic 반폭 e, 해상도 R이면 한 texel의 월드 크기는 2e/R이다. 중심을 이 간격의 배수로 반올림하면 작은 이동 중에 shadow texel이 계속 미끄러지는 현상을 줄일 수 있다. e=10,R=100이면 간격0.2이고 중심0.09는0,0.11은0.2로 바뀐다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "중심만 snap해도 e가 매 프레임 바뀌면 격자 간격 자체가 바뀐다. 안정적인 크기나 bounding sphere 등으로 투영 크기를 관리하는 문제를 별도로 해결해야 한다. 광원 방향이 회전할 때 생기는 변화도 좌표 평행이동 snap만으로 사라지지 않는다. 유한값 검사만으로 overflow가 사라지지는 않는다. extent=DBL_MAX는 2*extent에서 무한대가 될 수 있으므로 지원 월드 범위와 해상도를 입력에서 제한한다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/graphics-tech-05/assets/texel-snap.svg",
+          "alt": "중심 이동을 texel 크기로 양자화한다 — 카메라 깊이 구간과 광원 투영 격자를 나누고 흔들림의 두 원인을 분리한다.",
+          "caption": "중심 이동을 texel 크기로 양자화한다 · 자체 제작 개념도, 실제 GPU 화면이나 측정 결과가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "선택·경계·블렌딩은 명시적 계약",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 예제는 split와 정확히 같은 depth를 가까운 cascade에 넣는다. 경계를 넘으면 다음 cascade다. outside는 -1로 반환해 호출자가 처리하게 한다. 배열 마지막 요소를 잘못 읽지 않도록 far와 동일한 점도 테스트한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "서로 다른 맵 사이의 경계가 보이면 overlap 구간에서 visibility를 섞는 방식을 고려할 수 있다. 다만 두 맵이 동일한 월드 점을 유효하게 덮는지 먼저 확인해야 한다. 이 단원은 블렌딩 셰이더나 실제 shadow coverage를 구현하지 않았으므로 선형 split 숫자가 맞다는 사실을 완성된 CSM이라고 부르지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "숫자로 추적하는 한 경로",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "e=10, R=100이면 texel=0.2. snap(0.01)=0, snap(0.09)=0, snap(0.11)=0.2. 양자화 이동 오차는 반 texel인0.1이하이다. 음수 좌표에서도 floor(x/texel+0.5)를 써 동일한 격자를 유지한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  N0[\"양수 view near / far\"]\n  N1[\"선형·로그 split 혼합\"]\n  N2[\"cascade별 고정 extent\"]\n  N3[\"texel 크기 = 2extent / R\"]\n  N4[\"광원 중심을 격자에 snap\"]\n  N0 --> N1\n  N1 --> N2\n  N2 --> N3\n  N3 --> N4"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "분할 생성 O(N) 공간·시간, 이 예제의 cascade 선택은 O(N), snap은 O(1)이다. 작은 고정 N에 대한 선형 탐색을 썼다. 실제 shadow draw call이나 GPU 비용은 별도다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/graphics-tech-05.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "준비 도구·실행·기대 출력 README",
+              "href": "/knowledge/examples/readmes/graphics-tech-05.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다운로드는 실행이 아닙니다. CPU C++17 실습이며 실제 GPU 렌더러를 실행하지 않습니다. ZIP에는 소스와 빌드 설정만 포함합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "직접 계산하고 반례를 추가하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "첫 실행 전 위의 수치 추적을 손으로 계산한다. Run()에서 정상 입력, 경계, 거절 입력을 분류한 뒤 한 조건씩 수정하고 예상 결과를 먼저 적는다. 테스트를 삭제하지 말고 새 조건으로 추가한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "mixed splits: 1 14.5851 30.5249 53.9298 101\nPASS: 222 contract checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 실행당 222회 조건 평가가 통과했다. 반복문 sweep을 포함하며 여러 빌드 모드에서의 동일 조건 재실행을 별도 검증 개수로 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확장: 숫자 정확성 테스트를 유지한 채 시각화 버전을 만든다면 좌표·색·시간 단위를 화면에 함께 표시한다. 실제 장치와 장면으로 확인하기 전에는 GPU 품질·성능 검증 완료라고 기록하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 여섯 복습 문제",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · normalized depth를 split 공식에 넣어도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 여기서는 양수 view-space 거리이다. depth 복원 계약을 먼저 맞춘다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · near=0을 거절하는 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "로그 분할의 far/near가 정의되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · 중심만 snap하면 모든 shimmer가 사라지는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. extent 변화와 광원 회전, caster 변화는 다른 원인이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · extent=10, R=100의 texel 크기는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "반폭을 받으므로 전체폭20/100=0.2다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · split 경계와 정확히 같으면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가까운 cascade에 넣도록 정의했다. 다른 선택도 가능하지만 양쪽 코드가 같아야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · CSM 수치 테스트가 GPU 그림자 품질을 보장하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. coverage·caster 렌더링·filter·bias·실제 화면은 미검증이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "main.cpp 원본 파일",
+              "href": "/knowledge/shared/graphics-tech-05-lab/project/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp 전체 소스 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 블록은 연결된 파일의 정확한 텍스트입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cmath>\n#include <cstddef>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <string>\n#include <vector>\nnamespace {\n    int checks = 0;\n    void Check(bool ok, const char* why) {\n        ++checks;\n        if (!ok) throw std::runtime_error(why);\n        // Release에서도 검사가 사라지지 않는다.\n    }\n    bool Near(double a, double b, double e=1e-9) {\n        return std::abs(a-b) <= e;\n    }\n    void Require(bool ok, const char* why) {\n        if (!ok) throw std::invalid_argument(why);\n    }\n    void Finite(double x) {\n        Require(std::isfinite(x), \"finite input required\");\n    }\n    template<class F> void Reject(F fn) {\n        bool rejected=false;\n        try {\n            fn();\n        } catch(const std::invalid_argument&) {\n            rejected=true;\n        }\n        Check(rejected, \"invalid input was not rejected\");\n    }\n    constexpr double PI=3.14159265358979323846;\n    // near/far는 양수 view-space 거리다. normalized depth 값이 아니다.\n    std::vector<double> Splits(double nearZ,double farZ,int count,double lambda) {\n        for(double x: {\n            nearZ,farZ,lambda\n        })Finite(x);\n        Require(nearZ>=0.0001&&farZ<=1000000&&farZ>nearZ&&count>=1&&count<=16&&lambda>=0&&lambda<=1,\"split contract\");\n        std::vector<double> out;\n        out.push_back(nearZ);\n        for(int i=1;i<=count;++i) {\n            double t=static_cast<double>(i)/count;\n            out.push_back((1-lambda)*(nearZ+(farZ-nearZ)*t)+lambda*nearZ*std::pow(farZ/nearZ,t));\n        }\n        out.back()=farZ;\n        return out;\n    }\n    // 구간 끝과 같은 값은 더 가까운 cascade에 배정한다.\n    int Cascade(const std::vector<double>& split,double z) {\n        if(z<split.front()||z>split.back())return -1;\n        for(std::size_t i=1;i<split.size();++i)if(z<=split[i])return static_cast<int>(i)-1;\n        return -1;\n    }\n    // extent는 반폭이다. 크기를 바꾸면 격자 간격도 바뀌므로 이 실습에서는 고정한다.\n    double Snap(double center,double extent,int resolution) {\n        for(double x: {\n            center,extent\n        })Finite(x);\n        // 단위가 제한된 교육 모델: 큰 유한값의 곱셈 overflow도 입력 단계에서 거절한다.\n        Require(std::abs(center)<=1000000 && extent>=0.0001 && extent<=1000000,\n                \"center/extent bounded world domain\");\n        Require(resolution>=1 && resolution<=16384, \"resolution in [1,16384]\");\n        const double texel=2*extent/resolution;\n        return std::floor(center/texel+0.5)*texel;\n        // 가장 가까운 texel. 동률은 +방향.\n    }\n    // 선형/로그 끝값, 단조성, 경계 선택과 반 texel 오차 한계를 확인한다.\n    void Run() {\n        auto linear=Splits(1,101,4,0),log=Splits(1,81,4,1),mixed=Splits(1,101,4,0.5);\n        Check(Near(linear[1],26)&&Near(linear[4],101),\"linear partition\");\n        Check(Near(log[1],3)&&Near(log[2],9)&&Near(log[3],27),\"log partition\");\n        for(std::size_t i=1;i<mixed.size();++i)Check(mixed[i]>mixed[i-1],\"monotonic split\");\n        Check(Cascade(linear,26)==0,\"split equality belongs to nearer cascade\");\n        Check(Cascade(linear,26.001)==1,\"cross split\");\n        Check(Cascade(linear,0)==-1&&Cascade(linear,102)==-1,\"out of range\");\n        Check(Near(Snap(0.01,10,100),0)&&Near(Snap(0.09,10,100),0),\"subtexel stable\");\n        Check(Near(Snap(0.11,10,100),0.2),\"one texel step\");\n        Check(Near(Snap(-0.11,10,100),-0.2),\"negative coordinates\");\n        for(int i=-100;i<=100;++i) {\n            double c=i*0.013;\n            Check(std::abs(Snap(c,10,100)-c)<=0.10000001,\"bounded snap displacement\");\n        }\n        Reject([] {\n            Splits(0,100,4,0.5);\n        });\n        Reject([] {\n            Splits(1,100,0,0.5);\n        });\n        Reject([] {\n            Snap(0,1,0);\n        });\n        Reject([] { Snap(1,std::numeric_limits<double>::max(),1); });\n        Reject([] { Snap(0,1e-300,1024); });\n        Reject([] { Snap(1000001,1,1024); });\n        Reject([] { Snap(0,1,16385); });\n        Check(std::isfinite(Snap(1000000,0.0001,16384)), \"bounded extreme stays finite\");\n        Check(std::isfinite(Snap(-1000000,1000000,1)), \"largest extent stays finite\");\n        std::cout<<\"mixed splits:\";\n        for(double z:mixed)std::cout<<' '<<z;\n        std::cout<<\"\\n\";\n    }\n}\n// namespace\nint main() {\n    try {\n        Run();\n        std::cout<<\"PASS: \"<<checks<<\" contract checks\\n\";\n        return 0;\n    }catch(const std::exception& e) {\n        std::cerr<<\"FAIL: \"<<e.what()<<\"\\n\";\n        return 1;\n    }\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CMakeLists.txt 원본 파일",
+              "href": "/knowledge/shared/graphics-tech-05-lab/project/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt 전체 소스 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 블록은 연결된 파일의 정확한 텍스트입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(graphics_tech_05 LANGUAGES CXX)\nadd_executable(graphics_lab main.cpp)\ntarget_compile_features(graphics_lab PRIVATE cxx_std_17)\nset_target_properties(graphics_lab PROPERTIES CXX_EXTENSIONS OFF)\nif(MSVC)\n  target_compile_options(graphics_lab PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(graphics_lab PRIVATE -Wall -Wextra -Wpedantic)\nendif()\nenable_testing()\nadd_test(NAME contracts COMMAND graphics_lab)\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "공식 자료·검증 기록·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Microsoft · Cascaded Shadow Maps의 구간과 안정화 설명",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/dxtecharts/cascaded-shadow-maps"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Microsoft · 공식 CascadedShadowMaps11 예제",
+              "href": "https://github.com/microsoft/DirectX-SDK-Samples/tree/main/C%2B%2B/Direct3D11/CascadedShadowMaps11"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "현재 CPU 검증 로그와 파일 SHA-256",
+              "href": "/knowledge/shared/graphics-tech-05-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 공개 공식 문서·저장소를 개념과 계약 대조에 사용했습니다. 오래된 API 자료는 현재 권장 API나 성능 수치로 일반화하지 않습니다. 설명·예제·SVG는 본 교재를 위해 독립 작성했습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확인: Linux GCC 14.2.0 C++17, CMake Debug/Release CTest, UBSan. 미확인: Windows/MSVC, GPU 셰이더·실제 장면·시각 품질·GPU 성능. CPU 테스트 통과는 이 미확인 항목의 성공을 뜻하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "신규 집필·변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26: 사용자가 승인한 그래픽스 기술 정규 과정의 신규 집필입니다. 기존 문서 이관이나 예전 프로그램 복구로 집계하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 게임 수학·DirectX 교재와 URL·학습 저장 키를 변경하지 않았습니다. 본 예제는 수치 계약을 분리해 설명하는 자체 제작 CPU 실습입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문·코드·그림 작성, 로컬 검증, 저장소 반영, React 검사, Pages 배포, 실제 공개 확인은 서로 다른 단계입니다. 이 원고의 로컬 검증 기록만으로 공개 배포 완료를 선언하지 않습니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

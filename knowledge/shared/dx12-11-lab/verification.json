@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-26",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "standard": "C++17",
+  "cmake": "cmake version 3.31.6",
+  "release_ctest": "1/1 passed",
+  "ubsan": "passed, -fno-sanitize-recover=all",
+  "output": "PASS DX12-11: 10 CPU contract checks",
+  "tested": "Deterministic CPU model only",
+  "not_tested": [
+    "Windows/MSVC build",
+    "HLSL compilation",
+    "D3D12 debug layer",
+    "Hardware GPU or WARP",
+    "PIX/DRED capture",
+    "Performance measurements",
+    "ASan/LeakSanitizer: first run stopped because LeakSanitizer does not work under ptrace; not counted as pass"
+  ],
+  "sources": {
+    "project/main.cpp": "d967540403b8ce031613a7b94fe477d3b9ae7e4f9e389e50bd46120d6750d3ca"
+  }
+}

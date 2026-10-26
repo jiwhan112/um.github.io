@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-26",
+  "environment": "Linux x86_64, GCC 14.2.0, CMake 3.31.6",
+  "language": "C++17",
+  "tested": [
+    "CMake Debug build and CTest",
+    "CMake Release build and CTest",
+    "GCC UndefinedBehaviorSanitizer"
+  ],
+  "not_tested": [
+    "Windows/MSVC",
+    "GPU shaders and rasterization",
+    "real-time visual quality",
+    "GPU performance",
+    "reference.hlsl compilation and integration",
+    "reference.hlsl compilation and integration"
+  ],
+  "checks_per_execution": 1013,
+  "note": "Repeated build modes run the same conditions; counts are not added as independent tests. Looped sweeps are included in condition count.",
+  "files": {
+    "project/main.cpp": "cc51df3d1b5fbd9c6d5acf14675bd3bada61ed517bb52d107f250b70ec226f90",
+    "project/CMakeLists.txt": "f73b2d27658f1b418fdfca3e9fa9702fe51e33f10d6ab32d7530c3211b04c3e3",
+    "project/reference.hlsl": "75fd983c16002e8737974b1bf2b65920bab1e863ccc660e47062a860eefbe5e6"
+  },
+  "runs": [
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake -S <repository>/knowledge/shared/graphics-tech-01-lab/project -B <build>/cmake-01-Debug -DCMAKE_BUILD_TYPE=Debug",
+      "exit_code": 0,
+      "stdout": "-- The CXX compiler identification is GNU 14.2.0\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: /usr/bin/c++ - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring done (0.2s)\n-- Generating done (0.0s)\n-- Build files have been written to: <build>/cmake-01-Debug\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake --build <build>/cmake-01-Debug",
+      "exit_code": 0,
+      "stdout": "[ 50%] Building CXX object CMakeFiles/graphics_lab.dir/main.cpp.o\n[100%] Linking CXX executable graphics_lab\n[100%] Built target graphics_lab\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/ctest --test-dir <build>/cmake-01-Debug --output-on-failure",
+      "exit_code": 0,
+      "stdout": "Internal ctest changing into directory: <build>/cmake-01-Debug\nTest project <build>/cmake-01-Debug\n    Start 1: contracts\n1/1 Test #1: contracts ........................   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.00 sec\n",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/cmake-01-Debug/graphics_lab",
+      "exit_code": 0,
+      "stdout": "linear blend encoded=0.735357; encoded-space blend=0.5\nPASS: 1013 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake -S <repository>/knowledge/shared/graphics-tech-01-lab/project -B <build>/cmake-01-Release -DCMAKE_BUILD_TYPE=Release",
+      "exit_code": 0,
+      "stdout": "-- The CXX compiler identification is GNU 14.2.0\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: /usr/bin/c++ - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring done (0.2s)\n-- Generating done (0.0s)\n-- Build files have been written to: <build>/cmake-01-Release\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake --build <build>/cmake-01-Release",
+      "exit_code": 0,
+      "stdout": "[ 50%] Building CXX object CMakeFiles/graphics_lab.dir/main.cpp.o\n[100%] Linking CXX executable graphics_lab\n[100%] Built target graphics_lab\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/ctest --test-dir <build>/cmake-01-Release --output-on-failure",
+      "exit_code": 0,
+      "stdout": "Internal ctest changing into directory: <build>/cmake-01-Release\nTest project <build>/cmake-01-Release\n    Start 1: contracts\n1/1 Test #1: contracts ........................   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.00 sec\n",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/cmake-01-Release/graphics_lab",
+      "exit_code": 0,
+      "stdout": "linear blend encoded=0.735357; encoded-space blend=0.5\nPASS: 1013 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": "g++ -std=c++17 -O1 -g -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wpedantic <repository>/knowledge/shared/graphics-tech-01-lab/project/main.cpp -o <build>/ubsan-01",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/ubsan-01",
+      "exit_code": 0,
+      "stdout": "linear blend encoded=0.735357; encoded-space blend=0.5\nPASS: 1013 contract checks\n",
+      "stderr": ""
+    }
+  ]
+}

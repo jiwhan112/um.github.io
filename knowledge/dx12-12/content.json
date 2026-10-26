@@ -1,0 +1,620 @@
+{
+  "id": "knowledge--dx12-12",
+  "route": "/knowledge/dx12-12/",
+  "kind": "knowledge",
+  "title": "DirectX 12 12 · Debug Layer·PIX·Device Removal · 통합 점검",
+  "subtitle": "검증 실패를 숨기지 않고 재현 조건과 실행 한계를 남긴다",
+  "date": "2026-10-26",
+  "category": "DirectX 12",
+  "topic": "dx12",
+  "tags": [
+    "DirectX 12",
+    "디버깅",
+    "PIX",
+    "Device Removal"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표와 구현 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "앞 단원의 장치·자원·바인딩·제출·완료를 하나의 체크리스트로 통합한다. 오류를 성공 값으로 덮지 않고, 무엇을 실제 실행했는지와 무엇이 아직 미검증인지 분리해서 보고한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원의 실행 경계: HRESULT 오류, debug layer 초기화, fence 장치 제거/timeout, Present의 장치 이유 조회를 구현한다. PIX/DRED 수집과 자동 device recovery는 미구현이다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "title": "CPU 통과와 Windows/GPU 미검증을 구분합니다",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Linux의 C++17 CPU 계약 검사는 실제 실행했습니다. 공유 Windows 소스는 전체 구현을 제공하지만 Windows/MSVC·HLSL 컴파일·WARP·하드웨어 GPU·debug layer·PIX/DRED 실행은 아직 확인하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 교재: DirectX 11 카탈로그",
+              "href": "/knowledge/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이전 단원 DX12 11",
+              "href": "/knowledge/dx12-11/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "검증 순서를 층으로 나누기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 C++ 구성/컴파일, 그다음 shader 컴파일과 객체 생성, 다음 debug layer 경고, 그다음 실제 렌더·readback 결과, 마지막 성능 측정으로 나눈다. 앞 단계 성공이 뒤 단계의 성공을 뜻하지 않는다. Linux CPU contract 테스트가 통과했다고 Windows SDK 선언이나 HLSL이 컴파일됐다는 표현을 쓰면 안 된다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공유 renderer의 기대 동작은 고정 창에 체커 삼각형이 보이는 것이고 compute의 기대 출력은 64 GPU 값 일치다. 이번 제공물은 실제 D3D12 API를 사용하는 전체 소스지만 Windows/MSVC, HLSL 컴파일, WARP/하드웨어 실행, debug layer, PIX 캡처는 아직 수행하지 않았다. 이 한계는 다운로드 README와 검증 기록에도 동일하게 남긴다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/dx12-12/assets/flow.svg",
+          "alt": "CPU 계약 검사 · Windows build + shader · Debug/GPU 결과 확인 · PIX·DRED 증거로 원인 축소",
+          "caption": "자체 제작 책임 흐름도. 실제 GPU 배치나 실행 캡처가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "Device removed를 큰 완료 값으로 오해하지 않기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "fence GetCompletedValue의 UINT64_MAX는 장치 제거 상황과 연결되는 특수 결과다. expected보다 크다고 통과시키면 회수하면 안 되는 메모리를 재사용할 수 있다. WaitForFence는 먼저 이 값을 검사하고, 10초 timeout 또는 OS 대기 실패도 오류로 종료한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Present 실패에서는 GetDeviceRemovedReason을 조회해 실패 원인을 좁힌다. 하지만 HRESULT 하나만으로 정확한 잘못된 draw를 단정할 수는 없다. device recovery는 이전 자원의 재생성, CPU 원본 보관, 큐/스왑체인 초기화까지 포함한다. 예제는 진단 후 종료하며 자동 복구를 구현하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "PIX와 DRED가 제공하는 증거",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "PIX GPU capture는 한 구간의 D3D12 호출과 상태를 재생해 분석하는 도구다. target binding이나 shader 입력을 확인할 때 유용하지만 잘못된 API 사용 때문에 캡처 자체가 실패할 수도 있다. 먼저 debug layer 오류를 줄이고, 실제 GPU·드라이버·실행 구성을 기록해야 캡처 재현 한계를 판단할 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DRED breadcrumbs와 page fault 정보는 장치 제거 직전의 작업을 좁히는 데 도움이 된다. 마지막 breadcrumb가 곧 정확한 원인 명령이라는 단정은 피한다. 공유 코드에는 DRED 수집과 PIX event runtime 연동을 넣지 않았다. 이 단원은 도구를 어디에 적용할지 설명하며 실제 캡처 파일이나 성공 화면을 만들어낸 것이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/dx12-12/assets/trace.svg",
+          "alt": "100% CPU 통과 ≠ GPU 통과 · UINT64_MAX → DeviceLost · timeout은 성공으로 변경 금지 · DRED/PIX 캡처: 이번 실행 미수행",
+          "caption": "수업에서 비교하는 조건과 반례. GPU 성능 수치가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "작은 진단 상태기계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Diagnostic CPU 모델은 최근 4개 작업 이름만 보존하고 Finished, DeviceLost, Timeout을 구분한다. 종료 상태를 나중에 성공으로 덮어쓰지 못하게 한다. 4개는 수업용 로그 용량이며 실제 DRED ring 크기나 GPU breadcrumb 규칙을 재현하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예제의 sanitizer 시도 중 LeakSanitizer는 ptrace 환경 때문에 시작에 실패했다. 이 실패를 코드 통과로 바꾸지 않았다. 별도로 Release CTest와 UBSan을 실행한 결과만 통과로 기록한다. 검사 실패, 실행 환경 차단, 아직 실행하지 않음을 같은 상태로 뭉치지 않는 것이 디버깅 보고의 핵심이다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-5",
+      "title": "다음 렌더러 기능을 붙이기 전",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "최소화·종료, 반복 frame 슬롯 재사용, texture upload 수명, 잘못된 shader 컴파일, adapter 부재와 WARP 경로를 실제 Windows에서 확인한다. 그 뒤 resize, depth buffer, mesh, dynamic upload ring을 하나씩 추가한다. 요구 범위 밖의 장치 보안 설정을 바꾸거나 TDR timeout을 늘려 오류를 숨기는 방식은 사용하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 12단원의 범위는 명시적 API의 핵심 계약과 작은 실제 프로그램을 읽고 수정할 수 있는 기반이다. 완성 게임 엔진·HDR·DXR·Enhanced Barriers·범용 메모리 allocator를 모두 구현한 과정이 아니다. 기능 확장 목록과 검증 상태를 구분하면 다음 작업에서 과도한 완료 주장을 피할 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contract-map",
+      "title": "구현 순서와 확인 지점",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  N0[\"CPU 계약 검사\"] --> N1\n  N1[\"Windows build + shader\"] --> N2\n  N2[\"Debug/GPU 결과 확인\"] --> N3\n  N3[\"PIX·DRED 증거로 원인 축소\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "그림을 API 이름으로만 외우지 말고 각 화살표가 요구하는 상태·수명·완료 근거를 한 문장씩 적는다. 생략한 기능은 검증된 기능으로 표시하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · CPU와 Windows 프로젝트",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/dx12-12.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "준비·빌드·기대 결과·미검증 범위 README",
+              "href": "/knowledge/examples/readmes/dx12-12.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP의 project/는 이 단원 CPU 테스트, windows/는 12단원이 공유하는 실제 D3D12 프로그램 전체 소스다. 같은 Windows 소스를 여러 단원에서 재사용하며 서로 다른 GPU 실행 실적 12개로 세지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "직접 실행하고 반례를 설명하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 코드의 각 Reject 조건이 왜 실패해야 하는지 예상한다. 정상 값뿐 아니라 경계·잘못된 입력·실패 후 상태 보존을 확인한다. API와 다른 모델의 제한을 적고 Windows 프로그램의 대응 함수와 비교한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build --config Release\nctest --test-dir build -C Release --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "PASS DX12-12: 9 CPU contract checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출력의 조건 수는 한 프로그램 안의 결정적 검사 횟수다. CTest 케이스 수·GPU 작업 수·성능 표본 수가 아니다. UBSan 별도 실행도 같은 조건을 다시 확인한 것이며 조건 수를 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows 검증은 별도 단계다. Developer PowerShell에서 cmake -S windows -B win-build -A x64 후 cmake --build win-build --config Debug를 실행하고 README의 renderer/compute 명령을 사용한다. 이번 환경에서는 이 명령을 실행하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · CPU 테스트 통과로 Windows 실행 성공을 말해도 되나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 된다. 컴파일러·SDK·HLSL·GPU 경로가 다르다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · timeout을 무시하고 다음 프레임으로 가면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "완료 근거가 없으므로 자원 재사용이 안전하지 않다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · 마지막 breadcrumb가 반드시 범인인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "파이프라인 특성과 진단 한계가 있어 원인 후보를 좁히는 근거로 사용한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 소스에 PIX/DRED 수집 기능이 있는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "없다. 도구 적용 절차와 한계를 설명했으며 실제 캡처는 미수행이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · ASan 시도가 실패했는데 왜 UBSan 통과를 따로 기록하나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "검증 도구별 결과를 구분하기 위해서다. LeakSanitizer 환경 오류를 성공으로 바꾸지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장 과제: Windows 검증 보고서 항목",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "OS/SDK/compiler/adapter/driver/build configuration, 명령과 결과, debug 경고, 실제 화면/값, 미검증 기능을 구분해 작성한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "CPU 계약 검사 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CPU 계약 검사 전체 소스",
+              "href": "/knowledge/shared/dx12-12-lab/project/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 주석 CPU 전체 코드 보기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <cstddef>\n#include <utility>\n#include <cstring>\n#include <iostream>\n#include <limits>\n#include <map>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\n// GPU 호출이 아닌, 이 단원의 명시적 계약을 검증하는 결정적 CPU 모델이다.\nstatic unsigned checks = 0;\nvoid Check(bool condition, const char* name) {\n    ++checks;\n    if (!condition) throw std::runtime_error(name); // Release에서도 검사를 유지한다.\n}\ntemplate < class F > void Reject(F action, const char* name) {\n    bool rejected = false;\n    try {\n        action();\n    } catch (const std::exception&) {\n        rejected = true;\n    }\n    Check(rejected, name);\n}\n\nenum class Result { Running, Finished, DeviceLost, Timeout };\n// 성공과 장치 오류·시간 초과를 구분하고 종료 결과를 덮지 않는다.\nstruct Diagnostic {\n    Result result = Result::Running;\n    std::vector < std::string > recent;\n    void Mark(const std::string& operation) {\n        if (result != Result::Running) throw std::logic_error(\"already stopped\");\n        if (recent.size() == 4) recent.erase(recent.begin()); // DRED 구현이 아닌 작은 로그 모델\n        recent.push_back(operation);\n    }\n    void Complete(std::uint64_t completed, std::uint64_t expected, bool timeout) {\n        if (result != Result::Running) throw std::logic_error(\"terminal state\");\n        if (completed == UINT64_MAX) result = Result::DeviceLost;\n        else if (timeout || completed < expected) result = Result::Timeout;\n        else result = Result::Finished;\n    }\n};\nint main() {\n    try {\n        Diagnostic d;\n        for (const char* op:{\"reset\", \"copy\", \"barrier\", \"draw\", \"present\"}) d.Mark(op);\n        Check(d.recent.size() == 4, \"bounded history\");\n        Check(d.recent.front() == \"copy\", \"drop oldest\");\n        d.Complete(5, 5, false);\n        Check(d.result == Result::Finished, \"completed\");\n        Reject([&] { d.Mark(\"again\"); }, \"no work after terminal\");\n        Diagnostic lost;\n        lost.Complete(UINT64_MAX, 1, false);\n        Check(lost.result == Result::DeviceLost, \"UINT64MAX not success\");\n        Diagnostic pending;\n        pending.Complete(2, 3, false);\n        Check(pending.result == Result::Timeout, \"not complete\");\n        Diagnostic timeout;\n        timeout.Complete(3, 3, true);\n        Check(timeout.result == Result::Timeout, \"timeout not hidden\");\n        Reject([&] { timeout.Complete(4, 3, false); }, \"cannot overwrite failure\");\n        Check(lost.recent.empty(), \"diagnostic does not invent breadcrumb\");\n        std::cout << \"PASS DX12-12: \" << checks << \" CPU contract checks\\n\";\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << e.what() << '\\n';\n        return 1;\n    }\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "windows-source",
+      "title": "Windows 실제 API 발췌와 전체 파일",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows/MSVC·HLSL 컴파일·WARP·하드웨어 GPU·debug layer 실행은 미검증이다. 아래 발췌는 탐색용이며 독립 실행 가능한 전체 소스가 아니다. 전체 파일 링크와 ZIP의 windows/ 프로젝트를 함께 사용한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음은 아래 전체 Windows 파일에서 해당 경로를 찾기 위한 발췌다. 독립 실행 파일이 아니며 전체 CMake 프로젝트와 함께 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "실제 API 경로 발췌 · dx12_common.hpp",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "inline void WaitForFence(ID3D12Fence* fence, std::uint64_t value, HANDLE event) {\n    const auto completed = fence->GetCompletedValue();\n    if (completed == UINT64_MAX) throw std::runtime_error(\"Device removed during fence query\");\n    if (completed >= value) return;\n    Check(fence->SetEventOnCompletion(value, event), \"SetEventOnCompletion\");\n    // 장치 오류 때 무한 대기하지 않는다. 타임아웃은 성공으로 취급하지 않는다.\n    if (WaitForSingleObject(event, 10000) != WAIT_OBJECT_0)\n        throw std::runtime_error(\"Fence wait failed or timed out (10 seconds)\");\n    const auto after = fence->GetCompletedValue();\n    if (after == UINT64_MAX || after < value)\n        throw std::runtime_error(\"Fence completion is not valid\");\n}\ninline ComPtr<ID3DBlob> Compile(const char* source, const char* entry, const char* target) {\n    ComPtr<ID3DBlob> bytecode, errors;\n    const HRESULT hr = D3DCompile(source, std::strlen(source), \"atlas_original_shader\",\n        nullptr, nullptr, entry, target, D3DCOMPILE_ENABLE_STRICTNESS, 0,\n        bytecode.GetAddressOf(), errors.GetAddressOf());\n    if (FAILED(hr)) {\n        if (errors) OutputDebugStringA(static_cast<const char*>(errors->GetBufferPointer()));\n        Check(hr, \"D3DCompile\");\n    }\n    return bytecode;\n}\ninline D3D12_HEAP_PROPERTIES Heap(D3D12_HEAP_TYPE type) {\n    D3D12_HEAP_PROPERTIES p{};\n    p.Type = type; p.CreationNodeMask = 1; p.VisibleNodeMask = 1;\n    return p;\n}\ninline D3D12_RESOURCE_DESC BufferDesc(UINT64 bytes) {\n    D3D12_RESOURCE_DESC d{};\n    d.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER; d.Width = bytes;\n    d.Height = 1; d.DepthOrArraySize = 1; d.MipLevels = 1;\n    d.SampleDesc.Count = 1; d.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;\n    return d;\n}\ninline ComPtr<ID3D12Resource> Buffer(ID3D12Device* device, UINT64 bytes,\n    D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES state,\n    D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE) {\n    auto heap = Heap(heapType); auto desc = BufferDesc(bytes); desc.Flags = flags;\n    ComPtr<ID3D12Resource> result;\n    Check(device->CreateCommittedResource(&heap, D3D12_HEAP_FLAG_NONE, &desc, state,\n        nullptr, IID_PPV_ARGS(result.GetAddressOf())), \"CreateCommittedResource(buffer)\");\n    return result;\n}\ninline void Transition(ID3D12GraphicsCommandList* list, ID3D12Resource* resource,"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · CMakeLists.txt",
+              "href": "/knowledge/shared/dx12-core-lab/project/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · dx12_common.hpp",
+              "href": "/knowledge/shared/dx12-core-lab/project/dx12_common.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · renderer.cpp",
+              "href": "/knowledge/shared/dx12-core-lab/project/renderer.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · compute.cpp",
+              "href": "/knowledge/shared/dx12-core-lab/project/compute.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "통합 Windows 전체 코드 · dx12_common.hpp",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#pragma once\n#include <windows.h>\n#include <d3d12.h>\n#include <d3d12sdklayers.h>\n#include <dxgi1_6.h>\n#include <d3dcompiler.h>\n#include <wrl/client.h>\n#include <cstdint>\n#include <climits>\n#include <cstdio>\n#include <cstring>\n#include <limits>\n#include <stdexcept>\n#include <string>\nusing Microsoft::WRL::ComPtr;\n\n// HRESULT 실패를 소멸자 밖에서 예외로 전환한다. 호출 이름도 오류에 남긴다.\ninline void Check(HRESULT hr, const char* operation) {\n    if (FAILED(hr)) {\n        char text[192];\n        std::snprintf(text, sizeof text, \"%s failed: HRESULT=0x%08lX\", operation,\n                      static_cast<unsigned long>(hr));\n        throw std::runtime_error(text);\n    }\n}\nstruct EventHandle {\n    HANDLE value = CreateEventW(nullptr, FALSE, FALSE, nullptr);\n    EventHandle() {\n        if (!value) throw std::runtime_error(\"CreateEvent failed\");\n    }\n    ~EventHandle() { CloseHandle(value); }\n    EventHandle(const EventHandle&) = delete;\n    EventHandle& operator=(const EventHandle&) = delete;\n};\ninline void WaitForFence(ID3D12Fence* fence, std::uint64_t value, HANDLE event) {\n    const auto completed = fence->GetCompletedValue();\n    if (completed == UINT64_MAX) throw std::runtime_error(\"Device removed during fence query\");\n    if (completed >= value) return;\n    Check(fence->SetEventOnCompletion(value, event), \"SetEventOnCompletion\");\n    // 장치 오류 때 무한 대기하지 않는다. 타임아웃은 성공으로 취급하지 않는다.\n    if (WaitForSingleObject(event, 10000) != WAIT_OBJECT_0)\n        throw std::runtime_error(\"Fence wait failed or timed out (10 seconds)\");\n    const auto after = fence->GetCompletedValue();\n    if (after == UINT64_MAX || after < value)\n        throw std::runtime_error(\"Fence completion is not valid\");\n}\ninline ComPtr<ID3DBlob> Compile(const char* source, const char* entry, const char* target) {\n    ComPtr<ID3DBlob> bytecode, errors;\n    const HRESULT hr = D3DCompile(source, std::strlen(source), \"atlas_original_shader\",\n        nullptr, nullptr, entry, target, D3DCOMPILE_ENABLE_STRICTNESS, 0,\n        bytecode.GetAddressOf(), errors.GetAddressOf());\n    if (FAILED(hr)) {\n        if (errors) OutputDebugStringA(static_cast<const char*>(errors->GetBufferPointer()));\n        Check(hr, \"D3DCompile\");\n    }\n    return bytecode;\n}\ninline D3D12_HEAP_PROPERTIES Heap(D3D12_HEAP_TYPE type) {\n    D3D12_HEAP_PROPERTIES p{};\n    p.Type = type; p.CreationNodeMask = 1; p.VisibleNodeMask = 1;\n    return p;\n}\ninline D3D12_RESOURCE_DESC BufferDesc(UINT64 bytes) {\n    D3D12_RESOURCE_DESC d{};\n    d.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER; d.Width = bytes;\n    d.Height = 1; d.DepthOrArraySize = 1; d.MipLevels = 1;\n    d.SampleDesc.Count = 1; d.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;\n    return d;\n}\ninline ComPtr<ID3D12Resource> Buffer(ID3D12Device* device, UINT64 bytes,\n    D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES state,\n    D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE) {\n    auto heap = Heap(heapType); auto desc = BufferDesc(bytes); desc.Flags = flags;\n    ComPtr<ID3D12Resource> result;\n    Check(device->CreateCommittedResource(&heap, D3D12_HEAP_FLAG_NONE, &desc, state,\n        nullptr, IID_PPV_ARGS(result.GetAddressOf())), \"CreateCommittedResource(buffer)\");\n    return result;\n}\ninline void Transition(ID3D12GraphicsCommandList* list, ID3D12Resource* resource,\n    D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) {\n    if (before == after) return;\n    D3D12_RESOURCE_BARRIER barrier{};\n    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;\n    barrier.Transition = {resource, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, before, after};\n    list->ResourceBarrier(1, &barrier);\n}\nstruct DeviceContext {\n    ComPtr<IDXGIFactory6> factory;\n    ComPtr<ID3D12Device> device;\n    explicit DeviceContext(bool warp) {\n        UINT factoryFlags = 0;\n#ifndef NDEBUG\n        // 개발 시 Graphics Tools 설치가 없으면 명확히 실패한다. 검증을 조용히 끄지 않는다.\n        ComPtr<ID3D12Debug> debug;\n        Check(D3D12GetDebugInterface(IID_PPV_ARGS(debug.GetAddressOf())), \"D3D12 debug layer unavailable\");\n        debug->EnableDebugLayer(); factoryFlags = DXGI_CREATE_FACTORY_DEBUG;\n#endif\n        Check(CreateDXGIFactory2(factoryFlags, IID_PPV_ARGS(factory.GetAddressOf())), \"CreateDXGIFactory2\");\n        ComPtr<IDXGIAdapter1> adapter;\n        if (warp) {\n            Check(factory->EnumWarpAdapter(IID_PPV_ARGS(adapter.GetAddressOf())), \"EnumWarpAdapter\");\n            Check(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0,\n                IID_PPV_ARGS(device.GetAddressOf())), \"Create WARP device\");\n        } else {\n            for (UINT index = 0; ; ++index) {\n                adapter.Reset();\n                HRESULT hr = factory->EnumAdapters1(index, adapter.GetAddressOf());\n                if (hr == DXGI_ERROR_NOT_FOUND) break;\n                Check(hr, \"EnumAdapters1\");\n                DXGI_ADAPTER_DESC1 desc{}; Check(adapter->GetDesc1(&desc), \"GetDesc1\");\n                if ((desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) != 0) continue;\n                if (SUCCEEDED(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0,\n                    IID_PPV_ARGS(device.GetAddressOf())))) break;\n            }\n            if (!device) throw std::runtime_error(\"No D3D12 hardware adapter. Retry explicitly with --warp.\");\n        }\n        Check(device->SetName(L\"ATLAS original educational device\"), \"SetName(device)\");\n    }\n};\n"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "통합 Windows 전체 코드 · renderer.cpp",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"dx12_common.hpp\"\n#include <array>\n#include <memory>\n\n// ATLAS NOTE 자체 제작 예제. 고정 960x540 창, RGBA8, mip 1개, 깊이 없음.\n// CPU 단원 테스트와 달리 이 파일은 실제 Windows SDK/D3D12 장치를 요구한다.\nclass Renderer {\n    static constexpr UINT Count = 2;\n    DeviceContext context;\n    EventHandle event;\n    ComPtr<ID3D12CommandQueue> queue;\n    ComPtr<IDXGISwapChain3> swap;\n    ComPtr<ID3D12DescriptorHeap> rtvHeap, srvHeap;\n    std::array<ComPtr<ID3D12Resource>, Count> backBuffers;\n    std::array<ComPtr<ID3D12CommandAllocator>, Count> allocators;\n    std::array<UINT64, Count> lastUse{};\n    ComPtr<ID3D12GraphicsCommandList> list;\n    ComPtr<ID3D12Fence> fence;\n    ComPtr<ID3D12RootSignature> root;\n    ComPtr<ID3D12PipelineState> pipeline;\n    ComPtr<ID3D12Resource> texture;\n    UINT rtvStride = 0;\n    UINT64 nextFence = 1;\n\n    UINT64 Signal() {\n        if (nextFence == UINT64_MAX) throw std::runtime_error(\"Fence timeline exhausted\");\n        const UINT64 value = nextFence++;\n        Check(queue->Signal(fence.Get(), value), \"Signal\");\n        return value;\n    }\n    void CreateBindingsAndPipeline() {\n        // t0 하나를 담는 descriptor table + b0의 float4 root constants.\n        D3D12_DESCRIPTOR_RANGE range{};\n        range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;\n        range.NumDescriptors = 1; range.BaseShaderRegister = 0;\n        range.OffsetInDescriptorsFromTableStart = 0;\n        D3D12_ROOT_PARAMETER parameters[2]{};\n        parameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;\n        parameters[0].DescriptorTable = {1, &range};\n        parameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;\n        parameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;\n        parameters[1].Constants = {0, 0, 4};\n        parameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;\n        D3D12_STATIC_SAMPLER_DESC sampler{};\n        sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;\n        sampler.AddressU = sampler.AddressV = sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;\n        sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_ALWAYS;\n        sampler.MaxAnisotropy = 1; sampler.MaxLOD = D3D12_FLOAT32_MAX;\n        sampler.ShaderRegister = 0; sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;\n        D3D12_ROOT_SIGNATURE_DESC desc{};\n        desc.NumParameters = 2; desc.pParameters = parameters;\n        desc.NumStaticSamplers = 1; desc.pStaticSamplers = &sampler;\n        desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;\n        ComPtr<ID3DBlob> serialized, errors;\n        const auto hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1,\n            serialized.GetAddressOf(), errors.GetAddressOf());\n        if (FAILED(hr) && errors) OutputDebugStringA(static_cast<const char*>(errors->GetBufferPointer()));\n        Check(hr, \"SerializeRootSignature\");\n        Check(context.device->CreateRootSignature(0, serialized->GetBufferPointer(),\n            serialized->GetBufferSize(), IID_PPV_ARGS(root.GetAddressOf())), \"CreateRootSignature\");\n        // 외부 파일을 읽지 않는 짧은 자체 HLSL. 최신 SM6/DXC 기능의 예제가 아니다.\n        const char* shader = R\"HLSL(\nTexture2D<float4> checker : register(t0);\nSamplerState nearestSampler : register(s0);\ncbuffer Material : register(b0) { float4 tint; };\nstruct VertexOut { float4 position : SV_Position; float2 uv : TEXCOORD0; };\nVertexOut VSMain(uint vertex : SV_VertexID) {\n    const float2 positions[3] = { float2(-0.8,-0.7), float2(0,0.8), float2(0.8,-0.7) };\n    const float2 uv[3] = { float2(0,1), float2(0.5,0), float2(1,1) };\n    VertexOut result; result.position = float4(positions[vertex],0.5,1);\n    result.uv = uv[vertex]; return result;\n}\nfloat4 PSMain(VertexOut input) : SV_Target {\n    return checker.Sample(nearestSampler, input.uv) * tint;\n}\n)HLSL\";\n        auto vs = Compile(shader, \"VSMain\", \"vs_5_1\");\n        auto ps = Compile(shader, \"PSMain\", \"ps_5_1\");\n        D3D12_GRAPHICS_PIPELINE_STATE_DESC pso{};\n        pso.pRootSignature = root.Get();\n        pso.VS = {vs->GetBufferPointer(), vs->GetBufferSize()};\n        pso.PS = {ps->GetBufferPointer(), ps->GetBufferSize()};\n        auto& blend = pso.BlendState.RenderTarget[0];\n        blend.SrcBlend = D3D12_BLEND_ONE; blend.DestBlend = D3D12_BLEND_ZERO;\n        blend.BlendOp = D3D12_BLEND_OP_ADD;\n        blend.SrcBlendAlpha = D3D12_BLEND_ONE; blend.DestBlendAlpha = D3D12_BLEND_ZERO;\n        blend.BlendOpAlpha = D3D12_BLEND_OP_ADD; blend.LogicOp = D3D12_LOGIC_OP_NOOP;\n        blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;\n        pso.SampleMask = UINT_MAX;\n        pso.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;\n        pso.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;\n        pso.RasterizerState.DepthClipEnable = TRUE;\n        pso.DepthStencilState.DepthEnable = FALSE;\n        pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;\n        pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;\n        pso.DepthStencilState.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;\n        pso.DepthStencilState.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;\n        pso.DepthStencilState.FrontFace = {D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP,\n            D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS};\n        pso.DepthStencilState.BackFace = pso.DepthStencilState.FrontFace;\n        pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;\n        pso.NumRenderTargets = 1; pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;\n        pso.SampleDesc.Count = 1;\n        Check(context.device->CreateGraphicsPipelineState(&pso,\n            IID_PPV_ARGS(pipeline.GetAddressOf())), \"CreateGraphicsPipelineState\");\n    }\n    void UploadTexture() {\n        constexpr UINT Width = 8, Height = 8;\n        D3D12_RESOURCE_DESC desc{};\n        desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D; desc.Width = Width;\n        desc.Height = Height; desc.DepthOrArraySize = 1; desc.MipLevels = 1;\n        desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; desc.SampleDesc.Count = 1;\n        auto heap = Heap(D3D12_HEAP_TYPE_DEFAULT);\n        Check(context.device->CreateCommittedResource(&heap, D3D12_HEAP_FLAG_NONE, &desc,\n            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(texture.GetAddressOf())), \"Create texture\");\n        Check(texture->SetName(L\"Checker 8x8 mip0\"), \"SetName(texture)\");\n        D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint{};\n        UINT rows = 0; UINT64 rowBytes = 0, total = 0;\n        context.device->GetCopyableFootprints(&desc, 0, 1, 0, &footprint, &rows, &rowBytes, &total);\n        if (total == UINT64_MAX || rows != Height || rowBytes != Width * 4)\n            throw std::runtime_error(\"Unexpected texture footprint\");\n        auto upload = Buffer(context.device.Get(), total, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ);\n        void* mapped = nullptr; D3D12_RANGE noRead{0, 0};\n        Check(upload->Map(0, &noRead, &mapped), \"Map upload\");\n        auto* base = static_cast<unsigned char*>(mapped) + footprint.Offset;\n        // 데이터 32바이트와 행 피치 256바이트를 혼동하지 않는다.\n        for (UINT y = 0; y < Height; ++y) {\n            auto* row = base + static_cast<size_t>(y) * footprint.Footprint.RowPitch;\n            for (UINT x = 0; x < Width; ++x) {\n                const bool bright = ((x / 2 + y / 2) % 2) == 0;\n                row[4*x] = bright ? 240 : 40; row[4*x+1] = bright ? 200 : 80;\n                row[4*x+2] = bright ? 80 : 200; row[4*x+3] = 255;\n            }\n        }\n        upload->Unmap(0, nullptr);\n        Check(allocators[0]->Reset(), \"Reset upload allocator\");\n        Check(list->Reset(allocators[0].Get(), nullptr), \"Reset upload list\");\n        D3D12_TEXTURE_COPY_LOCATION source{};\n        source.pResource = upload.Get(); source.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;\n        source.PlacedFootprint = footprint;\n        D3D12_TEXTURE_COPY_LOCATION destination{};\n        destination.pResource = texture.Get(); destination.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;\n        list->CopyTextureRegion(&destination, 0, 0, 0, &source, nullptr);\n        Transition(list.Get(), texture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);\n        Check(list->Close(), \"Close upload list\");\n        ID3D12CommandList* lists[] = {list.Get()}; queue->ExecuteCommandLists(1, lists);\n        // upload를 scope 밖으로 해제하기 전에 복사 완료를 기다린다.\n        Drain();\n        D3D12_SHADER_RESOURCE_VIEW_DESC srv{};\n        srv.Format = desc.Format; srv.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;\n        srv.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;\n        srv.Texture2D.MipLevels = 1;\n        context.device->CreateShaderResourceView(texture.Get(), &srv, srvHeap->GetCPUDescriptorHandleForHeapStart());\n    }\npublic:\n    Renderer(HWND window, bool warp) : context(warp) {\n        D3D12_COMMAND_QUEUE_DESC q{}; q.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;\n        Check(context.device->CreateCommandQueue(&q, IID_PPV_ARGS(queue.GetAddressOf())), \"CreateCommandQueue\");\n        Check(context.device->CreateFence(0, D3D12_FENCE_FLAG_NONE,\n            IID_PPV_ARGS(fence.GetAddressOf())), \"CreateFence\");\n        DXGI_SWAP_CHAIN_DESC1 sc{};\n        sc.Width = 960; sc.Height = 540; sc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;\n        sc.SampleDesc.Count = 1; sc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;\n        sc.BufferCount = Count; sc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;\n        ComPtr<IDXGISwapChain1> temporary;\n        Check(context.factory->CreateSwapChainForHwnd(queue.Get(), window, &sc, nullptr,\n            nullptr, temporary.GetAddressOf()), \"CreateSwapChainForHwnd\");\n        Check(temporary.As(&swap), \"Query swapchain3\");\n        Check(context.factory->MakeWindowAssociation(window, DXGI_MWA_NO_ALT_ENTER), \"MakeWindowAssociation\");\n        D3D12_DESCRIPTOR_HEAP_DESC rtv{}; rtv.NumDescriptors = Count; rtv.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;\n        Check(context.device->CreateDescriptorHeap(&rtv, IID_PPV_ARGS(rtvHeap.GetAddressOf())), \"Create RTV heap\");\n        rtvStride = context.device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);\n        auto handle = rtvHeap->GetCPUDescriptorHandleForHeapStart();\n        for (UINT i = 0; i < Count; ++i) {\n            Check(swap->GetBuffer(i, IID_PPV_ARGS(backBuffers[i].GetAddressOf())), \"GetBuffer\");\n            context.device->CreateRenderTargetView(backBuffers[i].Get(), nullptr, handle);\n            handle.ptr += rtvStride;\n            Check(context.device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,\n                IID_PPV_ARGS(allocators[i].GetAddressOf())), \"CreateCommandAllocator\");\n        }\n        D3D12_DESCRIPTOR_HEAP_DESC srv{}; srv.NumDescriptors = 1;\n        srv.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV; srv.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;\n        Check(context.device->CreateDescriptorHeap(&srv, IID_PPV_ARGS(srvHeap.GetAddressOf())), \"Create SRV heap\");\n        Check(context.device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, allocators[0].Get(),\n            nullptr, IID_PPV_ARGS(list.GetAddressOf())), \"CreateCommandList\");\n        Check(list->Close(), \"Close initial list\");\n        CreateBindingsAndPipeline(); UploadTexture();\n    }\n    void Drain() { WaitForFence(fence.Get(), Signal(), event.value); }\n    ~Renderer() {\n        // 정상 종료의 Drain은 main에서 오류를 검사한다. 소멸자는 예외를 던지지 않는다.\n        if (queue && fence) { try { Drain(); } catch (...) { OutputDebugStringA(\"Cleanup drain failed. Device recovery not implemented.\\n\"); } }\n    }\n    void Draw() {\n        const UINT frame = swap->GetCurrentBackBufferIndex();\n        WaitForFence(fence.Get(), lastUse[frame], event.value);\n        Check(allocators[frame]->Reset(), \"Reset frame allocator\");\n        Check(list->Reset(allocators[frame].Get(), pipeline.Get()), \"Reset frame list\");\n        list->SetGraphicsRootSignature(root.Get());\n        ID3D12DescriptorHeap* heaps[] = {srvHeap.Get()}; list->SetDescriptorHeaps(1, heaps);\n        list->SetGraphicsRootDescriptorTable(0, srvHeap->GetGPUDescriptorHandleForHeapStart());\n        const float tint[4] = {1, 1, 1, 1}; list->SetGraphicsRoot32BitConstants(1, 4, tint, 0);\n        const D3D12_VIEWPORT viewport{0, 0, 960, 540, 0, 1};\n        const D3D12_RECT scissor{0, 0, 960, 540};\n        list->RSSetViewports(1, &viewport); list->RSSetScissorRects(1, &scissor);\n        Transition(list.Get(), backBuffers[frame].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);\n        auto rtv = rtvHeap->GetCPUDescriptorHandleForHeapStart(); rtv.ptr += static_cast<SIZE_T>(frame) * rtvStride;\n        list->OMSetRenderTargets(1, &rtv, FALSE, nullptr);\n        const float clear[4] = {0.04f, 0.06f, 0.10f, 1}; list->ClearRenderTargetView(rtv, clear, 0, nullptr);\n        list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);\n        list->DrawInstanced(3, 1, 0, 0);\n        Transition(list.Get(), backBuffers[frame].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);\n        Check(list->Close(), \"Close frame list\");\n        ID3D12CommandList* lists[] = {list.Get()}; queue->ExecuteCommandLists(1, lists);\n        const HRESULT present = swap->Present(1, 0);\n        if (FAILED(present)) {\n            Check(context.device->GetDeviceRemovedReason(), \"GetDeviceRemovedReason\");\n            Check(present, \"Present\");\n        }\n        lastUse[frame] = Signal();\n    }\n};\n\nLRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM w, LPARAM l) {\n    if (message == WM_DESTROY) { PostQuitMessage(0); return 0; }\n    if (message == WM_PAINT) { PAINTSTRUCT ps{}; BeginPaint(window, &ps); EndPaint(window, &ps); return 0; }\n    return DefWindowProcW(window, message, w, l);\n}\nint WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR commandLine, int show) {\n    HWND window = nullptr;\n    try {\n        WNDCLASSW wc{}; wc.lpfnWndProc = WindowProc; wc.hInstance = instance;\n        wc.lpszClassName = L\"AtlasDx12Original\"; wc.hCursor = LoadCursorW(nullptr, IDC_ARROW);\n        if (!RegisterClassW(&wc)) throw std::runtime_error(\"RegisterClass failed\");\n        const DWORD style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;\n        RECT rect{0, 0, 960, 540}; if (!AdjustWindowRect(&rect, style, FALSE)) throw std::runtime_error(\"AdjustWindowRect failed\");\n        window = CreateWindowW(wc.lpszClassName, L\"ATLAS DX12 - original texture/fence lab\", style,\n            CW_USEDEFAULT, CW_USEDEFAULT, rect.right - rect.left, rect.bottom - rect.top,\n            nullptr, nullptr, instance, nullptr);\n        if (!window) throw std::runtime_error(\"CreateWindow failed\");\n        Renderer renderer(window, std::wstring(commandLine).find(L\"--warp\") != std::wstring::npos);\n        ShowWindow(window, show);\n        MSG message{};\n        bool running = true;\n        while (running) {\n            while (PeekMessageW(&message, nullptr, 0, 0, PM_REMOVE)) {\n                if (message.message == WM_QUIT) { running = false; break; }\n                TranslateMessage(&message); DispatchMessageW(&message);\n            }\n            if (!running) break;\n            if (IsIconic(window)) { Sleep(20); continue; }\n            renderer.Draw();\n        }\n        renderer.Drain(); return 0;\n    } catch (const std::exception& error) {\n        MessageBoxA(nullptr, error.what(), \"ATLAS DX12 failure\", MB_OK | MB_ICONERROR);\n        if (window && IsWindow(window)) DestroyWindow(window);\n        return 1;\n    }\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "통합 Windows 전체 코드 · compute.cpp",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include \"dx12_common.hpp\"\n#include <iostream>\n\n// 실제 compute queue -> fence -> copy queue -> readback 예제.\n// CPU 모델 테스트의 통과가 이 프로그램의 Windows 실행을 뜻하지 않는다.\nint main(int argc, char** argv) {\n    try {\n        const bool warp = argc == 2 && std::string(argv[1]) == \"--warp\";\n        if (argc > 2 || (argc == 2 && !warp)) throw std::runtime_error(\"Usage: atlas_dx12_compute [--warp]\");\n        DeviceContext context(warp);\n        EventHandle event;\n        ComPtr<ID3D12CommandQueue> computeQueue, copyQueue;\n        D3D12_COMMAND_QUEUE_DESC queueDesc{};\n        queueDesc.Type = D3D12_COMMAND_LIST_TYPE_COMPUTE;\n        Check(context.device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(computeQueue.GetAddressOf())), \"Create compute queue\");\n        queueDesc.Type = D3D12_COMMAND_LIST_TYPE_COPY;\n        Check(context.device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(copyQueue.GetAddressOf())), \"Create copy queue\");\n        ComPtr<ID3D12Fence> computeDone, copyDone;\n        Check(context.device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(computeDone.GetAddressOf())), \"Create compute fence\");\n        Check(context.device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(copyDone.GetAddressOf())), \"Create copy fence\");\n        ComPtr<ID3D12CommandAllocator> computeAllocator, copyAllocator;\n        Check(context.device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_COMPUTE,\n            IID_PPV_ARGS(computeAllocator.GetAddressOf())), \"Create compute allocator\");\n        Check(context.device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_COPY,\n            IID_PPV_ARGS(copyAllocator.GetAddressOf())), \"Create copy allocator\");\n        constexpr UINT Count = 64; constexpr UINT64 Bytes = Count * sizeof(std::uint32_t);\n        auto output = Buffer(context.device.Get(), Bytes, D3D12_HEAP_TYPE_DEFAULT,\n            D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);\n        auto readback = Buffer(context.device.Get(), Bytes, D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_STATE_COPY_DEST);\n        D3D12_ROOT_PARAMETER params[2]{};\n        params[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_UAV;\n        params[0].Descriptor = {0, 0}; params[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;\n        params[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;\n        params[1].Constants = {0, 0, 1}; params[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;\n        D3D12_ROOT_SIGNATURE_DESC rootDesc{}; rootDesc.NumParameters = 2; rootDesc.pParameters = params;\n        ComPtr<ID3DBlob> signature, errors;\n        Check(D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1,\n            signature.GetAddressOf(), errors.GetAddressOf()), \"Serialize compute root\");\n        ComPtr<ID3D12RootSignature> root;\n        Check(context.device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(),\n            IID_PPV_ARGS(root.GetAddressOf())), \"Create compute root\");\n        const char* shader = R\"HLSL(\nRWStructuredBuffer<uint> result : register(u0);\ncbuffer Bounds : register(b0) { uint count; };\n[numthreads(32,1,1)]\nvoid CSMain(uint3 id : SV_DispatchThreadID) {\n    if (id.x < count) result[id.x] = id.x * id.x + 7;\n}\n)HLSL\";\n        auto cs = Compile(shader, \"CSMain\", \"cs_5_1\");\n        D3D12_COMPUTE_PIPELINE_STATE_DESC psoDesc{}; psoDesc.pRootSignature = root.Get();\n        psoDesc.CS = {cs->GetBufferPointer(), cs->GetBufferSize()};\n        ComPtr<ID3D12PipelineState> pso;\n        Check(context.device->CreateComputePipelineState(&psoDesc, IID_PPV_ARGS(pso.GetAddressOf())), \"Create compute PSO\");\n        ComPtr<ID3D12GraphicsCommandList> computeList, copyList;\n        Check(context.device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_COMPUTE, computeAllocator.Get(),\n            pso.Get(), IID_PPV_ARGS(computeList.GetAddressOf())), \"Create compute list\");\n        computeList->SetComputeRootSignature(root.Get());\n        computeList->SetComputeRootUnorderedAccessView(0, output->GetGPUVirtualAddress());\n        computeList->SetComputeRoot32BitConstant(1, Count, 0);\n        computeList->Dispatch((Count + 31) / 32, 1, 1);\n        // copy queue에 넘기기 전 COMMON. 상태 전환과 queue fence는 서로 다른 책임이다.\n        Transition(computeList.Get(), output.Get(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON);\n        Check(computeList->Close(), \"Close compute list\");\n        Check(context.device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_COPY, copyAllocator.Get(),\n            nullptr, IID_PPV_ARGS(copyList.GetAddressOf())), \"Create copy list\");\n        Transition(copyList.Get(), output.Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_SOURCE);\n        copyList->CopyBufferRegion(readback.Get(), 0, output.Get(), 0, Bytes);\n        Transition(copyList.Get(), output.Get(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COMMON);\n        Check(copyList->Close(), \"Close copy list\");\n        ID3D12CommandList* first[] = {computeList.Get()}; computeQueue->ExecuteCommandLists(1, first);\n        Check(computeQueue->Signal(computeDone.Get(), 1), \"Signal compute completion\");\n        // GPU 큐 대기이므로 호출한 CPU 스레드는 이 지점에서 완료를 기다리지 않는다.\n        Check(copyQueue->Wait(computeDone.Get(), 1), \"Copy queue wait\");\n        ID3D12CommandList* second[] = {copyList.Get()}; copyQueue->ExecuteCommandLists(1, second);\n        Check(copyQueue->Signal(copyDone.Get(), 1), \"Signal copy completion\");\n        WaitForFence(copyDone.Get(), 1, event.value);\n        void* mapped = nullptr; D3D12_RANGE readRange{0, static_cast<SIZE_T>(Bytes)};\n        Check(readback->Map(0, &readRange, &mapped), \"Map readback\");\n        bool matches = true;\n        for (UINT i = 0; i < Count; ++i) {\n            std::uint32_t actual = 0;\n            std::memcpy(&actual, static_cast<const unsigned char*>(mapped) + i * sizeof actual, sizeof actual);\n            if (actual != i * i + 7) matches = false;\n        }\n        D3D12_RANGE noWrite{0, 0}; readback->Unmap(0, &noWrite);\n        if (!matches) throw std::runtime_error(\"GPU result mismatch\");\n        std::cout << \"PASS: 64 GPU values (adapter chosen at runtime)\\n\";\n        return 0;\n    } catch (const std::exception& error) {\n        std::cerr << error.what() << '\\n'; return 1;\n    }\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처와 검증 범위",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "D3D12 debug 진단",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d12/understanding-the-d3d12-debug-layer"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "DRED의 기능과 한계",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d12/use-dred"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "PIX GPU captures",
+              "href": "https://devblogs.microsoft.com/pix/gpu-captures/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이 단원 실제 CPU 검증 기록",
+              "href": "/knowledge/shared/dx12-12-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 소스·미검증 기록",
+              "href": "/knowledge/shared/dx12-core-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 문서는 API 계약 확인에 사용했고 설명·게임 상황·CPU 모델·SVG·Windows 소스는 새로 작성했다. 공식 샘플의 전체 코드나 도서 지문을 복제하지 않았다. 2026-10-26에 문서를 확인했으며 기본 legacy D3D12 경로를 가르친다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실행 확인: g++ (Debian 14.2.0-19) 14.2.0 / cmake version 3.31.6 / C++17 Release CTest 1/1 및 UBSan. ASan/LeakSanitizer는 첫 시도에서 ptrace 환경 오류로 중단되어 통과로 집계하지 않았다. Windows/MSVC, HLSL, GPU, WARP, PIX/DRED, 성능은 미검증이다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "새 집필과 변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26: 신규 DirectX 12 정규 과정으로 독립 집필했다. 기존 DX9/DX11 교재를 삭제하거나 이관 실적으로 중복 집계하지 않는다. 원리 그림·Mermaid·CPU 반례·실제 Windows API 소스와 실행 한계를 함께 제공한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "HRESULT 오류, debug layer 초기화, fence 장치 제거/timeout, Present의 장치 이유 조회를 구현한다. PIX/DRED 수집과 자동 device recovery는 미구현이다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

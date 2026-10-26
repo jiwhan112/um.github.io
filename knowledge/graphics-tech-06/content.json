@@ -1,0 +1,507 @@
+{
+  "id": "knowledge--graphics-tech-06",
+  "route": "/knowledge/graphics-tech-06/",
+  "kind": "knowledge",
+  "title": "그래픽스 기술 06 · Bloom·분리형 Blur·Tone Mapping",
+  "subtitle": "밝은 신호를 추출하고 두 방향 필터를 거쳐 HDR에서 더한 뒤 표시 범위로 옮긴다.",
+  "date": "2026-10-26",
+  "category": "그래픽스 기술",
+  "topic": "graphics-tech",
+  "tags": [
+    "Bloom",
+    "Blur",
+    "HDR",
+    "Tone Mapping"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·전제·검증 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "작은 영상에서 2차원 필터와 수평·수직 분리 필터가 같은 결과를 만드는지 확인한다. bloom 합성 순서를 바꾸면 왜 결과가 달라지는지 직접 계산한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: 기존 게임 수학과 DirectX 11의 좌표·자원·파이프라인 기초. 본 과정은 API 호출 순서를 반복하는 대신 개별 기법의 수치 계약과 실패 사례에 집중한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "5×5 단일 채널의 비음수 선형 radiance 배열이다. 밝은 성분은 max(value-threshold,0), 커널은 [1/4,1/2,1/4], 경계는 clamp-to-edge다. RGB hue, 여러 mip의 bloom, exposure adaptation, 실제 GPU ping-pong 자원은 제외한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이전 단원",
+              "href": "/knowledge/graphics-tech-05/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "무엇을 번지게 할 것인가",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "화면 전체를 흐리게 만든 뒤 원본에 더하면 어두운 물체까지 밝아진다. 밝은 성분을 추출하는 정책이 먼저 필요하다. 여기서는 threshold를 뺀 양수 성분만 사용한다. 8의 입력에 threshold1이면 추출 결과7이다. 8을 그대로 남기는 hard threshold와 다르므로 아트 조절값의 의미를 문서화한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Threshold는 선형 HDR 공간에 적용한다. 톤 매핑으로1이하로 눌러 버린 영상에서 같은 숫자1을 쓰면 밝은 광원을 구분할 정보가 달라진다. 발광 마스크 기반의 stylized glow처럼 의도적으로 다른 계약을 쓰는 효과와 물리적 카메라 효과 근사를 혼동하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/graphics-tech-06/assets/separable-kernel.svg",
+          "alt": "분리형 커널은 외적으로 2D 필터를 만든다 — 밝은 신호를 추출하고 두 방향 필터를 거쳐 HDR에서 더한 뒤 표시 범위로 옮긴다.",
+          "caption": "분리형 커널은 외적으로 2D 필터를 만든다 · 자체 제작 개념도, 실제 GPU 화면이나 측정 결과가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "분리형 convolution의 계산",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2차원 커널이 수평 벡터와 수직 벡터의 외적이면 두 번의 1차원 연산으로 같은 값을 구할 수 있다. 3×3은 픽셀당9탭 대신3+3탭이다. 실습은 두 방식을 모두 구현하고25개 결과를 비교한다. 분리할 수 없는 임의 커널에 이 성질을 일반화하면 안 된다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출력과 입력을 다른 배열로 두는 것은 단순 스타일 문제가 아니다. 같은 배열을 읽고 쓰면 왼쪽에서 처리한 값이 다음 픽셀 입력에 섞여 의도한 convolution이 아니게 된다. GPU에서도 같은 subresource를 동시에 읽고 쓰는 제약과 barrier/자원 전이를 API별로 확인해야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "경계에서 무엇을 복제했는가",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가장자리 밖 샘플은 가장 가까운 texel로 clamp한다. 상수 영상3은 경계까지 계속3이어야 한다. 중앙 impulse7은 필터 뒤 총합7이지만 모든 경계 입력에서 총 에너지가 보존된다고 이 한 검사만으로 주장하지 않는다. border 정책에 따라 유한 영상의 합은 달라질 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검은 테두리나 어두워짐을 찾을 때 kernel 합이1인지와 sampler border가 무엇인지 따로 본다. 낮은 해상도 bloom을 다시 올릴 때는 다운샘플·업샘플 필터까지 추가되므로 이5×5 검사는 전체 mip pipeline의 정확성 검사가 아니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/graphics-tech-06/assets/bloom-trace.svg",
+          "alt": "Impulse 하나로 pass 순서를 확인한다 — 밝은 신호를 추출하고 두 방향 필터를 거쳐 HDR에서 더한 뒤 표시 범위로 옮긴다.",
+          "caption": "Impulse 하나로 pass 순서를 확인한다 · 자체 제작 개념도, 실제 GPU 화면이나 측정 결과가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "합성 다음 tone mapping",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본8에 blur중앙1.75를 더하면 HDR9.75다. 단순 Reinhard x/(1+x)를 적용하면 약0.907이다. Tone(8)+Tone(1.75)는 이 값과 다르다. 톤 매핑은 비선형이므로 덧셈과 교환할 수 없다. 어느 쪽을 의도했는지 렌더 그래프의 pass 위치로 드러내야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Reinhard는 작은 실습의 표시 범위 변환일 뿐 최신 엔진의 색 관리 전체를 대표하지 않는다. RGB 채널에 독립 적용하면 색상 변화가 생길 수 있고 실제 화면에는 exposure, gamut, display transfer가 더 필요하다. CPU 결과를 GPU bloom의 시각 검수 완료로 표시하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "숫자로 추적하는 한 경로",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "중앙 한 픽셀8 → threshold1을 빼서7 → 수평 중앙가중치1/2와 수직1/2를 곱해 중앙blur1.75 → 원본과 더해9.75 → Tone=9.75/10.75≈0.906977."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  N0[\"선형 HDR 영상\"]\n  N1[\"밝은 성분 추출\"]\n  N2[\"수평 blur → 별도 버퍼\"]\n  N3[\"수직 blur → 별도 버퍼\"]\n  N4[\"HDR 합성 후 tone mapping\"]\n  N0 --> N1\n  N1 --> N2\n  N2 --> N3\n  N3 --> N4"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "W×H 영상, 폭k 필터는 직접2D O(WHk²), 분리형 O(WHk)이다. 임시영상 O(WH)이 필요하다. 이 예제는 작은 고정배열이고 GPU 메모리 트래픽·dispatch overhead를 측정하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/graphics-tech-06.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "준비 도구·실행·기대 출력 README",
+              "href": "/knowledge/examples/readmes/graphics-tech-06.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다운로드는 실행이 아닙니다. CPU C++17 실습이며 실제 GPU 렌더러를 실행하지 않습니다. ZIP에는 소스와 빌드 설정만 포함합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "직접 계산하고 반례를 추가하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "첫 실행 전 위의 수치 추적을 손으로 계산한다. Run()에서 정상 입력, 경계, 거절 입력을 분류한 뒤 한 조건씩 수정하고 예상 결과를 먼저 적는다. 테스트를 삭제하지 말고 새 조건으로 추가한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "center HDR=9.75; SDR=0.906977\nPASS: 58 contract checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 실행당 58회 조건 평가가 통과했다. 반복문 sweep을 포함하며 여러 빌드 모드에서의 동일 조건 재실행을 별도 검증 개수로 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확장: 숫자 정확성 테스트를 유지한 채 시각화 버전을 만든다면 좌표·색·시간 단위를 화면에 함께 표시한다. 실제 장치와 장면으로 확인하기 전에는 GPU 품질·성능 검증 완료라고 기록하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 여섯 복습 문제",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · 이 threshold는8을 유지하는가7을 만드는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "threshold1을 빼는 max(x-1,0)라서7이다. hard threshold와 다르다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · 임의의3×3 kernel도 분리되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 수평·수직 벡터의 외적으로 표현되는 커널만 이 방식으로 같다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · 입출력 배열을 공유하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "앞서 쓴 값이 뒤 계산 입력에 섞일 수 있어 다른 필터가 된다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 중앙 impulse 합 검사만으로 모든 영상의 에너지 보존이 증명되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 유한 영상의 border 정책까지 분석해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · Tone(a+b)=Tone(a)+Tone(b)인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 본 함수는 비선형이므로 합성 순서가 결과를 바꾼다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 탭 수가9에서6으로 줄면 GPU가 반드시1.5배 빨라지는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 추가pass·자원 전환·대역폭·캐시 비용이 있어 실제 프로파일링이 필요하다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "main.cpp 원본 파일",
+              "href": "/knowledge/shared/graphics-tech-06-lab/project/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp 전체 소스 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 블록은 연결된 파일의 정확한 텍스트입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cmath>\n#include <cstddef>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <string>\n#include <vector>\nnamespace {\n    int checks = 0;\n    void Check(bool ok, const char* why) {\n        ++checks;\n        if (!ok) throw std::runtime_error(why);\n        // Release에서도 검사가 사라지지 않는다.\n    }\n    bool Near(double a, double b, double e=1e-9) {\n        return std::abs(a-b) <= e;\n    }\n    void Require(bool ok, const char* why) {\n        if (!ok) throw std::invalid_argument(why);\n    }\n    void Finite(double x) {\n        Require(std::isfinite(x), \"finite input required\");\n    }\n    template<class F> void Reject(F fn) {\n        bool rejected=false;\n        try {\n            fn();\n        } catch(const std::invalid_argument&) {\n            rejected=true;\n        }\n        Check(rejected, \"invalid input was not rejected\");\n    }\n    constexpr double PI=3.14159265358979323846;\n    using Image=std::array<double,25>;\n    // hard threshold 대신 threshold를 뺀 양수 성분을 사용한다.\n    Image Extract(const Image& src,double threshold) {\n        Finite(threshold);\n        Require(threshold>=0,\"nonnegative threshold\");\n        Image out {\n        };\n        for(std::size_t i=0;i<src.size();++i) {\n            Finite(src[i]);\n            Require(src[i]>=0,\"nonnegative radiance\");\n            out[i]=std::max(src[i]-threshold,0.0);\n        }\n        return out;\n    }\n    Image Blur(const Image& src,bool horizontal) {\n        const double w[3]= {\n            0.25,0.5,0.25\n        };\n        Image out {\n        };\n        for(int y=0;y<5;++y)for(int x=0;x<5;++x)for(int k=-1;k<=1;++k) {\n            int sx=std::clamp(x+(horizontal?k:0),0,4),sy=std::clamp(y+(horizontal?0:k),0,4);\n            out[static_cast<std::size_t>(y)*5+x]+=src[static_cast<std::size_t>(sy)*5+sx]*w[k+1];\n        }\n        return out;\n        // 별도 출력으로 읽기/쓰기 피드백을 차단한다.\n    }\n    // 분리형 결과를 비교하기 위한 독립적인 2D convolution 기준 구현이다.\n    Image BlurDirect(const Image& src) {\n        const double w[3]= {\n            0.25,0.5,0.25\n        };\n        Image out {\n        };\n        for(int y=0;y<5;++y)for(int x=0;x<5;++x)for(int j=-1;j<=1;++j)for(int i=-1;i<=1;++i) out[static_cast<std::size_t>(y)*5+x]+=src[static_cast<std::size_t>(std::clamp(y+j,0,4))*5+std::clamp(x+i,0,4)]*w[j+1]*w[i+1];\n        return out;\n    }\n    // 단순 Reinhard. RGB 색역 관리나 HDR 디스플레이 출력 구현이 아니다.\n    double Tone(double x) {\n        Finite(x);\n        Require(x>=0,\"nonnegative HDR\");\n        return x/(1+x);\n    }\n    // 중앙 impulse와 상수 영상으로 필터·경계·비선형 합성 순서를 확인한다.\n    void Run() {\n        Image impulse {\n        };\n        impulse[12]=8;\n        auto bright=Extract(impulse,1),blur=Blur(Blur(bright,true),false),direct=BlurDirect(bright);\n        Check(Near(bright[12],7),\"soft threshold difference\");\n        Check(Near(blur[12],1.75),\"center weight\");\n        double sum=0;\n        for(std::size_t i=0;i<25;++i) {\n            Check(Near(blur[i],direct[i]),\"separable equals 2d\");\n            sum+=blur[i];\n        }\n        Check(Near(sum,7),\"interior impulse sum\");\n        Image constant {\n        };\n        constant.fill(3);\n        auto smooth=Blur(Blur(constant,true),false);\n        for(double x:smooth)Check(Near(x,3),\"constant including border\");\n        Check(Near(Tone(0),0)&&Near(Tone(1),0.5),\"tone reference\");\n        Check(Tone(8+blur[12])>Tone(8),\"bloom before tone\");\n        Check(Tone(8+blur[12])<Tone(8)+Tone(blur[12]),\"tone and add not commutative\");\n        Reject([] {\n            Tone(-1);\n        });\n        Reject([&] {\n            Extract(impulse,-1);\n        });\n        std::cout<<\"center HDR=\"<<8+blur[12]<<\"; SDR=\"<<Tone(8+blur[12])<<\"\\n\";\n    }\n}\n// namespace\nint main() {\n    try {\n        Run();\n        std::cout<<\"PASS: \"<<checks<<\" contract checks\\n\";\n        return 0;\n    }catch(const std::exception& e) {\n        std::cerr<<\"FAIL: \"<<e.what()<<\"\\n\";\n        return 1;\n    }\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CMakeLists.txt 원본 파일",
+              "href": "/knowledge/shared/graphics-tech-06-lab/project/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt 전체 소스 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 블록은 연결된 파일의 정확한 텍스트입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(graphics_tech_06 LANGUAGES CXX)\nadd_executable(graphics_lab main.cpp)\ntarget_compile_features(graphics_lab PRIVATE cxx_std_17)\nset_target_properties(graphics_lab PROPERTIES CXX_EXTENSIONS OFF)\nif(MSVC)\n  target_compile_options(graphics_lab PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(graphics_lab PRIVATE -Wall -Wextra -Wpedantic)\nendif()\nenable_testing()\nadd_test(NAME contracts COMMAND graphics_lab)\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "공식 자료·검증 기록·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "NVIDIA GPU Gems · glow 추출·분리 필터·합성의 배경",
+              "href": "https://developer.nvidia.com/gpugems/gpugems/part-iv-image-processing/chapter-21-real-time-glow"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Microsoft DirectXTK · ToneMapPostProcess의 적용 맥락",
+              "href": "https://github.com/microsoft/DirectXTK/wiki/ToneMapPostProcess"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "현재 CPU 검증 로그와 파일 SHA-256",
+              "href": "/knowledge/shared/graphics-tech-06-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 공개 공식 문서·저장소를 개념과 계약 대조에 사용했습니다. 오래된 API 자료는 현재 권장 API나 성능 수치로 일반화하지 않습니다. 설명·예제·SVG는 본 교재를 위해 독립 작성했습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확인: Linux GCC 14.2.0 C++17, CMake Debug/Release CTest, UBSan. 미확인: Windows/MSVC, GPU 셰이더·실제 장면·시각 품질·GPU 성능. CPU 테스트 통과는 이 미확인 항목의 성공을 뜻하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "신규 집필·변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26: 사용자가 승인한 그래픽스 기술 정규 과정의 신규 집필입니다. 기존 문서 이관이나 예전 프로그램 복구로 집계하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 게임 수학·DirectX 교재와 URL·학습 저장 키를 변경하지 않았습니다. 본 예제는 수치 계약을 분리해 설명하는 자체 제작 CPU 실습입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문·코드·그림 작성, 로컬 검증, 저장소 반영, React 검사, Pages 배포, 실제 공개 확인은 서로 다른 단계입니다. 이 원고의 로컬 검증 기록만으로 공개 배포 완료를 선언하지 않습니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

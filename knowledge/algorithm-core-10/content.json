@@ -1,0 +1,628 @@
+{
+  "id": "knowledge--algorithm-core-10",
+  "route": "/knowledge/algorithm-core-10/",
+  "kind": "knowledge",
+  "title": "자료구조·알고리즘 10 · 그래프·BFS·DFS",
+  "subtitle": "도달 가능성과 최소 간선 수를 같은 답으로 취급하지 않는다",
+  "date": "2026-10-26",
+  "category": "알고리즘",
+  "topic": "algorithm",
+  "tags": [
+    "그래프",
+    "BFS",
+    "DFS"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·게임 개발 상황",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "발견 표시 시점과 방문 순서의 의미를 구분하고 순환·분리 그래프를 처리한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "게임 지역 연결망에서 어느 지역으로 이동 가능한지와 최소 몇 번의 지역 전환이 필요한지는 서로 다른 질문이다. 연결이 같은 비용일 때 BFS 거리는 최소 간선 수이고 DFS는 도달 여부를 조사하는 데 유용하다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 학습",
+              "href": "/knowledge/algorithm-core-09/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전제: C++20 단일 스레드 CPU 실습. 문자·파일·네트워크 입력은 없고 정수 ID와 메모리 안의 고정 시드 데이터를 사용한다. 외부 라이브러리나 실행 파일 다운로드는 필요하지 않다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "정점 번호와 간선의 유효성",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Graph는 정점별 인접 정점 번호 배열이다. 시작점과 모든 간선 목적지가0..V−1인지 먼저 확인한다. 유효하지 않은 정점을 방문한 뒤 검사하면 이미 범위 밖 접근이 발생할 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "큐에 넣을 때 발견한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "BFS는 시작점 거리0을 기록하고 큐에 넣는다. 아직 거리−1인 이웃에 거리를 기록한 즉시 큐에 추가한다. 꺼낼 때만 방문 표시하면 여러 부모가 같은 정점을 중복 삽입할 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "BFS의 층 불변식",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "큐는 거리 증가 순서로 정점을 처리한다. 거리d의 정점에서 처음 발견한 이웃은d+1이고, 더 짧은 경로가 있었다면 이전 층에서 이미 발견됐어야 한다. 이 논증은 모든 간선 비용이 같을 때 성립한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "DFS의 스택은 깊이 방향",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DFS는 최근 발견한 정점을 먼저 처리한다. 이 구현도 넣을 때 seen을 표시해 각 정점의 중복 삽입을 막는다. 반환은 bool 도달 여부이고 BFS처럼 최단 거리를 주장하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-5",
+      "title": "순환·자기 간선·분리 집합",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "방문 상태가 있으면 순환 간선으로 무한 탐색하지 않는다. 도달하지 못한 정점은 BFS−1,DFS false로 남는다. 시작점 하나의 탐색이 전체 그래프의 모든 연결 성분을 검사한 것은 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-6",
+      "title": "오라클을 다른 방식으로 만든다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "작은8정점 그래프에서 Floyd 방식의 모든 쌍 거리로 BFS 결과를 검증한다. DFS는 BFS의 도달 여부와 비교한다. 큰 실무 그래프에 이 느린 오라클을 그대로 적용하지 않고 작은 경계 실험에 사용한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-1",
+      "title": "작업 예제 · 같은 목적지의 중복 삽입을 막는다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "0→1,0→2,1→3,2→3인 지역망을 보자.0을 처리하면 큐[1,2], 거리[0,1,1,−1]이 된다.1을 처리하면서3의 거리를2로 정하고 큐[2,3]을 만든다.2가3을 다시 보더라도 이미 거리2가 기록돼 있어 큐에 또 넣지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-2",
+      "title": "작업 예제 · 순환 간선을 만났을 때",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "3→0을 추가해도0은 이미 거리0이므로 다시 넣지 않는다. 방문 표시가 없으면0,1,3,0…처럼 계속 탐색할 수 있다. 시작점이 자기 자신으로 가는 간선도 같은 규칙으로 걸러진다. 도달 불가 정점4의 자기 간선은 시작0의 탐색에 영향을 주지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-3",
+      "title": "작업 예제 · DFS 결과와 구분하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "DFS가 이웃을1,2순서로 스택에 넣으면 보통2를 먼저 꺼내는 식으로 방문 순서가 달라진다. 이웃 순서에 따라 구체적인 방문 경로가 달라도 최종 도달 집합은 같다. 이 교재의 Dfs는 방문 순서나 최단 경로가 아니라 bool집합만 반환하므로 그 계약만 검증한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-4",
+      "title": "작업 예제 · 가중치가 들어오면 왜 달라지는가",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "0→1의 이동 시간이100이고0→2→1이 각각1이라면 직접 간선은 한 번이지만 총시간100, 두 간선 경로는 총시간2다. BFS의 간선 수 최소는 여전히1이나 시간 최소는2다. 간선 비용이 같다는 증명 없이 BFS를 시간 최적 경로로 부르면 안 된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "상태를 손으로 추적하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-10/assets/trace.svg",
+          "alt": "시작0 queue=[0], d0=0 0→1,2; 0 처리 queue=[1,2], d1=d2=1 둘 다3으로 연결; 1 처리 queue=[2,3], d3=2 2는3을 다시 넣지 않음",
+          "caption": "자체 제작 상태 추적. 실행 시간 측정 그래프가 아니라 논리 상태의 변화다."
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "상태"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "시작0"
+                  }
+                ],
+                [
+                  {
+                    "text": "queue=[0], d0=0"
+                  }
+                ],
+                [
+                  {
+                    "text": "0→1,2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "0 처리"
+                  }
+                ],
+                [
+                  {
+                    "text": "queue=[1,2], d1=d2=1"
+                  }
+                ],
+                [
+                  {
+                    "text": "둘 다3으로 연결"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1 처리"
+                  }
+                ],
+                [
+                  {
+                    "text": "queue=[2,3], d3=2"
+                  }
+                ],
+                [
+                  {
+                    "text": "2는3을 다시 넣지 않음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-10/assets/invariant.svg",
+          "alt": "0: 거리0 → 1,2: 거리1 → 3: 거리2, 0으로 순환 → 4: 도달 불가, 자기 간선",
+          "caption": "BFS 층을 만드는 주요 간선만 표시했다. 코드에는 3→0 순환과 정점4의 자기 간선도 있으며 방문 표시로 중복 탐색을 막는다."
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"입력 계약과 현재 상태 확인\"] --> B[\"0: 거리0\"]\n B --> C[\"1,2: 거리1\"]\n C --> D[\"3: 거리2, 0으로 순환\"]\n D --> E[\"4: 도달 불가, 자기 간선\"]\n E --> F[\"오라클·경계 조건과 결과 비교\"]"
+        }
+      ]
+    },
+    {
+      "id": "complexity",
+      "title": "복잡도와 적용 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인접 리스트 검증·BFS·DFS 각각 O(V+E), 거리/방문/큐 또는 스택 O(V). 그래프 자체 O(V+E). 테스트용 모든 쌍 오라클은 O(V³)로 별도다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "간선마다 이동 시간이 다르면 BFS의 최소 간선 경로가 최소 시간 경로가 아니다. DFS의 첫 발견 경로도 일반적으로 최단이 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/algorithm-core-10.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "빌드·실행 README",
+              "href": "/knowledge/examples/readmes/algorithm-core-10.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축 안의 project/main.cpp와 CMakeLists.txt를 함께 사용한다. 공개 전 파일·ZIP 검증은 발행 단계에서 별도로 수행한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "BFS shortest edge counts and DFS reachability match 100 graph oracles\nPASS: 12802 contract checks\n"
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "예측 → 실행 → 반례 만들기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 위 상태 표의 다음 줄을 가리고 종이에 결과를 예측한다. 전체 소스의 Check를 읽어 정상 입력뿐 아니라 빈 값·중복·최댓값·부재 상태 중 이 자료구조에 해당하는 경계를 찾는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습 1: 테스트의 작은 입력을 한 곳 바꾸고 기대 결과를 직접 계산한 뒤 실행한다. 실습 2: 본문의 실패 사례를 설명하는 입력을 추가한다. 실습 3: 알고리즘을 수정했다면 원래 검사와 독립 오라클을 모두 다시 실행한다. 실패한 검사를 지워 통과시키지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "결과가 같다는 사실과 구현의 성능·모든 입력에 대한 정확성은 다르다. 출력의 Check 수는 루프 반복을 포함한 실행 호출 수이며 CTest에는 한 프로그램이 등록된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · 방문 표시는 언제 하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "큐나 스택에 넣을 때 한다. 이 구현에서는 같은 정점을 여러 번 넣지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · 정점4의 자기 간선이 있으면 시작0에서 발견되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0에서4로 가는 경로가 없다면 발견되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · DFS가 깊이 탐색이면 최소 거리도 아는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 여기서는 도달 여부만 반환한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 방향 그래프에서 u→v면 v→u도 있는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 역방향 이동이 필요하면 간선을 따로 넣는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · BFS의 거리−1은 오류인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "유효한 그래프에서 도달 불가를 나타내는 정상 결과다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장: 경로를 복원하려면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 발견할 때 parent[v]=u를 기록하고 목표에서 시작까지 역추적한다. 목표가 도달 불가인지 먼저 확인한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "전체 C++20 코드와 실제 파일 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "main.cpp 원본 파일",
+                  "href": "/knowledge/shared/algorithm-core-10-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "CMakeLists.txt",
+                  "href": "/knowledge/shared/algorithm-core-10-lab/project/CMakeLists.txt"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(algorithm_core_10 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(lesson main.cpp)\nif(MSVC)\n  target_compile_options(lesson PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(lesson PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME contract_tests COMMAND lesson)\n"
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <deque>\n#include <functional>\n#include <iostream>\n#include <limits>\n#include <map>\n#include <memory>\n#include <numeric>\n#include <optional>\n#include <queue>\n#include <random>\n#include <set>\n#include <stdexcept>\n#include <string>\n#include <utility>\n#include <vector>\n\n// Release 빌드에서도 사라지지 않는 계약 검사입니다.\nstatic std::size_t checks = 0;\nvoid Check(bool condition, const char* label) {\n    ++checks;\n    if (!condition) throw std::runtime_error(label);\n}\n\nusing Graph = std::vector<std::vector<std::size_t>>;\n\nvoid Validate(const Graph& graph, std::size_t start) {\n    if (graph.empty() || graph.size() > 1000 || start >= graph.size()) {\n        throw std::invalid_argument(\"graph range\");\n    }\n    for (const auto& neighbors : graph) {\n        for (auto vertex : neighbors) {\n            if (vertex >= graph.size()) {\n                throw std::invalid_argument(\"bad edge\");\n            }\n        }\n    }\n}\n\nstd::vector<int> Bfs(const Graph& graph, std::size_t start) {\n    Validate(graph, start);\n    std::vector<int> distance(graph.size(), -1);\n    std::queue<std::size_t> queue;\n    distance[start] = 0;\n    queue.push(start);\n    while (!queue.empty()) {\n        const auto current = queue.front();\n        queue.pop();\n        for (auto next : graph[current]) {\n            if (distance[next] == -1) {\n                // 큐에 넣는 순간 발견 표시를 하므로 중복 삽입하지 않습니다.\n                distance[next] = distance[current] + 1;\n                queue.push(next);\n            }\n        }\n    }\n    return distance;\n}\n\nstd::vector<bool> Dfs(const Graph& graph, std::size_t start) {\n    Validate(graph, start);\n    std::vector<bool> seen(graph.size(), false);\n    std::vector<std::size_t> stack{start};\n    seen[start] = true;\n    while (!stack.empty()) {\n        const auto current = stack.back();\n        stack.pop_back();\n        for (auto next : graph[current]) {\n            if (!seen[next]) {\n                seen[next] = true;\n                stack.push_back(next);\n            }\n        }\n    }\n    return seen;\n}\n\nint main() {\n    Graph graph{{1, 2}, {3}, {3}, {0}, {4}};\n    Check(Bfs(graph, 0) == std::vector<int>({0, 1, 1, 2, -1}), \"cycle and disconnected\");\n    std::mt19937 rng(1000);\n    for (int trial = 0; trial < 100; ++trial) {\n        Graph random(8);\n        std::array<std::array<int, 8>, 8> distance{};\n        for (int i = 0; i < 8; ++i) {\n            for (int j = 0; j < 8; ++j) {\n                distance[i][j] = i == j ? 0 : 100;\n            }\n        }\n        for (std::size_t i = 0; i < 8; ++i) {\n            for (std::size_t j = 0; j < 8; ++j) {\n                if (rng() % 5 == 0) {\n                    random[i].push_back(j);\n                    distance[i][j] = std::min(distance[i][j], 1);\n                }\n            }\n        }\n        // 작은 그래프의 모든 쌍 최단 거리를 독립 기준 해법으로 계산합니다.\n        for (int k = 0; k < 8; ++k) {\n            for (int i = 0; i < 8; ++i) {\n                for (int j = 0; j < 8; ++j) {\n                    distance[i][j] = std::min(distance[i][j], distance[i][k] + distance[k][j]);\n                }\n            }\n        }\n        for (std::size_t start = 0; start < 8; ++start) {\n            const auto breadth = Bfs(random, start);\n            const auto depth = Dfs(random, start);\n            for (std::size_t vertex = 0; vertex < 8; ++vertex) {\n                const int expected = distance[start][vertex] >= 100 ? -1 : distance[start][vertex];\n                Check(breadth[vertex] == expected, \"all-pairs oracle\");\n                Check(depth[vertex] == (breadth[vertex] >= 0), \"DFS reachability\");\n            }\n        }\n    }\n    bool rejected = false;\n    try {\n        Bfs({{2}}, 0);\n    } catch (const std::invalid_argument&) {\n        rejected = true;\n    }\n    Check(rejected, \"edge validation\");\n    std::cout << \"BFS shortest edge counts and DFS reachability match 100 graph oracles\\n\";\n    std::cout << \"PASS: \" << checks << \" contract checks\\n\";\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·실행 검증·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "개념·계약 확인에 사용한 공개 자료",
+              "href": "https://opendatastructures.org/ods-cpp/12_Graphs.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부 자료는 용어와 계약 확인용이다. 게임 상황·설명·그림·C++ 구현과 테스트는 독립 작성했으며 특정 책의 지문·공식 해설을 옮기지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "실제 실행 결과와 소스 SHA-256",
+              "href": "/knowledge/shared/algorithm-core-10-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 Linux GCC 14.2.0 C++20 Release CMake/CTest 1/1 및 별도 UBSan 실행을 확인했다. Windows/MSVC·Clang·GPU·성능 벤치마크·다중 스레드는 검증하지 않았다. 원고의 로컬 검증과 웹 공개 검증은 서로 다른 단계다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "집필 이력·다음 연결",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 신규 정규 과정으로 독립 집필. 기존 교재·URL·학습 저장 식별자를 대체하거나 삭제하지 않는다. 알고리즘 정규 과정은 비용 모델→저장 구조→정렬/탐색→그래프→동적 계획법으로 이어진다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "기존 LIS 심화·복원 교재",
+              "href": "/knowledge/algorithm-lis/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 정규 단원",
+              "href": "/knowledge/algorithm-core-11/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

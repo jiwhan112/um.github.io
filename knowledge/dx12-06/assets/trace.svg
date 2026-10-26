@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="620" viewBox="0 0 1080 620" role="img">
+<title>DirectX 12 06 · 실행 계약 시각화</title>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#34d399"/></marker></defs>
+<rect width="1080" height="620" rx="18" fill="#0f172a"/>
+<text x="36" y="53" fill="#f8fafc" font-family="sans-serif" font-size="29">Root 슬롯과 HLSL 레지스터 매핑</text>
+<rect x="40" y="120" width="300" height="110" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="54" y="183.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">root slot 0</text>
+<rect x="410" y="120" width="260" height="110" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="424" y="183.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">SRV table</text>
+<rect x="745" y="120" width="290" height="110" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="759" y="183.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">HLSL t0</text>
+<path d="M350 175 L400 175" stroke="#34d399" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M680 175 L735 175" stroke="#34d399" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="40" y="310" width="300" height="110" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="54" y="373.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">root slot 1</text>
+<rect x="410" y="310" width="260" height="110" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="424" y="373.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">4 constants</text>
+<rect x="745" y="310" width="290" height="110" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="759" y="373.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">HLSL b0</text>
+<path d="M350 365 L400 365" stroke="#34d399" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M680 365 L735 365" stroke="#34d399" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="55" y="510" fill="#34d399" font-family="sans-serif" font-size="27">비용: table 1 + constants 4 = 5 DWORD</text>
+<text x="55" y="555" fill="#e2e8f0" font-family="sans-serif" font-size="22">static sampler s0는 이 DWORD 크기 합계 밖이다.</text>
+<text x="35" y="603" fill="#94a3b8" font-family="sans-serif" font-size="17">자체 제작 개념도 · 실제 GPU 캡처 또는 측정 결과가 아닙니다</text>
+</svg>

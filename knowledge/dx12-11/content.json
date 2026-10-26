@@ -1,0 +1,554 @@
+{
+  "id": "knowledge--dx12-11",
+  "route": "/knowledge/dx12-11/",
+  "kind": "knowledge",
+  "title": "DirectX 12 11 · Compute·Multi-Queue · 의존성 그래프",
+  "subtitle": "Dispatch 범위, queue Wait, readback fence를 한 흐름으로 묶는다",
+  "date": "2026-10-26",
+  "category": "DirectX 12",
+  "topic": "dx12",
+  "tags": [
+    "DirectX 12",
+    "Compute",
+    "Multi Queue",
+    "Readback"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표와 구현 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "compute가 쓴 값을 copy queue가 옮기고 CPU가 읽는 세 단계의 선후 관계를 설명한다. 여러 큐를 만들었다는 사실과 실제 병렬 실행·성능 향상을 구분한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 단원의 실행 경계: 실제 compute queue→copy queue→CPU readback 체인과 64값 비교 프로그램을 제공한다. Windows 실행 및 GPU 비교 통과는 미확인이다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "title": "CPU 통과와 Windows/GPU 미검증을 구분합니다",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Linux의 C++17 CPU 계약 검사는 실제 실행했습니다. 공유 Windows 소스는 전체 구현을 제공하지만 Windows/MSVC·HLSL 컴파일·WARP·하드웨어 GPU·debug layer·PIX/DRED 실행은 아직 확인하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 교재: DirectX 11 카탈로그",
+              "href": "/knowledge/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이전 단원 DX12 10",
+              "href": "/knowledge/dx12-10/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "64개의 결과를 눈 대신 숫자로 확인하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공유 compute 프로그램은 uint 배열 64개에 i×i+7을 기록한다. HLSL은 numthreads(32,1,1), C++은 Dispatch(2,1,1)을 사용한다. 결과는 READBACK buffer로 복사해 CPU가 기대값과 비교한다. 이것은 작성된 Windows 실행 경로이며 이번 클라우드에서 GPU 출력 64개를 실제 얻었다고 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "count가 65라면 그룹은 3개지만 마지막 그룹의 일부 스레드는 범위 밖이다. shader는 id.x<count를 검사한다. CPU Groups 모델은 덧셈 오버플로를 피한 나눗셈/나머지 방식으로 그룹 수를 계산한다. root UAV 주소만 넘겼다고 HLSL 접근 범위가 자동으로 안전해지는 것은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/dx12-11/assets/flow.svg",
+          "alt": "Compute Dispatch · Signal computeDone · Copy queue Wait → Copy · CPU waits copyDone → Map",
+          "caption": "자체 제작 책임 흐름도. 실제 GPU 배치나 실행 캡처가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "큐 사이에 선을 그리기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "compute queue에 Dispatch와 COMMON 전환을 제출한 뒤 computeDone=1을 Signal한다. copy queue는 computeDone=1을 Wait한 다음 COPY_SOURCE 전환과 CopyBufferRegion을 수행하고 copyDone=1을 Signal한다. CPU는 copyDone을 기다려야 readback을 읽는다. 순서가 코드의 CPU 호출 순서에만 의존하지 않도록 GPU 큐 의존성을 명시했다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "queue->Wait는 큐가 다른 fence를 기다리게 하며 CPU 스레드를 해당 완료까지 막는 함수가 아니다. CPU 대기는 SetEventOnCompletion과 OS event를 통해 따로 구현한다. 두 대기를 구별하면 CPU를 불필요하게 멈추지 않고도 GPU 의존성을 연결할 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "상태와 완료 두 조건",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "compute가 쓴 UAV buffer를 copy queue로 넘기기 전에 COMMON 상태로 되돌린다. copy queue는 COMMON→COPY_SOURCE→COMMON을 기록한다. 상태 전환만 있고 Wait가 없으면 실행 순서가 없고, Wait만 있고 잘못된 state이면 사용 계약이 틀린다. 둘 중 하나를 다른 하나의 대체물로 취급하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본 프로그램은 한 번 계산하고 한 번 복사하는 직렬 의존 체인이다. async compute로 graphics와 겹쳐 처리량을 높이는 장면은 없다. 실제 하드웨어가 큐를 어떻게 스케줄하는지, 경쟁 자원 때문에 빨라지는지는 프로파일해야 한다. 큐 개수만으로 병렬도나 성능을 결론 내리지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/dx12-11/assets/trace.svg",
+          "alt": "64 / 32 → 2 groups · 65 / 32 → 3 groups + bounds check · Queue Wait ≠ CPU wait · A waits B, B waits A → cycle",
+          "caption": "수업에서 비교하는 조건과 반례. GPU 성능 수치가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "교착을 그래프로 찾기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CPU Acyclic 모델에서 간선 A→B는 B가 A의 완료를 필요로 한다는 의미다. compute→copy→CPU는 순환이 없지만 A→B와 B→A를 동시에 넣으면 둘 다 상대를 기다리는 사이클이 생긴다. 위상 정렬로 방문한 노드 수가 전체와 같은지 확인한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 여러 제출에서는 fence 값까지 노드에 포함해야 한다. 동일 queue 이름만 노드로 쓰면 서로 다른 시점의 유효한 의존성을 잘못 합칠 수 있다. 모델은 정적 그래프의 순환만 검사하며 드라이버 스케줄러나 OS thread 동기화를 시뮬레이션하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contract-map",
+      "title": "구현 순서와 확인 지점",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  N0[\"Compute Dispatch\"] --> N1\n  N1[\"Signal computeDone\"] --> N2\n  N2[\"Copy queue Wait → Copy\"] --> N3\n  N3[\"CPU waits copyDone → Map\"]"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "그림을 API 이름으로만 외우지 말고 각 화살표가 요구하는 상태·수명·완료 근거를 한 문장씩 적는다. 생략한 기능은 검증된 기능으로 표시하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · CPU와 Windows 프로젝트",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/dx12-11.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "준비·빌드·기대 결과·미검증 범위 README",
+              "href": "/knowledge/examples/readmes/dx12-11.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "ZIP의 project/는 이 단원 CPU 테스트, windows/는 12단원이 공유하는 실제 D3D12 프로그램 전체 소스다. 같은 Windows 소스를 여러 단원에서 재사용하며 서로 다른 GPU 실행 실적 12개로 세지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "직접 실행하고 반례를 설명하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 코드의 각 Reject 조건이 왜 실패해야 하는지 예상한다. 정상 값뿐 아니라 경계·잘못된 입력·실패 후 상태 보존을 확인한다. API와 다른 모델의 제한을 적고 Windows 프로그램의 대응 함수와 비교한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build --config Release\nctest --test-dir build -C Release --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "PASS DX12-11: 10 CPU contract checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출력의 조건 수는 한 프로그램 안의 결정적 검사 횟수다. CTest 케이스 수·GPU 작업 수·성능 표본 수가 아니다. UBSan 별도 실행도 같은 조건을 다시 확인한 것이며 조건 수를 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows 검증은 별도 단계다. Developer PowerShell에서 cmake -S windows -B win-build -A x64 후 cmake --build win-build --config Debug를 실행하고 README의 renderer/compute 명령을 사용한다. 이번 환경에서는 이 명령을 실행하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · queue Wait 호출이 CPU를 막는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "GPU 큐에 대기를 걸며 CPU 대기는 별도 event/fence 경로다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · count=65,threads=32면 groups는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "3이다. 마지막 그룹의 범위 밖 스레드는 shader에서 쓰지 않아야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · Map이 copy 완료를 기다려 주나?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. CPU는 copyDone fence 완료를 먼저 확인한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 두 큐면 항상 더 빠른가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 실제 overlap·하드웨어 자원 경쟁·동기화 비용을 측정해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · 상태를 COMMON으로 바꾸면 의존성이 생기는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 큐 간 Signal/Wait도 필요하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장 과제: 그래픽스 소비 노드 추가",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "compute 결과를 graphics가 읽는 edge와 retirement를 포함해 사이클 없는 제출 그래프를 그린다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "CPU 계약 검사 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CPU 계약 검사 전체 소스",
+              "href": "/knowledge/shared/dx12-11-lab/project/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "한국어 주석 CPU 전체 코드 보기",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <cstddef>\n#include <utility>\n#include <cstring>\n#include <iostream>\n#include <limits>\n#include <map>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\n// GPU 호출이 아닌, 이 단원의 명시적 계약을 검증하는 결정적 CPU 모델이다.\nstatic unsigned checks = 0;\nvoid Check(bool condition, const char* name) {\n    ++checks;\n    if (!condition) throw std::runtime_error(name); // Release에서도 검사를 유지한다.\n}\ntemplate < class F > void Reject(F action, const char* name) {\n    bool rejected = false;\n    try {\n        action();\n    } catch (const std::exception&) {\n        rejected = true;\n    }\n    Check(rejected, name);\n}\n\nbool Acyclic(unsigned nodes, const std::vector < std::pair < unsigned, unsigned >> & edges) {\n    std::vector < unsigned > indegree(nodes, 0);\n    std::vector < std::vector < unsigned >> out(nodes);\n    for (auto edge:edges) {\n        if (edge.first >= nodes || edge.second >= nodes) throw std::out_of_range(\"node\");\n        out[edge.first].push_back(edge.second);\n        ++indegree[edge.second];\n    }\n    std::vector < unsigned > ready;\n    for (unsigned i = 0;i < nodes;++i) if (indegree[i] == 0) ready.push_back(i);\n    std::size_t done = 0;\n    while (done < ready.size()) { auto n = ready[done++];\n    for (auto v:out[n]) if (--indegree[v] == 0) ready.push_back(v);\n    }\n    return done == nodes;\n}\nunsigned Groups(unsigned count, unsigned threads) {\n    if (threads == 0) throw std::invalid_argument(\"zero threads\");\n    return count/threads+(count%threads != 0); // count+threads-1 오버플로 회피\n}\nint main() {\n    try {\n        Check(Acyclic(3, {{0, 1}, {1, 2}}), \"compute copy CPU chain\");\n        Check(!Acyclic(2, {{0, 1}, {1, 0}}), \"two queue wait cycle\");\n        Check(!Acyclic(1, {{0, 0}}), \"self wait\");\n        Check(Acyclic(0, {}), \"empty graph\");\n        Reject([] { Acyclic(2, {{0, 2}}); }, \"bad edge\");\n        Check(Groups(64, 32) == 2, \"two dispatch groups\");\n        Check(Groups(65, 32) == 3, \"partial group needs shader bound\");\n        Check(Groups(0, 32) == 0, \"empty dispatch planning\");\n        Check(Groups(UINT32_MAX, 32) == 134217728u, \"ceil without addition overflow\");\n        Reject([] { Groups(1, 0); }, \"invalid group size\");\n        std::cout << \"PASS DX12-11: \" << checks << \" CPU contract checks\\n\";\n        return 0;\n    } catch (const std::exception& e) {\n        std::cerr << e.what() << '\\n';\n        return 1;\n    }\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "windows-source",
+      "title": "Windows 실제 API 발췌와 전체 파일",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Windows/MSVC·HLSL 컴파일·WARP·하드웨어 GPU·debug layer 실행은 미검증이다. 아래 발췌는 탐색용이며 독립 실행 가능한 전체 소스가 아니다. 전체 파일 링크와 ZIP의 windows/ 프로젝트를 함께 사용한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음은 아래 전체 Windows 파일에서 해당 경로를 찾기 위한 발췌다. 독립 실행 파일이 아니며 전체 CMake 프로젝트와 함께 읽는다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "실제 API 경로 발췌 · compute.cpp",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "        ID3D12CommandList* first[] = {computeList.Get()}; computeQueue->ExecuteCommandLists(1, first);\n        Check(computeQueue->Signal(computeDone.Get(), 1), \"Signal compute completion\");\n        // GPU 큐 대기이므로 호출한 CPU 스레드는 이 지점에서 완료를 기다리지 않는다.\n        Check(copyQueue->Wait(computeDone.Get(), 1), \"Copy queue wait\");\n        ID3D12CommandList* second[] = {copyList.Get()}; copyQueue->ExecuteCommandLists(1, second);\n        Check(copyQueue->Signal(copyDone.Get(), 1), \"Signal copy completion\");\n        WaitForFence(copyDone.Get(), 1, event.value);\n        void* mapped = nullptr; D3D12_RANGE readRange{0, static_cast<SIZE_T>(Bytes)};\n        Check(readback->Map(0, &readRange, &mapped), \"Map readback\");\n        bool matches = true;\n        for (UINT i = 0; i < Count; ++i) {\n            std::uint32_t actual = 0;\n            std::memcpy(&actual, static_cast<const unsigned char*>(mapped) + i * sizeof actual, sizeof actual);\n            if (actual != i * i + 7) matches = false;\n        }\n        D3D12_RANGE noWrite{0, 0}; readback->Unmap(0, &noWrite);\n        if (!matches) throw std::runtime_error(\"GPU result mismatch\");\n        std::cout << \"PASS: 64 GPU values (adapter chosen at runtime)\\n\";\n        return 0;\n    } catch (const std::exception& error) {\n        std::cerr << error.what() << '\\n'; return 1;\n    }\n}"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · CMakeLists.txt",
+              "href": "/knowledge/shared/dx12-core-lab/project/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · dx12_common.hpp",
+              "href": "/knowledge/shared/dx12-core-lab/project/dx12_common.hpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · renderer.cpp",
+              "href": "/knowledge/shared/dx12-core-lab/project/renderer.cpp"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 전체 소스 · compute.cpp",
+              "href": "/knowledge/shared/dx12-core-lab/project/compute.cpp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처와 검증 범위",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "멀티 엔진 queue 동기화",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d12/user-mode-heap-synchronization"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Readback buffer와 fence",
+              "href": "https://learn.microsoft.com/en-us/windows/win32/direct3d12/readback-data-using-heaps"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "이 단원 실제 CPU 검증 기록",
+              "href": "/knowledge/shared/dx12-11-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "공유 Windows 소스·미검증 기록",
+              "href": "/knowledge/shared/dx12-core-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 문서는 API 계약 확인에 사용했고 설명·게임 상황·CPU 모델·SVG·Windows 소스는 새로 작성했다. 공식 샘플의 전체 코드나 도서 지문을 복제하지 않았다. 2026-10-26에 문서를 확인했으며 기본 legacy D3D12 경로를 가르친다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실행 확인: g++ (Debian 14.2.0-19) 14.2.0 / cmake version 3.31.6 / C++17 Release CTest 1/1 및 UBSan. ASan/LeakSanitizer는 첫 시도에서 ptrace 환경 오류로 중단되어 통과로 집계하지 않았다. Windows/MSVC, HLSL, GPU, WARP, PIX/DRED, 성능은 미검증이다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "새 집필과 변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26: 신규 DirectX 12 정규 과정으로 독립 집필했다. 기존 DX9/DX11 교재를 삭제하거나 이관 실적으로 중복 집계하지 않는다. 원리 그림·Mermaid·CPU 반례·실제 Windows API 소스와 실행 한계를 함께 제공한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 compute queue→copy queue→CPU readback 체인과 64값 비교 프로그램을 제공한다. Windows 실행 및 GPU 비교 통과는 미확인이다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

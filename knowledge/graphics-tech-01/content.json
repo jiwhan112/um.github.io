@@ -1,0 +1,534 @@
+{
+  "id": "knowledge--graphics-tech-01",
+  "route": "/knowledge/graphics-tech-01/",
+  "kind": "knowledge",
+  "title": "그래픽스 기술 01 · 색 공간·sRGB·선형 합성·HDR 경계",
+  "subtitle": "0.5라는 숫자의 의미부터 분리하고, 빛을 섞는 공간과 저장하는 신호를 구별한다.",
+  "date": "2026-10-26",
+  "category": "그래픽스 기술",
+  "topic": "graphics-tech",
+  "tags": [
+    "색 공간",
+    "sRGB",
+    "선형 합성",
+    "HDR"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·전제·검증 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검은색과 흰색을 반씩 섞었을 때 저장 신호 0.5와 선형 밝기 0.5가 왜 다른지 수치로 설명한다. 투명 UI와 발광 효과를 다룰 때 RGB 변환, alpha 합성, 노출·톤 매핑이 각각 어느 단계인지 표시한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "선수: 기존 게임 수학과 DirectX 11의 좌표·자원·파이프라인 기초. 본 과정은 API 호출 순서를 반복하는 대신 개별 기법의 수치 계약과 실패 사례에 집중한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예제의 RGB는 sRGB 색도계의 SDR 신호 [0,1]이고 alpha는 [0,1]의 합성 가중치다. 계산은 double, 색역 변환·디스플레이 보정·HDR10 출력은 제외한다. premultiplied 색의 내부 RGB는 이미 선형이라는 계약을 지킨다. 외부 파일이나 사용자 입력은 읽지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "같은 RGB 배열에도 단위가 있다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "텍스처에서 읽은 0.5를 곧바로 광원 세기의 절반으로 간주하면, 저장 형식과 계산 공간을 섞게 된다. 이 실습의 Decode(0.5)는 약 0.214다. 반면 선형 에너지 0.5를 Encode하면 약 0.735가 된다. 숫자를 로그에 출력할 때 linear 또는 encoded 접미사를 붙이는 습관만으로도 두 번 디코딩하거나 감마를 빠뜨린 오류를 찾기 쉽다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "sRGB 전송 함수는 단일 pow(x,2.2)가 아니라 어두운 구간의 직선과 나머지 거듭제곱을 연결한 함수다. 코드가 경계 0.04045와 0.0031308을 따로 검사하는 이유는 화면의 중간 회색 하나만으로는 분기 오류를 발견할 수 없기 때문이다. 본문 그림은 전달 함수의 그래프이며 모니터로 측정한 감마 곡선이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/graphics-tech-01/assets/transfer.svg",
+          "alt": "sRGB 신호와 선형 밝기는 같은 축이 아니다 — 0.5라는 숫자의 의미부터 분리하고, 빛을 섞는 공간과 저장하는 신호를 구별한다.",
+          "caption": "sRGB 신호와 선형 밝기는 같은 축이 아니다 · 자체 제작 개념도, 실제 GPU 화면이나 측정 결과가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "합성은 디코딩 뒤에 한 번",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "불투명한 검정과 흰색의 평균을 구한다고 하자. 신호 평균은 0.5지만 올바른 선형 평균은 (0+1)/2=0.5를 다시 인코딩한 약 0.735다. 후자가 무조건 보기 좋다는 미적 주장보다 중요한 것은 선택한 빛의 계산 모델과 일치한다는 점이다. 아트 파이프라인이 의도적으로 비선형 연산을 쓰면 그 이유를 별도 정책으로 기록한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "텍스처 SRV가 sRGB 디코딩을 수행하면 셰이더에서 Decode를 또 호출하지 않는다. 출력 RTV가 sRGB 인코딩을 수행하면 Encode를 다시 적용하지 않는다. normal, roughness, metallic 같은 데이터 텍스처는 색 신호가 아니므로 sRGB 플래그를 일괄 적용하면 안 된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "Alpha와 premultiplication",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "RGB를 선형으로 만든 뒤 alpha를 곱하고 front + back*(1-front.a)를 계산한다. 붉은색 alpha 0.5를 불투명 파랑 위에 올리면 선형 결과 (0.5,0,0.5), alpha=1이다. source alpha를 RGB에 이미 곱했는데 blend state에서도 한 번 더 곱하면 이중 감쇠가 생긴다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Alpha 채널에 sRGB 곡선을 적용하지 않는다. alpha=0인 texel의 RGB를 어떻게 관리하는지, 선형 premultiplied 상태에서 필터링하는지까지 맞춰야 투명 가장자리의 검거나 밝은 테두리를 줄일 수 있다. 본 예제는 색 두 개의 합성 계약만 검증하며 텍스처 필터링을 실행하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/graphics-tech-01/assets/blend.svg",
+          "alt": "평균을 내는 순서가 결과를 바꾼다 — 0.5라는 숫자의 의미부터 분리하고, 빛을 섞는 공간과 저장하는 신호를 구별한다.",
+          "caption": "평균을 내는 순서가 결과를 바꾼다 · 자체 제작 개념도, 실제 GPU 화면이나 측정 결과가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "HDR에서 Encode를 호출할 시점",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "HDR 선형 값 8은 잘못된 색이 아니라 SDR 기준보다 큰 빛의 표현일 수 있다. 여기의 Encode는 SDR 전용이므로 2를 받으면 예외를 낸다. 조용히 clamp하지 않는 이유는 톤 매핑을 생략한 상위 호출 오류를 드러내기 위해서다. HDR 누적→노출/톤 매핑→SDR 인코딩의 경계가 분명해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확장 과제로 빨간 발광체를 blur한 뒤 합성하되 선형 버퍼를 유지한다. 06장의 bloom 실습이 이 경계를 이어받는다. 실제 HDR 출력은 색역, 백색점, 메타데이터와 디스플레이 EOTF 계약이 더 필요하므로 이 SDR 예제를 HDR10 구현으로 부르지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "숫자로 추적하는 한 경로",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기준 계산: Decode(0)=0, Decode(1)=1 → 선형 평균 0.5 → Encode(0.5)=0.735357. 잘못된 경로는 먼저 (0+1)/2=0.5 신호를 만들며 디코딩하면 0.214가 되어 같은 광량을 나타내지 못한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n  N0[\"sRGB RGB 입력\"]\n  N1[\"한 번 디코딩\"]\n  N2[\"선형 RGB × alpha\"]\n  N3[\"premultiplied over 합성\"]\n  N4[\"SDR 범위 확인 후 인코딩\"]\n  N0 --> N1\n  N1 --> N2\n  N2 --> N3\n  N3 --> N4"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "픽셀당 전송·합성은 O(1) 시간과 O(1) 추가 공간이다. N개 픽셀은 O(N)이다. CPU double의 pow 비용을 GPU 하드웨어 sRGB 변환 비용과 비교한 벤치마크는 수행하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/graphics-tech-01.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "준비 도구·실행·기대 출력 README",
+              "href": "/knowledge/examples/readmes/graphics-tech-01.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다운로드는 실행이 아닙니다. CPU C++17 실습이며 실제 GPU 렌더러를 실행하지 않습니다. ZIP에는 소스와 빌드 설정만 포함합니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "직접 계산하고 반례를 추가하기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "첫 실행 전 위의 수치 추적을 손으로 계산한다. Run()에서 정상 입력, 경계, 거절 입력을 분류한 뒤 한 조건씩 수정하고 예상 결과를 먼저 적는다. 테스트를 삭제하지 말고 새 조건으로 추가한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Debug\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "linear blend encoded=0.735357; encoded-space blend=0.5\nPASS: 1013 contract checks\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 실행당 1013회 조건 평가가 통과했다. 반복문 sweep을 포함하며 여러 빌드 모드에서의 동일 조건 재실행을 별도 검증 개수로 합산하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확장: 숫자 정확성 테스트를 유지한 채 시각화 버전을 만든다면 좌표·색·시간 단위를 화면에 함께 표시한다. 실제 장치와 장면으로 확인하기 전에는 GPU 품질·성능 검증 완료라고 기록하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 여섯 복습 문제",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · 0.5 신호는 빛의 절반인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 이 sRGB 함수에서 약 0.214 선형 값이다. 0.5 선형 값을 저장하면 약 0.735 신호다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · alpha에도 Decode를 적용하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. alpha는 이 예제의 선형 합성 가중치다. RGB 전송 함수와 분리한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · sRGB SRV와 수동 Decode를 함께 켜면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 색에 변환을 두 번 적용할 수 있다. SRV 형식과 셰이더 계약 중 한 곳에서 수행한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · Encode(2)가 예외인 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "SDR 함수의 정의역 밖이다. 상위 단계에서 노출·톤 매핑을 수행할지 결정해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · alpha=0인 흰색을 파랑 위에 올리면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "premultiplied RGB가 모두 0이라 파랑이 그대로 남는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 왕복 검사 1001개가 디스플레이 색 정확성을 증명하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 주어진 double 전달 함수의 수치 왕복만 검사한다. 실제 패널·프로파일·색역은 미검증이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "main.cpp 원본 파일",
+              "href": "/knowledge/shared/graphics-tech-01-lab/project/main.cpp"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "main.cpp 전체 소스 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 블록은 연결된 파일의 정확한 텍스트입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cmath>\n#include <cstddef>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <string>\n#include <vector>\nnamespace {\n    int checks = 0;\n    void Check(bool ok, const char* why) {\n        ++checks;\n        if (!ok) throw std::runtime_error(why);\n        // Release에서도 검사가 사라지지 않는다.\n    }\n    bool Near(double a, double b, double e=1e-9) {\n        return std::abs(a-b) <= e;\n    }\n    void Require(bool ok, const char* why) {\n        if (!ok) throw std::invalid_argument(why);\n    }\n    void Finite(double x) {\n        Require(std::isfinite(x), \"finite input required\");\n    }\n    template<class F> void Reject(F fn) {\n        bool rejected=false;\n        try {\n            fn();\n        } catch(const std::invalid_argument&) {\n            rejected=true;\n        }\n        Check(rejected, \"invalid input was not rejected\");\n    }\n    constexpr double PI=3.14159265358979323846;\n    // RGB 신호 값만 변환한다. alpha는 빛의 세기가 아니라 합성 가중치다.\n    // 어두운 구간의 선형 toe와 나머지 거듭제곱 구간을 구분한다.\n    double Decode(double s) {\n        Finite(s);\n        Require(s>=0 && s<=1, \"sRGB signal in [0,1]\");\n        return s<=0.04045 ? s/12.92 : std::pow((s+0.055)/1.055,2.4);\n    }\n    double Encode(double l) {\n        Finite(l);\n        Require(l>=0 && l<=1, \"SDR linear input in [0,1]\");\n        return l<=0.0031308 ? 12.92*l : 1.055*std::pow(l,1.0/2.4)-0.055;\n    }\n    struct Color {\n        double r,g,b,a;\n    };\n    Color Premultiply(Color c) {\n        Finite(c.a);\n        Require(c.a>=0&&c.a<=1,\"alpha in [0,1]\");\n        return {\n            Decode(c.r)*c.a,Decode(c.g)*c.a,Decode(c.b)*c.a,c.a\n        };\n    }\n    // RGB는 이미 alpha가 곱해져 있으므로 source alpha를 다시 곱하지 않는다.\n    Color Over(Color front, Color back) {\n        // 두 입력은 이미 선형·premultiplied 상태라는 내부 계약이다.\n        const double remain=1-front.a;\n        return {\n            front.r+back.r*remain,front.g+back.g*remain, front.b+back.b*remain,front.a+back.a*remain\n        };\n    }\n    // 경계값, 왕복 오차, 잘못된 신호 평균과 합성 불변식을 독립적으로 확인한다.\n    void Run() {\n        Check(Near(Decode(0),0),\"black\");\n        Check(Near(Decode(1),1),\"white\");\n        Check(Near(Decode(0.04045),0.04045/12.92),\"toe branch\");\n        Check(Near(Encode(0.0031308),0.0031308*12.92),\"encode toe\");\n        for(int i=0;i<=1000;++i) {\n            const double s=i/1000.0;\n            Check(Near(Encode(Decode(s)),s,3e-7),\"round trip\");\n        }\n        const double correct=Encode((Decode(0)+Decode(1))*0.5);\n        Check(correct>0.73 && correct<0.74,\"linear white-black average\");\n        Check(Decode(0.5)<0.22,\"signal half is not energy half\");\n        const auto red=Premultiply( {\n            1,0,0,0.5\n        });\n        const auto blue=Premultiply( {\n            0,0,1,1\n        });\n        auto mixed=Over(red,blue);\n        Check(Near(mixed.r,0.5)&&Near(mixed.b,0.5)&&Near(mixed.a,1),\"over\");\n        auto invisible=Over(Premultiply( {\n            1,1,1,0\n        }),blue);\n        Check(Near(invisible.r,0)&&Near(invisible.b,1),\"transparent color\");\n        Reject([] {\n            Premultiply( {\n                1,1,1,2\n            });\n        });\n        Reject([] {\n            Decode(-0.1);\n        });\n        Reject([] {\n            Encode(2);\n        });\n        Reject([] {\n            Decode(std::numeric_limits<double>::quiet_NaN());\n        });\n        std::cout<<\"linear blend encoded=\"<<correct<<\"; encoded-space blend=0.5\\n\";\n    }\n}\n// namespace\nint main() {\n    try {\n        Run();\n        std::cout<<\"PASS: \"<<checks<<\" contract checks\\n\";\n        return 0;\n    }catch(const std::exception& e) {\n        std::cerr<<\"FAIL: \"<<e.what()<<\"\\n\";\n        return 1;\n    }\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "CMakeLists.txt 원본 파일",
+              "href": "/knowledge/shared/graphics-tech-01-lab/project/CMakeLists.txt"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "CMakeLists.txt 전체 소스 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 블록은 연결된 파일의 정확한 텍스트입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(graphics_tech_01 LANGUAGES CXX)\nadd_executable(graphics_lab main.cpp)\ntarget_compile_features(graphics_lab PRIVATE cxx_std_17)\nset_target_properties(graphics_lab PROPERTIES CXX_EXTENSIONS OFF)\nif(MSVC)\n  target_compile_options(graphics_lab PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(graphics_lab PRIVATE -Wall -Wextra -Wpedantic)\nendif()\nenable_testing()\nadd_test(NAME contracts COMMAND graphics_lab)\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "reference.hlsl 원본 파일",
+              "href": "/knowledge/shared/graphics-tech-01-lab/project/reference.hlsl"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "reference.hlsl 전체 소스 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 블록은 연결된 파일의 정확한 텍스트입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "hlsl",
+              "text": "// 셰이더 통합용 보조 함수. 이 실행에서는 HLSL 컴파일과 GPU 실행을 하지 않았다.\n// 입력 RGB는 선형 SDR [0,1], alpha는 선형 합성 가중치라는 계약이다.\nfloat3 EncodeSrgb(float3 linearRgb)\n{\n    float3 low = 12.92 * linearRgb;\n    float3 high = 1.055 * pow(linearRgb, 1.0 / 2.4) - 0.055;\n    return float3(linearRgb.r <= 0.0031308 ? low.r : high.r,\n                  linearRgb.g <= 0.0031308 ? low.g : high.g,\n                  linearRgb.b <= 0.0031308 ? low.b : high.b);\n}\nfloat4 EncodeOutput(float4 linearRgba)\n{\n    // sRGB RTV가 인코딩한다면 이 함수를 다시 적용하지 않는다.\n    return float4(EncodeSrgb(linearRgba.rgb), linearRgba.a);\n}\n"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "reference.hlsl은 entry point가 없는 통합용 보조 함수입니다. HLSL 컴파일·GPU 실행은 하지 않았습니다. C++ 검증과 분리해서 읽으세요."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "공식 자료·검증 기록·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Microsoft Direct3D 기능 명세 · sRGB 전송 규칙",
+              "href": "https://microsoft.github.io/DirectX-Specs/d3d/archive/D3D11_3_FunctionalSpec.htm"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Microsoft DirectX 샘플 · 색 공간 유틸리티의 계약 비교",
+              "href": "https://github.com/microsoft/DirectX-Graphics-Samples/blob/master/MiniEngine/Core/Shaders/ColorSpaceUtility.hlsli"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "현재 CPU 검증 로그와 파일 SHA-256",
+              "href": "/knowledge/shared/graphics-tech-01-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 공개 공식 문서·저장소를 개념과 계약 대조에 사용했습니다. 오래된 API 자료는 현재 권장 API나 성능 수치로 일반화하지 않습니다. 설명·예제·SVG는 본 교재를 위해 독립 작성했습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확인: Linux GCC 14.2.0 C++17, CMake Debug/Release CTest, UBSan. 미확인: Windows/MSVC, GPU 셰이더·실제 장면·시각 품질·GPU 성능. CPU 테스트 통과는 이 미확인 항목의 성공을 뜻하지 않습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "신규 집필·변경 기록",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26: 사용자가 승인한 그래픽스 기술 정규 과정의 신규 집필입니다. 기존 문서 이관이나 예전 프로그램 복구로 집계하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 게임 수학·DirectX 교재와 URL·학습 저장 키를 변경하지 않았습니다. 본 예제는 수치 계약을 분리해 설명하는 자체 제작 CPU 실습입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "본문·코드·그림 작성, 로컬 검증, 저장소 반영, React 검사, Pages 배포, 실제 공개 확인은 서로 다른 단계입니다. 이 원고의 로컬 검증 기록만으로 공개 배포 완료를 선언하지 않습니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

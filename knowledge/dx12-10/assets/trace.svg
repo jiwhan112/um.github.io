@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="620" viewBox="0 0 1080 620" role="img">
+<title>DirectX 12 10 · 실행 계약 시각화</title>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#34d399"/></marker></defs>
+<rect width="1080" height="620" rx="18" fill="#0f172a"/>
+<text x="36" y="53" fill="#f8fafc" font-family="sans-serif" font-size="29">RGBA8 픽셀 행과 upload RowPitch</text>
+<text x="50" y="115" fill="#e2e8f0" font-family="sans-serif" font-size="25">원본 RGBA8: width 3, height 2 → 행당 12 bytes</text>
+<rect x="50" y="150" width="180" height="70" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="64" y="193.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">row 0 (12)</text>
+<rect x="230" y="150" width="180" height="70" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="244" y="193.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">row 1 (12)</text>
+<text x="50" y="295" fill="#93c5fd" font-family="sans-serif" font-size="27">upload: Offset 512, RowPitch 256</text>
+<text x="50" y="375" fill="#e2e8f0" font-family="sans-serif" font-size="23">512</text>
+<rect x="140" y="330" width="180" height="75" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="154" y="375.5" fill="#e2e8f0" font-family="sans-serif" font-size="23">row 0 (12)</text>
+<rect x="320" y="330" width="670" height="75" rx="9" fill="#422d1d" stroke="#64748b"/>
+<text x="334" y="375.5" fill="#e2e8f0" font-family="sans-serif" font-size="24">padding 244 bytes · 픽셀 아님</text>
+<text x="50" y="480" fill="#e2e8f0" font-family="sans-serif" font-size="23">768</text>
+<rect x="140" y="435" width="180" height="75" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="154" y="480.5" fill="#e2e8f0" font-family="sans-serif" font-size="23">row 1 (12)</text>
+<rect x="320" y="435" width="670" height="75" rx="9" fill="#422d1d" stroke="#64748b"/>
+<text x="334" y="480.5" fill="#e2e8f0" font-family="sans-serif" font-size="24">padding 244 bytes · 픽셀 아님</text>
+<text x="50" y="575" fill="#fbbf24" font-family="sans-serif" font-size="23">두 번째 행 시작: 512 + 256 = 768. 512 + 12가 아니다.</text>
+<text x="35" y="603" fill="#94a3b8" font-family="sans-serif" font-size="17">자체 제작 개념도 · 실제 GPU 캡처 또는 측정 결과가 아닙니다</text>
+</svg>

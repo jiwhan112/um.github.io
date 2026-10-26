@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="580" viewBox="0 0 1080 580" role="img">
+<title>DX12 07 · 책임의 흐름</title>
+<rect width="1080" height="580" rx="20" fill="#101827"/>
+<text x="42" y="58" fill="#f8fafc" font-size="27" font-family="sans-serif">DX12 07 · 책임의 흐름</text>
+<rect x="55" y="125" width="440" height="130" rx="15" fill="#1e334c" stroke="#60a5fa" stroke-width="2"/>
+<text x="79" y="170" fill="#93c5fd" font-size="22" font-family="sans-serif">01</text>
+<text x="79" y="213" fill="#f8fafc" font-size="24" font-family="sans-serif">HLSL 컴파일</text>
+<rect x="585" y="125" width="440" height="130" rx="15" fill="#1e334c" stroke="#60a5fa" stroke-width="2"/>
+<text x="609" y="170" fill="#93c5fd" font-size="22" font-family="sans-serif">02</text>
+<text x="609" y="213" fill="#f8fafc" font-size="24" font-family="sans-serif">Root + 고정 상태 → PSO</text>
+<rect x="585" y="335" width="440" height="130" rx="15" fill="#1e334c" stroke="#60a5fa" stroke-width="2"/>
+<text x="609" y="380" fill="#93c5fd" font-size="22" font-family="sans-serif">03</text>
+<text x="609" y="423" fill="#f8fafc" font-size="24" font-family="sans-serif">동적 viewport/바인딩</text>
+<rect x="55" y="335" width="440" height="130" rx="15" fill="#1e334c" stroke="#60a5fa" stroke-width="2"/>
+<text x="79" y="380" fill="#93c5fd" font-size="22" font-family="sans-serif">04</text>
+<text x="79" y="423" fill="#f8fafc" font-size="24" font-family="sans-serif">DrawInstanced(3)</text>
+<defs><marker id="flow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#34d399"/></marker></defs>
+<path d="M500 190H570" stroke="#34d399" stroke-width="3" fill="none" marker-end="url(#flow-arrow)"/>
+<path d="M805 265V320" stroke="#34d399" stroke-width="3" fill="none" marker-end="url(#flow-arrow)"/>
+<path d="M570 400H510" stroke="#34d399" stroke-width="3" fill="none" marker-end="url(#flow-arrow)"/>
+<text x="42" y="552" fill="#94a3b8" font-size="18" font-family="sans-serif">ATLAS NOTE · 자체 제작 개념도 · GPU 실행 화면이 아닙니다</text></svg>

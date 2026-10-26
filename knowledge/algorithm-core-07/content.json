@@ -1,0 +1,628 @@
+{
+  "id": "knowledge--algorithm-core-07",
+  "route": "/knowledge/algorithm-core-07/",
+  "kind": "knowledge",
+  "title": "자료구조·알고리즘 07 · 힙·우선순위 큐",
+  "subtitle": "전체 정렬 없이 다음 최소 우선순위만 빠르게 꺼낸다",
+  "date": "2026-10-26",
+  "category": "알고리즘",
+  "topic": "algorithm",
+  "tags": [
+    "힙",
+    "우선순위 큐",
+    "불변식"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·게임 개발 상황",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "배열 인덱스의 부모·자식 관계와 sift-up/down의 국소 복구를 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가장 이른 예약 이벤트를 반복적으로 꺼내려면 전체 큐를 매번 정렬할 필요가 없다. 최소 힙은 루트가 최소라는 사실을 유지하면서 나머지는 부분 순서로 남긴다. 같은 우선순위의 안정적인 처리 순서는 별도 키로 정해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 학습",
+              "href": "/knowledge/algorithm-core-06/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전제: C++20 단일 스레드 CPU 실습. 문자·파일·네트워크 입력은 없고 정수 ID와 메모리 안의 고정 시드 데이터를 사용한다. 외부 라이브러리나 실행 파일 다운로드는 필요하지 않다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "힙은 정렬 배열이 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "각 부모가 자식보다 작거나 같으면 루트는 전체 최소다. 형제끼리 또는 서로 다른 가지 사이의 순서는 보장하지 않는다. 배열을 앞에서 뒤로 읽어 정렬 결과라고 해석하면 안 된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "완전 이진 트리의 배열 표현",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "0기준 인덱스 i의 부모는 (i−1)/2, 자식은2i+1과2i+2다. 부모 식은 i>0일 때만 계산한다. Pop의 하강에서는 먼저 자식 존재 조건을 확인한 뒤 곱셈 인덱스를 만든다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "삽입은 경로 하나만 고친다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 값을 배열 끝에 붙이면 모양은 유지되고 위쪽 부모 관계만 깨질 수 있다. 부모보다 작을 때 교환해 올라가면 이미 정상인 다른 가지는 건드리지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "삭제는 두 자식 중 작은 쪽으로",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "루트 자리에 마지막 값을 옮기고 끝을 제거한다. 작은 자식을 골라야 교환 뒤 부모가 두 자식보다 작다는 조건을 복구할 수 있다. 왼쪽만 비교하면 오른쪽의 더 작은 값이 남는 반례가 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-5",
+      "title": "동점과 안정성",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 실습은 int 우선순위만 저장한다. 같은 값의 상대 순서를 보장하지 않는다. 프레임 예약 작업에 FIFO 동점 처리가 필요하면 (priority,sequence) 복합 키를 사용하고 sequence의 순환 정책도 정해야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-6",
+      "title": "다익스트라의 후보 큐로 연결",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 단원에서 힙은 현재 알려진 가장 작은 거리 후보를 꺼내는 도구다. 오래된 후보가 들어 있을 수 있으므로 Pop이 최소라는 사실만으로 후보가 최신이라고 결론내리지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-1",
+      "title": "작업 예제 · 삽입의 국소 오류를 추적한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "[3,7,5] 힙에1을 추가하면 배열은 [3,7,5,1]이다.1의 부모는 인덱스1의7이므로 교환해 [3,1,5,7]이 된다. 다시 부모 인덱스0의3과 교환하면 [1,3,5,7]이다. 바뀐 경로 밖인5의 가지는 원래 조건을 유지한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-2",
+      "title": "작업 예제 · 최소값 삭제를 추적한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "루트1을 반환할 준비를 하고 마지막7을 루트로 옮긴 뒤 마지막 슬롯을 지우면 [7,3,5]다. 두 자식3,5 중 작은3과 교환해 [3,7,5]가 된다.5는7보다 작지만 형제끼리의 순서는 힙 불변식이 아니므로 더 바꿀 필요가 없다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-3",
+      "title": "작업 예제 · 왜 작은 자식이어야 하는가",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "만약5와 먼저 교환하면 [5,3,7]이 되어 부모5보다 작은 자식3이 남는다. 한 단계의 국소 수정이 부모와 양쪽 자식 관계를 함께 보존해야 하므로 최소 자식을 선택한다. 위로 올라갈 때와 내려갈 때의 비교 대상이 다른 이유다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-4",
+      "title": "작업 예제 · 이벤트 우선순위가 바뀌는 경우",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이미 들어간 항목의 priority를 외부에서 바꾸면 힙 불변식이 깨질 수 있다. 이 예제는 값을 복사해 저장하고 외부 수정 참조를 주지 않는다. 취소나 우선순위 변경을 지원하려면 핸들 맵을 관리하거나 새 후보를 넣고 오래된 후보를 버리는 전략을 명시해야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "상태를 손으로 추적하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-07/assets/trace.svg",
+          "alt": "Push 7,3,5 [3,7,5] 루트3은 최소; Push 1 [1,3,5,7] 1이 부모 경로를 상승; Pop 반환1 → [3,7,5] 마지막7을 내려 복구",
+          "caption": "자체 제작 상태 추적. 실행 시간 측정 그래프가 아니라 논리 상태의 변화다."
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "상태"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Push 7,3,5"
+                  }
+                ],
+                [
+                  {
+                    "text": "[3,7,5]"
+                  }
+                ],
+                [
+                  {
+                    "text": "루트3은 최소"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Push 1"
+                  }
+                ],
+                [
+                  {
+                    "text": "[1,3,5,7]"
+                  }
+                ],
+                [
+                  {
+                    "text": "1이 부모 경로를 상승"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Pop"
+                  }
+                ],
+                [
+                  {
+                    "text": "반환1 → [3,7,5]"
+                  }
+                ],
+                [
+                  {
+                    "text": "마지막7을 내려 복구"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-07/assets/invariant.svg",
+          "alt": "부모 i: 값 ≤ 자식 → 왼쪽 2i+1 → 오른쪽 2i+2 → 형제의 정렬은 불필요",
+          "caption": "코드에서 유지하거나 구별해야 하는 핵심 상태."
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"입력 계약과 현재 상태 확인\"] --> B[\"부모 i: 값 ≤ 자식\"]\n B --> C[\"왼쪽 2i+1\"]\n C --> D[\"오른쪽 2i+2\"]\n D --> E[\"형제의 정렬은 불필요\"]\n E --> F[\"오라클·경계 조건과 결과 비교\"]"
+        }
+      ]
+    },
+    {
+      "id": "complexity",
+      "title": "복잡도와 적용 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Push/Pop O(log n), 최소값 읽기 O(1), 저장 O(n). 예제의 Valid 검사는 O(n)이며 테스트용이므로 제품 힙 호출 비용과 합쳐 설명하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 자식이 있을 때 무조건 왼쪽을 택하면 최소 힙 불변식이 깨진다. 빈 배열에서 front/back을 읽거나 i=0에서 (i−1)/2를 계산하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/algorithm-core-07.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "빌드·실행 README",
+              "href": "/knowledge/examples/readmes/algorithm-core-07.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축 안의 project/main.cpp와 CMakeLists.txt를 함께 사용한다. 공개 전 파일·ZIP 검증은 발행 단계에서 별도로 수행한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "min-heap tested with duplicates and mixed push/pop\nPASS: 4002 contract checks\n"
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "예측 → 실행 → 반례 만들기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 위 상태 표의 다음 줄을 가리고 종이에 결과를 예측한다. 전체 소스의 Check를 읽어 정상 입력뿐 아니라 빈 값·중복·최댓값·부재 상태 중 이 자료구조에 해당하는 경계를 찾는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습 1: 테스트의 작은 입력을 한 곳 바꾸고 기대 결과를 직접 계산한 뒤 실행한다. 실습 2: 본문의 실패 사례를 설명하는 입력을 추가한다. 실습 3: 알고리즘을 수정했다면 원래 검사와 독립 오라클을 모두 다시 실행한다. 실패한 검사를 지워 통과시키지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "결과가 같다는 사실과 구현의 성능·모든 입력에 대한 정확성은 다르다. 출력의 Check 수는 루프 반복을 포함한 실행 호출 수이며 CTest에는 한 프로그램이 등록된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · 힙 배열 전체는 오름차순인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 부모-자식 관계만 보장한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · Pop에서 더 작은 자식을 고르는 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "교환 후 새 부모가 양쪽 자식 이하가 되도록 하기 위해서다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · Valid를 매 호출 실행하면 전체 비용은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "검사 자체가 O(n)이므로 테스트 프로그램은 순수 힙 연산의 O(log n) 시간과 다르다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 중복 우선순위는 금지되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 여러 개 저장할 수 있지만 같은 값의 안정 순서는 따로 보장하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · multiset과 내부 모양이 같아야 하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 꺼낸 최소값과 존재 개수만 같으면 된다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장: 값 감소를 지원하려면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "특정 항목의 위치를 찾는 핸들/인덱스 맵과 교환 시 갱신 계약이 필요하다. 이 예제는 decrease-key를 제공하지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "전체 C++20 코드와 실제 파일 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "main.cpp 원본 파일",
+                  "href": "/knowledge/shared/algorithm-core-07-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "CMakeLists.txt",
+                  "href": "/knowledge/shared/algorithm-core-07-lab/project/CMakeLists.txt"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(algorithm_core_07 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(lesson main.cpp)\nif(MSVC)\n  target_compile_options(lesson PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(lesson PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME contract_tests COMMAND lesson)\n"
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <deque>\n#include <functional>\n#include <iostream>\n#include <limits>\n#include <map>\n#include <memory>\n#include <numeric>\n#include <optional>\n#include <queue>\n#include <random>\n#include <set>\n#include <stdexcept>\n#include <string>\n#include <utility>\n#include <vector>\n// Release 빌드에서도 사라지지 않는 계약 검사입니다.\nstatic std::size_t checks = 0;\nvoid Check(bool condition, const char* label) {\n    ++checks;\n    if (!condition)\n        throw std::runtime_error(label);\n}\nclass MinHeap {\n    std::vector<int> data_;\n    public:\n    void Push(int value) {\n        data_.push_back(value);\n        std::size_t child = data_.size() - 1;\n        while (child > 0) {\n            const auto parent =(child - 1) / 2;\n            if (data_[parent] <= data_[child]) break;\n            std::swap(data_[parent], data_[child]);\n            child = parent;\n        }\n    }\n    std::optional<int> Pop() {\n        if (data_.empty())\n            return std::nullopt;\n        const int result = data_.front();\n        data_.front() = data_.back();\n        data_.pop_back();\n        std::size_t parent = 0;\n        // parent < n/2이면 왼쪽 자식이 존재합니다. 곱셈을 그 뒤에 수행합니다.\n        while (parent < data_.size() / 2) {\n            std::size_t child = parent * 2 + 1;\n            if (child + 1 < data_.size() && data_[child + 1] < data_[child])++child;\n            if (data_[parent] <= data_[child]) break;\n            std::swap(data_[parent], data_[child]);\n            parent = child;\n        }\n        return result;\n    }\n    bool Valid() const {\n        for (std::size_t i = 1; i < data_.size(); ++i) if (data_[(i - 1) / 2] > data_[i])\n            return false;\n        return true;\n    }\n};\nint main() {\n    MinHeap heap;\n    std::multiset<int > oracle;\n    std::mt19937 rng(700);\n    Check(!heap.Pop(), \"empty pop\");\n    for (int i = 0; i < 2000; ++i) {\n        if (rng() % 3 != 0) {\n            int x = static_cast<int>(rng() % 101) - 50;\n            heap.Push(x);\n            oracle.insert(x);\n        } else {\n            auto x = heap.Pop();\n            Check(x.has_value() == !oracle.empty(), \"presence\");\n            if (!oracle.empty()) {\n                Check(* x == * oracle.begin(), \"minimum\");\n                oracle.erase(oracle.begin());\n            }\n        }\n        Check(heap.Valid(), \"parent child invariant\");\n    }\n    while (!oracle.empty()) {\n        Check(heap.Pop() == * oracle.begin(), \"drain sorted\");\n        oracle.erase(oracle.begin());\n    }\n    Check(!heap.Pop(), \"drained empty\");\n    std::cout << \"min-heap tested with duplicates and mixed push/pop\\nPASS: \" << checks << \" contract checks\\n\";\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·실행 검증·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "개념·계약 확인에 사용한 공개 자료",
+              "href": "https://opendatastructures.org/ods-cpp/10_Heaps.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부 자료는 용어와 계약 확인용이다. 게임 상황·설명·그림·C++ 구현과 테스트는 독립 작성했으며 특정 책의 지문·공식 해설을 옮기지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "실제 실행 결과와 소스 SHA-256",
+              "href": "/knowledge/shared/algorithm-core-07-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 Linux GCC 14.2.0 C++20 Release CMake/CTest 1/1 및 별도 UBSan 실행을 확인했다. Windows/MSVC·Clang·GPU·성능 벤치마크·다중 스레드는 검증하지 않았다. 원고의 로컬 검증과 웹 공개 검증은 서로 다른 단계다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "집필 이력·다음 연결",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 신규 정규 과정으로 독립 집필. 기존 교재·URL·학습 저장 식별자를 대체하거나 삭제하지 않는다. 알고리즘 정규 과정은 비용 모델→저장 구조→정렬/탐색→그래프→동적 계획법으로 이어진다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "기존 LIS 심화·복원 교재",
+              "href": "/knowledge/algorithm-lis/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 정규 단원",
+              "href": "/knowledge/algorithm-core-08/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

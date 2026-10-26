@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="620" viewBox="0 0 1080 620" role="img">
+<title>DirectX 12 11 · 실행 계약 시각화</title>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#34d399"/></marker></defs>
+<rect width="1080" height="620" rx="18" fill="#0f172a"/>
+<text x="36" y="53" fill="#f8fafc" font-family="sans-serif" font-size="29">Compute → Copy → CPU 의존성</text>
+<text x="35" y="130" fill="#e2e8f0" font-family="sans-serif" font-size="22">Compute queue</text>
+<path d="M200 140 L1030 140" stroke="#475569" stroke-width="2"/>
+<text x="35" y="290" fill="#e2e8f0" font-family="sans-serif" font-size="22">Copy queue</text>
+<path d="M200 300 L1030 300" stroke="#475569" stroke-width="2"/>
+<text x="35" y="450" fill="#e2e8f0" font-family="sans-serif" font-size="22">CPU</text>
+<path d="M200 460 L1030 460" stroke="#475569" stroke-width="2"/>
+<rect x="230" y="90" width="280" height="80" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="244" y="138.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">Dispatch → Signal(1)</text>
+<rect x="565" y="250" width="420" height="80" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="579" y="298.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">Wait(1) → Copy → Signal(1)</text>
+<rect x="690" y="410" width="295" height="80" rx="9" fill="#1e3a5f" stroke="#64748b"/>
+<text x="704" y="458.0" fill="#e2e8f0" font-family="sans-serif" font-size="23">Wait copyDone → Map</text>
+<path d="M510 170 L565 245" stroke="#34d399" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M860 335 L860 405" stroke="#34d399" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="45" y="565" fill="#34d399" font-family="sans-serif" font-size="25">큐 간 순서와 resource state는 둘 다 맞아야 한다.</text>
+<text x="35" y="603" fill="#94a3b8" font-family="sans-serif" font-size="17">자체 제작 개념도 · 실제 GPU 캡처 또는 측정 결과가 아닙니다</text>
+</svg>

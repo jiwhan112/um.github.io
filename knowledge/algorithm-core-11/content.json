@@ -1,0 +1,658 @@
+{
+  "id": "knowledge--algorithm-core-11",
+  "route": "/knowledge/algorithm-core-11/",
+  "kind": "knowledge",
+  "title": "자료구조·알고리즘 11 · 다익스트라·A*·휴리스틱 계약",
+  "subtitle": "현재 거리와 예상 남은 비용을 구분하고 오래된 후보를 버린다",
+  "date": "2026-10-26",
+  "category": "알고리즘",
+  "topic": "algorithm",
+  "tags": [
+    "다익스트라",
+    "A*",
+    "최단 경로"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·게임 개발 상황",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "비음수 가중치·일관적 휴리스틱 전제 아래 목표를 꺼냈을 때 최적 비용인 이유를 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "지역 간 이동 시간이 다르면 최소 간선 수만으로 경로를 고를 수 없다. A*는 이미 이동한 비용g와 목표까지 예상하는 비용h를 합해 후보 순서를 정한다. 예상이 임의로 과장되면 더 빠른 검색처럼 보여도 최적 경로를 놓칠 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 학습",
+              "href": "/knowledge/algorithm-core-10/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전제: C++20 단일 스레드 CPU 실습. 문자·파일·네트워크 입력은 없고 정수 ID와 메모리 안의 고정 시드 데이터를 사용한다. 외부 라이브러리나 실행 파일 다운로드는 필요하지 않다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "거리 후보를 완화한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 정점 u까지 알려진 거리와 간선 비용을 더한 후보가 기존 distance[v]보다 작을 때만 갱신한다. 큐에는 이전 후보도 남아 있을 수 있으므로 꺼낸 priority가 최신 distance[u]+h[u]와 다르면 버린다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "h=0이면 다익스트라",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "모든 h가0이면 큐 우선순위는 이미 이동한 비용g뿐이다. 비음수 간선에서 최소 g 후보를 꺼내면 더 긴 미확정 경로가 그 비용을 낮출 수 없다는 순서 논리가 작동한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "이 교재는 일관성을 요구한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "h(goal)=0, h≥0, 모든 간선에서 h(u)≤cost(u,v)+h(v)를 검사한다. 이를 경로 전체에 이어 붙이면 h는 실제 목표까지 비용을 넘지 않는다. 이 조건 아래 f=g+h의 감소 문제를 제어해 목표 조기 종료를 정당화한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "허용적과 일관적은 같지 않다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목표까지 과대평가하지 않는 허용적 휴리스틱이라도 간선별 일관성은 깨질 수 있다. 일반적인 불일관 A*는 닫힌 정점 재개방과 종료 조건을 더 신중히 다뤄야 한다. 이 구현은 그런 입력을 거절하며 모든 A* 변형을 지원한다고 주장하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-5",
+      "title": "정수 범위와 입력 제한",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정점≤1000, 간선 비용0..1000000, h≤10억이다. 최단 단순 경로 비용은999×1000000 이내라 int64_t에서 넉넉하다. Inf는 최댓값의1/4이며 도달한 정점에서만 덧셈한다. 음수 간선은 입력 오류로 거절한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-6",
+      "title": "좌표 거리의 적용 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "4방향 격자에서 최소 한 칸 비용을 곱한 Manhattan 거리는 후보가 될 수 있다. 순간이동·대각선·비용0 통로를 추가하면 기존 휴리스틱이 과대평가될 수 있다. 공간 거리라는 이름만 보고 안전하다고 판단하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-7",
+      "title": "검증과 실제 경로 품질",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "작은 무작위 가중 그래프의 모든 쌍 오라클과 h=0 결과를 비교한다. 손으로 만든 일관적 h는 같은 최적값5를 반환하는지 검사한다. 이 실험은 NavMesh 경로의 부드러움·에이전트 반경·동적 장애물을 검증하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-1",
+      "title": "작업 예제 · h=0으로 큐 변화부터 이해한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "초기 후보는(거리0,정점0) 하나다.0을 꺼내면1의 거리8,2의 거리2를 넣는다. 큐의 최소는(2,2)이므로2를 확장한다.2→1비용2로1은8에서4로 개선되고2→3비용10으로 목표3의 첫 후보12가 생긴다. 이때 큐에는(4,1),(8,1),(12,3)이 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-2",
+      "title": "작업 예제 · 목표를 넣을 때 종료하면 틀린다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목표3을 처음 넣은 순간 답12라고 종료하면 오답이다. 아직(4,1)을 처리하지 않았기 때문이다.1을 꺼내1→3비용1을 더하면 목표 비용은5로 개선된다. 이후 최소 후보(5,3)를 꺼냈을 때에야5를 반환한다. 이전(8,1),(12,3)은 더 이상 최신 거리를 나타내지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-3",
+      "title": "작업 예제 · 휴리스틱이 바꾸는 것은 우선순위다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "h=[5,1,3,0]을 쓰면0에서1후보의 f=8+1=9,2후보의f=2+3=5다.2를 확장하면1의g=4,f=5로 개선된다. h는 경로를 실제로 이동한 비용g에 더해 큐 순서만 정하고 반환하는 최단 비용은g=5다. h를 비용에 두 번 더해 반환하면 경로 값이 바뀐다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-4",
+      "title": "작업 예제 · 일관성이 종료 논증을 지탱한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "모든 간선에서 h(u)≤w+h(v)이면 경로를 한 단계 따라갈 때 f가 감소하지 않도록 연결된다. h(goal)=0이므로 목표의f는 실제g다. 더 싼 목표 경로가 남았다면 그 경로의 앞쪽 후보가 현재 목표보다 작은 우선순위로 먼저 나왔어야 한다. 이 함수는 입력 전체에서 일관성을 확인하므로 이 전제 없이 목표 조기 종료를 일반화하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-5",
+      "title": "작업 예제 · 0비용과 도달 불가도 정상 입력이다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "간선 비용0은 허용된다. 갱신을 candidate<distance일 때만 수행하므로0순환이 같은 거리를 끝없이 다시 넣지 않는다. 반대 방향 경로가 없는3→0검색은 큐가 소진된 뒤Inf를 반환한다. Inf는 실제 경로 비용이 아니라 부재 상태이며 다른 비용처럼 출력·덧셈하지 않도록 호출자가 구분해야 한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "상태를 손으로 추적하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-11/assets/trace.svg",
+          "alt": "초기0 1후보8, 2후보2 작은2 먼저 처리; 2 처리 1후보4, 3후보12 1의 예전8은 남아 있음; 1 처리 3후보5 → 목표 예전 후보는 최신값과 비교",
+          "caption": "자체 제작 상태 추적. 실행 시간 측정 그래프가 아니라 논리 상태의 변화다."
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "상태"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "초기0"
+                  }
+                ],
+                [
+                  {
+                    "text": "1후보8, 2후보2"
+                  }
+                ],
+                [
+                  {
+                    "text": "작은2 먼저 처리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2 처리"
+                  }
+                ],
+                [
+                  {
+                    "text": "1후보4, 3후보12"
+                  }
+                ],
+                [
+                  {
+                    "text": "1의 예전8은 남아 있음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1 처리"
+                  }
+                ],
+                [
+                  {
+                    "text": "3후보5 → 목표"
+                  }
+                ],
+                [
+                  {
+                    "text": "예전 후보는 최신값과 비교"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-11/assets/invariant.svg",
+          "alt": "g(v): 실제 누적 비용 → h(v): 남은 비용의 하한 → f(v)=g(v)+h(v) → h(u) ≤ w(u,v)+h(v)",
+          "caption": "코드에서 유지하거나 구별해야 하는 핵심 상태."
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"입력 계약과 현재 상태 확인\"] --> B[\"g(v): 실제 누적 비용\"]\n B --> C[\"h(v): 남은 비용의 하한\"]\n C --> D[\"f(v)=g(v)+h(v)\"]\n D --> E[\"h(u) ≤ w(u,v)+h(v)\"]\n E --> F[\"오라클·경계 조건과 결과 비교\"]"
+        }
+      ]
+    },
+    {
+      "id": "complexity",
+      "title": "복잡도와 적용 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "일관적 h와 비음수 간선에서 유효 확장과 간선 완화는 O(V+E). 중복 후보를 허용한 힙에는 O(E)개 항목이 들어갈 수 있어 시간 O((V+E) log(E+1)), 추가 공간 O(V+E)로 보수적으로 설명한다. 전체 휴리스틱 사전 검증도 O(V+E)다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목표를 큐에 넣은 순간 종료하면 아직 더 싼 경로가 나올 수 있다. 유효한 최신 최소 후보로 꺼냈을 때 종료한다. 비용0 간선도 허용하되 더 작은 경우만 갱신해0순환 반복을 막는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/algorithm-core-11.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "빌드·실행 README",
+              "href": "/knowledge/examples/readmes/algorithm-core-11.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축 안의 project/main.cpp와 CMakeLists.txt를 함께 사용한다. 공개 전 파일·ZIP 검증은 발행 단계에서 별도로 수행한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "Dijkstra and consistent A*: cost=5; 80 weighted graph oracles\nPASS: 3925 contract checks\n"
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "예측 → 실행 → 반례 만들기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 위 상태 표의 다음 줄을 가리고 종이에 결과를 예측한다. 전체 소스의 Check를 읽어 정상 입력뿐 아니라 빈 값·중복·최댓값·부재 상태 중 이 자료구조에 해당하는 경계를 찾는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습 1: 테스트의 작은 입력을 한 곳 바꾸고 기대 결과를 직접 계산한 뒤 실행한다. 실습 2: 본문의 실패 사례를 설명하는 입력을 추가한다. 실습 3: 알고리즘을 수정했다면 원래 검사와 독립 오라클을 모두 다시 실행한다. 실패한 검사를 지워 통과시키지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "결과가 같다는 사실과 구현의 성능·모든 입력에 대한 정확성은 다르다. 출력의 Check 수는 루프 반복을 포함한 실행 호출 수이며 CTest에는 한 프로그램이 등록된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · h=0은 잘못된 휴리스틱인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 비음수 간선에서 일관적이며 다익스트라로 동작한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · 목표를 처음 발견하면 끝내도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 된다. 더 작은 비용으로 갱신될 수 있다. 최신 최소 후보로 꺼낼 때 종료한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · 오래된 큐 항목을 지우지 않아도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최신 distance+h와 비교해 버리므로 정확성은 유지하지만 메모리와 큐 비용은 늘 수 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 불일관하지만 허용적인 h도 이 함수에 넣을 수 있는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 이 함수는 명시적으로 간선별 일관성을 검사해 거절한다. 일반 재개방 A*는 별도 설계다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · 음수 간선은 왜 거절하는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최소 후보를 확정하는 순서 논증이 성립하지 않는다. 다른 알고리즘과 음수 순환 정책이 필요하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장: 순간이동 링크를 추가했다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "새 간선에서도 h(u)≤w+h(v)가 성립하는지 다시 검증한다. 가장 단순한 안전 대안은 h=0이다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "전체 C++20 코드와 실제 파일 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "main.cpp 원본 파일",
+                  "href": "/knowledge/shared/algorithm-core-11-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "CMakeLists.txt",
+                  "href": "/knowledge/shared/algorithm-core-11-lab/project/CMakeLists.txt"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(algorithm_core_11 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(lesson main.cpp)\nif(MSVC)\n  target_compile_options(lesson PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(lesson PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME contract_tests COMMAND lesson)\n"
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <deque>\n#include <functional>\n#include <iostream>\n#include <limits>\n#include <map>\n#include <memory>\n#include <numeric>\n#include <optional>\n#include <queue>\n#include <random>\n#include <set>\n#include <stdexcept>\n#include <string>\n#include <utility>\n#include <vector>\n\n// Release 빌드에서도 사라지지 않는 계약 검사입니다.\nstatic std::size_t checks = 0;\nvoid Check(bool condition, const char* label) {\n    ++checks;\n    if (!condition) throw std::runtime_error(label);\n}\n\nstruct Edge {\n    std::size_t to;\n    int cost;\n};\nusing WeightedGraph = std::vector<std::vector<Edge>>;\nconstexpr std::int64_t Inf = std::numeric_limits<std::int64_t>::max() / 4;\n\nstd::int64_t Search(const WeightedGraph& graph, std::size_t start, std::size_t goal,\n                    const std::vector<std::int64_t>& heuristic) {\n    if (graph.empty() || graph.size() > 1000 || start >= graph.size() ||\n        goal >= graph.size() || heuristic.size() != graph.size() || heuristic[goal] != 0) {\n        throw std::invalid_argument(\"graph or heuristic\");\n    }\n    // 모든 인덱스와 수치 범위를 먼저 확인한 뒤 휴리스틱을 참조합니다.\n    for (std::size_t from = 0; from < graph.size(); ++from) {\n        if (heuristic[from] < 0 || heuristic[from] > 1000000000) {\n            throw std::invalid_argument(\"heuristic range\");\n        }\n        for (auto edge : graph[from]) {\n            if (edge.to >= graph.size() || edge.cost < 0 || edge.cost > 1000000) {\n                throw std::invalid_argument(\"edge range\");\n            }\n        }\n    }\n    // 이 교재는 일관적 휴리스틱만 지원합니다. 모든 간선에서 검사합니다.\n    for (std::size_t from = 0; from < graph.size(); ++from) {\n        for (auto edge : graph[from]) {\n            if (heuristic[from] > edge.cost + heuristic[edge.to]) {\n                throw std::invalid_argument(\"inconsistent heuristic\");\n            }\n        }\n    }\n    using Candidate = std::pair<std::int64_t, std::size_t>;\n    std::priority_queue<Candidate, std::vector<Candidate>, std::greater<Candidate>> open;\n    std::vector<std::int64_t> distance(graph.size(), Inf);\n    distance[start] = 0;\n    open.push({heuristic[start], start});\n    while (!open.empty()) {\n        const auto [priority, current] = open.top();\n        open.pop();\n        // 이전 거리로 넣어 두었던 오래된 후보는 확장하지 않습니다.\n        if (priority != distance[current] + heuristic[current]) {\n            continue;\n        }\n        if (current == goal) {\n            return distance[current];\n        }\n        for (auto edge : graph[current]) {\n            const auto candidate = distance[current] + edge.cost;\n            if (candidate < distance[edge.to]) {\n                distance[edge.to] = candidate;\n                open.push({candidate + heuristic[edge.to], edge.to});\n            }\n        }\n    }\n    return Inf;\n}\n\nint main() {\n    WeightedGraph graph{{{1, 8}, {2, 2}}, {{3, 1}}, {{1, 2}, {3, 10}}, {}};\n    Check(Search(graph, 0, 3, {0, 0, 0, 0}) == 5, \"stale candidate improves\");\n    Check(Search(graph, 0, 3, {5, 1, 3, 0}) == 5, \"consistent heuristic\");\n    Check(Search(graph, 3, 0, {0, 0, 0, 0}) == Inf, \"unreachable\");\n    std::mt19937 rng(1100);\n    for (int trial = 0; trial < 80; ++trial) {\n        WeightedGraph random(7);\n        std::array<std::array<std::int64_t, 7>, 7> distance{};\n        for (int i = 0; i < 7; ++i) {\n            for (int j = 0; j < 7; ++j) {\n                distance[i][j] = i == j ? 0 : Inf;\n            }\n        }\n        for (std::size_t i = 0; i < 7; ++i) {\n            for (std::size_t j = 0; j < 7; ++j) {\n                if (rng() % 4 == 0) {\n                    const int weight = static_cast<int>(rng() % 10);\n                    random[i].push_back({j, weight});\n                    distance[i][j] = std::min(distance[i][j], static_cast<std::int64_t>(weight));\n                }\n            }\n        }\n        // INF끼리 더하지 않고, 존재하는 두 경로만 연결합니다.\n        for (int k = 0; k < 7; ++k) {\n            for (int i = 0; i < 7; ++i) {\n                for (int j = 0; j < 7; ++j) {\n                    if (distance[i][k] != Inf && distance[k][j] != Inf) {\n                        distance[i][j] = std::min(distance[i][j], distance[i][k] + distance[k][j]);\n                    }\n                }\n            }\n        }\n        for (std::size_t start = 0; start < 7; ++start) {\n            for (std::size_t goal = 0; goal < 7; ++goal) {\n                Check(Search(random, start, goal, std::vector<std::int64_t>(7, 0)) ==\n                      distance[start][goal], \"weighted oracle\");\n            }\n        }\n    }\n    bool rejected = false;\n    try {\n        Search({{{1, -1}}, {}}, 0, 1, {0, 0});\n    } catch (const std::invalid_argument&) {\n        rejected = true;\n    }\n    Check(rejected, \"negative edge rejected\");\n    rejected = false;\n    try {\n        Search(graph, 0, 3, {99, 1, 3, 0});\n    } catch (const std::invalid_argument&) {\n        rejected = true;\n    }\n    Check(rejected, \"inconsistent heuristic rejected\");\n    std::cout << \"Dijkstra and consistent A*: cost=5; 80 weighted graph oracles\\n\";\n    std::cout << \"PASS: \" << checks << \" contract checks\\n\";\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·실행 검증·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "개념·계약 확인에 사용한 공개 자료",
+              "href": "https://www.boost.org/doc/libs/latest/libs/graph/doc/html/graph/algorithms/shortest_paths/astar_search.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부 자료는 용어와 계약 확인용이다. 게임 상황·설명·그림·C++ 구현과 테스트는 독립 작성했으며 특정 책의 지문·공식 해설을 옮기지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "실제 실행 결과와 소스 SHA-256",
+              "href": "/knowledge/shared/algorithm-core-11-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 Linux GCC 14.2.0 C++20 Release CMake/CTest 1/1 및 별도 UBSan 실행을 확인했다. Windows/MSVC·Clang·GPU·성능 벤치마크·다중 스레드는 검증하지 않았다. 원고의 로컬 검증과 웹 공개 검증은 서로 다른 단계다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "집필 이력·다음 연결",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 신규 정규 과정으로 독립 집필. 기존 교재·URL·학습 저장 식별자를 대체하거나 삭제하지 않는다. 알고리즘 정규 과정은 비용 모델→저장 구조→정렬/탐색→그래프→동적 계획법으로 이어진다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "기존 LIS 심화·복원 교재",
+              "href": "/knowledge/algorithm-lis/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 정규 단원",
+              "href": "/knowledge/algorithm-core-12/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

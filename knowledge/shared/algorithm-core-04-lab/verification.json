@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-26",
+  "platform": "Linux x86_64",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "cmake": "cmake version 3.31.6",
+  "standard": "C++20",
+  "configuration": "Release",
+  "ctest": {
+    "passed": 1,
+    "failed": 0
+  },
+  "undefined_behavior_sanitizer": {
+    "status": "passed",
+    "stdout_matches_release": true,
+    "diagnostics": ""
+  },
+  "stdout": "FIFO ring capacities=1,2,7; LIFO undo order=30,20,10\nPASS: 9085 contract checks\n",
+  "source_sha256": "43c069b6ee9362d7841d3411b7a8895eede42f7580795df706cca64856f610da",
+  "checks_note": "실행 중 Check 호출 수이며 독립 테스트 사례 수나 모든 입력에 대한 증명은 아닙니다.",
+  "not_tested": [
+    "Windows/MSVC",
+    "Clang",
+    "GPU",
+    "성능 벤치마크",
+    "동시 접근"
+  ],
+  "commands": [
+    "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release",
+    "cmake --build build",
+    "ctest --test-dir build --output-on-failure",
+    "g++ -std=c++20 -O1 -g -fsanitize=undefined -fno-sanitize-recover=all project/main.cpp -o lesson-ubsan",
+    "./lesson-ubsan"
+  ],
+  "special_member_policy": {
+    "copy_constructor": "deleted",
+    "copy_assignment": "deleted",
+    "move_constructor": "deleted",
+    "move_assignment": "deleted",
+    "regression_static_asserts": 4,
+    "runtime_check_count_note": "기존 런타임 Check 수와 컴파일 시점 4개 정책 검사를 합산하지 않습니다."
+  },
+  "capacity_regression": "SIZE_MAX rejects as invalid_argument before allocation; capacity1024 fill/drain boundary passed"
+}

@@ -1,0 +1,628 @@
+{
+  "id": "knowledge--algorithm-core-08",
+  "route": "/knowledge/algorithm-core-08/",
+  "kind": "knowledge",
+  "title": "자료구조·알고리즘 08 · 정렬·안정성·비교자 계약",
+  "subtitle": "같은 우선순위의 도착 순서를 보존하는 병합 정렬",
+  "date": "2026-10-26",
+  "category": "알고리즘",
+  "topic": "algorithm",
+  "tags": [
+    "병합 정렬",
+    "안정성",
+    "비교자"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·게임 개발 상황",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정렬 키와 원래 도착 순서를 분리하고 엄격 약순서가 필요한 이유를 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "프레임 이벤트를 우선순위로 정렬하되 같은 우선순위에서는 입력 순서를 유지해야 한다면 안정성이 필요하다. 정렬 결과의 키만 비교하는 테스트는 동점 이벤트가 뒤섞인 버그를 발견하지 못한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 학습",
+              "href": "/knowledge/algorithm-core-07/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전제: C++20 단일 스레드 CPU 실습. 문자·파일·네트워크 입력은 없고 정수 ID와 메모리 안의 고정 시드 데이터를 사용한다. 외부 라이브러리나 실행 파일 다운로드는 필요하지 않다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "정렬 기준과 데이터의 정체성",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Event는 priority와 arrival을 분리한다. 비교자는 priority만 비교하고 arrival은 안정성 검증에 사용한다. 원소의 모든 필드를 비교 키에 넣는 것과 안정 정렬을 사용하는 것은 요구 의미가 다를 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "분할과 합치기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "[lo,hi)를 두 구간으로 나누고 각 구간을 정렬한 뒤 작은 앞 원소를 하나씩 임시 배열로 옮긴다. 남은 한쪽을 복사하면 결과 구간 전체가 정렬된다. 입력 길이0·1은 바로 종료한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "동점에서 왼쪽 선택",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "오른쪽이 엄격히 더 작을 때만 오른쪽을 택하고 나머지는 왼쪽을 택한다. 왼쪽 구간은 원래 먼저 등장한 원소들이므로 동점 순서를 유지한다. 재귀 양쪽도 안정적이면 전체 병합도 안정적이다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "비교자에 <=를 쓰지 않는다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "comp(a,a)는 false여야 한다. < 대신 <=를 쓰면 자기 자신이 자기보다 앞선다고 말해 엄격 약순서를 깨뜨린다. 정렬 라이브러리의 요구를 어기는 비교자를 실행해서 결과를 관찰하는 실험은 안전한 테스트가 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-5",
+      "title": "부동소수점 비교의 별도 정책",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "NaN이 섞인 데이터에서 일반 <가 원하는 동등성 전이를 주는지 확인해야 한다. 점수의 유효 범위를 검증하거나 명시적으로 NaN 순서를 정한다. 이 실습은 작은 정수 우선순위만 다룬다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-6",
+      "title": "검증은 순서와 보존을 함께",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "표준 stable_sort 결과와 priority·arrival을 모두 비교해 정렬·안정성·원소 보존을 동시에 확인한다. 비교자의 전이성 표본 검사는 설명 보조이며 임의 사용자 비교자가 항상 올바르다는 증명은 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-1",
+      "title": "작업 예제 · 같은 키의 도착 순서를 따라간다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "입력은 (2,A),(1,B),(2,C),(1,D)다. 왼쪽 두 개를 정렬하면 (1,B),(2,A), 오른쪽은 (1,D),(2,C)가 된다. 병합 첫 비교는B와D의 priority가 모두1이다. 왼쪽B를 선택해야 원래 B가 D보다 먼저 왔다는 관계를 보존한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-2",
+      "title": "작업 예제 · 키만 보는 검사가 놓치는 것",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "잘못 구현해 D,B,A,C 순서가 나와도 priority열은 [1,1,2,2]로 정렬돼 있다. 따라서 단순 is_sorted 검사만으로는 요구를 만족했는지 모른다. arrival까지 원래 동점 순서와 비교해야 안정성 오류를 찾는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-3",
+      "title": "작업 예제 · 병합의 불변식",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "매 단계 임시 배열의 채워진 접두사는 남은 두 구간의 모든 원소보다 작거나 같은 원소들로 정렬돼 있다. 두 정렬 구간의 맨 앞 중 작은 값을 골라 붙이면 유지된다. 동점은 왼쪽 우선이라는 추가 규칙으로 안정성까지 보존한다. 한쪽이 비면 다른 쪽은 이미 정렬됐으므로 그대로 붙인다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-4",
+      "title": "작업 예제 · 복잡도를 단계와 연결한다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한 병합에서 각 원소는 한 번 임시 배열로 이동하고 한 번 원래 배열로 복사된다. 같은 재귀 깊이의 구간 길이 합은n이고 깊이는 대략 log₂n이므로 총 O(n log n)이다. 재귀 호출마다 별도n배열을 만들지 않고 단일 임시 배열을 재사용해 공간을 O(n)으로 제한한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "상태를 손으로 추적하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-08/assets/trace.svg",
+          "alt": "입력 (2,A),(1,B),(2,C),(1,D) arrival은A,B,C,D; 두 구간 (1,B),(2,A) / (1,D),(2,C) 각 구간 안정 정렬; 병합 (1,B),(1,D),(2,A),(2,C) 동점에서 왼쪽 우선",
+          "caption": "자체 제작 상태 추적. 실행 시간 측정 그래프가 아니라 논리 상태의 변화다."
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "상태"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "(2,A),(1,B),(2,C),(1,D)"
+                  }
+                ],
+                [
+                  {
+                    "text": "arrival은A,B,C,D"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "두 구간"
+                  }
+                ],
+                [
+                  {
+                    "text": "(1,B),(2,A) / (1,D),(2,C)"
+                  }
+                ],
+                [
+                  {
+                    "text": "각 구간 안정 정렬"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "병합"
+                  }
+                ],
+                [
+                  {
+                    "text": "(1,B),(1,D),(2,A),(2,C)"
+                  }
+                ],
+                [
+                  {
+                    "text": "동점에서 왼쪽 우선"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-08/assets/invariant.svg",
+          "alt": "[lo,mid) 정렬 완료 → [mid,hi) 정렬 완료 → 동점이면 왼쪽 선택 → [lo,hi) 안정 정렬",
+          "caption": "코드에서 유지하거나 구별해야 하는 핵심 상태."
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"입력 계약과 현재 상태 확인\"] --> B[\"[lo,mid) 정렬 완료\"]\n B --> C[\"[mid,hi) 정렬 완료\"]\n C --> D[\"동점이면 왼쪽 선택\"]\n D --> E[\"[lo,hi) 안정 정렬\"]\n E --> F[\"오라클·경계 조건과 결과 비교\"]"
+        }
+      ]
+    },
+    {
+      "id": "complexity",
+      "title": "복잡도와 적용 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "병합 정렬 시간 O(n log n), 임시 배열 O(n), 재귀 깊이 O(log n). 각 병합에서 임시 배열을 새로 만들지 않고 한 번 확보해 재사용한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "동점에서 오른쪽을 먼저 고르면 키는 정렬돼도 도착 순서가 뒤집힐 수 있다. 정렬된 값만 검사하지 말고 원래 ID도 검사한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/algorithm-core-08.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "빌드·실행 README",
+              "href": "/knowledge/examples/readmes/algorithm-core-08.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축 안의 project/main.cpp와 CMakeLists.txt를 함께 사용한다. 공개 전 파일·ZIP 검증은 발행 단계에서 별도로 수행한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "stable merge sort matches 128 duplicate-rich input lengths\nPASS: 8506 contract checks\n"
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "예측 → 실행 → 반례 만들기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 위 상태 표의 다음 줄을 가리고 종이에 결과를 예측한다. 전체 소스의 Check를 읽어 정상 입력뿐 아니라 빈 값·중복·최댓값·부재 상태 중 이 자료구조에 해당하는 경계를 찾는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습 1: 테스트의 작은 입력을 한 곳 바꾸고 기대 결과를 직접 계산한 뒤 실행한다. 실습 2: 본문의 실패 사례를 설명하는 입력을 추가한다. 실습 3: 알고리즘을 수정했다면 원래 검사와 독립 오라클을 모두 다시 실행한다. 실패한 검사를 지워 통과시키지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "결과가 같다는 사실과 구현의 성능·모든 입력에 대한 정확성은 다르다. 출력의 Check 수는 루프 반복을 포함한 실행 호출 수이며 CTest에는 한 프로그램이 등록된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · 안정 정렬은 항상 빠른 정렬인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안정은 같은 키의 상대 순서 보존을 뜻하며 속도나 메모리 사용량을 뜻하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · comp(x,x)가 true여도 동점 처리가 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 된다. 엄격 약순서 요구를 위반한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · 같은 priority에서 arrival도 비교하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "명시적인 복합 키 순서가 된다. 입력 순서와 arrival 값이 다르면 안정 정렬과 결과 의미가 달라진다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 빈 구간에서 mid 계산 후 재귀가 필요한가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 길이2미만이면 바로 종료해 무한 재귀를 피한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · 표본 전이성 검사가 증명인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 표본 밖 반례가 남을 수 있어 비교자 정의 자체를 검토해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장: 렌더 정렬에서 투명 물체는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "깊이 키·동점 정책·정렬 방향과 혼합의 요구를 먼저 정한다. 이 정수 이벤트 예제가 모든 렌더 순서를 해결하지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "전체 C++20 코드와 실제 파일 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "main.cpp 원본 파일",
+                  "href": "/knowledge/shared/algorithm-core-08-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "CMakeLists.txt",
+                  "href": "/knowledge/shared/algorithm-core-08-lab/project/CMakeLists.txt"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(algorithm_core_08 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(lesson main.cpp)\nif(MSVC)\n  target_compile_options(lesson PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(lesson PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME contract_tests COMMAND lesson)\n"
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <deque>\n#include <functional>\n#include <iostream>\n#include <limits>\n#include <map>\n#include <memory>\n#include <numeric>\n#include <optional>\n#include <queue>\n#include <random>\n#include <set>\n#include <stdexcept>\n#include <string>\n#include <utility>\n#include <vector>\n// Release 빌드에서도 사라지지 않는 계약 검사입니다.\nstatic std::size_t checks = 0;\nvoid Check(bool condition, const char* label) {\n    ++checks;\n    if (!condition)\n        throw std::runtime_error(label);\n}\nstruct Event {\n    int priority;\n    int arrival;\n};\nvoid MergeSort(std::vector<Event> & a, std::size_t lo, std::size_t hi, std::vector<Event> & temp) {\n    if (hi - lo < 2)\n        return;\n    const auto mid = lo +(hi - lo) / 2;\n    MergeSort(a, lo, mid, temp);\n    MergeSort(a, mid, hi, temp);\n    std::size_t left = lo, right = mid, out = lo;\n    while (left < mid && right < hi) {\n        // 동점이면 왼쪽을 먼저 선택하여 입력 순서를 유지합니다.\n        temp[out++] = a[right].priority < a[left].priority ? a[right++] : a[left++];\n    }\n    while (left < mid) temp[out++] = a[left++];\n    while (right < hi) temp[out++] = a[right++];\n    std::copy(temp.begin() + static_cast<std::ptrdiff_t>(lo), temp.begin() + static_cast<std::ptrdiff_t>(hi), a.begin() + static_cast<std::ptrdiff_t>(lo));\n}\nvoid Sort(std::vector<Event> & a) {\n    std::vector<Event> temp(a.size());\n    MergeSort(a, 0, a.size(), temp);\n}\nint main() {\n    std::mt19937 rng(800);\n    for (std::size_t n = 0; n < 128; ++n) {\n        std::vector<Event> data;\n        for (std::size_t i = 0; i < n; ++i) data.push_back({\n            static_cast<int>(rng() % 7), static_cast<int>(i)\n        });\n        auto expected = data;\n        std::stable_sort(expected.begin(), expected.end(), [](auto a, auto b) {\n            return a.priority < b.priority;\n        });\n        Sort(data);\n        Check(data.size() == expected.size(), \"permutation size\");\n        for (std::size_t i = 0; i < n; ++i)\n            Check(data[i].priority == expected[i].priority && data[i].arrival == expected[i].arrival, \"stable oracle\");\n    }\n    auto less =[](int a, int b) {\n        return a < b;\n    };\n    for (int a = - 2; a <= 2; ++a)\n        for (int b = - 2; b <= 2; ++b)\n        for (int c = - 2; c <= 2; ++c) {\n        Check(!less(a, a), \"irreflexive\");\n        Check(!(less(a, b) && less(b, c)) || less(a, c), \"transitive samples\");\n    }\n    std::cout << \"stable merge sort matches 128 duplicate-rich input lengths\\nPASS: \" << checks << \" contract checks\\n\";\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·실행 검증·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "개념·계약 확인에 사용한 공개 자료",
+              "href": "https://eel.is/c++draft/alg.sorting"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부 자료는 용어와 계약 확인용이다. 게임 상황·설명·그림·C++ 구현과 테스트는 독립 작성했으며 특정 책의 지문·공식 해설을 옮기지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "실제 실행 결과와 소스 SHA-256",
+              "href": "/knowledge/shared/algorithm-core-08-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 Linux GCC 14.2.0 C++20 Release CMake/CTest 1/1 및 별도 UBSan 실행을 확인했다. Windows/MSVC·Clang·GPU·성능 벤치마크·다중 스레드는 검증하지 않았다. 원고의 로컬 검증과 웹 공개 검증은 서로 다른 단계다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "집필 이력·다음 연결",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 신규 정규 과정으로 독립 집필. 기존 교재·URL·학습 저장 식별자를 대체하거나 삭제하지 않는다. 알고리즘 정규 과정은 비용 모델→저장 구조→정렬/탐색→그래프→동적 계획법으로 이어진다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "기존 LIS 심화·복원 교재",
+              "href": "/knowledge/algorithm-lis/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 정규 단원",
+              "href": "/knowledge/algorithm-core-09/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

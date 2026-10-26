@@ -1,0 +1,628 @@
+{
+  "id": "knowledge--algorithm-core-09",
+  "route": "/knowledge/algorithm-core-09/",
+  "kind": "knowledge",
+  "title": "자료구조·알고리즘 09 · 이분 탐색·반열린 구간",
+  "subtitle": "값 하나를 찾기보다 처음 참이 되는 경계를 찾는다",
+  "date": "2026-10-26",
+  "category": "알고리즘",
+  "topic": "algorithm",
+  "tags": [
+    "이분 탐색",
+    "경계",
+    "lower_bound"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "학습 목표·게임 개발 상황",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "lower/upper 경계를 분리해 중복 구간과 삽입 위치를 안전하게 계산한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "시간순으로 정렬된 리플레이 이벤트에서 특정 시각의 첫 항목을 찾고 같은 시각의 항목을 전부 묶고 싶다. 임의의 일치 원소 하나를 찾는 검색보다 경계 두 개를 찾는 방식이 요구에 잘 맞는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "선수 학습",
+              "href": "/knowledge/algorithm-core-08/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전제: C++20 단일 스레드 CPU 실습. 문자·파일·네트워크 입력은 없고 정수 ID와 메모리 안의 고정 시드 데이터를 사용한다. 외부 라이브러리나 실행 파일 다운로드는 필요하지 않다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-1",
+      "title": "원소 구간과 답 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검사할 원소는 [lo,hi) 안에 있고 답의 위치는 lo부터hi까지 가능하다. 배열 끝 n도 유효한 삽입 경계다. n을 찾았다고 a[n]을 읽을 수 있는 것은 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-2",
+      "title": "lower_bound의 단조 조건",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정렬된 배열에서 a[i]<x는 앞에서는 참, 뒤에서는 거짓이다. mid가 참이면 mid까지 답 후보가 아니므로 lo=mid+1, 거짓이면 mid도 답일 수 있어 hi=mid로 둔다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-3",
+      "title": "매번 구간이 줄어든다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "lo<hi이면 mid는 [lo,hi)에 있다. lo를mid+1로 올리거나 hi를mid로 내리면 구간 길이가 줄어 종료한다. lo=mid만 사용하면 길이1인 구간에서 멈추지 않을 수 있다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-4",
+      "title": "upper_bound는 다른 경계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "upper는 a[i]<=x인 영역 다음을 찾는다. lower가 첫 x 위치, upper가 마지막 x 다음 위치이므로 같은 값의 개수는 upper−lower다. [4,4,4]에서 두 경계는0과3이다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-5",
+      "title": "정렬은 호출의 전제",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "함수는 매번 정렬 여부를 검사하지 않는다. 검사 자체가O(n)이기 때문이다. 이 예제는 테스트가 먼저 정렬한 뒤 호출한다. 외부 입력이 정렬됐는지 모르면 적재 시 한 번 검증하거나 정렬하는 정책이 필요하다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept-6",
+      "title": "오버플로와 반복자 종류",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "mid=lo+(hi−lo)/2를 써 lo+hi 덧셈을 피한다. 이 코드는 vector 인덱스의 상수 시간 접근을 전제로 한다. 연결 리스트에 같은 비교 횟수 논리를 적용해도 이동 횟수까지 로그가 되지는 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-1",
+      "title": "작업 예제 · 하한 경계의 세 단계",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "[1,4,4,7]에서4를 찾는다. 처음 [lo,hi)=[0,4),mid=2이고 a[2]<4는 거짓이므로hi=2다. 다음mid=1도 거짓이라hi=1, 마지막mid=0은 참이라lo=1이 된다. 이제lo==hi==1이므로 첫4이상 위치를 찾았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-2",
+      "title": "작업 예제 · 상한 경계는 같은 질문이 아니다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "upper는 a[mid]<=4를 검사한다. mid=2의4는 참이므로lo=3으로 이동하고 a[3]=7은 거짓이라hi=3으로 끝난다. [lower,upper)=[1,3) 안의 두 원소가4다. 모든 값이4인 길이3배열에서도 lower=0,upper=3이 되어 중복 전체를 포함한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-3",
+      "title": "작업 예제 · 끝 경계와 빈 배열",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "찾는 값이8이면 모든 원소가8보다 작아 최종lo=4가 된다. 이는 배열 바깥을 읽으라는 뜻이 아니라 뒤에 삽입할 경계다. 빈 배열은 처음부터lo=hi=0이라 반복문을 실행하지 않고0을 반환한다. 빈 입력을 특별한 읽기 동작으로 처리하지 않아도 된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-4",
+      "title": "작업 예제 · 오류를 작은 반례로 잡는다",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "거짓인 mid도 답일 수 있는데 hi=mid−1로 줄이면 첫 경계를 건너뛸 수 있다. 반대로 참인 mid를 lo=mid로 남겨 두면 길이1에서 진행하지 않는다. 매 분기마다 어떤 후보를 안전하게 버렸는지 문장으로 설명하면 인덱스 공식의 암기보다 오류를 잘 막는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "title": "상태를 손으로 추적하기",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-09/assets/trace.svg",
+          "alt": "배열 [1,4,4,7], x=4 lo=0,hi=4,mid=2 4<4 거짓 → hi=2; 다음 lo=0,hi=2,mid=1 4<4 거짓 → hi=1; 마지막 lo=0,hi=1,mid=0 1<4 참 → lo=1 종료",
+          "caption": "자체 제작 상태 추적. 실행 시간 측정 그래프가 아니라 논리 상태의 변화다."
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "상태"
+                  }
+                ],
+                [
+                  {
+                    "text": "해석"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "배열 [1,4,4,7], x=4"
+                  }
+                ],
+                [
+                  {
+                    "text": "lo=0,hi=4,mid=2"
+                  }
+                ],
+                [
+                  {
+                    "text": "4<4 거짓 → hi=2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "다음"
+                  }
+                ],
+                [
+                  {
+                    "text": "lo=0,hi=2,mid=1"
+                  }
+                ],
+                [
+                  {
+                    "text": "4<4 거짓 → hi=1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "마지막"
+                  }
+                ],
+                [
+                  {
+                    "text": "lo=0,hi=1,mid=0"
+                  }
+                ],
+                [
+                  {
+                    "text": "1<4 참 → lo=1 종료"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/knowledge/algorithm-core-09/assets/invariant.svg",
+          "alt": "x보다 작은 접두사 → lower: 첫 x 이상 → x와 같은 구간 → upper: 첫 x 초과",
+          "caption": "코드에서 유지하거나 구별해야 하는 핵심 상태."
+        },
+        {
+          "type": "code",
+          "language": "mermaid",
+          "text": "flowchart TD\n A[\"입력 계약과 현재 상태 확인\"] --> B[\"x보다 작은 접두사\"]\n B --> C[\"lower: 첫 x 이상\"]\n C --> D[\"x와 같은 구간\"]\n D --> E[\"upper: 첫 x 초과\"]\n E --> F[\"오라클·경계 조건과 결과 비교\"]"
+        }
+      ]
+    },
+    {
+      "id": "complexity",
+      "title": "복잡도와 적용 범위",
+      "tab": "document",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정렬된 vector에서 비교·인덱스 접근 O(log n), 추가 공간 O(1). 정렬 준비 O(n log n)나 입력 검증 O(n)은 검색 자체와 별도로 계산한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "찾은 위치가 n일 때 역참조하면 범위 밖이다. 존재 검사에는 pos<n && a[pos]==x를 사용한다. 중복 입력에서 lower와upper를 뒤바꾸면 개수와 삽입 정책이 달라진다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-downloads",
+      "title": "예제 파일 다운로드 · 빌드와 실행",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "예제 프로젝트 ZIP 다운로드",
+              "href": "/knowledge/examples/algorithm-core-09.zip"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "빌드·실행 README",
+              "href": "/knowledge/examples/readmes/algorithm-core-09.md"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "압축 안의 project/main.cpp와 CMakeLists.txt를 함께 사용한다. 공개 전 파일·ZIP 검증은 발행 단계에서 별도로 수행한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "sh",
+          "text": "cmake -S project -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build\nctest --test-dir build --output-on-failure"
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "text": "lower([4,4,4],4)=0 upper=3; insertion boundaries include size\nPASS: 6402 contract checks\n"
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "title": "예측 → 실행 → 반례 만들기",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 위 상태 표의 다음 줄을 가리고 종이에 결과를 예측한다. 전체 소스의 Check를 읽어 정상 입력뿐 아니라 빈 값·중복·최댓값·부재 상태 중 이 자료구조에 해당하는 경계를 찾는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실습 1: 테스트의 작은 입력을 한 곳 바꾸고 기대 결과를 직접 계산한 뒤 실행한다. 실습 2: 본문의 실패 사례를 설명하는 입력을 추가한다. 실습 3: 알고리즘을 수정했다면 원래 검사와 독립 오라클을 모두 다시 실행한다. 실패한 검사를 지워 통과시키지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "결과가 같다는 사실과 구현의 성능·모든 입력에 대한 정확성은 다르다. 출력의 Check 수는 루프 반복을 포함한 실행 호출 수이며 CTest에는 한 프로그램이 등록된다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "title": "접어서 확인하는 복습과 확장",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 1 · lower의 반환 n은 실패 값인가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "x이상 원소가 없다는 정상 경계다. 삽입 위치로는 유효하지만 원소 인덱스는 아니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · lo=mid 대신 mid+1인 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "mid 원소가 답이 아님을 확인했으며 길이1구간도 반드시 줄여야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · 중복4가3개일 때 count는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "upper−lower=3이다. 임의 일치 인덱스 하나로는 구간 전체를 알 수 없다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 4 · 정렬 안 된 입력도 가끔 맞으면 괜찮은가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 단조 분할 전제가 없으므로 올바름이 보장되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 5 · 모든 값보다 작은 x의 lower는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0이다. 모든 값보다 큰 x이면 n이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 6 · 확장: 최소 통과 예산을 찾으려면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "예산이 증가할수록 판정이 거짓에서 참으로 단조롭게 변한다는 증명이 먼저 필요하다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "full-code",
+      "title": "한국어 주석 전체 소스",
+      "tab": "practice",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "전체 C++20 코드와 실제 파일 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "main.cpp 원본 파일",
+                  "href": "/knowledge/shared/algorithm-core-09-lab/project/main.cpp"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "CMakeLists.txt",
+                  "href": "/knowledge/shared/algorithm-core-09-lab/project/CMakeLists.txt"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cmake",
+              "text": "cmake_minimum_required(VERSION 3.16)\nproject(algorithm_core_09 LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 20)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nadd_executable(lesson main.cpp)\nif(MSVC)\n  target_compile_options(lesson PRIVATE /W4 /utf-8)\nelse()\n  target_compile_options(lesson PRIVATE -Wall -Wextra -Wpedantic -Werror)\nendif()\nenable_testing()\nadd_test(NAME contract_tests COMMAND lesson)\n"
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <deque>\n#include <functional>\n#include <iostream>\n#include <limits>\n#include <map>\n#include <memory>\n#include <numeric>\n#include <optional>\n#include <queue>\n#include <random>\n#include <set>\n#include <stdexcept>\n#include <string>\n#include <utility>\n#include <vector>\n// Release 빌드에서도 사라지지 않는 계약 검사입니다.\nstatic std::size_t checks = 0;\nvoid Check(bool condition, const char* label) {\n    ++checks;\n    if (!condition)\n        throw std::runtime_error(label);\n}\nstd::size_t Lower(const std::vector<int> & a, int value) {\n    std::size_t lo = 0, hi = a.size();\n    // 답의 경계는 닫힌 범위 [lo, hi] 안에, 검사할 원소는 [lo, hi)에 있습니다.\n    while (lo < hi) {\n        const auto mid = lo +(hi - lo) / 2;\n        if (a[mid] < value) lo = mid + 1;\n        else hi = mid;\n    }\n    return lo;\n}\nstd::size_t Upper(const std::vector<int> & a, int value) {\n    std::size_t lo = 0, hi = a.size();\n    while (lo < hi) {\n        auto mid = lo +(hi - lo) / 2;\n        if (a[mid] <= value) lo = mid + 1;\n        else hi = mid;\n    }\n    return lo;\n}\nint main() {\n    Check(Lower({}, 4) == 0, \"empty end boundary\");\n    Check(Lower({4, 4, 4}, 4) == 0 && Upper({4, 4, 4}, 4) == 3, \"duplicate interval\");\n    std::mt19937 rng(900);\n    for (std::size_t n = 0; n < 128; ++n) {\n        std::vector<int> a(n);\n        for (auto & x : a) x = static_cast<int>(rng() % 21) - 10;\n        std::sort(a.begin(), a.end());\n        for (int x = - 12; x <= 12; ++x) {\n            auto lo = Lower(a, x), hi = Upper(a, x);\n            auto count = static_cast<std::size_t>(std::count(a.begin(), a.end(), x));\n            Check(hi >= lo && hi - lo == count, \"equal interval\");\n            Check(lo == static_cast<std::size_t>(std::find_if(a.begin(), a.end(), [x](int v) {\n                return v >= x;\n            }) - a.begin()), \"linear boundary oracle\");\n        }\n    }\n    std::cout << \"lower([4,4,4],4)=0 upper=3; insertion boundaries include size\\nPASS: \" << checks << \" contract checks\\n\";\n}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "title": "출처·실행 검증·한계",
+      "tab": "sources",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "개념·계약 확인에 사용한 공개 자료",
+              "href": "https://eel.is/c++draft/alg.binary.search"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "외부 자료는 용어와 계약 확인용이다. 게임 상황·설명·그림·C++ 구현과 테스트는 독립 작성했으며 특정 책의 지문·공식 해설을 옮기지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "실제 실행 결과와 소스 SHA-256",
+              "href": "/knowledge/shared/algorithm-core-09-lab/verification.json"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 Linux GCC 14.2.0 C++20 Release CMake/CTest 1/1 및 별도 UBSan 실행을 확인했다. Windows/MSVC·Clang·GPU·성능 벤치마크·다중 스레드는 검증하지 않았다. 원고의 로컬 검증과 웹 공개 검증은 서로 다른 단계다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "집필 이력·다음 연결",
+      "tab": "history",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-26 신규 정규 과정으로 독립 집필. 기존 교재·URL·학습 저장 식별자를 대체하거나 삭제하지 않는다. 알고리즘 정규 과정은 비용 모델→저장 구조→정렬/탐색→그래프→동적 계획법으로 이어진다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "기존 LIS 심화·복원 교재",
+              "href": "/knowledge/algorithm-lis/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 정규 단원",
+              "href": "/knowledge/algorithm-core-10/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

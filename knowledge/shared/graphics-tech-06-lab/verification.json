@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-26",
+  "environment": "Linux x86_64, GCC 14.2.0, CMake 3.31.6",
+  "language": "C++17",
+  "tested": [
+    "CMake Debug build and CTest",
+    "CMake Release build and CTest",
+    "GCC UndefinedBehaviorSanitizer"
+  ],
+  "not_tested": [
+    "Windows/MSVC",
+    "GPU shaders and rasterization",
+    "real-time visual quality",
+    "GPU performance"
+  ],
+  "checks_per_execution": 58,
+  "note": "Repeated build modes run the same conditions; counts are not added as independent tests. Looped sweeps are included in condition count.",
+  "files": {
+    "project/main.cpp": "ed285e7c20bc2e34de9c03fecfd03e453c760c464a28ec2d9c9258bdad5eb451",
+    "project/CMakeLists.txt": "862fc28296b0dc09ebc792be99a4b62487e6cdcdbac5ef106faeb5ea190e6c77"
+  },
+  "runs": [
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake -S <repository>/knowledge/shared/graphics-tech-06-lab/project -B <build>/cmake-06-Debug -DCMAKE_BUILD_TYPE=Debug",
+      "exit_code": 0,
+      "stdout": "-- The CXX compiler identification is GNU 14.2.0\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: /usr/bin/c++ - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring done (0.2s)\n-- Generating done (0.0s)\n-- Build files have been written to: <build>/cmake-06-Debug\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake --build <build>/cmake-06-Debug",
+      "exit_code": 0,
+      "stdout": "[ 50%] Building CXX object CMakeFiles/graphics_lab.dir/main.cpp.o\n[100%] Linking CXX executable graphics_lab\n[100%] Built target graphics_lab\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/ctest --test-dir <build>/cmake-06-Debug --output-on-failure",
+      "exit_code": 0,
+      "stdout": "Internal ctest changing into directory: <build>/cmake-06-Debug\nTest project <build>/cmake-06-Debug\n    Start 1: contracts\n1/1 Test #1: contracts ........................   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.00 sec\n",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/cmake-06-Debug/graphics_lab",
+      "exit_code": 0,
+      "stdout": "center HDR=9.75; SDR=0.906977\nPASS: 58 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake -S <repository>/knowledge/shared/graphics-tech-06-lab/project -B <build>/cmake-06-Release -DCMAKE_BUILD_TYPE=Release",
+      "exit_code": 0,
+      "stdout": "-- The CXX compiler identification is GNU 14.2.0\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: /usr/bin/c++ - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring done (0.2s)\n-- Generating done (0.0s)\n-- Build files have been written to: <build>/cmake-06-Release\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake --build <build>/cmake-06-Release",
+      "exit_code": 0,
+      "stdout": "[ 50%] Building CXX object CMakeFiles/graphics_lab.dir/main.cpp.o\n[100%] Linking CXX executable graphics_lab\n[100%] Built target graphics_lab\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/ctest --test-dir <build>/cmake-06-Release --output-on-failure",
+      "exit_code": 0,
+      "stdout": "Internal ctest changing into directory: <build>/cmake-06-Release\nTest project <build>/cmake-06-Release\n    Start 1: contracts\n1/1 Test #1: contracts ........................   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.00 sec\n",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/cmake-06-Release/graphics_lab",
+      "exit_code": 0,
+      "stdout": "center HDR=9.75; SDR=0.906977\nPASS: 58 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": "g++ -std=c++17 -O1 -g -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wpedantic <repository>/knowledge/shared/graphics-tech-06-lab/project/main.cpp -o <build>/ubsan-06",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/ubsan-06",
+      "exit_code": 0,
+      "stdout": "center HDR=9.75; SDR=0.906977\nPASS: 58 contract checks\n",
+      "stderr": ""
+    }
+  ]
+}

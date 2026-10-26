@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-26",
+  "environment": "Linux x86_64, GCC 14.2.0, CMake 3.31.6",
+  "language": "C++17",
+  "tested": [
+    "CMake Debug build and CTest",
+    "CMake Release build and CTest",
+    "GCC UndefinedBehaviorSanitizer"
+  ],
+  "not_tested": [
+    "Windows/MSVC",
+    "GPU shaders and rasterization",
+    "real-time visual quality",
+    "GPU performance"
+  ],
+  "checks_per_execution": 113,
+  "note": "Repeated build modes run the same conditions; counts are not added as independent tests. Looped sweeps are included in condition count.",
+  "files": {
+    "project/main.cpp": "8baba457b401c75149f3beca078977e85e08bb2bb04f6eb0a11740b89047bba5",
+    "project/CMakeLists.txt": "f451d958bddb10ddfb0718c71ec1edb04fea5fd25f31a9b5372ff3517a3584ee"
+  },
+  "runs": [
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake -S <repository>/knowledge/shared/graphics-tech-03-lab/project -B <build>/cmake-03-Debug -DCMAKE_BUILD_TYPE=Debug",
+      "exit_code": 0,
+      "stdout": "-- Configuring done (0.0s)\n-- Generating done (0.0s)\n-- Build files have been written to: <build>/cmake-03-Debug\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake --build <build>/cmake-03-Debug",
+      "exit_code": 0,
+      "stdout": "[ 50%] Building CXX object CMakeFiles/graphics_lab.dir/main.cpp.o\n[100%] Linking CXX executable graphics_lab\n[100%] Built target graphics_lab\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/ctest --test-dir <build>/cmake-03-Debug --output-on-failure",
+      "exit_code": 0,
+      "stdout": "Internal ctest changing into directory: <build>/cmake-03-Debug\nTest project <build>/cmake-03-Debug\n    Start 1: contracts\n1/1 Test #1: contracts ........................   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.00 sec\n",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/cmake-03-Debug/graphics_lab",
+      "exit_code": 0,
+      "stdout": "plastic=0.203718 metal=0.63662 (BRDF response, not display signal)\nPASS: 113 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake -S <repository>/knowledge/shared/graphics-tech-03-lab/project -B <build>/cmake-03-Release -DCMAKE_BUILD_TYPE=Release",
+      "exit_code": 0,
+      "stdout": "-- Configuring done (0.0s)\n-- Generating done (0.0s)\n-- Build files have been written to: <build>/cmake-03-Release\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/cmake --build <build>/cmake-03-Release",
+      "exit_code": 0,
+      "stdout": "[ 50%] Building CXX object CMakeFiles/graphics_lab.dir/main.cpp.o\n[100%] Linking CXX executable graphics_lab\n[100%] Built target graphics_lab\n",
+      "stderr": ""
+    },
+    {
+      "command": "<workspace>/atlas-build-tools/cmake/data/bin/ctest --test-dir <build>/cmake-03-Release --output-on-failure",
+      "exit_code": 0,
+      "stdout": "Internal ctest changing into directory: <build>/cmake-03-Release\nTest project <build>/cmake-03-Release\n    Start 1: contracts\n1/1 Test #1: contracts ........................   Passed    0.01 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.01 sec\n",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/cmake-03-Release/graphics_lab",
+      "exit_code": 0,
+      "stdout": "plastic=0.203718 metal=0.63662 (BRDF response, not display signal)\nPASS: 113 contract checks\n",
+      "stderr": ""
+    },
+    {
+      "command": "g++ -std=c++17 -O1 -g -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wpedantic <repository>/knowledge/shared/graphics-tech-03-lab/project/main.cpp -o <build>/ubsan-03",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "<build>/ubsan-03",
+      "exit_code": 0,
+      "stdout": "plastic=0.203718 metal=0.63662 (BRDF response, not display signal)\nPASS: 113 contract checks\n",
+      "stderr": ""
+    }
+  ]
+}
