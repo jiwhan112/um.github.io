@@ -7,18 +7,915 @@
     "author": "Gayle Laakmann McDowell"
   },
   "current": {
-    "chapter": 3,
-    "number": "3.2",
-    "topic_en": "Stack Min",
+    "chapter": 6,
+    "topic_en": "Ants on a Triangle",
     "study_date": "2026-10-27",
-    "published_date": "2026-10-27"
+    "published_date": "2026-10-27",
+    "number": "6.4"
   },
   "next": {
-    "chapter": 3,
-    "number": "3.3",
-    "topic_en": "Stack of Plates"
+    "number": "6.5",
+    "chapter": 6,
+    "status": "blocked_source_conflict",
+    "reason": "Author Java Q6_05_Egg_Drop conflicts with author-linked JavaScript6.05 Jugs of Water; canonical numbering must be resolved before publication."
   },
   "episodes": [
+    {
+      "number": "6.4.2",
+      "chapter": 6,
+      "topic_en": "Ants on a Triangle",
+      "title": "심화 — 사람마다 방향 취향이 다르다면",
+      "summary": "원형 산책로에 네 사람이 같은 간격으로 서 있습니다. 시계 방향을 고를 확률은 순서대로 1/2,1/2,1/3,2/3입니다. 각 선택은 독립이고 보행 속도는 같습니다. 아무도 만나지 않을 확률과 누군가 만날 확률을 구하세요. 취향의 평균이 1/2이니 공정 동전 네 개와 같다는 주장도 검토하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-06-04-02-ants-on-a-triangle/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "논리",
+        "확률",
+        "심화"
+      ]
+    },
+    {
+      "number": "6.4.1",
+      "chapter": 6,
+      "topic_en": "Ants on a Triangle",
+      "title": "기본 — 세 갈림길 없는 원형 산책",
+      "summary": "작은 원형 산책로의 세 지점에 한 사람씩 서 있습니다. 각 사람은 동전을 던져 시계 방향 또는 반시계 방향으로 동시에 걷기 시작합니다. 모두 같은 속도로 계속 걸으며 앞사람을 지나칠 수는 없습니다. 처음으로 누군가 마주치는 사건의 확률을 구하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-06-04-ants-on-a-triangle/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "논리",
+        "확률",
+        "기본"
+      ]
+    },
+    {
+      "number": "6.3.2",
+      "chapter": 6,
+      "topic_en": "Dominos",
+      "title": "심화 — 색 개수는 같은데도 못 채우는 바닥",
+      "summary": "세로 3행·가로 6열에서 다음 표시의 #칸만 바닥입니다. 윗행은 .#..#., 가운데 행은 ######, 아랫행은 .#..#. 입니다. 열 개의 바닥 칸을 인접 두 칸 타일 다섯 개로 덮을 수 있을까요? 두 색 개수가 같다는 조건이 충분한지 검토하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-06-03-02-dominos/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "논리",
+        "불변조건",
+        "심화"
+      ]
+    },
+    {
+      "number": "6.3.1",
+      "chapter": 6,
+      "topic_en": "Dominos",
+      "title": "기본 — 두 칸 타일과 빠진 두 자리",
+      "summary": "세로 3행·가로 4열의 바닥에서 (1행, 1열)과 (3행, 3열)을 비워 두었습니다. 남은 10칸을 가로 또는 세로로 인접한 두 칸을 덮는 타일 5개로 빈틈없이 채울 수 있을까요? 가능한 배치를 찾거나, 어떤 배치도 불가능하다는 짧은 이유를 제시하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-06-03-dominos/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "논리",
+        "불변조건",
+        "기본"
+      ]
+    },
+    {
+      "number": "6.2.2",
+      "chapter": 6,
+      "topic_en": "Basketball",
+      "title": "심화 — 성공률만 같으면 계산도 같을까?",
+      "summary": "세 번의 체험 결과가 각각 성공일 확률은 모두 3/5라고 합니다. 담당자는 그러므로 두 번 이상 성공할 확률도 반드시 3p²−2p³이라고 말합니다. 이 주장을 반박하거나 증명하세요. 세 결과가 서로 의존할 수 있을 때, 각 회차 성공률은 3/5로 같지만 두 번 이상 성공할 확률은 달라지는 두 모형을 만들어 보세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-06-02-02-basketball/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "논리",
+        "확률",
+        "심화"
+      ]
+    },
+    {
+      "number": "6.2.1",
+      "chapter": 6,
+      "topic_en": "Basketball",
+      "title": "기본 — 한 번 성공과 세 번 중 두 번 성공",
+      "summary": "주머니에는 금색 표 1개와 흰색 표 2개가 있습니다. 한 표를 뽑아 색을 확인한 뒤 반드시 다시 넣고 충분히 섞습니다. 상품을 받는 방법 A는 한 번 뽑아 금색이면 성공, B는 세 번 뽑아 금색이 두 번 이상이면 성공입니다. 어느 쪽의 성공 확률이 더 높을까요?",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-06-02-basketball/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "논리",
+        "확률",
+        "기본"
+      ]
+    },
+    {
+      "number": "6.1.2",
+      "chapter": 6,
+      "topic_en": "Heavy Pill",
+      "title": "심화 — 두꺼운지 얇은지도 모르는 봉투",
+      "summary": "세 상자 중 정확히 하나만 다른 봉투를 담고 있습니다. 정상은 10g이고 이상 상자의 봉투는 전부 8g이거나 전부 12g입니다. 어느 상자인지와 가벼운지 무거운지를 단 한 번의 총무게 측정으로 함께 알아내세요. A·B·C에서 1·2·3장씩 골랐을 때 56g이 나오면 어떻게 해석할까요?",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-06-01-02-heavy-pill/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "논리",
+        "정보",
+        "심화"
+      ]
+    },
+    {
+      "number": "6.1.1",
+      "chapter": 6,
+      "topic_en": "Heavy Pill",
+      "title": "기본 — 한 번의 저울로 두꺼운 봉투 찾기",
+      "summary": "봉투가 충분히 들어 있는 상자 A·B·C가 있습니다. 보통 봉투는 10g인데 정확히 한 상자의 봉투만 모두 12g입니다. 숫자로 총무게를 보여 주는 저울을 단 한 번 쓸 수 있습니다. 상자마다 몇 장을 골라 함께 재면 어느 상자가 두꺼운 봉투인지 항상 알아낼 수 있을까요? 또한 A에서 1장, B에서 2장, C에서 3장을 고르는 계획으로 측정값이 64g이었다면 어느 상자인지도 판단하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-06-01-heavy-pill/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "논리",
+        "정보",
+        "기본"
+      ]
+    },
+    {
+      "number": "5.8.2",
+      "chapter": 5,
+      "topic_en": "Draw Line",
+      "title": "심화 — 테두리만 칠하는 작은 액자",
+      "summary": "가로 8칸·세로 5칸의 빈 픽셀 종이에 왼쪽 위 (1,1), 오른쪽 아래 (6,3)인 직사각형의 테두리만 칠하세요. 각 행을 8비트로 적고, 폭이나 높이가 1인 납작한 액자에서도 같은 규칙이 작동하도록 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-08-02-draw-line/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "심화"
+      ]
+    },
+    {
+      "number": "5.8.1",
+      "chapter": 5,
+      "topic_en": "Draw Line",
+      "title": "기본 — 종이 픽셀에 한 줄 긋기",
+      "summary": "가로 16칸의 종이 화면 한 행에서 x=3부터 x=12까지 검게 칠하세요. 이미 검은 칸은 x=0과 x=15입니다. 화면을 8칸씩 두 묶음으로 적었을 때 최종 두 묶음의 0·1 표시를 구하고, 같은 묶음 안에서만 선을 긋는 경우도 처리할 수 있는 규칙을 만드세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-08-draw-line/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "기본"
+      ]
+    },
+    {
+      "number": "5.7.2",
+      "chapter": 5,
+      "topic_en": "Pairwise Swap",
+      "title": "심화 — 교환해도 그대로인 무늬는 몇 개?",
+      "summary": "여덟 장의 두 색 깃발을 왼쪽부터 이웃한 두 장씩 교환합니다. 교환 전후가 완전히 같은 무늬는 몇 개일까요? 모든 256개를 적지 말고 묶음의 조건으로 세어 보세요. 일반적으로 2m장일 때도 답을 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-07-02-pairwise-swap/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "심화"
+      ]
+    },
+    {
+      "number": "5.7.1",
+      "chapter": 5,
+      "topic_en": "Pairwise Swap",
+      "title": "기본 — 이웃한 깃발을 두 장씩 바꾸기",
+      "summary": "여덟 장의 깃발 10 11 00 10을 왼쪽부터 두 장씩 묶었습니다. 각 묶음 안에서만 왼쪽과 오른쪽 깃발을 맞바꾼 결과를 구하세요. 한 칸씩 차례로 밀면 왜 다른 작업이 되는지도 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-07-pairwise-swap/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "기본"
+      ]
+    },
+    {
+      "number": "5.6.2",
+      "chapter": 5,
+      "topic_en": "Conversion",
+      "title": "심화 — 스위치마다 가격이 다른 수리",
+      "summary": "현재 011010을 목표 110001로 바꿉니다. 왼쪽부터 한 번 누르는 비용은 [2,7,1,4,3,6]입니다. 최소 총 비용과 눌러야 할 위치를 구하세요. 값싼 칸을 여러 번 누르면 비싼 칸을 안 누르고도 해결할 수 있는지 검토하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-06-02-conversion/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "심화"
+      ]
+    },
+    {
+      "number": "5.6.1",
+      "chapter": 5,
+      "topic_en": "Conversion",
+      "title": "기본 — 두 전광판 사이의 최소 스위치",
+      "summary": "현재 전광판 101101을 목표 100011로 바꾸려 합니다. 한 번 누르면 선택한 한 칸만 0과 1이 뒤집힙니다. 최소 몇 번 눌러야 하며 어느 칸을 누를까요? 각 칸의 차이만 따져도 전체 최소가 되는 이유를 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-06-conversion/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "기본"
+      ]
+    },
+    {
+      "number": "5.5.2",
+      "chapter": 5,
+      "topic_en": "Debugger",
+      "title": "심화 — 한 번에 하나씩 꺼지는 기록",
+      "summary": "표시 101100에 대해 가장 오른쪽의 켜진 칸을 하나씩 끄는 작업을 반복합니다. 몇 번 만에 모두 꺼질까요? 앞 문제의 n AND (n−1)을 반복하는 절차가 처음 켜진 칸 수를 세는 방법임을 증명하고, 처음 값을 잊지 않으려면 어떻게 해야 할지도 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-05-02-debugger/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "심화"
+      ]
+    },
+    {
+      "number": "5.5.1",
+      "chapter": 5,
+      "topic_en": "Debugger",
+      "title": "기본 — 딱 하나 켜진 표시를 알아보기",
+      "summary": "양의 정수 n에 대해 n과 n−1을 이진 표시로 겹치고 둘 다 1인 칸만 남깁니다. 결과가 0이면 켜진 칸이 딱 하나라는 주장을 검토하세요. 예로 n=8과 n=12를 비교하고, 0을 입력에 포함하면 무엇을 주의해야 할지도 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-05-debugger/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "기본"
+      ]
+    },
+    {
+      "number": "5.4.2",
+      "chapter": 5,
+      "topic_en": "Next Number",
+      "title": "심화 — 같은 불빛 수로 바로 이전 번호",
+      "summary": "여섯 칸 010011보다 작으면서 켜진 칸 수가 같은 가장 큰 표시를 찾으세요. 기본 문제의 다음 번호 절차를 단순히 거꾸로 읽는 것으로 충분할지 검토하고, 남은 1을 어느 쪽으로 모아야 하는지 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-04-02-next-number/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "심화"
+      ]
+    },
+    {
+      "number": "5.4.1",
+      "chapter": 5,
+      "topic_en": "Next Number",
+      "title": "기본 — 같은 개수의 불빛으로 다음 번호",
+      "summary": "여섯 칸의 표시판 001110을 자연수로 읽습니다. 켜진 칸의 개수는 그대로 유지하면서 지금보다 큰 가장 작은 번호를 만드세요. 모든 큰 번호를 하나씩 시험하는 대신 무늬 안에서 바꿀 자리를 찾아보세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-04-next-number/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "기본"
+      ]
+    },
+    {
+      "number": "5.3.2",
+      "chapter": 5,
+      "topic_en": "Flip Bit to Win",
+      "title": "심화 — 불빛 두 개를 켤 수 있다면",
+      "summary": "조명 10100111에서 0을 최대 두 개까지 1로 바꿀 수 있습니다. 가장 긴 연속 불빛의 길이를 구하고, 두 경계를 움직이는 창으로 모든 후보를 빠짐없이 검사하는 방법을 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-03-02-flip-bit-to-win/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "심화"
+      ]
+    },
+    {
+      "number": "5.3.1",
+      "chapter": 5,
+      "topic_en": "Flip Bit to Win",
+      "title": "기본 — 꺼진 등 하나로 가장 긴 불빛",
+      "summary": "일렬 조명 110111011에서 꺼진 등 하나를 켜거나 아무것도 바꾸지 않을 수 있습니다. 연속으로 켜진 구간의 최대 길이는 얼마인가요? 가능한 모든 자리에서 다시 처음부터 세지 않는 방법을 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-03-flip-bit-to-win/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "기본"
+      ]
+    },
+    {
+      "number": "5.2.2",
+      "chapter": 5,
+      "topic_en": "Binary to String",
+      "title": "심화 — 끝나는 조각표와 끝나지 않는 조각표",
+      "summary": "3/8, 3/12, 1/10을 반씩 작아지는 조각 카드만으로 정확하게 나타내려 합니다. 유한 장으로 끝나는 길이를 골라내는 규칙을 만들고, 끝나지 않는 경우에는 왜 계속 반복되는지도 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-02-02-binary-to-string/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "심화"
+      ]
+    },
+    {
+      "number": "5.2.1",
+      "chapter": 5,
+      "topic_en": "Binary to String",
+      "title": "기본 — 반 조각 카드로 정확히 나누기",
+      "summary": "길이 1인 띠를 1/2, 1/4, 1/8, 1/16, … 조각으로 나눌 수 있습니다. 각 크기의 조각은 한 장씩만 쓸 수 있습니다. 5/8을 정확히 만들려면 어느 조각을 고를까요? 더 일반적으로 남은 길이를 두 배씩 하는 방법으로 선택 여부를 알아내 보세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-02-binary-to-string/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "기본"
+      ]
+    },
+    {
+      "number": "5.1.2",
+      "chapter": 5,
+      "topic_en": "Insertion",
+      "title": "심화 — 겹치는 두 띠지 작업의 순서",
+      "summary": "여섯 칸 000000에 작업 A와 B를 합니다. A는 1~3번을 101로 바꾸고 B는 3~4번을 01로 바꿉니다. A→B와 B→A의 결과가 같은지 판정하고, 어떤 두 구간 대입이든 순서를 바꿔도 되는 정확한 조건을 찾아보세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-01-02-insertion/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "심화"
+      ]
+    },
+    {
+      "number": "5.1.1",
+      "chapter": 5,
+      "topic_en": "Insertion",
+      "title": "기본 — 띠지의 세 칸만 새 무늬로",
+      "summary": "여덟 칸의 조명 띠지 11010110에서 오른쪽부터 2번·3번·4번 칸을 새 무늬 001로 바꾸세요. 나머지 칸은 손대면 안 됩니다. 완성된 띠지를 쓰고, 이미 켜진 칸도 확실히 꺼지게 만드는 순서를 설명하세요.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-05-01-insertion/",
+      "category": "개념과 알고리즘",
+      "tags": [
+        "비트",
+        "논리",
+        "기본"
+      ]
+    },
+    {
+      "number": "4.12.2",
+      "chapter": 4,
+      "topic_en": "Paths with Sum",
+      "title": "심화 — 경로의 누적합을 빌려 쓰기",
+      "summary": "목표합을 만드는 아래방향 길의 개수를 큰 지도에서도 세고 싶습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-12-02-paths-with-sum/",
+      "category": "트리와 그래프",
+      "tags": [
+        "경로 합",
+        "누적합",
+        "백트래킹"
+      ]
+    },
+    {
+      "number": "4.12.1",
+      "chapter": 4,
+      "topic_en": "Paths with Sum",
+      "title": "기본 — 내려가는 길의 합계",
+      "summary": "산책 지도는 갈림길마다 점수가 적힌 나무입니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-12-paths-with-sum/",
+      "category": "트리와 그래프",
+      "tags": [
+        "경로 합",
+        "누적합",
+        "백트래킹"
+      ]
+    },
+    {
+      "number": "4.11.2",
+      "chapter": 4,
+      "topic_en": "Random Node",
+      "title": "심화 — 한 장의 추첨표를 아래로 전달하기",
+      "summary": "분류함마다 자신을 포함한 아래쪽 노드 수 size를 저장했습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-11-02-random-node/",
+      "category": "트리와 그래프",
+      "tags": [
+        "균등 확률",
+        "부분 트리 크기",
+        "순위 선택"
+      ]
+    },
+    {
+      "number": "4.11.1",
+      "chapter": 4,
+      "topic_en": "Random Node",
+      "title": "기본 — 분류함마다 같은 당첨 기회",
+      "summary": "전시관의 다섯 분류함 중 하나를 똑같은 확률로 뽑습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-11-random-node/",
+      "category": "트리와 그래프",
+      "tags": [
+        "균등 확률",
+        "부분 트리 크기",
+        "순위 선택"
+      ]
+    },
+    {
+      "number": "4.10.2",
+      "chapter": 4,
+      "topic_en": "Check Subtree",
+      "title": "심화 — 빈 자리 표식을 넣어 기록하기",
+      "summary": "많은 분류도를 비교하기 위해 나무를 한 줄의 토큰 기록으로 바꾸려 합니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-10-02-check-subtree/",
+      "category": "트리와 그래프",
+      "tags": [
+        "부분 트리",
+        "구조 비교",
+        "직렬화"
+      ]
+    },
+    {
+      "number": "4.10.1",
+      "chapter": 4,
+      "topic_en": "Check Subtree",
+      "title": "기본 — 똑같은 작은 분류도를 찾기",
+      "summary": "큰 분류도 안에 작은 분류도가 통째로 들어 있는지 찾습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-10-check-subtree/",
+      "category": "트리와 그래프",
+      "tags": [
+        "부분 트리",
+        "구조 비교",
+        "직렬화"
+      ]
+    },
+    {
+      "number": "4.9.2",
+      "chapter": 4,
+      "topic_en": "BST Sequences",
+      "title": "심화 — 두 가지의 순서를 보존하며 섞기",
+      "summary": "목표 나무는 뿌리4, 왼쪽2, 오른쪽6이고, 2의 왼쪽에는1, 6의 오른쪽에는7이 있습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-09-02-bst-sequences/",
+      "category": "트리와 그래프",
+      "tags": [
+        "삽입 순서",
+        "조합",
+        "순서 보존"
+      ]
+    },
+    {
+      "number": "4.9.1",
+      "chapter": 4,
+      "topic_en": "BST Sequences",
+      "title": "기본 — 같은 분류 나무를 만든 도착 순서",
+      "summary": "빈 분류 나무에 숫자 카드를 하나씩 넣습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-09-bst-sequences/",
+      "category": "트리와 그래프",
+      "tags": [
+        "삽입 순서",
+        "조합",
+        "순서 보존"
+      ]
+    },
+    {
+      "number": "4.8.2",
+      "chapter": 4,
+      "topic_en": "First Common Ancestor",
+      "title": "심화 — 없는 서류가 섞인 질문",
+      "summary": "분류도 검색을 만들었는데 질문에 없는 서류가 들어올 수도 있습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-08-02-first-common-ancestor/",
+      "category": "트리와 그래프",
+      "tags": [
+        "공통 조상",
+        "트리 경로",
+        "존재 확인"
+      ]
+    },
+    {
+      "number": "4.8.1",
+      "chapter": 4,
+      "topic_en": "First Common Ancestor",
+      "title": "기본 — 두 사람의 가장 가까운 공통 갈래",
+      "summary": "가족 관계 대신 서류 분류도를 봅시다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-08-first-common-ancestor/",
+      "category": "트리와 그래프",
+      "tags": [
+        "공통 조상",
+        "트리 경로",
+        "존재 확인"
+      ]
+    },
+    {
+      "number": "4.7.2",
+      "chapter": 4,
+      "topic_en": "Build Order",
+      "title": "심화 — 막힌 준비표에서 고리 증거 찾기",
+      "summary": "준비표에 조건이 추가되었습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-07-02-build-order/",
+      "category": "트리와 그래프",
+      "tags": [
+        "위상 정렬",
+        "의존 관계",
+        "순환 검출"
+      ]
+    },
+    {
+      "number": "4.7.1",
+      "chapter": 4,
+      "topic_en": "Build Order",
+      "title": "기본 — 준비 순서를 정하는 메모",
+      "summary": "동네 전시를 준비합니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-07-build-order/",
+      "category": "트리와 그래프",
+      "tags": [
+        "위상 정렬",
+        "의존 관계",
+        "순환 검출"
+      ]
+    },
+    {
+      "number": "4.6.2",
+      "chapter": 4,
+      "topic_en": "Successor",
+      "title": "심화 — 오른쪽 길이 없을 때 올라갈 곳",
+      "summary": "이번에는 각 보관함에서 부모로도 올라갈 수 있습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-06-02-successor/",
+      "category": "트리와 그래프",
+      "tags": [
+        "중위 순회",
+        "후속 노드",
+        "부모 링크"
+      ]
+    },
+    {
+      "number": "4.6.1",
+      "chapter": 4,
+      "topic_en": "Successor",
+      "title": "기본 — 목록에서 바로 다음 번호",
+      "summary": "정렬된 보관함 트리를 왼쪽 아래부터 차례로 읽습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-06-successor/",
+      "category": "트리와 그래프",
+      "tags": [
+        "중위 순회",
+        "후속 노드",
+        "부모 링크"
+      ]
+    },
+    {
+      "number": "4.5.2",
+      "chapter": 4,
+      "topic_en": "Validate BST",
+      "title": "심화 — 조상의 약속을 두 경계로 접기",
+      "summary": "보관함이 많아졌습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-05-02-validate-bst/",
+      "category": "트리와 그래프",
+      "tags": [
+        "이진 탐색 트리",
+        "범위 제한",
+        "불변식"
+      ]
+    },
+    {
+      "number": "4.5.1",
+      "chapter": 4,
+      "topic_en": "Validate BST",
+      "title": "기본 — 작은 번호는 정말 왼쪽에 있을까?",
+      "summary": "보관함을 나무 모양으로 연결했습니다.",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-05-validate-bst/",
+      "category": "트리와 그래프",
+      "tags": [
+        "이진 탐색 트리",
+        "범위 제한",
+        "불변식"
+      ]
+    },
+    {
+      "number": "4.4.2",
+      "chapter": 4,
+      "topic_en": "Check Balanced",
+      "title": "심화 — 높이와 실패 신호를 한 번에 전달하기",
+      "summary": "불균형을 놓치지 않는 후위 계산",
+      "category": "트리와 그래프",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-04-02-check-balanced/",
+      "tags": [
+        "트리",
+        "후위 순회",
+        "불변식"
+      ]
+    },
+    {
+      "number": "4.4.1",
+      "chapter": 4,
+      "topic_en": "Check Balanced",
+      "title": "기본 — 뿌리만 반듯한 나무의 함정",
+      "summary": "모든 갈림길의 높이 차이 검사",
+      "category": "트리와 그래프",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-04-check-balanced/",
+      "tags": [
+        "트리",
+        "후위 순회",
+        "불변식"
+      ]
+    },
+    {
+      "number": "4.3.2",
+      "chapter": 4,
+      "topic_en": "List of Depths",
+      "title": "심화 — 대기 줄 없이 깊이별 명단 만들기",
+      "summary": "깊이 우선 순회로도 층 순서를 얻는 조건",
+      "category": "트리와 그래프",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-03-02-list-of-depths/",
+      "tags": [
+        "트리",
+        "BFS",
+        "DFS"
+      ]
+    },
+    {
+      "number": "4.3.1",
+      "chapter": 4,
+      "topic_en": "List of Depths",
+      "title": "기본 — 가족 나무를 세대별 명단으로",
+      "summary": "한 층씩 읽는 순서",
+      "category": "트리와 그래프",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-03-list-of-depths/",
+      "tags": [
+        "트리",
+        "BFS",
+        "DFS"
+      ]
+    },
+    {
+      "number": "4.2.2",
+      "chapter": 4,
+      "topic_en": "Minimal Tree",
+      "title": "심화 — 최소 높이 나무의 뿌리는 꼭 가운데일까",
+      "summary": "가능한 뿌리 후보를 용량으로 판정하기",
+      "category": "트리와 그래프",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-02-02-minimal-tree/",
+      "tags": [
+        "이진 검색 트리",
+        "높이",
+        "구성"
+      ]
+    },
+    {
+      "number": "4.2.1",
+      "chapter": 4,
+      "topic_en": "Minimal Tree",
+      "title": "기본 — 번호표를 질문 나무에 배치하기",
+      "summary": "정렬된 카드로 가장 낮은 검색 나무",
+      "category": "트리와 그래프",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-02-minimal-tree/",
+      "tags": [
+        "이진 검색 트리",
+        "높이",
+        "구성"
+      ]
+    },
+    {
+      "number": "4.1.2",
+      "chapter": 4,
+      "topic_en": "Route Between Nodes",
+      "title": "심화 — 가장 적은 골목을 지나는 안내도",
+      "summary": "도착 가능성에서 최단 경로 한 개로",
+      "category": "트리와 그래프",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-01-02-route-between-nodes/",
+      "tags": [
+        "그래프",
+        "BFS",
+        "경로"
+      ]
+    },
+    {
+      "number": "4.1.1",
+      "chapter": 4,
+      "topic_en": "Route Between Nodes",
+      "title": "기본 — 한 방향 골목으로 편지를 전할 수 있을까",
+      "summary": "연결 여부와 방향을 구분하기",
+      "category": "트리와 그래프",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-04-01-route-between-nodes/",
+      "tags": [
+        "그래프",
+        "BFS",
+        "경로"
+      ]
+    },
+    {
+      "number": "3.6.2",
+      "chapter": 3,
+      "topic_en": "Animal Shelter",
+      "title": "심화 — 오늘은 데려갈 수 없는 동물",
+      "summary": "대기 순서는 유지하고 자격만 바꾸기",
+      "category": "스택과 큐",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-03-06-02-animal-shelter/",
+      "tags": [
+        "큐",
+        "도착 순서",
+        "조건 탐색"
+      ]
+    },
+    {
+      "number": "3.6.1",
+      "chapter": 3,
+      "topic_en": "Animal Shelter",
+      "title": "기본 — 먼저 도착한 동물을 찾는 보호소",
+      "summary": "종류별 줄과 전체 도착 순서",
+      "category": "스택과 큐",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-03-06-animal-shelter/",
+      "tags": [
+        "큐",
+        "도착 순서",
+        "조건 탐색"
+      ]
+    },
+    {
+      "number": "3.5.2",
+      "chapter": 3,
+      "topic_en": "Sort Stack",
+      "title": "심화 — 같은 숫자의 쪽지에도 도착 순서가 있다",
+      "summary": "정렬의 방향과 안정성을 함께 설계하기",
+      "category": "스택과 큐",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-03-05-02-sort-stack/",
+      "tags": [
+        "스택",
+        "정렬",
+        "안정성"
+      ]
+    },
+    {
+      "number": "3.5.1",
+      "chapter": 3,
+      "topic_en": "Sort Stack",
+      "title": "기본 — 위에서만 만질 수 있는 숫자 쪽지",
+      "summary": "보조 더미 하나로 작은 수를 위에",
+      "category": "스택과 큐",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-03-05-sort-stack/",
+      "tags": [
+        "스택",
+        "정렬",
+        "안정성"
+      ]
+    },
+    {
+      "number": "3.4.2",
+      "chapter": 3,
+      "topic_en": "Queue via Stacks",
+      "title": "심화 — 한꺼번에 오래 걸린 창구의 비용",
+      "summary": "최악 한 번과 전체 평균을 구분하기",
+      "category": "스택과 큐",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-03-04-02-queue-via-stacks/",
+      "tags": [
+        "스택",
+        "큐",
+        "상각 분석"
+      ]
+    },
+    {
+      "number": "3.4.1",
+      "chapter": 3,
+      "topic_en": "Queue via Stacks",
+      "title": "기본 — 뒤집어서 줄 세우는 우편 카드",
+      "summary": "두 쌓기를 이용한 먼저 온 순서",
+      "category": "스택과 큐",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-03-04-queue-via-stacks/",
+      "tags": [
+        "스택",
+        "큐",
+        "상각 분석"
+      ]
+    },
+    {
+      "number": "3.3.2",
+      "chapter": 3,
+      "topic_en": "Stack of Plates",
+      "title": "심화 — 가운데 더미에서 한 장을 꺼낸다면",
+      "summary": "빈자리를 왼쪽으로 넘기는 규칙",
+      "category": "스택과 큐",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-03-03-02-stack-of-plates/",
+      "tags": [
+        "스택",
+        "불변식",
+        "시뮬레이션"
+      ]
+    },
+    {
+      "number": "3.3.1",
+      "chapter": 3,
+      "topic_en": "Stack of Plates",
+      "title": "기본 — 접시를 세 장씩 쌓는 찬장",
+      "summary": "여러 더미를 하나의 쌓기로 바라보기",
+      "category": "스택과 큐",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-03-03-stack-of-plates/",
+      "tags": [
+        "스택",
+        "불변식",
+        "시뮬레이션"
+      ]
+    },
     {
       "number": "3.2.2",
       "chapter": 3,

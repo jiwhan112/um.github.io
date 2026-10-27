@@ -1,0 +1,381 @@
+{
+  "title": "5.5.1 기본 — 딱 하나 켜진 표시를 알아보기",
+  "subtitle": "깃발·조각·불빛으로 비트의 규칙을 발견하는 종이 사고력 문제",
+  "memoKey": "thinking-ctci-5.5-draft",
+  "starter": "// 관찰한 규칙과 반례를 자유롭게 적어 보세요.\n// 이 문제는 코드 없이도 완전하게 설명할 수 있습니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "5.5.1 기본 — 딱 하나 켜진 표시를 알아보기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "양의 정수 n에 대해 n과 n−1을 이진 표시로 겹치고 둘 다 1인 칸만 남깁니다. 결과가 0이면 켜진 칸이 딱 하나라는 주장을 검토하세요. 예로 n=8과 n=12를 비교하고, 0을 입력에 포함하면 무엇을 주의해야 할지도 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "표시·범위·행동 규칙",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이진 표시는 같은 충분한 폭에 맞춥니다. 겹치기는 비트 AND입니다. 기본 문제의 주장은 n>0에서 검사합니다. 0에서 1을 빼는 기계어 오버플로를 논하지 않고 0을 먼저 따로 판정합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "연습 입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "직접 할 일"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "8과 12"
+                  }
+                ],
+                [
+                  {
+                    "text": "각각 1을 빼고 AND하기"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "양수 조건"
+                  }
+                ],
+                [
+                  {
+                    "text": "0을 별도로 생각하기"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "1000에서 1을 빼면 어떤 무늬가 되나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가장 오른쪽 1은 0으로, 그보다 오른쪽 0은 모두 1로 바뀝니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그보다 왼쪽에 다른 1이 있었다면 AND 후에도 남을까요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "8은 1000 AND 0111=0000이므로 딱 한 개입니다. 12는 1100 AND 1011=1000이라 두 개 이상입니다. 0은 불빛이 없으므로 딱 한 개 판정에서 반드시 제외합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가장 오른쪽 1의 오른쪽에는 0만 있습니다. 1을 빼면 그 1에서 빌려 와 그 자리는 0, 아래 0들은 1이 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그 1보다 높은 자리는 변하지 않습니다. AND를 하면 바뀐 가장 오른쪽 1은 지워지고 아래 자리도 원래 0이어서 지워집니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "결과적으로 가장 오른쪽 1 하나만 사라집니다. 따라서 원래 딱 한 개였을 때만 0이 됩니다. 이것이 양수 2의 거듭제곱 검사의 이유입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 두 입력의대조\n    accDescr: 8은0으로12는8로간다\n    S[\"n AND n-1\"] --> A[\"8: 1000 AND 0111 = 0000\"]\n    S --> B[\"12: 1100 AND 1011 = 1000\"]\n    A --> C[\"1이 한 개\"]\n    B --> D[\"1이 두 개 이상\"]\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 양수검사의필요성\n    accDescr: 0을 먼저 거르고 양수에서만 제거 원리 적용\n    S[\"입력 n\"] --> Q{\"n이 양수인가?\"}\n    Q -->|아니오| N[\"딱 하나가 아님\"]\n    Q -->|예| A[\"가장 오른쪽 1 하나 제거\"]\n    A --> C{\"남은 1이 있는가?\"}\n    C -->|예| N\n    C -->|아니오| Y[\"딱 하나 켜짐\"]\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "n>0에는 가장 오른쪽 1이 존재합니다. 위 자리 보존과 아래 자리 소거를 자리별로 따지면 n AND (n−1)은 정확히 그 1만 제거한 값입니다. 결과 0과 원래 1개라는 조건이 동치입니다. n=0에는 제거할 1이 없어서 이 증명을 적용할 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용을 어떻게 세는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "종이에서 w칸을 계산하면 O(w) 시간입니다. 주어진 고정 폭 정수의 AND와 뺄셈을 상수 시간으로 보는 기계어 모형에서는 상수 개 연산입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "상황"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "확인할 점"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "1"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "참: 1 AND 0=0"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "16"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "참"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "3"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "거짓: 11 AND 10=10"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "거짓: 양수 조건 미충족"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 40의 가장 오른쪽 1을 지운 값은? 40은 딱 한 개 켜진 표시인가요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "40=101000,39=100111, AND는 100000=32입니다. 다른 1이 남으므로 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0~65,535의 모든 값에서 오른쪽 1 제거 횟수를 직접 센 1 개수와 비교했습니다. 양수 한 비트 판정의 동치도 함께 확인했습니다. Python의 정확한 정수·분수 기준으로 실제 실행한 비교입니다. 이 페이지에는 실행용 C++ 프로그램이 없으며, 브라우저의 그림 표시는 게시 검증에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 순서를 잇는 표지입니다. 이 문제의 상황·예시·설명은 별도로 만든 자료이며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-05-05-02-debugger/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

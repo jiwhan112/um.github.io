@@ -1,0 +1,381 @@
+{
+  "title": "5.5.2 심화 — 한 번에 하나씩 꺼지는 기록",
+  "subtitle": "깃발·조각·불빛으로 비트의 규칙을 발견하는 종이 사고력 문제",
+  "memoKey": "thinking-ctci-5.5-2-draft",
+  "starter": "// 관찰한 규칙과 반례를 자유롭게 적어 보세요.\n// 이 문제는 코드 없이도 완전하게 설명할 수 있습니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "5.5.2 심화 — 한 번에 하나씩 꺼지는 기록"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "표시 101100에 대해 가장 오른쪽의 켜진 칸을 하나씩 끄는 작업을 반복합니다. 몇 번 만에 모두 꺼질까요? 앞 문제의 n AND (n−1)을 반복하는 절차가 처음 켜진 칸 수를 세는 방법임을 증명하고, 처음 값을 잊지 않으려면 어떻게 해야 할지도 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "표시·범위·행동 규칙",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "고정 폭의 비음수 표시입니다. 0이면 바로 종료하며 0−1은 계산하지 않습니다. 매회 현재 값의 가장 오른쪽 1을 끕니다. 원본 보존이 필요하면 별도의 작업용 복사본을 사용합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "다른 예"
+                  }
+                ],
+                [
+                  {
+                    "text": "작업 횟수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "001001"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "101100"
+                  }
+                ],
+                [
+                  {
+                    "text": "중간 표시와 횟수를 직접 기록"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 번의 작업이 두 개의 1을 없앨 수 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0의 개수는 작업 횟수에 영향이 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "남은 1 개수는 매회 정확히 1 줄어듭니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "101100→101000→100000→000000이므로 3번입니다. 처음 켜진 칸도 3개입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "작업 복사본 x와 횟수 c=0으로 시작합니다. x가 0이 아닌 동안 x를 x AND (x−1)로 바꾸고 c를 1 늘립니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 44, 다음 40, 다음 32, 끝 0입니다. 중간에 값이 얼마나 많이 줄었는지는 횟수와 상관없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "빈 표시 혹은 모든 칸이 0이면 반복은 0회입니다. 원본 n을 나중에 쓸 경우 n 자체를 고치지 않고 x에 복사합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 제거횟수추적\n    accDescr: 44에서각각하나씩1소거\n    A[\"101100 / 횟수 0\"] --> B[\"101000 / 횟수 1\"]\n    B --> C[\"100000 / 횟수 2\"]\n    C --> D[\"000000 / 횟수 3\"]\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 같은개수다른위치\n    accDescr: 한 개 켜진 위치가 달라도 한 번\n    S[\"1이 하나인 두 표시\"] --> A[\"000001 → 000000 / 1회\"]\n    S --> B[\"100000 → 000000 / 1회\"]\n    A --> C[\"자리값이 아니라 1의 개수를 셈\"]\n    B --> C\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "매회 가장 오른쪽 1 하나만 제거하므로 나머지 1의 개수+c는 처음 1 개수와 항상 같습니다. 남은 개수는 음수가 될 수 없고 매회 줄어드니 종료합니다. 종료 시 남은 개수는 0이므로 c가 정답입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용을 어떻게 세는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 1 개수를 b라고 하면 b회의 비트 제거입니다. 고정 폭 기계 연산 모형에서 O(b) 시간, O(1) 공간입니다. 종이에서 매회 전체 w칸을 다시 그리면 O(bw) 시간이 들 수 있으므로 두 모형을 혼동하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "상황"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "확인할 점"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "0회"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "100000"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "1회"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "111111"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "6회"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "맨 오른쪽 0이 많음"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "작업 횟수는 증가하지 않음"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 101100에서 가장 왼쪽 1부터 꺼도 작업 횟수가 같을까요? 중간 값도 같을까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 번에 하나씩 끄는 한 횟수는 3으로 같습니다. 하지만 001100,000100,000000으로 중간 값은 다릅니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0~65,535의 모든 값에서 오른쪽 1 제거 횟수를 직접 센 1 개수와 비교했습니다. 양수 한 비트 판정의 동치도 함께 확인했습니다. Python의 정확한 정수·분수 기준으로 실제 실행한 비교입니다. 이 페이지에는 실행용 C++ 프로그램이 없으며, 브라우저의 그림 표시는 게시 검증에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 순서를 잇는 표지입니다. 이 문제의 상황·예시·설명은 별도로 만든 자료이며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-05-05-debugger/",
+              "text": "같은 주제의 기본 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

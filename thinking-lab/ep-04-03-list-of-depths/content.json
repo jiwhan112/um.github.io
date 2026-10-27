@@ -1,0 +1,225 @@
+{
+  "title": "4.3.1 기본 — 가족 나무를 세대별 명단으로",
+  "subtitle": "한 층씩 읽는 순서",
+  "memoKey": "thinking-ctci-4.3-draft",
+  "starter": "// 판단 근거와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "뿌리 A의 왼쪽 자식은 B, 오른쪽 자식은 C입니다. B의 자식은 왼쪽 D와 오른쪽 E, C는 오른쪽 F만 가집니다. 다른 자식은 없습니다. 깊이는 뿌리가 0, 자식으로 한 번 내려갈 때마다 1 증가합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "깊이별로 왼쪽부터 오른쪽 순서의 명단을 만드세요. 한 대기 줄만으로 다음 세대가 현재 세대에 섞이지 않도록 처리하는 방법을 설명하세요. A, B, D, E, C, F처럼 깊게 읽은 목록을 한 줄씩 끊으면 왜 안 되는지도 말해 보세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "범위와 읽기 약속",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 자료는 종이에 상태를 기록하며 풀 수 있는 논리·자료구조 문제입니다. 명시된 기호는 이름이며 문자 인코딩이나 입력 버퍼 처리를 요구하지 않습니다. 나무는 유한하고 순환이나 공유 자식이 없는 정상 이진 나무, 그래프는 유한 방향 그래프로 가정합니다. 나무나 그래프가 아닌 주제에는 해당 구조 전제를 적용하지 않습니다. 결과를 구하는 것과 그 이유를 증명하는 것을 함께 목표로 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 줄에는 같은 깊이의 사람들이 모여 있다고 시작해 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "층을 시작할 때 줄 크기를 저장하면 그 층에서 몇 명만 꺼내야 하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처리하면서 새로 넣은 자식은 다음 층의 인원입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성 증명",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "명단은 깊이 0:[A], 깊이 1:[B, C], 깊이 2:[D, E, F]입니다. 처음 줄에 A만 넣습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "층 시작의 줄 크기 k를 저장하고 정확히 k명만 꺼내 명단에 추가합니다. 각 사람의 왼쪽, 오른쪽 자식을 그 순서로 줄 뒤에 넣습니다. k명을 마치면 이번 명단을 닫고 다음 줄 크기를 새로 셉니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 명단의 원래 나무\n    accDescr: 명단의 원래 나무의 구체적인 상태와 이동을 표시합니다.\n    N0[\"A\"]\n    N1[\"B\"]\n    N2[\"C\"]\n    N3[\"D\"]\n    N4[\"E\"]\n    N5[\"F\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n    N1 --> N4\n    N2 --> N5\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 층 시작 크기를 고정\n    accDescr: 층 시작 크기를 고정의 구체적인 상태와 이동을 표시합니다.\n    N0[\"줄 A / k1 → 명단 A\"]\n    N1[\"줄 B C / k2 → 명단 B C\"]\n    N2[\"줄 D E F / k3 → 명단 D E F\"]\n    N3[\"줄 비어 있음 → 종료\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 층 시작에서 줄은 같은 깊이 노드의 왼쪽→오른쪽 순서라는 불변식을 둡니다. 그 노드들의 자식을 부모 순서와 좌우 순서로 추가하면 바로 다음 깊이의 순서가 됩니다. 저장한 k명만 꺼내므로 새로 추가한 다음 층이 현재 명단에 섞이지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 각 노드를 한 번 다뤄 O(n) 시간, 결과 O(n), 대기 줄 O(w)입니다. w는 최대 층 너비이며 인접 두 층이 잠시 섞여도 그 합은 O(w)입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검산과 반례",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "빈 나무는 명단 0개를 반환합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "오른쪽으로만 세 노드라면 각 깊이에 한 명씩입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "자식이 한쪽만 있는 C에서도 빈칸을 실제 노드처럼 명단에 넣지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: while 줄이 빌 때까지 한 명단에 넣으면 어떻게 되나요? 자식도 같은 반복에서 꺼내므로 모든 깊이가 하나의 명단으로 합쳐집니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 주제 4.3 List of Depths의 자료구조·논리 아이디어를 바탕으로 새로 구성한 독창적인 문제입니다. 책 지문이나 공식 해설을 읽었다는 주장 또는 번역·재현이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 심화",
+              "kind": "link",
+              "href": "/thinking-lab/ep-04-03-02-list-of-depths/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

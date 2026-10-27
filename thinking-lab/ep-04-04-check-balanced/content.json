@@ -1,0 +1,233 @@
+{
+  "title": "4.4.1 기본 — 뿌리만 반듯한 나무의 함정",
+  "subtitle": "모든 갈림길의 높이 차이 검사",
+  "memoKey": "thinking-ctci-4.4-draft",
+  "starter": "// 판단 근거와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "빈 나무의 높이는 0, 잎의 높이는 1입니다. 모든 노드에서 왼쪽과 오른쪽 자식 나무의 높이 차이가 1 이하일 때만 균형이라고 합니다. 나무는 R의 자식 A, B, A의 왼쪽 자식 C, C의 왼쪽 자식 D, B의 오른쪽 자식 E, E의 오른쪽 자식 F로 구성됩니다. 그 밖의 자식은 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 나무가 균형인지 판단하세요. 뿌리의 좌우 높이가 같다는 관찰만으로 결론 낼 수 없는 이유를 찾아 각 노드의 높이와 위반 지점을 적으세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "범위와 읽기 약속",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 자료는 종이에 상태를 기록하며 풀 수 있는 논리·자료구조 문제입니다. 명시된 기호는 이름이며 문자 인코딩이나 입력 버퍼 처리를 요구하지 않습니다. 나무는 유한하고 순환이나 공유 자식이 없는 정상 이진 나무, 그래프는 유한 방향 그래프로 가정합니다. 나무나 그래프가 아닌 주제에는 해당 구조 전제를 적용하지 않습니다. 결과를 구하는 것과 그 이유를 증명하는 것을 함께 목표로 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "잎 D, F부터 높이를 올려 적으세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A에는 왼쪽 높이 2, 오른쪽 높이 0이 생깁니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "뿌리에서 조건이 맞아도 자손의 위반은 사라지지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성 증명",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "D, F는 1, C, E는 2, A, B는 3, R은 4입니다. R의 높이 차이는 0이지만 A와 B에서 차이가 2이므로 불균형입니다. C, E의 차이는 1이라 허용됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 노드의 판정에는 왼쪽 부분의 균형 여부, 오른쪽 부분의 균형 여부, 두 높이 차이가 모두 필요합니다. 높이를 계산하면서 이 세 조건을 함께 전달해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 뿌리는 같아도 아래는 다르다\n    accDescr: 뿌리는 같아도 아래는 다르다의 구체적인 상태와 이동을 표시합니다.\n    N0[\"R 높이4\"]\n    N1[\"A 높이3 차이2\"]\n    N2[\"B 높이3 차이2\"]\n    N3[\"C 높이2\"]\n    N4[\"D 높이1\"]\n    N5[\"E 높이2\"]\n    N6[\"F 높이1\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n    N3 --> N4\n    N2 --> N5\n    N5 --> N6\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 한 노드에서 세 조건을 모음\n    accDescr: 한 노드에서 세 조건을 모음의 구체적인 상태와 이동을 표시합니다.\n    N0[\"왼쪽 균형인가\"]\n    N1[\"오른쪽 균형인가\"]\n    N2[\"높이 차이는1 이하인가\"]\n    N3[\"세 조건이 모두 참이어야 균형\"]\n    N0 --> N3\n    N1 --> N3\n    N2 --> N3\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 정의가 모든 노드의 조건을 요구하므로 하나라도 위반하면 충분한 반례입니다. 반대로 두 부분 나무가 각각 균형이고 현재 노드의 차이도 1 이하라면 그 아래의 모든 노드와 현재 노드가 조건을 만족하므로 전체가 균형입니다. 이것이 바닥부터 계산할 수 있는 근거입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 각 노드 높이와 판정을 한 번씩 결합하면 O(n) 시간, 재귀 O(h) 공간입니다. 각 노드에서 높이를 처음부터 다시 계산하는 방법은 최악 O(n²)입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검산과 반례",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "빈 나무와 잎 하나는 균형입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "노드 두 개의 사슬은 높이 차이 1이므로 균형입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "노드 세 개의 사슬은 뿌리 차이 2이므로 불균형입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "노드 개수 차이가 아니라 높이 차이를 비교합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 모든 잎의 깊이 차이만 보면 충분할까요? 한쪽 사슬은 잎이 하나라 차이 0이지만 길이가 3이면 불균형입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 주제 4.4 Check Balanced의 자료구조·논리 아이디어를 바탕으로 새로 구성한 독창적인 문제입니다. 책 지문이나 공식 해설을 읽었다는 주장 또는 번역·재현이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 심화",
+              "kind": "link",
+              "href": "/thinking-lab/ep-04-04-02-check-balanced/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

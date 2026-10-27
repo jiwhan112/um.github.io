@@ -1,0 +1,370 @@
+{
+  "title": "4.12.1 기본 — 내려가는 길의 합계",
+  "subtitle": "산책 지도는 갈림길마다 점수가 적힌 나무입니다.",
+  "memoKey": "thinking-ctci-4.12-draft",
+  "starter": "// 종이에 풀어 본 추론과 근거를 적어 두세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "산책 지도는 갈림길마다 점수가 적힌 나무입니다. 루트 점수1 의 왼쪽 자식은2, 그2 의 왼쪽은-1, 루트의 오른쪽 자식은3 입니다. 위에서 아래로만 이어 걷는 비어 있지 않은 길 중 점수합이3 인 것을 모두 찾으세요. 출발점은 루트가 아니어도 됩니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한 걸음마다 직접 자식으로 내려갑니다. 위로갔다다른 가지로내려가는길은안됩니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "시작점과끝점이같은한 노드길도셉니다. 빈 길은세지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "값이 같아도노드 위치가 다르면 다른 길입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "다른작은예"
+                  }
+                ],
+                [
+                  {
+                    "text": "합2 인길수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "한 노드2"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "연속1→1"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답을 메모한 뒤 근거를 설명해 보세요. 풀이와 복습 정답은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 노드를 출발점으로 정하고 아래의 끝점을 하나씩 늘려 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "1 에서왼쪽2 까지합과오른쪽3 혼자의합을비교하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "음수가있으므로합이 목표보다 커졌다고 더 이상 볼 필요가 없는가요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "루트1 에서시작하면1, 1+2=3, 1+2-1=2, 1+3=4 를확인합니다. 이중1→2 가맞습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "왼쪽2 에서시작하면2 와2-1=1 이라맞는길이없습니다. -1 혼자도아닙니다. 오른쪽3 혼자는맞습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "따라서답은루트1→왼쪽2 와오른쪽3 단독의두길입니다. 루트에서시작하는길만보면두 번째답을놓칩니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 실제지도와두 개의답\n A[\"1\"] --> B[\"2: 1→2의합3\"]\n B --> C[\"-1\"]\n A --> D[\"3: 혼자합3\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 끝점과시작점을모두구별\n A[\"루트에서:1,3,2,4\"] --> C[\"합3인것한개\"]\n B[\"나머지출발:2,1,-1,3\"] --> D[\"3단독한개\"]\n C --> E[\"총2개\"]\n D --> E"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 모든 비어 있지 않은아래 방향 길은 유일한 시작 노드와 끝 노드를 가집니다. 각 노드를한 번씩 출발점으로 고르고 그 아래의 끝점을 모두 탐색하면 각 길이 정확히 한 번등장합니다. 그때누적점수가3 인지 확인하므로 맞는 길만 세고 놓치지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 기억 — 시작점마다 아래를 다시 찾는 방법은 최악 O(n²)시간이며 한쪽으로 긴 나무에서 그 비용이 발생합니다. 한 탐색의재귀공간은 O(h)입니다. 더 빠르게 세는 방법은 심화에서 경로 누적합을 재사용합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "결론"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 지도"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "0 개"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "목표0, 노드0 하나"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "1 개:빈 길아님"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0→0→0, 목표0"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "길이1 세 개+길이2 두 개+길이3 한 개=6"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "양수 뒤 음수"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "초과했다고 가지치기하면 정답 누락 가능"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 회차의 검증은 제시된 논증과 경계·반례 추적입니다. 실행하지 않은 프로그램이나 난수 실험을 수행했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 양쪽 잎을잇는길도세나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 부모로 올라가는 이동이 필요하여 이번 아래 방향계약에서제외됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 합이같으면같은길인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시작·끝위치가다르면서로 다른길입니다. 합의 종류 수를묻는문제가아닙니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 Paths with Sum 주제명과 학습 순서를 참고해 새로 쓴 문제입니다. 도서 지문·예시·공식 해설을 옮긴 자료가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 4.12.2",
+              "href": "/thinking-lab/ep-04-12-02-paths-with-sum/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

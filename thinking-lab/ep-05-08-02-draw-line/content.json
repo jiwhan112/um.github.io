@@ -1,0 +1,421 @@
+{
+  "title": "5.8.2 심화 — 테두리만 칠하는 작은 액자",
+  "subtitle": "깃발·조각·불빛으로 비트의 규칙을 발견하는 종이 사고력 문제",
+  "memoKey": "thinking-ctci-5.8-2-draft",
+  "starter": "// 관찰한 규칙과 반례를 자유롭게 적어 보세요.\n// 이 문제는 코드 없이도 완전하게 설명할 수 있습니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "5.8.2 심화 — 테두리만 칠하는 작은 액자"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가로 8칸·세로 5칸의 빈 픽셀 종이에 왼쪽 위 (1,1), 오른쪽 아래 (6,3)인 직사각형의 테두리만 칠하세요. 각 행을 8비트로 적고, 폭이나 높이가 1인 납작한 액자에서도 같은 규칙이 작동하도록 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "표시·범위·행동 규칙",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "좌표는 왼쪽 위가 (0,0), x는 오른쪽, y는 아래로 증가합니다. 양 끝 좌표는 포함하고 0≤x1≤x2<8,0≤y1≤y2<5입니다. 1은 검정이며 기존 검정은 유지합니다. 테두리 안쪽을 채우지 않습니다. 색칠 행동은 OR라서 같은 칸을 두 번 칠해도 지워지지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "작은 예"
+                  }
+                ],
+                [
+                  {
+                    "text": "관찰"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "폭 1인 액자"
+                  }
+                ],
+                [
+                  {
+                    "text": "세로선 하나"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "높이 1인 액자"
+                  }
+                ],
+                [
+                  {
+                    "text": "가로선 하나"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "제시한 좌표"
+                  }
+                ],
+                [
+                  {
+                    "text": "행별로 테두리만 표시"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "맨 윗행과 맨 아랫행은 가로선을 그립니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그 사이 행에는 어느 두 칸만 칠해야 할까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "윗행과 아랫행이 같아도 OR는 문제가 없습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "위에서부터 00000000,01111110,01000010,01111110,00000000입니다. 가운데 행의 2~5번은 흰색으로 남습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "y=1과 y=3에는 x=1~6을 전부 칠합니다. 각 행 무늬는 01111110입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "y=2에는 x=1과 x=6만 칠해서 01000010을 얻습니다. 그 밖의 행은 그대로 둡니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일반화하면 윗변·아랫변은 가로선 규칙을 쓰고, 엄격히 사이인 행에는 양 끝 두 점만 놓습니다. x1=x2면 같은 점을 중복 칠할 뿐이고, y1=y2면 한 가로선을 중복 칠할 뿐입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 행별구성\n    accDescr: 윗변·가운데·아랫변을 독립 구성\n    S[\"액자 x=1~6, y=1~3\"] --> A[\"행1: 01111110 / 윗변\"]\n    S --> B[\"행2: 01000010 / 양끝\"]\n    S --> C[\"행3: 01111110 / 아랫변\"]\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 한 칸에두 번칠할때\n    accDescr: OR와XOR의 차이를 모서리 하나로 확인\n    S[\"흰 모서리 0에 두 변이 만남\"] --> A[\"OR: 0 → 1 → 1 / 보존\"]\n    S --> B[\"XOR: 0 → 1 → 0 / 지워짐\"]\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "직사각형 안의 테두리 칸은 y가 y1 또는 y2이거나 x가 x1 또는 x2인 칸입니다. 윗변·아랫변이 첫 조건을 모두 칠하고 그 사이 행의 양 끝이 남은 둘째 조건을 칠합니다. 이외의 칸은 접근하지 않아 안쪽과 바깥쪽이 보존됩니다. OR의 중복 적용은 변화를 추가하지 않으므로 퇴화 직사각형도 정확합니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용을 어떻게 세는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가로 묶음 수 b, 세로 길이 h이면 양 가로변 O(b), 중간 양 끝 O(h)로 전체 O(b+h) 묶음 작업입니다. 칸별 모형에서는 둘레에 비례합니다. 화면 외 추가 공간은 O(1)입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "상황"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "확인할 점"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "한 점: x1=x2, y1=y2"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "그 점 하나"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "폭 1"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "세로선"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "높이 1"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "가로선"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "기존 안쪽에 검정 있음"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "지우지 않고 그대로 보존"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "XOR로 중복 칠하면"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "모서리가 지워질 수 있으므로 다른 연산"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 같은 액자를 한 번 더 그리면 달라질까요? OR 대신 XOR로 네 변을 각각 그리면 모서리는 어떻게 될까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "OR는 같은 칸에 1을 다시 놓아도 그대로라 변화가 없습니다. XOR는 각 모서리를 두 번 뒤집어 원래 색으로 돌릴 수 있으므로 테두리를 놓칩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가로 폭 8·16·24의 구간과 네 초기 무늬를 조합한 선 1,888건을 칸별 판정과 비교했습니다. 8×5 화면의 직사각형 540개에서 한 점·한 줄을 포함한 모든 테두리를 좌표 조건과 대조했습니다. Python의 정확한 정수·분수 기준으로 실제 실행한 비교입니다. 이 페이지에는 실행용 C++ 프로그램이 없으며, 브라우저의 그림 표시는 게시 검증에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 순서를 잇는 표지입니다. 이 문제의 상황·예시·설명은 별도로 만든 자료이며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-05-08-draw-line/",
+              "text": "같은 주제의 기본 문제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-06-01-heavy-pill/",
+              "text": "다음 주제 6.1.1 — 한 번의 저울로 두꺼운 봉투 찾기"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "title": "3.3.2 심화 — 가운데 더미에서 한 장을 꺼낸다면",
+  "subtitle": "빈자리를 왼쪽으로 넘기는 규칙",
+  "memoKey": "thinking-ctci-3.3-2-draft",
+  "starter": "// 판단 근거와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "각 더미의 용량은 세 장입니다. [A B C] [D E F] [G H]가 있습니다. 특정 더미의 맨 위를 꺼낸 뒤 그 빈자리를 채우려고 바로 오른쪽 더미의 맨 아래를 옮깁니다. 이 이동 때문에 생긴 빈자리도 오른쪽에서 같은 방법으로 채웁니다. 마지막 더미가 비면 없앱니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "첫 번째 더미에서 한 장을 꺼내는 동작을 두 번 수행하세요. 각 단계의 상태와 꺼낸 두 접시를 구하세요. 마지막 더미 이외의 모든 더미가 꽉 차고, 제거하지 않은 접시들의 전체 순서는 보존됨을 증명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "범위와 읽기 약속",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 자료는 종이에 상태를 기록하며 풀 수 있는 논리·자료구조 문제입니다. 명시된 기호는 이름이며 문자 인코딩이나 입력 버퍼 처리를 요구하지 않습니다. 나무는 유한하고 순환이나 공유 자식이 없는 정상 이진 나무, 그래프는 유한 방향 그래프로 가정합니다. 나무나 그래프가 아닌 주제에는 해당 구조 전제를 적용하지 않습니다. 결과를 구하는 것과 그 이유를 증명하는 것을 함께 목표로 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "오른쪽 더미에서 가져올 것은 맨 위가 아니라 맨 아래입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 C를 꺼낸 자리에는 D가 들어옵니다. 그다음 빈자리는 어느 더미에 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이동은 인접 두 더미 사이의 경계만 한 칸 바꿉니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성 증명",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 제거는 C입니다. D를 왼쪽으로, G를 그다음 빈자리로 옮겨 [A B D] [E F G] [H]가 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 번째 제거는 이제 D입니다. E와 H를 차례로 옮기면 [A B E] [F G H]가 됩니다. 첫 번째 더미만 보고 이전의 B를 꺼내면 이동 규칙을 놓친 것입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 첫 번째 빈자리 전파\n    accDescr: 첫 번째 빈자리 전파의 구체적인 상태와 이동을 표시합니다.\n    N0[\"A B / D E F / G H\"]\n    N1[\"D 이동: A B D / E F / G H\"]\n    N2[\"G 이동: A B D / E F G / H\"]\n    N0 --> N1\n    N1 --> N2\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 두 번째 제거\n    accDescr: 두 번째 제거의 구체적인 상태와 이동을 표시합니다.\n    N0[\"A B / E F G / H\"]\n    N1[\"E 이동: A B E / F G / H\"]\n    N2[\"H 이동: A B E / F G H\"]\n    N0 --> N1\n    N1 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 한 이동에서 오른쪽의 첫 원소를 왼쪽의 끝에 붙이므로 연결 목록의 순서는 바뀌지 않습니다. 목표 원소만 먼저 지웠으므로 나머지 순서가 유지됩니다. 빈자리가 오른쪽으로 한 칸씩 전파되고 유일한 미충전 더미가 끝에 도달하므로 마지막 이외는 가득 찹니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 더미 k개에서 양끝 접근이 O(1)이면 한 제거는 최악 O(k) 이동, 저장 O(n)입니다. 고정 배열에서 앞 삭제로 당긴다면 용량 c까지 곱해 O(kc)가 될 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검산과 반례",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "마지막 더미에서 제거하면 오른쪽 이동은 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "단 하나의 접시를 제거하면 찬장 전체가 비게 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "오른쪽 맨 위 F를 가져오면 A B F D E G H가 되어 원래 순서를 깨뜨립니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 스택만으로 각 더미를 표현하면 맨 아래를 O(1)에 꺼낼 수 있나요? 일반 스택은 아닙니다. 양끝 접근 자료구조가 필요한 이유를 설명해 보세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "학습 주제 3.3 Stack of Plates의 자료구조·논리 아이디어를 바탕으로 새로 구성한 독창적인 문제입니다. 책 지문이나 공식 해설을 읽었다는 주장 또는 번역·재현이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 기본",
+              "kind": "link",
+              "href": "/thinking-lab/ep-03-03-stack-of-plates/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제 3.4",
+              "kind": "link",
+              "href": "/thinking-lab/ep-03-04-queue-via-stacks/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,381 @@
+{
+  "title": "5.7.2 심화 — 교환해도 그대로인 무늬는 몇 개?",
+  "subtitle": "깃발·조각·불빛으로 비트의 규칙을 발견하는 종이 사고력 문제",
+  "memoKey": "thinking-ctci-5.7-2-draft",
+  "starter": "// 관찰한 규칙과 반례를 자유롭게 적어 보세요.\n// 이 문제는 코드 없이도 완전하게 설명할 수 있습니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "5.7.2 심화 — 교환해도 그대로인 무늬는 몇 개?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "여덟 장의 두 색 깃발을 왼쪽부터 이웃한 두 장씩 교환합니다. 교환 전후가 완전히 같은 무늬는 몇 개일까요? 모든 256개를 적지 말고 묶음의 조건으로 세어 보세요. 일반적으로 2m장일 때도 답을 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "표시·범위·행동 규칙",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 깃발은 0 또는 1입니다. 위치가 다르면 다른 무늬이며, 묶음은 (1,2), (3,4), …로 고정합니다. 회전하거나 뒤집어서 같아 보이는 무늬를 하나로 합치지 않습니다. 0장에는 빈 무늬 한 개가 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "작은 예"
+                  }
+                ],
+                [
+                  {
+                    "text": "그대로인 무늬"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "두 장"
+                  }
+                ],
+                [
+                  {
+                    "text": "00과 11의 두 개"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "여덟 장"
+                  }
+                ],
+                [
+                  {
+                    "text": "묶음의 선택 수로 계산"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "01인 묶음은 교환 후 같을까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그대로이려면 각 묶음의 두 깃발이 같아야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "네 묶음의 선택은 서로 영향을 줄까요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "네 묶음마다 00 또는 11을 독립적으로 고르므로 2^4=16개입니다. 2m장이면 2^m개입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 묶음 (a, b)은 교환 뒤 (b, a)가 됩니다. 두 표시가 같으려면 a=b여야 하고 이는 00 또는 11입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "묶음마다 두 선택을 곱합니다. 첫째를 고르는 방법 2개마다 둘째 2개가 가능하므로 두 묶음은 4개, 네 묶음은 16개입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "전체 1의 개수가 짝수라는 조건만으로는 충분하지 않습니다. 0101은 1 두 개지만 1010으로 바뀝니다. 짝수라는 전역 조건보다 각 묶음의 지역 조건이 더 강합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 두 묶음의 선택나무\n    accDescr: 네장일때네개를모두구성\n    S[\"첫 묶음 선택\"] --> A[\"00\"]\n    S --> B[\"11\"]\n    A --> A0[\"0000\"]\n    A --> A1[\"0011\"]\n    B --> B0[\"1100\"]\n    B --> B1[\"1111\"]\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 짝수개조건의한계\n    accDescr: 같은1 개수라도 묶음 조건은 다르다\n    S[\"1이 두 개인 무늬\"] --> A[\"0011 → 0011 / 유지\"]\n    S --> B[\"0101 → 1010 / 변화\"]\n    A --> C[\"각 묶음이 같은 색인지 확인\"]\n    B --> C\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "모든 고정 무늬는 각 묶음이 00 또는 11이어야 합니다. 반대로 그렇게 만든 무늬는 모든 교환에서 변하지 않습니다. 따라서 m개의 두 가지 선택과 고정 무늬 사이에 일대일 대응이 있어 정확히 2^m개입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용을 어떻게 세는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이미 주어진 무늬를 판정하는 데 O(m) 시간, O(1) 공간입니다. 개수 공식 2^m 자체는 간단하지만 매우 큰 m의 결과 정수는 m+1비트가 필요합니다. 실제 정수 표현 비용을 무시하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "상황"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "확인할 점"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0장"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "1: 빈 무늬"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "2장"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "2"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "4장"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "4:0000,0011,1100,1111"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "1 개수가 짝수"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "0101 반례 때문에 충분하지 않음"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 여덟 장 중 정확히 네 장이 1이면서 교환해도 같은 무늬는 몇 개일까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "11 묶음을 네 묶음 중 두 곳에 고르면 되므로 6개입니다. 나머지 두 묶음은 00입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "짝수 폭 0~12의 5,461개 무늬에서 마스크 이동 결과를 두 장씩 직접 뒤집은 결과와 비교하고, 각 폭의 고정 무늬 수가 2의 묶음 수 제곱인지 확인했습니다. Python의 정확한 정수·분수 기준으로 실제 실행한 비교입니다. 이 페이지에는 실행용 C++ 프로그램이 없으며, 브라우저의 그림 표시는 게시 검증에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 순서를 잇는 표지입니다. 이 문제의 상황·예시·설명은 별도로 만든 자료이며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-05-07-pairwise-swap/",
+              "text": "같은 주제의 기본 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

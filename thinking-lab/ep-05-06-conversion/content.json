@@ -1,0 +1,381 @@
+{
+  "title": "5.6.1 기본 — 두 전광판 사이의 최소 스위치",
+  "subtitle": "깃발·조각·불빛으로 비트의 규칙을 발견하는 종이 사고력 문제",
+  "memoKey": "thinking-ctci-5.6-draft",
+  "starter": "// 관찰한 규칙과 반례를 자유롭게 적어 보세요.\n// 이 문제는 코드 없이도 완전하게 설명할 수 있습니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "5.6.1 기본 — 두 전광판 사이의 최소 스위치"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 전광판 101101을 목표 100011로 바꾸려 합니다. 한 번 누르면 선택한 한 칸만 0과 1이 뒤집힙니다. 최소 몇 번 눌러야 하며 어느 칸을 누를까요? 각 칸의 차이만 따져도 전체 최소가 되는 이유를 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "표시·범위·행동 규칙",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "폭 6을 고정하고 왼쪽부터 1번 위치로 셉니다. 스위치 하나는 그 칸만 바꿉니다. 다른 칸을 함께 바꾸는 연결은 없으며 각 클릭 비용은 1입니다. 두 표시의 길이는 같고 문자는 0과 1뿐입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "작은 예"
+                  }
+                ],
+                [
+                  {
+                    "text": "최소 클릭"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "010→011"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "101101→100011"
+                  }
+                ],
+                [
+                  {
+                    "text": "직접 차이 표시"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "서로 같은 칸을 누를 필요가 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다른 칸은 적어도 한 번 누르지 않으면 바뀌지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "XOR는 서로 다른 자리만 1로 만드는 연산입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "3·4·5번 세 칸을 한 번씩 누르면 되므로 최소 3번입니다. 차이 표시는 001110입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 줄을 위아래에 맞추고 다른 곳에 표시합니다. 1·2·6번은 이미 같으니 그대로 둡니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 차이 칸을 한 번씩 뒤집으면 각각 목표와 같아집니다. 누르는 순서는 상관없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 칸을 두 번 누르면 원래로 돌아오므로 최소 해에 그런 짝은 필요 없습니다. 비트 표현으로는 현재 XOR 목표의 1 개수가 정답입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 세 번의실제변환\n    accDescr: 다른세 칸을하나씩뒤집는다\n    A[\"101101\"] -->|3번| B[\"100101\"]\n    B -->|4번| C[\"100001\"]\n    C -->|5번| D[\"100011\"]\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 칸별하한\n    accDescr: 서로 다른 칸과 같은 칸은 필요한 행동이 다르다\n    S[\"현재와 목표의 한 칸 비교\"] --> Q{\"두 값이 다른가?\"}\n    Q -->|예| A[\"적어도 한 번 / 한 번이면 충분\"]\n    Q -->|아니오| B[\"0번이면 충분\"]\n    A --> C[\"다른 칸 수를 더함\"]\n    B --> C\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "서로 다른 각 칸은 홀수 번, 같은 각 칸은 짝수 번 눌러야 목표가 됩니다. 따라서 다른 칸 수는 모든 해의 하한입니다. 다른 칸만 한 번씩 누르는 해가 그 하한을 달성하므로 최적입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용을 어떻게 세는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이 w를 한 번 비교하므로 O(w) 시간, 위치를 출력하지 않고 개수만 세면 O(1) 추가 공간입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "상황"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "확인할 점"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "같은 두 표시"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "0"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "000→111"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "3"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 두 줄"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "0"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "한 칸을 세 번 누름"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "한 번과 같은 결과이나 최소 아님"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: A→B 최소 거리와 B→A 최소 거리는 항상 같을까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같습니다. 두 표시가 다른 칸의 집합은 비교 방향을 바꿔도 같습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "폭 1~4의 시작·목표 조합 340건에서 비용 0·1·2가 섞인 스위치를 각각 0·1·2번 누르는 행동을 열거해 가중 차이 합과 최적 비용을 대조했습니다. Python의 정확한 정수·분수 기준으로 실제 실행한 비교입니다. 이 페이지에는 실행용 C++ 프로그램이 없으며, 브라우저의 그림 표시는 게시 검증에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 순서를 잇는 표지입니다. 이 문제의 상황·예시·설명은 별도로 만든 자료이며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-05-06-02-conversion/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "title": "4.8.1 기본 — 두 사람의 가장 가까운 공통 갈래",
+  "subtitle": "가족 관계 대신 서류 분류도를 봅시다.",
+  "memoKey": "thinking-ctci-4.8-draft",
+  "starter": "// 종이에 풀어 본 추론과 근거를 적어 두세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가족 관계 대신 서류 분류도를 봅시다. 루트R 아래A와B가 있고, A 아래C와D, C 아래E와F가 있습니다. 서류E와D를 함께 포함하는 가장 아래의 분류함을 찾으세요. 가까워 보이는 정도가 아니라 두 서류의 조상 관계로 이유를 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이진 트리이며 각 서류·분류함은 서로 다른 노드입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한 노드는 자기 자신의 조상으로도 인정합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "질문의 두 노드는 실제 트리에 존재합니다. 번호나 글자의 크기와 좌우는 관계없습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "다른 쌍"
+                  }
+                ],
+                [
+                  {
+                    "text": "공통 갈래"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "E와F"
+                  }
+                ],
+                [
+                  {
+                    "text": "C"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A와E"
+                  }
+                ],
+                [
+                  {
+                    "text": "A"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답을 메모한 뒤 근거를 설명해 보세요. 풀이와 복습 정답은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "E에서루트까지의 길과D에서루트까지의 길을 적어 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 길에 함께 나오는 노드 중 어느 것이 가장 아래인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "루트부터 두 경로를 같이 읽으면 어디까지 같나요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "E의루트 경로는 R A C E이고D는R A D입니다. 공통 앞부분은R A입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "마지막 공통 노드A가 답입니다. R도둘을 포함하지만A보다 위이므로 가장 가까운 답이 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A의서로 다른 가지에E와D가 있으므로A보다 아래로 내려가면 둘 중 하나를 잃습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 두 경로가 갈라지는 분류함\n R[\"R\"] --> A[\"A: 마지막 공통\"]\n R --> B[\"B\"]\n A --> C[\"C\"]\n A --> D[\"D: 대상\"]\n C --> E[\"E: 대상\"]\n C --> F[\"F\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 공통 앞부분의 마지막\n A[\"E의길: R A C E\"] --> C[\"공통 앞부분: R A\"]\n B[\"D의길: R A D\"] --> C\n C --> D[\"마지막A가 가장 아래\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 루트에서 노드로 가는 길은 트리에서 하나뿐입니다. 두 길의 공통 노드는 시작부터 연속한 앞부분이며 한 번 갈라지면 다시 합쳐질 수 없습니다. 그 마지막 노드는 둘 모두의 조상이면서 그 아래에서는 두 경로가 분리되므로 가장 아래의 공통 조상입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 기억 — 부모 링크가 있으면 각 경로 길이합만큼 O(h)시간·공간입니다. 루트에서 경로를 찾아야 하면 각 탐색에 O(n)시간이 들 수 있습니다. 입력 접근 방식에 따라 비용을 구별합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "결론"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "같은 노드를두 번 지정"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "그 노드"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "한 대상이다른대상의 조상"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "그 조상"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "루트의 서로 다른부분"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "루트"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "이름같은서로 다른노드"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "이름이 아니라노드자체로 구별"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 회차의 검증은 제시된 논증과 경계·반례 추적입니다. 실행하지 않은 프로그램이나 난수 실험을 수행했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 이름의 사전순을 이용할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "분류도는 탐색 트리라는 조건이 없습니다. 이름의 크기로 가지를 선택하면 틀립니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 공통조상은하나뿐인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "여러 개일수있지만 가장 아래의 공통 조상은 유일합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 First Common Ancestor 주제명과 학습 순서를 참고해 새로 쓴 문제입니다. 도서 지문·예시·공식 해설을 옮긴 자료가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 4.8.2",
+              "href": "/thinking-lab/ep-04-08-02-first-common-ancestor/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

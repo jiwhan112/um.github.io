@@ -1,0 +1,435 @@
+{
+  "title": "4.5.2 심화 — 조상의 약속을 두 경계로 접기",
+  "subtitle": "보관함이 많아졌습니다.",
+  "memoKey": "thinking-ctci-4.5-2-draft",
+  "starter": "// 종이에 풀어 본 추론과 근거를 적어 두세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보관함이 많아졌습니다. 매번 뿌리까지 올라가지 말고 한 번의 순회로 전체 번호 배치를 검사하세요. 정수의 최솟값이나 최댓값도 번호로 쓸 수 있고, 같은 번호는 허용하지 않습니다. 위에서 내려온 약속을 어떻게 작은 메모로 전달할 수 있을까요?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "왼쪽 후손 전체는 작고 오른쪽 후손 전체는 커야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "각 부분 트리에 허용되는 아래 경계와 위 경계를 전달하는 방법을 설계하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "경계가 없는 상태와 어떤 정수 경계가 실제로 있는 상태를 구별합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "입력 모양"
+                  }
+                ],
+                [
+                  {
+                    "text": "기대"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2 의 왼쪽1, 오른쪽3"
+                  }
+                ],
+                [
+                  {
+                    "text": "참"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2 의 왼쪽1, 1 의 오른쪽4"
+                  }
+                ],
+                [
+                  {
+                    "text": "거짓"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "최솟값 하나"
+                  }
+                ],
+                [
+                  {
+                    "text": "참"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답을 메모한 뒤 근거를 설명해 보세요. 풀이와 복습 정답은 접혀 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "코딩 입력·범위·자료 구조 계약",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "함수 입력은 vector<Node>와 root 인덱스입니다. 자식 -1 은 없음이며 다른 인덱스는 범위 안입니다. 모든 노드가 루트에서 한 번씩 도달되는 유효한 이진 트리라는 사전조건입니다. n≤1000, 높이≤500; 값은 int전체 범위. 순환·잘못된 인덱스를 검증하는 파서가 아닙니다. 숫자 구조 입력이므로 문자 인코딩·문자 버퍼는 사용하지 않습니다. 출력은 bool이며 원본을 변경하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "왼쪽으로 내려갈 때 현재 번호는 위 경계가 됩니다. 기존 아래 경계는 어떻게 하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "경계를 포함할까요, 제외할까요? 중복 금지와 연결해 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최솟값-1 같은 값을 만들지 말고 경계의 존재 여부를 따로 저장하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시작점에는 아래·위 경계가 모두 없습니다. 값v를 검사할 때 있는 아래 경계lo에 대해v>lo, 있는 위 경계hi에 대해v<hi인지 확인합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "왼쪽에는 기존 아래 경계와 새 위 경계v를, 오른쪽에는 새 아래 경계v와 기존 위 경계를 넘깁니다. 조건을 어기면 즉시 거짓입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "경계가 없는 상태를 bool로 표현하므로 INT_MIN도 번호로 쓸 수 있습니다. v-1 이나v+1 을 계산하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 범위를 전달하는 실제 예\n A[\"8: 양쪽 경계 없음\"] --> B[\"3: 위 경계8\"]\n B --> C[\"6: 아래3, 위8\"]\n C --> D[\"3보다 크고8보다 작은6: 통과\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 중복과 극단값을 다르게 처리\n A[\"경계8 아래에 값8\"] --> B[\"엄격 비교 실패\"]\n C[\"경계 없는 뿌리에 INT_MIN\"] --> D[\"경계 비교 없음: 통과\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 호출의 경계는 경로상의 모든 작은쪽·큰쪽 약속을 가장 강한 한 쌍으로 모은 것입니다. 현재 노드가 그 범위에 들고, 좌우 호출이 각각 새 조건까지 만족하면 모든 후손이 자신과 모든 조상 사이의 규칙을 지킵니다. 빈 부분은 참이고 이 성질을 아래에서 위로 합치므로 전체 판정이 정확합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 기억 — 각 노드를 한 번 보아 O(n)시간, 재귀 호출 깊이만큼 O(h)추가 공간입니다. 편향 트리에서는 h=n이며 코드 계약은 재귀 깊이를 제한합니다."
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "전체 C++11 풀이와 독립 비교 검사",
+              "blocks": [
+                {
+                  "type": "code",
+                  "language": "cpp",
+                  "text": "#include <algorithm>\n#include <cassert>\n#include <climits>\n#include <iostream>\n#include <vector>\nstruct Node { int value; int left; int right; };\n// 유효한 트리의 인덱스를 받는다. 경계가 없다는 사실은 별도 bool로 표현한다.\nbool check(const std::vector<Node>& a, int i, bool hasLo, int lo, bool hasHi, int hi) {\n    if (i == -1) return true;\n    const Node& n = a[static_cast<std::size_t>(i)];\n    if ((hasLo && n.value <= lo) || (hasHi && n.value >= hi)) return false;\n    return check(a, n.left, hasLo, lo, true, n.value)\n        && check(a, n.right, true, n.value, hasHi, hi);\n}\nbool valid(const std::vector<Node>& a, int root) {\n    return check(a, root, false, 0, false, 0);\n}\n// 독립 비교 기준: 중위 순회 결과가 엄격히 증가하는지 확인한다.\nvoid inorder(const std::vector<Node>& a, int i, std::vector<int>& values) {\n    if (i == -1) return;\n    const Node& n = a[static_cast<std::size_t>(i)];\n    inorder(a, n.left, values); values.push_back(n.value); inorder(a, n.right, values);\n}\nbool reference(const std::vector<Node>& a, int root) {\n    std::vector<int> v; inorder(a, root, v);\n    for (std::size_t i = 1; i < v.size(); ++i) if (v[i - 1] >= v[i]) return false;\n    return true;\n}\nint main() {\n    // 세 가지 모양에 정수 세 종류를 전부 배정하여 비교한다.\n    const std::vector<std::vector<Node> > shapes = {\n        {{0,1,2},{0,3,4},{0,-1,-1},{0,-1,-1},{0,-1,-1}},\n        {{0,-1,1},{0,-1,2},{0,-1,3},{0,-1,4},{0,-1,-1}},\n        {{0,1,-1},{0,2,-1},{0,3,-1},{0,4,-1},{0,-1,-1}}\n    };\n    int tested = 0;\n    for (const auto& shape : shapes) for (int mask = 0; mask < 243; ++mask) {\n        auto a = shape; int x = mask;\n        for (auto& n : a) { n.value = x % 3 - 1; x /= 3; }\n        assert(valid(a,0) == reference(a,0)); ++tested;\n    }\n    // 다섯 개의 서로 다른 값을 순열로 배정하여 참/거짓 양쪽 경로를 확인한다.\n    int distinctCases = 0, accepted = 0;\n    for (const auto& shape : shapes) {\n        std::vector<int> values = {-2,-1,0,1,2};\n        do {\n            auto a = shape;\n            for (std::size_t i=0;i<a.size();++i) a[i].value=values[i];\n            const bool answer=valid(a,0);\n            assert(answer==reference(a,0));\n            if(answer) ++accepted;\n            ++distinctCases;\n        } while(std::next_permutation(values.begin(),values.end()));\n    }\n    assert(accepted==3); // 모양마다 정확히 한 가지 값 배정만 올바르다.\n    assert(valid({{2,1,2},{0,3,4},{3,-1,-1},{-1,-1,-1},{1,-1,-1}},0));\n    assert(valid({{0,-1,1},{1,-1,2},{2,-1,3},{3,-1,4},{4,-1,-1}},0));\n    assert(valid({{4,1,-1},{3,2,-1},{2,3,-1},{1,4,-1},{0,-1,-1}},0));\n    assert(!valid({{2,1,2},{0,3,4},{3,-1,-1},{-1,-1,-1},{4,-1,-1}},0));\n    assert(valid({},-1));\n    assert(valid({{INT_MIN,-1,1},{INT_MAX,-1,-1}},0));\n    assert(!valid({{10,1,2},{5,-1,3},{15,-1,-1},{12,-1,-1}},0));\n    assert(!valid({{1,-1,1},{1,-1,-1}},0));\n    std::cout << \"bounds reference cases: \" << tested << \"; distinct permutations: \" << distinctCases << \"; valid assignments: \" << accepted << \"; empty/extreme/ancestor/duplicate passed\\n\";\n}\n"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "검사"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "의미"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "729 개 값 배정/모양 비교"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "중위 순회 엄격증가 기준과 일치; 유효한 배정 3개와 조상 위반 변형 확인"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "INT_MIN→INT_MAX"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "경계용 산술 넘침 없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "조상 위반/중복"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "거부"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 입력"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "참"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "실제로 수행한 코드 검사",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2026-10-27 GCC C++11 엄격 경고 및 UBSan으로 다음 프로그램을 실제 빌드·실행했습니다. 독립 기준과 비교한 검사는 main에 포함되어 있습니다. Windows나 다른 컴파일러 실행을 의미하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "bash",
+              "text": "g++ -std=c++11 -Wall -Wextra -Werror -pedantic -fsanitize=undefined -fno-sanitize-recover=all bounds.cpp -o check\n./check"
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "bounds reference cases: 729; distinct permutations: 360; valid assignments: 3; empty/extreme/ancestor/duplicate passed"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 중위 순회가 증가하면 왜 같은 결론인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "왼쪽 모든 값이 현재보다 앞, 오른쪽 모든 값이 뒤에 옵니다. 엄격 증가하면 좌우 전체의 크기 조건이 만족됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 중복을 오른쪽에 허용하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "오른쪽 아래 경계만 포함해야 하며 경계의 포함 여부도 전달해야 합니다. 이번 계약의 구현을 그대로 쓰면 안 됩니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 Validate BST 주제명과 학습 순서를 참고해 새로 쓴 문제입니다. 도서 지문·예시·공식 해설을 옮긴 자료가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기본으로: 4.5.1",
+              "href": "/thinking-lab/ep-04-05-validate-bst/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제: 4.6",
+              "href": "/thinking-lab/ep-04-06-successor/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

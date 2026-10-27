@@ -1,0 +1,381 @@
+{
+  "title": "6.1.2 심화 — 두꺼운지 얇은지도 모르는 봉투",
+  "subtitle": "일상의 관찰에서 구별·확률·불변조건을 찾는 사고력 문제",
+  "memoKey": "thinking-ctci-6.1-2-draft",
+  "starter": "// 관찰한 규칙, 전제, 반례를 자유롭게 적어 보세요.\n// 코드 없이 논리로 완전하게 설명할 수 있는 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "6.1.2 심화 — 두꺼운지 얇은지도 모르는 봉투"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "세 상자 중 정확히 하나만 다른 봉투를 담고 있습니다. 정상은 10g이고 이상 상자의 봉투는 전부 8g이거나 전부 12g입니다. 어느 상자인지와 가벼운지 무거운지를 단 한 번의 총무게 측정으로 함께 알아내세요. A·B·C에서 1·2·3장씩 골랐을 때 56g이 나오면 어떻게 해석할까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 상자에 최소 3장이 있고 이상 상자는 정확히 하나입니다. 무게 차이의 크기는 2g으로 알려져 있으며 부호만 모릅니다. 저울은 정확한 수치와 정상보다 작거나 큰 차이를 구별합니다. 사용 장수의 최적화는 요구하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "다른 사례"
+                  }
+                ],
+                [
+                  {
+                    "text": "구별 가능성"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A와 B에서 같은 장수 선택"
+                  }
+                ],
+                [
+                  {
+                    "text": "같은 방향의 이상이면 두 상자를 구분 못함"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "56g"
+                  }
+                ],
+                [
+                  {
+                    "text": "상자와 이상 방향을 함께 찾으세요."
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정상 기준 60g보다 작다는 사실은 무엇을 알려 주나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "차이의 절댓값을 2g으로 나누면 무엇이 나오나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "상자에는 양의 서로 다른 장수를 배정해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "56g은 정상 60g보다 4g 가볍습니다. 차이 −4g=−2g×2장이므로 B 상자의 봉투가 8g입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A·B·C가 가벼운 경우 총무게는 58·56·54g, 무거운 경우는 62·64·66g입니다. 여섯 결과가 모두 다릅니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "차이의 부호는 가벼움/무거움, 절댓값을 2로 나눈 수는 고른 장수이며 이 장수로 상자를 찾습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "어느 상자에서도 0장을 고르면 그 상자의 가벼움과 무거움이 모두 기준 무게로 나타나 방향을 구별하지 못합니다. 기본 문제보다 0 선택의 위험이 커집니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 차이의 부호와 크기 분리\n    accDescr: 56을정상과비교하고두정보해독\n    A[\"56 - 60 = -4g\"] --> B[\"음수: 정상보다 가벼움\"]\n    A --> C[\"절댓값 4 / 2 = 2장\"]\n    B --> D[\"B 상자 / 한 장 8g\"]\n    C --> D\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 여섯 신호의 구별\n    accDescr: 상자별양음신호가겹치지않음\n    S[\"정상 기준 60g\"] --> A[\"A: -2 또는 +2\"]\n    S --> B[\"B: -4 또는 +4\"]\n    S --> C[\"C: -6 또는 +6\"]\n    A --> D[\"모든 차이가 서로 다름\"]\n    B --> D\n    C --> D\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "상자 i의 장수를 서로 다른 양의 정수 kᵢ로 고르면 차이는 +2kᵢ 또는 −2kᵢ입니다. 양의 차이와 음의 차이는 겹치지 않고 같은 부호 안에서도 장수가 달라 겹치지 않습니다. 따라서 2m개의 원인이 모두 구별됩니다. 이 논증은 이상 상자가 하나라는 전제를 사용합니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "1~m장 선택에서 준비 O(m²), 측정 1회입니다. 상자마다 알려진 서로 다른 식별 장수를 쓰는 설계이며 모든 무게 측정 퍼즐에 그대로 적용되는 일반해는 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "상황"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "한계"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "측정 60g"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "모형 위반 또는 선택 오류"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "두 상자가 동시에 이상"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "A가 무거우면 +2g, B가 가벼우면 −4g으로 합은 −2g입니다. A만 가벼울 때와 같은 신호이므로 원인을 구별할 수 없습니다."
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "장수 0 배정"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "그 상자의 방향 구분 불가"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "무게 차이도 미지수"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "장수와 차이의 곱만 보여 원인 중복 가능"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: A한장은 12g, B두장은 각각 9g이고 C는 정상이라면 총무게는? 왜 전제를 확인해야 할까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "60+2−2=60g입니다. 서로 다른 두 이상이 상쇄되며 기본 모형의 결론을 적용할 수 없습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "1~20상자에서 양·음 무게 차이 원인 420건을 실제 합산하고, 한 번의 측정으로 원래 상자와 부호가 복원되는지 확인했습니다. Python으로 실제 실행한 검산이며, 이 종이 논리 문제에는 C++ 실행 코드가 없습니다. 실제 화면의 도식 검수는 게시 단계에서 별도로 진행합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서의 주제명은 학습 순서를 위한 연결 표지입니다. 상황과 수치, 설명은 독창적으로 구성했으며 원서의 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-06-01-heavy-pill/",
+              "text": "같은 주제의 기본 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
