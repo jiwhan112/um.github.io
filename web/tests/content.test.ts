@@ -686,8 +686,9 @@ test('native teaching build resources are published as exact inert source bytes'
 // Fixed migration evidence records historic state, never generated from rewritten content.
 test('all original thinking routes, memo keys, dates and anchors survive paired revision',async()=>{
  const raw=JSON.parse(await readFile('../thinking-lab/data/catalog.json','utf8'));
- const policy=JSON.parse(await readFile('../automation/publishing.json','utf8')).jobs.find((j:{id:string})=>j.id==='thinking');
- const result=validateThinkingPairs(raw,policy);assert.ok(result.topics>=thinkingMigration.topics.length);
+ const policy=JSON.parse(await readFile('../automation/publishing.json','utf8')).continuousTasks.find((j:{id:string})=>j.id==='thinking');
+ const plan=JSON.parse(await readFile('../automation/thinking-book-plan.json','utf8'));
+ const result=validateThinkingPairs(raw,policy,plan);assert.ok(result.topics>=thinkingMigration.topics.length);
  const keys=new Set<string>();
  for(const e of raw.episodes){const meta=catalog.documents.find(d=>d.kind==='thinking'&&d.number===e.number)!;assert.ok(meta.memoKey);assert.ok(!keys.has(meta.memoKey!));keys.add(meta.memoKey!);}
  for(const old of thinkingMigration.topics){
@@ -700,19 +701,22 @@ test('all original thinking routes, memo keys, dates and anchors survive paired 
   const ids=new Set(doc.sections.map((s:{id:string})=>s.id));
   for(const id of old.sectionIds)assert.ok(ids.has(id),old.topic+' preserved anchor '+id);
  }
- for(const mode of ['missing','same-date-other-topic','duplicate-number','page-progress','stale-current','missing-date','bad-calendar-date','bad-next-date','leading-zero']){
+ for(const mode of ['missing','duplicate-number','page-progress','stale-current','missing-date','bad-calendar-date','dated-next','leading-zero','wrong-next','premature-completion','changed-historical-date']){
   const bad=structuredClone(raw);
   if(mode==='missing')bad.episodes.pop();
-  if(mode==='same-date-other-topic'){const date=bad.episodes[0].study_date;bad.episodes.filter((e:{number:string})=>e.number.startsWith('1.1.')).forEach((e:{study_date:string})=>e.study_date=date);}
   if(mode==='duplicate-number')bad.episodes[1].number=bad.episodes[0].number;
   if(mode==='page-progress')bad.current.number+='.'+1;
   if(mode==='stale-current'){bad.current.number='1.1';bad.current.study_date='2026-10-09';}
   if(mode==='missing-date')bad.episodes[0].study_date=undefined;
   if(mode==='bad-calendar-date')bad.episodes[0].published_date='2026-02-31';
-  if(mode==='bad-next-date')bad.next.study_date=bad.current.study_date;
+  if(mode==='dated-next')bad.next.study_date=bad.current.study_date;
   if(mode==='leading-zero')bad.episodes[0].number='0'+bad.episodes[0].number;
-  assert.throws(()=>validateThinkingPairs(bad,policy),mode);
+  if(mode==='wrong-next')bad.next.number='17.26';
+  if(mode==='premature-completion')bad.next=null;
+  if(mode==='changed-historical-date')bad.episodes.find((e:{number:string})=>e.number==='1.1.1').study_date='2026-10-10';
+  assert.throws(()=>validateThinkingPairs(bad,policy,plan),mode);
  }
+
 });
 
 // Regression: translated paired titles must not hide their original topic names.
@@ -746,4 +750,59 @@ test('dotted library numbers match exact pages or topic prefixes, never suffixes
  assert.equal(matchesDocument(basic,{...filter,tags:['없는 태그']}),false);
  assert.ok(filterDocuments(docs,{...filter,query:'Palindrome'}).some(d=>d.number==='1.4.1'));
  assert.deepEqual(filterDocuments([noise,basic,{...basic,number:'1.1.2'}],{...filter,query:''}).map(d=>d.number),['1.1.1','1.1.2','2.1.1']);
+});
+
+
+test('continuous thinking accepts same-day exact prefixes but rejects skipped or unverified progress',async()=>{
+ const raw=JSON.parse(await readFile('../thinking-lab/data/catalog.json','utf8'));
+ const policy=JSON.parse(await readFile('../automation/publishing.json','utf8')).continuousTasks.find((j:{id:string})=>j.id==='thinking');
+ const plan=JSON.parse(await readFile('../automation/thinking-book-plan.json','utf8'));
+ const first19=new Set(plan.verifiedPrefix.slice(0,19).map((t:{number:string})=>t.number));
+ const baseline=raw.episodes.filter((e:{number:string})=>first19.has(e.number.slice(0,-2)));
+ function batch(count:number){
+  const topics=plan.verifiedPrefix.slice(0,count);
+  const added=topics.slice(19).flatMap((t:{number:string;chapter:number;topic_en:string})=>[1,2].map(suffix=>({...t,number:t.number+'.'+suffix,path:'ep-test-'+t.number.replace('.','-')+'-'+suffix+'/',study_date:'2026-10-27',published_date:'2026-10-27'})));
+  const topic=topics.at(-1),date=baseline.find((e:{number:string})=>e.number===topic.number+'.1');
+  return {episodes:[...baseline,...added],current:{number:topic.number,chapter:topic.chapter,topic_en:topic.topic_en,study_date:date?.study_date||'2026-10-27',published_date:date?.published_date||'2026-10-27'},next:count<plan.verifiedPrefix.length?{number:plan.verifiedPrefix[count].number,chapter:plan.verifiedPrefix[count].chapter,topic_en:plan.verifiedPrefix[count].topic_en}:structuredClone(plan.blockedNext)};
+ }
+ for(const count of [19,21,43,47])assert.deepEqual(validateThinkingPairs(batch(count),policy,plan,'2026-10-27'),{topics:count,pages:count*2});
+ const valid=batch(21);
+ const mutations=[
+  (b:typeof valid)=>{b.episodes=b.episodes.filter((e:{number:string})=>!e.number.startsWith('3.3.'));},
+  (b:typeof valid)=>{b.episodes.at(-1).study_date='2026-10-28';b.episodes.at(-1).published_date='2026-10-28';},
+  (b:typeof valid)=>{b.episodes.at(-1).study_date='2026-10-26';},
+  (b:typeof valid)=>{b.episodes.at(-1).topic_en='Wrong topic';},
+  (b:typeof valid)=>{b.episodes.at(-1).number='6.5.2';},
+  (b:typeof valid)=>{b.next=null;},
+ ];
+ for(const mutate of mutations){const bad=structuredClone(valid);mutate(bad);assert.throws(()=>validateThinkingPairs(bad,policy,plan,'2026-10-27'));}
+ const frontier=batch(47);frontier.next=null;assert.throws(()=>validateThinkingPairs(frontier,policy,plan,'2026-10-27'));
+ assert.throws(()=>validateThinkingPairs(batch(47),policy,{...plan,complete:true},'2026-10-27'));
+ const reordered=structuredClone(plan);[reordered.verifiedPrefix[19],reordered.verifiedPrefix[20]]=[reordered.verifiedPrefix[20],reordered.verifiedPrefix[19]];
+ assert.throws(()=>validateThinkingPairs(valid,policy,reordered,'2026-10-27'));
+});
+
+
+test('incomplete curriculum supports explicit missing-source chapter boundaries without false completion',async()=>{
+ const raw=JSON.parse(await readFile('../thinking-lab/data/catalog.json','utf8'));
+ const policy=JSON.parse(await readFile('../automation/publishing.json','utf8')).continuousTasks.find((j:{id:string})=>j.id==='thinking');
+ const plan=JSON.parse(await readFile('../automation/thinking-book-plan.json','utf8'));
+ // Synthetic future boundary exercises only contract shape, not verification of new book metadata.
+ const boundary=structuredClone(plan);
+ for(let chapter=6;chapter<=10;chapter++){
+  const first=chapter===6?5:1;
+  for(let problem=first;problem<=11;problem++)boundary.verifiedPrefix.push({...plan.verifiedPrefix.at(-1),number:chapter+'.'+problem,chapter,topic_en:'Synthetic boundary fixture '+chapter+'.'+problem});
+ }
+ boundary.blockedNext={number:'11.1',chapter:11,status:'blocked_source_missing',reason:'Synthetic test: numbered source metadata missing'};
+ assert.doesNotThrow(()=>validateThinkingPairs(raw,policy,boundary,'2026-10-27'));
+ for(const patch of [{chapter:10},{status:'ready'},{number:'11.2'},{number:'12.1',chapter:12},{reason:'   '}]){
+  const invalid=structuredClone(boundary);Object.assign(invalid.blockedNext,patch);
+  assert.throws(()=>validateThinkingPairs(raw,policy,invalid,'2026-10-27'));
+ }
+ const duplicated=structuredClone(plan);duplicated.historicalBaseline[1]=structuredClone(duplicated.historicalBaseline[0]);
+ assert.throws(()=>validateThinkingPairs(raw,policy,duplicated,'2026-10-27'));
+ for(const field of ['study_date','published_date']){
+  const invalid=structuredClone(raw);invalid.current[field]='2026-10-26';
+  assert.throws(()=>validateThinkingPairs(invalid,policy,plan,'2026-10-27'));
+ }
 });

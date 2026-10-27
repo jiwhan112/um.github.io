@@ -1,0 +1,916 @@
+{
+  "schemaVersion": 1,
+  "edition": 6,
+  "book": "Cracking the Coding Interview",
+  "approvedMode": "continuous_user_requested",
+  "pagesPerTopic": 2,
+  "targetTopicCount": 189,
+  "complete": false,
+  "verificationScope": "Numbered repository metadata only, not access to full book text or verification of every printed question. Author confirms total 189; 160 numbered metadata entries observed, 29 missing. Conflicting 6.5 blocks sequential publication beyond 6.4.",
+  "sources": [
+    {
+      "id": "author-total",
+      "url": "https://www.crackingthecodinginterview.com/contents.html",
+      "checkedDate": "2026-10-27",
+      "scope": "edition 6 and total 189 only"
+    },
+    {
+      "id": "author-java",
+      "url": "https://github.com/careercup/CtCI-6th-Edition",
+      "revision": "59018cfcb90292209275db1c4b3ed306d4b07d7f",
+      "scope": "author-linked Java repository directory metadata"
+    },
+    {
+      "id": "author-linked-javascript",
+      "url": "https://github.com/careercup/CtCI-6th-Edition-JavaScript",
+      "revision": "33830739629d3d3f9a4b0f122ba5150431a9d506",
+      "scope": "author-linked community JavaScript repository directory metadata; not book text"
+    }
+  ],
+  "observedMetadataTopicCount": 160,
+  "unverifiedNumberedTopicCount": 29,
+  "verifiedPrefix": [
+    {
+      "number": "1.1",
+      "chapter": 1,
+      "topic_en": "Is Unique",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter01/1.1 - Is Unique"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 01. Arrays and Strings/Q1_01_Is_Unique"
+        }
+      ]
+    },
+    {
+      "number": "1.2",
+      "chapter": 1,
+      "topic_en": "Check Permutation",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter01/1.2 - Check Perm"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 01. Arrays and Strings/Q1_02_Check_Permutation"
+        }
+      ]
+    },
+    {
+      "number": "1.3",
+      "chapter": 1,
+      "topic_en": "URLify",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter01/1.3 - URLify"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 01. Arrays and Strings/Q1_03_URLify"
+        }
+      ]
+    },
+    {
+      "number": "1.4",
+      "chapter": 1,
+      "topic_en": "Palindrome Permutation",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter01/1.4 - PalinPerm"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 01. Arrays and Strings/Q1_04_Palindrome_Permutation"
+        }
+      ]
+    },
+    {
+      "number": "1.5",
+      "chapter": 1,
+      "topic_en": "One Away",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter01/1.5 - OneAway"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 01. Arrays and Strings/Q1_05_One_Away"
+        }
+      ]
+    },
+    {
+      "number": "1.6",
+      "chapter": 1,
+      "topic_en": "String Compression",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter01/1.6 - String Compression"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 01. Arrays and Strings/Q1_06_String_Compression"
+        }
+      ]
+    },
+    {
+      "number": "1.7",
+      "chapter": 1,
+      "topic_en": "Rotate Matrix",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter01/1.7 - Rotate Matrix"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 01. Arrays and Strings/Q1_07_Rotate_Matrix"
+        }
+      ]
+    },
+    {
+      "number": "1.8",
+      "chapter": 1,
+      "topic_en": "Zero Matrix",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter01/1.8 - Zero Matrix"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 01. Arrays and Strings/Q1_08_Zero_Matrix"
+        }
+      ]
+    },
+    {
+      "number": "1.9",
+      "chapter": 1,
+      "topic_en": "String Rotation",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter01/1.9 - String Rotation"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 01. Arrays and Strings/Q1_09_String_Rotation"
+        }
+      ]
+    },
+    {
+      "number": "2.1",
+      "chapter": 2,
+      "topic_en": "Remove Dups",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter02/2.1 - Remove Dups"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 02. Linked Lists/Q2_01_Remove_Dups"
+        }
+      ]
+    },
+    {
+      "number": "2.2",
+      "chapter": 2,
+      "topic_en": "Return Kth to Last",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter02/2.2 - Return Kth to Last"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 02. Linked Lists/Q2_02_Return_Kth_To_Last"
+        }
+      ]
+    },
+    {
+      "number": "2.3",
+      "chapter": 2,
+      "topic_en": "Delete Middle Node",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter02/2.3 - Delete Middle Node"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 02. Linked Lists/Q2_03_Delete_Middle_Node"
+        }
+      ]
+    },
+    {
+      "number": "2.4",
+      "chapter": 2,
+      "topic_en": "Partition",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter02/2.4 - Partition"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 02. Linked Lists/Q2_04_Partition"
+        }
+      ]
+    },
+    {
+      "number": "2.5",
+      "chapter": 2,
+      "topic_en": "Sum Lists",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter02/2.5 - Sum Lists"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 02. Linked Lists/Q2_05_Sum_Lists"
+        }
+      ]
+    },
+    {
+      "number": "2.6",
+      "chapter": 2,
+      "topic_en": "Palindrome",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter02/2.6 - Palindrome"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 02. Linked Lists/Q2_06_Palindrome"
+        }
+      ]
+    },
+    {
+      "number": "2.7",
+      "chapter": 2,
+      "topic_en": "Intersection",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter02/2.7 - Intersection"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 02. Linked Lists/Q2_07_Intersection"
+        }
+      ]
+    },
+    {
+      "number": "2.8",
+      "chapter": 2,
+      "topic_en": "Loop Detection",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter02/2.8 - Loop Detection"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 02. Linked Lists/Q2_08_Loop_Detection"
+        }
+      ]
+    },
+    {
+      "number": "3.1",
+      "chapter": 3,
+      "topic_en": "Three in One",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter03/3.1 - Three in One"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 03. Stacks and Queues/Q3_01_Three_in_One"
+        }
+      ]
+    },
+    {
+      "number": "3.2",
+      "chapter": 3,
+      "topic_en": "Stack Min",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter03/3.2 - Stack Min"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 03. Stacks and Queues/Q3_02_Stack_Min"
+        }
+      ]
+    },
+    {
+      "number": "3.3",
+      "chapter": 3,
+      "topic_en": "Stack of Plates",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter03/3.3 - Stack of Plates"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 03. Stacks and Queues/Q3_03_Stack_of_Plates"
+        }
+      ]
+    },
+    {
+      "number": "3.4",
+      "chapter": 3,
+      "topic_en": "Queue via Stacks",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter03/3.4 - Queue via Stacks"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 03. Stacks and Queues/Q3_04_Queue_via_Stacks"
+        }
+      ]
+    },
+    {
+      "number": "3.5",
+      "chapter": 3,
+      "topic_en": "Sort Stack",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter03/3.5 - Sort Stack"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 03. Stacks and Queues/Q3_05_Sort_Stack"
+        }
+      ]
+    },
+    {
+      "number": "3.6",
+      "chapter": 3,
+      "topic_en": "Animal Shelter",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter03/3.6 - Animal Shelter"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 03. Stacks and Queues/Q3_06_Animal_Shelter"
+        }
+      ]
+    },
+    {
+      "number": "4.1",
+      "chapter": 4,
+      "topic_en": "Route Between Nodes",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.01 - Route Between Nodes"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_01_Route_Between_Nodes"
+        }
+      ]
+    },
+    {
+      "number": "4.2",
+      "chapter": 4,
+      "topic_en": "Minimal Tree",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.02 - Minimal Tree"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_02_Minimal_Tree"
+        }
+      ]
+    },
+    {
+      "number": "4.3",
+      "chapter": 4,
+      "topic_en": "List of Depths",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.03 - List of Depths"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_03_List_of_Depths"
+        }
+      ]
+    },
+    {
+      "number": "4.4",
+      "chapter": 4,
+      "topic_en": "Check Balanced",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.04 - Check Balanced"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_04_Check_Balanced"
+        }
+      ]
+    },
+    {
+      "number": "4.5",
+      "chapter": 4,
+      "topic_en": "Validate BST",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.05 - Validate BST"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_05_Validate_BST"
+        }
+      ]
+    },
+    {
+      "number": "4.6",
+      "chapter": 4,
+      "topic_en": "Successor",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.06 - Successor"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_06_Successor"
+        }
+      ]
+    },
+    {
+      "number": "4.7",
+      "chapter": 4,
+      "topic_en": "Build Order",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.07 - Build Order"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_07_Build_Order"
+        }
+      ]
+    },
+    {
+      "number": "4.8",
+      "chapter": 4,
+      "topic_en": "First Common Ancestor",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.08 - First Common Ancestor"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_08_First_Common_Ancestor"
+        }
+      ]
+    },
+    {
+      "number": "4.9",
+      "chapter": 4,
+      "topic_en": "BST Sequences",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.09 - BST Sequences"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_09_BST_Sequences"
+        }
+      ]
+    },
+    {
+      "number": "4.10",
+      "chapter": 4,
+      "topic_en": "Check Subtree",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.10 - Check Subtree"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_10_Check_Subtree"
+        }
+      ]
+    },
+    {
+      "number": "4.11",
+      "chapter": 4,
+      "topic_en": "Random Node",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.11 - Random Node"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_11_Random_Node"
+        }
+      ]
+    },
+    {
+      "number": "4.12",
+      "chapter": 4,
+      "topic_en": "Paths with Sum",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter04/4.12 - Paths with Sum"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 04. Trees and Graphs/Q4_12_Paths_with_Sum"
+        }
+      ]
+    },
+    {
+      "number": "5.1",
+      "chapter": 5,
+      "topic_en": "Insertion",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter05/5.1 - Insertion"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 05. Bit Manipulation/Q5_01_Insertion"
+        }
+      ]
+    },
+    {
+      "number": "5.2",
+      "chapter": 5,
+      "topic_en": "Binary to String",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter05/5.2 - Binary to String"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 05. Bit Manipulation/Q5_02_Binary_to_String"
+        }
+      ]
+    },
+    {
+      "number": "5.3",
+      "chapter": 5,
+      "topic_en": "Flip Bit to Win",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter05/5.3 - Flip Bit To Win"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 05. Bit Manipulation/Q5_03_Flip_Bit_to_Win"
+        }
+      ]
+    },
+    {
+      "number": "5.4",
+      "chapter": 5,
+      "topic_en": "Next Number",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter05/5.4 - Next Number"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 05. Bit Manipulation/Q5_04_Next_Number"
+        }
+      ]
+    },
+    {
+      "number": "5.5",
+      "chapter": 5,
+      "topic_en": "Debugger",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter05/5.5 - Debugger"
+        }
+      ]
+    },
+    {
+      "number": "5.6",
+      "chapter": 5,
+      "topic_en": "Conversion",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter05/5.6 - Conversion"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 05. Bit Manipulation/Q5_06_Conversion"
+        }
+      ]
+    },
+    {
+      "number": "5.7",
+      "chapter": 5,
+      "topic_en": "Pairwise Swap",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter05/5.7 - Pairwise Swap"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 05. Bit Manipulation/Q5_07_Pairwise_Swap"
+        }
+      ]
+    },
+    {
+      "number": "5.8",
+      "chapter": 5,
+      "topic_en": "Draw Line",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter05/5.8 - Draw Line"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 05. Bit Manipulation/Q5_08_Draw_Line"
+        }
+      ]
+    },
+    {
+      "number": "6.1",
+      "chapter": 6,
+      "topic_en": "Heavy Pill",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.01 - Heavy Pill"
+        }
+      ]
+    },
+    {
+      "number": "6.2",
+      "chapter": 6,
+      "topic_en": "Basketball",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.02 - Basketball"
+        }
+      ]
+    },
+    {
+      "number": "6.3",
+      "chapter": 6,
+      "topic_en": "Dominos",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.03 - Dominos"
+        }
+      ]
+    },
+    {
+      "number": "6.4",
+      "chapter": 6,
+      "topic_en": "Ants on a Triangle",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.04 - Ants on a Triangle"
+        }
+      ]
+    }
+  ],
+  "blockedNext": {
+    "number": "6.5",
+    "chapter": 6,
+    "status": "blocked_source_conflict",
+    "reason": "Author Java Q6_05_Egg_Drop conflicts with author-linked JavaScript6.05 Jugs of Water; canonical numbering must be resolved before publication."
+  },
+  "unresolved": [
+    {
+      "scope": "6.5",
+      "kind": "number_title_conflict",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.05 - Jugs of Water",
+          "label": "Jugs of Water"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 06. Math and Logic Puzzles/Q6_05_Egg_Drop",
+          "label": "Egg Drop"
+        }
+      ]
+    },
+    {
+      "scope": "11.*,12.*,14.*,13.2–13.4,15.1–15.2",
+      "kind": "missing_numbered_primary_metadata",
+      "count": 29
+    },
+    {
+      "scope": "6.8,6.10",
+      "kind": "title_variant_crosscheck_after_frontier"
+    }
+  ],
+  "historicalBaseline": [
+    {
+      "number": "1.1",
+      "study_date": "2026-10-09",
+      "published_date": "2026-10-08"
+    },
+    {
+      "number": "1.2",
+      "study_date": "2026-10-10",
+      "published_date": "2026-10-12"
+    },
+    {
+      "number": "1.3",
+      "study_date": "2026-10-11",
+      "published_date": "2026-10-12"
+    },
+    {
+      "number": "1.4",
+      "study_date": "2026-10-12",
+      "published_date": "2026-10-12"
+    },
+    {
+      "number": "1.5",
+      "study_date": "2026-10-13",
+      "published_date": "2026-10-13"
+    },
+    {
+      "number": "1.6",
+      "study_date": "2026-10-14",
+      "published_date": "2026-10-16"
+    },
+    {
+      "number": "1.7",
+      "study_date": "2026-10-15",
+      "published_date": "2026-10-16"
+    },
+    {
+      "number": "1.8",
+      "study_date": "2026-10-16",
+      "published_date": "2026-10-16"
+    },
+    {
+      "number": "1.9",
+      "study_date": "2026-10-17",
+      "published_date": "2026-10-17"
+    },
+    {
+      "number": "2.1",
+      "study_date": "2026-10-18",
+      "published_date": "2026-10-18"
+    },
+    {
+      "number": "2.2",
+      "study_date": "2026-10-19",
+      "published_date": "2026-10-19"
+    },
+    {
+      "number": "2.3",
+      "study_date": "2026-10-20",
+      "published_date": "2026-10-20"
+    },
+    {
+      "number": "2.4",
+      "study_date": "2026-10-21",
+      "published_date": "2026-10-22"
+    },
+    {
+      "number": "2.5",
+      "study_date": "2026-10-22",
+      "published_date": "2026-10-22"
+    },
+    {
+      "number": "2.6",
+      "study_date": "2026-10-23",
+      "published_date": "2026-10-23"
+    },
+    {
+      "number": "2.7",
+      "study_date": "2026-10-24",
+      "published_date": "2026-10-24"
+    },
+    {
+      "number": "2.8",
+      "study_date": "2026-10-25",
+      "published_date": "2026-10-25"
+    },
+    {
+      "number": "3.1",
+      "study_date": "2026-10-26",
+      "published_date": "2026-10-26"
+    },
+    {
+      "number": "3.2",
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27"
+    }
+  ],
+  "completionRule": "All189 individually verified sequential topic pairs plus source/React/Pages/public-origin completion evidence. A catalog or source commit alone is not completion.",
+  "metadataCorrections": [
+    {
+      "number": "4.7",
+      "label": "Build Order",
+      "rejectedNestedLabel": "Build Order/EdgeRemoval"
+    },
+    {
+      "number": "10.4",
+      "label": "Sorted Search No Size",
+      "rejectedNestedLabel": "Sorted Search No Size/Arrayish"
+    },
+    {
+      "number": "15.3",
+      "label": "Dining Philosophers",
+      "rejectedNestedLabel": "Dining Philosophers/QuestionB"
+    }
+  ],
+  "metadataCorrectionNote": "Use question-root directory labels, never nested implementation names. 10.4 and15.3 remain outside the publication prefix; corrections do not resolve earlier gaps or authorize skipping6.5.",
+  "approvedDate": "2026-10-27"
+}

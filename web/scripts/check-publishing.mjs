@@ -6,9 +6,9 @@ import {validateGameDesignPlan} from './validate-game-design-plan.mjs';
 const root=resolve('..'),read=p=>readFileSync(resolve(root,p),'utf8');
 const policy=JSON.parse(read('automation/publishing.json'));
 if(policy.theme!=='dark'||policy.siteBase!=='/um.github.io/'||policy.branch!=='master')throw Error('Invalid publishing target or theme');
-const expectedStages=['thinking','briefing','language'];
+const expectedStages=['briefing','language'];
 const pipeline=policy.pipeline;
-if(policy.jobs.length!==3||JSON.stringify(policy.jobs.map(j=>j.id))!==JSON.stringify(expectedStages))throw Error('Unexpected publishing stages');
+if(policy.jobs.length!==2||JSON.stringify(policy.jobs.map(j=>j.id))!==JSON.stringify(expectedStages))throw Error('Unexpected publishing stages');
 if(!pipeline?.automationId||pipeline.is_enabled!==true||pipeline.localTime!=='05:00'||pipeline.timezone!=='Asia/Seoul'||pipeline.cadence!=='daily'||pipeline.independentStageSchedulesEnabled!==false||JSON.stringify(pipeline.stages)!==JSON.stringify(expectedStages))throw Error('Unreviewed sequential pipeline drift');
 for(const [index,j] of policy.jobs.entries()){
  if(j.execution!=='sequential_pipeline_stage'||j.runAfter!==(index===0?'pipeline_start':expectedStages[index-1])||j.automationId||j.localTime)throw Error('Independent stage schedule or order drift: '+j.id);
@@ -39,7 +39,10 @@ const videoIds=new Set();const paths=new Set();for(const e of gd.episodes){if(!e
 // Manual continuation is bounded by the verified, user-approved source manifest.
 validateGameDesignPlan(JSON.parse(read('automation/game-design-plan.json')),gd.episodes,feed);
 const catalog=JSON.parse(read('thinking-lab/data/catalog.json'));
-validateThinkingPairs(catalog,policy.jobs.find(j=>j.id==='thinking'));
+const thinking=policy.continuousTasks?.find(j=>j.id==='thinking');
+if(!thinking||thinking.allowedWritePatterns?.length!==2||JSON.stringify(thinking.allowedWritePatterns)!==JSON.stringify(['^thinking-lab/data/catalog\\.json$','^thinking-lab/ep-[a-z0-9-]+/content\\.json$']))throw Error('Thinking continuous authoring scope drift');
+for(const pattern of thinking.allowedWritePatterns){const re=new RegExp(pattern);for(const p of ['index.html','thinking-lab/index.html','web/src/styles.css','language-study/sw.js','data/atlas/catalog.json'])if(re.test(p))throw Error('Thinking writer may modify generated/UI file: '+p);}
+validateThinkingPairs(catalog,thinking,JSON.parse(read(thinking.curriculumManifest)));
 for(const e of catalog.episodes){
  if(!e.category?.trim()||!Array.isArray(e.tags)||e.tags.length<1||e.tags.length>8)throw Error('Missing classification: '+e.path);
  if(new Set(e.tags).size!==e.tags.length||e.tags.some(t=>typeof t!=='string'||!t.trim()||t!==t.trim()||t.length>40||/\d{4}-\d{2}-\d{2}/.test(t)))throw Error('Invalid tags: '+e.path);
@@ -48,4 +51,4 @@ for(const e of catalog.episodes){
 const publish=read('.github/workflows/react-pages.yml');
 if(!publish.includes('game-design/**')||!publish.includes('knowledge/**')||!publish.includes('automation/**')||!publish.includes('Reconcile language lessons')||publish.includes("- 'language-study/data/**'"))throw Error('Publication triggers no longer match source ownership');
 const reconcile=read('.github/workflows/language-study-reconcile.yml');if(!reconcile.includes("cron: '10 0 * * *'"))throw Error('Reconcile fallback must match 09:10 KST');
-console.log('Publishing contract passed: one 05:00 sequential pipeline, 3 scoped content stages, dark theme, classified thinking catalog.');
+console.log('Publishing contract passed: one 05:00 sequential pipeline, 2 scoped daily content stages plus bounded continuous thinking, dark theme, classified thinking catalog.');

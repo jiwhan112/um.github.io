@@ -16,8 +16,7 @@
   "next": {
     "chapter": 3,
     "number": "3.3",
-    "topic_en": "Stack of Plates",
-    "study_date": "2026-10-28"
+    "topic_en": "Stack of Plates"
   },
   "episodes": [
     {
@@ -657,11 +656,12 @@
   ],
   "policy": {
     "start_date": "2026-10-09",
-    "cadence": "daily",
+    "cadence": "continuous_user_requested",
     "timezone": "Asia/Seoul",
-    "description": "study_date is assigned learning date, published_date records actual GitHub publication",
+    "description": "Historical dates preserved; new topics use equal actual publication dates, multiple topics allowed per day; no planned next-topic date.",
     "publication_unit": "topic",
     "pages_per_topic": 2,
-    "revision": "2026-10-27: existing topics split into basic/advanced pages; original dates and base topic progress preserved"
+    "revision": "2026-10-27: existing topics split into basic/advanced pages; original dates and base topic progress preserved",
+    "curriculum_manifest": "automation/thinking-book-plan.json"
   }
 }

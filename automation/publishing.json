@@ -7,33 +7,6 @@
   "theme": "dark",
   "jobs": [
     {
-      "id": "thinking",
-      "cadence": "daily",
-      "allowedWritePatterns": [
-        "^thinking-lab/data/catalog\\.json$",
-        "^thinking-lab/ep-[a-z0-9-]+/content\\.json$"
-      ],
-      "limit": "one new topic (two separate problem pages) per Korean date",
-      "requiredMetadata": [
-        "number",
-        "chapter",
-        "topic_en",
-        "title",
-        "summary",
-        "category",
-        "tags",
-        "study_date",
-        "published_date",
-        "path"
-      ],
-      "execution": "sequential_pipeline_stage",
-      "runAfter": "pipeline_start",
-      "publicationUnit": "topic",
-      "pagesPerTopic": 2,
-      "numbering": "X.Y.1 basic and X.Y.2 advanced; current/next retain base topic X.Y",
-      "editorialPolicy": "From 2026-10-27: varied original interview-style algorithms, logic, everyday rules and combinatorial/noncoding reasoning. No forced game-programming framing. Each page has one problem, three folded hints and illustrated folded solutions; technical coding contracts stay folded. Preserve existing basic routes/memo keys/dates; advanced pages have independent memo keys. Both pages must pass publication together."
-    },
-    {
       "id": "briefing",
       "cadence": "daily",
       "allowedWritePatterns": [
@@ -44,7 +17,7 @@
       "archive": "Preserve existing Google Drive Markdown/PDF daily and Saturday weekly archive",
       "editorialPolicy": "From 2026-10-19, preserve existing date:index IDs. Group into three domains; substantial directly relevant technology gets detailed coverage, other meaningful releases/industry items get short summaries. No quota filler or repeated unchanged news.",
       "execution": "sequential_pipeline_stage",
-      "runAfter": "thinking"
+      "runAfter": "pipeline_start"
     },
     {
       "id": "language",
@@ -131,7 +104,7 @@
     }
   ],
   "failurePolicy": {
-    "thinking": "Do not self-disable the daily task. The same run verifies source, catalog, React CI and public Pages, performs bounded authorized recovery, and reports unresolved failures. Separate 07:00 watchdog is paused; do not re-enable it.",
+    "thinking": "Continuous user-requested task, not scheduled. Verify each complete pair through source, React CI, Pages and public origin before continuing. Keep unresolved source frontier explicit; never claim full-book completion with metadata gaps. Separate 07:00 watchdog stays paused.",
     "publication": "Prefer atomic create_tree/create_commit/update_ref(expected_sha). If GitHub safely permits a non-atomic Contents API recovery, write source first, verify it, then catalog; do not claim publication until both files and React Pages validation succeed. Never force-push or modify generated UI."
   },
   "scheduleMigration": {
@@ -139,7 +112,7 @@
     "timezone": "Asia/Seoul",
     "originalSchedules": "paused_by_user_confirmation",
     "dailyStartDate": "2026-10-24",
-    "note": "Only the daily 05:00 sequential pipeline remains enabled. Separate thinking-watch, briefing, language, maintenance and hourly textbook schedules are paused. Textbook execution is continuous and separately scoped; automation tools are authoritative."
+    "note": "From 2026-10-27 user request: only daily 05:00 briefing -> language remains enabled. Thinking removed from saved daily automation and runs continuously within verified book curriculum. Separate thinking-watch, briefing, language, maintenance and hourly textbook schedules stay paused. Automation tools are authoritative."
   },
   "runLevelMaintenance": {
     "mode": "integrated",
@@ -161,11 +134,41 @@
     "cadence": "daily",
     "startDate": "2026-10-24",
     "stages": [
-      "thinking",
       "briefing",
       "language"
     ],
     "advanceCondition": "Complete and verify the current stage and actual Pages publication before immediately starting the next stage. Briefing includes the existing Drive archive.",
     "independentStageSchedulesEnabled": false
-  }
+  },
+  "continuousTasks": [
+    {
+      "id": "thinking",
+      "cadence": "continuous",
+      "allowedWritePatterns": [
+        "^thinking-lab/data/catalog\\.json$",
+        "^thinking-lab/ep-[a-z0-9-]+/content\\.json$"
+      ],
+      "limit": "verified curriculum prefix; multiple complete topic pairs per actual Korean publication date",
+      "requiredMetadata": [
+        "number",
+        "chapter",
+        "topic_en",
+        "title",
+        "summary",
+        "category",
+        "tags",
+        "study_date",
+        "published_date",
+        "path"
+      ],
+      "execution": "continuous_user_requested",
+      "publicationUnit": "topic",
+      "pagesPerTopic": 2,
+      "numbering": "X.Y.1 basic and X.Y.2 advanced; current/next retain base topic X.Y",
+      "editorialPolicy": "From 2026-10-27: varied original interview-style algorithms, logic, everyday rules and combinatorial/noncoding reasoning. No forced game-programming framing. Each page has one problem, three folded hints and illustrated folded solutions; technical coding contracts stay folded. Preserve existing basic routes/memo keys/dates; advanced pages have independent memo keys. Both pages must pass publication together.",
+      "scheduleEnabled": false,
+      "curriculumManifest": "automation/thinking-book-plan.json",
+      "datePolicy": "Preserve historical dates; new topics use study_date=published_date on actual publication day, never future dates; next topic is undated."
+    }
+  ]
 }
