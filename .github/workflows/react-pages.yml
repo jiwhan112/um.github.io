@@ -33,6 +33,9 @@ jobs:
     timeout-minutes: 40
     outputs:
       source: ${{ steps.source.outputs.sha }}
+      lock: ${{ steps.package.outputs.lock }}
+      dist: ${{ steps.package.outputs.dist }}
+      input: ${{ steps.package.outputs.input }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -57,6 +60,76 @@ jobs:
           npm run build
           node scripts/check-publication.mjs
           npm audit --audit-level=high
+      - name: Capture full test partition and immutable inputs
+        id: package
+        working-directory: web
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          mkdir -p shard-input
+          tar -czf /tmp/atlas-react-dist.tar.gz -C dist .
+          export LOCK_HASH=$(sha256sum package-lock.json | cut -d' ' -f1)
+          export DIST_HASH=$(sha256sum /tmp/atlas-react-dist.tar.gz | cut -d' ' -f1)
+          node node_modules/@playwright/test/cli.js test --list --reporter=json > shard-input/all.json
+          for shard in 1 2 3 4; do
+            node node_modules/@playwright/test/cli.js test --list --shard=$shard/4 --reporter=json > shard-input/$shard.json
+          done
+          node scripts/verify-shard-coverage.mjs manifest shard-input/all.json shard-input/manifest.json shard-input/{1,2,3,4}.json
+          tar -czf /tmp/atlas-react-test-input.tar.gz dist public shard-input
+          echo "lock=$LOCK_HASH" >> "$GITHUB_OUTPUT"
+          echo "dist=$DIST_HASH" >> "$GITHUB_OUTPUT"
+          echo "input=$(sha256sum /tmp/atlas-react-test-input.tar.gz | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prepared-regression-input
+          path: /tmp/atlas-react-test-input.tar.gz
+          retention-days: 5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tested-react-distribution
+          path: /tmp/atlas-react-dist.tar.gz
+          retention-days: 5
+  e2e:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    env:
+      SOURCE_SHA: ${{ needs.build.outputs.source }}
+      RUN_ID: ${{ github.run_id }}
+      RUN_ATTEMPT: ${{ github.run_attempt }}
+      LOCK_HASH: ${{ needs.build.outputs.lock }}
+      DIST_HASH: ${{ needs.build.outputs.dist }}
+      INPUT_HASH: ${{ needs.build.outputs.input }}
+      PLAYWRIGHT_BLOB_OUTPUT_NAME: report-shard-${{ matrix.shard }}.zip
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.build.outputs.source }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install exact dependencies
+        working-directory: web
+        run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: prepared-regression-input
+          path: /tmp/atlas-regression-input
+      - name: Verify and restore identical prepared source inputs
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$(sha256sum web/package-lock.json | cut -d' ' -f1)" = "$LOCK_HASH"
+          echo "$INPUT_HASH  /tmp/atlas-regression-input/atlas-react-test-input.tar.gz" | sha256sum --check --strict
+          tar -xzf /tmp/atlas-regression-input/atlas-react-test-input.tar.gz -C web
       - name: Restore locked browser and OS package downloads
         uses: actions/cache@v4
         with:
@@ -68,57 +141,106 @@ jobs:
         working-directory: web
         timeout-minutes: 22
         run: bash scripts/install-browser.sh
-      - name: Regression gate (never update snapshots automatically)
+      - name: Full unchanged regression partition (never update snapshots)
         working-directory: web
-        run: npm run test:e2e
-      - name: Preserve focused thinking prototype diagrams
-        uses: actions/upload-artifact@v4
+        run: npm run test:e2e -- --shard=${{ matrix.shard }}/4 --add-reporter=blob
+      - name: Stamp shard identity even on test failure
         if: always()
-        with:
-          name: thinking-first-prototype-visuals
-          path: web/test-results/**/thinking-1-1-diagram-*.png
-          if-no-files-found: warn
-          retention-days: 7
-      - name: Preserve paired thinking worked diagrams
-        uses: actions/upload-artifact@v4
+        working-directory: web
+        run: node scripts/verify-shard-coverage.mjs stamp shard-input/manifest.json shard-meta.json ${{ matrix.shard }}
+      - name: Preserve complete shard evidence
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: thinking-pairs-visuals
+          name: e2e-${{ needs.build.outputs.source }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.shard }}
           path: |
+            web/shard-meta.json
+            web/blob-report
+            web/test-results
+            web/playwright-report
+            web/render-environment
+          if-no-files-found: error
+          retention-days: 7
+      - name: Preserve compact worked diagrams and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: thinking-visuals-shard-${{ matrix.shard }}
+          path: |
+            web/test-results/**/thinking-1-1-diagram-*.png
             web/test-results/**/thinking-pair-diagram-*.png
             web/test-results/**/thinking-pair-page-*.png
-          if-no-files-found: warn
-          retention-days: 7
-      - name: Preserve compact regression diagnostics
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: compact-regression-diagnostics
-          path: |
             web/test-results/results.json
             web/test-results/**/error-context.md
             web/test-results/**/paired-error-state.json
             web/test-results/visual-visual-problem-*/problem-*.png
           if-no-files-found: warn
           retention-days: 7
-      - name: Package tested distribution
-        run: tar -czf /tmp/atlas-react-dist.tar.gz -C web/dist .
-      - uses: actions/upload-artifact@v4
+  aggregate:
+    needs: [build, e2e]
+    if: always() && !cancelled() && needs.build.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      SOURCE_SHA: ${{ needs.build.outputs.source }}
+      RUN_ID: ${{ github.run_id }}
+      RUN_ATTEMPT: ${{ github.run_attempt }}
+      LOCK_HASH: ${{ needs.build.outputs.lock }}
+      DIST_HASH: ${{ needs.build.outputs.dist }}
+      INPUT_HASH: ${{ needs.build.outputs.input }}
+      PLAYWRIGHT_JSON_OUTPUT_FILE: merged-results.json
+    steps:
+      - uses: actions/checkout@v4
         with:
-          name: tested-react-distribution
-          path: /tmp/atlas-react-dist.tar.gz
-          retention-days: 5
+          ref: ${{ needs.build.outputs.source }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - working-directory: web
+        run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: prepared-regression-input
+          path: /tmp/atlas-regression-input
+      - name: Verify and restore manifest
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$(sha256sum web/package-lock.json | cut -d' ' -f1)" = "$LOCK_HASH"
+          echo "$INPUT_HASH  /tmp/atlas-regression-input/atlas-react-test-input.tar.gz" | sha256sum --check --strict
+          tar -xzf /tmp/atlas-regression-input/atlas-react-test-input.tar.gz -C web shard-input
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: e2e-${{ needs.build.outputs.source }}-${{ github.run_id }}-${{ github.run_attempt }}-*
+          path: web/shard-artifacts
+          merge-multiple: false
+      - name: Verify all exact-source executions and complete test coverage
+        working-directory: web
+        run: |
+          node scripts/verify-shard-coverage.mjs verify shard-input/manifest.json shard-artifacts
+          test '${{ needs.e2e.result }}' = success
+      - name: Merge all browser reports without losing shard diagnostics
+        if: always()
+        working-directory: web
+        run: |
+          mkdir -p blob-input
+          find shard-artifacts -path '*/blob-report/*.zip' -exec cp {} blob-input/ \;
+          test "$(find blob-input -name '*.zip' | wc -l)" -eq 4
+          node node_modules/@playwright/test/cli.js merge-reports --reporter=html,json blob-input
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: react-regression-report
           path: |
             web/playwright-report
-            web/test-results
-            web/render-environment
+            web/merged-results.json
+            web/shard-input/manifest.json
           retention-days: 7
   publish:
-    needs: build
+    needs: [build, e2e, aggregate]
+    if: success() && needs.e2e.result == 'success' && needs.aggregate.result == 'success'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     permissions:
@@ -141,6 +263,7 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - name: Extract only the distribution from the successful build job
         run: |
+          echo "${{ needs.build.outputs.dist }}  /tmp/atlas-react-tested/atlas-react-dist.tar.gz" | sha256sum --check --strict
           mkdir -p web/dist
           tar -xzf /tmp/atlas-react-tested/atlas-react-dist.tar.gz -C web/dist
       - name: Restore locked browser and OS package downloads
