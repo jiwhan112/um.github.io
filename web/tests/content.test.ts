@@ -765,7 +765,7 @@ test('continuous thinking accepts same-day exact prefixes but rejects skipped or
   const topic=topics.at(-1),date=baseline.find((e:{number:string})=>e.number===topic.number+'.1');
   return {episodes:[...baseline,...added],current:{number:topic.number,chapter:topic.chapter,topic_en:topic.topic_en,study_date:date?.study_date||'2026-10-27',published_date:date?.published_date||'2026-10-27'},next:count<plan.verifiedPrefix.length?{number:plan.verifiedPrefix[count].number,chapter:plan.verifiedPrefix[count].chapter,topic_en:plan.verifiedPrefix[count].topic_en}:structuredClone(plan.blockedNext)};
  }
- for(const count of [19,21,43,47])assert.deepEqual(validateThinkingPairs(batch(count),policy,plan,'2026-10-27'),{topics:count,pages:count*2});
+ for(const count of [19,21,43,47,105,189])assert.deepEqual(validateThinkingPairs(batch(count),policy,plan,'2026-10-27'),{topics:count,pages:count*2});
  const valid=batch(21);
  const mutations=[
   (b:typeof valid)=>{b.episodes=b.episodes.filter((e:{number:string})=>!e.number.startsWith('3.3.'));},
@@ -777,7 +777,13 @@ test('continuous thinking accepts same-day exact prefixes but rejects skipped or
  ];
  for(const mutate of mutations){const bad=structuredClone(valid);mutate(bad);assert.throws(()=>validateThinkingPairs(bad,policy,plan,'2026-10-27'));}
  const frontier=batch(47);frontier.next=null;assert.throws(()=>validateThinkingPairs(frontier,policy,plan,'2026-10-27'));
- assert.throws(()=>validateThinkingPairs(batch(47),policy,{...plan,complete:true},'2026-10-27'));
+ const falselyComplete={...plan,verifiedPrefix:plan.verifiedPrefix.slice(0,47),complete:true};
+ assert.throws(()=>validateThinkingPairs(batch(47),policy,falselyComplete,'2026-10-27'));
+ assert.deepEqual(validateThinkingPairs(batch(189),policy,plan,'2026-10-27'),{topics:189,pages:378});
+ const unfinished=batch(188);unfinished.next=null;assert.throws(()=>validateThinkingPairs(unfinished,policy,plan,'2026-10-27'));
+ const missingPair=batch(189);missingPair.episodes=missingPair.episodes.filter((e:{number:string})=>!e.number.startsWith('17.26.'));assert.throws(()=>validateThinkingPairs(missingPair,policy,plan,'2026-10-27'));
+ const missingPage=batch(189);missingPage.episodes.pop();assert.throws(()=>validateThinkingPairs(missingPage,policy,plan,'2026-10-27'));
+ const invalidFull={...plan,unverifiedNumberedTopicCount:1};assert.throws(()=>validateThinkingPairs(batch(189),policy,invalidFull,'2026-10-27'));
  const reordered=structuredClone(plan);[reordered.verifiedPrefix[19],reordered.verifiedPrefix[20]]=[reordered.verifiedPrefix[20],reordered.verifiedPrefix[19]];
  assert.throws(()=>validateThinkingPairs(valid,policy,reordered,'2026-10-27'));
 });
@@ -789,6 +795,7 @@ test('incomplete curriculum supports explicit missing-source chapter boundaries 
  const plan=JSON.parse(await readFile('../automation/thinking-book-plan.json','utf8'));
  // Synthetic future boundary exercises only contract shape, not verification of new book metadata.
  const boundary=structuredClone(plan);
+ boundary.verifiedPrefix=boundary.verifiedPrefix.slice(0,47);boundary.complete=false;boundary.unverifiedNumberedTopicCount=1;boundary.unresolved=[{scope:'synthetic test gap'}];
  for(let chapter=6;chapter<=10;chapter++){
   const first=chapter===6?5:1;
   for(let problem=first;problem<=11;problem++)boundary.verifiedPrefix.push({...plan.verifiedPrefix.at(-1),number:chapter+'.'+problem,chapter,topic_en:'Synthetic boundary fixture '+chapter+'.'+problem});

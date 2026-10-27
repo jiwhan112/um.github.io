@@ -5,30 +5,61 @@
   "approvedMode": "continuous_user_requested",
   "pagesPerTopic": 2,
   "targetTopicCount": 189,
-  "complete": false,
-  "verificationScope": "Numbered repository metadata only, not access to full book text or verification of every printed question. Author confirms total 189; 160 numbered metadata entries observed, 29 missing. Conflicting 6.5 blocks sequential publication beyond 6.4.",
+  "complete": true,
+  "verificationScope": "All189 numbered topic identities mapped from pinned author/author-linked and independent repository metadata. This is metadata coverage, NOT full book text access, exact printed-title verification, or publication completion. Existing47 labels preserved. Independent sources supply previously missing29;6.5/6.8 editorial numbering resolution and contrary Java evidence remain explicit.",
   "sources": [
     {
       "id": "author-total",
       "url": "https://www.crackingthecodinginterview.com/contents.html",
       "checkedDate": "2026-10-27",
-      "scope": "edition 6 and total 189 only"
+      "scope": "edition 6 and total 189 only",
+      "kind": "author_web_total"
     },
     {
       "id": "author-java",
       "url": "https://github.com/careercup/CtCI-6th-Edition",
       "revision": "59018cfcb90292209275db1c4b3ed306d4b07d7f",
-      "scope": "author-linked Java repository directory metadata"
+      "scope": "author-linked Java repository directory metadata",
+      "kind": "author_repository"
     },
     {
       "id": "author-linked-javascript",
       "url": "https://github.com/careercup/CtCI-6th-Edition-JavaScript",
       "revision": "33830739629d3d3f9a4b0f122ba5150431a9d506",
-      "scope": "author-linked community JavaScript repository directory metadata; not book text"
+      "scope": "author-linked community JavaScript repository directory metadata; not book text",
+      "kind": "author_linked_community_repository"
+    },
+    {
+      "id": "independent-w-hat",
+      "url": "https://github.com/w-hat/ctci-solutions",
+      "revision": "434e595b63e6dd8eccc6d44c44fafc9334b84e9c",
+      "scope": "Independent sixth-edition repository numbered file metadata. Not author endorsement or full book text.",
+      "kind": "independent_repository"
+    },
+    {
+      "id": "independent-ark",
+      "kind": "independent_repository",
+      "url": "https://github.com/ARK-0707/Cracking-The-Coding-Interview-Solutions",
+      "revision": "db76fbe9dad22b03e13b37c057fec9cae7fe8f75",
+      "scope": "Personal sixth-edition solution repository numbered path metadata; not author endorsement or printed wording."
+    },
+    {
+      "id": "independent-onteri",
+      "kind": "independent_repository",
+      "url": "https://github.com/Onteri/ctci_6th_edition",
+      "revision": "e63e14139a77a0a696a2a28d37798577cd2a2bc0",
+      "scope": "Personal sixth-edition solution repository numbered path metadata; not author endorsement or printed wording."
+    },
+    {
+      "id": "independent-rodney",
+      "kind": "independent_repository",
+      "url": "https://github.com/RodneyShag/Cracking-the-Coding-Interview_solutions",
+      "revision": "1c3e6c954ab20d2b5254e1dc9179cc5bf35193ee",
+      "scope": "Personal sixth-edition solution repository numbered path metadata; not author endorsement or printed wording."
     }
   ],
-  "observedMetadataTopicCount": 160,
-  "unverifiedNumberedTopicCount": 29,
+  "observedMetadataTopicCount": 189,
+  "unverifiedNumberedTopicCount": 0,
   "verifiedPrefix": [
     {
       "number": "1.1",
@@ -761,41 +792,2742 @@
           "path": "chapter06/6.04 - Ants on a Triangle"
         }
       ]
-    }
-  ],
-  "blockedNext": {
-    "number": "6.5",
-    "chapter": 6,
-    "status": "blocked_source_conflict",
-    "reason": "Author Java Q6_05_Egg_Drop conflicts with author-linked JavaScript6.05 Jugs of Water; canonical numbering must be resolved before publication."
-  },
-  "unresolved": [
+    },
     {
-      "scope": "6.5",
-      "kind": "number_title_conflict",
+      "number": "6.5",
+      "chapter": 6,
+      "topic_en": "Jugs of Water",
+      "verification": "numbered_repository_metadata",
       "evidence": [
         {
           "source": "author-linked-javascript",
-          "path": "chapter06/6.05 - Jugs of Water",
-          "label": "Jugs of Water"
+          "path": "chapter06/6.05 - Jugs of Water"
         },
         {
-          "source": "author-java",
-          "path": "Java/Ch 06. Math and Logic Puzzles/Q6_05_Egg_Drop",
-          "label": "Egg Drop"
+          "source": "independent-w-hat",
+          "path": "ch-06-math-and-logic-puzzles/05-jugs-of-water.py"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_6_math_logic_puzzles/6.5-jugs_of_water.py"
         }
       ]
     },
     {
-      "scope": "11.*,12.*,14.*,13.2–13.4,15.1–15.2",
-      "kind": "missing_numbered_primary_metadata",
-      "count": 29
+      "number": "6.6",
+      "chapter": 6,
+      "topic_en": "Blue-Eyed Island",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.06 - Blue-Eyed Island"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-06-math-and-logic-puzzles/06-blue-eyed-island.py"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_6_math_logic_puzzles/6.6-blue_eyed_island.py"
+        }
+      ]
     },
     {
-      "scope": "6.8,6.10",
-      "kind": "title_variant_crosscheck_after_frontier"
+      "number": "6.7",
+      "chapter": 6,
+      "topic_en": "The Apocalypse",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.07 - The Apocalypse"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 06. Math and Logic Puzzles/Q6_07_The_Apocalypse"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-06-math-and-logic-puzzles/07-the-apocalypse.py"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_6_math_logic_puzzles/6.7-apocalypse.py"
+        }
+      ]
+    },
+    {
+      "number": "6.8",
+      "chapter": 6,
+      "topic_en": "The Egg Drop Problem",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.08 - The Egg Drop Problem"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-06-math-and-logic-puzzles/08-the-egg-drop-problem.py"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_6_math_logic_puzzles/6.8-egg_drop_problem.py"
+        }
+      ]
+    },
+    {
+      "number": "6.9",
+      "chapter": 6,
+      "topic_en": "100 Lockers",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.09 - 100 Lockers"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-06-math-and-logic-puzzles/09-lockers.py"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_6_math_logic_puzzles/6.9-100_lockers.py"
+        }
+      ]
+    },
+    {
+      "number": "6.10",
+      "chapter": 6,
+      "topic_en": "Poison",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.10 - Poison"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 06. Math and Logic Puzzles/Q6_10_Test_Strips"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-06-math-and-logic-puzzles/10-poison.py"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_6_math_logic_puzzles/6.10-poison.py"
+        }
+      ]
+    },
+    {
+      "number": "7.1",
+      "chapter": 7,
+      "topic_en": "Deck of Cards",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.01 - Deck of Cards"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_01_Deck_of_Cards"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/01-deck-of-cards.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_01_Deck_of_Cards"
+        }
+      ]
+    },
+    {
+      "number": "7.2",
+      "chapter": 7,
+      "topic_en": "Call Center",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.02 - Call Center"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_02_Call_Center"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/02-call-center.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_02_Call_Center"
+        }
+      ]
+    },
+    {
+      "number": "7.3",
+      "chapter": 7,
+      "topic_en": "Jukebox",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.03 - Jukebox"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_03_Jukebox"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/03-jukebox.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_03_Jukebox"
+        }
+      ]
+    },
+    {
+      "number": "7.4",
+      "chapter": 7,
+      "topic_en": "Parking Lot",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.04 - Parking Lot"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_04_Parking_Lot"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/04-parking-lot.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_04_Parking_Lot"
+        }
+      ]
+    },
+    {
+      "number": "7.5",
+      "chapter": 7,
+      "topic_en": "Online Book Reader",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.05 - Online Book Reader"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_05_Online_Book_Reader"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/05-online-book-reader.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_05_Online_Book_Reader"
+        }
+      ]
+    },
+    {
+      "number": "7.6",
+      "chapter": 7,
+      "topic_en": "Jigsaw",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.06 - Jigsaw"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_06_Jigsaw"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/06-jigsaw.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_06_Jigsaw"
+        }
+      ]
+    },
+    {
+      "number": "7.7",
+      "chapter": 7,
+      "topic_en": "Chat Server",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.07 - Chat Server"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_07_Chat_Server"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/07-chat-server.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_07_Chat_Server"
+        }
+      ]
+    },
+    {
+      "number": "7.8",
+      "chapter": 7,
+      "topic_en": "Othello",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.08 - Othello"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_08_Othello"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/08-othello.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_08_Othello"
+        }
+      ]
+    },
+    {
+      "number": "7.9",
+      "chapter": 7,
+      "topic_en": "Circular Array",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.09 - Circular Array"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_09_Circular_Array"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/09-circular-array.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_09_Circular_Array"
+        }
+      ]
+    },
+    {
+      "number": "7.10",
+      "chapter": 7,
+      "topic_en": "Minesweeper",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.10 - Minesweeper"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_10_Minesweeper"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/10-minesweeper.py"
+        }
+      ]
+    },
+    {
+      "number": "7.11",
+      "chapter": 7,
+      "topic_en": "File System",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.11 - File System"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_11_File_System"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/11-file-system.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_11_File_System"
+        }
+      ]
+    },
+    {
+      "number": "7.12",
+      "chapter": 7,
+      "topic_en": "Hash Table",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter07/7.12 - Hash Table"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 07. Object-Oriented Design/Q7_12_Hash_Table"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-07-object-oriented-design/12-hash-table.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 07 - Object-Oriented Design/_7_12_Hash_Table"
+        }
+      ]
+    },
+    {
+      "number": "8.1",
+      "chapter": 8,
+      "topic_en": "Triple Step",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.01 - Triple Step"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_01_Triple_Step"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/01-triple-step.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_01_Triple_Step"
+        }
+      ]
+    },
+    {
+      "number": "8.2",
+      "chapter": 8,
+      "topic_en": "Robot in a Grid",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.02 - Robot in a Grid"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_02_Robot_in_a_Grid"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/02-robot-in-a-grid.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_02_Robot_in_a_Grid"
+        }
+      ]
+    },
+    {
+      "number": "8.3",
+      "chapter": 8,
+      "topic_en": "Magic Index",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.03 - Magic Index"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_03_Magic_Index"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/03-magic-index.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_03_Magic_Index"
+        }
+      ]
+    },
+    {
+      "number": "8.4",
+      "chapter": 8,
+      "topic_en": "Power Set",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.04 - Power Set"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_04_Power_Set"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/04-power-set.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_04_Power_Set"
+        }
+      ]
+    },
+    {
+      "number": "8.5",
+      "chapter": 8,
+      "topic_en": "Recursive Multiply",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.05 - Recursive Multiply"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_05_Recursive_Multiply"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/05-recursive-multiply.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_05_Recursive_Multiply"
+        }
+      ]
+    },
+    {
+      "number": "8.6",
+      "chapter": 8,
+      "topic_en": "Towers of Hanoi",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.06 - Towers of Hanoi"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_06_Towers_of_Hanoi"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/06-towers-of-hanoi.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_06_Towers_of_Hanoi"
+        }
+      ]
+    },
+    {
+      "number": "8.7",
+      "chapter": 8,
+      "topic_en": "Permutations Without Dups",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.07 - Permutations without Dups"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_07_Permutations_Without_Dups"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/07-permutations-without-dups.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_07_Permutations_without_Dups"
+        }
+      ]
+    },
+    {
+      "number": "8.8",
+      "chapter": 8,
+      "topic_en": "Permutations With Dups",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.08 - Permutations with Dups"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_08_Permutations_With_Dups"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/08-permutations-with-dups.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_08_Permutations_with_Dups"
+        }
+      ]
+    },
+    {
+      "number": "8.9",
+      "chapter": 8,
+      "topic_en": "Parens",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.09 - Parens"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_09_Parens"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/09-parens.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_09_Parens"
+        }
+      ]
+    },
+    {
+      "number": "8.10",
+      "chapter": 8,
+      "topic_en": "Paint Fill",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.10 - Paint Fill"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_10_Paint_Fill"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/10-paint-fill.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_10_Paint_Fill"
+        }
+      ]
+    },
+    {
+      "number": "8.11",
+      "chapter": 8,
+      "topic_en": "Coins",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.11 - Coins"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_11_Coins"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/11-coins.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_11_Coins"
+        }
+      ]
+    },
+    {
+      "number": "8.12",
+      "chapter": 8,
+      "topic_en": "Eight Queens",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.12 - Eight Queens"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_12_Eight_Queens"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/12-eight-queens.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_12_Eight_Queens"
+        }
+      ]
+    },
+    {
+      "number": "8.13",
+      "chapter": 8,
+      "topic_en": "Stack of Boxes",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.13 - Stack Boxes"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_13_Stack_of_Boxes"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/13-stacks-of-boxes.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_13_Stack_of_Boxes"
+        }
+      ]
+    },
+    {
+      "number": "8.14",
+      "chapter": 8,
+      "topic_en": "Boolean Evaluation",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter08/8.14 - Boolean Eval"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 08. Recursion and Dynamic Programming/Q8_14_Boolean_Evaluation"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-08-recursion-and-dynamic-programming/14-boolean-evaluation.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 08 - Recursion and Dynamic Programming/_8_14_Boolean_Evaluation"
+        }
+      ]
+    },
+    {
+      "number": "9.1",
+      "chapter": 9,
+      "topic_en": "Stock Data",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter09/9.1 - Stock Data"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-09-system-design-and-scalability/01-stock-data.py"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_9_system_design/9.1-stock_data.md"
+        }
+      ]
+    },
+    {
+      "number": "9.2",
+      "chapter": 9,
+      "topic_en": "Social Network",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter09/9.2 - Social Network"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 09. Scalability and Memory Limits/Q9_02_Social_Network"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_9_system_design/9.2-social_network.py"
+        }
+      ]
+    },
+    {
+      "number": "9.3",
+      "chapter": 9,
+      "topic_en": "Web Crawler",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter09/9.3 - Web Crawler"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_9_system_design/9.3-web_crawler.md"
+        }
+      ]
+    },
+    {
+      "number": "9.4",
+      "chapter": 9,
+      "topic_en": "Duplicate URLs",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter09/9.4 - Duplicate URLs"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_9_system_design/9.4-duplicate_urls.md"
+        }
+      ]
+    },
+    {
+      "number": "9.5",
+      "chapter": 9,
+      "topic_en": "Cache",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter09/9.5 - Cache"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 09. Scalability and Memory Limits/Q9_05_Cache"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_9_system_design/9.5-cache.md"
+        }
+      ]
+    },
+    {
+      "number": "9.6",
+      "chapter": 9,
+      "topic_en": "Sales Rank",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter09/9.6 - Sales Rank"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_9_system_design/9.6-sales_rank.md"
+        }
+      ]
+    },
+    {
+      "number": "9.7",
+      "chapter": 9,
+      "topic_en": "Personal Financial Manager",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter09/9.7 - Personal Financial Manager"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_9_system_design/9.7-personal_financial_manager.md"
+        }
+      ]
+    },
+    {
+      "number": "9.8",
+      "chapter": 9,
+      "topic_en": "Paste Bin",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter09/9.8 - Paste Bin"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_9_system_design/9.8-pastebin.md"
+        }
+      ]
+    },
+    {
+      "number": "10.1",
+      "chapter": 10,
+      "topic_en": "Sorted Merge",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.01 - Sorted Merge"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 10. Sorting and Searching/Q10_01_Sorted_Merge"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/01-sorted-merge.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_01_Sorted_Merge"
+        }
+      ]
+    },
+    {
+      "number": "10.2",
+      "chapter": 10,
+      "topic_en": "Group Anagrams",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.02 - Group Anagrams"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 10. Sorting and Searching/Q10_02_Group_Anagrams"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/02-group-anagrams.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_02_Group_Anagrams"
+        }
+      ]
+    },
+    {
+      "number": "10.3",
+      "chapter": 10,
+      "topic_en": "Search in Rotated Array",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.03 - Search In Rotated Array"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 10. Sorting and Searching/Q10_03_Search_in_Rotated_Array"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/03-search-in-rotated-array.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_03_Search_in_Rotated_Array"
+        }
+      ]
+    },
+    {
+      "number": "10.4",
+      "chapter": 10,
+      "topic_en": "Sorted Search No Size",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.04 - Sorted Search No Size"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 10. Sorting and Searching/Q10_04_Sorted_Search_No_Size"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/04-sorted-search-no-size.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_04_Sorted_Search_No_Size"
+        }
+      ]
+    },
+    {
+      "number": "10.5",
+      "chapter": 10,
+      "topic_en": "Sparse Search",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.05 - Sparse Search"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 10. Sorting and Searching/Q10_05_Sparse_Search"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/05-sparse-search.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_05_Sparse_Search"
+        }
+      ]
+    },
+    {
+      "number": "10.6",
+      "chapter": 10,
+      "topic_en": "Sort Big File",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.06 - Sort Big File"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/06-sort-big-file.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_06_Sort_Big_File"
+        }
+      ]
+    },
+    {
+      "number": "10.7",
+      "chapter": 10,
+      "topic_en": "Missing Int",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.07 - Missing Int"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 10. Sorting and Searching/Q10_07_Missing_Int"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/07-missing-int.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_07_Missing_Int"
+        }
+      ]
+    },
+    {
+      "number": "10.8",
+      "chapter": 10,
+      "topic_en": "Find Duplicates",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.08 - Find Duplicates"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 10. Sorting and Searching/Q10_08_Find_Duplicates"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/08-find-duplicates.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_08_Find_Duplicates"
+        }
+      ]
+    },
+    {
+      "number": "10.9",
+      "chapter": 10,
+      "topic_en": "Sorted Matrix Search",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.09 - Sorted Matrix Search"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 10. Sorting and Searching/Q10_09_Sorted_Matrix_Search"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/09-sorted-matrix-search.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_09_Sorted_Matrix_Search"
+        }
+      ]
+    },
+    {
+      "number": "10.10",
+      "chapter": 10,
+      "topic_en": "Rank from Stream",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.10 - Rank From Stream"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 10. Sorting and Searching/Q10_10_Rank_from_Stream"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/10-rank-from-stream.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_10_Rank_from_Stream"
+        }
+      ]
+    },
+    {
+      "number": "10.11",
+      "chapter": 10,
+      "topic_en": "Peaks and Valleys",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter10/10.11 - Peaks And Valleys"
+        },
+        {
+          "source": "author-java",
+          "path": "Java/Ch 10. Sorting and Searching/Q10_11_Peaks_and_Valleys"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-10-sorting-and-searching/11-peaks-and-valleys.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 10 - Sorting and Searching/_10_11_Peaks_and_Valleys"
+        }
+      ]
+    },
+    {
+      "number": "11.1",
+      "chapter": 11,
+      "topic_en": "Mistake",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-w-hat",
+          "path": "ch-11-testing/01-mistake.py"
+        },
+        {
+          "source": "independent-ark",
+          "path": "Testing/11.1 Mistake.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_11_testing/11.1-mistake.md"
+        }
+      ]
+    },
+    {
+      "number": "11.2",
+      "chapter": 11,
+      "topic_en": "Random Crashes",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-w-hat",
+          "path": "ch-11-testing/02-random-crashes.py"
+        },
+        {
+          "source": "independent-ark",
+          "path": "Testing/11.2 Random Crashes.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_11_testing/11.2-random_crashes.md"
+        }
+      ]
+    },
+    {
+      "number": "11.3",
+      "chapter": 11,
+      "topic_en": "Chess Test",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-w-hat",
+          "path": "ch-11-testing/03-chess-test.py"
+        },
+        {
+          "source": "independent-ark",
+          "path": "Testing/11.3 Chess Test.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_11_testing/11.3-chess_test.md"
+        }
+      ]
+    },
+    {
+      "number": "11.4",
+      "chapter": 11,
+      "topic_en": "No Test Tools",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-w-hat",
+          "path": "ch-11-testing/04-no-test-tools.py"
+        },
+        {
+          "source": "independent-ark",
+          "path": "Testing/11.4 No Test Tools.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_11_testing/11.4-no_test_tools.md"
+        }
+      ]
+    },
+    {
+      "number": "11.5",
+      "chapter": 11,
+      "topic_en": "Test a Pen",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-w-hat",
+          "path": "ch-11-testing/05-test-a-pen.py"
+        },
+        {
+          "source": "independent-ark",
+          "path": "Testing/11.5 Test a Pen.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_11_testing/11.5-test_a_pen.md"
+        }
+      ]
+    },
+    {
+      "number": "11.6",
+      "chapter": 11,
+      "topic_en": "Test an ATM",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-w-hat",
+          "path": "ch-11-testing/06-test-an-atm.py"
+        },
+        {
+          "source": "independent-ark",
+          "path": "Testing/11.6 Test an ATM.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_11_testing/11.6-test_an_atm.md"
+        }
+      ]
+    },
+    {
+      "number": "12.1",
+      "chapter": 12,
+      "topic_en": "Last K Lines",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-w-hat",
+          "path": "ch-12-c-and-c-plus-plus/01-last-k-lines.py"
+        },
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.1 Last K Lines.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.1-last_k_lines.cpp"
+        }
+      ]
+    },
+    {
+      "number": "12.2",
+      "chapter": 12,
+      "topic_en": "Reverse String",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.2 Reverse String.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.2-reverse_string.c"
+        }
+      ]
+    },
+    {
+      "number": "12.3",
+      "chapter": 12,
+      "topic_en": "Hash Table vs STL Map",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.3 Hash Table vs STL Map.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.3-hash_table_vs_stl.md"
+        }
+      ]
+    },
+    {
+      "number": "12.4",
+      "chapter": 12,
+      "topic_en": "Virtual Functions",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.4 Virtual Functions.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.4-virtual_functions.md"
+        }
+      ]
+    },
+    {
+      "number": "12.5",
+      "chapter": 12,
+      "topic_en": "Shallow vs Deep Copy",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.5 Shallow vs Deep Copy.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.5-shallow_deep_copies.md"
+        }
+      ]
+    },
+    {
+      "number": "12.6",
+      "chapter": 12,
+      "topic_en": "Volatile",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.6 Volatile.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.6-volatile.md"
+        }
+      ]
+    },
+    {
+      "number": "12.7",
+      "chapter": 12,
+      "topic_en": "Virtual Base Class",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.7 Virtual Base Class.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.7-virtual_base_class.md"
+        }
+      ]
+    },
+    {
+      "number": "12.8",
+      "chapter": 12,
+      "topic_en": "Copy Node",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.8 Copy Node.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.8-copy-node.cpp"
+        }
+      ]
+    },
+    {
+      "number": "12.9",
+      "chapter": 12,
+      "topic_en": "Smart Pointer",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.9 Smart Pointer.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.9-smart_pointer.cpp"
+        }
+      ]
+    },
+    {
+      "number": "12.10",
+      "chapter": 12,
+      "topic_en": "Malloc",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.10 Malloc.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.10-malloc.c"
+        }
+      ]
+    },
+    {
+      "number": "12.11",
+      "chapter": 12,
+      "topic_en": "2D Alloc",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "C and C++/12.11 2D Alloc.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_12_c_cpp/12.11-2D_alloc.c"
+        }
+      ]
+    },
+    {
+      "number": "13.1",
+      "chapter": 13,
+      "topic_en": "Private Constructor",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 13. Java/Q13_01_Private_Constructor"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 13 - Java/_13_1_Private_Constructor"
+        }
+      ]
+    },
+    {
+      "number": "13.2",
+      "chapter": 13,
+      "topic_en": "Return from Finally",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Java/13.2 Return from Finally.md"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 13 - Java/_13_2_Return_From_Finally"
+        }
+      ]
+    },
+    {
+      "number": "13.3",
+      "chapter": 13,
+      "topic_en": "Final, etc",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Java/13.3 Final, etc.md"
+        }
+      ]
+    },
+    {
+      "number": "13.4",
+      "chapter": 13,
+      "topic_en": "Generics vs Templates",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Java/13.4 Generics vs Templates.md"
+        }
+      ]
+    },
+    {
+      "number": "13.5",
+      "chapter": 13,
+      "topic_en": "TreeMap HashMap LinkedHashMap",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 13. Java/Q13_05_TreeMap_HashMap_LinkedHashMap"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 13 - Java/_13_5_TreeMap_HashMap_LinkedHashMap"
+        }
+      ]
+    },
+    {
+      "number": "13.6",
+      "chapter": 13,
+      "topic_en": "Object Reflection",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 13. Java/Q13_06_Object_Reflection"
+        }
+      ]
+    },
+    {
+      "number": "13.7",
+      "chapter": 13,
+      "topic_en": "Lambda Expressions",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 13. Java/Q13_07_Lambda_Expressions"
+        }
+      ]
+    },
+    {
+      "number": "13.8",
+      "chapter": 13,
+      "topic_en": "Lambda Random",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 13. Java/Q13_08_Lambda_Random"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-13-java/08-lambda-random.py"
+        }
+      ]
+    },
+    {
+      "number": "14.1",
+      "chapter": 14,
+      "topic_en": "Multiple Apartments",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Databases/14.1 Multiple Apartments.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_14_databases/14.1-multiple_apartments.sql"
+        }
+      ]
+    },
+    {
+      "number": "14.2",
+      "chapter": 14,
+      "topic_en": "Open Requests",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Databases/14.2 Open Requests.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_14_databases/14.2-open_requests.sql"
+        }
+      ]
+    },
+    {
+      "number": "14.3",
+      "chapter": 14,
+      "topic_en": "Close All Requests",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Databases/14.3 Close All Requests.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_14_databases/14.3-close_all_requests.sql"
+        }
+      ]
+    },
+    {
+      "number": "14.4",
+      "chapter": 14,
+      "topic_en": "Joins",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-w-hat",
+          "path": "ch-14-databases/04-joins.py"
+        },
+        {
+          "source": "independent-ark",
+          "path": "Databases/14.4 Joins.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_14_databases/14.4-joins.md"
+        }
+      ]
+    },
+    {
+      "number": "14.5",
+      "chapter": 14,
+      "topic_en": "Denormalization",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Databases/14.5 Denormalization.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_14_databases/14.5-denormalization.md"
+        }
+      ]
+    },
+    {
+      "number": "14.6",
+      "chapter": 14,
+      "topic_en": "Entity-Relationship Diagram",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Databases/14.6 Entity-Relationship Diagram.md"
+        }
+      ]
+    },
+    {
+      "number": "14.7",
+      "chapter": 14,
+      "topic_en": "Design Grade Database",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Databases/14.7 Design Grade Database.md"
+        }
+      ]
+    },
+    {
+      "number": "15.1",
+      "chapter": 15,
+      "topic_en": "Thread vs Process",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Threads and Locks/15.1 Thread vs Process.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_15_threads_locks/15.1-thread_vs_process.md"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 15 - Threads and Locks/_15_1_Thread_vs_Process"
+        }
+      ]
+    },
+    {
+      "number": "15.2",
+      "chapter": 15,
+      "topic_en": "Context Switch",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "independent-ark",
+          "path": "Threads and Locks/15.2 Context Switch.md"
+        },
+        {
+          "source": "independent-onteri",
+          "path": "chapter_15_threads_locks/15.2-context_switch.md"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 15 - Threads and Locks/_15_2_Context_Switch"
+        }
+      ]
+    },
+    {
+      "number": "15.3",
+      "chapter": 15,
+      "topic_en": "Dining Philosophers",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 15. Threads and Locks/Q15_03_Dining_Philosophers"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-15-threads-and-locks/03-dining-philosophers.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 15 - Threads and Locks/_15_3_Dining_Philosophers"
+        }
+      ]
+    },
+    {
+      "number": "15.4",
+      "chapter": 15,
+      "topic_en": "Deadlock Free Class",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 15. Threads and Locks/Q15_04_Deadlock_Free_Class"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 15 - Threads and Locks/_15_4_Deadlock_Free_Class"
+        }
+      ]
+    },
+    {
+      "number": "15.5",
+      "chapter": 15,
+      "topic_en": "Call In Order",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 15. Threads and Locks/Q15_05_Call_In_Order"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 15 - Threads and Locks/_15_5_Call_In_Order"
+        }
+      ]
+    },
+    {
+      "number": "15.6",
+      "chapter": 15,
+      "topic_en": "Synchronized Methods",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 15. Threads and Locks/Q15_06_Synchronized_Methods"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 15 - Threads and Locks/_15_6_Synchronized_Methods"
+        }
+      ]
+    },
+    {
+      "number": "15.7",
+      "chapter": 15,
+      "topic_en": "FizzBuzz",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 15. Threads and Locks/Q15_07_FizzBuzz"
+        }
+      ]
+    },
+    {
+      "number": "16.1",
+      "chapter": 16,
+      "topic_en": "Number Swapper",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_01_Number_Swapper"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/01-number-swapper.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_01_Number_Swapper"
+        }
+      ]
+    },
+    {
+      "number": "16.2",
+      "chapter": 16,
+      "topic_en": "Word Frequencies",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_02_Word_Frequencies"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/02-word-frequencies.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_02_Word_Frequencies"
+        }
+      ]
+    },
+    {
+      "number": "16.3",
+      "chapter": 16,
+      "topic_en": "Intersection",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_03_Intersection"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/03-intersection.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_03_Intersection"
+        }
+      ]
+    },
+    {
+      "number": "16.4",
+      "chapter": 16,
+      "topic_en": "Tic Tac Win",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_04_Tic_Tac_Win"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/04-tic-tac-win.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_04_Tic_Tac_Win"
+        }
+      ]
+    },
+    {
+      "number": "16.5",
+      "chapter": 16,
+      "topic_en": "Factorial Zeros",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_05_Factorial_Zeros"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/05-factorial-zeros.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_05_Factorial_Zeros"
+        }
+      ]
+    },
+    {
+      "number": "16.6",
+      "chapter": 16,
+      "topic_en": "Smallest Difference",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_06_Smallest_Difference"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/06-smallest-difference.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_06_Smallest_Difference"
+        }
+      ]
+    },
+    {
+      "number": "16.7",
+      "chapter": 16,
+      "topic_en": "Number Max",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_07_Number_Max"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/07-number-max.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_07_Number_Max"
+        }
+      ]
+    },
+    {
+      "number": "16.8",
+      "chapter": 16,
+      "topic_en": "English Int",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_08_English_Int"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/08-english-int.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_08_English_Int"
+        }
+      ]
+    },
+    {
+      "number": "16.9",
+      "chapter": 16,
+      "topic_en": "Operations",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_09_Operations"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/09-operations.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_09_Operations"
+        }
+      ]
+    },
+    {
+      "number": "16.10",
+      "chapter": 16,
+      "topic_en": "Living People",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_10_Living_People"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/10-living-people.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_10_Living_People"
+        }
+      ]
+    },
+    {
+      "number": "16.11",
+      "chapter": 16,
+      "topic_en": "Diving Board",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_11_Diving_Board"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/11-diving-board.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_11_Diving_Board"
+        }
+      ]
+    },
+    {
+      "number": "16.12",
+      "chapter": 16,
+      "topic_en": "XML Encoding",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_12_XML_Encoding"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/12-xml-encoding.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_12_XML_Encoding"
+        }
+      ]
+    },
+    {
+      "number": "16.13",
+      "chapter": 16,
+      "topic_en": "Bisect Squares",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_13_Bisect_Squares"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/13-bisect-squares.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_13_Bisect_Squares"
+        }
+      ]
+    },
+    {
+      "number": "16.14",
+      "chapter": 16,
+      "topic_en": "Best Line",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_14_Best_Line"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/14-best-line.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_14_Best_Line"
+        }
+      ]
+    },
+    {
+      "number": "16.15",
+      "chapter": 16,
+      "topic_en": "Master Mind",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_15_Master_Mind"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/15-mastermind.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_15_Master_Mind"
+        }
+      ]
+    },
+    {
+      "number": "16.16",
+      "chapter": 16,
+      "topic_en": "Sub Sort",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_16_Sub_Sort"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/16-sub-sort.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_16_Sub_Sort"
+        }
+      ]
+    },
+    {
+      "number": "16.17",
+      "chapter": 16,
+      "topic_en": "Contiguous Sequence",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_17_Contiguous_Sequence"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/17-contiguous-sequence.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_17_Contiguous_Sequence"
+        }
+      ]
+    },
+    {
+      "number": "16.18",
+      "chapter": 16,
+      "topic_en": "Pattern Matcher",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_18_Pattern_Matcher"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/18-pattern-matching.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_18_Pattern_Matching"
+        }
+      ]
+    },
+    {
+      "number": "16.19",
+      "chapter": 16,
+      "topic_en": "Pond Sizes",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_19_Pond_Sizes"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/19-pond-sizes.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_19_Pond_Sizes"
+        }
+      ]
+    },
+    {
+      "number": "16.20",
+      "chapter": 16,
+      "topic_en": "T9",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_20_T9"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/20-t-nine.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_20_T9__Trie_Solution"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_20_T9__HashMap_Solution"
+        }
+      ]
+    },
+    {
+      "number": "16.21",
+      "chapter": 16,
+      "topic_en": "Sum Swap",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_21_Sum_Swap"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/21-sum-swap.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_21_Sum_Swap"
+        }
+      ]
+    },
+    {
+      "number": "16.22",
+      "chapter": 16,
+      "topic_en": "Langtons Ant",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_22_Langtons_Ant"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/22-langtons-ant.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_22_Langtons_Ant"
+        }
+      ]
+    },
+    {
+      "number": "16.23",
+      "chapter": 16,
+      "topic_en": "Rand7 From Rand5",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_23_Rand7_From_Rand5"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/23-rand7-from-rand5.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_23_Rand7_from_Rand5"
+        }
+      ]
+    },
+    {
+      "number": "16.24",
+      "chapter": 16,
+      "topic_en": "Pairs With Sum",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_24_Pairs_With_Sum"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/24-pairs-with-sum.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_24_Pairs_with_Sum"
+        }
+      ]
+    },
+    {
+      "number": "16.25",
+      "chapter": 16,
+      "topic_en": "LRU Cache",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_25_LRU_Cache"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/25-lru-cache.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_25_LRU_Cache"
+        }
+      ]
+    },
+    {
+      "number": "16.26",
+      "chapter": 16,
+      "topic_en": "Calculator",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 16. Moderate/Q16_26_Calculator"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-16-moderate/26-calculator.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 16 - More Problems (Moderate)/_16_26_Calculator"
+        }
+      ]
+    },
+    {
+      "number": "17.1",
+      "chapter": 17,
+      "topic_en": "Add Without Plus",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_01_Add_Without_Plus"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-17-hard/01-add-without-plus.py"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_01_Add_Without_Plus"
+        }
+      ]
+    },
+    {
+      "number": "17.2",
+      "chapter": 17,
+      "topic_en": "Shuffle",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_02_Shuffle"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_02_Shuffle"
+        }
+      ]
+    },
+    {
+      "number": "17.3",
+      "chapter": 17,
+      "topic_en": "Random Set",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_03_Random_Set"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_03_Random_Set"
+        }
+      ]
+    },
+    {
+      "number": "17.4",
+      "chapter": 17,
+      "topic_en": "Missing Number",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_04_Missing_Number"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_04_Missing_Number"
+        }
+      ]
+    },
+    {
+      "number": "17.5",
+      "chapter": 17,
+      "topic_en": "Letters and Numbers",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_05_Letters_and_Numbers"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_05_Letters_and_Numbers"
+        }
+      ]
+    },
+    {
+      "number": "17.6",
+      "chapter": 17,
+      "topic_en": "Count of 2s",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_06_Count_of_2s"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_06_Count_of_2s"
+        }
+      ]
+    },
+    {
+      "number": "17.7",
+      "chapter": 17,
+      "topic_en": "Baby Names",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_07_Baby_Names"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_07_Baby_Names"
+        }
+      ]
+    },
+    {
+      "number": "17.8",
+      "chapter": 17,
+      "topic_en": "Circus Tower",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_08_Circus_Tower"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_08_Circus_Tower"
+        }
+      ]
+    },
+    {
+      "number": "17.9",
+      "chapter": 17,
+      "topic_en": "Kth Multiple",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_09_Kth_Multiple"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_09_Kth_Multiple"
+        }
+      ]
+    },
+    {
+      "number": "17.10",
+      "chapter": 17,
+      "topic_en": "Majority Element",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_10_Majority_Element"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_10_Majority_Element"
+        }
+      ]
+    },
+    {
+      "number": "17.11",
+      "chapter": 17,
+      "topic_en": "Word Distance",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_11_Word_Distance"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_11_Word_Distance"
+        }
+      ]
+    },
+    {
+      "number": "17.12",
+      "chapter": 17,
+      "topic_en": "BiNode",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_12_BiNode"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_12_BiNode"
+        }
+      ]
+    },
+    {
+      "number": "17.13",
+      "chapter": 17,
+      "topic_en": "ReSpace",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_13_ReSpace"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_13_ReSpace"
+        }
+      ]
+    },
+    {
+      "number": "17.14",
+      "chapter": 17,
+      "topic_en": "Smallest K",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_14_Smallest_K"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_14_Smallest_K"
+        }
+      ]
+    },
+    {
+      "number": "17.15",
+      "chapter": 17,
+      "topic_en": "Longest Word",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_15_Longest_Word"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_15_Longest_Word"
+        }
+      ]
+    },
+    {
+      "number": "17.16",
+      "chapter": 17,
+      "topic_en": "The Masseuse",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_16_The_Masseuse"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_16_The_Masseuse"
+        }
+      ]
+    },
+    {
+      "number": "17.17",
+      "chapter": 17,
+      "topic_en": "Multi Search",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_17_Multi_Search"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_17_Multi_Search"
+        }
+      ]
+    },
+    {
+      "number": "17.18",
+      "chapter": 17,
+      "topic_en": "Shortest Supersequence",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_18_Shortest_Supersequence"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_18_Shortest_Supersequence"
+        }
+      ]
+    },
+    {
+      "number": "17.19",
+      "chapter": 17,
+      "topic_en": "Missing Two",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_19_Missing_Two"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_19_Missing_Two"
+        }
+      ]
+    },
+    {
+      "number": "17.20",
+      "chapter": 17,
+      "topic_en": "Continuous Median",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_20_Continuous_Median"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_20_Continuous_Median"
+        }
+      ]
+    },
+    {
+      "number": "17.21",
+      "chapter": 17,
+      "topic_en": "Volume of Histogram",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_21_Volume_of_Histogram"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_21_Volume_of_Histogram"
+        }
+      ]
+    },
+    {
+      "number": "17.22",
+      "chapter": 17,
+      "topic_en": "Word Transformer",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_22_Word_Transformer"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_22_Word_Transformer"
+        }
+      ]
+    },
+    {
+      "number": "17.23",
+      "chapter": 17,
+      "topic_en": "Max Black Square",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_23_Max_Black_Square"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_23_Max_Black_Square"
+        }
+      ]
+    },
+    {
+      "number": "17.24",
+      "chapter": 17,
+      "topic_en": "Max Submatrix",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_24_Max_Submatrix"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_24_Max_Submatrix"
+        }
+      ]
+    },
+    {
+      "number": "17.25",
+      "chapter": 17,
+      "topic_en": "Word Rectangle",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_25_Word_Rectangle"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_25_Word_Rectangle"
+        }
+      ]
+    },
+    {
+      "number": "17.26",
+      "chapter": 17,
+      "topic_en": "Sparse Similarity",
+      "verification": "numbered_repository_metadata",
+      "evidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 17. Hard/Q17_26_Sparse_Similarity"
+        },
+        {
+          "source": "independent-rodney",
+          "path": "Chp. 17 - More Problems (Hard)/_17_26_Sparse_Similarity"
+        }
+      ]
     }
   ],
+  "blockedNext": null,
+  "unresolved": [],
   "historicalBaseline": [
     {
       "number": "1.1",
@@ -893,7 +3625,7 @@
       "published_date": "2026-10-27"
     }
   ],
-  "completionRule": "All189 individually verified sequential topic pairs plus source/React/Pages/public-origin completion evidence. A catalog or source commit alone is not completion.",
+  "completionRule": "Full publication requires all189 individually metadata-verified topic pairs plus source/React/Pages/public-origin completion evidence. Metadata complete=true or a catalog/source commit alone is not publication completion.",
   "metadataCorrections": [
     {
       "number": "4.7",
@@ -911,6 +3643,53 @@
       "rejectedNestedLabel": "Dining Philosophers/QuestionB"
     }
   ],
-  "metadataCorrectionNote": "Use question-root directory labels, never nested implementation names. 10.4 and15.3 remain outside the publication prefix; corrections do not resolve earlier gaps or authorize skipping6.5.",
-  "approvedDate": "2026-10-27"
+  "metadataCorrectionNote": "Use question-root labels, not nested implementation names. All189 topic identities have numbered metadata evidence; displayed labels are conventional descriptive labels, not guaranteed verbatim printed titles.",
+  "approvedDate": "2026-10-27",
+  "resolvedConflicts": [
+    {
+      "scope": "6.5,6.8",
+      "decision": {
+        "6.5": "Jugs of Water",
+        "6.8": "The Egg Drop Problem"
+      },
+      "basis": "Explicit author-linked JS numbered list and directories, corroborated by independent w-hat numbered filenames. Editorial resolution approved2026-10-27; not direct printed-book inspection.",
+      "supportingEvidence": [
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.05 - Jugs of Water"
+        },
+        {
+          "source": "author-linked-javascript",
+          "path": "chapter06/6.08 - The Egg Drop Problem"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-06-math-and-logic-puzzles/05-jugs-of-water.py"
+        },
+        {
+          "source": "independent-w-hat",
+          "path": "ch-06-math-and-logic-puzzles/08-the-egg-drop-problem.py"
+        }
+      ],
+      "contraryEvidence": [
+        {
+          "source": "author-java",
+          "path": "Java/Ch 06. Math and Logic Puzzles/Q6_05_Egg_Drop",
+          "label": "Egg Drop"
+        }
+      ]
+    }
+  ],
+  "completeMeaning": "complete means only numbered metadata coverage. Publication is separate: current remains6.4/47 topics until actual writing, validation, deployment and public verification advance it; next remains6.5. Never claim189 topics published from this flag.",
+  "corroboration": [
+    {
+      "kind": "dated_web_metadata_observation",
+      "url": "https://www.sdeskills.com/ctci",
+      "accessed_date": "2026-10-27",
+      "observedAt": "2026-10-27T07:55:44Z",
+      "capturedMetadataSha256": "7e09fc088012305c6415e7772461187d9129641774044595ba8bccfd4eb50ce7",
+      "hashScope": "Canonical JSON of recorded metadata observation, not raw HTML or immutable webpage revision. Direct HTML fetch403; not retried.",
+      "supports": "Chapter12 numbered study syllabus and15.1; pinned repository paths remain gating evidence."
+    }
+  ]
 }
