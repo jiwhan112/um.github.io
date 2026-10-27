@@ -4,9 +4,13 @@ import {readFileSync} from 'node:fs';
 // Functional tests above always use the complete current production data instead.
 const catalog=readFileSync('tests/fixtures/catalog.json','utf8');
 const articles=readFileSync('tests/fixtures/articles.json','utf8');
+// Same original 1.4 document used by the existing approved screenshot (source at 549202d).
+// Keep UI baseline deterministic when lesson prose changes; current documents stay covered by functional and pair tests.
+const problem=readFileSync('tests/fixtures/thinking-visual-problem.json','utf8');
 test.beforeEach(async({page})=>{
  await page.route('**/data/atlas/catalog.json',route=>route.fulfill({contentType:'application/json',body:catalog}));
  await page.route('**/data/atlas/articles.json',route=>route.fulfill({contentType:'application/json',body:articles}));
+ await page.route('**/data/atlas/docs/thinking-lab--ep-01-04-palindrome-permutation.json',route=>route.fulfill({contentType:'application/json',body:problem}));
 });
 for(const [name,path] of Object.entries({dashboard:'',briefing:'daily-briefing/',language:'language-study/japanese/9/',problem:'thinking-lab/ep-01-04-palindrome-permutation/',gallery:'ai-asset-lab/',library:'thinking-lab/',report:'ai-asset-lab/experiments/2d/001-potion-icons/report/'})){
  test('visual '+name,async({page,isMobile})=>{

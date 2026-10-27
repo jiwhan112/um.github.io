@@ -5,7 +5,9 @@ export const normalizeSearch = (value: string): string => value.normalize('NFKC'
 export function matchesDocument(doc: DocumentMeta, filter: Pick<LibraryFilter, 'query' | 'category' | 'tags'>): boolean {
   const haystack = normalizeSearch([doc.number || '', doc.title, doc.subtitle, doc.topic || '', doc.category || '', ...doc.tags].join(' '));
   const words = normalizeSearch(filter.query).split(' ').filter(Boolean);
-  return (!filter.category || doc.category === filter.category) && words.every(word => haystack.includes(word)) && filter.tags.every(tag => doc.tags.includes(tag));
+  return (!filter.category || doc.category === filter.category) && words.every(word => /^\d+(?:\.\d+)+$/.test(word)
+    ? String(doc.number || '') === word || String(doc.number || '').startsWith(word + '.')
+    : haystack.includes(word)) && filter.tags.every(tag => doc.tags.includes(tag));
 }
 export function filterDocuments(docs: DocumentMeta[], filter: LibraryFilter): DocumentMeta[] {
   return docs.filter(doc => matchesDocument(doc, filter)).sort((a, b) => {

@@ -259,7 +259,7 @@
             {
               "type": "code",
               "language": "mermaid",
-              "text": "flowchart TD\n    accTitle: 거울을 건너면 방향이 뒤집힌다\n    accDescr: 거울을 건너면 방향이 뒤집힌다의 생각 과정을 위에서 아래로 따라갑니다.\n    N0[\"R 다음 M\"]\n    N1[\"각 칸의 최종 위치는 c,r\"]\n    N0 --> N1\n    N2[\"M 다음 반시계90도\"]\n    N1 --> N2\n    N3[\"같은 c,r이므로 모든 칸에서 일치\"]\n    N2 --> N3\n"
+              "text": "flowchart TD\n    accTitle: 거울을 건너면 방향이 뒤집힌다\n    accDescr: 같은 시작 좌표 r,c에서 두 연산 순서를 따로 적용합니다. 시계 회전 다음 좌우 거울과 좌우 거울 다음 반시계 회전은 모두 c,r에 도착합니다.\n    S[\"시작 좌표: r, c\"]\n    R[\"시계 회전 R: c, n-1-r\"]\n    M[\"좌우 거울 M: r, n-1-c\"]\n    F[\"최종 좌표: c, r\"]\n    S -->|시계 90도| R\n    S -->|좌우 거울| M\n    R -->|좌우 거울 M| F\n    M -->|반시계 90도| F\n"
             },
             {
               "type": "heading",

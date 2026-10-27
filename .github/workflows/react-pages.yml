@@ -84,7 +84,21 @@ jobs:
         if: always()
         with:
           name: thinking-pairs-visuals
-          path: web/test-results/**/thinking-pair-diagram-*.png
+          path: |
+            web/test-results/**/thinking-pair-diagram-*.png
+            web/test-results/**/thinking-pair-page-*.png
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Preserve compact regression diagnostics
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compact-regression-diagnostics
+          path: |
+            web/test-results/results.json
+            web/test-results/**/error-context.md
+            web/test-results/**/paired-error-state.json
+            web/test-results/visual-visual-problem-*/problem-*.png
           if-no-files-found: warn
           retention-days: 7
       - name: Package tested distribution

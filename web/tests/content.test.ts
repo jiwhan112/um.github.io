@@ -714,3 +714,36 @@ test('all original thinking routes, memo keys, dates and anchors survive paired 
   assert.throws(()=>validateThinkingPairs(bad,policy),mode);
  }
 });
+
+// Regression: translated paired titles must not hide their original topic names.
+test('global search retains English topics without requiring them in displayed titles',async()=>{
+ const {matchesSearchRow}=await import('../src/lib/search');
+ const pair=catalog.documents.filter(d=>d.kind==='thinking'&&d.number?.startsWith('1.4.'));
+ assert.equal(pair.length,2);
+ for(const doc of pair){
+  assert.equal(matchesSearchRow(doc,'pALINDROME'),true);
+  assert.equal(matchesSearchRow(doc,'Palindrome Permutation'),true);
+  assert.equal(matchesSearchRow(doc,doc.title),true);
+  assert.equal(matchesSearchRow(doc,'nonexistent-topic-xyz'),false);
+ }
+ assert.equal(matchesSearchRow({title:'오늘의 게임 소식'},'게임'),true);
+ assert.equal(matchesSearchRow({title:'English lesson'},'LESSON'),true);
+ assert.equal(matchesSearchRow({title:'English lesson'},''),true);
+});
+
+test('dotted library numbers match exact pages or topic prefixes, never suffixes',()=>{
+ const docs=catalog.documents.filter(d=>d.kind==='thinking');
+ const filter={query:'1.1',category:'',tags:[] as string[],sort:'number' as const};
+ assert.deepEqual(filterDocuments(docs,filter).map(d=>d.number),['1.1.1','1.1.2']);
+ assert.deepEqual(filterDocuments(docs,{...filter,query:'1.1.1'}).map(d=>d.number),['1.1.1']);
+ assert.deepEqual(filterDocuments(docs,{...filter,query:'１．１'}).map(d=>d.number),['1.1.1','1.1.2']);
+ const basic=docs.find(d=>d.number==='1.1.1')!;
+ const noise={...basic,number:'2.1.1',title:'복습 1.1',subtitle:'1.1 참고'};
+ assert.equal(matchesDocument(noise,filter),false);
+ assert.equal(matchesDocument({...basic,number:'1.10.1'},filter),false);
+ assert.equal(matchesDocument(basic,{...filter,query:'1.1 '+basic.tags[0]}),true);
+ assert.equal(matchesDocument(basic,{...filter,category:'없는 분류'}),false);
+ assert.equal(matchesDocument(basic,{...filter,tags:['없는 태그']}),false);
+ assert.ok(filterDocuments(docs,{...filter,query:'Palindrome'}).some(d=>d.number==='1.4.1'));
+ assert.deepEqual(filterDocuments([noise,basic,{...basic,number:'1.1.2'}],{...filter,query:''}).map(d=>d.number),['1.1.1','1.1.2','2.1.1']);
+});

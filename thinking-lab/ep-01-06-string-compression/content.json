@@ -221,7 +221,7 @@
             {
               "type": "code",
               "language": "mermaid",
-              "text": "flowchart TD\n    accTitle: 짧아지는 경우와 늘어나는 경우\n    accDescr: 짧아지는 경우와 늘어나는 경우의 생각 과정을 위에서 아래로 따라갑니다.\n    N0[\"AAAAA → A5: 5칸에서2칸\"]\n    N1[\"ABAB → A1B1A1B1: 4칸에서8칸\"]\n    N0 --> N1\n    N2[\"연속 길이가 길수록 유리\"]\n    N1 --> N2\n    N3[\"실제 길이를 비교해 결정\"]\n    N2 --> N3\n"
+              "text": "flowchart TD\n    accTitle: 짧아지는 경우와 늘어나는 경우\n    accDescr: 서로 다른 두 문자열의 압축 길이를 각각 비교합니다. AAAAA는 A5가 더 짧지만 ABAB는 원문이 더 짧습니다.\n    S[\"각 문자열에서 연속 묶음과 길이 비교\"]\n    A[\"AAAAA: 원문 5칸\"]\n    B[\"ABAB: 원문 4칸\"]\n    AC[\"A5: 압축 2칸 → 압축 선택\"]\n    BC[\"A1B1A1B1: 압축 8칸 → 원문 유지\"]\n    C[\"압축 결과가 엄격히 더 짧을 때만 선택\"]\n    S --> A\n    S --> B\n    A --> AC\n    B --> BC\n    AC --> C\n    BC --> C\n"
             },
             {
               "type": "heading",

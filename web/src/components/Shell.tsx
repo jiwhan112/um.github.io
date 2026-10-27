@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dial
 import { cleanTitle, dateLabel } from '@/lib/utils';
 import { keys, useStored, objectBooleans } from '@/lib/storage';
 import { lessonProgress } from '@/lib/language-progress';
+import { matchesSearchRow } from '@/lib/search';
 import { compareKnowledgeDocuments } from '@/lib/knowledge-order';
 import { startCloud } from '@/lib/cloud';
 import { SyncSettings } from './SyncSettings';
@@ -26,8 +27,8 @@ export function Sidebar({onNavigate}:{onNavigate?:()=>void}){
 }
 export function SearchDialog({open,onOpenChange}:{open:boolean;onOpenChange:(value:boolean)=>void}){
  const {catalog,articles}=useData(),[query,setQuery]=useState('');
- const rows=useMemo(()=>[...catalog.documents.map(d=>({title:d.title,category:d.kind==='thinking'?'사고력':d.kind==='knowledge'?'프로그래밍':'문서',to:d.route})),...(['english','japanese'] as const).flatMap(lang=>catalog.languages[lang].map(m=>({title:m.title,category:lang==='english'?'영어':'일본어',to:`/language-study/${lang}/${m.id}/`}))),...articles.map(a=>({title:cleanTitle(a.title),category:'브리핑',to:'/daily-briefing/?article='+encodeURIComponent(a.id)+'&date='+a.date}))],[catalog,articles]);
- const filtered=rows.filter(x=>!query||x.title.toLocaleLowerCase().includes(query.toLocaleLowerCase())).slice(0,24);
+ const rows=useMemo(()=>[...catalog.documents.map(d=>({title:d.title,topic:d.topic,category:d.kind==='thinking'?'사고력':d.kind==='knowledge'?'프로그래밍':'문서',to:d.route})),...(['english','japanese'] as const).flatMap(lang=>catalog.languages[lang].map(m=>({title:m.title,category:lang==='english'?'영어':'일본어',to:`/language-study/${lang}/${m.id}/`}))),...articles.map(a=>({title:cleanTitle(a.title),category:'브리핑',to:'/daily-briefing/?article='+encodeURIComponent(a.id)+'&date='+a.date}))],[catalog,articles]);
+ const filtered=rows.filter(x=>matchesSearchRow(x,query)).slice(0,24);
  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="search-dialog"><DialogTitle>학습 자료 검색</DialogTitle><DialogDescription>기사 제목, 레슨, 문제와 실험 기록을 검색합니다.</DialogDescription><label className="search-input"><Search size={17}/><input autoFocus value={query} onChange={e=>setQuery(e.target.value)} placeholder="검색어를 입력하세요" aria-label="통합 검색"/></label><div className="search-results">{filtered.map((row,i)=><Link to={row.to} key={i} onClick={()=>onOpenChange(false)}><span className="badge">{row.category}</span><span>{row.title}</span><ArrowUpRight size={15}/></Link>)}{!filtered.length&&<p>검색 결과가 없습니다.</p>}</div></DialogContent></Dialog>;
 }
 export function Shell({children}:{children:ReactNode}){
