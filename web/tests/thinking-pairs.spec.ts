@@ -40,6 +40,10 @@ for(const meta of docs)test(`paired reasoning ${meta.number} retains one page an
  for(const diagram of await diagrams.all()){
   await expect(diagram).toHaveAttribute('data-diagram-state','ready');
   await expect.poll(()=>diagram.locator('.mermaid-canvas img').evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBe(true);
+  // These authored multi-step diagrams cannot be a tiny positive-size SVG stub.
+  const renderedSize=await diagram.locator('.mermaid-canvas img').evaluate((img:HTMLImageElement)=>({width:img.naturalWidth,height:img.naturalHeight}));
+  expect(renderedSize.width).toBeGreaterThanOrEqual(64);
+  expect(renderedSize.height).toBeGreaterThanOrEqual(64);
  }
  // Keyboard activation is a real user action and avoids pointer targets moving after a diagram loads.
  for(const disclosure of await scope.locator('details.disclosure').all()){
@@ -53,6 +57,10 @@ for(const meta of docs)test(`paired reasoning ${meta.number} retains one page an
   const diagram=diagrams.nth(i);await expect(diagram).toBeVisible();await diagram.scrollIntoViewIfNeeded();
   await expect(diagram).toHaveAttribute('data-diagram-state','ready');
   await expect.poll(()=>diagram.locator('.mermaid-canvas img').evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBe(true);
+  // These authored multi-step diagrams cannot be a tiny positive-size SVG stub.
+  const renderedSize=await diagram.locator('.mermaid-canvas img').evaluate((img:HTMLImageElement)=>({width:img.naturalWidth,height:img.naturalHeight}));
+  expect(renderedSize.width).toBeGreaterThanOrEqual(64);
+  expect(renderedSize.height).toBeGreaterThanOrEqual(64);
   await expect(diagram.locator('.mermaid-source')).not.toHaveAttribute('open','');
   await diagram.screenshot({path:testInfo.outputPath(`thinking-pair-diagram-${meta.number}-${i+1}.png`)});
  }

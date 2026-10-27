@@ -222,12 +222,14 @@ test('duplicate diagrams have separate IDs and release images when their tab unm
   expect(urls).toHaveLength(2);
   await page.getByRole('tab', { name: '실습·복습', exact: true }).click();
   await expect(diagrams).toHaveCount(0);
+  await expect(page.locator('.mermaid-render-stage')).toHaveCount(0);
   await expect.poll(() => page.evaluate((urls) => urls.every((url) => (window as unknown as UrlAuditWindow).__mermaidUrls.revoked.includes(url)), urls)).toBe(true);
   await page.getByRole('tab', { name: '개념과 원리', exact: true }).click();
   await expect(page.locator('.mermaid-diagram[data-diagram-state="ready"]')).toHaveCount(2);
   const newUrls = await diagrams.locator('.mermaid-canvas img').evaluateAll((nodes) => nodes.map((node) => (node as HTMLImageElement).src));
   expect(newUrls.every((url) => !urls.includes(url))).toBe(true);
-  await expect(diagrams.locator('.mermaid-render-stage > *')).toHaveCount(0);
+  await expect(page.locator('body > .mermaid-render-stage')).toHaveCount(2);
+  await expect(page.locator('.mermaid-render-stage > *')).toHaveCount(0);
   expect(errors).toEqual([]);
 });
 
@@ -239,6 +241,7 @@ test('leaving a tab before asynchronous rendering completes creates no stale ima
   await expect(page.locator('.mermaid-diagram')).toHaveAttribute('data-diagram-state', 'loading');
   await page.getByRole('tab', { name: '실습·복습', exact: true }).click();
   await expect(page.locator('.mermaid-diagram')).toHaveCount(0);
+  await expect(page.locator('.mermaid-render-stage')).toHaveCount(0);
   await page.evaluate(() => (window as unknown as UrlAuditWindow).__releaseMermaidFonts?.());
   await expect(page.getByText('다른 탭의 학습 내용')).toBeVisible();
   await page.getByRole('tab', { name: '개념과 원리', exact: true }).click();
@@ -301,7 +304,7 @@ test('external image input is rejected before rendering and remains available as
   await diagram.locator('.mermaid-source > summary').click();
   expect(await diagram.locator('.mermaid-source code').textContent()).toBe(external);
   expect(resourceRequests).toEqual([]);
-  await expect(diagram.locator('.mermaid-render-stage > *')).toHaveCount(0);
+  await expect(page.locator('.mermaid-render-stage > *')).toHaveCount(0);
 });
 
 test('knowledge illustrations switch from fit to real original size without overflowing the page', async ({ page, isMobile }) => {
@@ -331,4 +334,52 @@ test('knowledge illustrations switch from fit to real original size without over
   await page.keyboard.press('Escape');
   await expect(dialog).toHaveCount(0);
   await expect(trigger).toBeFocused();
+});
+
+
+test('initially closed and nested disclosures render the same full diagram as visible content', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await auditObjectUrls(page);
+  const diagramBlock: Block = { type: 'code', language: 'mermaid', text: example };
+  await fixture(page, [example], [
+    { type: 'details', title: '접힌 그림 열기', blocks: [diagramBlock] },
+    { type: 'details', title: '바깥 설명 열기', blocks: [
+      { type: 'details', title: '안쪽 그림 열기', blocks: [diagramBlock] },
+    ] },
+  ]);
+  const diagrams = page.locator('.mermaid-diagram');
+  await expect(page.locator('.mermaid-diagram[data-diagram-state="ready"]')).toHaveCount(3);
+  await expect(page.locator('details.disclosure[open]')).toHaveCount(0);
+  await expect(page.locator('body > .mermaid-render-stage')).toHaveCount(3);
+  const sizes: { width: number; height: number }[] = [];
+  for (let i = 0; i < 3; i++) {
+    const image = diagrams.nth(i).locator('.mermaid-canvas img');
+    await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
+    sizes.push(await image.evaluate((node: HTMLImageElement) => ({ width: node.naturalWidth, height: node.naturalHeight })));
+    const svg = await svgDetails(image);
+    for (const label of ['CPU 입력', '버퍼 기록', 'GPU 읽기']) expect(svg.labels).toContain(label);
+    expect(svg.foreignObjects).toBe(0);
+    expect(svg.activeElements).toBe(0);
+  }
+  expect(sizes[0].width).toBeGreaterThan(100);
+  expect(sizes[0].height).toBeGreaterThan(100);
+  expect(sizes[1]).toEqual(sizes[0]);
+  expect(sizes[2]).toEqual(sizes[0]);
+  for (const title of ['접힌 그림 열기', '바깥 설명 열기', '안쪽 그림 열기']) {
+    const summary = page.locator('summary').filter({ hasText: title });
+    await summary.focus();
+    await page.keyboard.press('Enter');
+  }
+  for (let i = 0; i < 3; i++) {
+    const image = diagrams.nth(i).locator('.mermaid-canvas img');
+    await expect(image).toBeVisible();
+    await expectWholeDiagramFits(image);
+  }
+  const urls = await page.evaluate(() => (window as unknown as UrlAuditWindow).__mermaidUrls.created.slice());
+  expect(urls).toHaveLength(3);
+  await page.getByRole('tab', { name: '실습·복습', exact: true }).click();
+  await expect(page.locator('.mermaid-render-stage')).toHaveCount(0);
+  await expect.poll(() => page.evaluate(urls => urls.every(url => (window as unknown as UrlAuditWindow).__mermaidUrls.revoked.includes(url)), urls)).toBe(true);
+  expect(errors).toEqual([]);
 });

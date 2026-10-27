@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import type { MermaidConfig } from 'mermaid';
 import { RefreshCw, ZoomIn } from 'lucide-react';
 import { Button } from './ui/button';
@@ -140,7 +141,9 @@ export function MermaidDiagram({ code, children }: { code: string; children: Rea
 
   const image = state.status === 'ready' ? state.image : undefined;
   return <figure className="mermaid-diagram" data-diagram-state={state.status}>
-    <div ref={stage} className="mermaid-render-stage" aria-hidden="true" inert />
+    {/* Closed details and hidden tab ancestors have no measurable SVG geometry.
+        Keep this instance-owned, inert stage in the document layout until unmount. */}
+    {createPortal(<div ref={stage} className="mermaid-render-stage" aria-hidden="true" inert />, document.body)}
     <Dialog open={open} onOpenChange={(next) => { setOpen(next); if (next) setZoom('fit'); }}>
       <div className="mermaid-toolbar">
         <span className="mermaid-label">{image?.title ?? '학습 도식'}</span>
