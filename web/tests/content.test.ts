@@ -794,10 +794,20 @@ test('incomplete curriculum supports explicit missing-source chapter boundaries 
   for(let problem=first;problem<=11;problem++)boundary.verifiedPrefix.push({...plan.verifiedPrefix.at(-1),number:chapter+'.'+problem,chapter,topic_en:'Synthetic boundary fixture '+chapter+'.'+problem});
  }
  boundary.blockedNext={number:'11.1',chapter:11,status:'blocked_source_missing',reason:'Synthetic test: numbered source metadata missing'};
- assert.doesNotThrow(()=>validateThinkingPairs(raw,policy,boundary,'2026-10-27'));
+ const baselineNumbers=new Set(plan.historicalBaseline.map((t:{number:string})=>t.number));
+ const boundaryTopics=boundary.verifiedPrefix.slice(19);
+ const syntheticCatalog={
+  episodes:[
+   ...raw.episodes.filter((e:{number:string})=>baselineNumbers.has(e.number.slice(0,-2))),
+   ...boundaryTopics.flatMap((t:{number:string;chapter:number;topic_en:string})=>[1,2].map(suffix=>({number:t.number+'.'+suffix,chapter:t.chapter,topic_en:t.topic_en,path:'ep-boundary-fixture-'+t.number.replace('.','-')+'-'+suffix+'/',study_date:'2026-10-27',published_date:'2026-10-27'}))),
+  ],
+  current:{number:'10.11',chapter:10,topic_en:boundary.verifiedPrefix.at(-1).topic_en,study_date:'2026-10-27',published_date:'2026-10-27'},
+  next:structuredClone(boundary.blockedNext),
+ };
+ assert.deepEqual(validateThinkingPairs(syntheticCatalog,policy,boundary,'2026-10-27'),{topics:boundary.verifiedPrefix.length,pages:boundary.verifiedPrefix.length*2});
  for(const patch of [{chapter:10},{status:'ready'},{number:'11.2'},{number:'12.1',chapter:12},{reason:'   '}]){
   const invalid=structuredClone(boundary);Object.assign(invalid.blockedNext,patch);
-  assert.throws(()=>validateThinkingPairs(raw,policy,invalid,'2026-10-27'));
+  assert.throws(()=>validateThinkingPairs(syntheticCatalog,policy,invalid,'2026-10-27'));
  }
  const duplicated=structuredClone(plan);duplicated.historicalBaseline[1]=structuredClone(duplicated.historicalBaseline[0]);
  assert.throws(()=>validateThinkingPairs(raw,policy,duplicated,'2026-10-27'));
