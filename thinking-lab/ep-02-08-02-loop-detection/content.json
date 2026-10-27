@@ -1,0 +1,418 @@
+{
+  "title": "2.8.2 심화 — 기록장 없이 반복의 입구 찾기",
+  "subtitle": "그림으로 원리를 이해하고 코드로 확인하는 확장 문제",
+  "memoKey": "thinking-ctci-2.8-2-draft",
+  "starter": "// 풀이 생각이나 관찰한 규칙을 자유롭게 적어 보세요.\n// 코딩 없이 설명해도 좋습니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2.8.2 심화 — 기록장 없이 반복의 입구 찾기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기본 문제의 쪽지 길에서 방문 목록을 적을 수 없습니다. 대신 두 위치를 표시하는 말 두 개를 사용할 수 있습니다. 한 말은 한 번에 한 쪽지, 다른 말은 두 쪽지씩 이동합니다. 두 말의 만남을 이용해 반복 구간의 입구를 찾는 절차를 설계하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "쪽지 구조와 “끝”의 의미는 기본 문제와 같습니다. 지시는 실행 중 바뀌지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "처음 두 말을 출발점에 놓은 상태는 만남으로 세지 않습니다. 반드시 이동한 뒤 비교합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "빠른 말이 끝에 닿으면 반복 없음입니다. 같은 실제 쪽지에 두 말이 서야 만남입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "상황"
+                  }
+                ],
+                [
+                  {
+                    "text": "판정 또는 목표"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A→B→C→D→E→C"
+                  }
+                ],
+                [
+                  {
+                    "text": "첫 만남은 D일 수 있지만 입구는 C"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A→B→끝"
+                  }
+                ],
+                [
+                  {
+                    "text": "빠른 말이 끝에 닿아 반복 없음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A→A"
+                  }
+                ],
+                [
+                  {
+                    "text": "한 번 이동 후 만나며 입구 A"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "코드로 풀 때의 입력 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Node는 유효하고 살아 있는 객체입니다. next는 nullptr 또는 같은 유효한 노드 집합을 가리킵니다. 도달 가능한 서로 다른 노드는 최대 100,000개이며 함수 실행 중 연결 변경·삭제가 없습니다. 함수는 포인터 동등성만 비교하고 값은 사용하지 않습니다. 메모리 소유권은 호출자가 유지합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 말이 모두 고리 안에 들어간 뒤에는 빠른 말이 느린 말과의 간격을 매번 한 칸씩 줄입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 만난 곳은 입구가 아닐 수 있습니다. 만난 뒤 말 하나만 출발점으로 되돌려 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이제 두 말을 한 칸씩 같은 속도로 움직이면 어디에서 다시 만나는지 작은 예로 확인하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 말을 각각 한 칸·두 칸씩 옮겨 고리 안에서 만날 때까지 진행합니다. A→B→C→D→E→C의 경우 느린 말은 3걸음 뒤 D, 빠른 말은 6걸음 뒤 D입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "만난 D에서 말 하나를 A로 옮기고, 둘 다 한 칸씩 움직입니다. A/D→B/E→C/C이므로 진입점 C를 찾습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 만난 지점을 바로 답하면 틀립니다. 첫 만남은 고리 존재를 알아내는 단계이고, 출발점으로 되돌리는 단계가 진입점을 찾습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 기록장 없이 반복의 입구 찾기 — 단계 추적\n    accDescr: 느림/빠름 시작 A/A → 이동 후 B/C → C/E → D/D → 한 말을 출발점으로: A/D → 같은 속도: B/E → C/C, 입구 C\n    N0[\"느림/빠름 시작 A/A\"]\n    N1[\"이동 후 B/C → C/E → D/D\"]\n    N0 --> N1\n    N2[\"한 말을 출발점으로: A/D\"]\n    N1 --> N2\n    N3[\"같은 속도: B/E → C/C, 입구 C\"]\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 반복 입구 찾기의 두 가지 종료 경로\n    accDescr: 빠른 말이 끝에 도달하면 반복 없음으로 종료한다. 그렇지 않으면 이동하며 만남을 찾고, 만난 뒤 한 말을 출발점으로 되돌려 같은 속도로 이동한다.\n    S[\"두 말을 출발점에 놓기\"] --> Q{\"빠른 말이 두 칸 이동할 수 있는가?\"}\n    Q -->|아니오| N[\"반복 없음: 종료\"]\n    Q -->|예| M[\"느린 말 1칸 / 빠른 말 2칸 이동\"]\n    M --> E{\"두 말이 같은 쪽지에 있는가?\"}\n    E -->|아니오| Q\n    E -->|예| R[\"한 말만 출발점으로 되돌리기\"]\n    R --> P{\"현재 두 위치가 같은가?\"}\n    P -->|예| A[\"그 쪽지가 반복 입구\"]\n    P -->|아니오| B[\"두 말 모두 한 칸씩 이동\"]\n    B --> P\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 방법이 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "고리 전 길이를 μ, 고리 길이를 λ라고 합시다. 첫 만남 때 느린 말이 t걸음, 빠른 말이 2t걸음을 움직였으므로 t는 λ의 배수입니다. 만남 지점은 입구에서 t−μ칸 간 곳입니다. 여기서 μ칸 더 가면 t칸이 되어 고리 입구로 돌아옵니다. 출발점의 말도 μ칸 뒤 입구에 도착합니다. μ 이전에는 한 말은 고리 밖, 다른 말은 고리 안이므로 미리 만날 수 없습니다. 시간 O(μ+λ), 추가 공간 O(1)입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "전체 C++11 풀이"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <cassert>\n#include <iostream>\nstruct Node { int value; Node* next; };\nconst Node* CycleEntry(const Node* head) {\n    const Node* slow = head;\n    const Node* fast = head;\n    // 먼저 고리 안의 만남을 찾습니다. 시작 위치가 같은 것은 세지 않습니다.\n    while (fast && fast->next) {\n        slow = slow->next;\n        fast = fast->next->next;\n        if (slow == fast) {\n            const Node* fromHead = head;\n            // 이제 두 위치를 같은 속도로 옮깁니다.\n            while (fromHead != slow) {\n                fromHead = fromHead->next;\n                slow = slow->next;\n            }\n            return fromHead;\n        }\n    }\n    return nullptr;\n}\nint main() {\n    Node a{1,nullptr}, b{2,nullptr}, c{3,nullptr}, d{4,nullptr}, e{5,nullptr};\n    a.next=&b; b.next=&c; c.next=&d; d.next=&e; e.next=&c;\n    assert(CycleEntry(&a)==&c);\n    assert(CycleEntry(&c)==&c);\n    e.next=nullptr;\n    assert(CycleEntry(&a)==nullptr);\n    a.next=&a;\n    assert(CycleEntry(&a)==&a);\n    assert(CycleEntry(nullptr)==nullptr);\n    std::cout << \"cycle-entry checks passed\\n\";\n}"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "위 코드는 main을 포함한 독립 프로그램입니다. c++ -std=c++11 -Wall -Wextra -Werror -pedantic main.cpp 명령으로 빌드할 수 있습니다. 실제 검증 결과는 아래 검증 절에 기록합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계·반례 확인",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경우"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "판정과 이유"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "μ=0"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "두 번째 단계가 바로 끝남"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "λ=1"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "자기 고리도 정상"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 길"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "반복 없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "fast만 검사하고 fast.next 미검사"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "끝 다음 접근 위험이므로 둘 다 확인"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "첫 만남 뒤에도 빠른 말을 두 칸씩 움직이면 같은 증명을 사용할 수 있을까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 입구 찾기 증명은 두 말이 모두 μ칸 움직인다는 조건에 의존합니다. 첫 단계에서만 속도를 다르게 하고 두 번째 단계에서는 둘 다 한 칸씩 움직여야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 자료는 기존 회차의 기본·심화 분리 개편입니다. 기존 학습일과 게시일은 보존하고 새 일일 진도로 세지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 1.1 개편 형식처럼 한 페이지에서 한 문제에 집중합니다. 주제 이름은 기존 학습 순서를 위한 연결 표시이며 책의 지문이나 공식 해설을 옮긴 것이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기본 문제로 돌아가기",
+              "href": "/thinking-lab/ep-02-08-loop-detection/",
+              "kind": "link"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "심화 페이지의 C++11 코드를 실제 추출하여 GCC 엄격 빌드와 UBSan 실행을 통과했습니다. 빈 길과 1~100개 노드의 모든 순환 진입 위치·비순환 경우 총 5,151개 구조를 확인했습니다. 설명 검산과 코드 실행 검증을 구분하며, 실제 브라우저 그림 표시 검증은 게시 단계에서 별도로 수행합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

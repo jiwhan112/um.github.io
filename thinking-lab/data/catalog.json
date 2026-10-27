@@ -21,11 +21,27 @@
   },
   "episodes": [
     {
-      "number": "3.2",
+      "number": "3.2.2",
       "chapter": 3,
       "topic_en": "Stack Min",
-      "title": "전투 밸런스 기록의 최솟값 되돌리기",
-      "summary": "깊이별 접두 최솟값을 저장해 중복 최소·LIFO 복원·실패 시 상태 보존을 최악 O(1) 연산으로 구현",
+      "title": "심화 — 각 카드에 작은 메모를 붙인다면",
+      "summary": "기본 문제의 카드 수가 아주 많아졌습니다 · 그림 풀이 2개",
+      "category": "스택과 큐",
+      "tags": [
+        "스택",
+        "접두부 최솟값",
+        "불변식"
+      ],
+      "study_date": "2026-10-27",
+      "published_date": "2026-10-27",
+      "path": "ep-03-02-02-stack-min/"
+    },
+    {
+      "number": "3.2.1",
+      "chapter": 3,
+      "topic_en": "Stack Min",
+      "title": "기본 — 되돌리기 카드와 가장 작은 수",
+      "summary": "숫자 카드를 한 묶음에 쌓습니다 · 그림 풀이 2개",
       "category": "스택과 큐",
       "tags": [
         "스택",
@@ -39,11 +55,27 @@
       "path": "ep-03-02-stack-min/"
     },
     {
-      "number": "3.1",
+      "number": "3.1.2",
       "chapter": 3,
       "topic_en": "Three in One",
-      "title": "세 편집 도구의 실행 취소 버퍼",
-      "summary": "단 하나의 연속 값 배열을 고정 분할해 세 독립 스택의 LIFO·경계 검사·실패 시 상태 보존을 구현",
+      "title": "심화 — 여섯 칸을 세 묶음이 나눠 쓰기",
+      "summary": "세 편지 묶음 A·B·C가 함께 사용하는 보관 칸은 모두 여섯 칸입니다 · 그림 풀이 2개",
+      "category": "스택과 큐",
+      "tags": [
+        "스택",
+        "공간 공유",
+        "불변식"
+      ],
+      "study_date": "2026-10-26",
+      "published_date": "2026-10-26",
+      "path": "ep-03-01-02-three-in-one/"
+    },
+    {
+      "number": "3.1.1",
+      "chapter": 3,
+      "topic_en": "Three in One",
+      "title": "기본 — 세 묶음의 편지를 거꾸로 꺼내기",
+      "summary": "세 사람의 편지를 A·B·C 세 묶음으로 나눠 쌓습니다 · 그림 풀이 2개",
       "category": "스택과 큐",
       "tags": [
         "스택",
@@ -57,11 +89,27 @@
       "path": "ep-03-01-three-in-one/"
     },
     {
-      "number": "2.8",
+      "number": "2.8.2",
       "chapter": 2,
       "topic_en": "Loop Detection",
-      "title": "전투 리플레이의 반복 진입점",
-      "summary": "두 포인터의 속도 차이로 순환을 검출하고 원본 링크 변경 없이 반복 구간의 입구를 O(n) 시간·O(1) 공간에 복원",
+      "title": "심화 — 기록장 없이 반복의 입구 찾기",
+      "summary": "기본 문제의 쪽지 길에서 방문 목록을 적을 수 없습니다 · 그림 풀이 2개",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "순환 탐지",
+        "두 포인터"
+      ],
+      "study_date": "2026-10-25",
+      "published_date": "2026-10-25",
+      "path": "ep-02-08-02-loop-detection/"
+    },
+    {
+      "number": "2.8.1",
+      "chapter": 2,
+      "topic_en": "Loop Detection",
+      "title": "기본 — 쪽지를 따라가면 어디서 반복될까?",
+      "summary": "쪽지 A에는 B로, B에는 C로, C에는 D로, D에는 E로, E에는 C로 가라고 적혀 있습니다 · 그림 풀이 2개",
       "category": "연결 리스트",
       "tags": [
         "연결 리스트",
@@ -74,11 +122,27 @@
       "path": "ep-02-08-loop-detection/"
     },
     {
-      "number": "2.7",
+      "number": "2.7.2",
       "chapter": 2,
       "topic_en": "Intersection",
-      "title": "두 리플레이가 공유하는 첫 이벤트",
-      "summary": "값이 아닌 객체 주소로 교차를 판별하고 길이 정렬로 공통 꼬리의 시작점을 O(1) 추가 공간에 탐색",
+      "title": "심화 — 메모 없이 두 길의 합류점 맞추기",
+      "summary": "기본 문제와 같은 두 산책길에서, 지나간 표지판 목록을 따로 적지 않고 첫 공통 표지판을 찾고 싶습니다 · 그림 풀이 2개",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "두 포인터",
+        "공통 꼬리"
+      ],
+      "study_date": "2026-10-24",
+      "published_date": "2026-10-24",
+      "path": "ep-02-07-02-intersection/"
+    },
+    {
+      "number": "2.7.1",
+      "chapter": 2,
+      "topic_en": "Intersection",
+      "title": "기본 — 두 산책길이 처음 만나는 표지판",
+      "summary": "두 사람이 서로 다른 출발점에서 화살표를 따라 걷습니다 · 그림 풀이 2개",
       "category": "연결 리스트",
       "tags": [
         "연결 리스트",
@@ -91,11 +155,27 @@
       "path": "ep-02-07-intersection/"
     },
     {
-      "number": "2.6",
+      "number": "2.6.2",
       "chapter": 2,
       "topic_en": "Palindrome",
-      "title": "이벤트 기록의 좌우 대칭 판별",
-      "summary": "단일 연결 리스트에서 원본 링크를 보존하며 양끝 이벤트의 대칭을 절반 버퍼로 검사",
+      "title": "심화 — 카드 한 장만 빼서 대칭 만들기",
+      "summary": "카드 줄에서 최대 한 장을 빼도 좋습니다 · 그림 풀이 2개",
+      "category": "연결 리스트",
+      "tags": [
+        "회문",
+        "경우 나누기",
+        "두 포인터"
+      ],
+      "study_date": "2026-10-23",
+      "published_date": "2026-10-23",
+      "path": "ep-02-06-02-palindrome/"
+    },
+    {
+      "number": "2.6.1",
+      "chapter": 2,
+      "topic_en": "Palindrome",
+      "title": "기본 — 양쪽에서 읽어도 같은 카드 줄",
+      "summary": "한 글자씩 적힌 카드가 줄지어 있습니다 · 그림 풀이 2개",
       "category": "연결 리스트",
       "tags": [
         "연결 리스트",
@@ -108,11 +188,27 @@
       "path": "ep-02-06-palindrome/"
     },
     {
-      "number": "2.5",
+      "number": "2.5.2",
       "chapter": 2,
       "topic_en": "Sum Lists",
-      "title": "보상 금액의 자릿수 연결 리스트 덧셈",
-      "summary": "큰 정수 변환 없이 역순 자릿수와 올림을 처리하고 독립 결과 체인을 생성",
+      "title": "심화 — 가려진 카드와 올림의 단서",
+      "summary": "일의 자리부터 읽는 두 카드 줄 [a, 9, 2]와 [7, b]를 더했더니 [2, 3, 3]이 되었습니다 · 그림 풀이 2개",
+      "category": "연결 리스트",
+      "tags": [
+        "자릿수",
+        "논리 추리",
+        "제약 조건"
+      ],
+      "study_date": "2026-10-22",
+      "published_date": "2026-10-22",
+      "path": "ep-02-05-02-sum-lists/"
+    },
+    {
+      "number": "2.5.1",
+      "chapter": 2,
+      "topic_en": "Sum Lists",
+      "title": "기본 — 거꾸로 놓인 숫자 카드 더하기",
+      "summary": "두 줄의 카드가 각각 한 수를 나타냅니다 · 그림 풀이 2개",
       "category": "연결 리스트",
       "tags": [
         "연결 리스트",
@@ -125,11 +221,28 @@
       "path": "ep-02-05-sum-lists/"
     },
     {
-      "number": "2.4",
+      "number": "2.4.2",
       "chapter": 2,
       "topic_en": "Partition",
-      "title": "전투 이벤트 목록의 기준값 분할",
-      "summary": "노드 주소와 그룹 내 순서를 보존하면서 두 체인으로 안정적 분할",
+      "title": "심화 — 기준보다 작음·같음·큼, 세 줄 만들기",
+      "summary": "이번에는 기준 무게보다 작은 상자, 정확히 같은 상자, 큰 상자의 세 줄로 나눕니다 · 그림으로 추론하고 근거를 설명하기",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "포인터 조작",
+        "안정적 분할",
+        "제자리 수정"
+      ],
+      "study_date": "2026-10-21",
+      "published_date": "2026-10-22",
+      "path": "ep-02-04-02-partition/"
+    },
+    {
+      "number": "2.4.1",
+      "chapter": 2,
+      "topic_en": "Partition",
+      "title": "기본 — 작은 택배를 앞에 모으기",
+      "summary": "택배 상자들이 도착한 순서로 줄지어 있습니다 · 그림으로 추론하고 근거를 설명하기",
       "category": "연결 리스트",
       "tags": [
         "연결 리스트",
@@ -142,11 +255,28 @@
       "path": "ep-02-04-partition/"
     },
     {
-      "number": "2.3",
+      "number": "2.3.2",
       "chapter": 2,
       "topic_en": "Delete Middle Node",
-      "title": "이벤트 큐 노드 삭제",
-      "summary": "head와 이전 노드 주소 없이 단일 연결 리스트의 이벤트를 O(1) 시간·공간으로 논리 삭제하는 포인터 연습",
+      "title": "심화 — 마지막 쪽지를 지우려면 무엇이 필요할까?",
+      "summary": "이번에는 마지막 쪽지 C만 건네받았습니다 · 그림으로 추론하고 근거를 설명하기",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "노드 삭제",
+        "포인터 조작",
+        "제자리 수정"
+      ],
+      "study_date": "2026-10-20",
+      "published_date": "2026-10-20",
+      "path": "ep-02-03-02-delete-middle-node/"
+    },
+    {
+      "number": "2.3.1",
+      "chapter": 2,
+      "topic_en": "Delete Middle Node",
+      "title": "기본 — 이전 쪽지를 못 만질 때 하나 지우기",
+      "summary": "A→B→C→D 순서로 연결된 쪽지 줄에서 B 쪽지를 맡았습니다 · 그림으로 추론하고 근거를 설명하기",
       "category": "연결 리스트",
       "tags": [
         "연결 리스트",
@@ -159,11 +289,28 @@
       "path": "ep-02-03-delete-middle-node/"
     },
     {
-      "number": "2.2",
+      "number": "2.2.2",
       "chapter": 2,
       "topic_en": "Return Kth to Last",
-      "title": "전투 리플레이의 뒤에서 k번째 이벤트",
-      "summary": "길이 정보를 모르는 단일 연결 리스트에서 간격이 일정한 두 포인터로 뒤에서 k번째 원본 노드를 한 번의 순회에 찾기",
+      "title": "심화 — 한 번만 걸으며 뒤에서 k번째 찾기",
+      "summary": "쪽지는 앞으로만 따라갈 수 있고 다시 처음으로 돌아갈 수 없습니다 · 그림으로 추론하고 근거를 설명하기",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "두 포인터",
+        "단일 순회",
+        "포인터 간격"
+      ],
+      "study_date": "2026-10-19",
+      "published_date": "2026-10-19",
+      "path": "ep-02-02-02-return-kth-to-last/"
+    },
+    {
+      "number": "2.2.1",
+      "chapter": 2,
+      "topic_en": "Return Kth to Last",
+      "title": "기본 — 마지막에서 세 번째 쪽지",
+      "summary": "한 줄로 이어진 쪽지에 A, B, C, D, E가 적혀 있습니다 · 그림으로 추론하고 근거를 설명하기",
       "category": "연결 리스트",
       "tags": [
         "연결 리스트",
@@ -176,11 +323,28 @@
       "path": "ep-02-02-return-kth-to-last/"
     },
     {
-      "number": "2.1",
+      "number": "2.1.2",
       "chapter": 2,
       "topic_en": "Remove Dups",
-      "title": "보상 이벤트 연결 리스트의 중복 제거",
-      "summary": "단일 연결 리스트에서 최초 등장 노드와 순서를 보존하면서 해시 집합으로 중복 노드를 제거",
+      "title": "심화 — 중복 신청자는 전부 제외하기",
+      "summary": "이번에는 한 번만 신청한 표식만 남깁니다 · 그림으로 추론하고 근거를 설명하기",
+      "category": "연결 리스트",
+      "tags": [
+        "연결 리스트",
+        "중복 검사",
+        "해시 테이블",
+        "제자리 수정"
+      ],
+      "study_date": "2026-10-18",
+      "published_date": "2026-10-18",
+      "path": "ep-02-01-02-remove-dups/"
+    },
+    {
+      "number": "2.1.1",
+      "chapter": 2,
+      "topic_en": "Remove Dups",
+      "title": "기본 — 처음 적힌 이름만 남기는 명단",
+      "summary": "동아리 신청 명단에 같은 이름표가 여러 번 적혔습니다 · 그림으로 추론하고 근거를 설명하기",
       "category": "연결 리스트",
       "tags": [
         "연결 리스트",
@@ -193,11 +357,28 @@
       "path": "ep-02-01-remove-dups/"
     },
     {
-      "number": "1.9",
+      "number": "1.9.2",
       "chapter": 1,
       "topic_en": "String Rotation",
-      "title": "순환 이벤트 패턴의 시작점 찾기",
-      "summary": "시작 위치만 달라진 이벤트 문자열인지 가상 이어 붙이기와 KMP 검색으로 판별",
+      "title": "심화 — 맞는 시작점은 모두 몇 개일까?",
+      "summary": "두 목걸이 기록이 같은지에서 한 걸음 더 나아갑니다 · 그림으로 추론하고 근거를 설명하기",
+      "category": "배열과 문자열",
+      "tags": [
+        "문자열",
+        "문자열 검색",
+        "KMP",
+        "순환 이동"
+      ],
+      "study_date": "2026-10-17",
+      "published_date": "2026-10-17",
+      "path": "ep-01-09-02-string-rotation/"
+    },
+    {
+      "number": "1.9.1",
+      "chapter": 1,
+      "topic_en": "String Rotation",
+      "title": "기본 — 같은 목걸이를 다른 곳에서 읽었을까?",
+      "summary": "빨강·파랑·초록 대신 A·B·C라고 적힌 구슬을 둥글게 연결했습니다 · 그림으로 추론하고 근거를 설명하기",
       "category": "배열과 문자열",
       "tags": [
         "문자열",
@@ -210,11 +391,28 @@
       "path": "ep-01-09-string-rotation/"
     },
     {
-      "number": "1.8",
+      "number": "1.8.2",
       "chapter": 1,
       "topic_en": "Zero Matrix",
-      "title": "타일 맵 장애 표식의 행·열 초기화",
-      "summary": "처음부터 0인 칸을 기준으로 대응하는 행과 열을 O(1) 추가 공간에 초기화",
+      "title": "심화 — 추가 메모 없이 흠집 줄 지우기",
+      "summary": "같은 종이를 이번에는 컴퓨터로 처리합니다 · 그림으로 추론하고 근거를 설명하기",
+      "category": "배열과 문자열",
+      "tags": [
+        "2차원 배열",
+        "행렬",
+        "제자리 수정",
+        "마커 배열"
+      ],
+      "study_date": "2026-10-16",
+      "published_date": "2026-10-16",
+      "path": "ep-01-08-02-zero-matrix/"
+    },
+    {
+      "number": "1.8.1",
+      "chapter": 1,
+      "topic_en": "Zero Matrix",
+      "title": "기본 — 흠집 난 가로줄과 세로줄",
+      "summary": "직사각형 종이의 칸마다 숫자가 하나씩 적혀 있습니다 · 그림으로 추론하고 근거를 설명하기",
       "category": "배열과 문자열",
       "tags": [
         "2차원 배열",
@@ -227,11 +425,28 @@
       "path": "ep-01-08-zero-matrix/"
     },
     {
-      "number": "1.7",
+      "number": "1.7.2",
       "chapter": 1,
       "topic_en": "Rotate Matrix",
-      "title": "미니맵 타일의 시계 방향 회전",
-      "summary": "정사각형 격자를 네 위치 순환 교환으로 제자리에서 90도 회전",
+      "title": "심화 — 회전과 거울의 순서를 바꾸면",
+      "summary": "같은 동작 두 개라도 순서가 결과를 바꾸는 퍼즐",
+      "category": "배열과 문자열",
+      "tags": [
+        "2차원 배열",
+        "행렬",
+        "인덱스 변환",
+        "제자리 수정"
+      ],
+      "study_date": "2026-10-15",
+      "published_date": "2026-10-16",
+      "path": "ep-01-07-02-rotate-matrix/"
+    },
+    {
+      "number": "1.7.1",
+      "chapter": 1,
+      "topic_en": "Rotate Matrix",
+      "title": "기본 — 종이 사진을 오른쪽으로 돌리기",
+      "summary": "행과 열이 바뀌는 위치를 그림 없이도 추적하기",
       "category": "배열과 문자열",
       "tags": [
         "2차원 배열",
@@ -244,11 +459,27 @@
       "path": "ep-01-07-rotate-matrix/"
     },
     {
-      "number": "1.6",
+      "number": "1.6.2",
       "chapter": 1,
       "topic_en": "String Compression",
-      "title": "전투 이벤트 프레임의 연속 코드 압축",
-      "summary": "연속 문자 묶음을 런 길이 인코딩으로 표현하고 짧아질 때만 채택",
+      "title": "심화 — 숫자도 글자일 때의 압축 규칙",
+      "summary": "구분 기호가 없을 때 생기는 모호함을 찾아 고치기",
+      "category": "배열과 문자열",
+      "tags": [
+        "문자열",
+        "문자열 압축",
+        "런 길이 인코딩"
+      ],
+      "study_date": "2026-10-14",
+      "published_date": "2026-10-16",
+      "path": "ep-01-06-02-string-compression/"
+    },
+    {
+      "number": "1.6.1",
+      "chapter": 1,
+      "topic_en": "String Compression",
+      "title": "기본 — 길게 이어진 색 띠를 짧게 적기",
+      "summary": "연속 묶음과 전체 개수의 차이 알아보기",
       "category": "배열과 문자열",
       "tags": [
         "문자열",
@@ -260,11 +491,27 @@
       "path": "ep-01-06-string-compression/"
     },
     {
-      "number": "1.5",
+      "number": "1.5.2",
       "chapter": 1,
       "topic_en": "One Away",
-      "title": "게임 로비 명령어의 한 글자 오타",
-      "summary": "삽입·삭제·치환을 한 번 이내로 허용하는 ASCII 명령어 비교",
+      "title": "심화 — 한 번의 편집으로 같은 쪽지 만들기",
+      "summary": "삽입·삭제·치환 중 한 번만 허용하면 무엇이 달라질까?",
+      "category": "배열과 문자열",
+      "tags": [
+        "문자열",
+        "두 포인터",
+        "편집 거리"
+      ],
+      "study_date": "2026-10-13",
+      "published_date": "2026-10-13",
+      "path": "ep-01-05-02-one-away/"
+    },
+    {
+      "number": "1.5.1",
+      "chapter": 1,
+      "topic_en": "One Away",
+      "title": "기본 — 쪽지의 한 글자 오타",
+      "summary": "길이가 같은 두 단어에서 필요한 수정 횟수 찾기",
       "category": "배열과 문자열",
       "tags": [
         "문자열",
@@ -276,11 +523,28 @@
       "path": "ep-01-05-one-away/"
     },
     {
-      "number": "1.4",
+      "number": "1.4.2",
       "chapter": 1,
       "topic_en": "Palindrome Permutation",
-      "title": "회문 순열 — 유적 암호의 대칭 배치",
-      "summary": "등장 횟수의 홀짝으로 회문 구성 가능성을 O(n)에 판정",
+      "title": "심화 — 서로 다른 대칭 줄은 몇 개일까",
+      "summary": "왼쪽 절반만 세어 중복을 없애는 조합 퍼즐",
+      "category": "배열과 문자열",
+      "study_date": "2026-10-12",
+      "published_date": "2026-10-12",
+      "path": "ep-01-04-02-palindrome-permutation/",
+      "tags": [
+        "문자열",
+        "회문",
+        "문자 빈도",
+        "비트 연산"
+      ]
+    },
+    {
+      "number": "1.4.1",
+      "chapter": 1,
+      "topic_en": "Palindrome Permutation",
+      "title": "기본 — 구슬 목걸이를 좌우 대칭으로",
+      "summary": "홀수 개 구슬이 가운데를 차지하는 이유",
       "category": "배열과 문자열",
       "study_date": "2026-10-12",
       "published_date": "2026-10-12",
@@ -293,11 +557,27 @@
       ]
     },
     {
-      "number": "1.3",
+      "number": "1.3.2",
       "chapter": 1,
       "topic_en": "URLify",
-      "title": "URLify — 미니맵 위치 문자열의 공백 인코딩",
-      "summary": "역방향 두 포인터로 버퍼 안에서 공백을 %20으로 인코딩",
+      "title": "심화 — 뒤에서 쓰면 원문이 살아남는다",
+      "summary": "여유 칸이 있는 한 줄에서 치환을 안전하게 하기",
+      "category": "배열과 문자열",
+      "study_date": "2026-10-11",
+      "published_date": "2026-10-12",
+      "path": "ep-01-03-02-urlify/",
+      "tags": [
+        "문자열",
+        "두 포인터",
+        "제자리 수정"
+      ]
+    },
+    {
+      "number": "1.3.1",
+      "chapter": 1,
+      "topic_en": "URLify",
+      "title": "기본 — 빈칸 하나가 세 칸이 된다면",
+      "summary": "공백 치환 뒤 길이를 먼저 예측하는 퍼즐",
       "category": "배열과 문자열",
       "study_date": "2026-10-11",
       "published_date": "2026-10-12",
@@ -309,11 +589,27 @@
       ]
     },
     {
-      "number": "1.2",
+      "number": "1.2.2",
       "chapter": 1,
       "topic_en": "Check Permutation",
-      "title": "문자열 순열 관계 — 로비 배지 토큰 재배열",
-      "summary": "순서와 무관하게 두 문자열의 문자 구성이 같은지 검증",
+      "title": "심화 — 빈 카드로 부족한 글자 채우기",
+      "summary": "정해진 카드와 만능 카드로 목표 구성을 만들기",
+      "category": "배열과 문자열",
+      "published_date": "2026-10-12",
+      "path": "ep-01-02-02-check-permutation/",
+      "study_date": "2026-10-10",
+      "tags": [
+        "문자열",
+        "순열",
+        "문자 빈도"
+      ]
+    },
+    {
+      "number": "1.2.1",
+      "chapter": 1,
+      "topic_en": "Check Permutation",
+      "title": "기본 — 글자 카드 봉투 두 개",
+      "summary": "순서는 달라도 같은 재료인지 알아보기",
       "category": "배열과 문자열",
       "published_date": "2026-10-12",
       "path": "ep-01-02-check-permutation/",
@@ -363,6 +659,9 @@
     "start_date": "2026-10-09",
     "cadence": "daily",
     "timezone": "Asia/Seoul",
-    "description": "study_date is assigned learning date, published_date records actual GitHub publication"
+    "description": "study_date is assigned learning date, published_date records actual GitHub publication",
+    "publication_unit": "topic",
+    "pages_per_topic": 2,
+    "revision": "2026-10-27: existing topics split into basic/advanced pages; original dates and base topic progress preserved"
   }
 }

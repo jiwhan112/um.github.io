@@ -1,3 +1,5 @@
+import thinkingMigration from './fixtures/thinking-pair-migration.json' with {type:'json'};
+import {validateThinkingPairs} from '../scripts/validate-thinking-pairs.mjs';
 import legacyVisualRollout from './fixtures/legacy-visual-rollout.json' with {type:'json'};
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
@@ -27,7 +29,7 @@ function assertLegacyPayload(blocks:Block[],expected:LegacyChapter){
 
 const catalog=await buildContent();
 test('all source lessons and documents are compiled',()=>{assert.equal(catalog.version,2);assert.ok(catalog.documents.length>=9);assert.ok(catalog.languages.english.length>=9);assert.ok(catalog.languages.japanese.length>=9);assert.ok(catalog.articleCount>=135);});
-test('memo storage keys are preserved exactly',()=>{const expected:Record<string,string>={'1.1.1':'thinking-ctci-1-1-draft','1.2':'thinking-ctci-1-2-draft','1.3':'thinking-ctci-1.3-draft','1.4':'thinking-ctci-1.4-draft'};for(const [number,key]of Object.entries(expected))assert.equal(catalog.documents.find(d=>d.kind==='thinking'&&d.number===number)?.memoKey,key);});
+test('memo storage keys are preserved exactly',()=>{const expected:Record<string,string>={'1.1.1':'thinking-ctci-1-1-draft','1.2.1':'thinking-ctci-1-2-draft','1.3.1':'thinking-ctci-1.3-draft','1.4.1':'thinking-ctci-1.4-draft'};for(const [number,key]of Object.entries(expected))assert.equal(catalog.documents.find(d=>d.kind==='thinking'&&d.number===number)?.memoKey,key);});
 test('split 1.1 preserves old route and gives advanced lesson independent state',()=>{
  const basic=catalog.documents.find(d=>d.kind==='thinking'&&d.number==='1.1.1')!;
  const advanced=catalog.documents.find(d=>d.kind==='thinking'&&d.number==='1.1.2')!;
@@ -56,14 +58,14 @@ test('thinking taxonomy uses authored catalog tags rather than dates or UI label
  for(const e of raw.episodes){const d=catalog.documents.find(d=>d.kind==='thinking'&&d.number===e.number)!;assert.ok(e.category);assert.deepEqual(d.tags,e.tags);assert.equal(d.category,e.category);assert.equal(d.topic,e.topic_en);assert.ok(!d.tags.some(t=>/\d{4}-\d{2}-\d{2}|학습일|게시일|힌트와/.test(t)));}
 });
 test('library matches Korean, English, number and combined tags without mutating source',()=>{
- const docs=catalog.documents.filter(d=>d.kind==='thinking'&&['1.1.1','1.1.2','1.2','1.3','1.4'].includes(d.number||'')),original=docs.map(d=>d.id),base={query:'',category:'',tags:[] as string[],sort:'number' as const};
+ const docs=catalog.documents.filter(d=>d.kind==='thinking'&&['1.1.1','1.1.2','1.2.1','1.3.1','1.4.1'].includes(d.number||'')),original=docs.map(d=>d.id),base={query:'',category:'',tags:[] as string[],sort:'number' as const};
  assert.equal(filterDocuments(docs,{...base,query:'PALINDROME'}).length,1);
- assert.equal(filterDocuments(docs,{...base,query:'  비트   연산  '})[0].number,'1.4');
- assert.equal(filterDocuments(docs,{...base,query:'1.3'})[0].number,'1.3');
- assert.deepEqual(filterDocuments(docs,{...base,tags:['문자열','문자 빈도']}).map(d=>d.number),['1.2','1.4']);
+ assert.equal(filterDocuments(docs,{...base,query:'  비트   연산  '})[0].number,'1.4.1');
+ assert.equal(filterDocuments(docs,{...base,query:'1.3.1'})[0].number,'1.3.1');
+ assert.deepEqual(filterDocuments(docs,{...base,tags:['문자열','문자 빈도']}).map(d=>d.number),['1.2.1','1.4.1']);
  assert.equal(filterDocuments(docs,{...base,tags:['존재하지않음']}).length,0);
  assert.equal(filterDocuments(docs,{...base,category:'존재하지않음'}).length,0);
- assert.equal(filterDocuments(docs,{...base,sort:'newest'})[0].number,'1.4');
+ assert.equal(filterDocuments(docs,{...base,sort:'newest'})[0].number,'1.4.1');
  assert.deepEqual(docs.map(d=>d.id),original);
  assert.equal(matchesDocument(docs[0],{...base,query:'this_word_is_only_in_a_hidden_solution'}),false);
 });
@@ -678,5 +680,37 @@ test('native teaching build resources are published as exact inert source bytes'
  for(const path of paths){
   const original=await readFile('../'+path);assert.ok(original.length>0,path);
   assert.deepEqual(await readFile('public/'+path),original,'native source byte preservation '+path);
+ }
+});
+
+// Fixed migration evidence records historic state, never generated from rewritten content.
+test('all original thinking routes, memo keys, dates and anchors survive paired revision',async()=>{
+ const raw=JSON.parse(await readFile('../thinking-lab/data/catalog.json','utf8'));
+ const policy=JSON.parse(await readFile('../automation/publishing.json','utf8')).jobs.find((j:{id:string})=>j.id==='thinking');
+ const result=validateThinkingPairs(raw,policy);assert.ok(result.topics>=thinkingMigration.topics.length);
+ const keys=new Set<string>();
+ for(const e of raw.episodes){const meta=catalog.documents.find(d=>d.kind==='thinking'&&d.number===e.number)!;assert.ok(meta.memoKey);assert.ok(!keys.has(meta.memoKey!));keys.add(meta.memoKey!);}
+ for(const old of thinkingMigration.topics){
+  const basic=catalog.documents.find(d=>d.kind==='thinking'&&d.number===old.topic+'.1')!;
+  const advanced=catalog.documents.find(d=>d.kind==='thinking'&&d.number===old.topic+'.2')!;
+  assert.ok(basic&&advanced,old.topic);assert.equal(basic.route,'/thinking-lab/'+old.path);assert.equal(basic.memoKey,old.memoKey);
+  assert.equal(basic.date,old.study_date);assert.equal(advanced.date,old.study_date);assert.notEqual(basic.id,advanced.id);assert.notEqual(basic.memoKey,advanced.memoKey);
+  for(const meta of [basic,advanced]){const entry=raw.episodes.find((e:{number:string})=>e.number===meta.number);assert.equal(entry.published_date,old.published_date);}
+  const doc=JSON.parse(await readFile('../'+basic.source,'utf8'));
+  const ids=new Set(doc.sections.map((s:{id:string})=>s.id));
+  for(const id of old.sectionIds)assert.ok(ids.has(id),old.topic+' preserved anchor '+id);
+ }
+ for(const mode of ['missing','same-date-other-topic','duplicate-number','page-progress','stale-current','missing-date','bad-calendar-date','bad-next-date','leading-zero']){
+  const bad=structuredClone(raw);
+  if(mode==='missing')bad.episodes.pop();
+  if(mode==='same-date-other-topic'){const date=bad.episodes[0].study_date;bad.episodes.filter((e:{number:string})=>e.number.startsWith('1.1.')).forEach((e:{study_date:string})=>e.study_date=date);}
+  if(mode==='duplicate-number')bad.episodes[1].number=bad.episodes[0].number;
+  if(mode==='page-progress')bad.current.number+='.'+1;
+  if(mode==='stale-current'){bad.current.number='1.1';bad.current.study_date='2026-10-09';}
+  if(mode==='missing-date')bad.episodes[0].study_date=undefined;
+  if(mode==='bad-calendar-date')bad.episodes[0].published_date='2026-02-31';
+  if(mode==='bad-next-date')bad.next.study_date=bad.current.study_date;
+  if(mode==='leading-zero')bad.episodes[0].number='0'+bad.episodes[0].number;
+  assert.throws(()=>validateThinkingPairs(bad,policy),mode);
  }
 });

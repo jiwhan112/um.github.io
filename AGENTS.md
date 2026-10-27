@@ -3,7 +3,7 @@
 실제 UI는 `web/src`의 React + TypeScript입니다. `README.md`, `web/README.md`, `automation/README.md`, `automation/publishing.json`을 먼저 읽으세요.
 
 ## 콘텐츠 예약 작업
-뉴스와 언어는 기존 원본 data JSON을 사용합니다. 사고력 신규 문제는 `thinking-lab/ep-XX-YY-slug/content.json`과 `thinking-lab/data/catalog.json`만 변경합니다. 각 episode에 category와 1~8개의 중복 없는 주제 tags를 반드시 기록합니다. 발행 시점 원본과 오늘 자료를 읽어 중복·미래 발행을 피합니다. 언어 카탈로그/진도는 `language-study/scripts/reconcile.py`가 관리하므로 예약 작업이 직접 편집하지 않습니다. AI 실험/오픈소스 분석은 수동입니다.
+뉴스와 언어는 기존 원본 data JSON을 사용합니다. 사고력은 하루 한 주제의 기본 `X.Y.1`·심화 `X.Y.2` 두 독립 페이지를 한 묶음으로 발행합니다. 신규 원본은 `thinking-lab/ep-XX-YY-slug/content.json`, `thinking-lab/ep-XX-YY-02-slug/content.json`과 `thinking-lab/data/catalog.json`만 변경합니다. 기존 기본 URL·메모·날짜를 보존하며 심화 메모는 독립 키로 둡니다. 다양한 알고리즘·논리·일상·조합/비코딩 문제를 구성하고 게임 배경을 강요하지 않습니다. 풀이에는 이해를 돕는 그림을 넣고 기술적인 코드 입력 조건은 접습니다. 각 episode에 category와 1~8개의 중복 없는 주제 tags를 반드시 기록합니다. 발행 시점 원본과 오늘 자료를 읽어 중복·미래 발행을 피합니다. 언어 카탈로그/진도는 `language-study/scripts/reconcile.py`가 관리하므로 예약 작업이 직접 편집하지 않습니다. AI 실험/오픈소스 분석은 수동입니다.
 
 원본 날짜·기사 순서·기존 localStorage 키·하위 URL·연구 검증 기록을 보존합니다. 기존 `_content.html`은 빌드 입력으로 남겨두되 새 독립 HTML UI를 작성하지 않습니다. 문제의 설명·힌트·코드·테스트는 typed content blocks로 작성하고 정답은 details 블록 안에 둡니다. HTML/CSS/JS로 UI를 새로 만들지 않습니다.
 

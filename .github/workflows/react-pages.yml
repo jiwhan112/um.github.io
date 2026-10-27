@@ -79,6 +79,14 @@ jobs:
           path: web/test-results/**/thinking-1-1-diagram-*.png
           if-no-files-found: warn
           retention-days: 7
+      - name: Preserve paired thinking worked diagrams
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: thinking-pairs-visuals
+          path: web/test-results/**/thinking-pair-diagram-*.png
+          if-no-files-found: warn
+          retention-days: 7
       - name: Package tested distribution
         run: tar -czf /tmp/atlas-react-dist.tar.gz -C web/dist .
       - uses: actions/upload-artifact@v4

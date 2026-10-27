@@ -1,0 +1,415 @@
+{
+  "title": "1.2.1 기본 — 글자 카드 봉투 두 개",
+  "subtitle": "순서는 달라도 같은 재료인지 알아보기",
+  "memoKey": "thinking-ctci-1-2-draft",
+  "starter": "// 생각 과정과 반례를 자유롭게 기록하세요.\n// 이전 회차 메모는 그대로 유지됩니다.",
+  "sections": [
+    {
+      "id": "section-3",
+      "title": "먼저 생각해 보기",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1.2.1 기본 — 글자 카드 봉투 두 개"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 종이나 머릿속으로 답을 예상하고, 왜 그런지 한 문장으로 설명해 보세요. 정답보다 판단 기준을 찾는 것이 목표입니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "challenge",
+      "title": "카드 봉투 문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 봉투에 영문 대문자 카드가 들어 있습니다. 봉투를 흔들어 순서를 바꿀 수는 있지만 카드를 더하거나 버릴 수는 없습니다. 두 봉투로 정확히 같은 문자열을 만들 수 있는지 판단하세요. 같은 글자가 여러 장이면 장수도 같아야 합니다. 빈 봉투 두 개는 같다고 정합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "봉투 A"
+                  }
+                ],
+                [
+                  {
+                    "text": "봉투 B"
+                  }
+                ],
+                [
+                  {
+                    "text": "가능한가?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "AABC"
+                  }
+                ],
+                [
+                  {
+                    "text": "BACA"
+                  }
+                ],
+                [
+                  {
+                    "text": "예"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "AABC"
+                  }
+                ],
+                [
+                  {
+                    "text": "ABBC"
+                  }
+                ],
+                [
+                  {
+                    "text": "아니요"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "AB"
+                  }
+                ],
+                [
+                  {
+                    "text": "ABA"
+                  }
+                ],
+                [
+                  {
+                    "text": "아니요"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "순서를 비교하지 말고, 카드 한 장씩 짝을 지어 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "글자 종류가 같다는 것만으로 충분할까요? AABC와 ABBC를 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 글자의 장수를 적은 표가 완전히 같아야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visual",
+      "title": "그림으로 짝 맞추기",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "같은 재료의 짝 맞추기"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 같은 재료의 짝 맞추기\n    accDescr: 같은 재료의 짝 맞추기의 생각 과정을 위에서 아래로 따라갑니다.\n    N0[\"AABC: A 두 장 · B 한 장 · C 한 장\"]\n    N1[\"BACA: A 두 장 · B 한 장 · C 한 장\"]\n    N0 --> N1\n    N2[\"모든 글자의 장수가 같음\"]\n    N1 --> N2\n    N3[\"재배열 가능\"]\n    N2 --> N3\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "종류는 같지만 장수가 다를 때"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 종류는 같지만 장수가 다를 때\n    accDescr: 종류는 같지만 장수가 다를 때의 생각 과정을 위에서 아래로 따라갑니다.\n    N0[\"AABC와 ABBC 모두 A B C를 포함\"]\n    N1[\"A의 장수: 2 대 1\"]\n    N0 --> N1\n    N2[\"B의 장수: 1 대 2\"]\n    N1 --> N2\n    N3[\"순서 변경은 장수를 바꾸지 못함\"]\n    N2 --> N3\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "판정 기준과 증명",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 논증 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "AABC와 BACA는 A 두 장, B 한 장, C 한 장으로 같습니다. AABC와 ABBC는 A와 B의 장수가 서로 달라 순서만 바꾸어 해결할 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 봉투의 카드를 하나 꺼낼 때마다 다른 봉투에서 같은 글자 하나를 지웁니다. 모두 짝지어 사라지면 성공입니다. 또는 A~Z의 장수 표 두 개를 비교해도 같습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 방법이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "필요성: 순서만 바꾸면 각 글자의 개수는 보존됩니다. 충분성: 모든 글자 개수가 같으면 A부터 Z까지 정렬한 두 결과가 완전히 같습니다. 따라서 두 봉투에서 같은 문자열을 만들 수 있습니다. n장의 카드를 한 번씩 세면 O(n), 알파벳별 표는 26칸이면 충분합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tests",
+      "title": "경계와 반례",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계와 반례를 확인하기",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경우"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "판정 이유"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 봉투 / 빈 봉투"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "예: 남는 카드가 없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "AAA / AAA"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "예: 중복은 허용되며 장수가 같음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "ABC / ABD"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "아니요: C와 D의 개수가 다름"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "AB / AAB"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "아니요: 총장수부터 다름"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-10",
+      "title": "복습 질문",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "복습 질문과 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "질문: 글자의 합계 숫자만 같으면 될까요? 해설: A=1, B=2, C=3일 때 AC와 BB의 합은4지만 구성이 다릅니다. 하나의 합계는 개수표를 대신하지 못합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "질문: 한 봉투만 정렬하면 되나요? 해설: 비교 대상의 순서도 맞추거나 두 개수표를 비교해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-11",
+      "title": "다음 학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 학습 주제 1.2 Check Permutation에서 아이디어를 얻어 새로 구성한 문제입니다. 책 지문이나 공식 해설의 번역·재현이 아닙니다. 기존 학습일 2026-10-10의 개편본으로 새 날짜 진도를 추가하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음: 심화 문제",
+              "kind": "link",
+              "href": "/thinking-lab/ep-01-02-02-check-permutation/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

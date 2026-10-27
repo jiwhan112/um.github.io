@@ -1,0 +1,388 @@
+{
+  "title": "1.3.1 기본 — 빈칸 하나가 세 칸이 된다면",
+  "subtitle": "공백 치환 뒤 길이를 먼저 예측하는 퍼즐",
+  "memoKey": "thinking-ctci-1.3-draft",
+  "starter": "// 생각 과정과 반례를 자유롭게 기록하세요.\n// 이전 회차 메모는 그대로 유지됩니다.",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1.3.1 기본 — 빈칸 하나가 세 칸이 된다면"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "쪽지의 영문 대문자와 빈칸을 그대로 옮겨 적되, 빈칸 하나마다 세 글자 %20을 씁니다. 예를 들어 A B는 A%20B가 됩니다. 원래 쪽지가 n칸이고 그중 빈칸이 s칸일 때 새 쪽지는 몇 칸이 필요한가요? 연속 빈칸도 각각 바꾸며 앞뒤 빈칸을 없애지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "원본(·는 빈칸)"
+                  }
+                ],
+                [
+                  {
+                    "text": "옮긴 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "길이"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A·B"
+                  }
+                ],
+                [
+                  {
+                    "text": "A%20B"
+                  }
+                ],
+                [
+                  {
+                    "text": "5"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A··B"
+                  }
+                ],
+                [
+                  {
+                    "text": "A%20%20B"
+                  }
+                ],
+                [
+                  {
+                    "text": "8"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "··"
+                  }
+                ],
+                [
+                  {
+                    "text": "%20%20"
+                  }
+                ],
+                [
+                  {
+                    "text": "6"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 종이나 머릿속으로 답을 예상하고, 왜 그런지 한 문장으로 설명해 보세요. 정답보다 판단 기준을 찾는 것이 목표입니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "빈칸이 아닌 한 칸은 결과에서도 한 칸입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "빈칸 한 칸은 세 칸이 되므로 두 칸이 늘어납니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원래 길이 n에 늘어난 칸수2s를 더하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 그림과 함께 생각하기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "답은 n+2s입니다. 원래 n칸에는 이미 빈칸의 한 칸이 포함되어 있으므로 3s를 그대로 더하면 빈칸을 한 번 더 센 셈입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A··B는 n=4,s=2여서4+4=8칸입니다. 빈칸이 전부라면 n=s이므로3n칸, 빈칸이 없다면 n칸입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "한 빈칸의 기여"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 한 빈칸의 기여\n    accDescr: 한 빈칸의 기여의 생각 과정을 위에서 아래로 따라갑니다.\n    N0[\"원래 빈칸 1칸\"]\n    N1[\"결과는 % 2 0의 3칸\"]\n    N0 --> N1\n    N2[\"증가량은 3 - 1 = 2칸\"]\n    N1 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "A와 B 사이 빈칸 두 개"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: A와 B 사이 빈칸 두 개\n    accDescr: A와 B 사이 빈칸 두 개의 생각 과정을 위에서 아래로 따라갑니다.\n    N0[\"원본 길이4 / 빈칸2\"]\n    N1[\"일반 글자2칸 유지\"]\n    N0 --> N1\n    N2[\"빈칸2개가6칸으로 바뀜\"]\n    N1 --> N2\n    N3[\"전체2+6=8칸\"]\n    N2 --> N3\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 방법이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일반 글자는 n-s개이고 각1칸, 빈칸은 s개이고 각3칸이므로 (n-s)+3s=n+2s입니다. 두 종류의 칸을 빠짐없이 한 번씩 세었습니다. 빈칸 수를 직접 세는 데 O(n), 길이 계산에는 O(1)이 듭니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tests",
+      "title": "검산과 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계와 반례를 확인하기",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경우"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "필요 길이"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 쪽지"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "0"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "ABCD"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "4"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈칸 한 개"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "3"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "·A·"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "7"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 질문과 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "질문: 빈칸을 다섯 글자로 치환하면? 해설: 각 빈칸마다4칸 증가하여 n+4s입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "질문: 이미 %20이 적혀 있다면? 해설: 기본 문제의 원본은 대문자와 빈칸뿐입니다. %를 허용한다면 이미 변환된 표시도 그냥 원문으로 볼지 별도 규칙이 필요합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 학습 주제 1.3 URLify에서 아이디어를 얻어 새로 구성한 문제입니다. 책 지문이나 공식 해설의 번역·재현이 아닙니다. 기존 학습일 2026-10-11의 개편본으로 새 날짜 진도를 추가하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음: 심화 문제",
+              "kind": "link",
+              "href": "/thinking-lab/ep-01-03-02-urlify/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

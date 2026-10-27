@@ -13,7 +13,7 @@
         "^thinking-lab/data/catalog\\.json$",
         "^thinking-lab/ep-[a-z0-9-]+/content\\.json$"
       ],
-      "limit": "one new episode per Korean date",
+      "limit": "one new topic (two separate problem pages) per Korean date",
       "requiredMetadata": [
         "number",
         "chapter",
@@ -27,7 +27,11 @@
         "path"
       ],
       "execution": "sequential_pipeline_stage",
-      "runAfter": "pipeline_start"
+      "runAfter": "pipeline_start",
+      "publicationUnit": "topic",
+      "pagesPerTopic": 2,
+      "numbering": "X.Y.1 basic and X.Y.2 advanced; current/next retain base topic X.Y",
+      "editorialPolicy": "From 2026-10-27: varied original interview-style algorithms, logic, everyday rules and combinatorial/noncoding reasoning. No forced game-programming framing. Each page has one problem, three folded hints and illustrated folded solutions; technical coding contracts stay folded. Preserve existing basic routes/memo keys/dates; advanced pages have independent memo keys. Both pages must pass publication together."
     },
     {
       "id": "briefing",

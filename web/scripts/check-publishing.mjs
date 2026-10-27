@@ -1,6 +1,7 @@
 /** Verify the publishing contract and authored thinking metadata before every release. */
 import {readFileSync,existsSync} from 'node:fs';
 import {resolve} from 'node:path';
+import {validateThinkingPairs} from './validate-thinking-pairs.mjs';
 import {validateGameDesignPlan} from './validate-game-design-plan.mjs';
 const root=resolve('..'),read=p=>readFileSync(resolve(root,p),'utf8');
 const policy=JSON.parse(read('automation/publishing.json'));
@@ -38,6 +39,7 @@ const videoIds=new Set();const paths=new Set();for(const e of gd.episodes){if(!e
 // Manual continuation is bounded by the verified, user-approved source manifest.
 validateGameDesignPlan(JSON.parse(read('automation/game-design-plan.json')),gd.episodes,feed);
 const catalog=JSON.parse(read('thinking-lab/data/catalog.json'));
+validateThinkingPairs(catalog,policy.jobs.find(j=>j.id==='thinking'));
 for(const e of catalog.episodes){
  if(!e.category?.trim()||!Array.isArray(e.tags)||e.tags.length<1||e.tags.length>8)throw Error('Missing classification: '+e.path);
  if(new Set(e.tags).size!==e.tags.length||e.tags.some(t=>typeof t!=='string'||!t.trim()||t!==t.trim()||t.length>40||/\d{4}-\d{2}-\d{2}/.test(t)))throw Error('Invalid tags: '+e.path);

@@ -1,0 +1,474 @@
+{
+  "title": "1.5.2 심화 — 한 번의 편집으로 같은 쪽지 만들기",
+  "subtitle": "삽입·삭제·치환 중 한 번만 허용하면 무엇이 달라질까?",
+  "memoKey": "thinking-ctci-1.5-2-draft",
+  "starter": "// 생각 과정과 반례를 자유롭게 기록하세요.\n// 심화 문제의 독립 메모입니다.",
+  "sections": [
+    {
+      "id": "section-2",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1.5.2 심화 — 한 번의 편집으로 같은 쪽지 만들기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번에는 글자 하나를 넣거나, 지우거나, 다른 글자로 바꾸는 편집을 합쳐 최대 한 번 허용합니다. 두 소문자 쪽지를 같게 만들 수 있는지 판단하세요. 이미 같아0번 필요한 경우도 성공입니다. 두 글자의 맞교환은 한 번의 편집이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "처음"
+                  }
+                ],
+                [
+                  {
+                    "text": "목표"
+                  }
+                ],
+                [
+                  {
+                    "text": "가능한가?"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "pale"
+                  }
+                ],
+                [
+                  {
+                    "text": "ple"
+                  }
+                ],
+                [
+                  {
+                    "text": "예: a 삭제"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "pale"
+                  }
+                ],
+                [
+                  {
+                    "text": "bale"
+                  }
+                ],
+                [
+                  {
+                    "text": "예: p 치환"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "pale"
+                  }
+                ],
+                [
+                  {
+                    "text": "bake"
+                  }
+                ],
+                [
+                  {
+                    "text": "아니요"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "ab"
+                  }
+                ],
+                [
+                  {
+                    "text": "ba"
+                  }
+                ],
+                [
+                  {
+                    "text": "아니요"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 종이나 머릿속으로 답을 예상하고, 왜 그런지 한 문장으로 설명해 보세요. 정답보다 판단 기준을 찾는 것이 목표입니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "코드로 풀 때의 입력 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 문자열은 ASCII 소문자만, 각각0~100,000바이트입니다. 다른 바이트·NUL·한글 또는 길이초과는 invalid_argument입니다. 입력 전체를 먼저 검증합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원문을 수정하지 않고 두 인덱스로 비교합니다. UTF-8 문자 단위 편집을 지원하는 함수가 아닙니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-3",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이 차이가2 이상이면 한 번 넣거나 지워서 맞출 수 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 다른 위치에서 길이가 같으면 양쪽 모두, 다르면 긴 쪽만 한 칸 건너뛰세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그 뒤에 다시 다른 문자가 나오면 두 번째 편집이 필요합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-4",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 그림과 함께 생각하기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이가 같으면 가능한 한 번의 편집은 치환입니다. 길이가 한 칸 다르면 긴 쪽의 문자 한 개를 삭제하는 경우로 생각하면 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "왼쪽에서 같은 글자를 함께 지나갑니다. 처음 불일치에서 편집권 한 장을 사용하고, 같은 길이는 양쪽을·다른 길이는 긴 쪽만 건너뜁니다. 이후 글자는 모두 같아야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "pale와 ple는 p 뒤에서 a/l이 다릅니다. 긴 pale의 a만 건너뛰면 le와 le가 맞습니다. ab와 ba는 같은 길이에서 a/b를 치환해도 b/a가 다시 달라 실패합니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "삭제 한 번으로 정렬 맞추기"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 삭제 한 번으로 정렬 맞추기\n    accDescr: 삭제 한 번으로 정렬 맞추기의 생각 과정을 위에서 아래로 따라갑니다.\n    N0[\"pale / ple\"]\n    N1[\"p는 같아 함께 이동\"]\n    N0 --> N1\n    N2[\"a와 l 불일치: 긴 쪽 a 건너뜀\"]\n    N1 --> N2\n    N3[\"le / le 일치 → 성공\"]\n    N2 --> N3\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "치환권을 다 쓴 뒤"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 치환권을 다 쓴 뒤\n    accDescr: 치환권을 다 쓴 뒤의 생각 과정을 위에서 아래로 따라갑니다.\n    N0[\"pale / bake\"]\n    N1[\"p와 b 불일치: 치환권 사용\"]\n    N0 --> N1\n    N2[\"a는 같음\"]\n    N1 --> N2\n    N3[\"l과 k에서 다시 불일치 → 실패\"]\n    N2 --> N3\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 방법이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 불일치보다 앞은 이미 같으므로 거기를 편집할 이유가 없습니다. 길이가 같으면 양쪽의 해당 문자를 맞추는 치환, 길이가 다르면 긴 쪽의 해당 문자를 지우는 연산만 남은 접미사의 정렬을 맞출 수 있습니다. 이를 선택한 뒤 접미사가 같으면 한 번으로 충분하며 다시 다르면 불가능합니다. 시간O(n+m), 추가공간O(1)입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "선택 실습 · 전체 C++11 풀이"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "종이 풀이를 이해한 뒤 코드로 확인해도 됩니다. 아래 코드는 main을 포함하며 다른 회차와 별도 파일로 컴파일합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <cassert>\n#include <iostream>\n#include <stdexcept>\n#include <string>\nbool OneEdit(const std::string& a,const std::string& b){\n    if(a.size()>100000||b.size()>100000)throw std::invalid_argument(\"length\");\n    for(unsigned char c:a)if(c<'a'||c>'z')throw std::invalid_argument(\"a\");\n    for(unsigned char c:b)if(c<'a'||c>'z')throw std::invalid_argument(\"b\");\n    if(a.size()>b.size()+1||b.size()>a.size()+1)return false;\n    std::size_t i=0,j=0;bool used=false;\n    while(i<a.size()&&j<b.size()){\n        if(a[i]==b[j]){++i;++j;continue;}\n        if(used) return false;\n        used=true;\n        // 긴 쪽만 건너뛰면 한 글자 삭제, 같은 길이면 치환입니다.\n        if(a.size()>=b.size())++i;\n        if(b.size()>=a.size())++j;\n    }\n    return true; // 남은 꼬리는 길이 차이 조건으로 최대 한 글자입니다.\n}\nint main(){assert(OneEdit(\"pale\",\"ple\"));assert(OneEdit(\"pale\",\"bale\"));assert(!OneEdit(\"pale\",\"bake\"));assert(OneEdit(\"\",\"a\"));assert(OneEdit(\"same\",\"same\"));assert(!OneEdit(\"ab\",\"ba\"));std::cout<<\"edit checks passed\\n\";}\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-5",
+      "title": "검산과 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계와 반례를 확인하기",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경우"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "결과"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 문자열 / a"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "참: 하나 삽입"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 문자열 / ab"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "거짓"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "abc / ab"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "참: 끝 삭제"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "abc / abc"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "참:0번"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 질문과 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "질문: 두 번까지 허용하면 같은 탐욕 선택으로 충분할까요? 해설: 여러 편집 유형이 경쟁하므로 일반 편집 거리에서는 동적 계획법 같은 더 넓은 비교가 필요합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "질문: 맞교환을 한 번으로 추가하면? 해설: ab와 ba의 판정부터 바뀌므로 다른 연산 체계를 명시해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "실행·검산 기록",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2026-10-27: 본문 C++11을 직접 추출해 GCC 엄격 빌드·UBSan 실행을 통과했습니다. a·b 길이0~5 문자열의3,969쌍을 독립 동적 계획법 편집 거리와 비교해 판정이 모두 일치했습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-6",
+      "title": "다음 학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 학습 주제 1.5 One Away에서 아이디어를 얻어 새로 구성한 문제입니다. 책 지문이나 공식 해설의 번역·재현이 아닙니다. 기존 학습일 2026-10-13의 개편본으로 새 날짜 진도를 추가하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "돌아가기: 기본 문제",
+              "kind": "link",
+              "href": "/thinking-lab/ep-01-05-one-away/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,440 @@
+{
+  "title": "1.7.2 심화 — 회전과 거울의 순서를 바꾸면",
+  "subtitle": "같은 동작 두 개라도 순서가 결과를 바꾸는 퍼즐",
+  "memoKey": "thinking-ctci-1.7-2-draft",
+  "starter": "// 생각 과정과 반례를 자유롭게 기록하세요.\n// 심화 문제의 독립 메모입니다.",
+  "sections": [
+    {
+      "id": "section-2",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1.7.2 심화 — 회전과 거울의 순서를 바꾸면"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사진에 두 동작을 합니다. R은 시계 방향90도 회전, M은 각 줄을 좌우로 뒤집는 거울입니다. 사진은2×2의 A B / C D입니다. R을 먼저 하고 M을 나중에 한 결과와, M을 먼저 하고 R을 나중에 한 결과가 같은가요? 다르다면 한 동작 순서를 다른 순서로 바꿀 때 회전 방향을 어떻게 바꾸어야 같은 결과가 되는지 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "행"
+                  }
+                ],
+                [
+                  {
+                    "text": "원래 사진"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "첫째 줄"
+                  }
+                ],
+                [
+                  {
+                    "text": "A B"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "둘째 줄"
+                  }
+                ],
+                [
+                  {
+                    "text": "C D"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 종이나 머릿속으로 답을 예상하고, 왜 그런지 한 문장으로 설명해 보세요. 정답보다 판단 기준을 찾는 것이 목표입니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-3",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "매 동작을 현재 사진에 적용하세요. 원본에 두 동작을 각각 한 결과를 섞지 마세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A가 가는 위치 하나만 추적해도 두 결과가 다름을 증명할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "R 다음 M은 M 다음 반시계90도 회전과 비교해보세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-4",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 그림과 함께 생각하기",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "순서"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "중간 결과"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "최종 결과"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "R 다음 M"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "C A / D B"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "A C / B D"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "M 다음 R"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "B A / D C"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "D B / C A"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "R 다음 M은 AC/BD이고 M 다음 R은 DB/CA이므로 다릅니다. 회전과 반사는 일반적으로 순서를 바꿀 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "R 다음 M의 위치 변화는(r,c)→(c,n-1-r)→(c,r)입니다. M 다음 반시계 회전은(r,c)→(r,n-1-c)→(c,r)이어서 같습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "따라서 거울을 회전 앞뒤로 옮기면 회전 방향을 반대로 바꾸어야 합니다. 이 문제에서 우연히 모두 같은 글자라 결과가 같아 보일 수 있지만, 동작 규칙이 같다는 뜻은 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "순서가 다른 두 경로"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 순서가 다른 두 경로\n accDescr: 같은 원본에서 두 가지 연산 순서로 갈라져 서로 다른 최종 배열을 얻습니다.\n O[\"원본: A B / C D\"] -->|시계 회전 R| R[\"C A / D B\"]\n R -->|좌우 거울 M| RM[\"A C / B D\"]\n O -->|좌우 거울 M| M[\"B A / D C\"]\n M -->|시계 회전 R| MR[\"D B / C A\"]\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "거울을 건너면 방향이 뒤집힌다"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 거울을 건너면 방향이 뒤집힌다\n    accDescr: 거울을 건너면 방향이 뒤집힌다의 생각 과정을 위에서 아래로 따라갑니다.\n    N0[\"R 다음 M\"]\n    N1[\"각 칸의 최종 위치는 c,r\"]\n    N0 --> N1\n    N2[\"M 다음 반시계90도\"]\n    N1 --> N2\n    N3[\"같은 c,r이므로 모든 칸에서 일치\"]\n    N2 --> N3\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 방법이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 칸의 좌표 대응을 합성하면 R→M과 M→반시계R 모두(r,c)→(c,r)로 같습니다. 반면 M→R은(r,c)→(n-1-c,n-1-r)이어서 일반적으로 다릅니다. 하나의 예만으로 같음을 증명할 수 없으므로 좌표 대응을 전체 칸에 대해 비교했습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-5",
+      "title": "검산과 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계와 반례를 확인하기",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "검산"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "의미"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "1×1 사진"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "모든 동작이 같아 반례가 되지 않음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "네 칸이 같은 글자"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "결과가 같아도 연산 일반성이 증명되지는 않음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "M 두 번"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "원래 사진"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "R 네 번"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "원래 사진"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 질문과 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "질문: 회전끼리는 순서를 바꿔도 되나요? 해설: 같은 중심의90도·180도 회전은 회전량을 더하면 되므로 순서를 바꾸어도 같습니다. 반사가 들어가면 달라집니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "질문: R 다음 M을 한 번에 구현하면? 해설: 좌표(r,c)→(c,r)이므로 주대각선 전치와 같습니다. 단순한 조합이 더 간단한 연산이 될 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "실행·검산 기록",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2026-10-27: 한 변 길이1~12의 모든 좌표에서 R 다음 M과 M 다음 반시계 회전의 대응이 같음을 별도 계산으로 확인했습니다. 일반적인 증명은 본문의 좌표식이며 유한 테스트가 증명을 대신하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-6",
+      "title": "다음 학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 학습 주제 1.7 Rotate Matrix에서 아이디어를 얻어 새로 구성한 문제입니다. 책 지문이나 공식 해설의 번역·재현이 아닙니다. 기존 학습일 2026-10-15의 개편본으로 새 날짜 진도를 추가하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "돌아가기: 기본 문제",
+              "kind": "link",
+              "href": "/thinking-lab/ep-01-07-rotate-matrix/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

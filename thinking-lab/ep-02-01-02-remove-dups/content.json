@@ -1,0 +1,459 @@
+{
+  "title": "2.1.2 심화 — 중복 신청자는 전부 제외하기",
+  "subtitle": "이번에는 한 번만 신청한 표식만 남깁니다.",
+  "memoKey": "thinking-ctci-2.1-2-draft",
+  "starter": "// 종이에 풀어 본 추론이나 구현 아이디어를 적어 두세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2.1.2 심화 — 중복 신청자는 전부 제외하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번에는 한 번만 신청한 표식만 남깁니다. 두 번 이상 나타난 표식은 첫 등장도 포함하여 모두 지워야 합니다. 남는 표식들은 원래 순서를 유지하세요. 기본 문제와 비슷해 보이지만 남길 기준이 다릅니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "A B A C B D의 답은 C D입니다. A와 B는 첫 등장도 남기지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "표식은 문자열 대신 정수 번호로도 표현할 수 있습니다. 같은 정수면 같은 표식입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명단은 다음 쪽지를 가리키는 연결 형태이며 기존 쪽지 중 일부만 이어 결과를 만듭니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "명단"
+                  }
+                ],
+                [
+                  {
+                    "text": "한 번만 등장한 표식"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1 2 1 3 2 4"
+                  }
+                ],
+                [
+                  {
+                    "text": "3 4"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "5 5"
+                  }
+                ],
+                [
+                  {
+                    "text": "빈 명단"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "3 1 2"
+                  }
+                ],
+                [
+                  {
+                    "text": "3 1 2"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 종이와 연필로 예시를 따라가고, 답이 맞는 이유를 한 문장으로 설명해 보세요. 빨리 답을 읽기보다 어떤 정보를 기억해야 하는지 생각해 보는 것이 목표입니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "코드로 풀 때의 입력 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Node{int value; Node* next;}의 유효한 비순환 단일 연결 리스트, 최대 100,000노드가 입력 전제입니다. 함수는 남은 기존노드를 연결하며 노드 생성·해제를 하지 않습니다. 모든 주소는 호출 중 유효해야 합니다. int 값의 전체 범위를 허용합니다. 순환하거나 해제된 주소를 검출하는 함수가 아닙니다. 함수 호출 입력이므로 문자 인코딩이나 문자 버퍼는 사용하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "표식 1을 처음 만났을 때는 나중에 1이 다시 나올지 알 수 없습니다. 바로 최종 결정을 내려도 될까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 번은 등장 횟수를 세고, 다음 번에는 횟수가 1인 표식만 남기는 방법을 생각해 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "연결을 바꾸기 전에 현재 쪽지의 다음 주소를 저장하세요. 남긴 꼬리의 다음 연결도 반드시 끝에서 끊어야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 순회에서 1과 2는 두 번, 3과 4는 한 번 등장했다고 기록합니다. 두 번째 순회에서는 횟수 1인 3,4만 선택합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 본 표식을 즉시 남겼던 기본 풀이를 그대로 사용하면 1,2를 잘못 남깁니다. 이번 판정은 앞부분만이 아니라 전체 명단에 달려 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 선택된 노드를 결과의 꼬리에 붙이고 그 next를 null로 만들어 둡니다. 제외된 노드는 삭제하지 않으며 메모리를 가진 호출자가 관리합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 두 순회가 필요한 이유\n A[\"첫 순회: 1 2 1 3 2 4\"] --> B[\"횟수: 1은2, 2는2, 3은1, 4는1\"]\n B --> C[\"둘째 순회: 횟수1인 노드만 선택\"]\n C --> D[\"결과: 3 → 4 → 끝\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 첫 등장 보존과 유일한 등장 보존\n A[\"A B A C\"] --> B[\"첫 등장만: A B C\"]\n A --> C[\"한 번만 등장: B C\"]\n B --> D[\"기본 규칙\"]\n C --> E[\"이번 심화 규칙\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "왜 맞는가 — 첫 순회 후 횟수표는 전체 명단에서 각 값이 나타난 횟수와 같습니다. 둘째 순회는 횟수가 정확히 1인 노드만 붙이므로 중복 값은 전부 제외되고 유일한 값은 빠짐없이 남습니다. 원래 순회 순서대로 꼬리에 붙이므로 상대 순서와 남은 노드의 주소가 보존됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "필요한 시간과 기억 — std::map을 사용하는 제시 코드는 서로 다른 값 U개, 노드 n개에 대해 O(n log(U+1)) 시간, O(U) 추가 공간입니다. 해시표라면 평균 O(n)이 가능하지만 이 코드의 복잡도를 해시표와 혼동하지 마세요. 노드 메모리는 새로 할당하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "전체 C++11 풀이와 실행 가능한 검사",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "코드 없이 먼저 원리를 이해한 뒤 구현과 비교해 보세요. 아래는 main을 포함한 독립 프로그램입니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "code",
+                  "language": "cpp",
+                  "text": "#include <cassert>\n#include <cstddef>\n#include <iostream>\n#include <map>\n#include <vector>\nstruct Node { int value; Node* next; };\nNode* KeepOnlySingleOccurrences(Node* head) {\n    std::map<int, std::size_t> counts;\n    for (Node* p = head; p != nullptr; p = p->next) ++counts[p->value];\n    Node* result = nullptr;\n    Node* tail = nullptr;\n    while (head != nullptr) {\n        Node* saved = head->next; // 연결 변경 전에 아직 읽지 않은 위치를 보존합니다.\n        if (counts.at(head->value) == 1) {\n            head->next = nullptr;\n            if (tail != nullptr) tail->next = head;\n            else result = head;\n            tail = head;\n        }\n        head = saved;\n    }\n    return result; // 제외한 노드의 해제 책임은 호출자에게 남습니다.\n}\nint main() {\n    std::size_t cases = 0;\n    std::size_t combinations = 1;\n    for (std::size_t n = 0; n <= 8; ++n) {\n        if (n != 0) combinations *= 3;\n        for (std::size_t pattern = 0; pattern < combinations; ++pattern) {\n            std::vector<Node> nodes(n);\n            std::size_t code = pattern;\n            for (std::size_t i = 0; i < n; ++i) {\n                nodes[i].value = static_cast<int>(code % 3) - 1;\n                code /= 3;\n                nodes[i].next = (i + 1 < n) ? &nodes[i + 1] : nullptr;\n            }\n            std::vector<Node*> expected;\n            // 다른 위치와 직접 비교하는 독립 참조 판정입니다.\n            for (std::size_t i = 0; i < n; ++i) {\n                std::size_t count = 0;\n                for (std::size_t j = 0; j < n; ++j)\n                    if (nodes[i].value == nodes[j].value) ++count;\n                if (count == 1) expected.push_back(&nodes[i]);\n            }\n            Node* p = KeepOnlySingleOccurrences(n ? &nodes[0] : nullptr);\n            for (Node* wanted : expected) { assert(p == wanted); p = p->next; }\n            assert(p == nullptr); ++cases;\n        }\n    }\n    std::cout << \"linked-list cases: \" << cases << \", address/order preservation: passed\\n\";\n}\n"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례로 검토하기",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "결과"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "1 1 2"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "노드2만"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "1 2 1"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "중간노드2만"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "1 2 3"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "모든 주소·순서 유지"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "1 1"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "null, 원래 노드 소유권은 호출자에게 있음"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2026-10-27 검증: 아래 프로그램을 GCC의 C++11 엄격 경고 및 UBSan으로 실제 빌드·실행했습니다. 문서의 단순 예시만 맞춘 것이 아니라 코드에 포함된 전수 비교를 수행했습니다. Windows/MSVC 실행이나 ASan 실행은 이 기록에 포함하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "bash",
+          "text": "g++ -std=c++11 -Wall -Wextra -Werror -pedantic -fsanitize=undefined -fno-sanitize-recover=all unique.cpp -o check\n./check"
+        },
+        {
+          "type": "details",
+          "title": "확인한 실행 출력",
+          "blocks": [
+            {
+              "type": "code",
+              "language": "text",
+              "text": "linked-list cases: 9841, address/order preservation: passed"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 왜 첫 노드만 지우는 것으로 부족할까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "중복 값의 두 번째 이후 노드도 모두 제외해야 하기 때문입니다. 기준은 위치가 아니라 전체 등장 횟수입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 제외된 노드를 delete하지 않는 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 함수는 비소유 포인터로 연결만 재구성합니다. 스택 객체·배열 안의 노드일 수도 있어 함수가 임의로 해제하면 안 됩니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 문제는 기존 2.1 주제를 바탕으로 새로 쓴 독창적인 학습 자료입니다. 책의 지문이나 공식 해설을 옮긴 것이 아니며, 참고 주제명은 카탈로그에 보존합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기존 배정일 2026-10-18과 게시일 2026-10-18을 보존한 개편입니다. 새로운 일일 진도로 세지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화 페이지는 별도 메모를 사용합니다. 예전 풀이 메모는 기본 페이지에서 확인하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이전: 2.1.1 기본 문제와 기존 메모",
+              "href": "/thinking-lab/ep-02-01-remove-dups/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
