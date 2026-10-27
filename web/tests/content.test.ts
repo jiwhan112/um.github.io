@@ -27,7 +27,18 @@ function assertLegacyPayload(blocks:Block[],expected:LegacyChapter){
 
 const catalog=await buildContent();
 test('all source lessons and documents are compiled',()=>{assert.equal(catalog.version,2);assert.ok(catalog.documents.length>=9);assert.ok(catalog.languages.english.length>=9);assert.ok(catalog.languages.japanese.length>=9);assert.ok(catalog.articleCount>=135);});
-test('memo storage keys are preserved exactly',()=>{const expected:Record<string,string>={'1.1':'thinking-ctci-1-1-draft','1.2':'thinking-ctci-1-2-draft','1.3':'thinking-ctci-1.3-draft','1.4':'thinking-ctci-1.4-draft'};for(const [number,key]of Object.entries(expected))assert.equal(catalog.documents.find(d=>d.kind==='thinking'&&d.number===number)?.memoKey,key);});
+test('memo storage keys are preserved exactly',()=>{const expected:Record<string,string>={'1.1.1':'thinking-ctci-1-1-draft','1.2':'thinking-ctci-1-2-draft','1.3':'thinking-ctci-1.3-draft','1.4':'thinking-ctci-1.4-draft'};for(const [number,key]of Object.entries(expected))assert.equal(catalog.documents.find(d=>d.kind==='thinking'&&d.number===number)?.memoKey,key);});
+test('split 1.1 preserves old route and gives advanced lesson independent state',()=>{
+ const basic=catalog.documents.find(d=>d.kind==='thinking'&&d.number==='1.1.1')!;
+ const advanced=catalog.documents.find(d=>d.kind==='thinking'&&d.number==='1.1.2')!;
+ assert.equal(basic.route,'/thinking-lab/ep-01-01-is-unique/');
+ assert.equal(advanced.route,'/thinking-lab/ep-01-01-02-is-unique-advanced/');
+ assert.equal(advanced.memoKey,'thinking-ctci-1-1-2-draft');
+ assert.notEqual(basic.id,advanced.id);assert.notEqual(basic.memoKey,advanced.memoKey);
+ assert.equal(basic.date,'2026-10-09');assert.equal(advanced.date,basic.date);
+ const sorted=filterDocuments([advanced,basic],{query:'',category:'',tags:[],sort:'number'});
+ assert.deepEqual(sorted.map(d=>d.number),['1.1.1','1.1.2']);
+});
 function codeBlocks(bs:Block[]):string[]{return bs.flatMap(b=>b.type==='code'?[b.text]:'blocks'in b?codeBlocks(b.blocks):b.type==='list'?b.items.flatMap(codeBlocks):[]);}
 test('C++ examples are byte-for-byte unchanged after entity decoding',async()=>{
  for(const meta of catalog.documents.filter(d=>d.kind==='thinking')){const source=await readFile('../'+meta.source,'utf8'),$=load(source),document=JSON.parse(await readFile('public/'+meta.file,'utf8'));const expected=meta.source.endsWith('.json')?codeBlocks(JSON.parse(source).sections.flatMap((s:{blocks:Block[]})=>s.blocks)):$('main pre').toArray().map(n=>$(n).text().replace(/^\n/,'').replace(/\n$/,''));const actual=codeBlocks(document.sections.flatMap((s:{blocks:Block[]})=>s.blocks));assert.deepEqual(actual,expected,meta.route);}
@@ -45,7 +56,7 @@ test('thinking taxonomy uses authored catalog tags rather than dates or UI label
  for(const e of raw.episodes){const d=catalog.documents.find(d=>d.kind==='thinking'&&d.number===e.number)!;assert.ok(e.category);assert.deepEqual(d.tags,e.tags);assert.equal(d.category,e.category);assert.equal(d.topic,e.topic_en);assert.ok(!d.tags.some(t=>/\d{4}-\d{2}-\d{2}|학습일|게시일|힌트와/.test(t)));}
 });
 test('library matches Korean, English, number and combined tags without mutating source',()=>{
- const docs=catalog.documents.filter(d=>d.kind==='thinking'&&['1.1','1.2','1.3','1.4'].includes(d.number||'')),original=docs.map(d=>d.id),base={query:'',category:'',tags:[] as string[],sort:'number' as const};
+ const docs=catalog.documents.filter(d=>d.kind==='thinking'&&['1.1.1','1.1.2','1.2','1.3','1.4'].includes(d.number||'')),original=docs.map(d=>d.id),base={query:'',category:'',tags:[] as string[],sort:'number' as const};
  assert.equal(filterDocuments(docs,{...base,query:'PALINDROME'}).length,1);
  assert.equal(filterDocuments(docs,{...base,query:'  비트   연산  '})[0].number,'1.4');
  assert.equal(filterDocuments(docs,{...base,query:'1.3'})[0].number,'1.3');
