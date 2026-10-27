@@ -1,0 +1,235 @@
+{
+  "title": "8.14.2 심화 — 참인 경우와 거짓인 경우를 따로 세기",
+  "subtitle": "부분 식의 두 개수를 결합하는 표",
+  "memoKey": "thinking-ctci-8.14-2-draft",
+  "starter": "// 상태 변화와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "식 1 XOR 0 AND 0 OR 1의 완전한 괄호 배치 중 결과가 참인 개수를 구합니다. OR는 하나 이상 참이면 참입니다. 순서는 고정하고 원래 연산자 우선순위는 무시합니다. 같은 결과를 내더라도 괄호 모양이 다르면 별개입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "마지막 연산자를 XOR, AND, OR로 각각 나누어 참·거짓 수를 구하고 합치세요. 전체 괄호 배치 수도 모르는 상태에서 참인 경우 수 하나만으로 직접 결합하기 어려운 이유를 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "풀이 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "먼저 종이에 작은 예의 상태와 경우를 기록해 풀 수 있습니다. 본문에 정한 순서·중복 여부·좌표·범위를 따릅니다. 코드가 있는 페이지는 별도 구현 전제를 함께 확인하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 부분 식에 (거짓 수, 참 수)를 기록하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "XOR의 참 수는 왼쪽 참×오른쪽 거짓 + 왼쪽 거짓×오른쪽 참입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "AND와 OR에서도 필요한 참·거짓 조합을 진리표대로 더하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "마지막 XOR일 때 오른쪽 0 AND 0 OR 1의 두 배치는 각각 참과 거짓이므로 전체도 참 1·거짓 1입니다. 마지막 AND이면 왼쪽 1 XOR 0과 오른쪽 0 OR 1이 모두 참이라 참 1입니다. 마지막 OR이면 오른쪽 1 때문에 왼쪽의 두 배치 모두 참이 되어 참 2입니다. 합계 참 4, 거짓 1입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "왼쪽 (F_L, T_L), 오른쪽 (F_R, T_R)에서 모든 결과쌍의 경우 수는 곱입니다. AND의 참은 T_L·T_R, OR의 거짓은 F_L·F_R, XOR의 참은 T_L·F_R+F_L·T_R입니다. 전체쌍 수에서 해당 수를 빼면 다른 결과 수를 얻습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 마지막 위치별 참 개수\n    accDescr: 마지막 위치별 참 개수의 구체적인 상태와 이동을 표시합니다.\n    N0[\"전체 식의 마지막 연산자\"]\n    N1[\"XOR: 참1 거짓1\"]\n    N2[\"AND: 참1 거짓0\"]\n    N3[\"OR: 참2 거짓0\"]\n    N4[\"합계 참4 거짓1\"]\n    N0 --> N1\n    N0 --> N2\n    N0 --> N3\n    N1 --> N4\n    N2 --> N4\n    N3 --> N4\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: XOR의 두 독립적인 참 경우\n    accDescr: XOR의 두 독립적인 참 경우의 구체적인 상태와 이동을 표시합니다.\n    N0[\"XOR가 참이 되는 조합\"]\n    N1[\"왼쪽참 × 오른쪽거짓\"]\n    N2[\"왼쪽거짓 × 오른쪽참\"]\n    N3[\"두 경우의 수를 합산\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n    N2 --> N3\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 왼쪽 괄호 배치와 오른쪽 괄호 배치는 독립적으로 선택되므로 각 결과 조합의 수가 곱입니다. 진리표가 각 조합을 정확히 한 결과에 보내고 마지막 연산자별 분할은 겹치지 않으므로 곱하고 더한 수가 전체 배치 수입니다. 전체 경우 수도 모르는 상태에서는 참 개수만으로 XOR처럼 상대가 거짓이어야 참이 되는 경우를 직접 계산할 수 없습니다. 다만 부분 식 길이로 전체 괄호 배치 수인 카탈란 수를 별도로 알면 거짓 수=전체 수-참 수로 복원할 수 있습니다. 이 풀이에서는 결합을 명확히 하려고 참·거짓 수를 함께 저장합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 값 n개의 연속 부분 식 O(n²)개마다 분할 O(n)개를 검사하면 O(n³) 시간, 두 결과 수 표 O(n²) 공간입니다. 큰 경우 수의 정수 연산 비용은 별도입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "네 값의 전체 괄호 배치는 5개이며 4+1=5로 검산됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "값 하나 1이면 참 1·거짓 0, 값 하나 0이면 참 0·거짓 1입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "연산자가 모두 AND여도 괄호 배치 수 자체가 한 가지로 줄지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: OR의 참 개수도 직접 세려면? (참, 참), (참, 거짓), (거짓, 참)의 곱 세 항을 더합니다. 전체에서 (거짓, 거짓)을 빼는 식과 같습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-09-01-stock-data/",
+              "text": "다음 주제 9.1.1 기본 — 늦게 온 가격표가 최신 값을 지우지 않게"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 8.14 Boolean Evaluation의 알고리즘 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설·저장소 풀이를 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 기본",
+              "kind": "link",
+              "href": "/thinking-lab/ep-08-14-boolean-evaluation/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

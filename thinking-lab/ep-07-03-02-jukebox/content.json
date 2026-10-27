@@ -1,0 +1,245 @@
+{
+  "title": "7.3.2 심화 — 같은 노래를 신청한 두 사람",
+  "subtitle": "노래 ID와 신청 ID를 분리하기",
+  "memoKey": "thinking-ctci-7.3-2-draft",
+  "starter": "// 상태 변화와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "신청 a는 곡 X, 신청 b는 곡 X, 신청 c는 곡 Y입니다. 같은 곡도 서로 다른 신청이면 각각 한 번 재생합니다. a는 현재 재생 중이고 대기는 [b, c]입니다. 취소는 아직 대기 중인 신청 ID 하나만 제거하며, 재생 중인 신청을 취소하려 하면 실패합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "b 취소, 곡 X의 새 신청 d 도착, 현재 a 종료를 순서대로 처리하세요. 마지막 현재와 대기를 구하고, 곡 이름 X만으로 취소하면 왜 정확히 처리할 수 없는지 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "풀이 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 문제는 명시된 사건을 순서대로 처리하는 종이 모형입니다. 실제 프로그램의 입력 형식·네트워크·장애 복구를 요구하지 않습니다. 식별자는 서로 다른 대상을 구별하며, 같은 이름이나 겉모습이 같다는 이유로 상태를 합치지 않습니다. 본문에 별도로 명시한 원자성·방향·범위 조건을 따릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "a와 b는 같은 곡을 가리키지만 같은 요청이 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "b를 지워도 현재 a는 계속 재생합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "취소 후 남은 대기의 상대 순서를 보존하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "b 취소 후 현재 a:X, 대기 [c:Y]입니다. d:X가 오면 [c:Y, d:X]. a가 끝나면 현재 c:Y, 대기 [d:X]입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "신청 항목은 고유 신청 ID와 곡 ID를 함께 가집니다. 취소는 대기에서 신청 ID를 찾아 그 항목만 제거합니다. 곡 정보는 곡 ID로 공유해도 신청 상태는 합치지 않습니다. X를 지운다는 명령은 a, b, d 중 대상을 특정하지 못합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 같은 곡을 가리키는 다른 요청\n    accDescr: 같은 곡을 가리키는 다른 요청의 구체적인 상태와 이동을 표시합니다.\n    N0[\"신청 a 현재\"]\n    N1[\"신청 b 대기\"]\n    N2[\"곡 X 정보\"]\n    N0 --> N2\n    N1 --> N2\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 취소 후에도 남은 순서 유지\n    accDescr: 취소 후에도 남은 순서 유지의 구체적인 상태와 이동을 표시합니다.\n    N0[\"현재 a:X / 대기 b:X c:Y\"]\n    N1[\"b 취소 → 대기 c:Y\"]\n    N2[\"d:X 추가 → 대기 c:Y d:X\"]\n    N3[\"a 종료 → 현재 c:Y / 대기 d:X\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 고유 신청 ID는 취소 대상을 하나로 결정합니다. 그 항목만 제거하면 다른 요청의 ID, 곡, 순서는 그대로입니다. 재생 중인 ID는 대기에 없고 별도 거절하므로 현재 곡을 뜻하지 않게 멈추지 않습니다. 신청 ID가 다르면 곡 ID가 같아도 독립적인 순서 자리를 가집니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 단순 대기 목록에서 취소 대상 탐색은 O(n), 나머지 상태 O(n)입니다. 곡 정보 공유는 요청의 독립적인 상태를 없애는 것과 다릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "없는 신청 ID 취소는 실패하며 다른 신청을 대신 지우지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 a 취소도 실패입니다. 재생 중단은 별도 행동으로 설계해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "맨 뒤 요청 취소는 앞 순서에 영향을 주지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 신청 ID와 곡 ID가 언제나 같다면 같은 노래를 두 번 신청할 수 있을까요? 중복 신청이 하나로 합쳐져 이 문제의 규칙을 표현하지 못합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-07-04-parking-lot/",
+              "text": "다음 주제 7.4.1 기본 — 작은 차를 어느 칸에 넣을까"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 7.3 Jukebox의 설계 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설·저장소 풀이를 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 기본",
+              "kind": "link",
+              "href": "/thinking-lab/ep-07-03-jukebox/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제 7.4",
+              "kind": "link",
+              "href": "/thinking-lab/ep-07-04-parking-lot/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

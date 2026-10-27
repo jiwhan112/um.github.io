@@ -1,0 +1,245 @@
+{
+  "title": "7.4.2 심화 — 충전기와 높이 제한이 함께 있다면",
+  "subtitle": "단순 우선순위 대신 전체 짝짓기",
+  "memoKey": "thinking-ctci-7.4-2-draft",
+  "starter": "// 상태 변화와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예약 차량 A는 칸 1 또는 2, B는 칸 1, C는 칸 2 또는 3에만 주차할 수 있습니다. 각 차량을 정확히 한 칸에, 한 칸에는 최대 한 대를 배정합니다. 예약은 모두 알려져 있고, 이미 안내한 임시 배치는 확정 전에는 바꿀 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "세 예약을 모두 받는 배치를 찾으세요. A를 칸 1에 먼저 놓은 상태에서 B를 받을 수 없다고 즉시 결론 내리면 왜 틀린지 설명하고, 밀어내기 연쇄로 빈칸을 찾는 절차를 추적하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "풀이 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 문제는 명시된 사건을 순서대로 처리하는 종이 모형입니다. 실제 프로그램의 입력 형식·네트워크·장애 복구를 요구하지 않습니다. 식별자는 서로 다른 대상을 구별하며, 같은 이름이나 겉모습이 같다는 이유로 상태를 합치지 않습니다. 본문에 별도로 명시한 원자성·방향·범위 조건을 따릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "B는 선택지가 하나뿐입니다. A가 다른 칸으로 갈 수 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A를 옮길 칸에 C가 있어도 C의 다른 선택지가 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "차량과 칸을 번갈아 따라가다가 빈칸을 찾으면 이동을 거꾸로 적용하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최종 배치는 B→1, A→2, C→3입니다. 처음 A→1, C→2라면 B가 원하는 칸 1에서 A를 만나고, A의 다른 칸 2에서 C를 만나며, C의 다른 칸 3은 비어 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "경로 B→1→A→2→C→3을 찾은 다음 C를 3, A를 2, B를 1로 옮깁니다. 탐색 중에는 실제 배치를 바꾸지 말고 완전한 빈칸 경로를 찾은 뒤 확정해야 실패한 탐색이 기존 예약을 잃지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 빈칸까지 이어지는 실제 경로\n    accDescr: 빈칸까지 이어지는 실제 경로의 구체적인 상태와 이동을 표시합니다.\n    N0[\"B\"]\n    N1[\"칸1: A 점유\"]\n    N2[\"A\"]\n    N3[\"칸2: C 점유\"]\n    N4[\"C\"]\n    N5[\"칸3: 비어 있음\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n    N3 --> N4\n    N4 --> N5\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 확정은 빈칸부터 역순으로\n    accDescr: 확정은 빈칸부터 역순으로의 구체적인 상태와 이동을 표시합니다.\n    N0[\"C를 칸3으로 이동: 칸2 비움\"]\n    N1[\"A를 칸2로 이동: 칸1 비움\"]\n    N2[\"B를 칸1로 이동\"]\n    N3[\"세 차량 모두 허용 칸 배정\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 경로의 차량→칸 간선은 허용 배정이고, 점유 칸→차량 간선은 현재 소유자를 뜻합니다. 끝의 빈칸부터 거꾸로 이동하면 목적지가 먼저 비워져 충돌이 없고 기존 차량도 모두 남습니다. 같은 차량·칸을 다시 탐색하지 않으면 순환을 피합니다. 모든 가능한 번갈이 경로를 탐색해도 빈칸이 없다면 현재 배정에서 새 차량을 포함하는 더 큰 배정은 존재하지 않습니다. 두 배정의 차이를 따라가면 더 큰 배정은 반드시 이런 빈칸 종료 경로를 만들기 때문입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 허용 간선 E개를 한 번의 방문 표시 탐색으로 훑으면 새 차량 한 대의 추가는 O(V+E), 방문 기록 O(V)입니다. 여러 예약을 하나씩 추가하면 횟수만큼 누적됩니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "B도 칸 1만, A도 칸 1만 가능하면 둘을 동시에 받을 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "탐색 실패 시 기존 A, C 배치를 그대로 유지합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이미 방문한 차량을 다시 따라가지 않아 순환을 막습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 이 방법은 크기가 작은 차를 작은 칸에 넣는 규칙과 어떤 차이가 있나요? 허용 조건이 서로 겹치되 포함 관계가 아닐 수 있으므로 각 차량의 모든 가능한 칸 관계를 다룹니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-07-05-online-book-reader/",
+              "text": "다음 주제 7.5.1 기본 — 같은 책을 읽는 두 사람의 책갈피"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 7.4 Parking Lot의 설계 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설·저장소 풀이를 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 기본",
+              "kind": "link",
+              "href": "/thinking-lab/ep-07-04-parking-lot/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제 7.5",
+              "kind": "link",
+              "href": "/thinking-lab/ep-07-05-online-book-reader/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

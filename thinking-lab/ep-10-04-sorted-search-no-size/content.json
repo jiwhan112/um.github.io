@@ -1,0 +1,371 @@
+{
+  "title": "10.4.1 기본 — 끝 길이를 모르는 목록",
+  "subtitle": "정렬된 정보와 비교 규칙을 이용해 필요한 답을 찾는 사고력 문제",
+  "memoKey": "thinking-ctci-10.4-draft",
+  "starter": "// 관찰한 규칙, 불변조건, 반례를 자유롭게 적어 보세요.\n// 풀이의 전제와 경계 상황도 함께 정리하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "10.4.1 기본 — 끝 길이를 모르는 목록"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정렬된 목록 [3,6,10,15,22,31]이 있지만 길이를 알려 주는 기능은 없습니다. read(i)를 부르면 i번 값 또는 범위 밖이라는 OUT 표식만 받습니다. 목표 15를 찾기 위해 1,2,4,8처럼 검사 위치를 늘리는 방법을 쓰세요. 어느 구간을 확보한 뒤 이진 탐색할 수 있는지 실제 질의 순서로 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "위치는 0부터 시작합니다. 목록은 유한하고 비내림차순이며 읽는 동안 바뀌지 않습니다. OUT은 실제 정수 값과 다른 별도 상태입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 기본 예의 값은 서로 다릅니다. 알고리즘은 예시에 적힌 길이를 직접 사용하지 않고 read만 호출합니다. 종이 계산에는 정수 오버플로가 없으며 실제 구현은 위치 배증의 상한을 검사해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "호출"
+                  }
+                ],
+                [
+                  {
+                    "text": "응답"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "read(1)"
+                  }
+                ],
+                [
+                  {
+                    "text": "6"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "read(2)"
+                  }
+                ],
+                [
+                  {
+                    "text": "10"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "read(4)"
+                  }
+                ],
+                [
+                  {
+                    "text": "22"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 바뀌는 상태와 바뀌지 않아야 할 규칙을 적어 보세요. 답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "검사한 값이 아직 목표보다 작으면 더 뒤를 봐야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "목표 이상인 값이나 OUT을 처음 만났다면 그 위치는 상한이 됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "위치 2에서 10, 위치 4에서 22를 봤다면 그 사이에 목표가 있는지 확인하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "read(1)=6, read(2)=10은 모두 15보다 작습니다. read(4)=22에서 목표 이상의 값을 만났으므로 4보다 뒤를 볼 필요가 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "마지막으로 목표보다 작은 위치가 2이므로 후보는 위치 3~4입니다. read(3)=15를 확인해 위치 3을 찾습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일반적으로 검사 위치를 두 배씩 늘려 목표 이상 값 또는 OUT을 얻으면 유한한 상한이 생깁니다. 그 안에서 이진 탐색합니다. OUT은 실제 최댓값을 꾸며 넣는 대신 “이 위치 이후에는 항목이 없다”는 분기 정보로 사용합니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"위치 1: 값 6\"] --> B[\"위치 2: 값 10\"]\n B --> C[\"위치 4: 값 22\"]\n C --> D[\"후보 위치 3부터 4\"]\n D --> E[\"위치 3: 목표 15\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"배증 위치를 읽음\"] --> B{\"값이 목표보다 작은가?\"}\n B -->|\"예\"| C[\"위치를 두 배로 늘림\"]\n B -->|\"목표 이상 또는 OUT\"| D[\"이진 탐색의 상한 확보\"]\n C --> A"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "목표보다 작은 값을 본 위치 이하에는 목표가 없고, 목표 이상 값이나 OUT을 본 위치보다 뒤는 가장 이른 후보를 찾는 데 필요하지 않습니다. 유한 목록이므로 배증은 결국 OUT 또는 충분히 큰 값에 닿습니다. 이 구간 안에서 범위를 줄이면 목표를 놓치지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "목표가 들어갈 위치를 p라 하면 상한 찾기와 이진 탐색에 각각 O(log(p+2))번 read가 필요합니다. 반복문 추가 공간은 O(1)입니다. 길이를 먼저 끝까지 세는 O(n)읽기는 필요 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "목표가 첫 값보다 작으면 없을 수 있으며 0번도 확인해야 합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "빈 목록이면 read(0)도 OUT입니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "목표가 모든 값보다 크면 OUT을 상한으로 얻고 없다고 판정합니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: OUT을 -1로 표현하면서 실제 목록에도 -1이 들어올 수 있으면 어떤 문제가 생길까요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "실제 값과 범위 밖을 구분할 수 없습니다. 상태와 값을 분리하거나, -1이 절대로 실제 값이 될 수 없다는 입력 계약을 명시해야 합니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "심화의 read 전용 모델에서 길이 0~8의 정렬 목록과 목표 2,970조합을 실제 lower_bound 기준과 대조했습니다. OUT을 실제 값과 다른 상태로 처리했습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "이 페이지는 종이 추론형이며 별도의 C++ 프로그램 실행을 주장하지 않습니다. 브라우저 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 심화 문제",
+              "href": "/thinking-lab/ep-10-04-02-sorted-search-no-size/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

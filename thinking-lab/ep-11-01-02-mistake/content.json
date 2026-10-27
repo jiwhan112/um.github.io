@@ -1,0 +1,245 @@
+{
+  "title": "11.1.2 심화 — 두 실수를 한 번에 구별하는 검사",
+  "subtitle": "예상 결과 벡터로 후보를 식별하기",
+  "memoKey": "thinking-ctci-11.1-2-draft",
+  "starter": "// 상태 변화와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "별 개수 세기 프로그램은 정확히 셋 중 하나입니다. 정상 N은 모든 항목을 셉니다. 후보 L은 마지막 항목만 빼고 셉니다. 후보 F는 첫 항목만 두 번 세고 나머지는 한 번씩 셉니다. 빈 목록에서 셋 모두 0입니다. 검사 입력은 길이 1 또는 2의 별·빈칸 목록 하나만 사용할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출력 숫자 한 번으로 세 후보를 모두 구별할 입력을 찾으세요. 가능한 입력을 빠짐없이 살펴 최소 길이도 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "모형의 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "본문에 명시한 유한한 규칙과 관찰만 사용하는 종이 추론 문제입니다. 실제 제품 전체의 품질·안전성을 보증하거나 내부 시스템 접근을 요구하지 않습니다. 예측과 실제 관찰을 구분하여 기록하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 입력에 대한 N, L, F의 출력을 나란히 적으세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "별이 첫 항목이자 마지막 항목인 경우를 생각하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 출력이 모두 다르면 한 번의 실행으로 후보를 알 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "[별]이면 N=1, L=0, F=2로 모두 다릅니다. [빈칸]은 모두 0이어서 구별하지 못합니다. 허용된 최소 길이가 1이므로 [별]은 최소 길이 해답입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이 2의 [별, 별]도 (2, 1, 3)으로 구별합니다. [별, 빈칸]은 (1, 1, 2), [빈칸, 별]은 (1, 0, 1), [빈칸, 빈칸]은 (0, 0, 0)이므로 실패합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 같은 입력의 세 대안\n    accDescr: 같은 입력의 세 대안의 구체적인 상태와 이동을 표시합니다.\n    N0[\"입력 별 하나\"]\n    N1[\"N: 한 번 세어 1\"]\n    N2[\"L: 마지막 제외하여 0\"]\n    N3[\"F: 첫 항목 두 번 세어 2\"]\n    N0 --> N1\n    N0 --> N2\n    N0 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 구별 못 하는 입력\n    accDescr: 구별 못 하는 입력의 구체적인 상태와 이동을 표시합니다.\n    N0[\"입력 별 다음 빈칸\"]\n    N1[\"N과 L 모두 1\"]\n    N2[\"F만 2\"]\n    N3[\"출력 1이면 N과 L 구별 불가\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 검사 결과가 0, 1, 2이면 각각 L, N, F에만 해당합니다. 이 결론은 프로그램이 반드시 이 셋 중 하나라는 전제에 의존합니다. 다른 버그를 가진 프로그램이 같은 출력을 내는 가능성까지 배제하지는 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 길이 1·2의 여섯 입력에 대해 세 출력을 비교하는 유한 검사입니다. 일반화하면 후보 k개와 검사 길이 n에 O(kn)입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "빈 목록을 허용해도 세 출력이 같으므로 더 짧은 해답은 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "[빈칸, 별]에서는 N과 F가 충돌합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "관측 출력이 3이면 이 길이 1 입력과 세 후보라는 가정 중 하나가 틀렸습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 알려진 후보 식별과 전체 정확성 검증은 왜 다른가요? 후보 식별은 유한한 가설 중 선택하는 일이고, 정확성 검증은 정해진 모든 입력에 대한 규칙 준수를 확인하는 일입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-11-02-random-crashes/",
+              "text": "다음 주제 11.2.1 기본 — 가끔 멈추는 사진 정리기"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 11.1 Mistake의 테스트 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 기본",
+              "kind": "link",
+              "href": "/thinking-lab/ep-11-01-mistake/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제 11.2",
+              "kind": "link",
+              "href": "/thinking-lab/ep-11-02-random-crashes/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

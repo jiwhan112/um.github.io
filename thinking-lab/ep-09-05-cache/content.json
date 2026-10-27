@@ -1,0 +1,426 @@
+{
+  "title": "9.5.1 기본 — 두 자리 캐시에서 무엇을 남길까?",
+  "subtitle": "작은 기록과 장애 사례로 검증하는 시스템 설계 사고력 문제",
+  "memoKey": "thinking-ctci-9.5-draft",
+  "starter": "// 데이터의 의미, 불변조건과 실패 시 행동을 적어 보세요.\n// 이 문제는 전체 앱 구현이 아니라 작은 설계의 정확성을 설명하는 연습입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "9.5.1 기본 — 두 자리 캐시에서 무엇을 남길까?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "읽기 전용 원본 A·B·C를 보관하는 서비스에 항목 두 개짜리 캐시가 있습니다. 요청 순서는 A,B,A,C,B입니다. 캐시가 차면 가장 오래 사용하지 않은 항목을 내보내는 LRU 규칙을 적용하세요. 각 요청의 적중 여부, 처리 뒤 캐시 순서, 원본 읽기 횟수를 구하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "데이터·규모·실패 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 캐시는 비어 있습니다. 항목 크기는 모두 같고 원본은 변하지 않습니다. 캐시 적중이면 그 항목을 가장 최근 위치로 옮깁니다. 실패이면 원본을 한 번 읽어 최근 위치에 넣고 용량을 넘으면 가장 오래된 항목 하나를 제거합니다. 표기 순서는 오래된 항목→최근 항목입니다. 동시 요청과 만료는 없습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "요청 번호"
+                  }
+                ],
+                [
+                  {
+                    "text": "읽을 항목"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "A"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "B"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "3"
+                  }
+                ],
+                [
+                  {
+                    "text": "A"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "4"
+                  }
+                ],
+                [
+                  {
+                    "text": "C"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "5"
+                  }
+                ],
+                [
+                  {
+                    "text": "B"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A를 두 번째 읽을 때 캐시에서 위치가 갱신되는지 확인하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "네 번째 요청 C에서 제거할 항목은 가장 먼저 들어온 항목이 아니라 가장 오래 사용하지 않은 항목입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "캐시 실패 횟수가 곧 원본 읽기 횟수입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "적중 여부는 실패·실패·적중·실패·실패이며 원본 읽기는 4번입니다. 처리 뒤 순서는 [A], [A,B], [B,A], [A,C], [C,B]입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 A와 B를 각각 읽어 두 자리를 채웁니다. 세 번째 A는 적중하면서 최근 위치로 옮겨 B가 가장 오래된 항목이 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C를 넣을 때 B를 제거하므로 [A,C]입니다. 마지막 B는 없어서 원본을 읽고 A를 제거해 [C,B]가 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A의 적중에서 순서를 바꾸지 않으면 FIFO처럼 동작해 네 번째에 A를 제거합니다. 이름만 LRU라고 붙이는 것이 아니라 사용 시점마다 순서를 갱신해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 실제 LRU 순서\n    accDescr: 오래된 항목을 왼쪽에 둔다\n    A[\"A 실패: [A]\"] --> B[\"B 실패: [A,B]\"]\n    B --> C[\"A 적중: [B,A]\"]\n    C --> D[\"C 실패: B 제거 → [A,C]\"]\n    D --> E[\"B 실패: A 제거 → [C,B]\"]\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 적중 때 순서를 바꾸는 이유\n    accDescr: 같은 직전 캐시에서도 규칙이 다르면 제거 대상이 달라진다\n    S[\"[A,B]에서 A를 다시 사용\"] --> A[\"LRU: [B,A]\"]\n    A --> Y[\"다음 C에서 B 제거\"]\n    S --> B[\"순서 갱신 안 함: [A,B]\"]\n    B --> N[\"다음 C에서 A 제거: LRU와 다름\"]\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 처리 뒤 캐시 순서가 보관된 항목의 마지막 사용 시점 순서와 같다는 불변조건을 둡니다. 적중 항목을 끝으로 옮기면 그 사용 시점이 가장 최근이 되고, 새 항목도 끝에 넣으면 맞습니다. 용량 초과 때 맨 앞을 제거하므로 정확히 가장 오래 사용하지 않은 항목이 사라집니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "해시 인덱스와 연결된 순서 구조를 함께 쓰면 조회·이동·제거를 평균 O(1)로 구현할 수 있습니다. 종이에서는 두 항목을 직접 옮기면 충분합니다. LRU가 모든 미래 요청에서 최적이라는 주장은 하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "변경 조건"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "확인"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "용량 0"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "모든 요청이 원본 읽기"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "A만 반복"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "첫 요청 뒤 적중"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "항목 크기가 서로 다름"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "개수 기준 용량 계약이 달라짐"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "원본이 변경됨"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "교체 정책 외 일관성 정책도 필요"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 같은 순서에서 용량이 세 개이면 원본을 몇 번 읽을까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A·B·C를 처음 읽는 세 번뿐입니다. 마지막 B도 남아 있어 적중합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 항목, 길이 0~7, 용량 0~3의 13,120개 LRU 사례를 마지막 사용 시각 기준과 대조했습니다. 원자적 버전 하한 상승과 과거 채움의 720개 순서에서도 보관 값이 하한보다 낮지 않다는 불변조건을 확인했습니다. 이는 명시된 원자성 가정의 모형 검사입니다. Python으로 실제 실행한 유한 사례·가정 모형 검산입니다. 실행용 C++ 코드를 제공하는 문제는 아닙니다. 브라우저 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서의 주제명은 학습 순서를 위한 연결 표지입니다. 이 자료는 유한한 사례와 명시된 가정으로 별도 구성한 설계 사고력 문제이며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-09-05-02-cache/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

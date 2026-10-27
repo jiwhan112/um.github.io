@@ -1,0 +1,370 @@
+{
+  "title": "8.6.1 기본 — 세 개의 고리에 접시 옮기기",
+  "subtitle": "크기가 다른 접시 세 장이 고리 A에 큰 것부터 아래로 쌓여 있습니다.",
+  "memoKey": "thinking-ctci-8.6-draft",
+  "starter": "// 문제에서 발견한 규칙과 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "크기가 다른 접시 세 장이 고리 A 에 큰 것부터 아래로 쌓여 있습니다. 빈 고리 B 와 C 를 이용하여 세 장을 모두 C 로 옮기세요. 한 번에 맨 위 접시 한 장만 옮길 수 있고 작은 접시 위에 큰 접시를 놓을 수 없습니다. 최소 이동 횟수와 그 순서를 찾으세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "접시 1 이 가장 작고 접시 3 이 가장 큽니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "고리에는 접시를 쌓을 수 있으며 바닥은 어떤 접시도 받을 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출발 상태와 목표 상태에서 각 더미의 아래→위 순서는 3,2,1 입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "작은 경우"
+                  }
+                ],
+                [
+                  {
+                    "text": "최소 이동"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "접시 0 장"
+                  }
+                ],
+                [
+                  {
+                    "text": "0 번"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "접시 1 장"
+                  }
+                ],
+                [
+                  {
+                    "text": "A→C 한 번"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 자신의 답과 근거를 적어 보세요. 힌트와 정답은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가장 큰 접시 3 을 움직이기 전에 위의 두 장은 어디에 있어야 하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "접시 3 을 C 로 옮긴 다음 두 장을 다시 그 위로 옮겨야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 장을 옮기는 작은 문제를 세 번 이동으로 풀어 보세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "먼저 작은 두 장을 A 에서 B 로 옮깁니다. 그 순서는 1:A→C, 2:A→B, 1:C→B 입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "접시 3 을 A→C 로 옮깁니다. 이제 작은 두 장을 B 에서 C 로 옮깁니다: 1:B→A, 2:B→C, 1:A→C. 총 7 번입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "접시 3 의 첫 이동 전에는 작은 두 장을 나머지 고리에 모아야 하므로 최소 3 번이 필요합니다. 접시 3 의 마지막 목표 이동 후에도 그 두 장을 목표로 모으는 최소 3 번이 필요합니다. 따라서 7 번보다 짧을 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 큰 접시를 중심으로 세 단계\n A[\"처음:A에321\"] --> B[\"작은21을B로:3회\"]\n B --> C[\"큰3을C로:1회\"]\n C --> D[\"작은21을C로:3회\"]\n D --> E[\"총7회\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 일곱 이동의 실제 순서\n A[\"1:A에서C\"] --> B[\"2:A에서B\"] --> C[\"1:C에서B\"] --> D[\"3:A에서C\"]\n D --> E[\"1:B에서A\"] --> F[\"2:B에서C\"] --> G[\"1:A에서C\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — n장 해법은 작은 n-1장을 보조 고리로 옮기고 큰 접시를 목표로 한 번 이동한 뒤 작은 더미를 목표로 옮깁니다. 이는 합법적인 2T(n-1)+1회 해법입니다. 어떤 다른 해법에서도 큰 접시의 첫 이동 전에는 작은 n-1장이 제3의 고리에 모여 있어야 하므로 최소 T(n-1)회가 필요합니다. 큰 접시가 목표에 도착하는 마지막 이동 직후에도 작은 더미는 다른 고리에 모여 있으므로 이후 최소 T(n-1)회가 필요합니다. 이 앞뒤 구간은 겹치지 않고 큰 접시를 적어도 한 번 움직이므로 같은 하한을 얻습니다. 따라서 T(0)=0, T(n)=2T(n-1)+1=2^n-1입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 실제 이동을 모두 출력하면 Θ(2^n)시간입니다. 출력 결과를 제외한 재귀 호출 스택은 O(n)입니다. 답 숫자만 계산하는 것과 이동을 실제로 수행하는 비용은 구별해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "두 장"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "3 번"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "작은 접시 위 큰 접시 이동"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "불법"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "가장 큰 접시를 먼저 이동"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "위에 작은 접시가 있어 불법"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "접시 0 장"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "아무 이동 없음"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 페이지는 종이 추론과 경계·반례 검산으로 검토합니다. 설명에 없는 프로그램 실행이나 실험을 했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 네 장이면 몇 번인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 번의 세 장 이동과 큰 접시 한 번으로 7+1+7=15 번입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — B 와 C 의 이름이 바뀌어도 작은 문제의 원리는 바뀌나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 출발·목표·보조의 역할만 바꾸어 같은 절차를 사용합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 Towers of Hanoi 주제명과 학습 순서를 참고하여 새로 만든 문제입니다. 번호·주제 메타데이터를 확인했으며 도서 지문이나 공식 해설을 복제한 자료가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 8.6.2",
+              "href": "/thinking-lab/ep-08-06-02-towers-of-hanoi/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

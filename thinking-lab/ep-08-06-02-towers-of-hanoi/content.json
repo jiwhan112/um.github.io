@@ -1,0 +1,379 @@
+{
+  "title": "8.6.2 심화 — 종이 위에서 멈춘 순간의 접시",
+  "subtitle": "접시 네 장을 고리 A에서 C로 옮기는 표준 최소 이동 절차를 따릅니다.",
+  "memoKey": "thinking-ctci-8.6-2-draft",
+  "starter": "// 문제에서 발견한 규칙과 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "접시 네 장을 고리 A 에서 C 로 옮기는 표준 최소 이동 절차를 따릅니다. 절차는 작은 n-1 장을 보조 고리로, 가장 큰 한 장을 목표로, 작은 n-1 장을 목표로 옮기는 순서입니다. 처음부터 일곱 이동을 모두 나열하지 않고, 7 번째 이동의 접시와 방향 및 그 직후 세 고리의 상태를 찾으세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "접시 번호는 1 이 가장 작고 4 가 가장 큽니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "고리 상태는 아래→위 순서로 적고 빈 고리는 ∅로 적습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "0 번째 이동 직후는 초기 상태입니다. 일반 n 의 k 는 1≤k≤2^n-1 범위라고 가정합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "별도 작은 예시"
+                  }
+                ],
+                [
+                  {
+                    "text": "결론"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "접시 2 장 A→C 의 2 번째 이동"
+                  }
+                ],
+                [
+                  {
+                    "text": "접시 2:A→C"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "같은 절차의 2 번째 직후"
+                  }
+                ],
+                [
+                  {
+                    "text": "A 는∅,B 는 1,C 는 2"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 자신의 답과 근거를 적어 보세요. 힌트와 정답은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "네 장 절차의 첫 묶음은 작은 세 장을 어디에서 어디로 옮기나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그 첫 묶음의 길이는 2^3-1=7 입니다. 따라서 질문은 그 묶음의 어느 순간인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 장 A→B 절차의 마지막 이동은 가장 작은 접시가 어느 고리에서 어디로 가는지 추적하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "네 장 전체의 첫 7 회는 세 장을 A 에서 B 로 옮기는 묶음입니다. 따라서 7 회 직후 작은 세 장은 B 에 모두 모이고 가장 큰 4 는 A 에 그대로 있습니다. C 는 비어 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 장 A→B 절차는 두 장 A→C, 접시 3 A→B, 두 장 C→B 입니다. 마지막 묶음인 두 장 C→B 의 마지막 이동은 접시 1 A→B 입니다. 이것이 전체 7 번째 이동입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일반적으로 첫 묶음 길이 L=2^(n-1)-1 과 k 를 비교합니다. k≤L 이면 출발→보조 작은 문제, k=L+1 이면 큰 접시 출발→목표, 그보다 크면 k-L-1 번째 보조→목표 작은 문제로 내려갑니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 7 번째가속한묶음\n A[\"네장A에서C:15회\"] --> B[\"1..7회:세장A에서B\"]\n A --> C[\"8회:접시4 A에서C\"]\n A --> D[\"9..15회:세장B에서C\"]\n B --> E[\"7회직후:A4 B321 C빈칸\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 역할을 바꾸며 마지막 이동 찾기\n A[\"세장A에서B의7회째\"] --> B[\"두장C에서B의3회째\"]\n B --> C[\"한장A에서B의1회째\"]\n C --> D[\"접시1 A에서B\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 표준 절차는 순서가 정해진 세 묶음의 연결입니다. 묶음 길이로 k 가 속한 정확히 한 묶음을 고를 수 있고, 첫·마지막 묶음에서는 접시 수가 하나 줄면서 고리 역할과 국소 이동 번호만 바뀝니다. 이 대응을 한 장까지 반복하면 해당 이동을 정확하게 찾습니다. 상태 질문은 완성된 첫 묶음의 목적과 아직 움직이지 않은 큰 접시를 함께 확인하므로 A=[4],B=[3,2,1],C=∅입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 특정 이동 하나는 n 이 한 단계씩 감소하므로 O(n)단계, 재귀라면 O(n)스택입니다. 전체 이동 목록을 생성하는 Θ(2^n)작업과 다릅니다. 아주 큰 n 에서는 묶음 길이의 큰 정수 계산 비용을 별도로 고려합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "같은문제 8 번째이동"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "접시 4 A→C"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "같은문제 15 번째직후"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "C 에 4321,나머지비어있음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "k 가 0"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "이동질문에는범위밖,상태는초기상태"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "보조고리역할을고정 B 로둠"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "재귀 하위 문제에서 잘못된 방향"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 페이지는 종이 추론과 경계·반례 검산으로 검토합니다. 설명에 없는 프로그램 실행이나 실험을 했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 세 장 A→C 의 4 번째 이동은?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 3 회 뒤이므로 접시 3 A→C 입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — k 번째 이동을 안다고 전체 상태가 바로 정해지나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "출발 상태와 그 앞의 절차도 필요합니다. 이 문제는 첫 묶음의 완성 시점이라는 구조를 이용해 상태를 구했습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 Towers of Hanoi 주제명과 학습 순서를 참고하여 새로 만든 문제입니다. 번호·주제 메타데이터를 확인했으며 도서 지문이나 공식 해설을 복제한 자료가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기본 복습으로: 8.6.1",
+              "href": "/thinking-lab/ep-08-06-towers-of-hanoi/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제: 8.7",
+              "href": "/thinking-lab/ep-08-07-permutations-without-dups/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "title": "8.3.1 기본 — 번호와 자리가 만나는 책갈피",
+  "subtitle": "오름차순으로 정리한 일곱 장의 카드가 있습니다.",
+  "memoKey": "thinking-ctci-8.3-draft",
+  "starter": "// 문제에서 발견한 규칙과 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "오름차순으로 정리한 일곱 장의 카드가 있습니다. 왼쪽부터 자리 번호는 0,1,2,3,4,5,6 이고 카드 값은 -3,-1,1,3,6,8,10 입니다. 값과 자리 번호가 같은 카드를 하나 찾으세요. 모든 카드를 왼쪽부터 읽지 않고 가운데 비교로 탐색 범위를 줄이는 이유를 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "카드 값은 정수이며 서로 다르고 작은 값부터 엄격하게 증가합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "자리 번호는 0 부터 시작합니다. 음수 값도 허용합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "조건을 만족하는 카드가 여러 장이면 아무 한 장을 찾으면 됩니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "별도 카드 목록"
+                  }
+                ],
+                [
+                  {
+                    "text": "일치 자리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "-1,1,5"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1,2,3"
+                  }
+                ],
+                [
+                  {
+                    "text": "없음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 자신의 답과 근거를 적어 보세요. 힌트와 정답은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가운데 자리 m 의 값 a[m]과 m 을 비교하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "a[m]>m 이면 오른쪽의 서로 다른 정수 값은 적어도 얼마나 증가하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "a[m]<m 일 때 같은 논리를 왼쪽에 적용해 보세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "주어진 가운데 자리는 3 이고 a[3]=3 이므로 답은 자리 3 입니다. 이는 우연히 바로 찾은 경우이며 범위를 줄이는 규칙도 따로 확인해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "값이 자리보다 크다면 오른쪽 i 에서는 a[i]≥a[m]+(i-m)>i 입니다. 따라서 오른쪽에는 답이 없습니다. 왼쪽만 남깁니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "값이 자리보다 작다면 왼쪽 i 에서는 a[i]≤a[m]-(m-i)<i 이므로 왼쪽에 답이 없습니다. 오른쪽만 남깁니다. 값이 같을 때만 반환합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 실제 목록의 가운데 검사\n A[\"자리:0 1 2 3 4 5 6\"] --> B[\"값:-3 -1 1 3 6 8 10\"]\n B --> C[\"m=3:값3=자리3\"]\n C --> D[\"자리3 반환\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 가운데 값이 너무 큰 별도 경우\n A[\"m=2,값4\"] --> B[\"자리3의값은최소5\"]\n B --> C[\"자리4의값은최소6\"]\n A --> D[\"답 후보는자리0..1만\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 서로 다른 정수의 정렬에서는 인접 값이 최소 1 씩 증가합니다. 이 하한이 위의 부등식을 보장하므로 버린 절반에는 답이 없습니다. 남긴 구간에서 같은 논리를 반복하다 일치를 찾으면 정답이고 구간이 비면 어디에도 답이 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 구간을 절반씩 줄이므로 n 개 카드에서 O(log n)비교입니다. 반복문으로 경계 두 개를 저장하면 O(1)추가 공간이며, 재귀로 쓰면 호출 스택 O(log n)입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "카드 없음"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "일치 없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "값 0 한 장"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "자리 0 일치"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "값-1 한 장"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0,1,2"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "여러 답 중 하나면 됨"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 페이지는 종이 추론과 경계·반례 검산으로 검토합니다. 설명에 없는 프로그램 실행이나 실험을 했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 가장 왼쪽 답이 필요하면 바로 반환해도 되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "안 됩니다. 일치를 후보로 기억한 뒤 더 왼쪽을 조사하는 추가 조건이 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 실수 값이 모두 다르기만 하면 증명이 유지되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 인접 증가량이 최소 1 이라는 정수 조건이 깨집니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 Magic Index 주제명과 학습 순서를 참고하여 새로 만든 문제입니다. 번호·주제 메타데이터를 확인했으며 도서 지문이나 공식 해설을 복제한 자료가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 8.3.2",
+              "href": "/thinking-lab/ep-08-03-02-magic-index/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

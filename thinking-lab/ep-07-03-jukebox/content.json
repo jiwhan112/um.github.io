@@ -1,0 +1,225 @@
+{
+  "title": "7.3.1 기본 — 신청곡과 지금 흐르는 곡",
+  "subtitle": "재생 목록에서 하나를 분리하기",
+  "memoKey": "thinking-ctci-7.3-draft",
+  "starter": "// 상태 변화와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "음악 상자에는 현재 재생 중인 곡 하나와 신청 순서대로 기다리는 곡 목록이 있습니다. 아무 곡도 재생하지 않을 때 신청이 들어오면 바로 재생합니다. 재생 중에 들어온 신청은 대기 뒤에 놓습니다. 곡이 끝나면 대기 앞을 꺼내 재생합니다. 처음에는 재생 중인 곡이 없고 대기 목록도 비어 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "곡 A 신청, 곡 B 신청, 곡 C 신청, 현재 곡 종료, 곡 D 신청을 순서대로 처리하세요. 최종 재생 곡과 대기 순서를 구하고 현재 곡을 대기 목록에도 남겨두면 생기는 오류를 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "풀이 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 문제는 명시된 사건을 순서대로 처리하는 종이 모형입니다. 실제 프로그램의 입력 형식·네트워크·장애 복구를 요구하지 않습니다. 식별자는 서로 다른 대상을 구별하며, 같은 이름이나 겉모습이 같다는 이유로 상태를 합치지 않습니다. 본문에 별도로 명시한 원자성·방향·범위 조건을 따릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 신청은 대기에서 머무르지 않고 바로 재생됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "곡 종료는 대기 맨 앞 하나만 현재로 옮깁니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 재생과 다음 재생 예정은 서로 다른 상태입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A는 즉시 재생됩니다. B, C는 대기합니다. A가 끝나면 B가 현재가 되고 대기는 [C]. D가 오면 현재 B, 대기 [C, D]입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "신청은 현재가 비었을 때 현재에, 아니면 대기 뒤에 넣습니다. 종료는 현재를 비운 뒤 대기가 있으면 앞 항목을 제거하여 현재에 놓습니다. 현재가 비었는데 대기가 있는 상태를 사건 처리 끝에 남기지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 신청 세 번\n    accDescr: 신청 세 번의 구체적인 상태와 이동을 표시합니다.\n    N0[\"A 신청 → 현재 A / 대기 없음\"]\n    N1[\"B 신청 → 현재 A / 대기 B\"]\n    N2[\"C 신청 → 현재 A / 대기 B C\"]\n    N0 --> N1\n    N1 --> N2\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 종료와 추가 신청\n    accDescr: 종료와 추가 신청의 구체적인 상태와 이동을 표시합니다.\n    N0[\"A 종료 → B를 대기에서 제거\"]\n    N1[\"현재 B / 대기 C\"]\n    N2[\"D 신청 → 현재 B / 대기 C D\"]\n    N0 --> N1\n    N1 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 각 신청은 대기·재생·종료 중 하나에만 존재합니다. 현재에 옮길 때 대기에서 제거하므로 한 신청을 두 번 재생하지 않습니다. 모든 이동이 줄 앞에서 일어나므로 신청 순서를 보존합니다. 현재와 대기 목록을 따로 두면 화면에 표시되는 지금 곡과 다음 곡도 모호하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: FIFO 대기 줄을 쓰면 신청·종료 각각 O(1), 대기 n개에 O(n) 공간입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 곡만 있다가 끝나면 현재와 대기 모두 빕니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재가 없는데 종료 사건이 오면 상태를 바꾸지 않고 잘못된 사건으로 처리합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 문제에는 임의 건너뛰기나 반복 재생 규칙이 없습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 대기에서 B를 제거하지 않고 현재에도 B를 넣으면 A 다음 무엇이 잘못될까요? B가 끝나도 대기 앞 B를 다시 꺼내 같은 신청을 반복 재생합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 7.3 Jukebox의 설계 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설·저장소 풀이를 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 심화",
+              "kind": "link",
+              "href": "/thinking-lab/ep-07-03-02-jukebox/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "title": "8.4.1 기본 — 소풍 가방의 선택표",
+  "subtitle": "소풍에 가져갈 선택 물품은 책 B, 과일 F, 우산 U의 세 가지입니다.",
+  "memoKey": "thinking-ctci-8.4-draft",
+  "starter": "// 문제에서 발견한 규칙과 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "소풍에 가져갈 선택 물품은 책 B, 과일 F, 우산 U 의 세 가지입니다. 각 물품은 넣거나 빼며, 가방에 넣는 순서는 구별하지 않습니다. 가능한 가방 내용을 빠짐없이 나열하고 총 몇 가지인지 설명하세요. 아무것도 넣지 않는 경우도 포함합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "각 물품은 종류별로 한 개이며 서로 구별됩니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "B,F 와 F,B 는 같은 가방 내용입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "빈 가방은 빈 집합 ∅로 적습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "별도 물품"
+                  }
+                ],
+                [
+                  {
+                    "text": "가능한 내용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "X 하나"
+                  }
+                ],
+                [
+                  {
+                    "text": "∅,{X}"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "선택 물품 없음"
+                  }
+                ],
+                [
+                  {
+                    "text": "∅ 한 가지"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 자신의 답과 근거를 적어 보세요. 힌트와 정답은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "B 를 넣지 않은 가방과 넣은 가방을 나누세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "F 와 U 로 만든 모든 가방에 B 를 각각 붙이면 어떤 묶음이 생기나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 물품에 아니오/예 두 결정을 차례로 붙이면 같은 가방을 두 번 만들까요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "F,U 로 만든 내용은 ∅,{F},{U},{F,U}입니다. 여기에 B 를 넣지 않은 묶음과 각각 B 를 넣은 묶음을 만듭니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "전체는 ∅,{F},{U},{F,U},{B},{B,F},{B,U},{B,F,U}로 8 가지입니다. 출력 순서는 자유지만 같은 내용은 두 번 적지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "물품마다  넣음/뺌을 한 번 결정하므로 2×2×2=8 입니다. 크기별로 세어도 1+3+3+1=8 로 검산됩니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 물품 B 를추가하는두묶음\n A[\"F,U의4가지\"] --> B[\"B없음:4가지\"]\n A --> C[\"각각B추가:4가지\"]\n B --> D[\"겹치지않는전체8가지\"]\n C --> D"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 선택의작은나무\n A[\"B선택\"] --> B[\"B뺌\"]\n A --> C[\"B넣음\"]\n B --> D[\"F,U의4결정\"]\n C --> E[\"F,U의4결정\"]\n D --> F[\"4개서로다른가방\"]\n E --> G[\"다른4개가방\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 어떤 가방 내용도 B 가 있거나 없는 둘 중 정확히 하나입니다. B 가 있는 가방에서 B 를 빼면 나머지 물품의 가방과 일대일로 대응합니다. 이 분할을 물품이 없을 때의 빈 가방 한 가지까지 반복하므로 누락과 중복 없이 모든 부분집합을 만듭니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — n 개 물품이면 가방 종류는 2^n 개입니다. 모든 결과의 물품 목록을 실제 복사해 적으면 총 출력량과 시간이 O(n·2^n), 작업용 선택 메모는 결과 저장을 제외하고 O(n)입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 가방을 빼기"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "한 경우누락"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "BF 와 FB 를둘다쓰기"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "순열과혼동한중복"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0 개물품"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "빈가방 1 가지"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "2 개물품"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "4 가지"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 페이지는 종이 추론과 경계·반례 검산으로 검토합니다. 설명에 없는 프로그램 실행이나 실험을 했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 모든 물품을 넣은 가방은 몇 번 생기나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "매 단계 넣음을 선택하는 유일한 결정열에서 한 번입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 네 번째 물품을 더하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기존 8 개를 넣음/뺌 두 묶음으로 나눠 16 개가 됩니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 Power Set 주제명과 학습 순서를 참고하여 새로 만든 문제입니다. 번호·주제 메타데이터를 확인했으며 도서 지문이나 공식 해설을 복제한 자료가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 8.4.2",
+              "href": "/thinking-lab/ep-08-04-02-power-set/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

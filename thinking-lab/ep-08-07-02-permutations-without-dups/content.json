@@ -1,0 +1,394 @@
+{
+  "title": "8.7.2 심화 — 서로 붙으면 안 되는 두 이름표",
+  "subtitle": "서로 다른 이름표 A,B,C,D를 한 줄로 놓습니다.",
+  "memoKey": "thinking-ctci-8.7-2-draft",
+  "starter": "// 문제에서 발견한 규칙과 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "서로 다른 이름표 A,B,C,D 를 한 줄로 놓습니다. A 와 B 는 어느 방향으로도 바로 이웃하면 안 됩니다. 가능한 줄의 수를 구하고, 전체 24 개를 모두 만든 뒤 거르지 않아도 되는 재귀 선택 규칙을 설명하세요. ABCD 처럼 A 바로 다음이 B 인 경우와 BACD 처럼 B 다음이 A 인 경우가 모두 금지입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "네 이름표를 각각 한 번씩 쓰며 방향을 뒤집은 줄은 보통 다른 결과입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "금지 조건은 바로 이웃하는 A,B 한 쌍뿐입니다. 다른 이웃에는 제한이 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이름표가 아직 남았을 때만 다음 자리에 선택할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "후보"
+                  }
+                ],
+                [
+                  {
+                    "text": "판정"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "ACBD"
+                  }
+                ],
+                [
+                  {
+                    "text": "허용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "CDAB"
+                  }
+                ],
+                [
+                  {
+                    "text": "불허"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "BCAD"
+                  }
+                ],
+                [
+                  {
+                    "text": "허용"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 자신의 답과 근거를 적어 보세요. 힌트와 정답은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A,B 를 한 덩어리로 보면 붙어 있는 줄을 몇 개로 셀 수 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "덩어리 안의 순서는 AB 와 BA 두 가지입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "접두사 마지막 글자만 알면 새 글자 추가가 금지인지 즉시 검사할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "제한 없는 순열은 4!=24 개입니다. A,B 가 붙은 줄은 덩어리[AB] 또는[BA]와 C,D 의 세 대상을 배열하므로 2×3!=12 개입니다. 허용된 줄은 24-12=12 개입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "재귀에서는 사용하지 않은 이름표 중 하나를 뒤에 붙입니다. 마지막이 A 인데 B 를 붙이거나 마지막이 B 인데 A 를 붙이려 하면 그 선택을 생략합니다. 다른 선택은 계속합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "허용된 완성 줄은 ACBD,ACDB,ADBC,ADCB,BCAD,BCDA,BDAC,BDCA,CADB,CBDA,DACB,DBCA 입니다. 총 12 개이며 직접 인접쌍을 확인해 검산할 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 붙어 있는 경우를 묶어서 빼기\n A[\"전체4! =24\"] --> B[\"붙음:AB또는BA덩어리\"]\n B --> C[\"덩어리,C,D의3! 곱하기2=12\"]\n A --> D[\"허용24-12=12\"]\n C --> D"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 접두사에서즉시검사\n A[\"접두사CA,남음BD\"] --> B[\"B추가:AB이웃이라중단\"]\n A --> C[\"D추가:CAD,남음B\"]\n C --> D[\"B추가:CADB허용\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 금지된 인접쌍은 한 번 접두사에 생기면 뒤에 어떤 글자를 붙여도 사라지지 않습니다. 따라서 그 분기를 즉시 제거해도 정답을 잃지 않습니다. 반대로 금지쌍이 없는 완성 줄의 모든 접두사는 검사에 통과하므로 해당 줄은 반드시 생성됩니다. 서로 다른 기호의 순열 선택 경로는 유일하므로 중복도 없습니다. 덩어리 계산은 A,B 가 각각 한 번이라 겹치는 중복 집계 없이 붙은 경우 전체를 정확히 셉니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 일반 n 개의 서로 다른 기호에서도 최악의 전체 순열 탐색은 O(n·n!)출력 비용을 가집니다. 금지 조건은 일부 분기를 줄이지만 팩토리얼 성장을 자동으로 없애지는 않습니다. 작업용 공간은 O(n)입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "A,B 두개뿐인변형"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "둘다붙어답 0 개"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "A,B,C 세개"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "ACB,BCA 의 2 개"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "AB 만금지하고 BA 허용"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "조건을 한 방향만 검사한 오답"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "접두사 A C"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "지금 안 붙었다고 뒤의 모든 선택을 허용하면 안 됨"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 페이지는 종이 추론과 경계·반례 검산으로 검토합니다. 설명에 없는 프로그램 실행이나 실험을 했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — A 와 B 사이에 정확히 한 개가 있어야 한다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "단순 이웃 금지만으로는 부족합니다. A,B 위치차가 2 인지 완성 시 검사하거나 위치 기억을 추가해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 같은 이름표 두 개를 허용하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "남은 위치와 기호 값을 구별해야 중복 출력을 피할 수 있습니다. 다음 주제는 중복 기호의 순열입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 Permutations without Dups 주제명과 학습 순서를 참고하여 새로 만든 문제입니다. 번호·주제 메타데이터를 확인했으며 도서 지문이나 공식 해설을 복제한 자료가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기본 복습으로: 8.7.1",
+              "href": "/thinking-lab/ep-08-07-permutations-without-dups/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제: 8.8",
+              "href": "/thinking-lab/ep-08-08-permutations-with-dups/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

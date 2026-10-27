@@ -1,0 +1,245 @@
+{
+  "title": "8.10.2 심화 — 칠한 영역의 둘레를 세기",
+  "subtitle": "칸 수가 아닌 바깥과 맞닿은 변의 수",
+  "memoKey": "thinking-ctci-8.10-2-draft",
+  "starter": "// 상태 변화와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "격자는 AAB / ABB / BBA이며 시작 (0, 0)의 네 방향 A 영역을 찾습니다. 영역의 둘레는 그 영역 칸과 격자 바깥 또는 영역에 속하지 않는 칸 사이의 단위 변 수입니다. 대각선 접촉은 변을 공유하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "시작 영역의 둘레를 구하세요. 연결 영역을 먼저 별도 표시한 뒤 각 칸의 네 변을 검사하는 방법을 설계하고, 영역 내부에서 공유하는 변을 둘레에 포함하면 안 되는 이유를 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "풀이 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "먼저 종이에 작은 예의 상태와 경우를 기록해 풀 수 있습니다. 본문에 정한 순서·중복 여부·좌표·범위를 따릅니다. 코드가 있는 페이지는 별도 구현 전제를 함께 확인하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "영역 칸은 (0, 0), (0, 1), (1, 0)입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 칸은 총 12개의 변을 갖지만 내부 공유 변은 두 칸에서 한 번씩 셉니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "영역 밖으로 나가는 방향만 더하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "둘레는 8입니다. 세 칸의 변 12개에서 내부 인접 쌍 두 개의 공유 변을 각각 두 번 빼면 12-4=8입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "먼저 원본을 바꾸지 않고 같은 색 연결 영역을 집합으로 구합니다. 그다음 각 영역 칸의 상하좌우가 집합 밖이면 1을 더합니다. 격자 바깥도 집합 밖입니다. 같은 색이지만 연결되지 않은 (2, 2)를 포함하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 칸별 바깥 변 기여\n    accDescr: 칸별 바깥 변 기여의 구체적인 상태와 이동을 표시합니다.\n    N0[\"(0,0): 위와 왼쪽 →2\"]\n    N1[\"(0,1): 위 오른쪽 아래 →3\"]\n    N2[\"(1,0): 왼쪽 아래 오른쪽 →3\"]\n    N3[\"합2+3+3=8\"]\n    N0 --> N3\n    N1 --> N3\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 내부 공유 변은 제외\n    accDescr: 내부 공유 변은 제외의 구체적인 상태와 이동을 표시합니다.\n    N0[\"영역 칸 두 개가 한 변을 공유\"]\n    N1[\"각 칸의 이웃이 모두 영역 안\"]\n    N2[\"그 변은 둘레에 더하지 않음\"]\n    N0 --> N1\n    N1 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 단위 변은 영역 안쪽 두 칸을 나누거나 영역의 안팎을 나눕니다. 첫 경우 양쪽 이웃 모두 집합 안이라 세지 않습니다. 둘째 경우 영역 칸 한쪽에서만 검사되어 정확히 한 번 세어집니다. 따라서 바깥 둘레와 구멍의 안쪽 경계를 포함하는 정의된 경계 길이를 정확히 계산합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 영역 k칸을 찾고 네 이웃을 검사하므로 O(k) 탐색·계산과 O(k) 집합 공간입니다. 격자 크기의 방문 배열을 새로 초기화하면 그 초기화 O(RC)도 포함합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 칸 영역의 둘레는 4입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2×2 꽉 찬 영역은 8이지 16이 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가운데 한 칸이 빈 3×3 고리 영역은 바깥 12와 안쪽 4를 합쳐 16입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 넓이가 같은 영역은 둘레도 같나요? 네 칸의 2×2 사각형은 8, 네 칸 일자 모양은 10으로 다릅니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-08-11-coins/",
+              "text": "다음 주제 8.11.1 기본 — 동전 순서는 잊고 금액만 만들기"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 8.10 Paint Fill의 알고리즘 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설·저장소 풀이를 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 기본",
+              "kind": "link",
+              "href": "/thinking-lab/ep-08-10-paint-fill/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제 8.11",
+              "kind": "link",
+              "href": "/thinking-lab/ep-08-11-coins/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

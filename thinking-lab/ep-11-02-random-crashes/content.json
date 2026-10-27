@@ -1,0 +1,225 @@
+{
+  "title": "11.2.1 기본 — 가끔 멈추는 사진 정리기",
+  "subtitle": "한 번에 한 조건을 바꾸는 재현 실험",
+  "memoKey": "thinking-ctci-11.2-draft",
+  "starter": "// 상태 변화와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사진 정리기의 실패 원인은 세 가설 중 정확히 하나입니다. A: 큰 사진일 때만 실패. B: 두 작업을 동시에 시작할 때만 실패. C: 큰 사진과 동시 시작이 함께 있을 때만 실패. 각 조건은 예/아니오이고 같은 조건에서는 항상 같은 결과입니다. 처음 관찰은 큰 사진을 동시에 시작했을 때 실패한 것뿐입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "추가 실험을 최악의 경우 두 번 이하로 하여 원인을 구별하는 절차를 만드세요. 각 실험은 새로 시작한 같은 환경에서 하며 두 조건 외에는 바꾸지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "모형의 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "본문에 명시한 유한한 규칙과 관찰만 사용하는 종이 추론 문제입니다. 실제 제품 전체의 품질·안전성을 보증하거나 내부 시스템 접근을 요구하지 않습니다. 예측과 실제 관찰을 구분하여 기록하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 관찰은 세 가설이 모두 예측하는 결과입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "큰 사진을 혼자 시작하면 A만 실패를 예측합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "그 실험이 성공하면 작은 사진의 동시 시작으로 B와 C를 나눌 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 추가 실험은 큰 사진 하나만 시작합니다. 실패하면 A입니다. 성공하면 작은 사진 두 작업을 동시에 시작합니다. 이때 실패면 B, 성공이면 C입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "작은 사진의 단독 실행은 세 가설 모두 성공을 예측하므로 후보 구분에는 도움이 없지만 환경 정상 여부를 확인하는 대조 실험으로는 쓸 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 처음 관찰의 한계\n    accDescr: 처음 관찰의 한계의 구체적인 상태와 이동을 표시합니다.\n    N0[\"큰 사진과 동시 시작: 실패\"]\n    N1[\"가설 A도 가능\"]\n    N2[\"가설 B도 가능\"]\n    N3[\"가설 C도 가능\"]\n    N0 --> N1\n    N0 --> N2\n    N0 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 분리한 결정 나무\n    accDescr: 조건을 분리한 결정 나무의 구체적인 상태와 이동을 표시합니다.\n    N0[\"큰 사진 단독 실행\"]\n    N1[\"실패: A\"]\n    N2[\"성공: 작은 사진 동시 실행\"]\n    N3[\"실패: B\"]\n    N4[\"성공: C\"]\n    N0 --> N1\n    N0 --> N2\n    N2 --> N3\n    N2 --> N4\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 첫 실험의 실패 집합은 {A}, 성공 집합은 {B, C}입니다. 두 번째는 남은 집합을 각각 {B}, {C}로 나눕니다. 이진 결과 하나로 세 후보를 모두 구별할 수 없으므로 최악 두 번은 최소입니다. 실제 비결정적 장애에 이 확정 모형을 그대로 적용하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 가설 세 개를 최대 두 실험으로 구분하는 유한 결정 나무입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 실험 실패 후 작은 사진 동시 실행도 실패한다면 단일 가설 전제와 맞지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "환경 버전이나 파일 내용까지 함께 바꾸면 어떤 조건이 영향을 주었는지 분리할 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 조건의 반복 결과가 다르면 확정 모형 대신 추가 기록과 반복 관찰이 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 실패한 설정만 계속 재실행하면 세 가설을 구분할 수 있나요? 모두 같은 예측을 하므로 아무리 반복해도 이 모형에서는 구분되지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 11.2 Random Crashes의 테스트 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 심화",
+              "kind": "link",
+              "href": "/thinking-lab/ep-11-02-02-random-crashes/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

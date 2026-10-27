@@ -1,0 +1,356 @@
+{
+  "title": "7.9.1 기본 — 원형 진열대의 첫 칸 바꾸기",
+  "subtitle": "작은 규칙과 상태 변화를 따라가며 객체 설계의 핵심을 발견하는 사고력 문제",
+  "memoKey": "thinking-ctci-7.9-draft",
+  "starter": "// 관찰한 규칙, 상태, 반례를 자유롭게 적어 보세요.\n// 코드 없이도 논리와 그림으로 완전하게 설명할 수 있습니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "7.9.1 기본 — 원형 진열대의 첫 칸 바꾸기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원형 진열대의 실제 다섯 칸에는 시계 방향으로 A, B, C, D, E가 놓여 있습니다. 물건을 옮기지 않고 C를 첫 번째로 보이게 한 뒤, 보이는 순서를 오른쪽으로 한 칸 회전시켰습니다. 최종 표시 순서와 화면의 0번·3번 물건을 구하고, 실제 물건을 옮기지 않는 인덱스 규칙을 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실제 칸 번호는 A가 0, B가 1, …, E가 4입니다. 화면 칸 번호도 0부터 시작합니다. 표시 순서는 실제 칸의 증가 방향으로 읽습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "오른쪽 회전 한 칸은 현재 화면의 마지막 물건을 화면 맨 앞으로 가져오는 뜻입니다. 물건을 삭제하거나 추가하지 않습니다. 일반식에서는 칸 수 n이 1 이상입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "행동"
+                  }
+                ],
+                [
+                  {
+                    "text": "변하지 않는 것"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "시작점을 C로 선택"
+                  }
+                ],
+                [
+                  {
+                    "text": "실제 칸 A·B·C·D·E"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "화면을 오른쪽으로 한 칸 회전"
+                  }
+                ],
+                [
+                  {
+                    "text": "물건의 원형 이웃 관계"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 바뀌는 상태와 바뀌지 않아야 할 규칙을 적어 보세요. 답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "화면의 첫 물건이 들어 있는 실제 칸 하나만 기억할 수 있을까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C에서 오른쪽으로 화면을 회전하면 새로운 첫 물건은 C의 이전 물건인가요, 다음 물건인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "화면의 i번 칸은 시작 칸에서 i만큼 진행한 뒤 칸 수로 나눈 나머지입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C를 첫 칸으로 삼으면 시작 위치 h=2이고 화면은 C, D, E, A, B입니다. 이를 오른쪽으로 한 칸 회전하면 마지막 B가 먼저 오므로 시작 위치가 h=1로 바뀝니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최종 순서는 B, C, D, E, A입니다. 화면 0번은 B, 화면 3번은 E입니다. 실제 배열은 처음부터 끝까지 A, B, C, D, E 그대로입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "화면 i번의 실제 위치는 (h+i) mod n입니다. 왼쪽으로 k칸 회전하면 h를 (h+k) mod n으로 바꿉니다. 오른쪽 k칸은 h-k를 0~n-1 범위의 나머지로 정규화합니다. 음수 나머지의 언어별 동작을 그대로 믿지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"실제 칸: A B C D E\"] --> B[\"시작 h=2: C D E A B\"]\n B --> C[\"화면 오른쪽 1칸\"]\n C --> D[\"시작 h=1: B C D E A\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"h=1, 화면 i=0\"] --> B[\"실제 위치 1: B\"]\n C[\"h=1, 화면 i=3\"] --> D[\"실제 위치 4: E\"]\n E[\"h=1, 화면 i=4\"] --> F[\"실제 위치 0: A로 순환\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0≤i<n인 서로 다른 두 화면 인덱스가 같은 실제 위치로 가려면 그 차이가 n의 배수여야 합니다. 차이의 절댓값이 n보다 작으므로 같은 위치로 갈 수 없습니다. 따라서 이 대응은 물건을 빠뜨리거나 중복하지 않고 모든 칸을 한 번씩 보여 줍니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시작 위치 변경과 한 칸 조회는 O(1)시간, 추가 공간 O(1)입니다. 화면 전체 n칸을 실제로 출력하는 비용은 O(n)이며 회전 자체와 구분해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "n=1이면 어떤 회전도 같은 물건입니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "n칸 회전은 원래 화면과 같습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "음수·아주 큰 회전량은 먼저 n을 기준으로 줄인 후 시작 위치를 계산합니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: 순회 중에 다른 사람이 시작 위치를 바꾸면 화면 순회가 꼬일 수 있습니다. 간단한 약속은 무엇일까요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "순회를 시작할 때 h와 n을 복사해 그 순회가 끝날 때까지 같은 값을 쓰도록 정할 수 있습니다. 원본 물건까지 바뀔 수 있다면 그것은 별도의 수정 일관성 규칙이 필요합니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "크기 1~20, 모든 시작점, -2n~2n 회전량을 조합한 11,690개 경우를 실제 deque 회전 결과와 비교했습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "이 페이지는 종이 추론형이며 실행용 C++ 프로그램을 제공하거나 실행했다고 주장하지 않습니다. 브라우저의 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 심화 문제",
+              "href": "/thinking-lab/ep-07-09-02-circular-array/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

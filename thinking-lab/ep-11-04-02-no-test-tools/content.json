@@ -1,0 +1,245 @@
+{
+  "title": "11.4.2 심화 — 관찰할 수 없는 차이는 증명할 수 있을까",
+  "subtitle": "관측 한계와 최소한의 추가 창구",
+  "memoKey": "thinking-ctci-11.4-2-draft",
+  "starter": "// 상태 변화와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 전등 제어 상자 A와 B는 버튼을 누를 때마다 표시등을 켜짐·꺼짐으로 번갈아 바꾸며 처음에는 꺼짐입니다. A는 내부 기록에 누른 횟수를 올바르게 적고, B는 항상 0을 적습니다. 현재 허용된 행동은 버튼 누르기뿐이고 관찰은 표시등뿐입니다. 내부 기록은 표시등이나 이후 버튼 처리에 영향을 주지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "유한한 버튼 검사로 A와 B를 구별할 수 있는지 논증하세요. 구별이 불가능하다면 내부 구조를 열지 않고 제품에 추가할 최소한의 관찰 기능 한 가지와 그 기능을 사용한 검사를 제시하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "모형의 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "본문에 명시한 유한한 규칙과 관찰만 사용하는 종이 추론 문제입니다. 실제 제품 전체의 품질·안전성을 보증하거나 내부 시스템 접근을 요구하지 않습니다. 예측과 실제 관찰을 구분하여 기록하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 번 누른 결과와 두 번 누른 결과를 비교하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "내부 기록이 이후 표시등에도 영향을 주지 않는다는 전제를 사용하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기록 값을 읽기 전용으로 보여 주는 기능이면 어떤가요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 행동·관찰만으로는 구별할 수 없습니다. 두 상자는 k번 누른 뒤 모두 k가 홀수면 켜짐, 짝수면 꺼짐입니다. 더 오래 누르는 것으로 해결되지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "읽기 전용 “누른 횟수 표시” 기능을 요구할 수 있습니다. 초기 기록 0을 확인하고 한 번 누른 뒤 조회하면 A는 1, B는 0입니다. 이 기능은 제품 요구와 허용 범위 안에서 추가하는 관찰 창구이며 내부 기록을 임의로 바꾸는 기능이 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 버튼 관찰은 끝까지 같음\n    accDescr: 버튼 관찰은 끝까지 같음의 구체적인 상태와 이동을 표시합니다.\n    N0[\"A와 B 모두 꺼짐\"]\n    N1[\"한 번: 둘 다 켜짐\"]\n    N2[\"두 번: 둘 다 꺼짐\"]\n    N3[\"세 번: 둘 다 켜짐\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 추가 조회의 구분력\n    accDescr: 추가 조회의 구분력의 구체적인 상태와 이동을 표시합니다.\n    N0[\"초기 0에서 버튼 한 번\"]\n    N1[\"A의 조회값 1\"]\n    N2[\"B의 조회값 0\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 초기 관찰은 같고 같은 행동이 같은 표시등 전이를 만듭니다. 횟수에 대한 귀납으로 모든 유한 버튼 열의 관찰이 같습니다. 따라서 기존 관찰로 식별하는 검사는 없습니다. 새로운 조회는 달랐던 내부 상태를 관찰값에 연결하므로 한 번 누른 뒤 구분됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 기존 도구에서는 검사 횟수와 관계없이 구분 불가능합니다. 조회 기능 추가 후 버튼 한 번과 조회 한 번이면 충분합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0번 누르고 조회하면 둘 다 0이어서 구분되지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "표시등만 촬영하는 기능은 같은 관찰을 저장할 뿐이므로 도움되지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기록이 나중에 경고등을 바꾼다면 관찰 동등성 전제가 달라집니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 검사 실패를 찾지 못했다는 사실과 검사 수단으로 찾을 수 없다는 증명은 어떻게 다른가요? 후자는 가능한 모든 행동 열에 같은 관찰이 나온다는 논증을 요구합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-11-05-test-a-pen/",
+              "text": "다음 주제 11.5.1 기본 — 좋은 펜이라는 말부터 시험 가능하게"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 11.4 No Test Tools의 테스트 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 기본",
+              "kind": "link",
+              "href": "/thinking-lab/ep-11-04-no-test-tools/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제 11.5",
+              "kind": "link",
+              "href": "/thinking-lab/ep-11-05-test-a-pen/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

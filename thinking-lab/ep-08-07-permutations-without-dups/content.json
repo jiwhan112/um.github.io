@@ -1,0 +1,370 @@
+{
+  "title": "8.7.1 기본 — 서로 다른 글자 도장의 줄세우기",
+  "subtitle": "서로 다른 도장 A,B,C를 각각 한 번씩 써서 세 글자 띠를 만듭니다.",
+  "memoKey": "thinking-ctci-8.7-draft",
+  "starter": "// 문제에서 발견한 규칙과 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "서로 다른 도장 A,B,C 를 각각 한 번씩 써서 세 글자 띠를 만듭니다. 가능한 띠를 모두 나열하고 같은 띠를 두 번 만들지 않았다는 이유를 설명하세요. 선택한 글자를 맨 앞에 고정하고 남은 글자만 다시 줄 세우는 방법을 사용해 보세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "A,B,C 는 서로 다른 기호이며 각각 정확히 한 번 사용합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "글자의 순서가 다르면 다른 결과입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "빈 글자 집합에는 길이 0 의 빈 띠 한 가지가 있다고 정의합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "별도 글자"
+                  }
+                ],
+                [
+                  {
+                    "text": "결과"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "X,Y"
+                  }
+                ],
+                [
+                  {
+                    "text": "XY,YX"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "X"
+                  }
+                ],
+                [
+                  {
+                    "text": "X"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 자신의 답과 근거를 적어 보세요. 힌트와 정답은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 글자가 A 인 띠와 B 인 띠는 서로 겹칠 수 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A 로 시작했다면 뒤에는 B,C 의 어느 두 순서가 가능하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 단계에서 고른 글자를 남은 목록에서 제거한 뒤 다음 단계를 진행하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A 로 시작하면 ABC,ACB 입니다. B 로 시작하면 BAC,BCA 이고 C 로 시작하면 CAB,CBA 입니다. 총 6 가지입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 글자 선택이 3 가지이고 그다음은 남은 2 가지, 마지막은 1 가지이므로 3×2×1=6 입니다. 이는 부분집합의 넣음/뺌과 다른 분기입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "선택을 마치고 되돌아올 때는 선택했던 글자를 복구해야 다음 첫 글자 분기도 같은 원래 재료에서 시작할 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 첫글자별세묶음\n A[\"A B C\"] --> B[\"A고정:BC,CB\"]\n A --> C[\"B고정:AC,CA\"]\n A --> D[\"C고정:AB,BA\"]\n B --> E[\"ABC,ACB\"]\n C --> F[\"BAC,BCA\"]\n D --> G[\"CAB,CBA\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 한경로의남은재료\n A[\"접두사빈칸,남음ABC\"] --> B[\"A선택:접두사A,남음BC\"]\n B --> C[\"C선택:접두사AC,남음B\"]\n C --> D[\"B선택:ACB완성\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 모든 띠에는 유일한 첫 글자가 있고 서로 다른 첫 글자 묶음은 겹치지 않습니다. 그 첫 글자를 지우면 남은 서로 다른 글자의 순열입니다. 이 분할을 빈 띠까지 반복하므로 각 결과는 정확히 한 선택 경로에서 만들어지며 모든 결과를 포함합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — n 개 기호의 결과는 n!개입니다. 길이 n 의 띠를 실제 저장하거나 출력하는 데 Θ(n·n!)시간과 출력량이 필요합니다. 방문표와 접두사, 재귀 스택의 작업용 공간은 O(n)입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0 개기호"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "빈띠 1 개"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "2 개기호"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "2 개"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "부분집합 방식으로 글자 생략"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "모든 글자 사용 조건 위반"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "서로같은기호를입력"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "이 회차 계약 밖이며 중복 결과가 생길 수 있음"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 페이지는 종이 추론과 경계·반례 검산으로 검토합니다. 설명에 없는 프로그램 실행이나 실험을 했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 네 글자라면 몇 개일까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "4×3×2×1=24 개입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 사전순 출력이 꼭 필요한가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원래 문제에는 없습니다. 필요하다면 남은 글자 선택 순서를 정렬 순으로 고정하면 됩니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 Permutations without Dups 주제명과 학습 순서를 참고하여 새로 만든 문제입니다. 번호·주제 메타데이터를 확인했으며 도서 지문이나 공식 해설을 복제한 자료가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 8.7.2",
+              "href": "/thinking-lab/ep-08-07-02-permutations-without-dups/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

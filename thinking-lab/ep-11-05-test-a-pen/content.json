@@ -1,0 +1,225 @@
+{
+  "title": "11.5.1 기본 — 좋은 펜이라는 말부터 시험 가능하게",
+  "subtitle": "모호한 요구를 판정 규칙으로 바꾸기",
+  "memoKey": "thinking-ctci-11.5-draft",
+  "starter": "// 상태 변화와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "종이 시험용 펜의 계약은 다음과 같습니다. 새 흰 종이에 같은 사람이 자를 따라 10cm 선을 다섯 번 긋습니다. 각 선에서 잉크가 끊긴 구간 중 가장 긴 길이가 2mm 이하여야 합니다. 선을 그은 뒤 10초에 마른 종이를 한 번 대었을 때 번짐이 없어야 합니다. 다섯 선 모두 두 조건을 만족해야 합격입니다. 길이 측정과 번짐 판정에는 오차가 없다고 가정합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "끊김 최댓값이 차례로 [0, 1, 2, 1, 0]mm이고 번짐이 [없음, 없음, 없음, 있음, 없음]인 펜을 판정하세요. 끊김 평균만 보는 대체 검사와 전체 합격 조건이 다른 이유를 반례로 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "모형의 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "본문에 명시한 유한한 규칙과 관찰만 사용하는 종이 추론 문제입니다. 실제 제품 전체의 품질·안전성을 보증하거나 내부 시스템 접근을 요구하지 않습니다. 예측과 실제 관찰을 구분하여 기록하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "합격은 조건들의 평균이 아니라 모든 선의 조건 충족입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2mm는 허용 경계 안입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "평균은 짧은 끊김들 사이에 긴 끊김 하나를 숨길 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "네 번째 선에 번짐이 있으므로 불합격입니다. 끊김은 모두 2mm 이하라 그 조건만 보면 통과합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "반례로 끊김 [0, 0, 0, 0, 5]mm, 번짐 모두 없음인 펜을 보세요. 평균 1mm는 2mm 이하이지만 마지막 선은 5mm여서 계약상 불합격입니다. “잘 써진다”라는 표현 대신 대상 종이, 시간, 반복 수, 경계를 먼저 고정해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 두 종류의 판정 분리\n    accDescr: 두 종류의 판정 분리의 구체적인 상태와 이동을 표시합니다.\n    N0[\"다섯 선의 기록\"]\n    N1[\"끊김 조건: 다섯 개 모두 통과\"]\n    N2[\"번짐 조건: 네 번째 실패\"]\n    N3[\"전체 불합격\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 평균이 놓치는 반례\n    accDescr: 평균이 놓치는 반례의 구체적인 상태와 이동을 표시합니다.\n    N0[\"끊김 0 0 0 0 5\"]\n    N1[\"평균 1: 대체 검사 통과\"]\n    N2[\"마지막 5: 계약 검사 실패\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 계약은 각 선 i에 대해 끊김≤2 그리고 번짐 없음의 논리곱입니다. 하나라도 거짓이면 전체가 거짓입니다. 평균≤2는 모든 값≤2보다 약한 조건이므로 계약을 대신하지 못합니다. 다섯 번 합격은 이 검사 조건의 합격이지 모든 종이에서 영구히 쓸 수 있다는 증명은 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 선 n개의 기록을 모두 확인하는 데 O(n), 현재 합격 여부만 저장하면 O(1) 추가 공간입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "끊김 정확히 2mm는 허용이고 3mm는 불허입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "번짐 한 번만 있어도 불합격입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다른 종이나 5초 시점에서의 결과는 이번 계약과 다른 조건입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 검사 횟수를 다섯 번에서 한 번으로 줄이면 같은 계약을 확인한 것인가요? 아니며, 한 번만 관찰해 나머지 네 번을 통과했다고 적을 수 없습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 11.5 Test a Pen의 테스트 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 심화",
+              "kind": "link",
+              "href": "/thinking-lab/ep-11-05-02-test-a-pen/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

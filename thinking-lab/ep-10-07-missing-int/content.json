@@ -1,0 +1,370 @@
+{
+  "title": "10.7.1 기본 — 번호표 더미에서 빠진 하나",
+  "subtitle": "작은 전시회의 입장 번호는 0부터 7까지입니다.",
+  "memoKey": "thinking-ctci-10.7-draft",
+  "starter": "// 문제에서 발견한 규칙과 검산 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "작은 전시회의 입장 번호는 0 부터 7 까지입니다. 회수한 번호표를 읽은 순서는 5,0,7,2,1,6,4 입니다. 번호표를 정렬하지 않고 아직 회수되지 않은 번호를 찾으세요. 읽을 때마다 번호별 작은 칸 하나에 표시하는 방법을 종이에 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "같은 번호표가 두 번 들어오지 않으며 범위 밖 번호는 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "회수한 번호는 일곱 개이고 전체 번호는 여덟 개이므로 정확히 하나가 빠졌습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "입력 순서는 자유입니다. 번호 0 도 정상 번호입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "별도 범위·회수"
+                  }
+                ],
+                [
+                  {
+                    "text": "빠진 번호"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "0..3 / 2,0,3"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "0..0 / 회수 없음"
+                  }
+                ],
+                [
+                  {
+                    "text": "0"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답과 근거를 적어 보세요. 힌트·정답·복습 해설은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "입력 순서의 자리와 번호표의 값을 구별하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0..7 의 칸을 만들고 번호 5 를 읽으면 어느 칸을 표시하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "모든 번호를 읽은 뒤 표시 없는 칸이 뜻하는 것을 설명하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음에 여덟 칸을 모두 미표시로 둡니다. 5,0,7,2,1,6,4 를 차례로 읽을 때 해당 번호의 칸을 표시합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최종 표시를 번호 0 부터 적으면 1,1,1,0,1,1,1,1 입니다. 따라서 빠진 번호는 3 입니다. 입력의 네 번째 값 2 가 빠졌다는 뜻이 아니라, 값 3 을 한 번도 읽지 않았다는 뜻입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 칸을 참/거짓 한 비트로 저장하면 번호 하나당 한 비트만 필요합니다. 실제 카드 목록을 다시 정렬하거나 복사할 필요가 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 번호 값으로 표시 위치 선택\n A[\"읽은값5\"] --> B[\"5번칸을표시\"]\n C[\"읽은값0\"] --> D[\"0번칸을표시\"]\n E[\"읽은순서의자리\"] -.-> F[\"표시위치가아님\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 마지막표의빈칸\n A[\"번호0 1 2 3 4 5 6 7\"] --> B[\"표시1 1 1 0 1 1 1 1\"]\n B --> C[\"3번만미표시\"]\n C --> D[\"빠진번호3\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 어떤 번호 x 의 칸은 x 를 읽었을 때만 표시됩니다. 따라서 처리한 접두사에 x 가 포함되어 있다는 사실과 표시가 참이라는 사실은 항상 동치입니다. 모든 입력을 처리한 뒤 미표시인 칸은 정확히 회수되지 않은 번호입니다. 정확히 하나가 빠졌다는 계약 아래 답도 하나입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 입력 N 개와 전체 번호 U 개에 대해 O(N+U)시간, U 비트의 표시 공간입니다. 비트 단위로 압축하지 않고 일반 정수 배열을 쓰면 같은 개수의 칸이라도 실제 바이트 수는 더 커집니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "0 이 빠짐"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "첫 칸이 미표시"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "마지막 번호가 빠짐"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "마지막 칸까지 확인해야 함"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "회수 목록이 없음 / U=1"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "0 이 답"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "범위 밖 값으로 배열 표시"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "계약 위반이며 구현은 거부해야 함"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 페이지는 제시된 추론과 경계·반례로 검토합니다. 설명에 없는 코드 실행이나 실험을 수행했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 같은 번호를 두 번 읽으면 표시 자체는 어떻게 되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이미 참인 칸을 다시 참으로 만들 뿐입니다. 다만 정확히 하나 누락이라는 개수 계약은 별도로 보장되지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 빠진 번호가 여러 개면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "미표시 칸을 모두 출력하면 됩니다. 답을 하나만 원하면 첫 미표시 칸에서 멈출 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 Missing Int 번호·주제 메타데이터를 참고하여 새로 만든 문제입니다. 도서 지문·예시·공식 해설을 복제하거나 책 본문에 접근했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 10.7.2",
+              "href": "/thinking-lab/ep-10-07-02-missing-int/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

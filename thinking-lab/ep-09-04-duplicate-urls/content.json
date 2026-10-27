@@ -1,0 +1,456 @@
+{
+  "title": "9.4.1 기본 — 주소가 조금 달라도 같은 페이지일까?",
+  "subtitle": "작은 기록과 장애 사례로 검증하는 시스템 설계 사고력 문제",
+  "memoKey": "thinking-ctci-9.4-draft",
+  "starter": "// 데이터의 의미, 불변조건과 실패 시 행동을 적어 보세요.\n// 이 문제는 전체 앱 구현이 아니라 작은 설계의 정확성을 설명하는 연습입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "9.4.1 기본 — 주소가 조금 달라도 같은 페이지일까?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주소 일곱 개에서 같은 페이지로 취급할 그룹을 찾으려 합니다. 번호별 주소는 표와 같습니다. 이 서비스는 스킴·호스트의 대소문자, HTTPS 기본 포트 443, 조각 식별자만 정리하고 나머지는 보존합니다. 중복 그룹과 고유 주소 수를 구하고, 경로 대소문자나 쿼리 순서까지 마음대로 바꾸면 왜 위험한지 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "데이터·규모·실패 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정규화 규칙은 이 문제의 명시적 서비스 계약입니다. HTTPS의 :443은 제거하고 호스트는 소문자로 만듭니다. # 뒤 조각은 제거합니다. 경로의 대소문자, 끝 슬래시, 쿼리 문자열의 순서는 바꾸지 않습니다. 리다이렉트나 실제 페이지 내용이 같다는 추측으로 추가 병합하지 않습니다. 모든 입력은 표에 주어진 유효한 HTTPS 주소입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "번호"
+                  }
+                ],
+                [
+                  {
+                    "text": "주소"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "https://EXAMPLE.test:443/a#x"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "https://example.test/a#y"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "3"
+                  }
+                ],
+                [
+                  {
+                    "text": "https://example.test/A"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "4"
+                  }
+                ],
+                [
+                  {
+                    "text": "https://example.test/a/"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "5"
+                  }
+                ],
+                [
+                  {
+                    "text": "https://example.test/a?x=1&y=2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "6"
+                  }
+                ],
+                [
+                  {
+                    "text": "https://example.test/a?y=2&x=1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "7"
+                  }
+                ],
+                [
+                  {
+                    "text": "https://example.test/a?x=1&y=2"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "무엇을 같은 것으로 볼지 먼저 고정해야 중복이라는 말에 의미가 생깁니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "1번과 2번에 허용된 정리만 적용해 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "5번과 6번의 쿼리 순서를 바꾸어도 된다는 보장은 주어졌나요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "중복 그룹은 {1,2}와 {5,7}입니다. 나머지 3·4·6은 각각 독립이므로 고유 주소는 5개입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "1번은 호스트 소문자화, 기본 포트 제거, 조각 제거를 거쳐 https://example.test/a가 됩니다. 2번도 조각 제거 후 같습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "3번의 /A와 4번의 /a/는 정리 대상이 아니므로 /a와 합치지 않습니다. 실제 서버가 같게 처리할 수도 있지만 여기서는 보장되지 않았습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "5번과 7번은 완전히 같고 6번은 쿼리 순서가 달라 별도입니다. 정규화한 전체 문자열을 동치 비교의 기준으로 보관합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 허용된 정규화 추적\n    accDescr: 1번과2번이 동일한 키로 수렴한다\n    S[\"입력 주소\"] --> A[\"1: EXAMPLE.test:443 /a #x\"]\n    A --> K[\"https://example.test/a\"]\n    S --> B[\"2: example.test /a #y\"]\n    B --> K\n    K --> R[\"같은 그룹 {1,2}\"]\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 보존해야 하는 차이\n    accDescr: 나머지 문자열을 함부로 같게 만들지 않는다\n    S[\"같은 호스트의 주소\"] --> A[\"/a 와 /A: 경로 대소문자 보존\"]\n    S --> B[\"/a 와 /a/: 끝 슬래시 보존\"]\n    S --> C[\"x=1&y=2 와 y=2&x=1: 순서 보존\"]\n    A --> R[\"추가 동치 계약 없으면 별도 키\"]\n    B --> R\n    C --> R\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 주소를 계약된 결정적 정규화 함수 N에 통과시킨 뒤 N(u)=N(v)일 때만 같은 그룹에 넣습니다. 동일한 결과 문자열은 동등 관계를 이루므로 입력 순서와 무관하게 그룹이 정해집니다. 계약 밖 변환을 추가하면 서로 다르게 취급해야 하는 두 주소를 합칠 수 있어 정확성을 잃습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "주소의 전체 문자 수를 L이라 하면 정규화에 O(L)이 필요합니다. 해시를 사용하면 평균적으로 빠르게 후보 그룹을 찾을 수 있지만 충돌 여부는 전체 정규화 문자열로 확인해야 합니다. 해시 값 하나만 같다고 주소가 같다는 증거가 되지는 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "차이"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "계약상 결과"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "호스트 대소문자"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "합침"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "조각만 다름"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "합침"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "경로 대소문자·끝 슬래시"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "보존하여 구별"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "쿼리 순서"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "보존하여 구별"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: https://example.test:443/A#top은 표의 어느 번호와 같은 그룹일까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "3번과 같습니다. 기본 포트와 조각을 없애도 경로 /A의 대문자는 보존됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일곱 주소를 명시된 정규화 규칙으로 처리해 다섯 고유 키와 중복 그룹 {1,2}, {5,7}을 확인했습니다. 충돌 해시로 분배한 여섯 레코드의 서로 다른 180개 순서에서 두 입력 병합 결과를 전체 문자열 Counter 기준과 비교했습니다. 외부 파일의 디스크 성능을 측정한 것은 아닙니다. Python으로 실제 실행한 유한 사례·가정 모형 검산입니다. 실행용 C++ 코드를 제공하는 문제는 아닙니다. 브라우저 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서의 주제명은 학습 순서를 위한 연결 표지입니다. 이 자료는 유한한 사례와 명시된 가정으로 별도 구성한 설계 사고력 문제이며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-09-04-02-duplicate-urls/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

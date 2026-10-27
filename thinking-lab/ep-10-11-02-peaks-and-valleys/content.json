@@ -1,0 +1,404 @@
+{
+  "title": "10.11.2 심화 — 정렬하지 않고 봉우리만 고치기",
+  "subtitle": "화분 높이 목록을 정렬하지 않고 한 번의 왼쪽→오른쪽 순회로 골짜기·봉우리 모양으로 바꾸세요.",
+  "memoKey": "thinking-ctci-10.11-2-draft",
+  "starter": "// 문제에서 발견한 규칙과 검산 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "화분 높이 목록을 정렬하지 않고 한 번의 왼쪽→오른쪽 순회로 골짜기·봉우리 모양으로 바꾸세요. 홀수 자리 1,3,5,…를 처리할 때 그 자리와 존재하는 양옆 세 값 중 가장 큰 것을 가운데로 옮기는 방법을 검토합니다. 이미 만든 왼쪽 봉우리가 뒤의 교환 때문에 깨지지 않는지도 증명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "높이는 정수이며 음수와 중복을 허용합니다. 목표 비교는 ≤,≥이고 엄격한 부등식이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "최댓값이 여럿이면 현재 가운데를 우선해도 됩니다. 어떤 하나를 택해도 조건은 맞습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "예시 5,3,1,2,3 을 직접 추적하되 결과는 유일하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "가능한결과"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "3,1,2"
+                  }
+                ],
+                [
+                  {
+                    "text": "1,3,2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "-3,-1,-2"
+                  }
+                ],
+                [
+                  {
+                    "text": "그대로조건만족"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답과 근거를 적어 보세요. 힌트·정답·복습 해설은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "자리 1 에서 0,1,2 중 최댓값을 1 로 가져오세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다음 봉우리 3 에서 왼쪽 2 의 값이 바뀔 때, 새로 들어오는 값은 이전 2 의 값보다 커질까요 작아질까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이전 봉우리 1 은 2 를 지배하고 있었습니다. 2 가 작아지면 그 약속이 깨질까요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "5,3,1,2,3 의 자리 1 에서 최댓값 5 를 가운데로 옮기면 3,5,1,2,3 입니다. 자리 3 에서는 오른쪽 3 을 가운데로 옮겨 3,5,1,3,2 가 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 가운데가 세 값의 최댓값이면 그대로 둡니다. 오른쪽 최댓값을 가져오면 이전 왼쪽 봉우리에는 영향을 주지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "왼쪽 최댓값을 가운데로 가져오는 경우만 주의합니다. 왼쪽 이웃 자리에는 이전 가운데 값이 들어가는데, 이는 선택한 왼쪽 최댓값 이하입니다. 왼쪽 이웃이 작아지거나 같아지므로 이전 봉우리의 지배 관계는 유지됩니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 두봉우리의실제수정\n A[\"5 3 1 2 3\"] --> B[\"자리1의최댓값5선택\"]\n B --> C[\"3 5 1 2 3\"]\n C --> D[\"자리3의최댓값3선택\"]\n D --> E[\"3 5 1 3 2\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 이전 봉우리를 지키는 핵심\n A[\"이전봉우리P는왼쪽이웃L이상\"] --> B[\"L을현재가운데로옮김\"]\n B --> C[\"빈L자리에이전가운데M이옴\"]\n C --> D[\"최댓값선택때문에M이L이하\"]\n D --> E[\"P는새이웃M도지배\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 홀수 자리 i 를 처리하면 세 값의 최댓값이 가운데가 되어 새 봉우리 조건을 만족합니다. 이미 처리한 봉우리 중 영향을 받을 수 있는 것은 i-2 뿐입니다. i-1 과 교환할 때만 그 오른쪽 이웃이 바뀌며, 이웃 값은 커지지 않으므로 기존 조건이 유지됩니다. 나머지 교환은 이전 봉우리 이웃을 바꾸지 않습니다. 귀납적으로 끝까지 모든 봉우리가 맞고 교환은 원래 값의 다중집합을 보존합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 홀수 자리마다 최대 세 값만 비교하므로 O(n)시간이며 별도 큰 배열 없이 O(1)추가 공간입니다. 입력 목록을 저장하는 공간은 이 추가 공간 계산과 별개입니다."
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "코드 입력·자료 범위 계약",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "입력은 ASCII 십진 정수 n(0..100000)과 n 개의 높이(-1000000000..1000000000)입니다. int 가 이 범위를 표현하는지 정적 검사하며 범위 밖·변환 실패는 종료 코드 1 입니다. 출력은 재배열된 정수를 공백으로 구분하고 마지막에 줄바꿈합니다. 빈 배열은 줄바꿈만 출력합니다. 고정 문자 버퍼를 사용하지 않습니다. 한국어 주석과 설명은 UTF-8 이며 입력 번호 자체의 문자 인코딩은 ASCII 입니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "전체 C++11 풀이",
+              "blocks": [
+                {
+                  "type": "code",
+                  "language": "cpp",
+                  "text": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cassert>\n#include <climits>\nstatic_assert(INT_MAX>=1000000000 && INT_MIN<=-1000000000,\"int range too small\");\nvoid arrange(std::vector<int>& a) {\n    // 실제 가운데 값을 후보로 시작하므로 음수만 있어도 안전합니다.\n    for(std::size_t i=1;i<a.size();i+=2) {\n        std::size_t best=i;\n        if(a[i-1]>a[best])best=i-1;\n        if(i+1<a.size() && a[i+1]>a[best])best=i+1;\n        std::swap(a[i],a[best]);\n    }\n}\nint main() {\n    int n;\n    if(!(std::cin>>n)||n<0||n>100000)return 1;\n    std::vector<int> a(static_cast<std::size_t>(n));\n    // 높이는 정해진 안전 범위의 정수입니다. 산술 합은 계산하지 않습니다.\n    for(int& x:a) {\n        long long value;\n        if(!(std::cin>>value)||value< -1000000000LL||value>1000000000LL)return 1;\n        x=static_cast<int>(value);\n    }\n    arrange(a);\n    for(std::size_t i=0;i<a.size();++i)std::cout<<(i?\" \":\"\")<<a[i];\n    std::cout<<'\\n';\n}\n"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "반례·경계"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "두값뿐"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "홀수 마지막과 왼쪽만 비교"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "최댓값이 동률"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "등호이므로 어느 최댓값도 허용"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "음수높이"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "0 을 가짜 최댓값으로 초기화하면 안 됨"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "매 자리 처리 후 전체 정렬"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "불필요하고 만든 모양도 깨짐"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제로 실행한 검증 — GCC C++11 엄격 경고와 UBSan 으로 값-2..2 의 길이 0..8 모든 488,281 개 배열과 큰 양·음수 경계 배열 한 개, 총 488,282 개를 검사했습니다. 모든 홀수 자리의 부등식과 정렬한 다중집합의 정확한 일치를 확인했습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 이 방법이 최소 교환 횟수도 보장하나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 이 문제에서 증명한 것은 유효한 배치와 선형 시간이지 최소 교환 횟수가 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 골짜기들을 먼저 고쳐도 될까요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 짝수 자리 주변의 최솟값을 가운데로 가져오는 대칭적인 논증을 만들 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6 판의 Peaks and Valleys 번호·주제 메타데이터를 참고하여 새로 만든 문제입니다. 도서 지문·예시·공식 해설을 복제하거나 책 본문에 접근했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기본 복습으로: 10.11.1",
+              "href": "/thinking-lab/ep-10-11-peaks-and-valleys/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제: 11.1 Mistake",
+              "href": "/thinking-lab/ep-11-01-mistake/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

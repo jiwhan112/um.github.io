@@ -1,0 +1,441 @@
+{
+  "title": "9.6.1 기본 — 재전송이 있어도 판매 순위를 한 번만 세기",
+  "subtitle": "작은 기록과 장애 사례로 검증하는 시스템 설계 사고력 문제",
+  "memoKey": "thinking-ctci-9.6-draft",
+  "starter": "// 데이터의 의미, 불변조건과 실패 시 행동을 적어 보세요.\n// 이 문제는 전체 앱 구현이 아니라 작은 설계의 정확성을 설명하는 연습입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "9.6.1 기본 — 재전송이 있어도 판매 순위를 한 번만 세기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "세 상품 A·B·C의 순위를 판매 수량에서 반품 수량을 뺀 값으로 정합니다. 도착 기록은 e1:A+3, e2:B+4, e1:A+3 재전송, e3:A+2, e4:B−1, e5:C+3입니다. 이벤트 ID를 이용해 중복을 제거한 뒤 최종 순위를 구하세요. 동점은 상품 ID의 사전순으로 정합니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "데이터·규모·실패 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 이벤트 ID는 전역적으로 고유하고 재전송은 같은 내용입니다. 다른 ID의 같은 상품·수량은 별개 거래입니다. 반품은 음수 수량이며 이미 유효성이 확인된 이벤트만 입력됩니다. 모든 입력을 받은 뒤의 확정 순위를 묻습니다. 실시간 중간 순위의 최신성이나 금액 계산은 다루지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "ID"
+                  }
+                ],
+                [
+                  {
+                    "text": "수량 변화"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "e1"
+                  }
+                ],
+                [
+                  {
+                    "text": "A +3"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "e2"
+                  }
+                ],
+                [
+                  {
+                    "text": "B +4"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "e1 재전송"
+                  }
+                ],
+                [
+                  {
+                    "text": "A +3"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "e3"
+                  }
+                ],
+                [
+                  {
+                    "text": "A +2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "e4"
+                  }
+                ],
+                [
+                  {
+                    "text": "B −1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "e5"
+                  }
+                ],
+                [
+                  {
+                    "text": "C +3"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이벤트 ID를 본 적 있는지와 상품별 합계를 따로 저장하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "e1 재전송을 무시해도 e3는 같은 A의 다른 이벤트이므로 더해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "합계가 같은 B와 C에는 명시된 동점 규칙을 적용하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "합계는 A=5, B=3, C=3이며 순위는 A, B, C입니다. 재전송 e1을 다시 더하면 A가 8이 되는 잘못된 집계입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 보는 e1과 e2를 반영해 A=3, B=4입니다. e1 재전송은 이미 처리한 ID라 무시합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "e3를 반영해 A=5, e4를 반영해 B=3, e5를 반영해 C=3으로 만듭니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최종 정렬 키는 (수량 내림차순, 상품 ID 오름차순)입니다. 처리 ID 등록과 합계 반영은 함께 확정되어야 실패 후 재시도에서 빠뜨리거나 두 번 더하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 고유 이벤트만 반영\n    accDescr: 재전송 e1은 합계에 다시 들어가지 않는다\n    A[\"e1,e2: A3 / B4\"] --> B[\"e1 재전송: 변화 없음\"]\n    B --> C[\"e3,e4,e5: A5 / B3 / C3\"]\n    C --> D[\"수량 내림차순 + ID 오름차순: A,B,C\"]\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 같은 내용과 같은 이벤트의 차이\n    accDescr: 중복 판정은 상품과 수량만으로 하지 않는다\n    S[\"A에 +3인 기록을 다시 받음\"] --> A[\"ID e1 재전송\"]\n    A --> N[\"이미 반영: 무시\"]\n    S --> B[\"새 ID e7\"]\n    B --> Y[\"별개 판매: +3 반영\"]\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처리 집합에 든 각 고유 이벤트를 정확히 한 번씩 합산한다는 불변조건을 유지합니다. 새 ID일 때만 합계와 집합을 원자적으로 갱신하면 재전송은 상태를 바꾸지 않습니다. 모든 입력 뒤 합계는 고유 이벤트들의 합이며 결정적인 동점 규칙까지 적용해 유일한 순서가 정해집니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "E개의 고유 이벤트 ID와 P개의 상품 합계를 저장합니다. 최종 전체 순위 정렬은 O(P log P)이며 상위 K개만 원하면 크기 K의 선택 구조를 사용할 수 있습니다. 정확한 중복 제거 집합을 언제 삭제할 수 있는지는 재전송 보존 기간의 별도 계약입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경우"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "처리"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "같은 ID·같은 내용"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "무시"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "다른 ID·같은 수량"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "별도 이벤트로 반영"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "동점"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "상품 ID로 안정적인 순서"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "ID 등록만 하고 합계 반영 전 중단"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "원자적 처리 없으면 이벤트 누락 위험"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: e6:C+2가 새로 오면 순위는 어떻게 될까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A=5, C=5, B=3이므로 A, C, B입니다. A와 C의 동점은 ID 순서로 A가 앞섭니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "판매 이벤트의 720개 순서에서 ID 중복 제거 후 순위를 대조했습니다. 지역별 부분 1위만 보내면 A를 놓치는 반례를 확인했고, 완성된 상품 점수를 작업자 하나씩 맡긴 경우의 5,184개 분배·점수·K 조합에서 후보 병합이 전체 정렬과 같음을 확인했습니다. Python으로 실제 실행한 유한 사례·가정 모형 검산입니다. 실행용 C++ 코드를 제공하는 문제는 아닙니다. 브라우저 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서의 주제명은 학습 순서를 위한 연결 표지입니다. 이 자료는 유한한 사례와 명시된 가정으로 별도 구성한 설계 사고력 문제이며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-09-06-02-sales-rank/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

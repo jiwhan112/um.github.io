@@ -1,0 +1,380 @@
+{
+  "title": "10.1.2 심화 — 앞을 덮지 않으려면 뒤에서",
+  "subtitle": "정렬된 정보와 비교 규칙을 이용해 필요한 답을 찾는 사고력 문제",
+  "memoKey": "thinking-ctci-10.1-2-draft",
+  "starter": "// 관찰한 규칙, 불변조건, 반례를 자유롭게 적어 보세요.\n// 풀이의 전제와 경계 상황도 함께 정리하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "10.1.2 심화 — 앞을 덮지 않으려면 뒤에서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "A의 실제 배열은 [2,5,9,빈칸,빈칸,빈칸]이고, 별도 배열 B=[1,5,8]입니다. 새 큰 배열을 만들지 않고 A의 여섯 칸에 정렬된 결과를 넣으세요. 아직 읽지 않은 A의 값을 망가뜨리지 않는 방향과 불변조건을 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A의 앞 n개와 B의 m개는 각각 비내림차순입니다. A의 실제 size는 n+m이며 뒤 m칸은 값이 무엇이든 비어 있는 저장 자리로 취급합니다. capacity만 큰 배열과 다릅니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A와 B는 서로 다른 배열이며 합계 길이는 100000 이하입니다. 값은 int 범위 정수이고 덧셈 없이 비교·복사합니다. n 또는 m은 0일 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "배열"
+                  }
+                ],
+                [
+                  {
+                    "text": "상태"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A"
+                  }
+                ],
+                [
+                  {
+                    "text": "2,5,9,빈칸,빈칸,빈칸"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "B"
+                  }
+                ],
+                [
+                  {
+                    "text": "1,5,8"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 바뀌는 상태와 바뀌지 않아야 할 규칙을 적어 보세요. 답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "앞에서 B의 1을 A[0]에 쓰면 원래 A의 2는 어디에 남을까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가장 큰 값부터 A의 마지막 빈칸에 확정해 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A에서 아직 읽지 않은 끝 i와 B의 끝 j, 쓸 위치 write의 관계를 적어 보세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A의 유효 끝 i=2, B의 끝 j=2, 쓸 끝 write=5에서 시작합니다. 큰 값 9를 A[5]에, 다음 8을 A[4]에 씁니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 끝이 5이면 B의 5를 먼저 뒤쪽에 씁니다. 다음 A의 5, A의 2, B의 1을 쓰면 [1,2,5,5,8,9]입니다. 뒤에서 같은 값 중 B를 먼저 쓰므로 원래 A의 같은 값이 최종적으로 앞에 놓입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "B가 남아 있는 동안 큰 끝을 하나씩 씁니다. B를 다 쓰면 남은 A의 앞부분은 이미 제자리에 있습니다. 아래 전체 프로그램은 이 알고리즘과 독립된 전체 정렬 기준 검증을 함께 담습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "전체 C++11 풀이와 실행 검증"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <cassert>\n#include <iostream>\n#include <vector>\n\n// a.size()는 실제 원소 n개와 비어 있는 뒤쪽 m칸을 합친 크기입니다.\nvoid mergeBack(std::vector<int>& a, int n, const std::vector<int>& b) {\n    const int m = static_cast<int>(b.size());\n    assert(n >= 0 && a.size() == static_cast<std::size_t>(n + m));\n    int i = n - 1, j = m - 1, write = n + m - 1;\n    // 뒤에서 큰 값을 확정하면 아직 읽지 않은 a의 앞부분을 덮지 않습니다.\n    while (j >= 0) {\n        if (i >= 0 && a[i] > b[j]) {\n            a[write--] = a[i--];\n        } else {\n            a[write--] = b[j--];\n        }\n    }\n    // b를 모두 썼다면 남은 a의 앞부분은 이미 제자리에 있습니다.\n}\n\nvoid generate(int remaining, int minimum, std::vector<int>& cur,\n              std::vector<std::vector<int>>& all) {\n    if (remaining == 0) { all.push_back(cur); return; }\n    for (int value = minimum; value <= 2; ++value) {\n        cur.push_back(value);\n        generate(remaining - 1, value, cur, all);\n        cur.pop_back();\n    }\n}\nint main() {\n    std::vector<std::vector<int>> sorted;\n    std::vector<int> cur;\n    for (int size = 0; size <= 5; ++size) generate(size, -2, cur, sorted);\n    long long cases = 0;\n    for (const auto& left : sorted) for (const auto& right : sorted) {\n        std::vector<int> actual = left;\n        actual.resize(left.size() + right.size());\n        std::vector<int> expected = left;\n        expected.insert(expected.end(), right.begin(), right.end());\n        std::sort(expected.begin(), expected.end());  // 독립된 전체 정렬 기준\n        mergeBack(actual, static_cast<int>(left.size()), right);\n        assert(actual == expected);\n        ++cases;\n    }\n    std::cout << \"backward merge comparisons: \" << cases << '\\n';\n}\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"끝 비교: 9와 8\"] --> B[\"A의 마지막 칸에 9\"]\n B --> C[\"그 앞에 8\"]\n C --> D[\"동점 5: B의 것을 뒤에\"]\n D --> E[\"남은 5,2,1을 역순으로 확정\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"쓸 위치 write=i+j+1\"] --> B[\"j가 남아 있으면 write는 i보다 큼\"]\n B --> C[\"아직 읽지 않은 A 앞부분을 덮지 않음\"]\n C --> D[\"B 소진 후 A 앞부분은 이미 제자리\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "루프 시작마다 write=i+j+1이고 write 뒤는 전체에서 큰 값들이 올바르게 확정되어 있습니다. j≥0이면 write>i이므로 A를 읽기 전에 덮지 않습니다. 남은 두 끝의 큰 값을 쓰면 확정 구간이 한 칸 늘고 관계식도 유지됩니다. B가 소진되면 남은 A가 가장 작은 앞부분을 이룹니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "O(n+m)시간, 입력 배열 이외 O(1)추가 공간입니다. 예제 검증 프로그램이 만드는 expected와 테스트 자료는 검증용 공간이며 실제 병합 알고리즘의 추가 공간에 포함하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "A의 유효 길이 0이면 B 전체를 뒤에서 복사합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "B가 비면 A를 건드리지 않습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "반드시 A의 size를 n+m으로 확보하며 두 배열이 겹치지 않아야 합니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: 동점에서 A를 먼저 뒤쪽에 쓴다면 정렬 자체가 틀릴까요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "정수 값의 정렬은 맞지만 같은 값의 A 항목이 B 항목보다 뒤에 놓일 수 있습니다. 값만 맞는 조건과 출처까지 포함한 안정적인 순서는 구별해야 합니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "전체 C++11 프로그램을 -Wall -Wextra -Werror -pedantic 및 UBSan으로 컴파일·실행했습니다. 값 -2~2, 길이 0~5의 정렬된 두 배열 63,504조합이 std::sort 기준과 일치했습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "위 전체 C++11 프로그램은 실제 컴파일·실행했습니다. 브라우저 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 기본 문제",
+              "href": "/thinking-lab/ep-10-01-sorted-merge/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 주제 10.2.1 기본 문제",
+              "href": "/thinking-lab/ep-10-02-group-anagrams/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
