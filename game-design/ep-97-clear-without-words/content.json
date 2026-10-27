@@ -1,0 +1,449 @@
+{
+  "title": "말이 없어도 읽히는 메뉴 — 형태·배치·상태의 약속",
+  "subtitle": "텍스트를 지우는 것이 아니라 행동과 결과를 예측할 단서를 만들고 아이콘의 모호함을 검증한다.",
+  "original": {
+    "title": "Making Things Clear, Even Without Words [UI]",
+    "published_date": "2024-08-06",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "psGx8fOlus0",
+    "video_url": "https://www.youtube.com/watch?v=psGx8fOlus0",
+    "date_note": "공식 제목·설명·공개일을 확인했다. 영상 재생·자막 전문 미확인과 독창적 학습 확장을 구분한다."
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 말이 없어도 읽히는 메뉴",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "출처 경계: 공식 설명은 가능하면 단어 없이도 메뉴를 이해할 수 있게 만드는 목표와 그에 가까워지는 팁을 다룬다고 안내한다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 말이 없다는 목표를 오해하지 않는다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 설명은 가능한 한 단어 없이도 메뉴를 이해할 수 있게 만드는 이상을 제시한다. 이것을 모든 글자를 없애라는 명령으로 받아들이지 않는다. 익숙한 형태, 배치, 상태 변화로 의미가 읽히면 긴 설명의 부담을 줄일 수 있지만, 모호한 아이콘에는 짧은 이름이나 보조 설명이 필요할 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "톱니바퀴는 설정을 뜻한다고 익숙한 사람도 있지만 처음 보는 사람에게 보편적으로 자명한 기호는 아니다. 문화를 가로지르는 의미나 특정 이용자의 경험을 추정하지 않고 과제로 검증한다. 글자를 제거한 화면이 더 깔끔해 보이는 것과 실제로 이해하기 쉬운 것은 다른 평가다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 위치와 상태도 언어처럼 작동한다"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단서"
+                  }
+                ],
+                [
+                  {
+                    "text": "가상 메뉴의 예"
+                  }
+                ],
+                [
+                  {
+                    "text": "검증 질문"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "배치"
+                  }
+                ],
+                [
+                  {
+                    "text": "같은 종류의 행동을 묶음"
+                  }
+                ],
+                [
+                  {
+                    "text": "묶음의 기준이 보이는가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "형태"
+                  }
+                ],
+                [
+                  {
+                    "text": "삭제와 보관을 다른 모양으로"
+                  }
+                ],
+                [
+                  {
+                    "text": "작게 보여도 구분되는가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "상태"
+                  }
+                ],
+                [
+                  {
+                    "text": "선택·포커스·비활성을 다르게"
+                  }
+                ],
+                [
+                  {
+                    "text": "색 없이도 구분 가능한가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "반응"
+                  }
+                ],
+                [
+                  {
+                    "text": "누른 뒤 대상이 이동"
+                  }
+                ],
+                [
+                  {
+                    "text": "무슨 일이 바뀌었는지 읽히는가"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-97-clear-without-words/assets/menu-signals.svg",
+          "alt": "형태배치포커스선택결과를구분한메뉴설계.",
+          "caption": "직접 제작한 학습 도식. 아이콘만으로 이해된다고 가정하지 않고 과제로 검증합니다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 보관함과 휴지통을 혼동하지 않게"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가상 인벤토리에서 상자 아이콘은 “보관”이고 휴지통은 “삭제”다. 둘을 모양만 조금 다른 사각형으로 그리면 작은 화면에서 혼동할 수 있다. 보관은 다른 공간으로 이동하는 결과, 삭제는 회복 정책과 함께 설명해야 한다. 위험한 행동일수록 아이콘 하나에 모든 의미를 떠넘기지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확인창을 많이 띄우는 것이 유일한 해결책은 아니다. 되돌리기 가능한 삭제, 명확한 대상 이름, 별도의 위치, 실수 후 복구 등 선택지가 있다. 무엇을 지우는지 읽히지 않는 확인창은 반복 클릭 습관만 만들 수 있다. 현재 작업의 위험과 복구 가능성에 맞춰 설계한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 포커스와 선택을 구분한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "패드나 키보드로 옮겨 다니는 포커스는 “지금 누르면 실행될 항목”이고 선택 상태는 “현재 적용된 값”일 수 있다. 둘이 같은 표시라면 설정이 이미 바뀌었는지 알기 어렵다. 테두리·체크·미리보기처럼 다른 단서를 사용하고 실제 입력 방식에서 시험한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "텍스트를 줄이더라도 접근 가능한 이름과 설명이 필요한 환경은 고려해야 한다. 화면에 보이는 글자와 보조 기술이 읽는 의미는 같은 문제의 다른 층이다. 이 교재는 특정 보조 기술의 호환성을 검증하지 않았으며 실제 기기와 이용자 검토를 별도로 요구한다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-97-clear-without-words/assets/focus-selected.svg",
+          "alt": "작은글자현재적용과큰글자포커스를체크설명과테두리로구분한메뉴모형.",
+          "caption": "직접 제작한 가상 학습 예시. 원작 구현·실제 실험 결과와 구분한다."
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "1분 요약",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "단어 없이 읽히는 단서는 텍스트 무조건 제거와 다르다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "배치·형태·상태·반응이 일관된 약속을 만들게 한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "익숙한 아이콘을 모든 사람에게 자명하다고 가정하지 않는다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "포커스와 적용된 선택을 구분한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "위험한 행동에는 의미·대상·복구 경로를 더 분명히 한다."
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — 작동 계약과 검증",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실험 계약"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실행 코드 없이 가상 인벤토리의 보관·삭제·포커스·선택을 비교한다. 실제 아이콘 세트나 사용자 데이터를 사용하지 않았다. 아이콘 해석률이나 접근성 호환성 수치를 측정하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "UI 상태 모델과 표현"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "focusedItem, selectedItem, disabledReason을 서로 다른 상태로 관리하면 표현이 의미를 섞는 것을 줄일 수 있다. 클릭·패드 확정·키보드 Enter가 같은 동작을 실행하는지도 확인한다. 이 회차는 UI 코드를 수정하거나 동작 검사를 실행하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "검증 과제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "설명을 먼저 주지 않고 “이 물건을 나중에 쓰려고 보관해 보라”는 과제를 제시한다. 사용자가 무엇을 눌렀는지와 왜 그랬는지를 구분해 기록한다. 한 번 맞혔다고 의미를 이해했다고 단정하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습과 접힌 복습 답",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 · 아이콘 옆 한 단어"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "보관·삭제·정렬 중 가장 오해하기 쉬운 항목 하나를 고르고, 아이콘만 있는 버전과 짧은 이름이 있는 버전을 비교하는 계획을 세운다. 화면의 깔끔함과 과제 성공을 별도 지표로 둔다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 · 빨간색이면 삭제를 이해할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "색의 의미가 익숙하지 않거나 구분하기 어려울 수 있다. 형태·이름·위치·결과 피드백 등 다른 단서와 함께 검토한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장 · 언어가 길어지는 경우",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "짧은 한국어 이름이 다른 언어에서 길어질 수 있다. 잘림·줄바꿈·툴팁 접근을 확인하고, 글자를 없애는 것으로 의미 문제를 숨기지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 검증 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Making Things Clear, Even Without Words [UI]",
+              "href": "https://www.youtube.com/watch?v=psGx8fOlus0"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 채널 Masahiro Sakurai on Creating Games. 영상 ID psGx8fOlus0, 공개일 2024-08-06. 공식 공개 페이지의 채널 ID UCv1DvRY5PyHHt3KN9ghunuw 및 제작자 설명을 대조했다. 날짜는 원본 공개 기록 기준이며 연구실 발행일과 다르다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출처 경계: 공식 설명은 가능하면 단어 없이도 메뉴를 이해할 수 있게 만드는 목표와 그에 가까워지는 팁을 다룬다고 안내한다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인용 영상의 화면·음성·자막을 복제하지 않았다. 이 교재의 한국어 해설, 가상 상황, 코드, SVG는 자체 제작했다. CPU 예제의 통과를 실제 플레이어의 재미·접근성·온라인 공정성 검증으로 확대하지 않는다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

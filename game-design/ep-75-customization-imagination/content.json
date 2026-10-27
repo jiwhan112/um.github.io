@@ -1,0 +1,425 @@
+{
+  "title": "조합을 상상하게 하는 커스터마이즈 — 정답 하나보다 시험할 이유",
+  "subtitle": "장비 개수보다 조합의 의미·비용·되돌리기·실험 피드백을 설계하고 작은 예산 모델로 검증한다.",
+  "original": {
+    "title": "Customization Lets Your Imagination Play [Planning & Game Design]",
+    "published_date": "2024-01-16",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "rwE-EEn3hYU",
+    "video_url": "https://www.youtube.com/watch?v=rwE-EEn3hYU",
+    "date_note": "공식 제목·설명·공개일을 확인했다. 영상 재생·자막 전문 미확인과 독창적 학습 확장을 구분한다."
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 조합을 상상하게 하는 커스터마이즈",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "출처 경계: 공식 설명은 능력·장비를 실험하며 효과적인 구성을 생각하는 플레이어의 사고를 장려해야 한다고 말한다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 선택창 밖에서도 플레이가 이어진다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 설명은 능력이나 장비를 실험할 수 있으면 플레이어가 효과적인 캐릭터 구성을 생각하게 되며 이런 사고를 장려해야 한다고 제시한다. 메뉴에서 수치를 바꾸는 시간도 다음 행동을 상상하는 놀이가 될 수 있다. 하지만 모든 선택지 중 하나가 항상 우월하다면 고민은 비교표에서 정답을 찾는 작업으로 줄어든다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 조합의 의미를 상황과 연결한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가상 탐험에서 가벼운 장비는 이동, 집중 장비는 긴 준비 뒤 강한 공격, 보호 장비는 실수 회복을 돕는다고 하자. 서로 다른 상황에서 이점이 생기도록 설계하면 사용자는 자신의 계획과 맞춰 고를 수 있다. 이 효과는 교재의 가정이며 아래 코드는 실제 전투 효과가 아니라 비용 계약만 구현한다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "장비"
+                  }
+                ],
+                [
+                  {
+                    "text": "가상 역할"
+                  }
+                ],
+                [
+                  {
+                    "text": "비용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "0 가벼움"
+                  }
+                ],
+                [
+                  {
+                    "text": "이동에 집중"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1 집중"
+                  }
+                ],
+                [
+                  {
+                    "text": "준비 뒤 공격에 집중"
+                  }
+                ],
+                [
+                  {
+                    "text": "3"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2 보호"
+                  }
+                ],
+                [
+                  {
+                    "text": "실수 회복에 집중"
+                  }
+                ],
+                [
+                  {
+                    "text": "4"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-75-customization-imagination/assets/loadout-roles.svg",
+          "alt": "세장비의비용과예산6의가능조합을정리.",
+          "caption": "직접 제작한 학습 도식. 비용 검증과 전투 밸런스 검증은 다른 단계입니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "슬롯2개와 예산6이면0+2,1+1은 가능하지만1+2는 불가능하다. 같은 장비를 두 번 장착할 수 있는지도 계약이다. 이번 예제는 허용하지만 실제 효과를 중첩하는 방법은 구현하지 않는다. 비용 제한만 있다고 균형이 잡히는 것도 아니다. 효과와 상황의 가치가 함께 검증돼야 한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 실험 비용이 상상을 막지 않게 한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "새 조합을 시험할 때 비싼 소모품이 필요하거나 원래 상태로 돌아가기 어렵다면 플레이어는 이미 아는 구성을 고수할 수 있다. 미리보기, 연습 공간, 저장된 구성, 되돌리기를 검토한다. 다만 전투 도중 자유 교체가 위험을 없애는 게임이라면 변경 가능한 시점과 비용을 명시한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 결과를 해석할 단서를 준다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한 번 이겼다고 새 장비가 더 좋다고 결론 내릴 수 없다. 적 배치·사용자의 숙련·운이 달라졌을 수 있다. 같은 조건의 연습 과제에서 이동 시간, 준비 시간, 회복 여유처럼 의도한 차이를 관찰할 수 있게 한다. 모든 지표를 종합 점수 하나로 합치면 서로 다른 플레이 스타일을 다시 한 줄로 서열화할 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "조합을 공유하는 재미도 있지만 남의 구성을 따라 하지 않으면 손해라는 압박을 만들 필요는 없다. 선택 이유를 이해할 설명과 자신의 목표에 맞게 수정할 수 있는 경로를 제공한다. 선택지의 수보다 사용자가 세울 수 있는 계획의 차이를 본다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-75-customization-imagination/assets/budget-bars.svg",
+          "alt": "비용2+4와3+3은예산6에맞고3+4는초과함을비례막대로비교.",
+          "caption": "직접 제작한 가상 학습 예시. 원작 구현·실제 실험 결과와 구분한다."
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "1분 요약",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "커스터마이즈는 다음 행동을 상상하는 놀이가 될 수 있다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "상황별 역할과 비용을 연결하고 중첩 규칙을 명시한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "실험·미리보기·되돌리기의 비용을 점검한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "한 번의 승리로 조합의 우월함을 단정하지 않는다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "장비 개수보다 달라지는 계획을 평가한다."
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — 작동 계약과 검증",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실험 계약"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 슬롯은-1이면 비어 있고0~2가 장비 ID다. 비용은2·3·4, 총예산6이다. 같은 ID 중복 장착을 허용한다. 변경 후보를 복사해 검증하고 예산을 넘으면 원본을 보존한다. 효과·전투·저장·UI는 없다. get은0·1만 사용하며 잘못된 인덱스에는 array::at의 예외가 발생한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#ifdef NDEBUG\n#error \"Assertions must remain enabled.\"\n#endif\n#include <array>\n#include <cassert>\n#include <iostream>\n// 장비0,1,2의 비용은2,3,4. 두 슬롯과 총예산6.\nclass Loadout{\n    std::array<int,2> slots_{{-1,-1}};\n    static int cost(int id){const int c[]={2,3,4};return id<0?0:c[id];}\npublic:\n    bool equip(int slot,int id){\n        if(slot<0 || slot>=2 || id< -1 || id>2)return false;\n        auto next=slots_;next[slot]=id;\n        if(cost(next[0])+cost(next[1])>6)return false;\n        slots_=next;return true;\n    }\n    int get(int slot)const{return slots_.at(slot);}\n    int total()const{return cost(slots_[0])+cost(slots_[1]);}\n};\nint main(){\n    Loadout l;assert(l.equip(0,0));assert(l.equip(1,2));assert(l.total()==6);\n    assert(!l.equip(0,1));assert(l.get(0)==0 && l.total()==6);\n    assert(l.equip(1,-1));assert(l.equip(0,1));assert(l.equip(1,1));\n    assert(l.total()==6);assert(!l.equip(2,0));assert(!l.equip(0,3));\n    assert(l.get(0)==1 && l.get(1)==1);\n    std::cout<<\"loadout budget tests passed\\n\";\n}\n"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "원자적 변경과 설명 가능한 거부"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "잘못된 슬롯·ID와 예산 초과를 상태 변경 전에 확인한다. 따라서 거부 후 일부 슬롯만 바뀌지 않는다. 실제품에서는 false 대신 예산 초과·장착 불가·존재하지 않는 장비 등 이유를 구분해 안내할 수 있다. 고정2슬롯이라 O(1) 시간·공간이며 n슬롯 전체 검사는 O(n)이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++11 엄격 빌드와 UBSan에서 예산6 경계, 초과 시 보존, 해제, 중복 장착, 잘못된 슬롯·ID를 실행했다. 장비 효과와 게임 밸런스는 검증하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습과 접힌 복습 답",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 · 역할이 다른 두 구성"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "0+2와1+1이 각각 어떤 과제에서 다른 계획을 만들지 적는다. 단순히 공격력 합계만 비교하지 말고 접근·대기·실수 복구를 포함한다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 · 예산이 같으면 균형도 같은가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 비용은 설계한 제약일 뿐 실제 효과의 가치를 보장하지 않는다. 특정 상황에서 항상 우세한 조합이나 상호작용으로 예상 밖 효율이 생기는지 검증해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장 · 저장된 구성 불러오기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "여러 슬롯을 한 번에 검증하고 전체 성공 또는 전체 거부를 선택한다. 없는 장비나 변경된 비용을 어떻게 안내할지 정하고 이전 저장을 조용히 손상시키지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 검증 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Customization Lets Your Imagination Play [Planning & Game Design]",
+              "href": "https://www.youtube.com/watch?v=rwE-EEn3hYU"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 채널 Masahiro Sakurai on Creating Games. 영상 ID rwE-EEn3hYU, 공개일 2024-01-16. 공식 공개 페이지의 채널 ID UCv1DvRY5PyHHt3KN9ghunuw 및 제작자 설명을 대조했다. 날짜는 원본 공개 기록 기준이며 연구실 발행일과 다르다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출처 경계: 공식 설명은 능력·장비를 실험하며 효과적인 구성을 생각하는 플레이어의 사고를 장려해야 한다고 말한다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인용 영상의 화면·음성·자막을 복제하지 않았다. 이 교재의 한국어 해설, 가상 상황, 코드, SVG는 자체 제작했다. CPU 예제의 통과를 실제 플레이어의 재미·접근성·온라인 공정성 검증으로 확대하지 않는다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

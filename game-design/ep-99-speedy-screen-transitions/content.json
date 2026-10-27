@@ -1,0 +1,442 @@
+{
+  "title": "빠른 화면 전환의 계약 — 준비·표시·입력 소유권을 나누기",
+  "subtitle": "연출 시간을 줄이되 미완료 화면이나 오래된 요청이 나타나지 않도록 세대 토큰 모델로 검증한다.",
+  "original": {
+    "title": "Speedy Screen Transitions [Design Specifics]",
+    "published_date": "2024-08-27",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "9ic7LEHtekM",
+    "video_url": "https://www.youtube.com/watch?v=9ic7LEHtekM",
+    "date_note": "공식 제목·설명·공개일을 확인했다. 영상 재생·자막 전문 미확인과 독창적 학습 확장을 구분한다."
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 빠른 화면 전환의 계약",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "출처 경계: 공식 설명은 전환 뒤에서 로딩이 일어나더라도 화면 전환을 가능한 짧게 유지해야 한다고 제시한다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 화면이 가려진 동안에도 일은 진행된다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 설명은 화면 전환 뒤에서 많은 로딩이 일어나지만 가능한 짧게 유지해야 한다고 제시한다. 화면이 검게 변했다는 사실은 준비가 끝났다는 증거가 아니다. 반대로 준비가 이미 끝났는데 고정 연출 길이 때문에 기다리게 할 수도 있다. 실제 준비와 표현의 시간을 분리해 보아야 한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 전환을 세 구간으로 나눈다"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구간"
+                  }
+                ],
+                [
+                  {
+                    "text": "책임"
+                  }
+                ],
+                [
+                  {
+                    "text": "실패하면"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "준비"
+                  }
+                ],
+                [
+                  {
+                    "text": "다음 화면에 필요한 상태·자원 확보"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 화면 보존 또는 오류 안내"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "표시 전환"
+                  }
+                ],
+                [
+                  {
+                    "text": "검증된 다음 화면을 보여 줌"
+                  }
+                ],
+                [
+                  {
+                    "text": "부분 화면·깜박임 방지"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "입력 인계"
+                  }
+                ],
+                [
+                  {
+                    "text": "새 화면이 입력을 소유"
+                  }
+                ],
+                [
+                  {
+                    "text": "이전 클릭이 새 버튼을 누르지 않게"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전환이 빠르더라도 제목·선택 상태·뒤로 가기 위치가 잠깐 틀렸다가 바뀌면 사용자는 불안정하게 느낄 수 있다. 속도 최적화는 검증되지 않은 상태를 먼저 보여 주라는 뜻이 아니다. 준비가 필요한 요소와 나중에 채워도 되는 보조 요소를 명확히 나눈다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-99-speedy-screen-transitions/assets/transition-ownership.svg",
+          "alt": "준비Ready표시취소의조건과최신요청소유권.",
+          "caption": "직접 제작한 학습 도식. 요청 토큰은 보안 인증이 아닌 수명 구분용 번호입니다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 빠른 연속 이동에서 오래된 완료가 도착하면"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사용자가A화면을 요청한 뒤 곧바로B로 바꾸었는데A의 로딩이 늦게 끝날 수 있다. 완료 순서대로 화면을 보여 주면 최신 의도인B대신A로 돌아가는 오류가 생긴다. 요청마다 세대 토큰을 주고 현재 요청과 일치하는 완료만 받아들이는 작은 모델을 사용한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "토큰은 권한 인증 수단이 아니라 같은 프로세스 안에서 요청 수명을 구분하는 번호다. 네트워크 보안이나 접근 제어를 해결한다고 주장하지 않는다. 실제 비동기 시스템에서는 자원 해제와 작업 취소가 별도로 필요하다. 오래된 완료를 화면에 적용하지 않는 것만으로 백그라운드 작업이 중단되지는 않는다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 뒤로 가기와 취소도 전환의 일부다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "전환 중 뒤로 가기를 눌렀다면 이전 화면의 포커스·스크롤·선택이 어떻게 복원되는지 정한다. 중간 화면이 히스토리에 남아 뒤로 가기를 여러 번 눌러야 한다면 빠른 연출만으로 경험이 좋아지지 않는다. 새 화면을 표시하기 전 취소된 요청이 뒤늦게 다시 나타나지 않게 한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "5. 시간은 구간별로 측정한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "요청부터 자원 준비, 준비부터 첫 완전한 화면, 화면부터 첫 유효 입력까지 나누어 측정하면 병목을 찾기 쉽다. 평균만 보면 느린 장치나 첫 실행의 긴 꼬리가 가려질 수 있다. 장치·캐시·첫 실행 여부를 기록하고, 아직 측정하지 않은 성능 개선을 숫자로 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-99-speedy-screen-transitions/assets/stale-completion.svg",
+          "alt": "A요청뒤B요청을하면늦은A완료는거부하고B완료만표시하는시간순서.",
+          "caption": "직접 제작한 가상 학습 예시. 원작 구현·실제 실험 결과와 구분한다."
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "1분 요약",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "준비 완료·화면 표시·입력 인계를 별도 조건으로 본다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "준비된 화면을 불필요한 고정 연출로 지연시키지 않는다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "오래된 요청 완료가 최신 화면을 덮어쓰지 않게 한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "취소·뒤로 가기·중복 입력도 전환 흐름에 포함한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "구간별 실제 시간과 가상 설계 목표를 구분한다."
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — 작동 계약과 검증",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실험 계약"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "화면 ID 0~3, 단일 스레드, 테스트 요청 수 4 이하의 CPU 모델이다. begin은 새 세대 번호와 Loading을 만든다. 현재 토큰의 complete만 Ready로 바꾸고 commit이 실제 current를 바꾼다. cancel은 세대 번호를 올려 이전 완료를 무효화하고 현재 화면을 보존한다. 실제 자원·스레드·히스토리·입력은 없다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#ifdef NDEBUG\n#error \"Assertions must remain enabled.\"\n#endif\n#include <cassert>\n#include <iostream>\nenum class Phase{Showing,Loading,Ready};\nclass Transition{\n    int current_=0,target_=0,generation_=0;\n    Phase phase_=Phase::Showing;\npublic:\n    int begin(int target){\n        if(target<0 || target>3)return -1;\n        target_=target;phase_=Phase::Loading;return ++generation_;\n    }\n    bool complete(int token){\n        if(token!=generation_ || phase_!=Phase::Loading)return false;\n        phase_=Phase::Ready;return true;\n    }\n    bool commit(){\n        if(phase_!=Phase::Ready)return false;\n        current_=target_;phase_=Phase::Showing;return true;\n    }\n    void cancel(){++generation_;target_=current_;phase_=Phase::Showing;}\n    int current()const{return current_;}\n};\nint main(){\n    Transition t;int a=t.begin(1);assert(!t.commit());\n    int b=t.begin(2);assert(!t.complete(a));assert(t.current()==0);\n    assert(t.complete(b));assert(!t.complete(b));assert(t.commit());\n    assert(t.current()==2 && !t.commit());\n    int c=t.begin(3);t.cancel();assert(!t.complete(c));assert(t.current()==2);\n    assert(t.begin(9)==-1 && t.current()==2);\n    std::cout<<\"transition token tests passed\\n\";\n}\n"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "최신 의도를 보존하는 조건"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "complete는 토큰 일치와Loading을 동시에 요구하므로 이전 요청이나 중복 완료를 거부한다. commit은Ready에서만 허용하므로 미완료 화면이 표시되지 않는다. 취소는 번호를 바꿔 늦은 완료가 다시 활성화되지 않게 한다. 각 함수는 O(1) 시간·공간이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "세대 번호를 장기 실행 제품에 사용할 때에는 오버플로·ID재사용·동시 접근을 별도로 설계해야 한다. 예제의 작은 int와 단일 스레드 계약을 그대로 서버·실시간 엔진의 완성 구현으로 사용하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++11 엄격 빌드와 UBSan으로 준비 전 commit 거부, 연속 A→B에서 오래된 A 완료 거부, 중복 완료·commit 거부, 취소 뒤 늦은 완료 거부, 잘못된 화면 ID를 실행했다. 실제 전환 시간·렌더링·비동기 경쟁·입력 포커스는 검증하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습과 접힌 복습 답",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 · 전환 중 뒤로 가기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목록에서 상세를 열다가 뒤로 가는 상황의 상태표를 작성한다. 어떤 화면이 현재인지, 어떤 요청이 살아 있는지, 완료가 늦게 오면 무엇을 무시하는지 적는다. 스크롤과 포커스는 별도 상태로 포함한다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 · 오래된 완료를 무시하면 로딩도 취소되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. UI 반영을 거부하는 것과 작업 자체를 중단하고 자원을 해제하는 것은 다르다. 취소 가능한 작업인지, 완료 후 정리해야 하는지 별도 계약이 필요하다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장 · 화면은 먼저 열고 보조 자료를 나중에 받는다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "필수 준비와 보조 자료를 분리하고, 보조 자료도 해당 화면의 요청 ID와 일치할 때만 적용한다. 오류·빈 상태·재시도를 명시하고 완료되지 않은 자료를 완료로 표시하지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 검증 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Speedy Screen Transitions [Design Specifics]",
+              "href": "https://www.youtube.com/watch?v=9ic7LEHtekM"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 채널 Masahiro Sakurai on Creating Games. 영상 ID 9ic7LEHtekM, 공개일 2024-08-27. 공식 공개 페이지의 채널 ID UCv1DvRY5PyHHt3KN9ghunuw 및 제작자 설명을 대조했다. 날짜는 원본 공개 기록 기준이며 연구실 발행일과 다르다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출처 경계: 공식 설명은 전환 뒤에서 로딩이 일어나더라도 화면 전환을 가능한 짧게 유지해야 한다고 제시한다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인용 영상의 화면·음성·자막을 복제하지 않았다. 이 교재의 한국어 해설, 가상 상황, 코드, SVG는 자체 제작했다. CPU 예제의 통과를 실제 플레이어의 재미·접근성·온라인 공정성 검증으로 확대하지 않는다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

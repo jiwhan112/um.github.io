@@ -581,6 +581,1426 @@
       "published_date": "2026-10-27",
       "video_id": "j45EIuChfqs",
       "video_url": "https://www.youtube.com/watch?v=j45EIuChfqs"
+    },
+    {
+      "path": "ep-30-do-we-really-need-enemies/",
+      "number": "30",
+      "title": "적 없이도 선택은 생긴다 — 방해자의 역할부터 설계하기",
+      "summary": "공격하는 적을 기본값으로 넣기 전에 판단·긴장·피드백의 역할을 분해하고 비전투 경험을 설계한다.",
+      "topic_en": "Do We Really Need Enemies? [Game Essence]",
+      "category": "게임성 · 비전투 설계",
+      "tags": [
+        "비전투",
+        "선택",
+        "피드백",
+        "실패 비용",
+        "게임성"
+      ],
+      "date": "2023-02-06",
+      "published_date": "2026-10-27",
+      "video_id": "atqS7SImuBc",
+      "video_url": "https://www.youtube.com/watch?v=atqS7SImuBc"
+    },
+    {
+      "path": "ep-31-say-no-to-slow/",
+      "number": "31",
+      "title": "재미까지의 대기를 줄이기 — 재시도 흐름의 시간 예산",
+      "summary": "플레이어의 반복 대기를 단계별로 측정하고 필요한 준비와 불필요한 마찰을 분리한다.",
+      "topic_en": "Say No to Slow! [Design Specifics]",
+      "category": "구체적 설계 · 흐름",
+      "tags": [
+        "대기 시간",
+        "재시도",
+        "흐름",
+        "상태 관리",
+        "사용성"
+      ],
+      "date": "2023-02-11",
+      "published_date": "2026-10-27",
+      "video_id": "3qEKNxp_-Qs",
+      "video_url": "https://www.youtube.com/watch?v=3qEKNxp_-Qs"
+    },
+    {
+      "path": "ep-32-meteos/",
+      "number": "32",
+      "title": "움직이는 제안서로 퍼즐을 설명하기 — 위험과 보상의 인과",
+      "summary": "Meteos의 공식 제작자 설명을 출발점으로 독립 퍼즐의 선택·위험·보상을 시간 순서로 전달한다.",
+      "topic_en": "Meteos  [Game Concepts]",
+      "category": "게임 컨셉 · 퍼즐",
+      "tags": [
+        "퍼즐",
+        "위험과 보상",
+        "프로토타입",
+        "제안서",
+        "상태 전이"
+      ],
+      "date": "2023-02-13",
+      "published_date": "2026-10-27",
+      "video_id": "snHecpmPeJs",
+      "video_url": "https://www.youtube.com/watch?v=snHecpmPeJs"
+    },
+    {
+      "path": "ep-33-consider-rewards-first/",
+      "number": "33",
+      "title": "보상은 쓰는 순간까지 설계한다 — 획득과 사용의 연결",
+      "summary": "재료를 얼마나 줄지 정하기 전에 무엇에 쓰고 어떤 플레이 변화를 만드는지부터 설계한다.",
+      "topic_en": "Consider Rewards First  [Game Essence]",
+      "category": "게임성 · 보상 설계",
+      "tags": [
+        "보상",
+        "자원",
+        "선택",
+        "목표",
+        "경제 설계"
+      ],
+      "date": "2023-02-17",
+      "published_date": "2026-10-27",
+      "video_id": "SpwQkNzNsXk",
+      "video_url": "https://www.youtube.com/watch?v=SpwQkNzNsXk"
+    },
+    {
+      "path": "ep-34-learn-to-count-frames/",
+      "number": "34",
+      "title": "프레임으로 시간을 말하기 — 감각과 측정을 연결하기",
+      "summary": "시간을 프레임·밀리초로 변환하고 반열린 구간으로 동작 경계를 명확히 표현한다.",
+      "topic_en": "Learn to Count Frames!  [Planning & Game Design]",
+      "category": "기획 · 시간 설계",
+      "tags": [
+        "프레임",
+        "시간",
+        "타이밍",
+        "상태 전이",
+        "C++11"
+      ],
+      "date": "2023-02-20",
+      "published_date": "2026-10-27",
+      "video_id": "JZ1Jd0u3b6U",
+      "video_url": "https://www.youtube.com/watch?v=JZ1Jd0u3b6U"
+    },
+    {
+      "number": "35",
+      "path": "ep-35-loading-screens/",
+      "title": "기다림을 설계하기 — 로딩의 사실과 플레이어의 시간을 맞추기",
+      "summary": "진행률의 의미·완료 조건·입력 차단·실패 복구를 구분하고 거짓100% 대신 정직한 상태를 전달한다.",
+      "topic_en": "Loading Screens  [UI]",
+      "date": "2023-02-24",
+      "published_date": "2026-10-27",
+      "source_date": "2023-02-24",
+      "video_id": "JKV-30FD6NY",
+      "video_url": "https://www.youtube.com/watch?v=JKV-30FD6NY",
+      "category": "UI · 로딩",
+      "tags": [
+        "로딩",
+        "진행률",
+        "상태 머신",
+        "오류 복구",
+        "C++11"
+      ]
+    },
+    {
+      "number": "36",
+      "path": "ep-36-competitive-games-complex/",
+      "title": "경쟁의 깊이와 진입 장벽 — 복잡함을 어디에 둘 것인가",
+      "summary": "명령의 수와 선택의 깊이를 구분하고 첫 승부까지 필요한 지식·조작·정보 부담을 분해한다.",
+      "topic_en": "Do Competitive Games Have to Be Complex?   [Game Essence]",
+      "date": "2023-03-08",
+      "published_date": "2026-10-27",
+      "source_date": "2023-03-08",
+      "video_id": "1ggw9xXbzig",
+      "video_url": "https://www.youtube.com/watch?v=1ggw9xXbzig",
+      "category": "게임성 · 경쟁",
+      "tags": [
+        "경쟁 게임",
+        "진입 장벽",
+        "선택",
+        "게임 밸런스",
+        "학습"
+      ]
+    },
+    {
+      "number": "37",
+      "path": "ep-37-units-of-speed/",
+      "title": "속도의 단위를 맞추기 — 초·프레임·거리의 계약",
+      "summary": "기획서의 빠르다는 표현을 측정 가능한 거리/시간으로 바꾸고 프레임 의존 이동과 정수 반올림을 구분한다.",
+      "topic_en": "Units of Speed  [Design Specifics]",
+      "date": "2023-03-14",
+      "published_date": "2026-10-27",
+      "source_date": "2023-03-14",
+      "video_id": "_B0cpF8fQ4s",
+      "video_url": "https://www.youtube.com/watch?v=_B0cpF8fQ4s",
+      "category": "구체적 디자인 · 속도",
+      "tags": [
+        "속도",
+        "시간 단위",
+        "고정 업데이트",
+        "정수 연산",
+        "C++11"
+      ]
+    },
+    {
+      "number": "38",
+      "path": "ep-38-natural-tutorials/",
+      "title": "자연스러운 튜토리얼 — 배우는 동안에도 앞으로 나아가게 하기",
+      "summary": "안내창을 닫는 행동과 실제 이해를 구분하고 안전한 시도·새 상황 적용·실패 후 복귀를 설계한다.",
+      "topic_en": "Making Tutorials Feel Natural  [Planning & Game Design]",
+      "date": "2023-03-17",
+      "published_date": "2026-10-27",
+      "source_date": "2023-03-17",
+      "video_id": "Xz53DEwuAcU",
+      "video_url": "https://www.youtube.com/watch?v=Xz53DEwuAcU",
+      "category": "기획 · 튜토리얼",
+      "tags": [
+        "튜토리얼",
+        "학습 전이",
+        "상태 머신",
+        "피드백",
+        "C++11"
+      ]
+    },
+    {
+      "number": "39",
+      "path": "ep-39-falling-block-puzzle-essence/",
+      "title": "쌓을 것인가 지울 것인가 — 낙하 퍼즐의 선택과 위험",
+      "summary": "블록 배치 결과를 상태 변화로 읽고 즉시 해소와 미래 보상의 긴장을 독창적4×4 보드로 분석한다.",
+      "topic_en": "Game Essence in Falling-Block Puzzle Games  [Game Essence]",
+      "date": "2023-03-20",
+      "published_date": "2026-10-27",
+      "source_date": "2023-03-20",
+      "video_id": "QOkY6BULsgo",
+      "video_url": "https://www.youtube.com/watch?v=QOkY6BULsgo",
+      "category": "게임성 · 퍼즐",
+      "tags": [
+        "퍼즐",
+        "위험과 보상",
+        "보드 상태",
+        "배열",
+        "C++11"
+      ]
+    },
+    {
+      "path": "ep-40-sodatete-kouchuu-ouja-mushiking/",
+      "number": "40",
+      "title": "《Sodatete! Kouchuu Ouja Mushiking》 — 작은 기기의 경험을 제안하는 법",
+      "summary": "휴대형 디지털 게임이라는 출발점에서, 움직이는 제안과 실행 가능한 상태 계약의 차이를 배운다.",
+      "topic_en": "Sodatete! Kouchuu Ouja Mushiking  [Game Concepts]",
+      "category": "게임 컨셉 · 전달과 제약",
+      "tags": [
+        "게임 컨셉",
+        "프로토타입",
+        "상태 설계",
+        "기획서"
+      ],
+      "date": "2023-04-05",
+      "published_date": "2026-10-27",
+      "video_id": "b3Fd8pBK0EA",
+      "video_url": "https://www.youtube.com/watch?v=b3Fd8pBK0EA"
+    },
+    {
+      "path": "ep-41-emphasizing-text/",
+      "number": "41",
+      "title": "텍스트에 강조를 더하기 — 감정과 정보의 우선순위",
+      "summary": "색·움직임·표시 리듬을 목적별로 나누고, 번역·건너뛰기·접근성까지 유지되는 텍스트 연출을 설계한다.",
+      "topic_en": "Emphasizing Text  [UI]",
+      "category": "UI · 정보와 표현",
+      "tags": [
+        "UI",
+        "텍스트",
+        "접근성",
+        "국제화"
+      ],
+      "date": "2023-04-08",
+      "published_date": "2026-10-27",
+      "video_id": "bZSNYX5CVpw",
+      "video_url": "https://www.youtube.com/watch?v=bZSNYX5CVpw"
+    },
+    {
+      "path": "ep-42-praise-the-player/",
+      "number": "42",
+      "title": "플레이어를 칭찬하라 — 성공의 이유가 보이는 피드백",
+      "summary": "칭찬을 장식 문구가 아니라 행동의 의미를 알려 주는 신호로 설계하고, 과장·반복·중복 이벤트를 줄인다.",
+      "topic_en": "Praise the Player! [Planning & Game Design]",
+      "category": "게임 기획 · 긍정적 피드백",
+      "tags": [
+        "피드백",
+        "성취감",
+        "이벤트",
+        "UX"
+      ],
+      "date": "2023-04-14",
+      "published_date": "2026-10-27",
+      "video_id": "fryDyXROp8A",
+      "video_url": "https://www.youtube.com/watch?v=fryDyXROp8A"
+    },
+    {
+      "path": "ep-43-dying-comes-as-a-relief/",
+      "number": "43",
+      "title": "패배가 안도가 되는 순간? — 긴장 해소와 실패의 의미 분리",
+      "summary": "공식 설명에 소개된 역설을 비판적으로 읽고, 승패·긴장·휴식·장기 만족을 따로 관찰하는 방법을 배운다.",
+      "topic_en": "Dying Comes as a Relief?  [Game Essence]",
+      "category": "게임성 · 감정과 관찰",
+      "tags": [
+        "긴장과 해소",
+        "실패 설계",
+        "플레이테스트",
+        "측정"
+      ],
+      "date": "2023-04-19",
+      "published_date": "2026-10-27",
+      "video_id": "vDEJ0sXw8Ks",
+      "video_url": "https://www.youtube.com/watch?v=vDEJ0sXw8Ks"
+    },
+    {
+      "path": "ep-44-behavior-at-ledges/",
+      "number": "44",
+      "title": "낭떠러지의 행동 규칙 — 떨어짐·멈춤·관용을 구분하기",
+      "summary": "발판 가장자리에서 플레이어 의도를 다루는 여러 정책을 비교하고, 정수 좌표의 작은 C++11 모델로 경계를 시험한다.",
+      "topic_en": "Behavior at Ledges  [Design Specifics]",
+      "category": "구체적 디자인 · 이동 규칙",
+      "tags": [
+        "충돌",
+        "조작감",
+        "상태 머신",
+        "경계 테스트"
+      ],
+      "date": "2023-05-02",
+      "published_date": "2026-10-27",
+      "video_id": "rcuihq0j7VM",
+      "video_url": "https://www.youtube.com/watch?v=rcuihq0j7VM"
+    },
+    {
+      "path": "ep-45-dont-be-unresponsive/",
+      "number": "45",
+      "title": "무반응을 없애기 — 입력·처리·결과를 구분하는 피드백",
+      "summary": "눌림을 인식했다는 응답과 실제 성공을 분리하고 중복 입력·늦은 응답을 상태 모델로 검증한다.",
+      "topic_en": "Don't Be Unresponsive  [Planning & Game Design]",
+      "category": "기획 · 반응과 피드백",
+      "tags": [
+        "입력 피드백",
+        "비동기 처리",
+        "상태 전이",
+        "중복 요청",
+        "C++11"
+      ],
+      "date": "2023-05-08",
+      "published_date": "2026-10-27",
+      "video_id": "eia2IAmvtKI",
+      "video_url": "https://www.youtube.com/watch?v=eia2IAmvtKI"
+    },
+    {
+      "path": "ep-46-mountain-climbing/",
+      "number": "46",
+      "title": "산을 오르기만 하는 게임은 아니다 — 성장과 도전의 리듬",
+      "summary": "동일 비율 스케일링의 한계를 타격 수로 분석하고 과거의 성취와 새 도전을 함께 설계한다.",
+      "topic_en": "Mountain Climbing Is More Than Just Climbing  [Game Essence]",
+      "category": "게임성 · 성장과 리듬",
+      "tags": [
+        "성장 곡선",
+        "난도",
+        "스케일링",
+        "성취감",
+        "전투 밸런스"
+      ],
+      "date": "2023-05-10",
+      "published_date": "2026-10-27",
+      "video_id": "Be6km65CuuM",
+      "video_url": "https://www.youtube.com/watch?v=Be6km65CuuM"
+    },
+    {
+      "path": "ep-47-super-smash-bros-brawl/",
+      "number": "47",
+      "title": "큰 게임의 개념을 지키기 — Super Smash Bros. Brawl에서 출발하는 범위 설계",
+      "summary": "제품의 경험 목표를 기능 후보와 연결하고 시스템 간 상호작용을 기준으로 검증 우선순위를 정한다.",
+      "topic_en": "Super Smash Bros. Brawl  [Game Concepts]",
+      "category": "게임 컨셉 · 제품 범위",
+      "tags": [
+        "게임 컨셉",
+        "범위 설계",
+        "우선순위",
+        "시스템 관계",
+        "프로토타입"
+      ],
+      "date": "2023-05-19",
+      "published_date": "2026-10-27",
+      "video_id": "dXpFTHtlmCo",
+      "video_url": "https://www.youtube.com/watch?v=dXpFTHtlmCo"
+    },
+    {
+      "path": "ep-48-menus-define-world/",
+      "number": "48",
+      "title": "메뉴가 세계를 정의한다 — 분위기와 사용성을 함께 설계하기",
+      "summary": "세계관을 담은 메뉴를 의미·탐색·장식 층으로 나누고 입력·읽기·복귀의 기본 약속을 지킨다.",
+      "topic_en": "Menus Define Your World [UI]",
+      "category": "UI · 세계관과 사용성",
+      "tags": [
+        "UI",
+        "세계관",
+        "메뉴",
+        "정보 계층",
+        "접근성",
+        "초점 이동"
+      ],
+      "date": "2023-05-27",
+      "published_date": "2026-10-27",
+      "video_id": "pivfg2DrFfY",
+      "video_url": "https://www.youtube.com/watch?v=pivfg2DrFfY"
+    },
+    {
+      "path": "ep-49-game-writing-is-unique/",
+      "number": "49",
+      "title": "게임 글쓰기는 다르다 — 행동·상태·반복을 담는 문장",
+      "summary": "대사를 조건과 전이로 분해하고 순서가 바뀌거나 중단되어도 플레이어 행동을 인정하는 서사를 설계한다.",
+      "topic_en": "Game Writing is Unique  [Planning & Game Design]",
+      "category": "기획 · 인터랙티브 서사",
+      "tags": [
+        "게임 서사",
+        "대사 조건",
+        "상태 전이",
+        "플레이어 선택",
+        "반복",
+        "현지화"
+      ],
+      "date": "2023-06-01",
+      "published_date": "2026-10-27",
+      "video_id": "ssvIEm_2mYM",
+      "video_url": "https://www.youtube.com/watch?v=ssvIEm_2mYM"
+    },
+    {
+      "number": "50",
+      "path": "ep-50-make-retries-quick/",
+      "title": "재도전의 입구를 짧게 — 실패 뒤 다시 행동하기까지",
+      "summary": "실패 연출·상태 초기화·입력 복귀를 분리하고 빠르면서도 안전한 재시도 루프를 설계한다.",
+      "topic_en": "Make Retries Quick [Game Essence]",
+      "date": "2023-06-12",
+      "published_date": "2026-10-27",
+      "video_id": "oSi0wEJHLuA",
+      "video_url": "https://www.youtube.com/watch?v=oSi0wEJHLuA",
+      "category": "게임성 · 재시도",
+      "tags": [
+        "재시도",
+        "상태 초기화",
+        "실패 피드백",
+        "입력",
+        "C++11"
+      ]
+    },
+    {
+      "number": "51",
+      "path": "ep-51-maps-are-game-screens/",
+      "title": "지도도 플레이 화면이다 — 어디를 보고 결정하게 할 것인가",
+      "summary": "지도와 세계 화면의 정보 역할을 나누고 경로 선택·방향 감각·정보 중복의 비용을 분석한다.",
+      "topic_en": "Maps Are Game Screens, Too [Design Specifics]",
+      "date": "2023-06-16",
+      "published_date": "2026-10-27",
+      "video_id": "-Fhj07C1ou0",
+      "video_url": "https://www.youtube.com/watch?v=-Fhj07C1ou0",
+      "category": "구체적 디자인 · 지도",
+      "tags": [
+        "지도",
+        "시선",
+        "경로 선택",
+        "정보 설계",
+        "탐험"
+      ]
+    },
+    {
+      "number": "52",
+      "path": "ep-52-fun-in-picking-sides/",
+      "title": "응원할 편이 생기는 순간 — 관전의 목표와 정보 설계",
+      "summary": "관전자에게 결과의 의미를 전달하되 편파 정보·과도한 압박 없이 스스로 관심을 형성하게 돕는다.",
+      "topic_en": "The Fun in Picking Sides  [Planning & Game Design]",
+      "date": "2023-06-19",
+      "published_date": "2026-10-27",
+      "video_id": "A_A4tgLIXO4",
+      "video_url": "https://www.youtube.com/watch?v=A_A4tgLIXO4",
+      "category": "기획 · 관전",
+      "tags": [
+        "관전",
+        "응원",
+        "목표",
+        "정보 설계",
+        "공정성"
+      ]
+    },
+    {
+      "number": "53",
+      "path": "ep-53-kid-icarus-uprising/",
+      "title": "여러 목표를 한 경험으로 묶기 — Kid Icarus: Uprising에서 출발한 기획 연습",
+      "summary": "원본의 작품 소개와 독창적 설계 실습을 구분하고 이동·조준·발사의 역할, 조작 부담, 경험 우선순위를 분석한다.",
+      "topic_en": "Kid Icarus: Uprising [Game Concepts]",
+      "date": "2023-07-04",
+      "published_date": "2026-10-27",
+      "video_id": "p-uwRfckTs4",
+      "video_url": "https://www.youtube.com/watch?v=p-uwRfckTs4",
+      "category": "게임 컨셉 · 조작",
+      "tags": [
+        "게임 컨셉",
+        "이동과 조준",
+        "입력",
+        "프로토타입",
+        "C++11"
+      ]
+    },
+    {
+      "number": "54",
+      "path": "ep-54-appealing-enough-start-over/",
+      "title": "다시 시작하고 싶은 이유 — 손실의 크기보다 다음 선택의 매력",
+      "summary": "재시작을 요구하는 게임에서 사라지는 자원·남는 학습·새로운 가능성을 분리하고 반복의 질을 설계한다.",
+      "topic_en": "Is Your Game Appealing Enough to Start Over? [Game Essence]",
+      "date": "2023-07-13",
+      "published_date": "2026-10-27",
+      "video_id": "atHnu2fKtZA",
+      "video_url": "https://www.youtube.com/watch?v=atHnu2fKtZA",
+      "category": "게임성 · 반복",
+      "tags": [
+        "재시작",
+        "반복 플레이",
+        "실패 비용",
+        "학습",
+        "진도 저장"
+      ]
+    },
+    {
+      "path": "ep-55-motion-settings/",
+      "number": "55",
+      "title": "화면 움직임을 선택하게 하기 — 카메라 설정의 설계와 검증",
+      "summary": "추가 카메라 효과를 분리하고 사용자가 조정한 설정이 장면과 재접속에서도 유지되는지 점검한다.",
+      "topic_en": "Motion Sickness in 3D Games [Planning & Game Design]",
+      "category": "기획 · 카메라 선택권",
+      "tags": [
+        "카메라",
+        "접근성",
+        "설정",
+        "화면 효과",
+        "사용자 선택"
+      ],
+      "date": "2023-07-17",
+      "published_date": "2026-10-27",
+      "video_id": "OS4CZkBBbW4",
+      "video_url": "https://www.youtube.com/watch?v=OS4CZkBBbW4"
+    },
+    {
+      "path": "ep-56-color-coding/",
+      "number": "56",
+      "title": "색으로 게임을 정리하기 — 분위기와 의미를 혼동하지 않기",
+      "summary": "색의 역할을 분리하고 팀·속성·상태의 충돌을 점검하며 기호와 문구로 핵심 의미를 함께 전달한다.",
+      "topic_en": "Color-Coding Your Game [UI]",
+      "category": "UI · 색과 의미",
+      "tags": [
+        "UI",
+        "색상",
+        "정보 설계",
+        "접근성",
+        "상태 표시"
+      ],
+      "date": "2023-08-01",
+      "published_date": "2026-10-27",
+      "video_id": "CWvLMK4OKko",
+      "video_url": "https://www.youtube.com/watch?v=CWvLMK4OKko"
+    },
+    {
+      "path": "ep-57-shooting-game-essence/",
+      "number": "57",
+      "title": "슈팅 게임의 위험과 보상 — 발사보다 선택을 설계하기",
+      "summary": "공격 기회·노출·회피 공간을 분해하고 적 제거 순서가 다음 선택을 어떻게 바꾸는지 분석한다.",
+      "topic_en": "Game Essence in Shooting Games [Game Essence]",
+      "category": "게임성 · 슈팅의 선택",
+      "tags": [
+        "슈팅",
+        "위험과 보상",
+        "회피",
+        "위협 우선순위",
+        "공간 판단"
+      ],
+      "date": "2023-08-04",
+      "published_date": "2026-10-27",
+      "video_id": "iN3IyqPjLkc",
+      "video_url": "https://www.youtube.com/watch?v=iN3IyqPjLkc"
+    },
+    {
+      "path": "ep-58-smash-3ds-wii-u/",
+      "number": "58",
+      "title": "두 환경에서 하나의 개념을 지키기 — 3DS / Wii U에서 출발하는 설계",
+      "summary": "공통 규칙과 환경별 표현을 구분하고 화면·입력·성능 차이를 검증 계약으로 연결한다.",
+      "topic_en": "Super Smash Bros. for 3DS / Wii U [Game Concepts]",
+      "category": "게임 컨셉 · 다중 환경",
+      "tags": [
+        "게임 컨셉",
+        "멀티플랫폼",
+        "공통 규칙",
+        "화면 설계",
+        "검증"
+      ],
+      "date": "2023-08-08",
+      "published_date": "2026-10-27",
+      "video_id": "DeLrIXCOUw0",
+      "video_url": "https://www.youtube.com/watch?v=DeLrIXCOUw0"
+    },
+    {
+      "path": "ep-59-hierarchical-outlines/",
+      "number": "59",
+      "title": "계층형 개요로 생각을 정리하기 — 목표·규칙·검증을 연결한다",
+      "summary": "문서의 층을 질문별로 나누고 안정적인 항목 ID와 구조 검사를 통해 중복·누락을 찾는다.",
+      "topic_en": "Staying Organized with Hierarchical Outlines [Planning & Game Design]",
+      "category": "기획 · 문서 구조",
+      "tags": [
+        "기획 문서",
+        "계층형 개요",
+        "사양",
+        "추적성",
+        "C++11"
+      ],
+      "date": "2023-08-15",
+      "published_date": "2026-10-27",
+      "video_id": "ZzCfzwe23kw",
+      "video_url": "https://www.youtube.com/watch?v=ZzCfzwe23kw"
+    },
+    {
+      "path": "ep-60-unexpected-results/",
+      "number": "60",
+      "title": "예상 밖의 결과를 다루는 기획 — 관찰과 원인을 분리하기",
+      "summary": "불확실한 결과를 숨기거나 단정하지 않고 재현 조건·영향·복구 선택으로 나누어 대응한다.",
+      "topic_en": "Unexpected Results [Design Specifics]",
+      "category": "구체적 설계 · 검증",
+      "tags": [
+        "검증",
+        "예외 상황",
+        "재현",
+        "복구",
+        "기획 판단"
+      ],
+      "date": "2023-08-25",
+      "published_date": "2026-10-27",
+      "video_id": "6P8zwwQ9OhU",
+      "video_url": "https://www.youtube.com/watch?v=6P8zwwQ9OhU"
+    },
+    {
+      "path": "ep-61-make-important-elements-bigger/",
+      "number": "61",
+      "title": "중요한 선택을 크게 보이게 — 메뉴의 시각적 위계",
+      "summary": "목록형 메뉴의 대안을 비교하며 중요도·위치 기억·입력 탐색을 함께 설계한다.",
+      "topic_en": "Make Important Elements Bigger [UI]",
+      "category": "UI · 정보 위계",
+      "tags": [
+        "UI",
+        "메뉴",
+        "위계",
+        "포커스",
+        "탐색"
+      ],
+      "date": "2023-09-15",
+      "published_date": "2026-10-27",
+      "video_id": "va8wt2yGviY",
+      "video_url": "https://www.youtube.com/watch?v=va8wt2yGviY"
+    },
+    {
+      "path": "ep-62-more-game-essence-less-broad-appeal/",
+      "number": "62",
+      "title": "깊이와 폭넓은 접근성 사이 — 누구를 위한 판단인가",
+      "summary": "위험·보상의 깊이를 늘릴 때 생기는 학습 부담과 대상 경험을 구분하고 선택 가능한 도전을 설계한다.",
+      "topic_en": "More Game Essence Means Less Broad Appeal [Game Essence]",
+      "category": "게임성 · 대상 설계",
+      "tags": [
+        "게임성",
+        "접근성",
+        "난도",
+        "대상 사용자",
+        "선택"
+      ],
+      "date": "2023-09-19",
+      "published_date": "2026-10-27",
+      "video_id": "ML5wdEWpTuA",
+      "video_url": "https://www.youtube.com/watch?v=ML5wdEWpTuA"
+    },
+    {
+      "path": "ep-63-planning-your-games-rewards/",
+      "number": "63",
+      "title": "핵심 규칙을 해치지 않는 보상 — 성장 수치 밖의 만족",
+      "summary": "레벨·장비 강화가 맞지 않는 게임에서 표현·기록·탐색·도전 보상을 핵심 경험과 연결한다.",
+      "topic_en": "Planning Your Game’s Rewards [Planning & Game Design]",
+      "category": "기획 · 보상 체계",
+      "tags": [
+        "보상",
+        "대전",
+        "공정성",
+        "표현",
+        "진척"
+      ],
+      "date": "2023-09-28",
+      "published_date": "2026-10-27",
+      "video_id": "44ONFHla-sw",
+      "video_url": "https://www.youtube.com/watch?v=44ONFHla-sw"
+    },
+    {
+      "path": "ep-64-flick-input/",
+      "number": "64",
+      "title": "스틱을 얼마나 빨리 기울였는가 — 플릭 입력의 시간 계약",
+      "summary": "아날로그 위치와 변화 시간을 구분하고 중립 재무장·이중 문턱으로 단발 플릭을 검출한다.",
+      "topic_en": "Flick Input [Design Specifics]",
+      "category": "구체적 설계 · 입력",
+      "tags": [
+        "아날로그 입력",
+        "플릭",
+        "임계값",
+        "시간",
+        "C++11"
+      ],
+      "date": "2023-10-10",
+      "published_date": "2026-10-27",
+      "video_id": "ChNceKFm2kI",
+      "video_url": "https://www.youtube.com/watch?v=ChNceKFm2kI"
+    },
+    {
+      "path": "ep-65-the-shoryuken-command/",
+      "number": "65",
+      "title": "승룡권 커맨드 — 입력 자체의 위험과 보상",
+      "summary": "기술의 위력뿐 아니라 입력에 드는 시간·자세·오입력 가능성을 함께 보고, 인식 규칙과 공정한 피드백을 설계한다.",
+      "topic_en": "The Shoryuken Command [Game Essence]",
+      "category": "게임의 본질 · 입력과 선택",
+      "tags": [
+        "입력 설계",
+        "위험과 보상",
+        "버퍼",
+        "전투 시스템"
+      ],
+      "date": "2023-10-27",
+      "published_date": "2026-10-27",
+      "video_id": "zswiCPS5CSM",
+      "video_url": "https://www.youtube.com/watch?v=zswiCPS5CSM"
+    },
+    {
+      "path": "ep-66-super-smash-bros-ultimate/",
+      "number": "66",
+      "title": "《Super Smash Bros. Ultimate》 — 큰 컨셉을 검증 가능한 약속으로",
+      "summary": "작품 소개를 출발점으로, 대규모 게임의 중심 약속과 콘텐츠·규칙·검증 범위를 연결하는 독립적인 설계 연습을 한다.",
+      "topic_en": "Super Smash Bros. Ultimate [Game Concepts]",
+      "category": "게임 컨셉 · 규모와 약속",
+      "tags": [
+        "게임 컨셉",
+        "범위 설계",
+        "테스트 행렬",
+        "공통 규칙"
+      ],
+      "date": "2023-10-30",
+      "published_date": "2026-10-27",
+      "video_id": "RDrNWAHaKfI",
+      "video_url": "https://www.youtube.com/watch?v=RDrNWAHaKfI"
+    },
+    {
+      "path": "ep-67-avoiding-comparison/",
+      "number": "67",
+      "title": "비교를 피하기 — 익숙한 설명과 새로운 경험의 경계",
+      "summary": "차별화를 기능의 낯섦으로만 보지 않고, 익숙한 기준점이 이해를 돕거나 잘못된 기대를 만드는 과정을 분석한다.",
+      "topic_en": "Avoiding Comparison [Planning & Game Design]",
+      "category": "기획과 게임 디자인 · 비교와 독창성",
+      "tags": [
+        "차별화",
+        "기획 전달",
+        "프로토타입",
+        "플레이테스트"
+      ],
+      "date": "2023-11-02",
+      "published_date": "2026-10-27",
+      "video_id": "gYuvggptkDM",
+      "video_url": "https://www.youtube.com/watch?v=gYuvggptkDM"
+    },
+    {
+      "path": "ep-68-making-sequels/",
+      "number": "68",
+      "title": "후속작 만들기 — 재사용할 기반과 바꿔야 할 약속",
+      "summary": "기존 시스템을 활용하는 이점과 변경 비용을 함께 보고, 후속작의 정체성·기술 부채·데이터 호환성을 구분한다.",
+      "topic_en": "Making Sequels [Planning & Game Design]",
+      "category": "기획과 게임 디자인 · 기반과 변화",
+      "tags": [
+        "후속작",
+        "재사용",
+        "호환성",
+        "회귀 테스트"
+      ],
+      "date": "2023-11-14",
+      "published_date": "2026-10-27",
+      "video_id": "plPR6-Gqemc",
+      "video_url": "https://www.youtube.com/watch?v=plPR6-Gqemc"
+    },
+    {
+      "path": "ep-69-i-want-to-choose-fast/",
+      "number": "69",
+      "title": "빨리 고르고 싶다 — 메뉴 이동 속도와 확정의 안전성",
+      "summary": "선택지를 빠르게 탐색하는 경험을 입력 반복·경계 정책·확정 단계로 나누고, 실수 비용을 늘리지 않는 UI 계약을 만든다.",
+      "topic_en": "I Want to Choose Fast! [UI]",
+      "category": "UI · 빠른 선택과 안전한 확정",
+      "tags": [
+        "UI",
+        "입력 반복",
+        "목록 탐색",
+        "C++11"
+      ],
+      "date": "2023-12-01",
+      "published_date": "2026-10-27",
+      "video_id": "-_3ZnSiwlnc",
+      "video_url": "https://www.youtube.com/watch?v=-_3ZnSiwlnc"
+    },
+    {
+      "path": "ep-70-leaderboards/",
+      "number": "70",
+      "title": "순위표의 장단점 — 비교가 누구에게 어떤 목표가 되는가",
+      "summary": "전체·가까운 집단·자기 기록을 구분하고 동점·기간·공개 범위를 포함한 비교 계약을 설계한다.",
+      "topic_en": "The Pros and Cons of Leaderboards [Game Essence]",
+      "category": "게임성 · 비교와 동기",
+      "tags": [
+        "순위표",
+        "동기",
+        "개인 기록",
+        "비교 기준",
+        "공개 범위"
+      ],
+      "date": "2023-12-05",
+      "published_date": "2026-10-27",
+      "video_id": "g7nC6NtTMIk",
+      "video_url": "https://www.youtube.com/watch?v=g7nC6NtTMIk"
+    },
+    {
+      "path": "ep-71-teaching-players/",
+      "number": "71",
+      "title": "플레이 방법 가르치기 — 설명·시도·이해를 연결한다",
+      "summary": "가상 방어 튜토리얼을 단계화하고 입력 성공과 규칙 이해를 구분하는 관찰·복습 경로를 설계한다.",
+      "topic_en": "Teaching Players How to Play [Design Specifics]",
+      "category": "구체적 디자인 · 플레이 학습",
+      "tags": [
+        "튜토리얼",
+        "학습",
+        "피드백",
+        "실패 비용",
+        "복습"
+      ],
+      "date": "2023-12-16",
+      "published_date": "2026-10-27",
+      "video_id": "Icl-jMlz1iY",
+      "video_url": "https://www.youtube.com/watch?v=Icl-jMlz1iY"
+    },
+    {
+      "path": "ep-72-already-know/",
+      "number": "72",
+      "title": "이미 아는 것을 활용하기 — 조작 관례와 사용자 조정",
+      "summary": "익숙한 행동 기대를 보존하면서 재매핑·반전·장치 전환에 일관적인 입력 계약을 설계한다.",
+      "topic_en": "It’s Easier If They Already Know [Planning & Game Design]",
+      "category": "기획 · 익숙함과 조정",
+      "tags": [
+        "조작 관례",
+        "입력 매핑",
+        "사용자 설정",
+        "학습 비용",
+        "일관성"
+      ],
+      "date": "2023-12-22",
+      "published_date": "2026-10-27",
+      "video_id": "ANerCiyfJjo",
+      "video_url": "https://www.youtube.com/watch?v=ANerCiyfJjo"
+    },
+    {
+      "path": "ep-73-what-is-play/",
+      "number": "73",
+      "title": "놀이라는 질문 — 목표·표현·관계의 여러 이유를 관찰하기",
+      "summary": "같은 반복 행동에 서로 다른 동기가 있을 수 있음을 가상 블록 놀이로 분석하고 경험 목표를 명시한다.",
+      "topic_en": "What is “Play”?　[Game Essence]",
+      "category": "게임성 · 놀이의 의미",
+      "tags": [
+        "놀이",
+        "경험 목표",
+        "표현",
+        "관찰",
+        "동기"
+      ],
+      "date": "2024-01-02",
+      "published_date": "2026-10-27",
+      "video_id": "g5uooUqdXXs",
+      "video_url": "https://www.youtube.com/watch?v=g5uooUqdXXs"
+    },
+    {
+      "path": "ep-74-skip-and-pause/",
+      "number": "74",
+      "title": "건너뛰고 멈출 자유 — 컷신 상태와 진행 결과를 분리하기",
+      "summary": "일시정지·재개·건너뛰기의 의미를 명시하고 필수 결과가 한 번만 적용되는 C++11 상태 모델을 검증한다.",
+      "topic_en": "Let Them Skip, Let Them Pause [UI]",
+      "category": "UI · 재생 제어",
+      "tags": [
+        "컷신",
+        "일시정지",
+        "건너뛰기",
+        "상태 전이",
+        "중복 처리",
+        "C++11"
+      ],
+      "date": "2024-01-09",
+      "published_date": "2026-10-27",
+      "video_id": "Y4-eS6Ezui8",
+      "video_url": "https://www.youtube.com/watch?v=Y4-eS6Ezui8"
+    },
+    {
+      "number": "75",
+      "path": "ep-75-customization-imagination/",
+      "title": "조합을 상상하게 하는 커스터마이즈 — 정답 하나보다 시험할 이유",
+      "summary": "장비 개수보다 조합의 의미·비용·되돌리기·실험 피드백을 설계하고 작은 예산 모델로 검증한다.",
+      "topic_en": "Customization Lets Your Imagination Play [Planning & Game Design]",
+      "date": "2024-01-16",
+      "published_date": "2026-10-27",
+      "video_id": "rwE-EEn3hYU",
+      "video_url": "https://www.youtube.com/watch?v=rwE-EEn3hYU",
+      "category": "기획 · 커스터마이즈",
+      "tags": [
+        "커스터마이즈",
+        "조합",
+        "예산",
+        "실험",
+        "C++11"
+      ]
+    },
+    {
+      "number": "76",
+      "path": "ep-76-licensed-faithfulness/",
+      "title": "원작다움을 먼저 정의하기 — 라이선스 게임의 창작 기준",
+      "summary": "계약·법률 판단 대신 창작 브리프에서 지켜야 할 인물·세계·행동의 기준과 게임적 변환을 구분한다.",
+      "topic_en": "Faithfulness Comes First in Licensed Games [Game Essence]",
+      "date": "2024-02-06",
+      "published_date": "2026-10-27",
+      "video_id": "EgUvH3YMVCM",
+      "video_url": "https://www.youtube.com/watch?v=EgUvH3YMVCM",
+      "category": "게임성 · 원작 충실성",
+      "tags": [
+        "원작 충실성",
+        "창작 브리프",
+        "세계 규칙",
+        "인물 동기",
+        "검토"
+      ]
+    },
+    {
+      "number": "77",
+      "path": "ep-77-randomness-spices-games/",
+      "title": "무작위성을 어디에 넣을까 — 암기와 적응 사이의 설계",
+      "summary": "독립 추첨과 셔플 가방의 차이를 계산하고 예측 가능성·연속성·재현 가능한 테스트를 분리한다.",
+      "topic_en": "Randomness Spices Games Up [Design Specifics]",
+      "date": "2024-02-09",
+      "published_date": "2026-10-27",
+      "video_id": "e9v_FwUGOwY",
+      "video_url": "https://www.youtube.com/watch?v=e9v_FwUGOwY",
+      "category": "구체적 디자인 · 무작위",
+      "tags": [
+        "무작위",
+        "확률",
+        "셔플 가방",
+        "재현성",
+        "C++11"
+      ]
+    },
+    {
+      "number": "78",
+      "path": "ep-78-action-game-essence/",
+      "title": "행동 게임의 판단을 읽기 — 예고·위험·회복의 시간 창",
+      "summary": "반사 신경이라는 한 단어 대신 정보를 읽고 위험을 선택하고 결과를 수정하는 과정을 분리한다.",
+      "topic_en": "Game Essence in Action Games [Game Essence]",
+      "date": "2024-02-23",
+      "published_date": "2026-10-27",
+      "video_id": "EzwCc2_8OzU",
+      "video_url": "https://www.youtube.com/watch?v=EzwCc2_8OzU",
+      "category": "게임성 · 액션",
+      "tags": [
+        "액션",
+        "예고",
+        "위험과 보상",
+        "시간 창",
+        "C++11"
+      ]
+    },
+    {
+      "number": "79",
+      "path": "ep-79-crafting-similar-games/",
+      "title": "비슷함을 분석하고 새 목적을 세우기 — 영감에서 설계로",
+      "summary": "외형 복제 대신 선택·정보·비용·피드백의 관계를 분석하고 가상의 운반 게임을 새로운 경험으로 변형한다.",
+      "topic_en": "Crafting “Similar” Games [Planning & Game Design]",
+      "date": "2024-03-05",
+      "published_date": "2026-10-27",
+      "video_id": "BO_q72ug1eA",
+      "video_url": "https://www.youtube.com/watch?v=BO_q72ug1eA",
+      "category": "기획 · 시스템 변형",
+      "tags": [
+        "영감",
+        "시스템 분석",
+        "선택",
+        "프로토타입",
+        "비교 실험"
+      ]
+    },
+    {
+      "path": "ep-80-button-settings/",
+      "number": "80",
+      "title": "버튼 설정을 안전하게 바꾸기 — 행동 매핑과 복구 경로",
+      "summary": "물리 키와 행동을 분리하고 충돌·취소·표시 갱신을 함께 설계하는 입력 설정 실습이다.",
+      "topic_en": "Button Settings [UI]",
+      "category": "UI · 입력 설정",
+      "tags": [
+        "버튼 설정",
+        "입력",
+        "충돌 처리",
+        "접근성",
+        "C++11"
+      ],
+      "date": "2024-03-08",
+      "published_date": "2026-10-27",
+      "video_id": "8nfMt4oG6hg",
+      "video_url": "https://www.youtube.com/watch?v=8nfMt4oG6hg"
+    },
+    {
+      "path": "ep-81-presenting-scores/",
+      "number": "81",
+      "title": "점수를 행동의 피드백으로 보여 주기 — 합계 너머의 의미",
+      "summary": "점수의 계산과 표현을 분리하고 내역·기준·다음 목표로 플레이어가 결과를 해석하도록 돕는다.",
+      "topic_en": "Presenting Scores [Planning & Design]",
+      "category": "기획 · 결과 표현",
+      "tags": [
+        "점수",
+        "피드백",
+        "결과 화면",
+        "목표",
+        "표현"
+      ],
+      "date": "2024-03-19",
+      "published_date": "2026-10-27",
+      "video_id": "FeekeBW26AI",
+      "video_url": "https://www.youtube.com/watch?v=FeekeBW26AI"
+    },
+    {
+      "path": "ep-82-handicap-systems/",
+      "number": "82",
+      "title": "함께 즐길 조건을 맞추기 — 공개된 핸디캡 설계",
+      "summary": "실력 차이를 다루는 보조 규칙을 목표·동의·표시·모드 기록과 함께 설계한다.",
+      "topic_en": "Handicap Systems [Design Specifics]",
+      "category": "구체적 설계 · 함께 플레이",
+      "tags": [
+        "핸디캡",
+        "멀티플레이",
+        "공정성",
+        "동의",
+        "난도"
+      ],
+      "date": "2024-03-26",
+      "published_date": "2026-10-27",
+      "video_id": "-aA_mjpCPMg",
+      "video_url": "https://www.youtube.com/watch?v=-aA_mjpCPMg"
+    },
+    {
+      "path": "ep-83-making-work-games-fun/",
+      "number": "83",
+      "title": "일처럼 보이는 행동을 즐겁게 만들기 — 변화가 보이는 반복",
+      "summary": "정리·배치 같은 반복에서 조작의 예측 가능성, 눈에 보이는 변화, 수정의 자유를 설계한다.",
+      "topic_en": "Making \"Work\" Games Fun [Game Essence]",
+      "category": "게임성 · 작업 경험",
+      "tags": [
+        "반복",
+        "정리",
+        "피드백",
+        "조작감",
+        "표현"
+      ],
+      "date": "2024-03-29",
+      "published_date": "2026-10-27",
+      "video_id": "4SFOO23m-bI",
+      "video_url": "https://www.youtube.com/watch?v=4SFOO23m-bI"
+    },
+    {
+      "path": "ep-84-using-parameters-to-establish-characters/",
+      "number": "84",
+      "title": "숫자로 캐릭터의 느낌을 만들기 — 파라미터의 일관성",
+      "summary": "이동·공격·반응 수치를 캐릭터의 역할과 연결하고 단일 강약 평가 대신 관계를 검토한다.",
+      "topic_en": "Using Parameters to Establish Characters [Planning & Game Design]",
+      "category": "기획 · 캐릭터 표현",
+      "tags": [
+        "파라미터",
+        "캐릭터",
+        "역할",
+        "조작감",
+        "균형"
+      ],
+      "date": "2024-04-09",
+      "published_date": "2026-10-27",
+      "video_id": "zwiS1L6QVY0",
+      "video_url": "https://www.youtube.com/watch?v=zwiS1L6QVY0"
+    },
+    {
+      "path": "ep-85-advancing-text/",
+      "number": "85",
+      "title": "대사 넘기기 — 읽기 속도의 주도권을 플레이어에게",
+      "summary": "음성·글자 표시·다음 대사·선택 확정을 분리해, 빠르게 읽는 사람도 내용을 놓친 사람도 흐름을 조절할 수 있게 한다.",
+      "topic_en": "Advancing Text [UI]",
+      "category": "UI · 대화 진행과 주도권",
+      "tags": [
+        "대화 UI",
+        "입력 처리",
+        "상태 기계",
+        "C++11"
+      ],
+      "date": "2024-04-26",
+      "published_date": "2026-10-27",
+      "video_id": "CkXSIUX5l_s",
+      "video_url": "https://www.youtube.com/watch?v=CkXSIUX5l_s"
+    },
+    {
+      "path": "ep-86-better-than-not-being-able-to-beat-the-game/",
+      "number": "86",
+      "title": "끝내 못 깨는 것보다는 — 도전과 완주의 여러 경로",
+      "summary": "플레이어의 막힘을 하나의 실력 수치로 단정하지 않고, 핵심 도전을 보존하면서 다시 시도하거나 도움을 선택할 경로를 설계한다.",
+      "topic_en": "Better Than Not Being Able to Beat the Game [Game Essence]",
+      "category": "게임의 본질 · 도전과 완주",
+      "tags": [
+        "난도 설계",
+        "접근성",
+        "재시도",
+        "도움 옵션"
+      ],
+      "date": "2024-05-03",
+      "published_date": "2026-10-27",
+      "video_id": "G3eacnEqdV0",
+      "video_url": "https://www.youtube.com/watch?v=G3eacnEqdV0"
+    },
+    {
+      "path": "ep-87-a-world-with-less-color/",
+      "number": "87",
+      "title": "색이 적은 세계 — 색을 잃어도 남는 게임 정보",
+      "summary": "색을 제거하는 대신 색 하나에 의존하는 의미를 찾아, 모양·문구·패턴·위치가 함께 전달하는 정보 체계를 설계한다.",
+      "topic_en": "A World with Less Color [Planning & Game Design]",
+      "category": "기획과 게임 디자인 · 색과 정보",
+      "tags": [
+        "접근성",
+        "색 지각",
+        "정보 디자인",
+        "UI 상태"
+      ],
+      "date": "2024-05-07",
+      "published_date": "2026-10-27",
+      "video_id": "obnjR8KJ9nk",
+      "video_url": "https://www.youtube.com/watch?v=obnjR8KJ9nk"
+    },
+    {
+      "path": "ep-88-average-and-mediocre-are-the-same-thing/",
+      "number": "88",
+      "title": "평균과 평범함 — 차이를 없애지 않는 균형 조정",
+      "summary": "모든 능력을 비슷하게 맞추는 대신, 각 선택지의 강점·약점·사용 상황을 읽을 수 있게 만들고 공정성과 동일함을 구별한다.",
+      "topic_en": "Average and Mediocre Are the Same Thing [Design Specifics]",
+      "category": "디자인 세부 · 균형과 개성",
+      "tags": [
+        "밸런스",
+        "개성",
+        "상황별 평가",
+        "트레이드오프"
+      ],
+      "date": "2024-05-21",
+      "published_date": "2026-10-27",
+      "video_id": "KW4x-_Y8BmM",
+      "video_url": "https://www.youtube.com/watch?v=KW4x-_Y8BmM"
+    },
+    {
+      "path": "ep-89-mandatory-strategies-and-strategic-balance/",
+      "number": "89",
+      "title": "필수 전략과 전략의 균형 — 정답을 익힐 것인가, 선택을 넓힐 것인가",
+      "summary": "특정 해법을 요구하는 경험과 여러 대응이 경쟁하는 경험을 구별하고, 어떤 규칙이 목표한 학습·선택을 만드는지 검증한다.",
+      "topic_en": "Mandatory Strategies and Strategic Balance [Game Essence]",
+      "category": "게임의 본질 · 전략과 경험의 약속",
+      "tags": [
+        "전략 설계",
+        "필수 해법",
+        "밸런스",
+        "진행 계약"
+      ],
+      "date": "2024-05-24",
+      "published_date": "2026-10-27",
+      "video_id": "U1b2OXdNcUY",
+      "video_url": "https://www.youtube.com/watch?v=U1b2OXdNcUY"
+    },
+    {
+      "path": "ep-90-computer-controlled-players/",
+      "number": "90",
+      "title": "컴퓨터 플레이어 설계 — 강함보다 정보·판단·실행의 약속",
+      "summary": "CPU의 관찰 범위와 행동 제약을 분리하고 작은 C++11 정책으로 경계와 우선순위를 검증한다.",
+      "topic_en": "Computer-Controlled Players [Planning & Game Design]",
+      "category": "기획 · 컴퓨터 플레이어",
+      "tags": [
+        "CPU 플레이어",
+        "게임 AI",
+        "관찰",
+        "행동 정책",
+        "난도",
+        "C++11"
+      ],
+      "date": "2024-06-01",
+      "published_date": "2026-10-27",
+      "video_id": "uleauI0IwZM",
+      "video_url": "https://www.youtube.com/watch?v=uleauI0IwZM"
+    },
+    {
+      "path": "ep-91-help-text/",
+      "number": "91",
+      "title": "메뉴 도움말 쓰기 — 짧게 쓰되 결과를 숨기지 않기",
+      "summary": "항목 이름·핵심 효과·적용 조건을 분리하고 초점과 값 변경에 맞는 도움말 표시를 설계한다.",
+      "topic_en": "Adding Help Text to Menus [UI]",
+      "category": "UI · 도움말 문구",
+      "tags": [
+        "UI",
+        "도움말",
+        "문구",
+        "정보 계층",
+        "설정"
+      ],
+      "date": "2024-06-28",
+      "published_date": "2026-10-27",
+      "video_id": "mWIbb1l7Wlw",
+      "video_url": "https://www.youtube.com/watch?v=mWIbb1l7Wlw"
+    },
+    {
+      "path": "ep-92-strategy-essence/",
+      "number": "92",
+      "title": "전략 게임의 선택 — 대등한 자원을 다른 조건으로 바꾸기",
+      "summary": "두 거점 자원 배분으로 집중·분산·정보·미래 비용을 분석하고 지배적인 선택이 생기는 조건을 찾는다.",
+      "topic_en": "Game Essence in Strategy Games [Game Essence]",
+      "category": "게임성 · 전략과 교환",
+      "tags": [
+        "전략",
+        "자원 배분",
+        "기회비용",
+        "정보",
+        "위치"
+      ],
+      "date": "2024-07-02",
+      "published_date": "2026-10-27",
+      "video_id": "3eG3expp5KM",
+      "video_url": "https://www.youtube.com/watch?v=3eG3expp5KM"
+    },
+    {
+      "path": "ep-93-online-updates/",
+      "number": "93",
+      "title": "온라인 업데이트의 책임 — 개선 가치와 검증 비용을 함께 보기",
+      "summary": "오류 수정의 범위를 정하고 저장·호환·배포·공개 확인을 분리하는 안전한 업데이트 계획을 설계한다.",
+      "topic_en": "Online Updates [Design Specifics]",
+      "category": "구체적 디자인 · 업데이트",
+      "tags": [
+        "업데이트",
+        "검증",
+        "호환성",
+        "배포",
+        "기회비용"
+      ],
+      "date": "2024-07-05",
+      "published_date": "2026-10-27",
+      "video_id": "e89D_CG9P0g",
+      "video_url": "https://www.youtube.com/watch?v=e89D_CG9P0g"
+    },
+    {
+      "path": "ep-94-in-game-cutscenes/",
+      "number": "94",
+      "title": "게임 안의 컷신 — 이야기와 행동 사이의 제어권을 설계하기",
+      "summary": "컷신의 목적과 진입·진행·복귀 계약을 분리하고 반복·중단·위험 상황에서도 흐름을 보존한다.",
+      "topic_en": "In-Game Cutscenes [Planning & Game Design]",
+      "category": "기획 · 연출과 플레이",
+      "tags": [
+        "컷신",
+        "서사",
+        "제어권",
+        "카메라",
+        "흐름",
+        "상태 전이"
+      ],
+      "date": "2024-07-12",
+      "published_date": "2026-10-27",
+      "video_id": "VZRh0P40RAM",
+      "video_url": "https://www.youtube.com/watch?v=VZRh0P40RAM"
+    },
+    {
+      "number": "95",
+      "path": "ep-95-start-with-climax/",
+      "title": "첫 장면에서 경험의 약속을 보여 주기 — 시작부터 절정으로",
+      "summary": "큰 폭발보다 첫 선택의 의미를 앞당기고 초반의 정보 부담·조작 학습·이후 전개를 함께 설계한다.",
+      "topic_en": "Start with the Climax [Planning & Game Design]",
+      "date": "2024-07-19",
+      "published_date": "2026-10-27",
+      "video_id": "eAd0pt-uv8g",
+      "video_url": "https://www.youtube.com/watch?v=eAd0pt-uv8g",
+      "category": "기획 · 도입",
+      "tags": [
+        "도입",
+        "핵심 경험",
+        "첫 선택",
+        "튜토리얼",
+        "정보 부담"
+      ]
+    },
+    {
+      "number": "96",
+      "path": "ep-96-how-good-player-actions/",
+      "title": "행동의 질과 결과를 나누어 보기 — 밸런스 판단의 근거",
+      "summary": "성공·실패 한 번으로 실력을 단정하지 않고 정보·위험·실행·결과의 관계를 가상 선택표로 분석한다.",
+      "topic_en": "How Good Were the Player’s Actions? [Game Essence]",
+      "date": "2024-07-30",
+      "published_date": "2026-10-27",
+      "video_id": "IGpEp0R1_xY",
+      "video_url": "https://www.youtube.com/watch?v=IGpEp0R1_xY",
+      "category": "게임성 · 행동 평가",
+      "tags": [
+        "행동 평가",
+        "기대값",
+        "위험",
+        "밸런스",
+        "피드백"
+      ]
+    },
+    {
+      "number": "97",
+      "path": "ep-97-clear-without-words/",
+      "title": "말이 없어도 읽히는 메뉴 — 형태·배치·상태의 약속",
+      "summary": "텍스트를 지우는 것이 아니라 행동과 결과를 예측할 단서를 만들고 아이콘의 모호함을 검증한다.",
+      "topic_en": "Making Things Clear, Even Without Words [UI]",
+      "date": "2024-08-06",
+      "published_date": "2026-10-27",
+      "video_id": "psGx8fOlus0",
+      "video_url": "https://www.youtube.com/watch?v=psGx8fOlus0",
+      "category": "UI · 명료성",
+      "tags": [
+        "UI",
+        "아이콘",
+        "포커스",
+        "선택 상태",
+        "명료성"
+      ]
+    },
+    {
+      "number": "98",
+      "path": "ep-98-kind-to-beginners/",
+      "title": "초보자를 배려하는 함께하기 — 승패보다 참여와 학습의 조건",
+      "summary": "숙련 차이가 큰 플레이에서 도움의 방식·동의·목표·공정성을 분리하고 과도한 간섭 없이 선택을 남긴다.",
+      "topic_en": "Being Kind to Beginners [Planning & Game Design]",
+      "date": "2024-08-13",
+      "published_date": "2026-10-27",
+      "video_id": "R7rd4-ua2AI",
+      "video_url": "https://www.youtube.com/watch?v=R7rd4-ua2AI",
+      "category": "기획 · 초보자",
+      "tags": [
+        "초보자",
+        "협력",
+        "학습",
+        "도움",
+        "참여"
+      ]
+    },
+    {
+      "number": "99",
+      "path": "ep-99-speedy-screen-transitions/",
+      "title": "빠른 화면 전환의 계약 — 준비·표시·입력 소유권을 나누기",
+      "summary": "연출 시간을 줄이되 미완료 화면이나 오래된 요청이 나타나지 않도록 세대 토큰 모델로 검증한다.",
+      "topic_en": "Speedy Screen Transitions [Design Specifics]",
+      "date": "2024-08-27",
+      "published_date": "2026-10-27",
+      "video_id": "9ic7LEHtekM",
+      "video_url": "https://www.youtube.com/watch?v=9ic7LEHtekM",
+      "category": "구체적 디자인 · 화면 전환",
+      "tags": [
+        "화면 전환",
+        "비동기",
+        "요청 토큰",
+        "상태 머신",
+        "C++11"
+      ]
+    },
+    {
+      "path": "ep-100-amplify-strengths-and-weaknesses/",
+      "number": "100",
+      "title": "강점과 약점을 함께 읽히게 — 차이를 지우지 않는 균형",
+      "summary": "평균화와 역할 대비를 구분하고 강점의 대응 수단·약점의 회복 가능성으로 균형을 검토한다.",
+      "topic_en": "Amplify Both Strengths and Weaknesses [Game Essence]",
+      "category": "게임성 · 균형",
+      "tags": [
+        "균형",
+        "강점",
+        "약점",
+        "역할",
+        "대응"
+      ],
+      "date": "2024-08-30",
+      "published_date": "2026-10-27",
+      "video_id": "fc-hOvTBTCc",
+      "video_url": "https://www.youtube.com/watch?v=fc-hOvTBTCc"
+    },
+    {
+      "path": "ep-101-player-time/",
+      "number": "101",
+      "title": "플레이어가 준 시간을 존중하기 — 길이보다 경험의 밀도",
+      "summary": "세션의 각 시간이 어떤 역할을 하는지 살피고 반복 마찰·중단·복귀 비용을 줄이는 계획을 세운다.",
+      "topic_en": "Be Mindful of the Time Players are Giving You [Planning & Game Design]",
+      "category": "기획 · 플레이 시간",
+      "tags": [
+        "시간",
+        "세션",
+        "반복",
+        "중단",
+        "복귀"
+      ],
+      "date": "2024-09-10",
+      "published_date": "2026-10-27",
+      "video_id": "-49L25Q0YAU",
+      "video_url": "https://www.youtube.com/watch?v=-49L25Q0YAU"
+    },
+    {
+      "path": "ep-102-huds/",
+      "number": "102",
+      "title": "플레이를 가리지 않는 HUD — 정보의 시점과 우선순위",
+      "summary": "플레이 공간 위에 표시할 정보를 행동·빈도·긴급도에 따라 나누고 상태와 표시의 일치를 검증한다.",
+      "topic_en": "HUDs [UI]",
+      "category": "UI · 플레이 정보",
+      "tags": [
+        "HUD",
+        "정보",
+        "우선순위",
+        "가독성",
+        "상태"
+      ],
+      "date": "2024-09-24",
+      "published_date": "2026-10-27",
+      "video_id": "a_HB81ujHHE",
+      "video_url": "https://www.youtube.com/watch?v=a_HB81ujHHE"
+    },
+    {
+      "path": "ep-103-center-of-gravity/",
+      "number": "103",
+      "title": "기준점을 옮겨 움직임을 다르게 보기 — 회전 피벗 실습",
+      "summary": "단순한 이동에 변화를 주는 관점에서 회전 기준점의 효과를2차원 수학과 C++11로 검증한다.",
+      "topic_en": "What Happens When You Shift the Center of Gravity? [Design Specifics]",
+      "category": "구체적 설계 · 움직임",
+      "tags": [
+        "움직임",
+        "회전",
+        "피벗",
+        "좌표",
+        "C++11"
+      ],
+      "date": "2024-09-27",
+      "published_date": "2026-10-27",
+      "video_id": "jeA-m-Bzs04",
+      "video_url": "https://www.youtube.com/watch?v=jeA-m-Bzs04"
+    },
+    {
+      "path": "ep-104-handicap-when-balancing/",
+      "number": "104",
+      "title": "익숙한 개발자에게 제약을 주기 — 처음 플레이의 어려움 찾기",
+      "summary": "개발자의 사전 지식을 드러내고 제한된 자체 테스트와 실제 초보자 관찰을 구분해 균형을 검토한다.",
+      "topic_en": "Give Yourself a Handicap When Balancing Your Game [Game Essence]",
+      "category": "게임성 · 초보자 검증",
+      "tags": [
+        "플레이테스트",
+        "초보자",
+        "균형",
+        "사전 지식",
+        "검증"
+      ],
+      "date": "2024-10-01",
+      "published_date": "2026-10-27",
+      "video_id": "2T86JqRAKjc",
+      "video_url": "https://www.youtube.com/watch?v=2T86JqRAKjc"
     }
   ]
 }

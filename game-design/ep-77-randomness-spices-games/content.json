@@ -1,0 +1,425 @@
+{
+  "title": "무작위성을 어디에 넣을까 — 암기와 적응 사이의 설계",
+  "subtitle": "독립 추첨과 셔플 가방의 차이를 계산하고 예측 가능성·연속성·재현 가능한 테스트를 분리한다.",
+  "original": {
+    "title": "Randomness Spices Games Up [Design Specifics]",
+    "published_date": "2024-02-09",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "e9v_FwUGOwY",
+    "video_url": "https://www.youtube.com/watch?v=e9v_FwUGOwY",
+    "date_note": "공식 제목·설명·공개일을 확인했다. 영상 재생·자막 전문 미확인과 독창적 학습 확장을 구분한다."
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 무작위성을 어디에 넣을까",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "출처 경계: 공식 설명은 패턴 암기와 변하는 과제에 대한 기술적 적응을 비교하며 무작위성을 다룬다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 매번 달라지는 것과 매번 배울 수 없는 것은 다르다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 설명은 패턴 암기로 이길 수 있는 게임과 변하는 과제를 기술로 극복하는 게임을 비교하며 무작위성을 다룬다. 무작위가 많다고 자동으로 신선해지는 것은 아니다. 플레이어가 대응 가능한 정보와 선택을 갖고 있는지, 결과를 이해할 수 있는지 함께 설계한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 같은 세 종류도 분포 규칙이 다르다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가상 도구A·B·C를 매번 독립적으로 같은 확률로 뽑으면 세 번 모두A일 수 있다. 반면 세 종류를 한 번씩 넣고 섞어 소진하는 가방은 한 가방 안에서 각각 한 번 나온다. 두 방식은 같은 장기 구성 비율을 의도할 수 있어도 짧은 구간의 경험이 다르다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "방식"
+                  }
+                ],
+                [
+                  {
+                    "text": "세 번의 가능한 예"
+                  }
+                ],
+                [
+                  {
+                    "text": "짧은 구간의 특징"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "독립 균등 추첨"
+                  }
+                ],
+                [
+                  {
+                    "text": "AAA,ABA,ABC 등"
+                  }
+                ],
+                [
+                  {
+                    "text": "연속 중복과 특정 종류 부재 가능"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "3개 셔플 가방"
+                  }
+                ],
+                [
+                  {
+                    "text": "ABC,BCA,CAB 등"
+                  }
+                ],
+                [
+                  {
+                    "text": "가방 안에서 각 종류 정확히 한 번"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "가방 경계"
+                  }
+                ],
+                [
+                  {
+                    "text": "ABC | CAB"
+                  }
+                ],
+                [
+                  {
+                    "text": "끝과 다음 시작이 같은 종류일 수 있음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-77-randomness-spices-games/assets/random-contract.svg",
+          "alt": "독립추첨과가방내부·경계의보장차이를정리.",
+          "caption": "직접 제작한 학습 도식. 실제 플레이어 체감이나 보안 추첨을 검증한 모델이 아닙니다."
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "독립 균등 추첨의 특정 순서AAA 확률은(1/3)^3=1/27이다. 가방 안의AAA는 불가능하지만 가방 경계의CC처럼 두 번 연속은 가능하다. “가방을 쓰면 중복이 없다”는 설명은 부정확하다. 제한을 어느 구간에 적용하는지 명시해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 무작위가 선택 전인가 후인가"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 도구를 보여 준 뒤 경로를 고르게 하면 주어진 조건에 적응하는 판단이 생긴다. 경로를 고른 뒤 결과를 뽑으면 선택의 위험을 감수하는 구조가 된다. 어느 쪽도 항상 옳지 않지만 결과가 나온 뒤 사용자가 무엇을 바꿀 수 있는지가 다르다. 중요한 손실을 설명 없는 추첨 뒤에 숨기지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 난수와 디버깅의 관계"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "버그가 특정 순서에서만 발생하면 재현 가능한 시드와 이벤트 기록이 도움이 된다. 다만 같은 시드가 모든 플랫폼·표준 라이브러리에서 같은 셔플 순서를 보장한다고 가정하지 않는다. 네트워크 동기화나 장기 리플레이에는 알고리즘·버전·입력 기록의 별도 계약이 필요하다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "통계 검증은 규칙 검증과 다르다.1000가방에서 각 종류가한번씩 나온 것은 가방의 불변식이지 난수의 모든 통계적 품질을 인증한 것이 아니다. 예제 난수는 보안·금전적 추첨용으로 제시하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-77-randomness-spices-games/assets/bag-boundary.svg",
+          "alt": "ABC가방뒤CAB가방이오면경계에서CC가연속되는반례.",
+          "caption": "직접 제작한 가상 학습 예시. 원작 구현·실제 실험 결과와 구분한다."
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "1분 요약",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "무작위의 양보다 대응 가능한 정보와 선택을 설계한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "독립 추첨과 가방은 짧은 구간의 경험이 다르다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "가방 내부의 중복 금지와 경계 중복을 구분한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "추첨이 선택 전인지 후인지에 따라 판단 구조가 바뀐다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "불변식 테스트·재현성·통계 품질은 다른 검증이다."
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — 작동 계약과 검증",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실험 계약"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가방에는 0·1·2가 하나씩 있다. 소진할 때마다 초기화 후 std::shuffle과 mt19937로 섞는다. 시드는 테스트용 고정값이다. 테스트는 같은 실행 환경에서 동일 시드의 순서 일치를 검사하며 플랫폼 간 동일 순서를 주장하지 않는다. 보안·온라인 공정성·실제 사용자 경험은 범위 밖이다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#ifdef NDEBUG\n#error \"Assertions must remain enabled.\"\n#endif\n#include <algorithm>\n#include <array>\n#include <cassert>\n#include <random>\n#include <iostream>\nclass Bag{\n    std::array<int,3> values_{{0,1,2}};\n    std::size_t next_=3;\n    std::mt19937 rng_;\npublic:\n    explicit Bag(unsigned seed):rng_(seed){}\n    int draw(){\n        if(next_==3){values_={{0,1,2}};std::shuffle(values_.begin(),values_.end(),rng_);next_=0;}\n        return values_[next_++];\n    }\n};\nint main(){\n    Bag bag(42);\n    for(int batch=0;batch<1000;++batch){\n        std::array<int,3> counts{{0,0,0}};\n        for(int i=0;i<3;++i){int x=bag.draw();assert(x>=0 && x<3);++counts[x];}\n        assert(counts[0]==1 && counts[1]==1 && counts[2]==1);\n    }\n    Bag a(7),b(7);\n    for(int i=0;i<100;++i)assert(a.draw()==b.draw());\n    std::cout<<\"bag invariant tests passed\\n\";\n}\n"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "보장하는 것과 보장하지 않는 것"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "셔플은 원소를 재배열하므로 한 가방의 세 번에는 각 값이 한 번씩 나온다. 가방 경계에서는 이전 마지막과 다음 첫 값이 같을 수 있다. 고정3개라 공간·평균 draw 비용은 O(1)이며 n개 가방 일반화에서는 재충전 O(n), 상각 draw O(1)이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++11 엄격 빌드와 UBSan으로1000가방의 구성 불변식과 같은 환경의 동일 시드100회 일치를 실행했다. 특정 출력 순서를 문서 계약으로 고정하지 않았고 통계적 무작위성이나 크로스플랫폼 재현성을 검증하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습과 접힌 복습 답",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 · 경계 반례 만들기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "각 가방에는 A·B·C가 한 번씩 있지만 두 번 연속 C가 나오는 두 가방 순서를 적어라. 플레이어에게 보여 줄 규칙 설명도 정확히 고쳐라."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "예시 답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "ABC | CAB이면 가방 경계에서 CC가 나온다. “세 개짜리 가방마다 각 종류가 한 번씩 나옵니다”는 정확하지만 “같은 종류는 연속으로 나오지 않습니다”는 틀리다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장 · 다음 두 개를 미리 보여 준다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "분포는 같아도 계획 가능한 정보가 늘어난다. 어려움이 어떻게 바뀌는지 가설을 세우고, 숨긴 정보와 공개 정보의 UI 일관성을 점검한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 검증 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Randomness Spices Games Up [Design Specifics]",
+              "href": "https://www.youtube.com/watch?v=e9v_FwUGOwY"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 채널 Masahiro Sakurai on Creating Games. 영상 ID e9v_FwUGOwY, 공개일 2024-02-09. 공식 공개 페이지의 채널 ID UCv1DvRY5PyHHt3KN9ghunuw 및 제작자 설명을 대조했다. 날짜는 원본 공개 기록 기준이며 연구실 발행일과 다르다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출처 경계: 공식 설명은 패턴 암기와 변하는 과제에 대한 기술적 적응을 비교하며 무작위성을 다룬다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인용 영상의 화면·음성·자막을 복제하지 않았다. 이 교재의 한국어 해설, 가상 상황, 코드, SVG는 자체 제작했다. CPU 예제의 통과를 실제 플레이어의 재미·접근성·온라인 공정성 검증으로 확대하지 않는다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

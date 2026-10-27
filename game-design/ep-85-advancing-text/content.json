@@ -1,0 +1,546 @@
+{
+  "title": "대사 넘기기 — 읽기 속도의 주도권을 플레이어에게",
+  "subtitle": "음성·글자 표시·다음 대사·선택 확정을 분리해, 빠르게 읽는 사람도 내용을 놓친 사람도 흐름을 조절할 수 있게 한다.",
+  "original": {
+    "title": "Advancing Text [UI]",
+    "published_date": "2024-04-26",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "CkXSIUX5l_s",
+    "video_url": "https://www.youtube.com/watch?v=CkXSIUX5l_s"
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 경험에서 설계 질문으로",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "공식 설명문은 음성 대사가 풍부해지는 장점을 인정하면서, 글만 읽는 경우보다 진행이 느려질 수 있어 대화를 빠르게 넘길 자유를 다룬다고 안내한다. 아래 입력 규칙과 상태 기계는 교재의 가상 대화 UI이며 영상의 구현이나 특정 게임의 동작을 재현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 듣는 속도와 읽는 속도는 같지 않다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한 사용자는 연기를 끝까지 듣고 싶고 다른 사용자는 이미 읽은 문장을 바로 넘기고 싶을 수 있다. 같은 사람도 첫 방문과 재도전에서 원하는 속도가 달라진다. 음성이 끝나야만 진행하도록 고정하면 대화가 전달 수단이 아니라 기다림이 될 수 있다. 반대로 모든 음성을 자동으로 잘라 버리면 연기를 감상할 선택이 사라진다. 하나의 속도 대신 주도권을 제공하는 것이 핵심이다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. “넘기기”라는 한 단어를 여러 행동으로 나눈다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "글자가 조금씩 나타나는 중에는 전체 글자를 보이게 하는 행동이 필요할 수 있다. 이미 전부 표시됐다면 다음 문장으로 갈 수 있다. 선택지가 있는 경우에는 선택 화면으로 들어가는 것과 특정 답을 확정하는 것이 다르다. 같은 버튼을 사용하더라도 현재 상태에 따라 의미를 정하고, 한 번의 입력이 두 행동을 연속 실행하지 않게 해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-85-advancing-text/assets/design-contract.svg",
+          "alt": "① 표시 중: 첫 입력은 전체 글자 표시, 같은 입력으로 다음 줄까지 안 감, 음성 처리 정책은 별도로 정함 / ② 읽기 대기: 다음 입력은 다음 대사로, 자동 진행과 수동 진행 구분, 지난 대사로 내용 복구 가능 / ③ 선택 대기: 선택 진입과 확정을 분리, 이전 입력이 자동 확정하지 않음, 분기 변경은 한 번만 적용 / ④ 종료: 늦게 도착한 이벤트는 무시, 끝난 대화에서 중복 실행 금지, 읽기 기록과 되감기는 다름",
+          "caption": "독립적으로 작성한 설계 점검 도식. 원작의 구현 사양이 아니다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 빠른 진행과 내용 복구는 함께 설계한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실수로 넘겼을 때 지난 대사를 읽을 수 있다면 빠르게 진행하는 부담이 줄어들 수 있다. 하지만 지난 대사 기능이 있다고 중요한 선택을 되돌릴 수 있는 것은 아니다. 읽기 기록과 게임 상태 되감기는 다른 기능이다. 무엇을 복구할 수 있는지 분명히 하고, 선택 확정 앞에는 내용과 대상을 확인할 기회를 남긴다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 음성이 끝나지 않았을 때의 정책을 정한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 문장으로 가면 이전 음성을 즉시 끊을지 짧게 감쇠할지, 자연스러운 지점까지 기다릴지 정해야 한다. 정답 하나를 모든 장면에 강제하기보다 대사의 성격과 연출 목표에 맞춘다. 다만 사용자가 누른 입력이 무시된 것처럼 보이지 않도록 접수 여부를 알린다. 중요한 정보를 음성에만 남겨 두고 자막을 건너뛰게 만들지 않는지도 확인한다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "핵심 요약 — 기억할 설계 원칙",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "대사의 속도는 사용자와 상황에 따라 달라질 수 있다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "전체 표시, 다음 대사, 선택 진입, 확정을 별개로 정의한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "한 입력이 현재 줄 표시와 다음 줄 이동을 동시에 하지 않게 한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "음성 종료는 텍스트 완료와 다른 사건이다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "복구 가능한 읽기 기록과 되돌릴 수 없는 선택을 구별한다."
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 요약은 영상 전체의 요약문이 아니라, 확인된 설명문을 출발점으로 구성한 본 교재의 학습 원칙이다. 수치와 가상 사례는 비교 실습을 위한 값이며 특정 상용 게임의 실제 값이 아니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — 규칙과 경계의 계약",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "설계 결정을 표로 고정하기"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "현재 상태"
+                  }
+                ],
+                [
+                  {
+                    "text": "입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "가상 결과"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "표시 중"
+                  }
+                ],
+                [
+                  {
+                    "text": "넘기기"
+                  }
+                ],
+                [
+                  {
+                    "text": "전체 표시 후 읽기 대기"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "읽기 대기"
+                  }
+                ],
+                [
+                  {
+                    "text": "넘기기"
+                  }
+                ],
+                [
+                  {
+                    "text": "다음 줄 또는 선택 화면"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "선택 중"
+                  }
+                ],
+                [
+                  {
+                    "text": "넘기기"
+                  }
+                ],
+                [
+                  {
+                    "text": "아무 선택도 확정하지 않음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "선택 중"
+                  }
+                ],
+                [
+                  {
+                    "text": "별도 선택 확정"
+                  }
+                ],
+                [
+                  {
+                    "text": "분기 결과 한 번 반환"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "종료"
+                  }
+                ],
+                [
+                  {
+                    "text": "모든 늦은 입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "무시"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 상태와 효과를 분리한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "아래 코드는 Revealing·Ready·Choosing·Ended 네 상태만 다룬다. 상태 전이는 내부에서 하고, ShowAll·NextLine·CommitChoice 효과를 호출자에게 돌려준다. 렌더러는 효과를 받아 표시를 바꾸지만, 매 프레임 화면을 그리는 행위가 다음 줄 이동을 다시 실행해서는 안 된다. 문자열 처리나 음성 재생은 이 코드에 포함하지 않았다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 한 번의 물리 입력을 한 사건으로 만든다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Handle을 한 번 호출하면 전이도 한 번만 일어난다. 그러나 호출자가 같은 버튼 눌림을 두 번 전달하면 두 번 진행할 수 있다. 따라서 입력 계층에서 눌림 에지와 유지 상태를 구분하고, 화면 전환 후 남은 반복 입력을 어떻게 처리할지 정한다. 이 함수는 네트워크 이벤트의 중복 제거기나 장치 입력 드라이버가 아니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 새 줄에 들어갈 때 데이터를 갱신해야 한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "hasChoice와 hasNext는 현재 줄의 메타데이터다. NextLine 효과를 받은 실제 호출자는 다음 줄을 불러온 뒤 두 값을 새 줄에 맞게 갱신해야 한다. 예제는 문자열 저장소가 없는 단일 계약 모형이므로 자동으로 다음 줄 데이터를 읽지 않는다. 오래된 줄의 비동기 완료 이벤트도 실제 구현에서는 줄 ID나 세대 번호로 걸러야 한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 선택 확정의 한 번 실행 범위"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "CommitChoice 뒤 Ended로 가기 때문에 같은 상태 인스턴스에서는 선택 효과가 다시 나오지 않는다. 실제 게임은 이 효과를 받아 다음 대화나 게임 분기로 이어갈 수 있다. 재시작·저장 복구·여러 대화 인스턴스에 걸친 중복 방지는 별도 계약이 필요하다. 이 작은 모형을 영속적인 트랜잭션 보장으로 확대 해석하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "5. 실행 검증과 미검증 영역"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++11 예제는 기본 전이와 4가지 플래그 조합 각각의 729개 길이 6 이벤트열, 총 2,916개 이벤트열을 검사한다. 표시 중 입력이 즉시 다음 줄로 건너뛰지 않음, 종료의 안정성, 한 인스턴스의 선택 확정 최대 한 번을 확인한다. 실제 자막 가독성, 음성 중단 품질, Unicode 글자 분할, 장치 입력은 검증하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "독립 실행 가능한 최소 계약 검사"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include <cassert>\n#ifdef NDEBUG\n#error Tests require assertions enabled\n#endif\nenum class Phase { Revealing, Ready, Choosing, Ended };\nenum class Event { RevealFinished, AdvancePressed, ChoosePressed };\nenum class Effect { None, ShowAll, NextLine, CommitChoice };\nstruct State { Phase phase; bool hasChoice; bool hasNext; };\nEffect Handle(State& s, Event e) {\n    if (s.phase == Phase::Ended) return Effect::None;\n    if (s.phase == Phase::Revealing) {\n        if (e == Event::RevealFinished || e == Event::AdvancePressed) {\n            s.phase = Phase::Ready;\n            return e == Event::AdvancePressed ? Effect::ShowAll : Effect::None;\n        }\n        return Effect::None;\n    }\n    if (s.phase == Phase::Ready && e == Event::AdvancePressed) {\n        if (s.hasChoice) { s.phase = Phase::Choosing; return Effect::None; }\n        if (s.hasNext) { s.phase = Phase::Revealing; return Effect::NextLine; }\n        s.phase = Phase::Ended; return Effect::None;\n    }\n    if (s.phase == Phase::Choosing && e == Event::ChoosePressed) {\n        s.phase = Phase::Ended; return Effect::CommitChoice;\n    }\n    return Effect::None;\n}\nint main() {\n    State a{Phase::Revealing,false,true};\n    assert(Handle(a,Event::AdvancePressed)==Effect::ShowAll);\n    assert(a.phase==Phase::Ready);\n    assert(Handle(a,Event::AdvancePressed)==Effect::NextLine);\n    assert(a.phase==Phase::Revealing);\n    State b{Phase::Revealing,true,true};\n    assert(Handle(b,Event::RevealFinished)==Effect::None);\n    assert(b.phase==Phase::Ready);\n    assert(Handle(b,Event::AdvancePressed)==Effect::None);\n    assert(b.phase==Phase::Choosing);\n    assert(Handle(b,Event::AdvancePressed)==Effect::None);\n    assert(Handle(b,Event::ChoosePressed)==Effect::CommitChoice);\n    assert(Handle(b,Event::ChoosePressed)==Effect::None);\n    State c{Phase::Ready,false,false};\n    assert(Handle(c,Event::AdvancePressed)==Effect::None);\n    assert(c.phase==Phase::Ended);\n    const Event events[]={Event::RevealFinished,Event::AdvancePressed,Event::ChoosePressed};\n    // Exhaustively inspect every six-event sequence for each flag pair.\n    for (int flags=0;flags<4;++flags)\n      for (int sequence=0;sequence<729;++sequence) {\n        State s{Phase::Revealing,(flags&1)!=0,(flags&2)!=0};\n        int value=sequence, commits=0;\n        for (int step=0;step<6;++step) {\n            const Event e=events[value%3];value/=3;\n            const Phase before=s.phase;const Effect effect=Handle(s,e);\n            if (before==Phase::Revealing) assert(effect!=Effect::NextLine);\n            if (before==Phase::Ended) assert(s.phase==Phase::Ended && effect==Effect::None);\n            if (effect==Effect::CommitChoice) ++commits;\n            assert(commits<=1);\n        }\n      }\n}\n"
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습 — 설계안을 반례로 검증하기",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 A · 같은 버튼의 뜻을 적기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "글자 표시 중·표시 완료·선택 중·대화 종료에서 확인 버튼을 눌렀을 때의 결과를 표로 작성한다. 한 번 누름과 길게 누름을 따로 적고, 한 번 입력으로 두 줄을 넘기는 경로가 없는지 추적한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 B · 복구와 분기를 분리하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사용자가 선택 직전 대사를 실수로 넘겼다. 지난 대사를 열어 읽는 기능과 선택을 다시 고르는 기능의 차이를 설명하라. 기록을 열었다 닫았을 때 음성·커서·자동 진행 타이머를 어디로 돌릴지도 정한다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 · 음성 완료를 다음 대사 신호로 항상 써도 될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "수동 읽기와 자동 진행 정책에 따라 다르다. 텍스트를 더 오래 읽거나 다시 확인하려는 사용자가 있을 수 있으므로 음성 종료와 진행 허용을 구별한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "반례 · 단위 테스트가 통과했는데 두 줄이 넘어간다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "물리 입력 하나가 두 이벤트로 전달되거나, 같은 효과를 두 번 적용하는 호출 계층을 확인한다. 함수 내부의 상태 계약만으로 전체 입력 파이프라인이 검증되지는 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "완료 기준: 원본 설명에서 확인된 사실과 자신이 만든 규칙을 구분한다. 정상 사례뿐 아니라 경계·취소·실패 사례의 기대 결과를 적고, 아직 검증하지 않은 가정은 검증 완료처럼 표시하지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 확인 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확인 범위: 공식 YouTube 공개 페이지의 제목·게시 시각·채널 ID·설명문을 확인했다. 영상 전체 재생·자막 전문을 검증했다는 뜻은 아니다. 설명문에서 확인되지 않는 개발 경위나 장면을 영상의 주장으로 쓰지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Advancing Text [UI]",
+              "kind": "link",
+              "href": "https://www.youtube.com/watch?v=CkXSIUX5l_s"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 게시일: 2024-04-26 · 채널: Masahiro Sakurai on Creating Games · 공식 타임스탬프: 2024-04-26T04:00:12-07:00"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "학습 확장과 권리: 가상 게임 규칙, 수치, 질문, 시스템 도식은 직접 작성한 교재다. 영상 화면·자막·공식 도표를 복제하지 않았으며 전체 영상의 대체 요약이나 번역본을 제공하지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

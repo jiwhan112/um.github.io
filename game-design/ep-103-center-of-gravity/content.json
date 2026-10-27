@@ -1,0 +1,370 @@
+{
+  "title": "기준점을 옮겨 움직임을 다르게 보기 — 회전 피벗 실습",
+  "subtitle": "단순한 이동에 변화를 주는 관점에서 회전 기준점의 효과를2차원 수학과 C++11로 검증한다.",
+  "original": {
+    "title": "What Happens When You Shift the Center of Gravity? [Design Specifics]",
+    "published_date": "2024-09-27",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "jeA-m-Bzs04",
+    "video_url": "https://www.youtube.com/watch?v=jeA-m-Bzs04",
+    "date_note": "공식 페이지 메타데이터와 제작자 설명 확인. 재생·자막 전문 미확인; 독립 확장 교재와 구분."
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 같은 점을 같은 각도로 돌려도?",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "공식 영상 페이지의 제목·공개 정보·제작자 설명을 확인했다. 영상 재생 및 자막 전문은 확인하지 않았으므로 장면·세부 발언의 요약으로 읽지 않는다. 아래 가상 사례, 수치, 도식과 실습은 원본 주제를 바탕으로 새로 작성한 독립 확장 교재다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "화면 왼쪽에서 오른쪽으로 물체를 보내는 구현은 단순하지만, 회전이나 흔들림의 기준점을 바꾸면 다른 인상을 만들 수 있다. 공식 설명은 이런 단순한 움직임에도 변화를 줄 방법을 생각하자고 제안한다. 제목의 질량 중심이라는 표현을 곧바로 특정 물리 구현으로 해석하지 않고, 여기서는 별도의 회전 피벗 실습으로 좌표 관계를 배운다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-103-center-of-gravity/assets/pivot-comparison.svg",
+          "alt": "왼쪽은 원점 기준으로 점2,0이0,2로 회전하고 오른쪽은1,0 기준으로1,1이 되는90도 회전 비교.",
+          "caption": "독립적인2차원 변환 실습이며 원본의 구현을 재현하지 않는다. 자체 제작 SVG이며 원본 영상 화면이 아니다. 흰 점은 피벗, 파란 선은 회전 전, 노란 선은 회전 후다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "피벗과 질량 중심을 구분한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "피벗은 회전 변환의 기준점이다. 물리적 질량 중심은 질량 분포로 정해지는 개념이며 항상 시각적 피벗과 같지는 않다. 이 교재는 질량·관성·힘을 계산하지 않는다. 원본의 세부 사례나 알고리즘을 확인한 것처럼 설명하지 않고, 기준점 변경의 시각적 효과를 독립적으로 다룬다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "점(2,0)을 원점 기준으로90도 반시계 회전하면(0,2)가 된다. 같은 점을(1,0) 기준으로 회전하면(1,1)이다. 각도는 같아도 기준점에서의 상대 위치가 달라져 궤적이 달라진다. 캐릭터의 몸통 중심, 손잡이, 매달린 지점 등 어떤 시각적 관계를 표현하려는지에 따라 피벗을 선택할 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "움직임의 느낌과 판정의 관계"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "그림만 크게 흔들리고 충돌 영역은 그대로라면 사용자가 어디에 닿는지 오해할 수 있다. 의도적으로 시각 효과와 판정을 분리할 수는 있지만 그 관계가 읽히는지 확인해야 한다. 멋진 궤적을 만드는 것과 조작·충돌의 명료함을 유지하는 것은 함께 검토할 과제다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "설계 요약 — 상대 좌표로 바꾸고 되돌린다",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "식"
+                  }
+                ],
+                [
+                  {
+                    "text": "의미"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "피벗 기준 이동"
+                  }
+                ],
+                [
+                  {
+                    "text": "q = point − pivot"
+                  }
+                ],
+                [
+                  {
+                    "text": "기준점을 원점으로"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "회전"
+                  }
+                ],
+                [
+                  {
+                    "text": "r = R(θ)q"
+                  }
+                ],
+                [
+                  {
+                    "text": "상대 벡터의 방향 변경"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원래 공간 복귀"
+                  }
+                ],
+                [
+                  {
+                    "text": "result = pivot + r"
+                  }
+                ],
+                [
+                  {
+                    "text": "세계 위치로 복원"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2차원 회전은 x′=cosθ·x−sinθ·y, y′=sinθ·x+cosθ·y다. 이 예제는 위쪽이양수인 수학 좌표와 라디안을 사용한다. 화면 좌표에서 아래쪽이양수이면 보이는 회전 방향의 해석을 맞춰야 한다. 도와 라디안을 섞지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이동과 회전을 결합할 때 순서도 중요하다. 세계 원점에서 회전한 뒤 이동하는 것과 이동한 물체를 다른 기준점으로 회전하는 것은 다를 수 있다. 코드에서 어느 공간의 좌표인지 이름과 함수 경계로 드러낸다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "C++11 — 피벗 회전의 불변식",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "좌표는 절댓값1,000,000 이하, 각도는 절댓값1,000라디안 이하의 유한 실수다. NaN·무한대·범위 밖 값을 거부한다. 문자열·인코딩·버퍼·GPU·충돌·질량 계산은 다루지 않는 숫자 함수다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include <cassert>\n#include <cmath>\n#include <iostream>\n#include <stdexcept>\n#ifdef NDEBUG\n#error \"Tests require assertions enabled.\"\n#endif\nstruct Vec { double x,y; };\nVec rotateAround(Vec point,Vec pivot,double radians) {\n    // 학습 범위를 명시한다. 물리 질량 중심이나 충돌은 계산하지 않는다.\n    for(double v:{point.x,point.y,pivot.x,pivot.y})\n        if(!std::isfinite(v) || std::fabs(v)>1000000.0) throw std::invalid_argument(\"position\");\n    if(!std::isfinite(radians) || std::fabs(radians)>1000.0) throw std::invalid_argument(\"angle\");\n    const double x=point.x-pivot.x,y=point.y-pivot.y;\n    const double c=std::cos(radians),s=std::sin(radians);\n    return Vec{pivot.x+c*x-s*y,pivot.y+s*x+c*y};\n}\nbool near(double a,double b) { return std::fabs(a-b)<1e-8; }\ndouble distance2(Vec a,Vec b) { const double x=a.x-b.x,y=a.y-b.y;return x*x+y*y; }\nint main() {\n    const double pi=std::acos(-1.0);\n    const Vec a=rotateAround({2,0},{0,0},pi/2);\n    const Vec b=rotateAround({2,0},{1,0},pi/2);\n    assert(near(a.x,0)&&near(a.y,2)); assert(near(b.x,1)&&near(b.y,1));\n    const Vec fixed=rotateAround({3,4},{3,4},1.0);\n    assert(near(fixed.x,3)&&near(fixed.y,4));\n    for(int k=0;k<1000;++k) {\n        const Vec p{(k%31)-15.0,(k%23)-11.0},o{1.0,-2.0};\n        const double angle=k*0.01; const Vec q=rotateAround(p,o,angle);\n        const Vec back=rotateAround(q,o,-angle);\n        assert(near(back.x,p.x)&&near(back.y,p.y));\n        assert(near(distance2(p,o),distance2(q,o)));\n    }\n    int rejected=0;\n    try { rotateAround({std::nan(\"\"),0},{0,0},0); } catch(const std::invalid_argument&) { ++rejected; }\n    try { rotateAround({0,0},{0,0},1001); } catch(const std::invalid_argument&) { ++rejected; }\n    assert(rejected==2);\n    std::cout<<\"pivot tests passed: 1000 inverse/distance cases\\n\";\n}\n"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "정확성과 검사"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "피벗을 뺀 상대 벡터에 회전 행렬을 적용한 뒤 피벗을 더하므로 기준점은 고정된다. 이상적인 실수 연산에서 회전은 피벗까지의 거리를 보존하며 반대 각도로 돌리면 원래 점으로 돌아온다. 테스트는 작은 유효 좌표 범위에서 부동소수 오차를 고려해 이 두 성질을 확인한다. 전체 허용 범위에서 같은 절대 오차를 보장한다고 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "함수는 상수 개수의 산술·삼각 함수 호출을 사용해 시간·공간 O(1)이다. 실제 렌더링에서 많은 정점에 적용할 때는 행렬 계산 공유나 엔진 변환 계층을 활용할 수 있지만, 이 예제는 최적화 성능을 측정하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실행 검증: C++11 엄격 경고 컴파일, 일반 실행·UndefinedBehaviorSanitizer로90도 예제·고정점·1000개 역변환/거리 보존·잘못된 입력을 검사했고 모두 통과했다. 실제 애니메이션·물리·GPU 결과는 별도다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습 — 매달린 표지판과 중심 회전",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가상 표지판이 가운데에서 도는 경우와 위쪽 고정점에 매달려 도는 경우를 그린다. 같은 각도 변화에서 모서리의 궤적이 어떻게 다른지 설명한다. 실제 물리 시뮬레이션이 아니라 지정된 각도에 따른 시각적 변환임을 표시한다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "정답 방향",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "고정점에서 각 모서리까지의 상대 벡터가 달라지므로 회전 반경이 달라진다. 피벗 자체는 움직이지 않는다. 물리적 진자 주기나 질량 효과는 이 변환만으로 계산되지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "반례 — 도와 라디안 혼합",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "함수에90을 넣으면90도가 아니라90라디안으로 해석된다. 단위를 이름·계약으로 명시하고 알려진90도 예제를 테스트한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장 — 움직이는 피벗",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간에 따라 피벗 위치를 이동시키고 그 주위에 상대 벡터를 회전시킬 수 있다. 이동 경로와 회전 각도는 별도 입력으로 관리하고 어느 좌표 공간인지 분명히 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 17회 시간 기반 움직임과84회 숫자의 표현을 연결한다. 간단한 수학 변화도 캐릭터의 인상을 바꾸지만 실제 체감은 관찰이 필요하다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 검증 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 원본: What Happens When You Shift the Center of Gravity? [Design Specifics]",
+              "kind": "link",
+              "href": "https://www.youtube.com/watch?v=jeA-m-Bzs04"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 영상 설명에서 확인한 범위: 물체를 화면 왼쪽에서 오른쪽으로 보내는 단순 구현에서도 변화를 줄 방법을 생각하자고 제안하며 구체적 설계 분야 마지막 영상이라고 안내한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 공개 타임스탬프: 2024-09-27T04:01:01-07:00. 원본 날짜는 공식 메타데이터의 날짜를 기록한다. 한국 날짜로 환산하면 2024-09-27이다. 교재 신규 발행일은 2026-10-27이며 영상의 새 발표일로 취급하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 영상 페이지의 제목·공개 정보·제작자 설명을 확인했다. 영상 재생 및 자막 전문은 확인하지 않았으므로 장면·세부 발언의 요약으로 읽지 않는다. 아래 가상 사례, 수치, 도식과 실습은 원본 주제를 바탕으로 새로 작성한 독립 확장 교재다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "저작권·검증: 설명 그림은 자체 SVG이며 게임 화면·긴 자막·공식 해설을 복제하지 않았다. 실제 실행한 검사는 구현 탭에만 명시한다. 사용자 테스트, 실제 기기 UI, 엔진 통합·배포 검증을 수행했다고 주장하지 않는다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

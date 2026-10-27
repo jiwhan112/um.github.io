@@ -1,0 +1,375 @@
+{
+  "title": "컴퓨터 플레이어 설계 — 강함보다 정보·판단·실행의 약속",
+  "subtitle": "CPU의 관찰 범위와 행동 제약을 분리하고 작은 C++11 정책으로 경계와 우선순위를 검증한다.",
+  "original": {
+    "title": "Computer-Controlled Players [Planning & Game Design]",
+    "published_date": "2024-06-01",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "uleauI0IwZM",
+    "video_url": "https://www.youtube.com/watch?v=uleauI0IwZM"
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 사람처럼 보인다는 것은 무엇인가",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 설명은 사람과 컴퓨터가 다르므로 CPU가 사람처럼 움직이게 하는 요구가 어렵다고 말한다. 여기서는 사람을 완벽히 모사하는 기술을 주장하지 않고, 상대가 어떤 정보를 알고 어떤 제약을 지키는지 명시하는 기획 방법을 다룬다. 강한 상대와 납득 가능한 상대, 연습에 도움이 되는 상대는 서로 다른 목표일 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-90-computer-controlled-players/assets/cpu-information.svg",
+          "alt": "강한 CPU와 납득할 수 있는 CPU는 다른 목표다。관찰: 볼 수 있는 정보, 기억한 이전 상태, 알 수 없는 정보 / 판단: 목표와 우선순위, 반응 시점, 행동 가능한 조건 / 실행과 표현: 실제 입력 제약, 예고·실수·복구, 결과를 읽을 단서",
+          "caption": "내부 정답을 바로 실행하기보다 게임이 약속한 정보와 제약을 정의한다. 원작 화면이 아닌 직접 제작한 학습 도식."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 입력을 읽는 것과 행동을 예측하는 것을 구분한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "컴퓨터는 프로그램 내부의 상태를 쉽게 참조할 수 있다. 그러나 플레이어가 볼 수 없는 선택을 미리 알고 즉시 대응하면 상대가 자신의 행동을 읽었다기보다 규칙 밖에서 반응한다고 느낄 수 있다. 어떤 정보 사용을 허용할지는 게임의 약속에 따라 정하되, 구현 편의 때문에 무심코 모든 내부 상태를 전달하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "연습용 상대라면 최적 승리보다 특정 패턴을 반복해 주는 것이 더 유용할 수 있다. 협력 동료라면 적을 모두 혼자 제거하는 것보다 사용자의 계획을 방해하지 않는 것이 중요할 수 있다. 목표를 정하지 않은 채 난도 숫자만 높이면 역할과 맞지 않는 행동이 나올 수 있다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-90-computer-controlled-players/assets/difficulty-axes.svg",
+          "alt": "난도는 한 개의 반응 속도만으로 정하지 않는다。정보 범위: 보이는 대상만, 기억의 지속시간, 숨은 정보 사용 여부 / 판단 품질: 목표 선택, 자원 사용 시점, 패턴 예측 정도 / 실행 제약: 반응 지연, 입력 빈도, 행동 실패 가능성",
+          "caption": "각 축을 바꾸면 이용자가 경험하는 상대의 성격도 달라진다. 원작 화면이 아닌 직접 제작한 학습 도식."
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "핵심 정리 — 난도와 성격을 분리해서 기록한다",
+      "blocks": [
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "축"
+                  }
+                ],
+                [
+                  {
+                    "text": "조정 예"
+                  }
+                ],
+                [
+                  {
+                    "text": "확인할 부작용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "관찰"
+                  }
+                ],
+                [
+                  {
+                    "text": "시야 밖 정보 제외"
+                  }
+                ],
+                [
+                  {
+                    "text": "길을 잃거나 정지하는가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "판단"
+                  }
+                ],
+                [
+                  {
+                    "text": "위협 우선순위 변경"
+                  }
+                ],
+                [
+                  {
+                    "text": "한 행동만 반복하는가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "반응"
+                  }
+                ],
+                [
+                  {
+                    "text": "결정까지 대기"
+                  }
+                ],
+                [
+                  {
+                    "text": "입력을 무시하는 듯 보이는가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "실행"
+                  }
+                ],
+                [
+                  {
+                    "text": "자원·재사용 조건 준수"
+                  }
+                ],
+                [
+                  {
+                    "text": "사람에게 불가능한 연속 행동인가"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "역할"
+                  }
+                ],
+                [
+                  {
+                    "text": "연습·경쟁·협력"
+                  }
+                ],
+                [
+                  {
+                    "text": "제품의 목표와 맞는가"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실수를 무작위로 넣는 것만으로 사람다운 행동이 되는 것은 아니다. 중요한 순간마다 이유 없이 실패하면 상대가 일관되지 않게 보일 수 있다. 관찰 가능한 목표와 제한에서 행동이 나오도록 설계하고 예외는 설명 가능한 범위로 둔다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "C++11 — 관찰 스냅샷으로 행동을 결정한다",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 모델의 전제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "거리는0~100의 정수, 체력0~100, 에너지0~10이다. 반응 대기나 보이지 않는 대상이면 기다린다. 체력20미만이며 거리5미만이면 후퇴를 우선한다. 그 외 거리3초과면 접근하고, 가까우며 재사용 대기가 없고 에너지2이상이면 공격한다. 이 수치는 원작 AI가 아니라 계약을 검증하기 위한 독창적 예시다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include <cassert>\n#include <iostream>\n#include <stdexcept>\n#ifdef NDEBUG\n#error Tests require assertions enabled\n#endif\nenum class Action { Wait, Approach, Retreat, Attack };\nstruct Seen { bool visible; int distance; int health; int energy; };\n// 관찰된 값만 사용하는 독창적 CPU 정책. 숨은 상대 입력은 받지 않는다.\nAction decide(const Seen& s, int reactionTicks, int cooldownTicks) {\n    if(s.distance<0||s.distance>100||s.health<0||s.health>100||\n       s.energy<0||s.energy>10||reactionTicks<0||cooldownTicks<0)\n        throw std::invalid_argument(\"invalid observation\");\n    if(reactionTicks>0||!s.visible||s.health==0)return Action::Wait;\n    if(s.health<20 && s.distance<5)return Action::Retreat;\n    if(s.distance>3)return Action::Approach;\n    if(cooldownTicks==0 && s.energy>=2)return Action::Attack;\n    return Action::Wait;\n}\nint main(){\n    assert(decide({true,3,100,2},0,0)==Action::Attack);\n    assert(decide({true,4,100,2},0,0)==Action::Approach);\n    assert(decide({true,3,19,2},0,0)==Action::Retreat);\n    assert(decide({true,3,20,2},0,0)==Action::Attack);\n    assert(decide({false,3,100,2},0,0)==Action::Wait);\n    assert(decide({true,3,100,2},1,0)==Action::Wait);\n    assert(decide({true,3,100,2},0,1)==Action::Wait);\n    assert(decide({true,3,100,1},0,0)==Action::Wait);\n    for(int d=0;d<=100;++d)for(int h=0;h<=100;++h){\n        const Action a=decide({true,d,h,2},0,0);\n        if(a==Action::Attack)assert(d<=3&&h>=20);\n        if(h==0)assert(a==Action::Wait);\n    }\n    bool rejected=false;try{decide({true,-1,50,2},0,0);}catch(const std::invalid_argument&){rejected=true;}\n    assert(rejected);std::cout<<\"CPU policy tests passed\\n\";\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 검증: GCC C++11 경고를 오류로 처리한 빌드와 실행, UBSan 실행을 수행했다. 거리3/4, 체력19/20, 시야·반응·재사용·에너지 조건 및 거리와 체력의10,201조합을 확인했다. 실제 엔진·길찾기·사람다운 행동·전투 재미를 검증한 것은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 결정과 실행을 다시 분리한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Approach를 반환했다고 실제로 가까워졌다는 뜻은 아니다. 벽이나 다른 캐릭터가 길을 막을 수 있다. 실행 결과를 다음 관찰에 반영하고 진전이 없는 경우를 처리해야 한다. 여기서는 길찾기와 이동을 구현하지 않았으므로 그 성공을 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "반응 지연을 구현할 때 현재의 최신 상태를 즉시 읽으면서 단지 버튼만 늦게 누르면 정보 처리의 의미가 달라질 수 있다. 관찰 시점·결정 시점·실행 시점을 구분하고 오래된 관찰을 사용할 때의 취소 조건도 정의한다. 이 예제의 reactionTicks는 호출자가 관리하는 대기 계약이며 실제 지연 큐는 구현하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "연습 — 납득 가능한 행동을 만들기",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "체력19에서 거리4라면 접근과 후퇴 중 무엇이 나오는가? 왜 그런가?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "후퇴다. 낮은 체력·가까운 거리의 조건을 접근보다 먼저 검사한다. 우선순위를 바꾸면 다른 성격이 된다. 코드 순서는 기획 규칙의 일부다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "연습 상대가 항상 사용자의 공격을 완벽히 피한다. 어떤 목표를 다시 확인할까?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "승리보다 특정 타이밍과 패턴을 배우게 하는 역할인지 확인한다. 정보·반응·행동 제약을 분리해 조정하고 실제로 학습에 도움이 되는지 관찰해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "시야를 잃었을 때 즉시 멈추는 대신 마지막 위치를 기억하게 확장한다면 기억 유효시간과 새로운 관찰의 우선순위를 먼저 명시하라."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 독창적 확장의 경계",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 영상의 제목·제작자 설명·채널·공개 timestamp를 확인했다. 영상 재생이나 자막 전문을 확인한 요약·번역본이 아니다. 본문의 가상 게임·수치·실험·도식은 원본의 주제에서 출발해 직접 만든 학습 확장이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Computer-Controlled Players [Planning & Game Design]",
+              "href": "https://www.youtube.com/watch?v=uleauI0IwZM"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 공개일: 2024-06-01 (공식 메타데이터의 날짜). 전체 timestamp: 2024-06-01T04:00:49-07:00. 교재 발행일과 구분한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 설명에서 확인한 범위: 제작자는 CPU 플레이어가 사람처럼 움직이기를 바라는 요구는 어렵고 사람과 컴퓨터의 차이를 어떻게 조정할지 묻는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "저작권·검증: 원본 영상 화면이나 장문 자막을 복제하지 않았다. 실험 계획은 실제 참가자 연구 결과가 아니다. 코드 실행 여부는 구현 탭에 별도로 기록한다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
