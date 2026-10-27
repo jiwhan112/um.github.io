@@ -1,6 +1,7 @@
 /** Verify the publishing contract and authored thinking metadata before every release. */
 import {readFileSync,existsSync} from 'node:fs';
 import {resolve} from 'node:path';
+import {validateGameDesignPlan} from './validate-game-design-plan.mjs';
 const root=resolve('..'),read=p=>readFileSync(resolve(root,p),'utf8');
 const policy=JSON.parse(read('automation/publishing.json'));
 if(policy.theme!=='dark'||policy.siteBase!=='/um.github.io/'||policy.branch!=='master')throw Error('Invalid publishing target or theme');
@@ -13,7 +14,7 @@ for(const [index,j] of policy.jobs.entries()){
  for(const pattern of j.allowedWritePatterns){const re=new RegExp(pattern);for(const p of ['index.html','thinking-lab/index.html','web/src/styles.css','language-study/sw.js','data/atlas/catalog.json'])if(re.test(p))throw Error('Scheduled writer can modify generated/UI file: '+p);}
 }
 const feed=policy.contentFeeds?.find(f=>f.id==='game-design');
-if(!feed||feed.targetEpisodes!==12||feed.allowedWritePatterns?.length!==3)throw Error('Game design feed policy missing');
+if(!feed||feed.targetEpisodes!==104||feed.allowedWritePatterns?.length!==3)throw Error('Game design feed policy missing');
 for(const pattern of feed.allowedWritePatterns){const re=new RegExp(pattern);for(const p of ['index.html','game-design/index.html','web/src/App.tsx','data/atlas/catalog.json'])if(re.test(p))throw Error('Game design scheduled writer may modify UI/generated: '+p);}
 const gd=JSON.parse(read('game-design/data/catalog.json'));
 function findImages(blocks){
@@ -34,7 +35,8 @@ for(const entry of gd.episodes){
 }
 
 const videoIds=new Set();const paths=new Set();for(const e of gd.episodes){if(!e.video_id||!e.video_url||e.video_url!=='https://www.youtube.com/watch?v='+e.video_id||videoIds.has(e.video_id)||paths.has(e.path)||!e.category||!e.tags?.length||e.tags.length>8||!existsSync(resolve(root,'game-design/'+e.path+'content.json')))throw Error('Invalid game design episode: '+e.path);videoIds.add(e.video_id);paths.add(e.path);}
-if(gd.episodes.length>12)throw Error('Game design exceeds approved 12 episodes');
+// Manual continuation is bounded by the verified, user-approved source manifest.
+validateGameDesignPlan(JSON.parse(read('automation/game-design-plan.json')),gd.episodes,feed);
 const catalog=JSON.parse(read('thinking-lab/data/catalog.json'));
 for(const e of catalog.episodes){
  if(!e.category?.trim()||!Array.isArray(e.tags)||e.tags.length<1||e.tags.length>8)throw Error('Missing classification: '+e.path);

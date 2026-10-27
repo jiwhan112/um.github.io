@@ -1,0 +1,453 @@
+{
+  "title": "편의 기능을 경험으로 완성하기 — 찾기·미리보기·저장·복구",
+  "subtitle": "설정 항목을 많이 만드는 대신 플레이어가 발견하고 이해하고 안전하게 되돌릴 수 있는 흐름을 설계한다.",
+  "original": {
+    "title": "Modern Quality of Life Features [UI]",
+    "published_date": "2022-12-30",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "j2BX4yw8Z4Y",
+    "video_url": "https://www.youtube.com/watch?v=j2BX4yw8Z4Y",
+    "date_note": "공식 제목·설명·공개일을 확인했다. 영상 재생·자막 전문 미확인과 독창적 학습 확장을 구분한다."
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 편의 기능을 경험으로 완성하기",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "출처 경계: 공식 설명은 게임을 직접 조작하며 잘 만들어진 접근성 설정을 살펴보는 진행 형식이라고 밝힌다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 체크박스를 추가했다고 기능이 끝나지 않는다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 설명은 한 게임을 직접 조작하며 잘 만들어진 접근성 설정을 살펴보는 형식이라고 안내한다. 게임 이름과 개별 옵션은 본문에서 확인되지 않은 사실로 채우지 않는다. 대신 독창적인 설정 화면 사례를 통해 항목의 존재와 실제 사용 가능성 사이의 차이를 배운다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "글자를 크게 하는 옵션이 있어도 설명 자체가 너무 작거나 게임 시작 뒤 깊은 메뉴에서만 찾을 수 있으면 정작 필요한 사람이 접근하기 어렵다. 기능을 발견하고 뜻을 이해하고 결과를 확인하고 저장하고 다시 복구하는 전체 경로가 경험의 일부다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 편의와 접근성을 같은 기준 하나로 평가하지 않는다"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "질문"
+                  }
+                ],
+                [
+                  {
+                    "text": "관찰할 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "피할 결론"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "찾을 수 있는가"
+                  }
+                ],
+                [
+                  {
+                    "text": "첫 실행·메뉴·검색 경로"
+                  }
+                ],
+                [
+                  {
+                    "text": "설정 메뉴에 있으니 충분하다"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "뜻을 알 수 있는가"
+                  }
+                ],
+                [
+                  {
+                    "text": "효과·범위·즉시 적용 여부"
+                  }
+                ],
+                [
+                  {
+                    "text": "기술 용어가 정확하니 이해된다"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "효과를 확인하는가"
+                  }
+                ],
+                [
+                  {
+                    "text": "미리보기·현재값·변화"
+                  }
+                ],
+                [
+                  {
+                    "text": "수치가 바뀌었으니 체감한다"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "되돌릴 수 있는가"
+                  }
+                ],
+                [
+                  {
+                    "text": "취소·기본값·마지막 저장"
+                  }
+                ],
+                [
+                  {
+                    "text": "실수는 사용자의 책임이다"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-24-modern-quality-of-life-features/assets/settings-flow.svg",
+          "alt": "설정 발견,미리보기,적용,취소의 상태와 책임을 구분한 도식.",
+          "caption": "직접 제작한 학습 도식. UI·영속 저장·접근성 실사용 검증은 별도로 필요합니다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 미리보기와 저장은 서로 다른 상태다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "텍스트 크기를 시험한 뒤 취소했는데 저장값까지 바뀌면 사용자는 취소를 믿지 못한다. 반대로 즉시 저장되는 설정에 적용 버튼을 보여 주면 무엇이 확정됐는지 혼란스럽다. 이번 가상 화면은 저장본과 편집본을 분리하고 Apply에서만 저장한다. 즉시 저장 방식도 가능하지만 화면의 언어와 데이터 흐름이 일치해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "화면 해상도처럼 잘못 바꾸면 되돌리는 버튼조차 보이지 않는 설정은 자동 복귀 시간 같은 더 강한 복구 장치가 필요할 수 있다. 이번 텍스트 크기·흔들림 모델에는 시간 제한 복구나 파일 저장이 없다. 단순한 메모리 복사를 전체 설정 시스템으로 포장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 여러 옵션이 함께 켜질 때를 시험한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "글자 확대만 시험하면 잘 보여도 긴 번역문, 작은 화면, 자막, 높은 대비, 버튼 안내가 함께 켜지면 겹칠 수 있다. 기능별 단독 성공뿐 아니라 실제로 함께 사용할 조합을 검증한다. 색만으로 상태를 표시하지 않는지, 키보드나 패드로 빠져나올 수 있는지, 취소 후 포커스가 돌아오는지도 점검한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "접근성은 가상의 평균 사용자에 맞춘 점수 하나로 끝내기 어렵다. 목표 사용자의 요구를 듣고, 동의를 얻은 범위에서 관찰하며, 보조 기술과 입력 장치의 실제 제약을 확인한다. 본문 CPU 테스트는 이 과정을 대체하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "1분 요약",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "설정의 존재보다 발견·이해·적용·복구 흐름을 평가한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "미리보기 값과 저장값의 관계를 명시한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "취소·기본값·마지막 저장으로 복구의 의미를 구분한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "글자 확대와 번역·작은 화면·다른 옵션의 조합을 검사한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "코드 테스트 통과를 접근성 인증으로 말하지 않는다."
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — 작동 계약과 검증",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실험 계약"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "교육용 메모리 모델은 textScale100~150과 shake bool만 다룬다. 유효한 setScale은 편집본만 바꾸고 범위 밖은 거부한다. shown은 미리보기, saved는 확정본이다. commit은 편집본을 저장본에 복사하고 cancel은 저장본을 편집본으로 복원한다. 파일·클라우드·UI·실제 글자 렌더링은 없다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#ifdef NDEBUG\n#error \"Assertions must remain enabled.\"\n#endif\n#include <cassert>\n#include <iostream>\nstruct Settings { int textScale; bool shake; };\nclass Preview {\n    Settings saved_{100,true};\n    Settings draft_{100,true};\npublic:\n    bool setScale(int value) {\n        if(value<100 || value>150) return false;\n        draft_.textScale=value;return true;\n    }\n    void setShake(bool value){draft_.shake=value;}\n    void cancel(){draft_=saved_;}\n    void commit(){saved_=draft_;}\n    Settings shown() const{return draft_;}\n    Settings saved() const{return saved_;}\n};\nint main(){\n    Preview p;assert(p.setScale(150));p.setShake(false);\n    assert(p.shown().textScale==150 && !p.shown().shake);\n    assert(p.saved().textScale==100 && p.saved().shake);\n    assert(!p.setScale(151) && !p.setScale(99));\n    assert(p.shown().textScale==150);\n    p.cancel();assert(p.shown().textScale==100 && p.shown().shake);\n    assert(p.setScale(125));p.setShake(false);p.commit();\n    assert(p.saved().textScale==125 && !p.saved().shake);\n    assert(p.setScale(100));p.cancel();\n    assert(p.shown().textScale==125 && !p.shown().shake);\n    std::cout<<\"settings preview tests passed\\n\";\n}\n"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "왜 복사본을 분리하는가"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "편집 중 변경이 저장본에 전파되지 않기 때문에 취소가 정확히 마지막 확정 상태로 돌아간다. 범위 검사에 실패해도 이전 편집본이 유지된다. 두 필드의 복사는 O(1) 시간·공간이다. 설정 수가 n으로 늘어나면 전체 복사의 비용과 검증은 O(n)이며, 파일 저장 실패 시 원자적 기록·오류 표시를 별도 설계해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++11 엄격 빌드와 UBSan에서 상한150, 범위 밖99·151, 편집과 저장 분리, 취소, 적용 뒤 다시 취소를 실행했다. 실제 화면의 잘림·포커스·보조 기술 호환성·파일 영속성은 검증하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습과 접힌 복습 답",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 · 설정 카드 하나를 설계하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "“화면 흔들림” 항목의 이름, 간단한 설명, 현재 상태, 미리보기, 적용 방식, 되돌리기 경로를 적는다. 감소와 끄기가 다른 의미라면 구분한다. 변경이 경쟁 판정에 영향을 주는지 시각 표현만 바꾸는지도 설명한다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 · 취소와 기본값 복원은 같은가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 취소는 마지막 확정 상태로 돌아가고 기본값 복원은 제품이 정한 초기 상태를 선택한다. 기본값 복원이 즉시 저장되는지 편집본만 바꾸는지도 별도 계약이다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "실습 답 · 크게 보이는 글자가 잘리면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "폰트 수치만 줄여 실패를 숨기지 않는다. 줄바꿈·스크롤·레이아웃 재배치·정보 우선순위를 검토하고 실제 작은 화면과 긴 문자열로 다시 확인한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장 · 저장 실패 후 화면은 무엇을 보여야 할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실제로 영속 저장되지 않았는데 저장 완료로 표시하면 안 된다. 편집본 유지, 재시도, 이전 확정본 복원 중 제품 정책을 정하고 실패를 재현하는 테스트를 추가한다. 현재 예제는 저장 장치를 구현하지 않았다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 검증 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Modern Quality of Life Features [UI]",
+              "href": "https://www.youtube.com/watch?v=j2BX4yw8Z4Y"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 채널 Masahiro Sakurai on Creating Games. 영상 ID j2BX4yw8Z4Y, 공개일 2022-12-30. 공식 공개 페이지의 채널 ID UCv1DvRY5PyHHt3KN9ghunuw 및 제작자 설명을 대조했다. 날짜는 원본 공개 기록 기준이며 연구실 발행일과 다르다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출처 경계: 공식 설명은 게임을 직접 조작하며 잘 만들어진 접근성 설정을 살펴보는 진행 형식이라고 밝힌다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인용 영상의 화면·음성·자막을 복제하지 않았다. 이 교재의 한국어 해설, 가상 상황, 코드, SVG는 자체 제작했다. CPU 예제의 통과를 실제 플레이어의 재미·접근성·온라인 공정성 검증으로 확대하지 않는다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

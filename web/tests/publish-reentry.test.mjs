@@ -42,3 +42,27 @@ test('publication reentry proves exact generated child and rejects altered linea
   git('checkout','--detach',source);result=run();assert.notEqual(result.status,0);assert.match(result.stderr,/Refusing stale/);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
+
+test('manual game-design continuation is exactly the approved 104-video prefix',async()=>{
+ const {readFile}=await import('node:fs/promises');
+ const {validateGameDesignPlan}=await import('../scripts/validate-game-design-plan.mjs');
+ const read=async path=>JSON.parse(await readFile(resolve('..',path),'utf8'));
+ const plan=await read('automation/game-design-plan.json');
+ const episodes=(await read('game-design/data/catalog.json')).episodes;
+ const feed=(await read('automation/publishing.json')).contentFeeds.find(f=>f.id==='game-design');
+ assert.doesNotThrow(()=>validateGameDesignPlan(plan,episodes,feed));
+ const mutated=change=>{const p=structuredClone(plan),e=structuredClone(episodes),f=structuredClone(feed);change(p,e,f);assert.throws(()=>validateGameDesignPlan(p,e,f),/Game design plan:/);};
+ mutated(p=>p.entries.pop());
+ mutated(p=>p.entries[13].videoId=p.entries[0].videoId);
+ mutated(p=>p.entries[13].sourceCategory='Audio');
+ mutated(p=>p.entries[13].sourceDate='2020-01-01');
+ mutated((p,e)=>{[e[0],e[1]]=[e[1],e[0]];});
+ mutated((p,e)=>e[0].path='renamed/');
+ mutated((p,e)=>e[0].date='2026-10-27');
+ mutated((p,e,f)=>f.targetEpisodes=105);
+ mutated((p,e,f)=>f.status='active');
+ const complete=plan.entries.map(x=>({number:String(x.number),video_id:x.videoId,path:x.existingPath??`ep-${x.number}/`,date:x.existingDate??x.sourceDate}));
+ assert.doesNotThrow(()=>validateGameDesignPlan(plan,complete,feed));
+ complete.push({...complete[103],number:'105'});
+ assert.throws(()=>validateGameDesignPlan(plan,complete,feed),/prefix length/);
+});

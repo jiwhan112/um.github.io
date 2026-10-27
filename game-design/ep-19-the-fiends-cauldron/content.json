@@ -1,0 +1,535 @@
+{
+  "title": "악마의 가마솥 — 난이도 선택을 위험·보상 계약으로 만들기",
+  "subtitle": "선택 가능한 도전과 손실 고지를 살펴보고, 가상 탐험의 참가·정산 상태를 C++11로 검증한다.",
+  "original": {
+    "title": "The Fiend's Cauldron  [Game Essence]",
+    "published_date": "2022-11-23",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "ai7pBxHAcvU",
+    "video_url": "https://www.youtube.com/watch?v=ai7pBxHAcvU"
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 난이도 메뉴를 선택의 순간으로",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "출처 구분: 이 영상의 공식 설명문은 Kid Icarus: Uprising의 Fiend’s Cauldron을 주제로 소개한다. 세부 규칙은 영상 시청으로 확인한 것이 아니라, 별도 Nintendo 공식 인터뷰 “Having the Players Choose”를 읽어 확인했다. 아래 가상 탐험의 수치와 코드는 원작의 구현이나 정확한 보상 공식을 재현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 공식 인터뷰에서 확인되는 설계"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Nintendo 인터뷰에서 사쿠라이는 이 시스템을 자신의 실력과 무기, 난이도를 저울질하는 위험·보상 선택으로 설명한다. 플레이어는 게임 내 하트를 걸어 난이도를 조절하며, 높은 도전에는 더 나은 보상이 연결된다. 실패하면 걸었던 하트가 줄고 난이도도 내려간다. 실제 돈을 거는 시스템은 아니라는 점도 분명히 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 사실에서 배우는 지점은 난이도 설정이 단순한 메뉴 분류를 넘어 플레이어가 감당할 도전을 정하는 행동이 될 수 있다는 것이다. 다만 이는 모든 게임에 정답이라는 뜻이 아니다. 이후의 분석은 이 구조를 바탕으로 만든 교재의 독립적인 설계 해석이다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 위험을 선택하게 하려면 정보를 먼저 줘야 한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가상 탐험에서 “도전 비용 40, 실패 시 40 손실, 성공 시 예치금 반환과 보상 40”이라고 제시하자. 사용자는 단순히 “어려움”이라는 단어보다 무엇을 잃고 얻는지 구체적으로 생각할 수 있다. 그러나 상대의 강함이나 실패 결과를 전혀 모르는데 큰 비용을 먼저 내게 하면 선택이라기보다 정보 부족에 대한 벌이 된다."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-19-the-fiends-cauldron/assets/risk-contract.svg",
+          "alt": "도전 선택, 비용 확정, 단 한 번의 결과 정산, 재선택으로 이어지는 위험 계약의 네 단계. 각 단계에서 중복 차감과 중복 보상을 방지한다.",
+          "caption": "원작 화면을 쓰지 않은 자체 제작 상태 관계도. 예치금과 보상 규칙은 교재 전용이다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 높은 보상이 항상 높은 재미는 아니다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "모든 사람이 가장 높은 난이도를 골라야만 재료를 얻는다면 낮은 난이도는 명목상 선택이 된다. 반대로 낮은 난이도에서 시간당 보상이 압도적으로 좋으면 실력이 높은 사람도 지루한 반복을 최적 전략으로 선택할 수 있다. 도전의 만족, 성장 속도, 원하는 진행 방식이 함께 유지되는지 살펴야 한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 실패 후의 선택도 설계의 일부다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "패배 직후에는 이전 손실을 되찾으려는 조급함이 생길 수 있다. 더 큰 위험을 눈에 띄게 밀어붙이기보다 잔액과 손실 내역을 정확히 보여 주고, 쉬운 도전이나 비용 없는 연습으로 돌아갈 길을 제공하자. 가상 재화 시스템이라도 불투명한 손실이나 압박적인 재도전 유도는 신뢰를 해친다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "핵심 요약 — 도전의 크기는 사용자가 이해하고 고른다",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "공식 영상 주제와 별도 공식 인터뷰로 확인한 규칙을 구분한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "선택 전에 비용·실패 손실·성공 보상을 명확히 보여 준다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "낮은 난이도를 선택할 실질적인 이유와 진행 가능성을 남긴다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "성공 보상이 높아도 실패 확률과 소요 시간이 다르면 기대 결과는 달라진다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "구현은 참가와 정산을 분리하고, 중복 이벤트가 재화를 두 번 바꾸지 못하게 한다."
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — 재화와 도전 상태를 같이 관리하기",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 기대값은 재미 점수가 아니라 점검 도구다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가상 계약 A는 성공 시 순증가 +40, 실패 시 −40이다. 성공 확률을 설명용 가정 0.75로 두면 한 번의 기대 순변화는 0.75×40 − 0.25×40 = 20이다. 계약 B가 성공 +100, 실패 −80이고 성공 확률이 0.4라면 40 − 48 = −8이다. 보상 숫자가 더 커도 기대 순변화는 낮을 수 있다. 이 확률은 실제 플레이 데이터나 개인 실력을 예측한 값이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "여기에 시도 시간이 다르면 시간당 기대값도 달라진다. 하지만 기대값만 같게 맞추는 것으로 재미가 같아지지는 않는다. 긴장감, 실패를 받아들이는 성향, 학습 기회가 다르기 때문이다. 기대값 계산은 반복 파밍이나 경제 붕괴의 가능성을 찾는 보조 도구로 쓰고, 플레이 경험 판단은 별도로 하자."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 이 코드가 지키는 계약"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "항목"
+                  }
+                ],
+                [
+                  {
+                    "text": "교육용 계약"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "초기 재화는 int, 음수면 0으로 보정. 참가 비용은 0~1000"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "참가"
+                  }
+                ],
+                [
+                  {
+                    "text": "진행 중 새 참가 거절. 잔액 부족·범위 오류면 상태 불변"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "성공"
+                  }
+                ],
+                [
+                  {
+                    "text": "예치금과 같은 크기의 보상을 합해 비용의 두 배 반환"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "실패"
+                  }
+                ],
+                [
+                  {
+                    "text": "예치금은 이미 차감됐으므로 추가 차감 없음"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "중복 결과"
+                  }
+                ],
+                [
+                  {
+                    "text": "진행 중이 아니면 정산 거절"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "지원 범위"
+                  }
+                ],
+                [
+                  {
+                    "text": "단일 프로세스의 순차 호출. 저장·멀티스레드·네트워크 미구현"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#include <cassert>\n#include <cstdint>\n#ifdef NDEBUG\n#error Tests require assertions enabled\n#endif\n// Original teaching model, not Kid Icarus: Uprising's implementation.\nclass Attempt {\n    std::int64_t wallet_;\n    int stake_ = 0;\n    bool active_ = false;\npublic:\n    explicit Attempt(int wallet) : wallet_(wallet < 0 ? 0 : wallet) {}\n    std::int64_t Wallet() const { return wallet_; }\n    bool Active() const { return active_; }\n    bool Begin(int stake) {\n        if (active_ || stake < 0 || stake > 1000 || wallet_ < stake) return false;\n        wallet_ -= stake; stake_ = stake; active_ = true; return true;\n    }\n    bool Settle(bool won) {\n        if (!active_) return false;\n        // Win returns escrow plus an equally sized reward; loss loses escrow.\n        if (won) wallet_ += 2LL * stake_;\n        stake_ = 0; active_ = false; return true;\n    }\n};\nint main() {\n    Attempt a(100);\n    assert(!a.Settle(true));\n    assert(!a.Begin(-1) && !a.Begin(1001) && !a.Begin(101));\n    assert(a.Wallet() == 100 && !a.Active());\n    assert(a.Begin(40) && a.Wallet() == 60);\n    assert(!a.Begin(1) && a.Wallet() == 60);\n    assert(a.Settle(true) && a.Wallet() == 140);\n    assert(!a.Settle(true) && a.Wallet() == 140);\n    assert(a.Begin(40) && a.Settle(false) && a.Wallet() == 100);\n    assert(a.Begin(0) && a.Settle(false) && a.Wallet() == 100);\n    Attempt empty(-5);\n    assert(empty.Wallet() == 0 && !empty.Begin(1));\n    for (int i=0;i<10000;++i) {\n        assert(a.Begin(1) && a.Settle(true));\n        assert(a.Begin(1) && a.Settle(false));\n    }\n    assert(a.Wallet() == 100 && !a.Active());\n}\n"
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이 예제의 원본을 g++ -std=c++11 -O2 -Wall -Wextra -Werror -pedantic으로 컴파일·실행하고 UBSan으로도 실행했다. 경계 비용, 잔액 부족, 진행 중 중복 참가, 중복 정산, 비용 0, 10,000회 승패 쌍의 잔액 복원을 검증했다. NDEBUG 빌드를 거절하여 assert 안의 테스트 행동이 사라지는 것을 방지한다. 실행 결과는 CPU 계약 검증일 뿐 실제 재미나 원작 규칙 검증이 아니다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 예제가 해결하지 않는 실제 제품 문제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "지금 코드는 진행 중 중복 참가와 정산 직후 중복 결과만 막는다. 이전 도전의 늦게 도착한 결과가 새 도전 도중 들어오는 상황은 구분하지 못한다. 온라인 구현에는 도전 ID와 정산 ID를 넣고 서버에서 동일 ID의 처리를 멱등하게 만들어야 한다. 버튼 비활성화만으로는 네트워크 재전송이나 저장 재시도를 막을 수 없다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "프로그램을 종료하면 진행 상태와 잔액이 사라진다. 실제 저장에서는 차감과 도전 시작 기록을 함께 저장하거나 복구 가능한 거래 로그가 필요하다. 도중 종료 시 환급할지, 도전을 이어갈지, 패배로 볼지도 제품 계약이다. 이 샘플에는 취소·환급 API가 없으며, 임의로 새 객체를 만들면 환급된다고 가정해서는 안 된다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "재화는 int64_t로 넓혔지만 무한히 누적 가능한 것은 아니다. 장기 운영에서는 잔액 상한과 덧셈 전 오버플로 검사를 추가해야 한다. 현재 테스트의 최대값은 매우 작아 안전하지만, 이를 모든 운영 시간에 대한 안전 증명으로 확대하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습 — 보상 표와 실패 계약을 함께 검토하기",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 A · 두 가지 도전 메뉴 만들기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가상 계약 두 개에 참가 비용, 실패 시 잔액 변화, 성공 시 총 반환액, 예상 소요 시간, 연습 가능 여부를 적는다. “보상 80”이 순이익인지 예치금 포함 반환액인지 구분하라. UI 문구와 정산 로그가 같은 뜻인지 다른 사람에게 설명해 보게 한다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 B · 이벤트 순서를 바꿔 공격하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "참가 두 번, 결과 두 번, 결과부터 도착, 실패 후 새 참가, 새 참가 후 오래된 성공 결과라는 입력 시퀀스를 적는다. 앞의 네 경우와 달리 마지막 경우는 이 예제로 해결되지 않는다. 도전 ID를 추가한 확장 설계를 먼저 그린 다음 구현하라."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 1 · 실패 정산에서 비용을 다시 빼면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "참가 시 이미 차감했으므로 이 계약에서는 이중 손실이다. 참가 비용을 확정 차감하는지 보류만 하는지 먼저 정해야 한다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 2 · 비용이 0이면 검증을 건너뛰어도 될까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 금액이 0이어도 도전 상태와 결과 처리는 존재한다. 진행 중 중복 참가나 오래된 결과 문제는 그대로 남는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 3 · 모든 난이도의 기대값을 같게 하면 충분할까?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 소요 시간·보상 분산·실패 경험·연습 가치·선택 동기가 다르다. 경제 균형의 한 검사항목일 뿐 전체 경험을 대체하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "완료 기준: 정산 전후 잔액 표와 실패 복구 정책을 작성하고, 코드가 지원하지 않는 네트워크·저장 경계를 명시한다. 사람 대상 테스트는 아직 수행하지 않았다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 확인 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "확인 범위: 공식 YouTube 공개 페이지의 제목·게시 시각·채널 ID·설명문을 확인했다. 영상 전체 재생·자막 전문을 검증했다는 뜻은 아니다. 설명문에서 확인되지 않는 개발 경위나 장면을 영상의 주장으로 쓰지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "The Fiend's Cauldron  [Game Essence]",
+              "kind": "link",
+              "href": "https://www.youtube.com/watch?v=ai7pBxHAcvU"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원본 게시일: 2022-11-23 · 채널: Masahiro Sakurai on Creating Games · 공식 타임스탬프: 2022-11-23T01:00:01-08:00"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Nintendo 공식 인터뷰: Having the Players Choose",
+              "kind": "link",
+              "href": "https://www.nintendo.com/en-gb/Iwata-Asks/Iwata-Asks-Kid-Icarus-Uprising/Iwata-Asks-Kid-Icarus-Uprising/4-Having-the-Players-Choose/4-Having-the-Players-Choose-207744.html"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인터뷰에서 확인한 시스템 설명은 위의 짧은 개요에 한정한다. 원작 난이도별 비용표·드롭률·정산 수치나 영상 속 시연은 제공하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "학습 확장과 권리: 가상 게임 규칙, 수치, 질문, 시스템 도식은 직접 작성한 교재다. 영상 화면·자막·공식 도표를 복제하지 않았으며 전체 영상의 대체 요약이나 번역본을 제공하지 않는다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

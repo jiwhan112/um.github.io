@@ -1,0 +1,445 @@
+{
+  "title": "플레이어에게 유리한 여유 — 규칙 위반이 아니라 의도된 관용",
+  "subtitle": "실수 허용과 부정행위를 구분하고, 작은 점프 유예의 경계·재사용 방지·공정성 계약을 설계한다.",
+  "original": {
+    "title": "Let Players Cheat the System  [Game Essence]",
+    "published_date": "2022-12-11",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "MVsVTgJKuzU",
+    "video_url": "https://www.youtube.com/watch?v=MVsVTgJKuzU",
+    "date_note": "공식 제목·설명·공개일을 확인했다. 영상 재생·자막 전문 미확인과 독창적 학습 확장을 구분한다."
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 플레이어에게 유리한 여유",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "출처 경계: 공식 설명은 개발자가 때로 플레이어에게 유리하게 규칙을 굽힐 여유를 줄 수 있다고 말하며, 경쟁 게임의 부정행위는 허용되지 않는다고 명시한다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 엄격한 판정이 항상 정직한 경험은 아니다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "화면에서 아직 발판 끝에 있는 것처럼 보였는데 점프가 나가지 않으면 플레이어는 자신이 규칙을 어겼다고 느끼기보다 입력이 먹지 않았다고 느낄 수 있다. 표현과 판정의 작은 차이를 흡수하는 여유는 의도한 행동을 살리는 수단이다. 이 교재에서는 발판을 떠난 뒤 짧은 점프 기회를 남기는 가상 사례를 사용한다. 이 사례가 원본에 등장한다고 주장하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "관용을 설계한다는 말은 모든 실패를 지우자는 뜻이 아니다. 어려움을 읽고 선택하는 재미와, 인터페이스의 애매함 때문에 의도하지 않은 실패를 하는 경험을 구분하자는 뜻이다. 실패를 제거하기 전에 플레이어가 무엇을 잘못 이해했는지, 무엇을 정확히 이해하고도 실행하지 못했는지 살펴본다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 관용·접근성·부정행위는 같은 단어가 아니다"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "구분"
+                  }
+                ],
+                [
+                  {
+                    "text": "예시와 목적"
+                  }
+                ],
+                [
+                  {
+                    "text": "설계 책임"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "의도된 관용"
+                  }
+                ],
+                [
+                  {
+                    "text": "입력·판정의 작은 틈을 흡수"
+                  }
+                ],
+                [
+                  {
+                    "text": "조건과 경계를 일관되게 적용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "접근성 옵션"
+                  }
+                ],
+                [
+                  {
+                    "text": "특정 조작 부담을 조절"
+                  }
+                ],
+                [
+                  {
+                    "text": "설정 탐색·설명·저장·복구 제공"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "연습 모드"
+                  }
+                ],
+                [
+                  {
+                    "text": "실패 비용을 낮춰 학습"
+                  }
+                ],
+                [
+                  {
+                    "text": "기록·랭킹과의 관계 명확화"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "경쟁 부정행위"
+                  }
+                ],
+                [
+                  {
+                    "text": "승인되지 않은 외부 수단으로 우위"
+                  }
+                ],
+                [
+                  {
+                    "text": "관용이라는 말로 정당화하지 않음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-22-let-players-cheat-the-system/assets/grace-contract.svg",
+          "alt": "시간 경계,소모,회복,공정성의 네 조건을 설명하는 도식.",
+          "caption": "직접 제작한 학습 도식. 2 tick은 교육용 수치이며 제품 권장값이 아닙니다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 여유의 예산을 정한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "“조금 늦어도 된다”는 기획 문장은 코드로 옮기기 어렵다. 마지막 유효 시점부터 몇 tick인지, 경계 tick을 포함하는지, 한 번 성공하면 소모되는지, 재착지하면 복구되는지 적어야 한다. 같은 tick에서 입력과 유예 감소의 순서도 결과를 바꾼다. 이번 예제는 감소 후 입력을 검사하는 호출 시나리오를 테스트한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "너무 큰 여유는 플레이어가 화면 밖에서 점프하는 듯한 모순을 만들 수 있다. 너무 작은 여유는 체감되지 않을 수 있다. 적절한 값은 해상도·속도·입력 방식·시각 피드백에 따라 달라지므로 본문의2 tick을 제품 권장치로 사용하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 공정성은 모두에게 똑같은 숫자만 주면 끝일까?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "경쟁 모드에서는 승인된 규칙을 모든 참가자에게 일관되게 적용하고, 판정 권한과 기록 비교 조건을 명확하게 해야 한다. 기기 지연이나 네트워크 보정은 또 다른 문제다. 클라이언트가 마음대로 유예를 늘리게 두는 것은 이 학습 예제의 범위가 아니다. 싱글 플레이 관용을 온라인 권한 우회와 혼동하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "1분 요약",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "관용은 의도한 입력을 살리기 위한 게임 규칙의 일부다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "어려운 선택과 애매한 판정에서 생긴 실패를 구분한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "유예의 시작·종료·소모·재충전을 명시한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "원본 설명도 경쟁 게임의 부정행위를 허용하지 않는다고 구분한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "수치 테스트가 플레이어에게 적절한 관용 폭임을 증명하지는 않는다."
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — 작동 계약과 검증",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실험 계약"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "초기에는 점프 권한이 없다. landed가 유예2와 미소모 상태를 만든다. leftGround는 유예를2로 설정하되 소모 상태는 바꾸지 않는다. airborneTick은2→1→0→-1까지 감소하고-1에서 멈춘다. press는 미소모이고 잔여0이상일 때 한 번만 성공한다. 재착지 이벤트는 충돌 계층에서 실제 착지에만 발생한다고 가정한다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#ifdef NDEBUG\n#error \"Assertions must remain enabled.\"\n#endif\n#include <cassert>\n#include <iostream>\n// 발판을 벗어난 뒤2 tick까지 허용하는 자체 제작 점프 유예.\nclass JumpGrace {\n    int left_ = 0;\n    bool consumed_ = true;\npublic:\n    void landed() { left_=2; consumed_=false; }\n    void leftGround() { left_=2; }\n    bool press() {\n        if(consumed_ || left_<0) return false;\n        consumed_=true; return true;\n    }\n    void airborneTick() { if(left_>=0)--left_; }\n};\nint main(){\n    JumpGrace a;assert(!a.press());\n    a.landed();a.leftGround();\n    a.airborneTick();a.airborneTick();assert(a.press());\n    assert(!a.press()); // 같은 유예에서 두 번 점프하지 않는다.\n    JumpGrace b;b.landed();b.leftGround();\n    b.airborneTick();b.airborneTick();b.airborneTick();\n    assert(!b.press());\n    for(int i=0;i<10000;++i)b.airborneTick();\n    assert(!b.press());b.landed();assert(b.press());\n    std::cout<<\"grace tests passed\\n\";\n}\n"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "정확성의 핵심"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "점프 성공은 consumed를 true로 바꾸며 착지 외에는 false로 바꾸지 않는다. 따라서 같은 비행 중 leftGround를 다시 호출해도 성공한 점프를 재충전하지 않는다. 다만 잘못된 landed 이벤트는 권한을 재충전하므로 실제 충돌 계층은 이 이벤트의 진위를 책임져야 한다. 함수 호출마다 O(1) 시간·공간이다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++11 엄격 빌드와 UBSan에서 초기 거부, 두 tick 경계 성공, 세 tick 뒤 실패, 중복 점프 거부,10,000 tick 뒤 포화, 재착지 회복을 실행했다. 실제 패드·지형 충돌·네트워크·플레이어 테스트는 하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습과 접힌 복습 답",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 · 경계 표를 먼저 쓰기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "유예를0,1,2 tick으로 바꾼 세 버전의 입력 처리 순서를 적고, 발판을 떠나는 tick의 입력을 포함할지 결정한다. 숫자만 바꾸기 전에 표현과 호출 순서를 함께 검토한다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 · 소모 상태와 남은 tick을 하나로 합쳐도 되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가능한 설계는 있지만 의미가 다른 상태를 섞으면 재진입·재착지 처리에서 오류가 생기기 쉽다. 이 예제는 시간 경계와 사용 권한을 별도로 두어 계약을 읽기 쉽게 만들었다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 · 유예를 늘리면 접근성이 자동으로 개선되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아니다. 어떤 부담을 줄이고 어떤 예측 가능성을 해치는지 실제 이용자의 관점에서 확인해야 한다. 옵션 이름·설명·기본값·되돌리기도 사용성의 일부다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장 · 점프 입력을 착지 전 저장한다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이번 유예는 발판을 떠난 뒤의 권한이다. 착지 전에 눌러 둔 입력을 저장하는 버퍼는 별도 상태와 만료 시점이 필요하다. 둘을 함께 구현하면 한 입력이 두 번 소비되지 않는지 테스트한다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 검증 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "Let Players Cheat the System  [Game Essence]",
+              "href": "https://www.youtube.com/watch?v=MVsVTgJKuzU"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 채널 Masahiro Sakurai on Creating Games. 영상 ID MVsVTgJKuzU, 공개일 2022-12-11. 공식 공개 페이지의 채널 ID UCv1DvRY5PyHHt3KN9ghunuw 및 제작자 설명을 대조했다. 날짜는 원본 공개 기록 기준이며 연구실 발행일과 다르다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출처 경계: 공식 설명은 개발자가 때로 플레이어에게 유리하게 규칙을 굽힐 여유를 줄 수 있다고 말하며, 경쟁 게임의 부정행위는 허용되지 않는다고 명시한다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인용 영상의 화면·음성·자막을 복제하지 않았다. 이 교재의 한국어 해설, 가상 상황, 코드, SVG는 자체 제작했다. CPU 예제의 통과를 실제 플레이어의 재미·접근성·온라인 공정성 검증으로 확대하지 않는다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,445 @@
+{
+  "title": "버튼 하나의 가능성 — 입력 수보다 선택의 구조를 설계하기",
+  "subtitle": "방향키 없는 진짜 한 버튼 게임에서 타이밍·누름·해제의 의미를 나누고, 입력 상태 기계와 취소 계약을 배운다.",
+  "original": {
+    "title": "The Potential of One Button  [Planning & Game Design]",
+    "published_date": "2022-12-20",
+    "channel": "Masahiro Sakurai on Creating Games",
+    "video_id": "tafG03n89MY",
+    "video_url": "https://www.youtube.com/watch?v=tafG03n89MY",
+    "date_note": "공식 제목·설명·공개일을 확인했다. 영상 재생·자막 전문 미확인과 독창적 학습 확장을 구분한다."
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "tab": "overview",
+      "title": "쉬운 해설 — 버튼 하나의 가능성",
+      "blocks": [
+        {
+          "type": "callout",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "출처 경계: 공식 설명은 한 버튼으로 조작을 단순화하되 허술하게 만들지 말고 게임 방식의 차이를 구분하라고 안내하며, 방향 입력을 함께 쓰는 경우는 이번 영상의 대상이 아니라고 명시한다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "1. 한 버튼은 방향키와 공격 버튼의 조합이 아니다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 설명의 주의 문구는 방향 패드나 아날로그 스틱과 버튼을 함께 쓰는 게임이 아니라 문자 그대로 버튼 하나만 쓰는 게임에 초점을 둔다. 이 제한을 지켜야 무엇을 자동화하고 무엇을 플레이어에게 맡길지 분명해진다. 이동 방향을 매번 조절할 수 없다면 자동 이동, 선택지 순환, 시간에 따른 상태 변화 같은 다른 구조가 필요하다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "2. 적은 입력이 적은 결정을 뜻하지 않는다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "버튼 하나라도 언제 누를지, 얼마나 기다릴지, 언제 놓을지에 따라 선택이 생긴다. 반대로 한 버튼에 너무 많은 숨은 조건을 붙이면 입력은 적어도 이해 부담은 커진다. “조작이 간단하다”와 “규칙이 쉽게 읽힌다”를 별도 목표로 평가해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "자체 제작 구조"
+                  }
+                ],
+                [
+                  {
+                    "text": "플레이어의 선택"
+                  }
+                ],
+                [
+                  {
+                    "text": "읽혀야 하는 정보"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "자동 이동 후 타이밍 점프"
+                  }
+                ],
+                [
+                  {
+                    "text": "언제 누를까"
+                  }
+                ],
+                [
+                  {
+                    "text": "위험까지의 거리·속도"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "순환 선택지 확정"
+                  }
+                ],
+                [
+                  {
+                    "text": "어느 순간 고를까"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 선택·다음 선택"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "누르고 모아 놓기"
+                  }
+                ],
+                [
+                  {
+                    "text": "언제 놓을까"
+                  }
+                ],
+                [
+                  {
+                    "text": "축적 상태·위험 변화"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "상태에 따른 한 동작"
+                  }
+                ],
+                [
+                  {
+                    "text": "지금 어떤 행동이 될까"
+                  }
+                ],
+                [
+                  {
+                    "text": "현재 모드·입력 결과"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/game-design/ep-23-potential-of-one-button/assets/button-states.svg",
+          "alt": "대기,누름유지,해제,취소 네 상태의 규칙을 구분한 도식.",
+          "caption": "직접 제작한 학습 도식. 방향 입력 없는 자체 제작 충전 모델입니다."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "3. 누르는 순간과 놓는 순간은 다르다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번 독창적 예제는 버튼을 놓을 때만 행동한다. 한 tick 누르고 놓으면 Tap, 두 tick 이상이면 Charged다. 누르는 즉시 Tap을 실행하고 오래 누르면 다시 Charged를 실행하는 구조와 다르다. 전자는 두 행동이 중복될 수 있고 후자는 짧은 행동이 해제까지 지연된다. 어느 쪽이 맞는지는 의도한 경험에 달려 있다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "샘플을 여러 번 읽어도 유지 중에는 한 번의 행동을 반복 발생시키지 않는다. 실제 입력 장치의 키 반복 이벤트와 게임의 버튼 유지 상태는 구분한다. 메뉴를 열거나 창 포커스를 잃었을 때 누름 상태가 남으면 돌아오는 순간 원치 않는 공격이 나갈 수 있으므로 취소 계약을 먼저 세운다."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "4. 간단한 조작도 신체적 부담이 있다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한 버튼이라고 누구에게나 접근하기 쉬운 것은 아니다. 길게 누르기, 빠른 연타, 정확한 해제 타이밍은 각각 다른 부담이다. 유지 대신 토글 같은 대안을 검토할 때 규칙의 경쟁 의미가 달라지는지 설명하고, 실제 이용자와 검증한다. 버튼 수를 줄인 것만으로 접근성 검증이 끝났다고 하지 않는다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "tab": "summary",
+      "title": "1분 요약",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "items": [
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "이번 범위는 방향키 없이 문자 그대로 한 버튼이다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "타이밍·지속·해제·현재 상태가 선택의 공간을 만들 수 있다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "버튼 수와 규칙 이해 부담은 다른 지표다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "누름 중 반복 실행과 해제 시 단발 실행을 구분한다."
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "text": "포커스 상실·메뉴 진입은 입력 상태 취소를 고려한다."
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation",
+      "tab": "implementation",
+      "title": "프로그래머 관점 — 작동 계약과 검증",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실험 계약"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "bool held를 일정 간격으로 샘플링한다. 첫 true에서 charge=1, 유지 중 최대3까지 증가한다. true→false에서2이상이면 Charged,1이면 Tap을 한 번 반환한다. 연속 false는 None이다. cancel은 진행 중 누름을 폐기한다.2 tick은 제품 권장 시간이 아닌 교육용 경계다. 방향·마우스 좌표·외부 문자열 버퍼는 입력에 없다."
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "language": "cpp",
+          "text": "#ifdef NDEBUG\n#error \"Assertions must remain enabled.\"\n#endif\n#include <cassert>\n#include <iostream>\nenum class Action { None, Tap, Charged };\n// 방향 입력 없이 버튼의 상태와 경과 tick만 읽는다.\nclass OneButton {\n    bool wasHeld_ = false;\n    int charge_ = 0;\npublic:\n    Action sample(bool held) {\n        if (held) {\n            if (!wasHeld_) charge_=1;\n            else if(charge_<3) ++charge_;\n            wasHeld_=true;\n            return Action::None;\n        }\n        if(!wasHeld_) return Action::None;\n        const Action result=charge_>=2?Action::Charged:Action::Tap;\n        wasHeld_=false;charge_=0;return result;\n    }\n    void cancel() { wasHeld_=false;charge_=0; }\n};\nint main(){\n    OneButton b;assert(b.sample(false)==Action::None);\n    assert(b.sample(true)==Action::None);\n    assert(b.sample(false)==Action::Tap);\n    assert(b.sample(false)==Action::None);\n    b.sample(true);b.sample(true);\n    assert(b.sample(false)==Action::Charged);\n    for(int i=0;i<10000;++i)assert(b.sample(true)==Action::None);\n    assert(b.sample(false)==Action::Charged);\n    b.sample(true);b.cancel();assert(b.sample(false)==Action::None);\n    b.sample(true);assert(b.sample(false)==Action::Tap);\n    std::cout<<\"one-button tests passed\\n\";\n}\n"
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "불변식과 비용"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "charge는0~3, wasHeld가 false이면 charge는0이다. release 직후 상태를 지우므로 연속 false가 행동을 재발행하지 않는다. 유지 시간이 늘어도 charge가 포화되어 오버플로하지 않는다. sample과 cancel은 O(1) 시간·공간이다. 실제 프레임률에 따라 의미가 변하지 않도록 고정 tick이나 명시한 시간 자료형을 제품 단계에서 선택해야 한다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "C++11 엄격 빌드와 UBSan에서 짧은 누름, 경계2 tick, 해제 중복 방지,10,000 tick 유지, 취소 후 해제·재입력을 실행했다. 실제 입력 장치·렌더링·반응 시간·접근성 평가는 수행하지 않았다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "tab": "practice",
+      "title": "실습과 접힌 복습 답",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "실습 · 표시 없이 이해할 수 있을까?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Tap과 Charged를 색뿐 아니라 형태·텍스트·소리 등 구별 가능한 신호로 표현하는안을 그린다. 임계점 직전과 직후를 사용자가 어떻게 알아차릴지 설명하고, 색각이나 소리를 사용할 수 없는 상황도 고려한다. 모든 신호를 한꺼번에 켜는 것이 정답은 아니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 · 오래 누르면 Tap과 Charged가 둘 다 실행되는가?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 계약에서는 아니다. 해제할 때 한 결과만 결정한다. 누름 순간의 즉시 반응이 필요하다면 시각적 준비 피드백과 실제 규칙 실행을 분리할 수 있다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 · cancel 뒤 버튼이 여전히 눌려 있으면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다음 true 샘플은 새 누름으로 인식한다. 제품에서 반드시 한 번 놓은 뒤 재입력해야 한다면 별도의 release 대기 상태를 추가해야 한다. 현재 모델은 그 요구를 구현하지 않았다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장 · 타이밍 대신 선택지를 순환한다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "자동 순환 속도와 정지·재개, 현재 선택의 가시성, 놓친 선택으로 돌아가는 비용을 설계한다. 기존 충전 상태 기계를 그대로 재사용하기 전에 새 상호작용 계약을 쓴다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "tab": "sources",
+      "title": "원본과 검증 범위",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "The Potential of One Button  [Planning & Game Design]",
+              "href": "https://www.youtube.com/watch?v=tafG03n89MY"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공식 채널 Masahiro Sakurai on Creating Games. 영상 ID tafG03n89MY, 공개일 2022-12-20. 공식 공개 페이지의 채널 ID UCv1DvRY5PyHHt3KN9ghunuw 및 제작자 설명을 대조했다. 날짜는 원본 공개 기록 기준이며 연구실 발행일과 다르다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "출처 경계: 공식 설명은 한 버튼으로 조작을 단순화하되 허술하게 만들지 말고 게임 방식의 차이를 구분하라고 안내하며, 방향 입력을 함께 쓰는 경우는 이번 영상의 대상이 아니라고 명시한다. 공식 제목·공개일·제작자 설명은 확인했지만 원본 재생·자막 전문은 확인하지 않았다. 아래 구체적 수치·코드·실습·도식은 독창적인 학습 확장이며 영상의 사례·순서·공식 구현을 재현하지 않는다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "인용 영상의 화면·음성·자막을 복제하지 않았다. 이 교재의 한국어 해설, 가상 상황, 코드, SVG는 자체 제작했다. CPU 예제의 통과를 실제 플레이어의 재미·접근성·온라인 공정성 검증으로 확대하지 않는다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
