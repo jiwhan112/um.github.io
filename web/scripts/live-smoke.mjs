@@ -35,10 +35,13 @@ try{
  const matchingChapters=[...new Set(matching.map(d=>d.number.split('.')[0]))].sort((a,b)=>Number(a)-Number(b)),seen=[];
  for(const chapter of matchingChapters){
   await library.getByRole('navigation',{name:'학습 장 목록',exact:true}).getByRole('button',{name:new RegExp('^'+chapter.padStart(2,'0')+' ')}).click();
+  // Equal-sized chapters can keep the previous cards during a React route transition.
+  await expect(library.getByLabel('학습 장',{exact:true})).toHaveValue(chapter);
   const chapterMatches=matching.filter(d=>d.number.split('.')[0]===chapter);
   await expect(library.getByTestId('library-card')).toHaveCount(chapterMatches.length);
-  const hrefs=await library.getByTestId('library-card').evaluateAll(links=>links.map(link=>new URL(link.href).pathname));
-  expect(hrefs.slice().sort()).toEqual(chapterMatches.map(d=>'/um.github.io'+d.route).sort());seen.push(...hrefs);
+  const chapterRoutes=chapterMatches.map(d=>'/um.github.io'+d.route).sort();
+  await expect.poll(async()=> (await library.getByTestId('library-card').evaluateAll(links=>links.map(link=>new URL(link.href).pathname))).sort()).toEqual(chapterRoutes);
+  seen.push(...await library.getByTestId('library-card').evaluateAll(links=>links.map(link=>new URL(link.href).pathname)));
  }
  expect(seen.slice().sort()).toEqual(matching.map(d=>'/um.github.io'+d.route).sort());
  await library.getByRole('searchbox',{name:'문제 검색'}).fill('1.4');await library.reload();await expect(library.getByRole('searchbox',{name:'문제 검색'})).toHaveValue('1.4');

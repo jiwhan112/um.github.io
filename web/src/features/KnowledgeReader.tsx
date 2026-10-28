@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { BookOpen, ListTree } from 'lucide-react';
+import { ListTree } from 'lucide-react';
 import { Blocks } from '@/components/Content';
 import { Panel, ReadCheck, NextPrevious } from '@/components/Common';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,6 +9,7 @@ import { cleanTitle, dateLabel } from '@/lib/utils';
 import { compareKnowledgeDocuments } from '@/lib/knowledge-order';
 import type { Document } from '@/lib/types';
 import './knowledge-reader.css';
+import { LearningLessonNav } from './Learning';
 
 const labels: Record<string, string> = {
   document: '개념과 원리', practice: '실습·복습', sources: '출처·검증',
@@ -49,8 +50,8 @@ export function KnowledgeReader({ doc }: { doc: Document }) {
   return <div className="page document-page knowledge-document knowledge-reader">
     <div className="document-workspace">
       <div className="document-main">
+        <LearningLessonNav doc={doc}/>
         <header className="document-heading">
-          <Link className="knowledge-back" to="/knowledge/"><BookOpen size={15}/>프로그래밍 학습 목차</Link>
           <div className="eyebrow">{doc.category || 'PROGRAMMING'} / ATLAS NOTE</div>
           <h1>{cleanTitle(doc.title)}</h1>
           <p className="page-description">{doc.subtitle}</p>

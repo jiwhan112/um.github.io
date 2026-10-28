@@ -1,3 +1,4 @@
+import {selectLearningGroup,expectLearningRoutes} from './learning-test-helpers';
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 
@@ -6,11 +7,8 @@ const chapters = catalog.filter(d => d.category === 'Effective C++');
 
 test('Effective C++ topic exposes every published chapter in catalog order', async ({page}) => {
   await page.goto('knowledge/');
-  const topic = page.locator('#knowledge-cpp .knowledge-topic').filter({has:page.getByText('Effective C++', {exact:true})});
-  await expect(topic).toHaveCount(1);
-  const expected = chapters.map(d => `/um.github.io/knowledge/${d.path}/`);
-  expect(await topic.locator('.knowledge-document-link').evaluateAll(nodes => nodes.map(n => n.getAttribute('href')))).toEqual(expected);
-  if (chapters.length) await expect(topic.locator('.knowledge-topic-row')).toContainText(`${chapters.length}개 공개`);
+  await selectLearningGroup(page,'Effective C++');
+  await expectLearningRoutes(page,chapters.map(doc=>`/knowledge/${doc.path}/`));
 });
 
 const visualChapters = catalog.filter(d => d.category === 'Effective C++' || /^c-basics-(09|1[0-4])$/.test(d.path));

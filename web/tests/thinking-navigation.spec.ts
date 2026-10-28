@@ -12,6 +12,7 @@ async function selectChapter(page:Page,chapter:string){
  const select=page.getByLabel('학습 장',{exact:true});
  if((page.viewportSize()?.width || 1440)<=760){await expect(select).toBeVisible();await select.selectOption(chapter);}
  else await page.getByRole('navigation',{name:'학습 장 목록',exact:true}).getByRole('button',{name:new RegExp('^'+chapter.padStart(2,'0')+' ')}).click();
+ await expect(select).toHaveValue(chapter);
 }
 async function noOverflow(page:Page){expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);}
 async function seedReading(page:Page,reading:unknown){
@@ -214,6 +215,7 @@ test('thinking cross-chapter tag filter exposes every exact matching route once'
   await selectChapter(page,chapter);
   const expected=matching.filter(d=>String(d.number).split('.')[0]===chapter);
   await expect(page.getByTestId('library-card')).toHaveCount(expected.length);
+  await expect.poll(async()=> (await page.getByTestId('library-card').evaluateAll(links=>links.map(link=>new URL((link as HTMLAnchorElement).href).pathname))).sort()).toEqual(expected.map(d=>href(d.route)).sort());
   const paths=await page.getByTestId('library-card').evaluateAll(links=>links.map(link=>new URL((link as HTMLAnchorElement).href).pathname));
   expect(paths.slice().sort()).toEqual(expected.map(d=>href(d.route)).sort());seen.push(...paths);
  }

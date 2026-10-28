@@ -1,3 +1,4 @@
+import {selectLearningGroup,expectLearningRoutes} from './learning-test-helpers';
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
@@ -21,16 +22,17 @@ function links(value:unknown):string[]{
  return [...(typeof object.href==='string'?[object.href]:[]),...Object.values(object).flatMap(links)];
 }
 test('new curriculum categories expose all authored chapters in study order',async({page})=>{
- await page.goto('knowledge/');await page.getByRole('button',{name:'모두 펼치기'}).click();
+ await page.goto('knowledge/');
  for(const group of groups){
   const expected=catalog.filter(doc=>doc.category===group.category).sort((a,b)=>compareKnowledgeDocuments({category:a.category,route:'/knowledge/'+a.path+'/'} as DocumentMeta,{category:b.category,route:'/knowledge/'+b.path+'/'} as DocumentMeta));
-  const area=page.locator('#knowledge-'+group.area);
-  const actual=await area.locator('.knowledge-topic').filter({has:page.locator('.knowledge-document-link').filter({hasText:expected[0]?.title??'__not_authored__'})}).locator('.knowledge-document-link').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
-  expect(actual).toEqual(expected.map(doc=>'/um.github.io/knowledge/'+doc.path+'/'));
+  await selectLearningGroup(page,group.category);
+  await expectLearningRoutes(page,expected.map(doc=>'/knowledge/'+doc.path+'/'));
  }
- // The two excluded tracks must not receive newly written curriculum chapters.
- await expect(page.locator('#knowledge-engine .knowledge-document-link')).toHaveCount(0);
- await expect(page.locator('#knowledge-python .knowledge-document-link')).toHaveCount(0);
+ // Excluded new Engine/Python curricula cannot acquire invented lessons. Existing
+ // BeautifulSoup material remains a separate, reachable source-catalog course.
+ expect(catalog.filter(doc=>/^engine-|^python-(?:core|basics)-/.test(doc.path))).toEqual([]);
+ await selectLearningGroup(page,'Python');
+ await expectLearningRoutes(page,catalog.filter(doc=>doc.category==='Python').map(doc=>'/knowledge/'+doc.path+'/'));
 });
 for(const chapter of chapters)test(`${chapter.path} original course diagrams, code, review and sources`,async({page,request},testInfo)=>{
  const authored=JSON.parse(readFileSync('../knowledge/'+chapter.path+'/content.json','utf8')) as Document;
@@ -94,6 +96,6 @@ for(const chapter of chapters)test(`${chapter.path} original course diagrams, co
  expect(JSON.stringify(authored)).not.toMatch(/\/(?:workspace|home|tmp|Users)\/|[A-Z]:[\\/]Users[\\/]|source-note\.md|(?:raw|source)-capture\.json|notion\.com|notion\.so/i);
  await page.goto('knowledge/'+chapter.path+'/#review');await expect(page.locator('#review')).toBeVisible();
  await page.goto('knowledge/');await page.goBack();await expect(page.locator('#review')).toBeVisible();
- await page.goForward();await expect(page.locator('.knowledge-tree')).toBeVisible();
+ await page.goForward();await expect(page.getByTestId('learning-current-group')).toBeVisible();
  expect(errors).toEqual([]);
 });

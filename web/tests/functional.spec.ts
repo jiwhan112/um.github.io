@@ -1,3 +1,5 @@
+import {selectLearningGroup,expectLearningRoutes,revealLearningRoute,learningRows,learningPageSize} from './learning-test-helpers';
+import {compareKnowledgeDocuments} from '../src/lib/knowledge-order';
 import legacyVisualRollout from './fixtures/legacy-visual-rollout.json' with {type:'json'};
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
@@ -26,9 +28,9 @@ const routes=JSON.parse(readFileSync('public/data/atlas/routes.json','utf8')) as
 const knowledgeDocs=catalog.documents.filter(doc=>doc.kind==='knowledge');
 const windowsCategories=['WinAPI','게임 수학','DirectX 9','DirectX 11','DirectX 12'];
 const windowsCount=knowledgeDocs.filter(doc=>windowsCategories.includes(doc.category)).length;
-const initialTreeCount=knowledgeDocs.filter(doc=>[...windowsCategories,'C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++','알고리즘'].includes(doc.category)).length;
-const treeCount=initialTreeCount+knowledgeDocs.filter(doc=>['컴퓨터 구조','운영체제','네트워크','그래픽스 기술'].includes(doc.category)).length;
 const cCount=knowledgeDocs.filter(doc=>doc.category==='C 언어').length;
+const courseDocuments=(category:string)=>knowledgeDocs.filter(doc=>doc.category===category).sort(compareKnowledgeDocuments);
+const courseRoutes=(category:string)=>courseDocuments(category).map(doc=>doc.route);
 for(const route of routes){test('direct route '+route,async({page,isMobile,request})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  const response=await request.get('/um.github.io'+route);expect(response.status()).toBe(200);expect(await response.text()).toContain('id="root"');expect(await response.text()).not.toContain('atlas-detail');
@@ -114,61 +116,53 @@ test('game design diagrams are readable inline and zoomed at desktop/mobile size
 });
 
 
-test('homepage opens the Notion-style knowledge sitemap with searchable chapter tree',async({page,isMobile})=>{
+test('homepage opens the grouped knowledge curriculum with every authored route searchable',async({page,isMobile})=>{
  await page.goto('');
  const entry=page.locator('.dashboard .quick-card').filter({hasText:'프로그래밍 학습'});
- await expect(entry).toBeVisible();
- await entry.click();
+ await expect(entry).toBeVisible();await entry.click();
  await expect(page).toHaveURL(/\/knowledge\/$/);
- await expect(page.getByRole('heading',{name:'프로그래밍 지식 라이브러리'})).toBeVisible();
- await expect(page.locator('.knowledge-map-sidebar nav a')).toHaveCount(7);
- const tree=page.locator('.knowledge-tree');
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(initialTreeCount);
- const cppTopics=page.locator('#knowledge-cpp .knowledge-topic-row strong');
- await expect(cppTopics).toHaveText(['C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++']);
- const windowsTopics=page.locator('#knowledge-windows .knowledge-topic-row strong');
- await expect(windowsTopics).toHaveText(['WinAPI','게임 수학','DirectX 9','DirectX 11','DirectX 12']);
- // The approved five tracks now connect actual source-catalog chapters. Engine/Python
- // remain separate plans; a completed course must not be asserted to look unwritten.
- await page.locator('#knowledge-engine').getByRole('button').click();
- await expect(page.locator('#knowledge-engine .knowledge-topic-row')).toContainText('신규 집필 예정');
- await expect(page.locator('#knowledge-engine .knowledge-document-link')).toHaveCount(0);
- await page.locator('#knowledge-engine').getByRole('button').click();
- const publishedKnowledgeRoutes=catalog.documents.filter(d=>d.kind==='knowledge').map(d=>d.route).sort();
- const recentLinks=page.locator('.knowledge-recent-list a');
- await expect(recentLinks).toHaveCount(publishedKnowledgeRoutes.length);
- const displayedRoutes=(await recentLinks.evaluateAll(links=>links.map(link=>new URL((link as HTMLAnchorElement).href).pathname.replace(/^\/um\.github\.io/,'')))).sort();
- expect(displayedRoutes).toEqual(publishedKnowledgeRoutes);
- const dx11=tree.getByRole('button',{name:/Windows·그래픽스 프로그래밍/});
- await expect(dx11).toHaveAttribute('aria-expanded','true');
- await expect(tree.getByRole('link',{name:/Frustum Culling/})).toBeVisible();
- await page.getByRole('button',{name:'모두 접기'}).click();
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(0);
- await dx11.click();
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(windowsCount);
- await page.getByLabel('학습 목차 검색').fill('BeautifulSoup');
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(0);
- await expect(page.locator('.knowledge-recent-list a')).toHaveCount(1);
- await expect(page.locator('.knowledge-recent-list a').first()).toContainText('BeautifulSoup');
- await page.getByRole('button',{name:'목차 검색 초기화'}).click();
- await page.getByRole('button',{name:'모두 펼치기'}).click();
- await expect(tree.locator('.knowledge-document-link')).toHaveCount(treeCount);
+ await expect(page.locator('main h1')).toContainText('프로그래밍');
+ const categories=[...new Set(knowledgeDocs.map(doc=>doc.category))];
+ const actualGroups=await page.getByTestId('learning-group-nav').locator('button[data-group]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('data-group')));
+ expect(actualGroups.slice().sort()).toEqual(categories.slice().sort());
+ const cppOrder=['C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++'];
+ expect(actualGroups.filter(category=>cppOrder.includes(category!))).toEqual(cppOrder);
+ expect(actualGroups.filter(category=>windowsCategories.includes(category!))).toEqual(windowsCategories);
+ const plan=page.locator('details.learning-plan');await expect(plan).not.toHaveAttribute('open');await plan.locator('summary').click();
+ await expect(plan.locator('.learning-plan-grid section')).toHaveCount(7);await expect(plan.locator('.learning-plan-grid li')).toHaveCount(17);
+ await expect(plan.locator('#knowledge-engine')).toContainText('신규 집필 예정');await expect(plan.locator('#knowledge-python')).toContainText('신규 집필 예정');
+ await expect(plan.locator('a')).toHaveCount(0);await plan.locator('summary').click();
+ const seen:string[]=[];
+ for(const category of categories){
+  await selectLearningGroup(page,category);
+  seen.push(...await expectLearningRoutes(page,courseRoutes(category)));
+ }
+ expect(seen.slice().sort()).toEqual(knowledgeDocs.map(doc=>'/um.github.io'+doc.route).sort());
+ expect(new Set(seen).size).toBe(knowledgeDocs.length);
+ // Plans do not invent published documents; the existing Python prototype is still reachable.
+ expect(knowledgeDocs.filter(doc=>/^\/knowledge\/engine-|^\/knowledge\/python-(?:core|basics)-/.test(doc.route))).toEqual([]);
+ await page.getByRole('searchbox',{name:'문서 검색',exact:true}).fill('BeautifulSoup');
+ await expect(learningRows(page)).toHaveCount(1);await expect(learningRows(page).first()).toContainText('BeautifulSoup');
+ await page.getByRole('button',{name:'필터 초기화',exact:true}).click();
+ await selectLearningGroup(page,'DirectX 11');
  if(isMobile){
   await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
   await expect(page.getByRole('dialog').getByRole('link',{name:'프로그래밍 학습',exact:true})).toBeVisible();
   await page.keyboard.press('Escape');
  }
- await tree.getByRole('link',{name:/Frustum Culling/}).click();
- await expect(page).toHaveURL(/\/knowledge\/dx11-frustum\/$/);
+ const frustum=await revealLearningRoute(page,'/knowledge/dx11-frustum/',courseRoutes('DirectX 11'));
+ await frustum.click();await expect(page).toHaveURL(/\/knowledge\/dx11-frustum\/$/);
  await expect(page.locator('main h1')).toContainText('Frustum Culling');
 });
 
 test('WinAPI and game math migrated lessons are usable through the sitemap',async({page})=>{
  await page.goto('knowledge/');
- const section=page.locator('#knowledge-windows');
- await expect(section.getByRole('button',{name:/Windows·그래픽스 프로그래밍/})).toHaveAttribute('aria-expanded','true');
- const items=section.locator('.knowledge-document-link');
- await expect(items).toHaveCount(windowsCount);
+ const seen:string[]=[];
+ for(const category of windowsCategories){await selectLearningGroup(page,category);seen.push(...await expectLearningRoutes(page,courseRoutes(category)));}
+ expect(seen).toHaveLength(windowsCount);
+ expect(seen.slice().sort()).toEqual(knowledgeDocs.filter(doc=>windowsCategories.includes(doc.category)).map(doc=>'/um.github.io'+doc.route).sort());
+ await selectLearningGroup(page,'WinAPI');
+ const section=page.getByTestId('learning-current-group');
  await expect(section.getByText('WinAPI 01 · 창·핸들·메시지·호출 규약')).toBeVisible();
  await section.getByRole('link',{name:/WinAPI 01/}).click();
  await expect(page).toHaveURL(/\/knowledge\/winapi-01\/$/);
@@ -211,7 +205,8 @@ test('WinAPI and game math migrated lessons are usable through the sitemap',asyn
 
 test('DX9 implementation chapters and corrected full C++ source are linked inside the atlas',async({page})=>{
  await page.goto('knowledge/');
- const window=page.locator('#knowledge-windows');
+ await selectLearningGroup(page,'DirectX 9');
+ const window=page.getByTestId('learning-current-group');
  await expect(window.getByRole('link',{name:/DX9 03 · VB\/IB/})).toBeVisible();
  await window.getByRole('link',{name:/DX9 03 · VB\/IB/}).click();
  await expect(page).toHaveURL(/\/knowledge\/dx9-impl-03\/$/);
@@ -234,7 +229,8 @@ test('DX9 implementation chapters and corrected full C++ source are linked insid
 
 test('DX11 migrated chapter sitemap and raw diagrams are readable on the website',async({page})=>{
  await page.goto('knowledge/');
- const dx=page.locator('#knowledge-windows');
+ await selectLearningGroup(page,'DirectX 11');
+ const dx=page.getByTestId('learning-current-group');
  await expect(dx.getByRole('link',{name:/DX11 02 · Resource·View·Usage·Map/})).toBeVisible();
  await dx.getByRole('link',{name:/DX11 02 · Resource·View·Usage·Map/}).click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-02\/$/);
@@ -249,7 +245,8 @@ test('DX11 migrated chapter sitemap and raw diagrams are readable on the website
 
 test('DX11 01, 07, 08 course chapters and recovered full C++ sources open',async({page})=>{
  await page.goto('knowledge/');
- const win=page.locator('#knowledge-windows');
+ await selectLearningGroup(page,'DirectX 11');
+ const win=page.getByTestId('learning-current-group');
  await expect(win.getByRole('link',{name:/DX11 01/}).first()).toBeVisible();
  await win.getByRole('link',{name:/DX11 01/}).first().click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-01\/$/);
@@ -274,7 +271,9 @@ test('DX11 01, 07, 08 course chapters and recovered full C++ sources open',async
 
 test('DX11 Mesh/Animation/Collider/NavMesh navigation and full source links',async({page})=>{
  await page.goto('knowledge/');
- const group=page.locator('#knowledge-windows');
+ await selectLearningGroup(page,'DirectX 11');
+ const group=page.getByTestId('learning-current-group');
+ await revealLearningRoute(page,'/knowledge/dx11-09/',courseRoutes('DirectX 11'));
  const mesh=group.getByRole('link',{name:/DX11 09 · Mesh·Material·Assimp Node/});
  await expect(mesh).toBeVisible();
  await mesh.click();
@@ -302,11 +301,13 @@ test('DX11 Mesh/Animation/Collider/NavMesh navigation and full source links',asy
 
 test('DX11 Instancing, Geometry, QuadTree, Font and Deferred lessons stay browsable',async({page})=>{
  await page.goto('knowledge/');
- const windows=page.locator('#knowledge-windows');
  for(const slug of ['dx11-13','dx11-13b','dx11-14','dx11-16','dx11-17','dx11-18']){
-  await expect(windows.locator('.knowledge-document-link[href$="/knowledge/'+slug+'/"]')).toBeVisible();
+  await selectLearningGroup(page,'DirectX 11');
+  const link=await revealLearningRoute(page,`/knowledge/${slug}/`,courseRoutes('DirectX 11'));
+  await expect(link).toBeVisible();
  }
- await windows.locator('.knowledge-document-link[href$="/knowledge/dx11-13/"]').click();
+ await selectLearningGroup(page,'DirectX 11');
+ await (await revealLearningRoute(page,'/knowledge/dx11-13/',courseRoutes('DirectX 11'))).click();
  await expect(page).toHaveURL(/\/knowledge\/dx11-13\/$/);
  await expect(page.locator('main h1')).toContainText('Instancing');
  await revealLegacy(page,'dx11-13','section','github-source');
@@ -333,8 +334,18 @@ test('DX11 Instancing, Geometry, QuadTree, Font and Deferred lessons stay browsa
 
 test('DX11 knowledge outline follows numeric chapter sequence despite migration history',async({page})=>{
  await page.goto('knowledge/');
- await expect(page.locator('#knowledge-windows .knowledge-document-link')).toHaveCount(windowsCount);
- const names=await page.locator('#knowledge-windows .knowledge-document-link').allTextContents();
+ await selectLearningGroup(page,'DirectX 11');
+ const expected=courseRoutes('DirectX 11');
+ await expectLearningRoutes(page,expected);
+ await selectLearningGroup(page,'DirectX 11');
+ const names:string[]=[];
+ for(let offset=0;offset<expected.length;offset+=learningPageSize){
+  await expect(learningRows(page)).toHaveCount(Math.min(learningPageSize,expected.length-offset));
+  await expect(learningRows(page).first()).toHaveAttribute('href','/um.github.io'+expected[offset]);
+  names.push(...await learningRows(page).allTextContents());
+  if(offset+learningPageSize<expected.length)await page.getByRole('button',{name:'다음 목록',exact:true}).click();
+ }
+ expect(names).toHaveLength(expected.length);
  const indexOf=(title:string)=>names.findIndex(x=>x.includes(title));
  const idx13=indexOf('DX11 13 · Instancing —');
  const idx13Source=indexOf('DX11 13 · Instancing 전체');
@@ -355,10 +366,12 @@ test('DX11 knowledge outline follows numeric chapter sequence despite migration 
 
 test('published C01 opens from the C language curriculum topic',async({page})=>{
  await page.goto('knowledge/');
- const topic=page.locator('#knowledge-cpp .knowledge-topic').filter({has:page.getByText('C 언어',{exact:true})});
- await expect(topic.locator('.knowledge-topic-row')).toContainText(`${cCount}개 공개`);
- await expect(topic.locator('.knowledge-document-link')).toHaveCount(cCount);
- const link=topic.locator('.knowledge-document-link[href="/um.github.io/knowledge/c-language-01/"]');
+ await selectLearningGroup(page,'C 언어');
+ const topic=page.getByTestId('learning-current-group');
+ expect(courseRoutes('C 언어')).toHaveLength(cCount);
+ await expectLearningRoutes(page,courseRoutes('C 언어'));
+ await selectLearningGroup(page,'C 언어');
+ const link=topic.locator('.learning-lesson-link[href="/um.github.io/knowledge/c-language-01/"]');
  await expect(link).toHaveCount(1);
  await expect(link).toHaveAttribute('href','/um.github.io/knowledge/c-language-01/');
  await link.click();
@@ -368,7 +381,8 @@ test('published C01 opens from the C language curriculum topic',async({page})=>{
 
 test('C fundamentals 04–05 are linked and render learning visuals',async({page})=>{
  await page.goto('knowledge/');
- const topic=page.locator('#knowledge-cpp .knowledge-topic').filter({has:page.getByText('C 언어',{exact:true})});
+ await selectLearningGroup(page,'C 언어');
+ const topic=page.getByTestId('learning-current-group');
  for(const chapter of ['04','05']){
   const route=`/um.github.io/knowledge/c-basics-${chapter}/`;
   const chapterLink=topic.locator(`a[href="${route}"]`);
@@ -378,6 +392,6 @@ test('C fundamentals 04–05 are linked and render learning visuals',async({page
   await expect(page.locator('main h1')).toContainText(`C 기초 ${chapter}`);
   await expect(page.locator('main .mermaid-diagram').first()).toHaveAttribute('data-diagram-state','ready');
   await expect(page.locator('main .mermaid-canvas img').first()).toBeVisible();
-  await page.goto('knowledge/');
+  await page.goto('knowledge/');await selectLearningGroup(page,'C 언어');
  }
 });

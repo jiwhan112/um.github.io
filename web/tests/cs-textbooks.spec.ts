@@ -1,3 +1,4 @@
+import {selectLearningGroup,expectLearningRoutes} from './learning-test-helpers';
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
@@ -16,14 +17,11 @@ function technicalEvidenceLinks(value:unknown):string[]{
 }
 test('CS curriculum exposes exactly the authored approved chapters',async({page})=>{
  await page.goto('knowledge/');
- const area=page.locator('#knowledge-cs');
- await area.getByRole('button',{name:/컴퓨터 과학/}).click();
  for(const group of groups){
   const expected=chapters.filter(doc=>group.pattern.test(doc.path));
   for(const doc of expected)expect(doc.category).toBe(group.category);
-  const topic=area.locator('.knowledge-topic').filter({has:page.getByText(group.category,{exact:true})});
-  await expect(topic).toHaveCount(1);
-  expect(await topic.locator('.knowledge-document-link').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(expected.map(doc=>'/um.github.io/knowledge/'+doc.path+'/'));
+  await selectLearningGroup(page,group.category);
+  await expectLearningRoutes(page,expected.map(doc=>'/knowledge/'+doc.path+'/'));
  }
 });
 for(const chapter of chapters)test(`${chapter.path} CS visual lesson, original files and tab navigation`,async({page,request},testInfo)=>{
@@ -86,6 +84,6 @@ for(const chapter of chapters)test(`${chapter.path} CS visual lesson, original f
  // Reload a direct section hash, then real Back/Forward across a separate route.
  await page.goto('knowledge/'+chapter.path+'/#review');await expect(page.locator('#review')).toBeVisible();
  await page.goto('knowledge/');await page.goBack();await expect(page.locator('#review')).toBeVisible();
- await page.goForward();await expect(page.locator('.knowledge-tree')).toBeVisible();
+ await page.goForward();await expect(page.getByTestId('learning-current-group')).toBeVisible();
  expect(errors).toEqual([]);
 });
