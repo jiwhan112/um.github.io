@@ -701,8 +701,22 @@ test('all original thinking routes, memo keys, dates and anchors survive paired 
   const ids=new Set(doc.sections.map((s:{id:string})=>s.id));
   for(const id of old.sectionIds)assert.ok(ids.has(id),old.topic+' preserved anchor '+id);
  }
+ // Negative next-topic cases need a valid nonterminal fixture even after the
+ // actual curriculum is complete. Actual raw migration/terminal validation above
+ // remains unchanged; this clone removes only the final paired topic.
+ const negativeBase=structuredClone(raw);
+ if(negativeBase.next===null){
+  const finalTopic=plan.verifiedPrefix.at(-1)!;
+  const previousTopic=plan.verifiedPrefix.at(-2)!;
+  negativeBase.episodes=negativeBase.episodes.filter((e:{number:string})=>!e.number.startsWith(finalTopic.number+'.'));
+  const previousEntry=negativeBase.episodes.find((e:{number:string})=>e.number===previousTopic.number+'.1');
+  assert.ok(previousEntry,'nonterminal negative fixture retains previous basic page');
+  negativeBase.current={number:previousTopic.number,chapter:previousTopic.chapter,topic_en:previousTopic.topic_en,study_date:previousEntry.study_date,published_date:previousEntry.published_date};
+  negativeBase.next={number:finalTopic.number,chapter:finalTopic.chapter,topic_en:finalTopic.topic_en};
+  assert.doesNotThrow(()=>validateThinkingPairs(negativeBase,policy,plan),'negative fixture itself must be valid');
+ }
  for(const mode of ['missing','duplicate-number','page-progress','stale-current','missing-date','bad-calendar-date','dated-next','leading-zero','wrong-next','premature-completion','changed-historical-date']){
-  const bad=structuredClone(raw);
+  const bad=structuredClone(negativeBase);
   if(mode==='missing')bad.episodes.pop();
   if(mode==='duplicate-number')bad.episodes[1].number=bad.episodes[0].number;
   if(mode==='page-progress')bad.current.number+='.'+1;
@@ -711,7 +725,7 @@ test('all original thinking routes, memo keys, dates and anchors survive paired 
   if(mode==='bad-calendar-date')bad.episodes[0].published_date='2026-02-31';
   if(mode==='dated-next')bad.next.study_date=bad.current.study_date;
   if(mode==='leading-zero')bad.episodes[0].number='0'+bad.episodes[0].number;
-  if(mode==='wrong-next')bad.next.number='17.26';
+  if(mode==='wrong-next')bad.next.number='1.1';
   if(mode==='premature-completion')bad.next=null;
   if(mode==='changed-historical-date')bad.episodes.find((e:{number:string})=>e.number==='1.1.1').study_date='2026-10-10';
   assert.throws(()=>validateThinkingPairs(bad,policy,plan),mode);
