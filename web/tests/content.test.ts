@@ -1,3 +1,4 @@
+import {gameTopic,isLearningRead,learningGroups,learningPage,orderedLearningDocuments,PAGE_SIZE} from '../src/lib/learning-navigation';
 import thinkingMigration from './fixtures/thinking-pair-migration.json' with {type:'json'};
 import {validateThinkingPairs} from '../scripts/validate-thinking-pairs.mjs';
 import legacyVisualRollout from './fixtures/legacy-visual-rollout.json' with {type:'json'};
@@ -888,4 +889,67 @@ test('thinking labels strip only numbering and level prefix while keeping author
  assert.equal(chapterTitle('1'),'배열과 문자열');
  assert.equal(chapterTitle('17'),'어려운 문제');
  assert.equal(chapterTitle('999'),'사고력 연습');
+});
+
+
+// Learning explorers reorganize navigation, never authored courses, episodes or records.
+test('knowledge navigation retains every authored route once with the established course order',()=>{
+ const docs=catalog.documents.filter(doc=>doc.kind==='knowledge'),before=JSON.stringify(docs);
+ const groups=learningGroups(docs,'knowledge');
+ const established=['C 언어','C++ 기초·심화','Modern C++','Effective C++','Effective Modern C++','WinAPI','게임 수학','DirectX 9','DirectX 11','DirectX 12','그래픽스 기술','컴퓨터 구조','운영체제','네트워크','알고리즘','Python'];
+ assert.deepEqual(groups.map(group=>group.id).filter(id=>established.includes(id)),established.filter(id=>docs.some(doc=>doc.category===id)));
+ assert.deepEqual(groups.map(group=>group.id).sort(),[...new Set(docs.map(doc=>doc.category||'기타 교재'))].sort());
+ const actual=groups.flatMap(group=>group.documents);
+ assert.deepEqual(actual.map(doc=>doc.route).sort(),docs.map(doc=>doc.route).sort());
+ assert.equal(new Set(actual.map(doc=>doc.route)).size,docs.length);
+ for(const group of groups){assert.ok(group.documents.every(doc=>doc.category===group.id));assert.deepEqual(group.documents,docs.filter(doc=>doc.category===group.id).sort(compareKnowledgeDocuments));}
+ assert.equal(JSON.stringify(docs),before);
+ const future={...docs[0],id:'future-course',route:'/knowledge/future-course/',category:'새로운 원본 과정'};
+ assert.equal(learningGroups([...docs,future],'knowledge').at(-1)?.documents[0],future);
+});
+
+test('knowledge navigation keeps applied C, C++ progression and DX11 source sequence',()=>{
+ const groups=learningGroups(catalog.documents.filter(doc=>doc.kind==='knowledge'),'knowledge');
+ const routes=(id:string)=>groups.find(group=>group.id===id)!.documents.map(doc=>doc.route);
+ const c=routes('C 언어');assert.equal(c.indexOf('/knowledge/c-language-01/'),c.indexOf('/knowledge/c-basics-11/')+1);assert.equal(c.indexOf('/knowledge/c-basics-12/'),c.indexOf('/knowledge/c-language-01/')+1);
+ const cpp=routes('C++ 기초·심화');assert.equal(cpp.indexOf('/knowledge/cpp-advanced-01/'),cpp.indexOf('/knowledge/cpp-basics-05/')+1);
+ const dx=routes('DirectX 11');
+ for(const [before,after] of [['dx11-13','dx11-sources-13'],['dx11-sources-13','dx11-13b'],['dx11-13b','dx11-14'],['dx11-14','dx11-frustum'],['dx11-frustum','dx11-16']])assert.ok(dx.indexOf('/knowledge/'+before+'/')<dx.indexOf('/knowledge/'+after+'/'),before+' before '+after);
+});
+
+test('game design groups use authored source-series metadata and preserve chronological episodes',async()=>{
+ const source=JSON.parse(await readFile('../game-design/data/catalog.json','utf8')) as {episodes:{number:string;topic_en:string;category:string;path:string}[]};
+ const docs=catalog.documents.filter(doc=>doc.kind==='game-design'),before=JSON.stringify(docs);
+ const ordered=orderedLearningDocuments(docs.slice().reverse(),'game-design');
+ assert.deepEqual(ordered.map(doc=>doc.route),source.episodes.slice().sort((a,b)=>Number(a.number)-Number(b.number)).map(episode=>'/game-design/'+episode.path));
+ const groups=learningGroups(docs.slice().reverse(),'game-design'),actual=groups.flatMap(group=>group.documents);
+ assert.deepEqual(actual.map(doc=>doc.route).sort(),docs.map(doc=>doc.route).sort());assert.equal(new Set(actual.map(doc=>doc.route)).size,docs.length);
+ for(const group of groups){
+  const expected=source.episodes.filter(episode=>(episode.topic_en.match(/\[([^\]]+)\]\s*$/)?.[1]||episode.category||'기타 주제')===group.id).sort((a,b)=>Number(a.number)-Number(b.number));
+  assert.deepEqual(group.documents.map(doc=>doc.route),expected.map(episode=>'/game-design/'+episode.path));
+ }
+ assert.equal(JSON.stringify(docs),before);assert.ok(!groups.some(group=>group.id==='all'));
+});
+
+test('game source series falls back to existing category without guessing a curriculum',()=>{
+ assert.equal(gameTopic({topic:'A title [Planning & Game Design]',category:'기획'}),'Planning & Game Design');
+ assert.equal(gameTopic({topic:'An earlier [bracket] and [UI]  ',category:'기획'}),'UI');
+ assert.equal(gameTopic({topic:'[UI] appears before a subtitle',category:'원본 분류'}),'원본 분류');
+ assert.equal(gameTopic({topic:'No metadata',category:''}),'기타 주제');
+});
+
+test('learning progress reads only legacy boolean route keys and never mutates them',()=>{
+ const doc=catalog.documents.find(doc=>doc.kind==='game-design')!,key=doc.route.replace(/^\//,'');
+ const reading={[key]:true,unknown:false};assert.equal(isLearningRead(doc,reading),true);assert.deepEqual(reading,{[key]:true,unknown:false});
+ assert.equal(isLearningRead(doc,{[doc.route]:true}),false);
+ for(const value of [null,[],true,'true',{[key]:'true'},{[key]:1}])assert.equal(isLearningRead(doc,objectBooleans(value)),false);
+});
+
+test('learning pagination bounds invalid and stale URL values without hiding tail lessons',()=>{
+ assert.equal(PAGE_SIZE,12);
+ for(const value of [null,'','0','-1','1.5','NaN','Infinity','9007199254740992'])assert.equal(learningPage(value,104),1);
+ assert.equal(learningPage('999',104),9);assert.equal(learningPage('2',12),1);assert.equal(learningPage('2',13),2);assert.equal(learningPage('4',0),1);
+ const docs=orderedLearningDocuments(catalog.documents.filter(doc=>doc.kind==='game-design'),'game-design');
+ const pages=Array.from({length:Math.ceil(docs.length/PAGE_SIZE)},(_,index)=>docs.slice(index*PAGE_SIZE,(index+1)*PAGE_SIZE));
+ assert.deepEqual(pages.flat().map(doc=>doc.route),docs.map(doc=>doc.route));assert.ok(pages.every(page=>page.length<=12));
 });

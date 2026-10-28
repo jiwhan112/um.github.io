@@ -1,17 +1,10 @@
-import { useMemo, useState, type ComponentType } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Braces, CheckCircle2, ChevronRight, Code2, Cpu, FileText, Folder, FolderOpen, Layers3, ListTree, Network, Search, Wrench, X } from 'lucide-react';
+import { type ComponentType } from 'react';
+import { BookOpen, Braces, Code2, Cpu, Layers3, Network, Wrench } from 'lucide-react';
+import { LearningIndex } from './Learning';
 import { useData } from '@/lib/data';
-import { DocumentLibrary } from '@/components/DocumentLibrary';
-import { normalizeSearch } from '@/lib/document-library';
-import { compareKnowledgeDocuments } from '@/lib/knowledge-order';
-import type { DocumentMeta } from '@/lib/types';
-
 type Phase = 'legacy' | 'new' | 'replan' | 'keep';
 type Topic = { id: string; title: string; description: string; phase: Phase; category?: string };
 type Area = { id: string; title: string; subtitle: string; icon: ComponentType<{size?:number; className?:string}>; topics: Topic[] };
-type VisibleTopic = Topic & { documents: DocumentMeta[] };
-type VisibleArea = Omit<Area, 'topics'> & { topics: VisibleTopic[]; count: number };
 const phaseLabels: Record<Phase,string> = {
   legacy: '기존 자료 기준', new: '신규 집필 예정', replan: '집필 시 설계', keep: '기존 구성 유지'
 };
@@ -50,92 +43,13 @@ const areas: Area[] = [
   ]}
 ];
 
-
 export default function Knowledge() {
-  const {catalog}=useData();
-  const docs=catalog.documents.filter(d=>d.kind==='knowledge');
-  const [query,setQuery]=useState('');
-  const [opened,setOpened]=useState<Record<string,boolean>>({cpp:true,windows:true,algorithm:true});
-  const term=normalizeSearch(query);
-  const visible=useMemo<VisibleArea[]>(()=>areas.flatMap(area=>{
-    const areaMatches=normalizeSearch(area.title+' '+area.subtitle).includes(term);
-    const topics=area.topics.flatMap(topic=>{
-      const documents=docs.filter(d=>d.category===topic.category && !!topic.category).sort(compareKnowledgeDocuments);
-      const topicMatches=normalizeSearch(topic.title+' '+topic.description).includes(term);
-      const matchedDocs=documents.filter(d=>normalizeSearch([d.title,d.subtitle,...d.tags].join(' ')).includes(term));
-      if(term && !areaMatches && !topicMatches && !matchedDocs.length)return [];
-      return [{...topic,documents:term&&!areaMatches&&!topicMatches?matchedDocs:documents}];
-    });
-    return topics.length?[{...area,topics,count:topics.reduce((total,topic)=>total+topic.documents.length,0)}]:[];
-  }),[docs,term]);
-  const totalTopics=areas.reduce((n,area)=>n+area.topics.length,0);
-  const archived=docs.filter(d=>!term||normalizeSearch([d.title,d.subtitle,d.category,...d.tags].join(' ')).includes(term));
-  const expandAll=(value:boolean)=>setOpened(Object.fromEntries(areas.map(a=>[a.id,value])));
-  return <div className="page knowledge-page">
-    <header className="knowledge-hero">
-      <div className="knowledge-kicker"><ListTree size={15}/> PROGRAMMING KNOWLEDGE / ATLAS NOTE</div>
-      <h1>프로그래밍 지식 라이브러리</h1>
-      <p>기존 개편 교재와 신규 집필 과정을 함께 안내합니다. 실제 공개된 단원만 펼쳐서 읽을 수 있습니다.</p>
-      <div className="knowledge-hero-meta">
-        <span><strong>{areas.length}</strong>개 주요 분야</span>
-        <span><strong>{totalTopics}</strong>개 하위 주제</span>
-        <span><strong>{docs.length}</strong>개 공개 교재</span>
-        <span className="knowledge-prototype">언어 → 그래픽스 → 컴퓨터 과학 · 알고리즘</span>
-      </div>
-    </header>
-    <div className="knowledge-layout">
-      <aside className="knowledge-map-sidebar" aria-label="학습 분야 바로가기">
-        <div className="knowledge-map-sidebar-title"><ListTree size={17}/> 목차 <span>CONTENTS</span></div>
-        <nav aria-label="주요 학습 분야">
-          {areas.map(area=>{
-            const Icon=area.icon;
-            const count=docs.filter(d=>area.topics.some(t=>t.category===d.category && !!t.category)).length;
-            return <a key={area.id} href={'#knowledge-'+area.id}><Icon size={15}/><span>{area.title}</span><small>{count||'—'}</small></a>;
-          })}
-        </nav>
-        <div className="knowledge-sidebar-note"><CheckCircle2 size={16}/><span>추가 목차는 신규 집필 계획입니다. 빈 문서나 가짜 완료 상태를 생성하지 않습니다.</span></div>
-      </aside>
-      <div className="knowledge-main-column">
-        <section className="knowledge-outline" aria-labelledby="knowledge-map-heading">
-          <div className="knowledge-outline-heading">
-            <div><span className="eyebrow">TOPIC EXPLORER</span><h2 id="knowledge-map-heading">전체 학습 목차</h2><p>분야별 학습 계획과 현재 공개 교재를 구분해 표시합니다.</p></div>
-            <div className="knowledge-outline-actions"><button type="button" onClick={()=>expandAll(true)}>모두 펼치기</button><button type="button" onClick={()=>expandAll(false)}>모두 접기</button></div>
-          </div>
-          <label className="knowledge-search">
-            <Search size={17}/>
-            <input type="search" aria-label="학습 목차 검색" placeholder="학습 주제 또는 단원 검색" value={query} onChange={e=>setQuery(e.target.value)}/>
-            {query&&<button type="button" onClick={()=>setQuery('')} aria-label="목차 검색 초기화"><X size={16}/></button>}
-          </label>
-          <div className="knowledge-tree">
-            {visible.map(area=>{
-              const Icon=area.icon;
-              const isOpen=!!term||!!opened[area.id];
-              return <section className="knowledge-tree-area" id={'knowledge-'+area.id} key={area.id}>
-                <button className="knowledge-tree-group" type="button" aria-expanded={isOpen} onClick={()=>setOpened(state=>({...state,[area.id]:!isOpen}))}>
-                  <ChevronRight className="knowledge-chevron" size={17}/>
-                  <span className="knowledge-area-icon"><Icon size={18}/></span>
-                  <span className="knowledge-area-label"><strong>{area.title}</strong><small>{area.subtitle}</small></span>
-                  <span className="knowledge-count">{area.count?area.count+'개 공개':'학습 계획'}</span>
-                </button>
-                {isOpen&&<div className="knowledge-topic-list">
-                  {area.topics.map(topic=><div className="knowledge-topic" key={topic.id}>
-                    <div className="knowledge-topic-row"><Folder size={17}/><div><strong>{topic.title}</strong><small>{topic.description}</small></div><span>{topic.documents.length?topic.documents.length+'개 공개':phaseLabels[topic.phase]}</span></div>
-                    {topic.documents.map(d=><Link className="knowledge-document-link" to={d.route} key={d.id}><FileText size={16}/><span><strong>{d.title}</strong><small>{d.subtitle}</small></span><ArrowRight size={16}/></Link>)}
-                  </div>)}
-                </div>}
-              </section>;
-            })}
-            {!visible.length&&<div className="knowledge-search-empty">설계 목차에서 일치하는 항목을 찾지 못했습니다. 이전 공개 교재는 아래에서 별도로 검색할 수 있습니다.</div>}
-          </div>
-        </section>
-        <section className="knowledge-recent" aria-label="기존 공개 프로토타입">
-          <div className="section-heading"><h2><FolderOpen size={19}/> 공개 학습 교재 · 검색</h2><span className="muted text-xs">{archived.length} / {docs.length}개</span></div>
-          <div className="knowledge-recent-list">{archived.map(d=><Link key={d.id} to={d.route}><span className="knowledge-recent-icon"><FileText size={17}/></span><span><small>{d.category}</small><strong>{d.title}</strong></span><ArrowRight size={16}/></Link>)}</div>
-          <p className="knowledge-catalog-note">기존 교재와 DX11·LIS·BeautifulSoup 시범 교재의 URL을 유지합니다. 새 교재의 CPU 실험과 Windows·GPU 실행 여부는 각 단원의 출처·검증 탭에서 구별합니다.</p>
-        </section>
-        <DocumentLibrary docs={docs} thinking={false}/>
-      </div>
-    </div>
-    <p className="knowledge-footnote">실제 게시 문서만 공개 숫자에 포함합니다. 신규 교재는 기존 자료 이관 실적과 구별하며, Windows/MSVC·DirectX/GPU 실행은 별도 검증 대상입니다.</p>
-  </div>;
+  const { catalog } = useData();
+  const published = (category?: string) => category ? catalog.documents.filter(doc => doc.kind === 'knowledge' && doc.category === category).length : 0;
+  return <LearningIndex kind="knowledge" title="프로그래밍 학습" eyebrow="PROGRAMMING / STUDY LIBRARY"
+    description="언어부터 그래픽스까지, 한 과정씩 배우고 직접 구현하는 학습 노트."
+    after={<details className="learning-plan"><summary>전체 분야와 집필 계획 <span>7개 분야 · 공개 교재와 별도 안내</span></summary><div className="learning-plan-grid">{areas.map(area => {
+      const Icon = area.icon;
+      return <section key={area.id} id={'knowledge-' + area.id}><h3><Icon size={16}/>{area.title}</h3><p>{area.subtitle}</p><ul>{area.topics.map(topic => <li key={topic.id}><strong>{topic.title}</strong><span>{published(topic.category) ? published(topic.category) + '개 공개' : phaseLabels[topic.phase]}</span><small>{topic.description}</small></li>)}</ul></section>;
+    })}</div><p className="learning-footnote">이 목록은 장기 집필 계획입니다. 위 학습 목차에는 실제 공개된 교재만 표시하며, 신규 집필 계획을 이관·완료 실적으로 계산하지 않습니다.</p></details>}/>
 }

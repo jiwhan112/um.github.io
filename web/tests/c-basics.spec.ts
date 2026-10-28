@@ -1,3 +1,4 @@
+import {selectLearningGroup,expectLearningRoutes} from './learning-test-helpers';
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 const slugs=['c-basics-01','c-basics-02','c-basics-03'];
@@ -47,12 +48,13 @@ for(const [index,slug] of slugs.entries())test(`${slug} opens tabs, images, revi
 });
 test('C curriculum includes every authored chapter with applied C01 after chapter 11',async({page})=>{
  await page.goto('knowledge/');
- const topic=page.locator('#knowledge-cpp .knowledge-topic').filter({has:page.getByText('C 언어',{exact:true})});
- await expect(topic.locator('.knowledge-topic-row')).toContainText(`${course.length}개 공개`);
- expect(await topic.locator('.knowledge-document-link').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')))).toEqual(course.map(s=>`/um.github.io/knowledge/${s}/`));
+ await selectLearningGroup(page,'C 언어');
+ await expectLearningRoutes(page,course.map(slug=>`/knowledge/${slug}/`));
+ await selectLearningGroup(page,'C 언어');
+ const topic=page.getByTestId('learning-current-group');
  for(const slug of slugs){
   await topic.locator(`a[href="/um.github.io/knowledge/${slug}/"]`).click();
   await expect(page.locator('main h1')).toContainText('C 기초');
-  await page.getByRole('link',{name:'프로그래밍 학습 목차',exact:true}).click();
+  await page.getByRole('navigation',{name:'학습 위치',exact:true}).getByRole('link',{name:'학습 목차',exact:true}).click();
  }
 });

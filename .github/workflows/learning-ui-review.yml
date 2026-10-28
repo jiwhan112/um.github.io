@@ -1,0 +1,68 @@
+name: Learning UI candidate review
+on:
+  push:
+    branches: ['review/learning-study-navigation']
+permissions:
+  contents: read
+concurrency:
+  group: learning-ui-review-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Build identical UI candidate with existing dependencies
+        working-directory: web
+        run: |
+          npm ci
+          npm run check:repo
+          npm run check:publishing
+          npm run test:unit
+          npm run build
+          node scripts/check-publication.mjs
+          printf '%s\n' "${{ github.sha }}" > ui-review-source.txt
+          node node_modules/@playwright/test/cli.js test tests/learning-navigation.spec.ts tests/thinking-navigation.spec.ts tests/library-theme.spec.ts tests/thinking-first-prototype.spec.ts tests/visual.spec.ts --list --reporter=json > ui-review-test-list.json
+      - name: Restore locked browser and OS package downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            /tmp/atlas-apt/*.deb
+          key: atlas-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24-v1-${{ hashFiles('web/package-lock.json', 'web/scripts/install-browser.sh') }}
+      - name: Install unchanged reviewed browser and fonts
+        working-directory: web
+        timeout-minutes: 22
+        run: bash scripts/install-browser.sh
+      - name: Focused behavior and unchanged screenshot assertions
+        working-directory: web
+        run: |
+          npm run test:e2e -- tests/learning-navigation.spec.ts tests/thinking-navigation.spec.ts tests/library-theme.spec.ts tests/thinking-first-prototype.spec.ts tests/visual.spec.ts --output=test-results/focused
+          cp test-results/results.json ui-review-focused-results.json
+      - name: Exact authored course route and existing navigation contracts
+        working-directory: web
+        run: |
+          node node_modules/@playwright/test/cli.js test tests/functional.spec.ts tests/c-basics.spec.ts tests/cpp-basics.spec.ts tests/cs-textbooks.spec.ts tests/new-curricula.spec.ts --grep 'homepage opens|WinAPI and game math|DX9 implementation|DX11 migrated|DX11 01,|DX11 Mesh|DX11 Instancing|DX11 knowledge outline|published C01|C fundamentals|C curriculum includes|C\+\+ curriculum follows|CS curriculum exposes|new curriculum categories|Effective C\+\+ topic' --list --reporter=json > ui-review-legacy-test-list.json
+          npm run test:e2e -- tests/functional.spec.ts tests/c-basics.spec.ts tests/cpp-basics.spec.ts tests/cs-textbooks.spec.ts tests/new-curricula.spec.ts --grep 'homepage opens|WinAPI and game math|DX9 implementation|DX11 migrated|DX11 01,|DX11 Mesh|DX11 Instancing|DX11 knowledge outline|published C01|C fundamentals|C curriculum includes|C\+\+ curriculum follows|CS curriculum exposes|new curriculum categories|Effective C\+\+ topic' --output=test-results/legacy
+      - name: Save candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: learning-ui-candidate-review
+          path: |
+            web/playwright-report
+            web/test-results
+            web/render-environment
+            web/ui-review-source.txt
+            web/ui-review-test-list.json
+            web/ui-review-focused-results.json
+            web/ui-review-legacy-test-list.json
+          retention-days: 7

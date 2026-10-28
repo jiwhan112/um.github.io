@@ -1,3 +1,4 @@
+import {selectLearningGroup,expectLearningRoutes} from './learning-test-helpers';
 import { test, expect } from '@playwright/test';
 
 const chapters = [
@@ -134,19 +135,20 @@ test('bitmask operations distinguish clearing from toggling and preserve existin
 
 test('C++ curriculum follows foundations 01–05 with advanced 01–06', async ({ page, isMobile }) => {
   await page.goto('knowledge/');
-  const cpp = page.locator('#knowledge-cpp .knowledge-topic').filter({ has: page.locator('.knowledge-topic-row strong', { hasText: 'C++ 기초·심화' }) });
+  await selectLearningGroup(page,'C++ 기초·심화');
+  const cpp = page.getByTestId('learning-current-group');
   const order=[...chapters.map(chapter=>chapter.slug),'cpp-advanced-01','cpp-advanced-02','cpp-advanced-03','cpp-advanced-04','cpp-advanced-05','cpp-advanced-06'];
-  await expect(cpp.locator('.knowledge-document-link')).toHaveCount(11);
-  expect(await cpp.locator('.knowledge-document-link').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')))).toEqual(order.map(slug => `/um.github.io/knowledge/${slug}/`));
+  expect(order).toHaveLength(11);
+  await expectLearningRoutes(page,order.map(slug=>`/knowledge/${slug}/`));
   const expected=order.map(slug=>`/um.github.io/knowledge/${slug}/`);
-  expect(await page.locator('.sidebar .chapter-nav a[href*="/knowledge/cpp-"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(expected);
+  expect(await page.locator('.sidebar [data-testid=learning-sidebar-list] a[href*="/knowledge/cpp-"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(expected);
   if(isMobile){
     await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
     const drawer=page.getByRole('dialog',{name:'사이트 메뉴',exact:true});
-    expect(await drawer.locator('.chapter-nav a[href*="/knowledge/cpp-"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(expected);
+    expect(await drawer.locator('[data-testid=learning-sidebar-list] a[href*="/knowledge/cpp-"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(expected);
     await page.keyboard.press('Escape');
     await expect(drawer).toHaveCount(0);
   }
-  await cpp.locator('.knowledge-document-link').first().click();
+  await cpp.locator('.learning-lesson-link').first().click();
   await expect(page).toHaveURL(/\/knowledge\/cpp-basics-01\/$/);
 });
