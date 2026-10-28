@@ -191,7 +191,7 @@
             {
               "type": "code",
               "language": "mermaid",
-              "text": "flowchart TD\n accTitle: B와 C를 함께 넣지 못하는 이유\n A[\"B 키 160 > C 키 155\"] --> B[\"키만 보면 B가 아래\"]\n C[\"B 무게 55 < C 무게 60\"] --> D[\"무게는 반대로 요구\"]\n B --> E[\"한 탑에 둘 다 넣을 수 없음\"]\n D --> E"
+              "text": "flowchart TD\n accTitle: B와 C를 함께 넣지 못하는 이유\n A[\"B 키 160은 C 키 155보다 큼\"] --> B[\"키만 보면 B가 아래\"]\n C[\"B 무게 55 < C 무게 60\"] --> D[\"무게는 반대로 요구\"]\n B --> E[\"한 탑에 둘 다 넣을 수 없음\"]\n D --> E"
             },
             {
               "type": "paragraph",
