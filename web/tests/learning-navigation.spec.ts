@@ -75,6 +75,9 @@ for(const kind of ['knowledge','game-design'] as const){
   await page.getByLabel('문제 분류',{exact:true}).selectOption(target.category);
   await page.getByRole('button',{name:'태그 '+target.tags[0],exact:true}).click();
   await page.getByLabel('문제 정렬',{exact:true}).selectOption('newest');
+  // Rapid changes must compose before reload; a dropped tag is a real lost update.
+  await expect.poll(()=>new URL(page.url()).searchParams.getAll('tag')).toEqual([target.tags[0]]);
+  await expect.poll(()=>new URL(page.url()).searchParams.get('sort')).toBe('newest');
   const filtered=page.url();await page.reload();await filters(page);
   await expect(page.getByLabel('문제 분류',{exact:true})).toHaveValue(target.category);
   await expect(page.getByRole('button',{name:'태그 '+target.tags[0],exact:true})).toHaveAttribute('aria-pressed','true');
@@ -87,6 +90,34 @@ for(const kind of ['knowledge','game-design'] as const){
   await expect(page.getByText('조건에 맞는 자료가 없습니다.',{exact:true})).toBeVisible();await expect(learningRows(page)).toHaveCount(0);
   await page.getByRole('button',{name:'전체 자료 보기',exact:true}).click();
   await expect(page.getByTestId('library-count')).toHaveText(`${docs.length} / ${docs.length}개`);await noOverflow(page);
+ });
+
+ test(`learning ${kind} rapid repeated filter events compose without losing URL state`,async({page})=>{
+  const target=kind==='knowledge'?knowledge.find(doc=>doc.title.includes('BeautifulSoup'))!:game[0];
+  expect(target.tags.length).toBeGreaterThanOrEqual(2);
+  await page.goto(kind+'/?'+new URLSearchParams({q:target.title}));
+  await expect(learningRows(page)).toHaveCount(1);await filters(page);
+  // One event turn makes the formerly intermittent render-time URL closure deterministic.
+  // Use the real React controls and browser change/click events, without artificial waits.
+  await page.evaluate(({category,firstTag,secondTag})=>{
+   const panel=document.querySelector('details.learning-filter-more')!;
+   const categorySelect=panel.querySelector<HTMLSelectElement>('select[aria-label="문제 분류"]')!;
+   const sortSelect=panel.querySelector<HTMLSelectElement>('select[aria-label="문제 정렬"]')!;
+   const tags=Array.from(panel.querySelectorAll<HTMLButtonElement>('button[aria-label]'));
+   const first=tags.find(button=>button.getAttribute('aria-label')==='태그 '+firstTag)!;
+   const second=tags.find(button=>button.getAttribute('aria-label')==='태그 '+secondTag)!;
+   const select=(node:HTMLSelectElement,value:string)=>{node.value=value;node.dispatchEvent(new Event('change',{bubbles:true}));};
+   select(categorySelect,category);first.click();select(sortSelect,'newest');second.click();select(sortSelect,'oldest');first.click();select(sortSelect,'newest');
+  },{category:target.category,firstTag:target.tags[0],secondTag:target.tags[1]});
+  await expect.poll(()=>new URL(page.url()).searchParams.getAll('tag')).toEqual([target.tags[1]]);
+  const final=new URL(page.url());expect(final.searchParams.get('category')).toBe(target.category);expect(final.searchParams.get('sort')).toBe('newest');expect(final.searchParams.get('q')).toBe(target.title);
+  await expect(page.getByRole('button',{name:'태그 '+target.tags[0],exact:true})).toHaveAttribute('aria-pressed','false');
+  await expect(page.getByRole('button',{name:'태그 '+target.tags[1],exact:true})).toHaveAttribute('aria-pressed','true');
+  await expect(learningRows(page)).toHaveAttribute('href',learningHref(target.route));
+  await page.reload();await filters(page);await expect(page.getByRole('button',{name:'태그 '+target.tags[1],exact:true})).toHaveAttribute('aria-pressed','true');
+  await page.goBack();await expect(page.getByLabel('문제 정렬',{exact:true})).toHaveValue('oldest');
+  await expect(page.getByRole('button',{name:'태그 '+target.tags[1],exact:true})).toHaveAttribute('aria-pressed','true');
+  await page.goForward();await expect(page).toHaveURL(final.href);await expect(learningRows(page)).toHaveAttribute('href',learningHref(target.route));
  });
 
  test(`learning ${kind} completion persists and reverses without touching other records`,async({page})=>{
@@ -124,6 +155,10 @@ for(const kind of ['knowledge','game-design'] as const){
   const last=selected.at(-1)!;
   await page.goto(last.route.slice(1));await expect(page.locator('main h1')).toHaveText(last.title);
   const crumb=page.getByRole('navigation',{name:'학습 위치',exact:true});await expect(crumb).toBeVisible();
+  const chronological=kind==='game-design'?game:selected,position=chronological.findIndex(doc=>doc.route===last.route);
+  const adjacent=[chronological[position-1],chronological[position+1]].filter((doc):doc is DocumentMeta=>!!doc);
+  const nextPrevious=page.getByRole('navigation',{name:'이전 다음 문서',exact:true});
+  expect(await nextPrevious.getByRole('link').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')))).toEqual(adjacent.map(doc=>learningHref(doc.route)));
   await expect(crumb.getByRole('link')).toHaveAttribute('href',new RegExp(groupKey+'='));
   if(isMobile)await page.getByRole('button',{name:'사이트 메뉴 열기'}).click();
   const scope=isMobile?page.getByRole('dialog',{name:'사이트 메뉴',exact:true}):page.locator('.sidebar');
@@ -143,6 +178,20 @@ for(const kind of ['knowledge','game-design'] as const){
    await expect(page.getByRole('dialog')).toHaveCount(0);await expect(page.getByTestId('learning-current-group')).toBeVisible();
   }
   await noOverflow(page);
+ });
+
+ test(`learning ${kind} pagination returns reading position and keyboard focus to the new list`,async({page})=>{
+  const id=kind==='knowledge'?'DirectX 11':'all',ordered=kind==='knowledge'?course(id):game;
+  await page.goto(kind+'/');await selectLearningGroup(page,id,kind);
+  const next=page.getByRole('button',{name:'다음 목록',exact:true}),previous=page.getByRole('button',{name:'이전 목록',exact:true});
+  const heading=page.getByTestId('learning-list-heading');
+  await next.scrollIntoViewIfNeeded();await expect(learningRows(page).first()).not.toBeInViewport();
+  await next.click();await expect(learningRows(page).first()).toHaveAttribute('href',learningHref(ordered[learningPageSize].route));
+  await expect(heading).toBeFocused();await expect(learningRows(page).first()).toBeInViewport({ratio:1});
+  await page.keyboard.press('Tab');await expect(learningRows(page).first()).toBeFocused();
+  await previous.scrollIntoViewIfNeeded();await expect(learningRows(page).first()).not.toBeInViewport();
+  await previous.click();await expect(learningRows(page).first()).toHaveAttribute('href',learningHref(ordered[0].route));
+  await expect(heading).toBeFocused();await expect(learningRows(page).first()).toBeInViewport({ratio:1});
  });
 
  test(`learning ${kind} date sorting changes real list order without losing selected group`,async({page})=>{
