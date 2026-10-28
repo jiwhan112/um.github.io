@@ -53,19 +53,20 @@ export function LearningIndex({ kind, title, eyebrow, description, after }: { ki
     // A previous input can update history before React commits its new render.
     // Compose from the current URL so quick tag/sort changes cannot lose each other.
     const nextParams = new URLSearchParams(window.location.search);
-    if (key === 'page') focusNewPage.current = true;
+    focusNewPage.current = key === 'page';
     if (value) nextParams.set(key, value); else nextParams.delete(key);
     if (key !== 'page') nextParams.delete('page');
     if (['q', 'category', 'tag', 'status'].includes(key)) nextParams.delete(groupKey(kind));
     setParams(nextParams, { replace });
   }
   function toggleTag(tag: string) {
+    focusNewPage.current = false;
     const nextParams = new URLSearchParams(window.location.search), chosen = new Set(nextParams.getAll('tag'));
     if (chosen.has(tag)) chosen.delete(tag); else chosen.add(tag);
     ['tag', 'page', groupKey(kind)].forEach(key => nextParams.delete(key));
     [...chosen].sort().forEach(value => nextParams.append('tag', value)); setParams(nextParams);
   }
-  function reset() { const nextParams = new URLSearchParams(window.location.search); ['q', 'category', 'tag', 'sort', 'status', 'page', groupKey(kind)].forEach(key => nextParams.delete(key)); setParams(nextParams); }
+  function reset() { focusNewPage.current = false; const nextParams = new URLSearchParams(window.location.search); ['q', 'category', 'tag', 'sort', 'status', 'page', groupKey(kind)].forEach(key => nextParams.delete(key)); setParams(nextParams); }
   return <div className={'page learning-index ' + kind + '-index'}>
     <header className="learning-header"><div><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p className="page-description">{description}</p></div><div className="learning-stats"><span><strong>{groups.length}</strong>{kind === 'knowledge' ? '개 과정' : '개 주제'}</span><span><strong>{docs.length}</strong>{kind === 'knowledge' ? '개 공개 교재' : '개 공개 강의'}</span></div></header>
     {next && <section className="learning-start" aria-label="학습 시작"><div className="learning-start-icon"><BookOpen size={23}/></div><div className="learning-start-copy"><span className="eyebrow">{groupAllDone ? 'REVIEW' : done ? 'CONTINUE LEARNING' : 'START HERE'}</span><h2>{groupAllDone ? '학습을 마쳤어요. 다시 살펴볼까요?' : kind === 'knowledge' ? `${fullGroup?.title || next.category} · 다음 단원` : '다음 미완료 강의부터 이어 가세요.'}</h2><p>{kind === 'game-design' && next.number + ' · '}{cleanTitle(next.title)}</p></div><Button asChild><Link data-testid="learning-study-entry" to={next.route}>{groupAllDone ? '다시 읽기' : done ? '이어서 학습' : '학습 시작'}<ArrowRight size={16}/></Link></Button><div className="learning-progress" data-testid="learning-progress"><div><span>전체 학습 기록</span><strong>{done} / {docs.length} 완료</strong></div><progress value={done} max={docs.length || 1} aria-label={title + ' 전체 학습 진도'}/></div></section>}
