@@ -10,7 +10,7 @@ const href=(route:string)=>'/um.github.io'+route;
 const inChapter=(chapter:string)=>docs.filter(d=>String(d.number).split('.')[0]===chapter);
 async function selectChapter(page:Page,chapter:string){
  const select=page.getByLabel('학습 장',{exact:true});
- if(await select.isVisible())await select.selectOption(chapter);
+ if((page.viewportSize()?.width || 1440)<=760){await expect(select).toBeVisible();await select.selectOption(chapter);}
  else await page.getByRole('navigation',{name:'학습 장 목록',exact:true}).getByRole('button',{name:new RegExp('^'+chapter.padStart(2,'0')+' ')}).click();
 }
 async function noOverflow(page:Page){expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);}
@@ -62,7 +62,7 @@ test('thinking chapter selection restores through reload, Back and Forward',asyn
  await page.goBack();await expect(page).toHaveURL(secondUrl);await expect(select).toHaveValue(chapters[1]);
  await page.goForward();await expect(page).toHaveURL(lastUrl);await expect(select).toHaveValue(chapters.at(-1)!);
  await noOverflow(page);
- await page.getByTestId('thinking-current-chapter').scrollIntoViewIfNeeded();
+ await page.locator('.thinking-chapter-heading').scrollIntoViewIfNeeded();
  await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:testInfo.outputPath('thinking-ui-chapter17.png'),fullPage:false});
 });
 
@@ -121,6 +121,8 @@ test('thinking lesson navigation stays in the current chapter and crosses chapte
  const lessonRoutes=navRoutes.filter(route=>/^\/thinking-lab\/ep-/.test(route));
  expect(lessonRoutes.slice().sort()).toEqual(inChapter(chapters[0]).map(d=>d.route).sort());
  await expect(chapterNav.locator('[aria-current="page"]')).toHaveAttribute('href',href(last.route));
+ if(isMobile)await chapterNav.scrollIntoViewIfNeeded();
+ await expect(chapterNav.locator('[aria-current="page"]')).toBeInViewport();
  if(isMobile)await page.screenshot({path:testInfo.outputPath('thinking-ui-sidebar.png'),fullPage:false});
  if(isMobile){await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(0);await expect(page).toHaveURL(new RegExp(last.route+'$'));}
  await nextPrevious.locator('a').nth(1).click();await expect(page).toHaveURL(new RegExp(docs[index+1].route+'$'));

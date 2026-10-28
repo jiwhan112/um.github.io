@@ -50,7 +50,7 @@ test('newly published problems remain reachable exactly once through bounded cha
  const seen:string[]=[];
  for(const chapter of chapters){
   const select=page.getByLabel('학습 장',{exact:true});
-  if(await select.isVisible())await select.selectOption(chapter);
+  if((page.viewportSize()?.width || 1440)<=760){await expect(select).toBeVisible();await select.selectOption(chapter);}
   else await page.getByRole('navigation',{name:'학습 장 목록',exact:true}).getByRole('button',{name:new RegExp('^'+chapter.padStart(2,'0')+' ')}).click();
   const expected=docs.filter(d=>String(d.number).split('.')[0]===chapter);
   await expect(page.getByTestId('library-card')).toHaveCount(expected.length);
