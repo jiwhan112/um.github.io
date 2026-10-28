@@ -202,3 +202,26 @@ for(const viewport of [{width:1165,height:747},{width:900,height:650},{width:144
  await expect(page).toHaveURL(new RegExp('chapter='+chapters[0]+'(?:&|$)'));
  await noOverflow(page);
 });
+
+
+test('thinking cross-chapter tag filter exposes every exact matching route once',async({page})=>{
+ const matching=docs.filter(d=>d.tags?.includes('회문'));
+ const matchesInChapters=[...new Set(matching.map(d=>String(d.number).split('.')[0]))].sort((a,b)=>Number(a)-Number(b));
+ expect(matchesInChapters.length).toBeGreaterThan(1);
+ await page.goto('thinking-lab/?tag='+encodeURIComponent('회문'));
+ const seen:string[]=[];
+ for(const chapter of matchesInChapters){
+  await selectChapter(page,chapter);
+  const expected=matching.filter(d=>String(d.number).split('.')[0]===chapter);
+  await expect(page.getByTestId('library-card')).toHaveCount(expected.length);
+  const paths=await page.getByTestId('library-card').evaluateAll(links=>links.map(link=>new URL((link as HTMLAnchorElement).href).pathname));
+  expect(paths.slice().sort()).toEqual(expected.map(d=>href(d.route)).sort());seen.push(...paths);
+ }
+ expect(seen.slice().sort()).toEqual(matching.map(d=>href(d.route)).sort());
+ await page.getByRole('searchbox',{name:'문제 검색'}).fill('1.4');await page.reload();
+ await expect(page.getByRole('searchbox',{name:'문제 검색'})).toHaveValue('1.4');
+ const numbered=matching.filter(d=>d.number==='1.4'||d.number?.startsWith('1.4.'));
+ await expect(page.getByTestId('library-card')).toHaveCount(numbered.length);
+ expect((await page.getByTestId('library-card').evaluateAll(links=>links.map(link=>new URL((link as HTMLAnchorElement).href).pathname))).sort()).toEqual(numbered.map(d=>href(d.route)).sort());
+ await noOverflow(page);
+});
