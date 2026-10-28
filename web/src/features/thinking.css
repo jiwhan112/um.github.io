@@ -12,4 +12,6 @@
 
 /* Keep the current chapter inside the available sidebar space, not below it. */
 .sidebar .thinking-sidebar{display:flex;flex-direction:column;flex:1;min-height:0}.sidebar .thinking-sidebar-topics{flex:1;min-height:110px;max-height:360px}.sidebar:has(.thinking-sidebar) .side-foot{padding-top:16px}
+/* A short desktop must reserve room for the chapter, not paint it over the footer. */
+@media(min-width:761px) and (max-height:950px){.sidebar:has(.thinking-sidebar){padding-top:12px;padding-bottom:12px}.sidebar:has(.thinking-sidebar) .brand{padding-bottom:12px}.sidebar:has(.thinking-sidebar) .nav-label{margin-top:8px;margin-bottom:5px}.sidebar:has(.thinking-sidebar) .site-nav{gap:1px}.sidebar:has(.thinking-sidebar) .site-nav a{padding-top:5px;padding-bottom:5px;min-height:30px}.sidebar:has(.thinking-sidebar) .nav-divider{margin-top:9px;margin-bottom:9px}.sidebar:has(.thinking-sidebar) .side-foot{display:none}.sidebar .thinking-sidebar{flex-shrink:0;min-height:210px}.sidebar .thinking-sidebar-topics{min-height:90px}}
 @media(max-width:760px){.thinking-start-copy .eyebrow{display:none}.thinking-overall-progress small{display:none}.thinking-start{gap:12px}.thinking-start-copy h2{margin-top:0}.thinking-curriculum{margin-top:23px}}
