@@ -1,0 +1,310 @@
+{
+  "title": "15.5.2 심화 — 두 번째 회차가 첫 번째 완료표를 쓰지 않게",
+  "subtitle": "차례·잠금·대기 조건을 그림으로 검증하는 동시성 사고력 문제",
+  "memoKey": "thinking-ctci-15.5-2-draft",
+  "starter": "// 원자 단계, 잠금 소유자, 대기 조건을 분리해 적어 보세요.\n// 안전성과 진행 보장에 필요한 가정을 구분하는 종이 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "15.5.2 심화 — 두 번째 회차가 첫 번째 완료표를 쓰지 않게"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이번에는 A 담당, B 담당, C 담당이 각각 두 번 출력해 ABCABC를 만들어야 합니다. 기본의 done1,done2를 한 번 true로 만든 채 재사용하면 무엇이 잘못될까요? phase=0,1,2를 순환시키는 방식으로 각 담당의 정확한 조건과 갱신을 정하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원자성·실패·진행 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "하나의 공유 잠금과 phase=0으로 시작합니다. 각 담당은 자신의 문자를 정확히 두 번 출력하며 자기 차례가 아니면 조건 대기를 while로 반복합니다. 잠금 안에서 출력과 phase 갱신을 함께 하고 모두에게 알립니다. 허위 깨어남은 가능하며 작업 실패는 없고 실행 가능한 작업은 결국 실행됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 상태와 입력"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "초기 phase=0"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "목표 출력 ABCABC"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "각 담당은 두 번 출력"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "사용할 phase 값 0,1,2"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "완료 여부보다 지금 누구 차례인지 상태에 넣으세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C가 출력한 뒤 0으로 되돌려야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각자 두 번이라는 유한 반복 횟수를 별도로 유지하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A는 phase=0에서 A를 출력하고 1로, B는 1에서 B를 출력하고 2로, C는 2에서 C를 출력하고 0으로 바꿉니다. 출력은 ABCABC입니다. 영구 true 완료표는 다음 회차 선행 작업을 기다리지 않게 만들어 AABCBC 같은 잘못된 순서를 허용할 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 주어진 사례의 진행을 차례로 추적한다\n    N0[\"phase0: A → phase1\"]\n    N1[\"phase1: B → phase2\"]\n    N2[\"phase2: C → phase0\"]\n    N3[\"한 번 더 반복: ABCABC\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 바꿔 비교하기\n    accDescr: 공통 조건에서 서로 다른 경우를 비교한다\n    N0[\"반복 순서 제어\"]\n    N1[\"영구 완료표: 이전 회차가 다음 회차를 통과시킴\"]\n    N2[\"순환 phase: 매 출력마다 다음 담당 제한\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "출력 길이가 t이면 다음 phase는 t mod 3이고 지금까지 출력은 ABC 반복의 길이 t 접두사라는 불변조건을 씁니다. 허용된 담당 하나만 출력하고 다음 위상으로 바꾸므로 귀납적으로 유지됩니다. 각 담당이 두 번씩 끝나면 길이 6에서 멈춥니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 진행 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "공유 위상은 상수 공간이고 r회씩 출력하면 총 3r회 상태 전이입니다. 스케줄링에 따른 깨움·대기 횟수는 더 많을 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "반복 횟수가 담당마다 다르면 마지막 차례에서 영원히 기다릴 수 있습니다. 조건이 다른 여러 대기자가 있을 때 단일 임의 알림만으로 필요한 담당이 깨어난다고 가정하지 않습니다. 여기서는 모두 알림을 사용합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 각 담당이 세 번이면 별도 회차 번호 없이도 가능할까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "동일한 조건과 같은 반복 횟수 계약이면 ABCABCABC가 됩니다. 요청마다 별도 ID나 누락 허용이 필요한 서비스는 더 많은 상태가 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 번씩 호출하는 여섯 시작 순서와 담당별 1..5회 반복 위상 모형을 검산했습니다. 차례가 아닌 담당의 시도는 상태를 바꾸지 않는 대기로 취급합니다. 실제 스케줄러의 공정성을 실험한 것은 아닙니다. Python으로 실행한 유한 모형 검산은 명시된 원자성 가정에 한정됩니다. 실제 스레드 실행·Java 컴파일·운영체제 시간 측정은 수행하지 않았습니다. 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습과 규칙 출처",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명시된 원자 단계와 실패·공정성 가정 아래에서 별도로 만든 종이 사고력 문제입니다. 원서 주제명은 진도 연결에만 사용하며 원서 지문과 해설을 옮기지 않았습니다. 유한 모형 검산을 실제 스레드 구현의 모든 실행에 대한 증명으로 과장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait--",
+              "text": "Java 8 Object.wait: 조건 재확인 · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-05-call-in-order/",
+              "text": "같은 주제의 기본 문제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-06-synchronized-methods/",
+              "text": "다음 주제 15.6.1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

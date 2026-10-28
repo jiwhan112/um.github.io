@@ -1,0 +1,364 @@
+{
+  "title": "16.1.1 기본 — 두 상자의 이름표 바꾸기",
+  "subtitle": "왼쪽 상자에는 4, 오른쪽 상자에는 9가 적힌 이름표가 있습니다.",
+  "memoKey": "thinking-ctci-16.1-draft",
+  "starter": "// 문제에서 발견한 규칙과 검산 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "왼쪽 상자에는 4, 오른쪽 상자에는 9가 적힌 이름표가 있습니다. 이름표를 다른 곳에 대입하면 원래 표시는 덮어써집니다. 빈 메모 칸 하나를 써서 두 상자의 값을 바꾸세요. 왼쪽에 오른쪽 값을 먼저 적고 곧바로 오른쪽에 왼쪽 값을 적으면 왜 실패할까요?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "상자는 서로 다른 두 저장 장소입니다. 같은 값이 들어 있어도 됩니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "각 대입은 오른쪽의 현재 값을 읽어 왼쪽 저장 장소에 복사합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "메모 칸 하나를 허용하며 덧셈·뺄셈은 필요하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "별도 시작"
+                  }
+                ],
+                [
+                  {
+                    "text": "목표"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2,7"
+                  }
+                ],
+                [
+                  {
+                    "text": "7,2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "5,5"
+                  }
+                ],
+                [
+                  {
+                    "text": "5,5"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답과 근거를 적어 보세요. 힌트·정답·복습 해설은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 값을 덮어쓰기 전에 어디에 남겨야 할까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "메모에는 원래 왼쪽 값을 담으세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 번의 대입 뒤 각 칸이 원래 어느 값을 가지고 있는지 적으세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "메모에 왼쪽의 4를 저장합니다. 그다음 왼쪽에 오른쪽의 9를 적습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "마지막으로 오른쪽에 메모의 4를 적어 결과는 왼쪽 9, 오른쪽 4입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "메모 없이 왼쪽=오른쪽, 오른쪽=왼쪽만 하면 첫 대입 뒤 둘 다 9입니다. 이미 잃은 원래 4를 두 번째 대입으로 복구할 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 원래 값을 먼저 보존\n A[\"왼쪽 4 / 오른쪽 9\"] --> B[\"메모 4\"]\n B --> C[\"왼쪽 9 / 오른쪽 9 / 메모 4\"]\n C --> D[\"왼쪽 9 / 오른쪽 4\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 덮어쓴 뒤에는 늦음\n A[\"4와 9\"] --> B[\"왼쪽에 9 대입\"] --> C[\"9와 9\"]\n C --> D[\"원래 4의 정보가 사라짐\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 시작 값을 a,b라고 하면 첫 대입 뒤 메모=a, 둘째 뒤 왼쪽=b이며 메모=a가 보존됩니다. 셋째 대입은 오른쪽=a를 만들어 정확히 교환합니다. 이 과정은 값의 대소나 동일 여부에 의존하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 고정 크기 값에 대해 세 번의 대입과 한 값의 추가 저장소를 사용하므로 O(1)시간·O(1)공간입니다. 임의 크기 객체의 복사 비용까지 상수라고 일반화하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "두 값이 같음"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "결과가 같아 보여도 알고리즘은 유효"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "같은 상자를 두 이름으로 부름"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "자기 교환은 값 유지가 목표"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "합을 이용한 교환"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "정수 넘침 문제를 새로 만들 수 있음"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검토 방식 — 제시된 추론과 경계·반례를 사용합니다. 본문에 명시하지 않은 코드 실행·실측을 수행했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 메모 칸을 마지막에 읽기 전에 지우면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원래 왼쪽 값이 없어져 마지막 대입의 근거를 잃습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 실제 C++에서는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일반적인 교환은 std::swap 등 타입에 맞는 도구를 쓰는 것이 명확합니다. 요령을 쓰기 전에 별칭·예외·비용 계약을 봅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6판의 Number Swapper 번호·주제 메타데이터를 바탕으로 새로 만든 문제입니다. 도서 본문·예시·공식 해설을 복제하거나 책 본문을 읽었다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 16.1.2",
+              "href": "/thinking-lab/ep-16-01-02-number-swapper/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정수 규칙 참고: WG21 공개 작업 초안 N3337 (2012-01-16), [conv.integral], [expr.shift], [expr.mul]",
+              "href": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3337.pdf"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

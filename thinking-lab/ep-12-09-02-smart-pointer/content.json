@@ -1,0 +1,421 @@
+{
+  "title": "12.9.2 심화 — 서로 아는 두 객체의 소유 방향",
+  "subtitle": "객체의 정체성·수명·저장 범위를 구별하는 사고력 문제",
+  "memoKey": "thinking-ctci-12.9-2-draft",
+  "starter": "// 관찰한 상태, 소유 책임, 경계 조건을 적어 보세요.\n// 코드와 그림이 같은 계약을 지키는지 확인하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "12.9.2 심화 — 서로 아는 두 객체의 소유 방향"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "부모 객체는 자식 객체를 소유해야 하고, 자식은 부모를 가끔 찾아보기만 하면 됩니다. 외부에서는 부모와 자식을 각각 shared_ptr 하나로 잡고 있습니다. 부모→자식을 강한 소유로 두고 자식→부모를 약한 관찰로 두세요. 외부 부모를 먼저 비우고 외부 자식을 나중에 비울 때의 수명을 설명하고 안전한 부모 조회 코드를 작성하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "부모의 child는 shared_ptr<Child>, 자식의 parent는 weak_ptr<Parent>입니다. 외부 parent와 child 외의 지속적인 소유자는 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "부모를 조회하는 동안만 lock의 반환 shared_ptr를 지역 변수로 유지합니다. 시험은 단일 스레드이며, 공유 포인터의 제어 기능이 객체 필드의 경쟁 상태까지 해결한다고 주장하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "관계"
+                  }
+                ],
+                [
+                  {
+                    "text": "필요한 책임"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "부모→자식"
+                  }
+                ],
+                [
+                  {
+                    "text": "자식을 살려 두는 소유"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "자식→부모"
+                  }
+                ],
+                [
+                  {
+                    "text": "살아 있다면 찾아보는 관찰"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "외부 child"
+                  }
+                ],
+                [
+                  {
+                    "text": "부모보다 오래 자식을 보관할 수 있음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 바뀌는 상태와 바뀌지 않아야 할 규칙을 적어 보세요. 답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 방향 모두 강한 소유이면 외부 손잡이를 버려도 서로를 살려 두지 않을까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "부모를 관찰하는 역방향만 약하게 두면 어떤 순환이 끊어지나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "lock의 결과를 지역 shared_ptr로 잡아 두고 성공한 경우에만 필드를 읽으세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "외부 parent를 비우면 부모를 강하게 소유하는 다른 지속 참조가 없으므로 Parent가 파괴됩니다. 그 안의 child 소유도 해제되지만 외부 child가 남아 있으므로 Child는 아직 살아 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "자식의 parent는 약한 관찰이므로 Parent의 파괴를 막지 않습니다. 이후 lock은 실패하고 빈 shared_ptr를 돌려줍니다. 마지막 외부 child를 비우면 Child도 한 번 파괴됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 방향을 모두 shared_ptr로 만들었다면 외부 참조가 없어도 부모와 자식이 서로 강한 소유를 남겨 자동 회수가 막힐 수 있습니다. 문제의 의미상 역방향은 소유가 아니므로 weak_ptr가 맞습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "전체 C++11 풀이와 실행 검증"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <cassert>\n#include <iostream>\n#include <memory>\n\nstruct Parent;\nstruct Child {\n    static int destroyed;\n    std::weak_ptr<Parent> parent;  // 관찰만 하며 부모를 살려 두지 않습니다.\n    ~Child() { ++destroyed; }\n};\nstruct Parent {\n    static int destroyed;\n    int id = 7;\n    std::shared_ptr<Child> child;\n    ~Parent() { ++destroyed; }\n};\nint Parent::destroyed = 0;\nint Child::destroyed = 0;\nint main() {\n    for (int trial = 0; trial < 1000; ++trial) {\n        auto parent = std::make_shared<Parent>();\n        auto child = std::make_shared<Child>();\n        parent->child = child;\n        child->parent = parent;\n        {\n            // expired 확인과 raw pointer 접근을 나누지 않고 lock의 결과를 소유합니다.\n            auto held = child->parent.lock();\n            assert(held && held->id == 7);\n        }\n        parent.reset();\n        assert(Parent::destroyed == trial + 1);\n        assert(child->parent.expired());\n        assert(!child->parent.lock());\n        assert(Child::destroyed == trial);  // 외부 child가 아직 소유합니다.\n        child.reset();\n        assert(Child::destroyed == trial + 1);\n    }\n    std::cout << \"1000 weak-backlink lifetimes passed\\n\";\n}\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"외부 parent\"] --> P[\"Parent\"]\n P --> C[\"Child\"]\n B[\"외부 child\"] --> C\n C -. \"약한 관찰만\" .-> P"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"외부 parent 해제\"] --> B[\"Parent 파괴, child 소유 하나 감소\"]\n B --> C[\"외부 child 덕분에 Child는 생존\"]\n C --> D[\"parent.lock은 실패\"]\n D --> E[\"외부 child 해제 후 Child 파괴\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "강한 소유 그래프의 역방향을 제거하므로 부모를 계속 살려 둘 순환이 없습니다. 부모가 사라질 때 자식으로 향한 강한 소유 하나가 해제되지만 외부 자식 소유는 남습니다. lock으로 얻은 지역 소유는 성공한 접근 범위에서만 수명을 연장하므로 사라진 부모에 접근하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 고정 구조는 객체 두 개와 약한 역참조 하나입니다. 코드의 반복 횟수는 검증용이며, 부모 조회의 성공·실패를 검사하는 것이 객체 전체의 스레드 안전성을 증명하는 것은 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "부모가 이미 없으면 lock 실패를 정상적인 경우로 처리합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "lock으로 얻은 지역 소유를 계속 저장하면 그만큼 부모 수명이 늘어납니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "소유 의미가 다른 관계를 무조건 weak_ptr로 바꾸면 필요한 객체가 너무 일찍 사라질 수 있습니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: 순환이 보인다는 이유만으로 아무 방향이나 약하게 바꿔도 될까요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "아닙니다. 누가 누구의 수명을 책임지는지 요구를 먼저 정해야 합니다. 여기서는 부모가 자식을 소유하고 자식은 부모를 관찰한다는 의미가 분명하므로 역방향을 약하게 정했습니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "전체 C++11 프로그램을 엄격 경고·UBSan으로 실행했습니다. 1,000회 각각 부모 소멸 한 번, 자식의 일시 생존, lock 실패, 마지막 자식 소멸 한 번을 단언으로 확인했습니다. 일부러 회수되지 않는 강한 순환을 실제 누수로 남기지는 않았습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "위 전체 C++11 프로그램은 실제 컴파일·실행했습니다. 브라우저 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 기본 문제",
+              "href": "/thinking-lab/ep-12-09-smart-pointer/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 주제 12.10.1 기본 문제",
+              "href": "/thinking-lab/ep-12-10-malloc/"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "C++11 시기 표준 초안 N3337 규칙 확인",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "weak_ptr 규칙",
+                  "href": "https://timsong-cpp.github.io/cppwp/n3337/util.smartptr.weak"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "shared_ptr 파괴 규칙",
+                  "href": "https://timsong-cpp.github.io/cppwp/n3337/util.smartptr.shared.dest"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

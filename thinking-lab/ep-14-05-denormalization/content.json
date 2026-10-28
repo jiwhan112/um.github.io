@@ -1,0 +1,235 @@
+{
+  "title": "14.5.1 기본 — 이름을 한 곳에서 바꾸는 도서 목록",
+  "subtitle": "중복 저장과 수정 이상",
+  "memoKey": "thinking-ctci-14.5-draft",
+  "starter": "// 표의 전후 상태와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "작가 7의 이름은 “하늘”이고 책 B1과 B2의 작가입니다. 펼친 표는 (B1, 7, 하늘), (B2, 7, 하늘)처럼 각 책에 작가 이름을 복사합니다. 목표 규칙은 같은 작가 번호의 현재 이름이 항상 하나라는 것입니다. 작가가 이름을 “바다”로 바꾸었습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한 행만 바꾸면 어떤 모순이 생기는지 적고, 작가 표와 책 표로 나누어 한 번의 이름 변경으로 두 책에 같은 새 이름이 보이게 설계하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 검증 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "명시한 유한 기록을 대상으로 관계와 결과를 손으로 추론할 수 있습니다. 예제 SQL의 방언은 SQLite입니다. 동시 쓰기·실제 서비스 운영·금융 거래를 요구하지 않습니다. 본문에 별도로 명시한 키·NULL·오류 처리 조건을 따릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "번호 7은 같은 사람이라는 뜻입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "작가 번호가 현재 이름을 하나로 결정합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "책에는 작가 번호만 두고 표시할 때 이름을 연결할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "B1만 바꾸면 작가 7이 어떤 책에서는 바다, 다른 책에서는 하늘로 표시됩니다. 현재 이름이 하나라는 규칙을 어깁니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "작가 표를 (7, 하늘), 책 표를 (B1, 7), (B2, 7)로 둡니다. 작가 표의 7번 이름만 바다로 갱신하고 책과 작가를 번호로 연결하면 두 책 모두 바다로 보입니다. 작가 번호는 기본 키, 책의 작가 번호는 필수 외래 키로 둡니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 복사본 일부 갱신의 모순\n    accDescr: 복사본 일부 갱신의 모순의 구체적인 상태와 이동을 표시합니다.\n    N0[\"작가7 이름을 바다로 변경\"]\n    N1[\"B1 복사 이름 바다\"]\n    N2[\"B2 복사 이름 하늘\"]\n    N3[\"같은 작가의 현재 이름 불일치\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 기준 이름 한 곳\n    accDescr: 기준 이름 한 곳의 구체적인 상태와 이동을 표시합니다.\n    N0[\"책 B1 → 작가7\"]\n    N1[\"책 B2 → 작가7\"]\n    N2[\"작가7 현재 이름 바다\"]\n    N0 --> N2\n    N1 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 이름의 기준 값이 작가 번호당 한 행뿐이므로 이름을 바꾸는 위치도 하나입니다. 책은 그 행을 참조하므로 서로 다른 현재 이름을 복사해 보관하는 모순을 피합니다. 출판 당시 이름을 보존하려는 요구라면 별도의 역사 속성으로 구별해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 기준 이름 갱신은 한 행입니다. 읽을 때 연결 비용이 생기며 정규화가 모든 조회를 더 빠르게 만든다고 단정하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "책이 없어도 작가 정보를 보존할 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "작가 번호가 다른 동명이인은 합치지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "작가 없는 책을 허용하려면 NULL 정책을 별도 정의해야 하며 이번 표는 필수 작가입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 이름을 책에 남기는 것이 항상 잘못인가요? “출판 당시 표기”가 독립적인 요구라면 유효한 역사 자료일 수 있으며 현재 이름 복사본과 구분해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 14.5 Denormalization의 관계 데이터 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 심화",
+              "kind": "link",
+              "href": "/thinking-lab/ep-14-05-02-denormalization/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "SQLite 트랜잭션 문서",
+              "kind": "link",
+              "href": "https://www.sqlite.org/lang_transaction.html"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

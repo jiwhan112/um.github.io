@@ -1,0 +1,394 @@
+{
+  "title": "16.5.2 심화 — 끝의 0이 정확히 다섯 개일 수 있을까",
+  "subtitle": "목표 z가 주어졌을 때 n!의 끝의 0이 정확히 z개가 되는 가장 작은 n을 찾거나 없음을 알려 주세요.",
+  "memoKey": "thinking-ctci-16.5-2-draft",
+  "starter": "// 문제에서 발견한 규칙과 검산 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목표 z가 주어졌을 때 n!의 끝의 0이 정확히 z개가 되는 가장 작은 n을 찾거나 없음을 알려 주세요. z=5와 z=6을 비교해, 끝의 0 개수가 늘어난다고 모든 중간 개수가 반드시 존재하는 것은 아님을 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "0≤z≤10억, n≥0이며 0!=1입니다. 문제는 가장 작은 n 하나 또는 없음입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "F(n)=floor(n/5)+floor(n/25)+…로 끝의 0을 셉니다. 실제 팩토리얼은 만들지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "수 계산은 64비트 이상의 충분한 정수 범위를 사용합니다. 5^k를 계속 곱하는 대신 몫을 반복해서 5로 나누면 불필요한 거듭제곱 넘침을 피할 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "목표"
+                  }
+                ],
+                [
+                  {
+                    "text": "검토"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "z=0"
+                  }
+                ],
+                [
+                  {
+                    "text": "가장 작은 n은 0"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "z=5"
+                  }
+                ],
+                [
+                  {
+                    "text": "F(24)와 F(25)를 비교"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "z=6"
+                  }
+                ],
+                [
+                  {
+                    "text": "처음 6 이상이 되는 n을 찾기"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답과 근거를 적어 보세요. 힌트·정답·복습 해설은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "F(n)은 감소하지 않지만 한 번에 2 이상 뛰기도 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확히 z를 바로 찾기보다 F(n)≥z인 첫 n을 찾으세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 n의 F(n)이 z보다 크면 앞에도 뒤에도 정답이 있을까요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "F(24)=4이고 F(25)=5+1=6입니다. 25가 5의 인수를 두 개 제공하므로 5를 건너뜁니다. 따라서 z=5는 없고 z=6의 최소 n은 25입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일반적으로 z=0이면 바로 0입니다. z>0이면 [0,5z]에서 F(n)≥z인 첫 n을 이진 탐색합니다. 상한 5z는 floor((5z)/5)=z이므로 항상 조건을 만족합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "찾은 n에서 F(n)=z이면 반환하고, 더 크면 없음입니다. F를 셀 때 q=n에서 시작해 q를 5로 나누고 그 몫을 누적하다 0이 되면 멈춥니다. 탐색 중간점은 lo+(hi-lo)/2처럼 계산합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 25에서 한 단계 건너뜀\n A[\"24!: F=4\"] --> B[\"25가 5를 두 개 더함\"]\n B --> C[\"25!: F=6\"]\n C --> D[\"정확히 5인 값은 없음\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 최초 이상값을 찾은 뒤 확인\n A[\"F(n)≥z인 첫 n 이진 탐색\"] --> B{\"F(n)=z인가?\"}\n B -->|예| C[\"가장 작은 n 반환\"]\n B -->|아니오| D[\"건너뛴 목표: 없음\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 각 바닥 함수가 감소하지 않으므로 F도 단조 비감소입니다. F≥z인 첫 위치 이전은 모두 z보다 작고, 그 위치 이후는 그 값 이상입니다. 따라서 첫 위치에서 같으면 최소 정답이고 더 크면 어디에도 z가 없습니다. z>0에서 5z가 조건을 만족하므로 탐색 구간은 정답 경계를 포함합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — F 계산은 O(log z)나눗셈, 이진 탐색은 O(log z)회 판정이므로 O((log z)²)시간·O(1)추가 공간입니다. z=0은 별도 상수 시간입니다. 주어진 범위에서 5z≤50억이므로 32비트 signed 정수로 상한을 계산하면 안 됩니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "z=1"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "최초 n=5"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "z=5"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "24와 25 사이의 점프 때문에 없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "F(n)≥z면 무조건 정답"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "정확히 같다는 최종 검사를 놓침"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "상한 5z를 32비트에서 계산"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "최대 입력에서 넘침 가능"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검토 방식 — 제시된 추론과 경계·반례를 사용합니다. 본문에 명시하지 않은 코드 실행·실측을 수행했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 최소 n만 찾으면 같은 z를 갖는 다른 n도 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "있을 수 있습니다. 다음 증가가 일어나기 전까지 같은 F값이 유지됩니다. 이번 계약은 첫 n만 요구합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 25의 배수를 한 번 더 세는 이유는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기본 5의 배수 계수에서 이미 한 번 센 5에 더해 두 번째 인수를 세는 것입니다. 125는 세 번째까지 기여합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6판의 Factorial Zeros 번호·주제 메타데이터를 바탕으로 새로 만든 문제입니다. 도서 본문·예시·공식 해설을 복제하거나 책 본문을 읽었다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기본 복습으로: 16.5.1",
+              "href": "/thinking-lab/ep-16-05-factorial-zeros/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제: 16.6",
+              "href": "/thinking-lab/ep-16-06-smallest-difference/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

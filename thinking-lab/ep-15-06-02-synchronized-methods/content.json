@@ -1,0 +1,330 @@
+{
+  "title": "15.6.2 심화 — 기다릴 때 놓는 자물쇠는 하나뿐",
+  "subtitle": "차례·잠금·대기 조건을 그림으로 검증하는 동시성 사고력 문제",
+  "memoKey": "thinking-ctci-15.6-2-draft",
+  "starter": "// 원자 단계, 잠금 소유자, 대기 조건을 분리해 적어 보세요.\n// 안전성과 진행 보장에 필요한 가정을 구분하는 종이 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "15.6.2 심화 — 기다릴 때 놓는 자물쇠는 하나뿐"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Java 8에서 T1이 모니터 A와 B를 모두 잡고 A.wait()를 호출합니다. T2는 B를 얻은 뒤 A를 얻어 조건을 바꾸고 A.notifyAll()을 하려 합니다. T1은 조건이 바뀔 때까지 기다립니다. 이 순서가 막힐 수 있는 이유와 B를 보유하지 않고 A만으로 조건 대기하도록 고친 경우를 비교하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원자성·실패·진행 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 모니터는 서로 다른 객체입니다. wait는 A 모니터 소유 상태에서 호출하며 while로 조건을 확인합니다. 외부 알림·인터럽트·시간 제한은 없고 조건은 T2만 바꿉니다. 허위 깨어남이 있어도 조건은 거짓이면 다시 기다립니다. 수정안은 공유 조건의 모든 접근을 A 하나로 보호하고 T2도 B가 필요 없도록 설계합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 상태와 입력"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "T1: A,B 소유 후 A.wait"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "T2: B → A → 조건 변경·알림"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "수정안: 조건에 A만 사용"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "wait가 놓는 것은 호출 대상 객체의 모니터입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "T1이 B를 계속 소유하면 T2가 어디에서 멈출까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "sleep은 wait처럼 모니터를 놓는 연산인가요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "T1의 A.wait는 A를 놓지만 B는 유지합니다. T2는 B에서 막혀 조건을 바꾸지 못하고 T1은 조건을 기다리므로 진행하지 못할 수 있습니다. 수정안에서 T1은 A를 놓고 대기하므로 T2가 A를 얻어 조건을 바꾸고 알린 뒤, T1이 A를 다시 얻어 조건을 확인할 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 주어진 사례의 진행을 차례로 추적한다\n    N0[\"T1: A,B 보유\"]\n    N1[\"A.wait: A 해제 / B 유지\"]\n    N2[\"T2: B에서 막힘\"]\n    N3[\"조건 변경 불가: T1도 대기\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 바꿔 비교하기\n    accDescr: 공통 조건에서 서로 다른 경우를 비교한다\n    N0[\"조건 대기 설계\"]\n    N1[\"다른 B 보유: 생산자 진입을 막을 수 있음\"]\n    N2[\"A만 보유 후 wait: 생산자가 A로 조건 변경\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원래 구조에서는 T1의 재개 조건이 T2의 작업인데 T2는 T1이 보유한 B 때문에 도달하지 못합니다. 수정안은 이 추가 보유 자원을 없애 의존 고리를 끊습니다. 알림 자체가 잠금 양도를 뜻하지 않으며 T1은 A를 재획득한 뒤에만 진행합니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 진행 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "잠금 수가 작아도 소유 관계 때문에 무한 대기가 생길 수 있습니다. 시간 복잡도 O(1) 같은 표기로 교착의 지연을 숨기지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "sleep은 보유 모니터를 놓지 않으므로 대체 해결책이 아닙니다. wait는 다른 잠금까지 모두 놓아 주지 않습니다. 수정안의 진행은 T2의 정상 실행과 스케줄링 기회를 전제로 하며 Java 모니터가 공정한 순서를 약속한다고 주장하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: T2가 알림 뒤 A를 계속 잡고 있다면 T1이 즉시 조건 코드를 실행할까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. T1은 A를 다시 획득해야 하므로 T2가 A를 놓기 전에는 진행할 수 없습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A.wait 뒤 B 소유가 남는 명시적 소유표 모형을 확인했습니다. Java의 모니터 대상, wait의 해제 범위, sleep의 잠금 유지 규칙은 공식 JLS/API를 확인했으며 JVM을 실행한 검사는 아닙니다. Python으로 실행한 유한 모형 검산은 명시된 원자성 가정에 한정됩니다. 실제 스레드 실행·Java 컴파일·운영체제 시간 측정은 수행하지 않았습니다. 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습과 규칙 출처",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명시된 원자 단계와 실패·공정성 가정 아래에서 별도로 만든 종이 사고력 문제입니다. 원서 주제명은 진도 연결에만 사용하며 원서 지문과 해설을 옮기지 않았습니다. 유한 모형 검산을 실제 스레드 구현의 모든 실행에 대한 증명으로 과장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html#jls-17.1",
+              "text": "JLS 17.1 모니터 · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html",
+              "text": "Oracle synchronized 메서드 · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait--",
+              "text": "Java 8 Object.wait · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#sleep-long-",
+              "text": "Java 8 Thread.sleep · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-06-synchronized-methods/",
+              "text": "같은 주제의 기본 문제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-07-fizzbuzz/",
+              "text": "다음 주제 15.7.1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

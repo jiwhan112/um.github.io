@@ -1,0 +1,235 @@
+{
+  "title": "14.1.1 기본 — 같은 이름 말고 사람 번호로 세기",
+  "subtitle": "여러 집에 연결된 사람을 찾는 묶음",
+  "memoKey": "thinking-ctci-14.1-draft",
+  "starter": "// 표의 전후 상태와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공동 주거 기록에는 사람 표와 현재 입주 표가 있습니다. 사람은 (1, 민), (2, 수), (3, 민)이며 이름이 같아도 번호가 다르면 다른 사람입니다. 입주는 (사람번호, 집번호)로 (1, A), (1, B), (2, B), (3, C)입니다. 같은 사람·집 쌍은 중복되지 않습니다. 집 하나에 여러 사람이 살 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "현재 서로 다른 집 두 곳 이상에 연결된 사람의 번호와 이름을 구하세요. 이름으로만 묶으면 생기는 오류도 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 검증 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "명시한 유한 기록을 대상으로 관계와 결과를 손으로 추론할 수 있습니다. 예제 SQL의 방언은 SQLite입니다. 동시 쓰기·실제 서비스 운영·금융 거래를 요구하지 않습니다. 본문에 별도로 명시한 키·NULL·오류 처리 조건을 따릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "사람 1과 사람 3을 이름이 같다는 이유로 합치지 마세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "사람 번호별 입주 행 개수를 세세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "집이 둘 이상이라는 조건은 묶음을 만든 다음 적용합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정답은 사람 1, 민입니다. 사람 1은 A와 B에, 사람 2는 B에, 사람 3은 C에 연결됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "사람 번호별로 세고 개수가 2 이상인 번호를 사람 표와 연결합니다. 이름으로만 묶으면 서로 다른 두 민의 집 A, B, C가 합쳐져 사람을 구별할 수 없습니다. 같은 집 B에 사는 사람 1과 2는 각각 자기 집 한 곳으로 셉니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사람별 입주 분류\n    accDescr: 사람별 입주 분류의 구체적인 상태와 이동을 표시합니다.\n    N0[\"입주 1-A 1-B 2-B 3-C\"]\n    N1[\"사람 1: A B / 2곳\"]\n    N2[\"사람 2: B / 1곳\"]\n    N3[\"사람 3: C / 1곳\"]\n    N0 --> N1\n    N0 --> N2\n    N0 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 이름으로 합치면 잃는 구분\n    accDescr: 이름으로 합치면 잃는 구분의 구체적인 상태와 이동을 표시합니다.\n    N0[\"사람 1 민: A B\"]\n    N1[\"사람 3 민: C\"]\n    N2[\"이름 민 하나로 합치면 서로 다른 사람이 섞임\"]\n    N0 --> N2\n    N1 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 입주 쌍이 유일하므로 사람 번호별 행 수는 그 사람의 서로 다른 집 수와 같습니다. 선택된 묶음만 2 이상이므로 빠짐과 잘못된 포함이 없습니다. 이름은 표시 속성이지 식별자가 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 입주 n행을 분류해 세는 논리적 작업입니다. 실제 SQL 실행 시간은 색인과 실행 계획에 따라 달라집니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "입주가 없는 사람은 0곳이므로 결과에 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 집에 두 사람이 살아도 두 사람의 식별자는 유지합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확히 2곳은 포함하고 1곳은 제외합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 사람 번호까지 같은 중복 입주 행을 허용하면 행 수 세기가 여전히 맞나요? 아니며 중복을 막거나 집 번호를 중복 제거하여 세어야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 14.1 Multiple Apartments의 관계 데이터 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 심화",
+              "kind": "link",
+              "href": "/thinking-lab/ep-14-01-02-multiple-apartments/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "SQLite 집계 함수 문서",
+              "kind": "link",
+              "href": "https://www.sqlite.org/lang_aggfunc.html"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

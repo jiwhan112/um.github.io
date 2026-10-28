@@ -1,0 +1,245 @@
+{
+  "title": "14.5.2 심화 — 빠르게 읽는 개수도 틀릴 수 있다",
+  "subtitle": "중복 요약 값의 계약과 복구",
+  "memoKey": "thinking-ctci-14.5-2-draft",
+  "starter": "// 표의 전후 상태와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "도서 표의 각 행은 작가 번호를 갖습니다. 작가 표에는 빠른 표시를 위한 book_count 복사 요약도 있습니다. 처음 작가 7의 책은 B1, B2이고 요약은 2입니다. 새 책 B3 삽입과 요약 +1을 따로 커밋하는 후보가 있습니다. 요구는 커밋된 상태에서 요약이 실제 책 수와 항상 같아야 한다는 것입니다. 단일 연결이며 다른 쓰기는 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 커밋 사이 오류의 상태를 적고, 원자적 갱신과 재계산 복구 규칙을 제시하세요. 재계산할 때 왜 기존 요약에 실제 개수를 더하면 안 되나요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 검증 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "명시한 유한 기록을 대상으로 관계와 결과를 손으로 추론할 수 있습니다. 예제 SQL의 방언은 SQLite입니다. 동시 쓰기·실제 서비스 운영·금융 거래를 요구하지 않습니다. 본문에 별도로 명시한 키·NULL·오류 처리 조건을 따릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "책 삽입만 확정되면 기준 자료와 요약은 각각 얼마인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "둘을 하나의 트랜잭션으로 묶어 함께 확정하거나 함께 되돌리세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복구는 현재 기준 자료로 값을 덮어 정하는 일입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "B3 삽입만 커밋되면 실제 3권, 요약 2로 요구를 어깁니다. 책 삽입과 요약 증가를 한 트랜잭션으로 묶고 오류 시 명시적으로 전체 롤백해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복구는 작가별 실제 COUNT를 계산해 요약을 그 값으로 설정합니다. 책이 없는 작가는 0입니다. 2에 실제 3을 더해 5로 만드는 방식은 재계산이 아니며 반복할수록 부풀어 오릅니다. 책 표를 유일한 기준으로 정해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 분리 커밋 사이의 오류\n    accDescr: 분리 커밋 사이의 오류의 구체적인 상태와 이동을 표시합니다.\n    N0[\"기준 책 2 / 요약2\"]\n    N1[\"책 B3만 커밋\"]\n    N2[\"오류 발생: 기준3 / 요약2\"]\n    N0 --> N1\n    N1 --> N2\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 복구의 올바른 대안\n    accDescr: 복구의 올바른 대안의 구체적인 상태와 이동을 표시합니다.\n    N0[\"기준 책 수3 / 낡은 요약2\"]\n    N1[\"설정 방식: 요약을3으로 → 반복해도3\"]\n    N2[\"더하기 방식: 2 더하기3 →5 → 다시8\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 초기 동등성이 성립하고 각 새 책 삽입이 책 수와 요약을 함께 1 늘리면 동등성이 보존됩니다. 실패는 함께 롤백합니다. 재계산 함수는 기준 표가 같으면 매번 같은 값을 설정하므로 반복 복구에도 안정적입니다. 삭제·작가 변경 기능을 추가하면 그 전이도 같은 불변식을 지켜야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 요약 읽기는 작가 한 행으로 가능하지만 갱신·복구 비용이 추가됩니다. 전체 재계산은 적어도 기준 책들을 집계해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "책 0권인 작가의 낡은 요약 4도 0으로 고쳐야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "요약 검증을 위해 기준 자료와 요약을 서로 독립적으로 읽어 비교합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 책 ID 재삽입이 실패했는데 요약만 증가시키면 규칙을 깨뜨립니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 읽기가 빨라진다면 복사 요약은 무조건 좋은가요? 갱신 경로와 복구 책임이 늘어나므로 읽기 이득과 일관성 비용을 함께 판단해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 14.5 Denormalization의 관계 데이터 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 기본",
+              "kind": "link",
+              "href": "/thinking-lab/ep-14-05-denormalization/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제 14.6",
+              "kind": "link",
+              "href": "/thinking-lab/ep-14-06-entity-relationship-diagram/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "SQLite 트랜잭션 문서",
+              "kind": "link",
+              "href": "https://www.sqlite.org/lang_transaction.html"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

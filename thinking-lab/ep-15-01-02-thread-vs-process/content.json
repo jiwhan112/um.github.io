@@ -1,0 +1,300 @@
+{
+  "title": "15.1.2 심화 — 분리된 방에서 보내는 증가 요청",
+  "subtitle": "차례·잠금·대기 조건을 그림으로 검증하는 동시성 사고력 문제",
+  "memoKey": "thinking-ctci-15.1-2-draft",
+  "starter": "// 원자 단계, 잠금 소유자, 대기 조건을 분리해 적어 보세요.\n// 안전성과 진행 보장에 필요한 가정을 구분하는 종이 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "15.1.2 심화 — 분리된 방에서 보내는 증가 요청"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "두 별도 프로세스 A,B가 중앙 담당자에게 각각 요청 ID a,b로 1 증가를 부탁합니다. 배달은 a,b,a 순서이고 마지막 a는 재전송입니다. 중앙 값은 0입니다. 같은 요청을 한 번만 반영하면서 두 증가를 모두 보존하는 규칙을 만들고 최종값을 구하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원자성·실패·진행 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "중앙 담당자는 한 번에 한 요청을 처리하며 (값,처리한 ID 집합)을 하나의 원자적 저장으로 갱신합니다. 같은 ID는 같은 내용만 재전송합니다. 요청·응답은 늦거나 중복될 수 있고 영구 유실 없이 재시도하면 도착한다고 가정합니다. 프로세스 장애 후에도 원자적 저장 상태는 보존됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 상태와 입력"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "초기 값 0, ID 집합 {}"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "도착 a,b,a"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "각 새 ID는 +1"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "메시지가 세 번 도착했다는 사실과 새 요청이 세 개라는 사실은 다릅니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처리 ID와 값을 따로 저장하면 어느 지점의 실패가 위험할까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "중복 ID에는 값을 바꾸지 않고 이미 처리한 결과를 알려 주세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 a를 반영해 1, b를 반영해 2, 재전송 a는 무시해 2입니다. 새 ID일 때만 값과 처리 집합을 함께 갱신합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 주어진 사례의 진행을 차례로 추적한다\n    N0[\"a: 값1 / 집합{a}\"]\n    N1[\"b: 값2 / 집합{a,b}\"]\n    N2[\"a 재전송: 변화 없음\"]\n    N3[\"최종 값2\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 바꿔 비교하기\n    accDescr: 공통 조건에서 서로 다른 경우를 비교한다\n    N0[\"증가와 ID 기록\"]\n    N1[\"함께 저장: 재전송 구별\"]\n    N2[\"값만 저장 후 중단: 중복 증가 위험\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "값이 처리한 서로 다른 ID 수와 같다는 불변조건을 유지합니다. 새 ID는 양쪽을 1씩 늘리고 중복은 둘 다 그대로 둡니다. 원자적 저장 덕분에 재시도에서도 일부만 반영한 중간 상태를 보지 않습니다. 실제로 메시지가 한 번만 전달된다는 보장이 아니라 효과를 중복하지 않는 설계입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 진행 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "서로 다른 요청 m개를 기억하면 O(m)개의 ID가 필요합니다. 중앙 처리량·보관 기간은 별도 설계 사항입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "값만 먼저 저장하고 ID 전에 중단하면 같은 요청을 다시 더할 수 있습니다. 무한 유실이나 영구 장애까지 이 계약으로 해결할 수는 없습니다. ID 저장을 지우려면 재전송 유효기간 등 별도 규칙이 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: b,a,b,a 순서여도 결과는?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "서로 다른 ID가 a,b 둘이므로 2입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 증가 작업의 합법적인 R/W 순서 6개를 열거해 최종값 집합 {1,2}를 확인했습니다. 중복 요청 ID의 네 도착 순서도 별도 모형으로 검산했습니다. Python으로 실행한 유한 모형 검산은 명시된 원자성 가정에 한정됩니다. 실제 스레드 실행·Java 컴파일·운영체제 시간 측정은 수행하지 않았습니다. 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습과 규칙 출처",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명시된 원자 단계와 실패·공정성 가정 아래에서 별도로 만든 종이 사고력 문제입니다. 원서 주제명은 진도 연결에만 사용하며 원서 지문과 해설을 옮기지 않았습니다. 유한 모형 검산을 실제 스레드 구현의 모든 실행에 대한 증명으로 과장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/tutorial/essential/concurrency/procthread.html",
+              "text": "Oracle 프로세스와 스레드 · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-01-thread-vs-process/",
+              "text": "같은 주제의 기본 문제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-02-context-switch/",
+              "text": "다음 주제 15.2.1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

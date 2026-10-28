@@ -1,0 +1,308 @@
+{
+  "title": "13.6.1 기본 — 명단에 보인다고 호출해도 될까",
+  "subtitle": "작은 사례로 구분하는 Java의 접근·타입·제어 흐름 계약",
+  "memoKey": "thinking-ctci-13.6-draft",
+  "starter": "// 제어 흐름과 객체 관계, 허용되는 연산을 적어 보세요.\n// 이 페이지는 Java 8 규칙을 종이로 추론하는 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "13.6.1 기본 — 명단에 보인다고 호출해도 될까"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "공개 클래스 Base에는 public void base()가 있고, 공개 하위 클래스 Child에는 public void show()와 private void secret()이 있습니다. Child.class의 getMethods()와 getDeclaredMethods() 결과를 조사할 때 세 이름 중 어떤 것이 각 결과에 들어갈까요? private 메서드를 찾았다는 이유만으로 외부 코드에서 호출 권한을 얻는지도 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "버전·범위·해석 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Java 8입니다. 세 메서드는 중복·오버라이드·합성 메서드와 관계없는 고유 이름입니다. 표에는 base,show,secret만 표시하고 Object의 다른 메서드는 제외합니다. 외부 호출자는 무관한 클래스이며 접근 검사 우회나 setAccessible을 사용하지 않습니다. 배열 결과 순서는 보장하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "살펴볼 입력 또는 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Base에 public base"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Child에 public show"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Child에 private secret"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "상속된 공개 목록과 이 클래스에 직접 선언된 목록을 구분하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "직접 선언된 목록은 공개만을 뜻하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "발견과 실행 허용은 같은 검사인가요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "getMethods에는 base와 show가 들어갑니다. getDeclaredMethods에는 show와 secret이 들어갑니다. secret을 발견해도 외부 호출자의 private 접근 제한은 자동으로 사라지지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 목록은 공개 메서드를 상속 관계까지 포함해 찾습니다. 둘째 목록은 Child가 직접 선언한 범위만 보되 접근 수준은 public으로 제한하지 않습니다. 두 목록은 어느 하나가 항상 다른 하나를 포함하는 관계가 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 대안을 공통 조건에서 나누어 비교한다\n    N0[\"Child의 메서드 분류\"]\n    N1[\"base: 상속 + 공개\"]\n    N2[\"show: 직접 + 공개\"]\n    N3[\"secret: 직접 + 비공개\"]\n    N0 --> N1\n    N0 --> N2\n    N0 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 바꿔 비교하기\n    accDescr: 대안을 공통 조건에서 나누어 비교한다\n    N0[\"목록 조회 두 가지\"]\n    N1[\"getMethods: base, show\"]\n    N2[\"getDeclaredMethods: show, secret\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "소속과 공개 여부라는 두 축으로 세 메서드를 분류하면 결과를 재구성할 수 있습니다. base는 상속·공개, show는 직접·공개, secret은 직접·비공개입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "범위와 비용"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "후보 m개를 직접 분류하면 O(m)개 메타데이터 검사가 필요합니다. 이름·매개변수 키로 허용 목록을 만들 수 있지만 실제 반사 호출 비용이나 성능 개선 효과는 여기서 측정하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "메서드 배열의 첫 항목을 “실행할 작업”으로 삼으면 순서 미보장 때문에 잘못됩니다. 이름뿐 아니라 매개변수 타입까지 지정해야 오버로드를 구분할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: Child에 public void show(int n)도 있으면 이름 show만으로 하나를 고를 수 있을까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "없습니다. show()와 show(int)의 매개변수 목록까지 구분해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "상속·직접 선언 및 공개·비공개의 세 메타데이터 예를 집합으로 분류해 검산했습니다. 실제 Java 반사 호출은 실행하지 않았고 예외 포장과 조회 규칙은 공식 API 문서로 확인했습니다. Java 컴파일러·JVM·Random 구현은 실행하지 않았습니다. Python 유한 모형 검산과 공식 규칙 확인을 구분하며 브라우저·실제 공개 검증은 발행 단계에서 별도로 수행합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습과 규칙 출처",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서의 주제명은 진도 연결에만 사용했습니다. 사례·질문·그림은 별도로 구성했으며 원서 지문이나 공식 풀이를 옮기지 않았습니다. Java 8 규칙을 대상으로 하므로 C++과 동일한 의미라고 가정하지 마세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#getMethods--",
+              "text": "Java 8 Class 메서드 조회 · 공식 규칙 확인"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html#invoke-java.lang.Object-java.lang.Object...-",
+              "text": "Java 8 Method.invoke · 공식 규칙 확인"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-13-06-02-object-reflection/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

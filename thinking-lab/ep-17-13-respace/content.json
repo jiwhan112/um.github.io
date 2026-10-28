@@ -1,0 +1,385 @@
+{
+  "title": "17.13.1 기본 — 띄어쓰기를 복구할 때 모르는 글자 최소화",
+  "subtitle": "붙여 쓴 문자열 abcd와 사전 {ab, abc, cd}가 있습니다.",
+  "memoKey": "thinking-ctci-17.13-draft",
+  "starter": "// 문제에서 발견한 규칙과 검산 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "붙여 쓴 문자열 abcd와 사전 {ab, abc, cd}가 있습니다. 문자열을 사전 단어와 모르는 글자 조각으로 나누되, 모르는 글자의 수를 최소로 하세요. 가장 긴 사전 단어를 앞에서 무조건 고르는 방법이 맞는지도 확인하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "문자는 ASCII 소문자이고 한 글자는 한 바이트입니다. 부분 조각을 버리거나 순서를 바꾸지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사전 단어로 인정한 조각은 비용 0, 사전에 없는 조각은 그 글자 수만큼 비용이 듭니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "단어 수나 공백 수를 최소화하는 문제가 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "입력 자료"
+                  }
+                ],
+                [
+                  {
+                    "text": "값"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "붙여 쓴 문자열"
+                  }
+                ],
+                [
+                  {
+                    "text": "abcd"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "사전"
+                  }
+                ],
+                [
+                  {
+                    "text": "ab, abc, cd"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "최소화할 것"
+                  }
+                ],
+                [
+                  {
+                    "text": "모르는 글자 수"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답과 근거를 적어 보세요. 힌트·정답·복습 해설은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "앞의 abc가 길어도 뒤의 d를 사전으로 읽을 수 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "짧은 ab 뒤에 남는 cd를 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "앞에서의 좋은 선택이 뒤까지 포함한 최선과 같지는 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "abc를 먼저 고르면 d 한 글자가 사전에 없어 비용 1입니다. ab와 cd로 나누면 둘 다 사전 단어라 비용 0입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용은 음수가 될 수 없으므로 실제로 0을 만든 ab | cd가 최적입니다. 가장 긴 단어를 먼저 고르는 탐욕 규칙은 이 예에서 실패합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 위치에서 어떤 단어를 고를지는 그 단어 뒤에 남은 문자열의 최적 비용과 함께 비교해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 긴 단어가 불리한 예\n A[\"abcd\"] --> B[\"abc 선택\"] --> C[\"남은 d는 모르는 글자 1개\"]\n A --> D[\"ab 선택\"] --> E[\"남은 cd는 사전 단어\"]\n E --> F[\"총 모르는 글자 0개\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 목적 함수의 차이\n A[\"사전 단어 조각\"] --> B[\"비용 0\"]\n C[\"모르는 조각 길이 L\"] --> D[\"비용 L\"]\n B --> E[\"전체 비용을 최소화\"]\n D --> E"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 두 사전 단어 ab와 cd를 이어 붙이면 입력을 정확히 보존하고 비용이 0입니다. 모든 분할의 비용은 비음수 글자 수 합이므로 0보다 작은 답은 없습니다. 따라서 이 분할은 전역 최적이며, abc 우선이라는 국소 규칙은 더 큰 비용을 만들어 반례가 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 작은 문자열은 가능한 분할을 직접 비교할 수 있습니다. 길이가 n이면 경계 후보가 n-1개라 모든 분할은 지수적으로 늘 수 있으므로 심화에서는 접미사 최적 비용을 재사용합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 문자열"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "비용 0, 조각 없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "사전이 비어 있음"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "모든 글자가 미등록이라 비용 n"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "긴 단어 우선"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "남은 부분 때문에 최적을 놓칠 수 있음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "UTF-8 한국어에 같은 바이트 규칙 적용"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "사람이 세는 글자 수와 달라질 수 있음"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검토 방식 — 제시된 추론과 경계·반례를 사용합니다. 본문에 명시하지 않은 코드 실행·실측을 수행했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 모르는 글자를 한 조각으로 묶어도 되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용이 글자 수 합이면 묶는 방식은 비용을 바꾸지 않습니다. 표시 형식은 별도로 정할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 자연스러운 문장을 고르는 문제와 같나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 사전과 모르는 글자 수만 기준이므로 의미·문법·빈도까지 최적화하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6판의 ReSpace 번호·주제 메타데이터를 바탕으로 새로 만든 문제입니다. 도서 지문·예시·공식 해설을 복제하거나 책 본문을 읽었다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 17.13.2",
+              "href": "/thinking-lab/ep-17-13-02-respace/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

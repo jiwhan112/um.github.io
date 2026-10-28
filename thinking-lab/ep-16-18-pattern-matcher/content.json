@@ -1,0 +1,393 @@
+{
+  "title": "16.18.1 기본 — 반복되는 낱말의 이름표",
+  "subtitle": "조건을 구분하고 작은 예에서 일반 규칙을 찾아가는 사고력 문제",
+  "memoKey": "thinking-ctci-16.18-draft",
+  "starter": "// 작은 예를 직접 추적하고 경계 조건을 적어 보세요.\n// 답을 보지 않고 규칙이 맞는 이유부터 설명해 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "16.18.1 기본 — 반복되는 낱말의 이름표"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "패턴 abba의 각 a는 똑같은 비어 있지 않은 문자열, 각 b도 똑같은 비어 있지 않은 문자열로 바꿉니다. a와 b의 문자열은 서로 달라야 합니다. 결과가 redbluebluered가 되도록 대응을 찾으세요. 단어 사전이나 공백은 제공되지 않으며 문자열 경계도 함께 찾아야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "문자열은 ASCII 소문자 바이트열입니다. 여기서 red, blue라는 의미를 알아야 풀리는 문제가 아니라 같은 조각 반복 여부를 묻습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "a와 b의 대응은 비어 있지 않고 서로 다릅니다. 패턴 순서대로 조각을 이어 붙여 결과 전체를 정확히 소비해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "패턴 위치"
+                  }
+                ],
+                [
+                  {
+                    "text": "0"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "3"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "기호"
+                  }
+                ],
+                [
+                  {
+                    "text": "a"
+                  }
+                ],
+                [
+                  {
+                    "text": "b"
+                  }
+                ],
+                [
+                  {
+                    "text": "b"
+                  }
+                ],
+                [
+                  {
+                    "text": "a"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "한 가능한 대응"
+                  }
+                ],
+                [
+                  {
+                    "text": "red"
+                  }
+                ],
+                [
+                  {
+                    "text": "blue"
+                  }
+                ],
+                [
+                  {
+                    "text": "blue"
+                  }
+                ],
+                [
+                  {
+                    "text": "red"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 자신의 답과 이유를 적어 보세요. 정답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "a가 두 번, b가 두 번 나타나므로 길이 식은 2|a|+2|b|=14입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 a를 red로 잡으면 그 뒤 b 후보는 어느 조각일까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이만 맞는 것과 같은 기호의 실제 내용까지 같은 것은 다릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "a=red, b=blue로 정하면 red+blue+blue+red=redbluebluered입니다. 두 값은 비어 있지 않고 서로 다르므로 유효합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이 식만 만족하는 다른 후보는 실제 내용을 확인해야 합니다. 예를 들어 |a|=1, |b|=6으로 자르면 첫 a는 r, 마지막 a는 d가 되어 같은 기호의 대응이 일치하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"a: red\"] --> B[\"b: blue\"]\n B --> C[\"b: blue\"]\n C --> D[\"a: red\"]\n D --> E[\"전체 14바이트와 정확히 일치\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"길이 후보 a=1, b=6\"] --> B[\"첫 a는 r\"]\n B --> C[\"마지막 a는 d\"]\n C --> D[\"길이 식은 맞지만 내용이 달라 거부\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 기호가 나타나는 모든 위치에 같은 대응 문자열을 넣고 결과를 이어 붙여 원문과 정확히 같다면 정의를 만족합니다. 제시한 대응은 각 조각의 내용·순서·전체 길이를 모두 확인했으므로 유효한 증거입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "주어진 한 대응의 확인은 전체 문자열 길이 L에 비례한 O(L)시간입니다. 대응을 찾는 과정은 심화에서 길이 후보를 열거합니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "ab에 xx를 대응시키려면 두 값이 모두 x가 되어 서로 다르다는 조건을 어깁니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "a 하나와 xx는 a=xx로 가능합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "반복 기호 하나가 달라지면 길이만 맞아도 실패할 수 있습니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: “서로 달라야 한다” 조건을 지우면 ab와 xx는 어떻게 될까요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "그때는 a=x,b=x가 허용되어 성공입니다. 패턴 대응의 동일성·비어 있음 허용 여부는 정답을 바꾸므로 반드시 먼저 정해야 합니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "심화의 실제 C++11 검사에서 작은 패턴·문자열 8,001쌍을 부분문자열 대응의 독립 열거 기준과 비교했습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "이 페이지의 예시는 종이 모형이며 별도 C++ 프로그램 실행을 주장하지 않습니다. 브라우저 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 심화 문제",
+              "href": "/thinking-lab/ep-16-18-02-pattern-matcher/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

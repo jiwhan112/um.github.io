@@ -1,0 +1,385 @@
+{
+  "title": "12.2.1 기본 — 쪽지의 순서를 뒤집는 두 손",
+  "subtitle": "다섯 쪽지에 S, T, O, N, E가 한 글자씩 적혀 있습니다.",
+  "memoKey": "thinking-ctci-12.2-draft",
+  "starter": "// 문제에서 발견한 규칙과 검산 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다섯 쪽지에 S, T, O, N, E가 한 글자씩 적혀 있습니다. 쪽지를 새로 만들지 않고 양끝의 쪽지를 바꾸어 역순으로 놓으세요. 어느 쪽지까지 교환해야 하고, 가운데 쪽지는 왜 그대로 두어도 될까요?"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "각 쪽지는 한 덩어리입니다. 쪽지 안에 쓰인 글자 모양 자체를 뒤집지는 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "목표는 쪽지 순서를 완전히 반대로 하는 것입니다. 알파벳 정렬이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "빈 목록, 한 쪽지, 짝수 개 목록에도 같은 규칙을 적용해야 합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "별도 목록"
+                  }
+                ],
+                [
+                  {
+                    "text": "역순"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A B"
+                  }
+                ],
+                [
+                  {
+                    "text": "B A"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A"
+                  }
+                ],
+                [
+                  {
+                    "text": "A"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A A B"
+                  }
+                ],
+                [
+                  {
+                    "text": "B A A"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답과 근거를 적어 보세요. 힌트·정답·복습 해설은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "맨 앞의 쪽지는 결과에서 어디에 있어야 하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 번 교환한 양끝은 더는 건드리지 않고 범위를 좁혀 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "남은 범위가 한 쪽지 또는 빈 범위가 되면 무엇을 해야 할까요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "양끝 S와 E를 바꾸면 E,T,O,N,S입니다. 다음으로 T와 N을 바꾸면 E,N,O,T,S입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가운데 O는 원래도 역순 결과에서도 가운데이므로 이동하지 않습니다. 두 손이 만나거나 지나치면 끝납니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "교환은 양끝에서 안쪽으로 진행합니다. 이미 바깥에 놓인 쪽지는 목적 위치에 있으므로 다시 교환하면 오히려 답을 되돌립니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 두 번의 교환 추적\n A[\"S T O N E\"] -->|S와 E 교환| B[\"E T O N S\"]\n B -->|T와 N 교환| C[\"E N O T S\"]\n C --> D[\"가운데 O는 그대로\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 교환 뒤에 확정되는 자리\n A[\"처음과 마지막\"] --> B[\"서로의 최종 자리로 이동\"]\n B --> C[\"확정된 양끝 제외\"]\n C --> D[\"남은 가운데 범위에 같은 규칙\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 길이가 n이면 원래 자리 i의 쪽지는 n-1-i에 있어야 합니다. 양끝을 바꾸면 두 쪽지가 각각 정확한 목적지에 도착합니다. 그 둘을 제외한 가운데 목록에도 같은 관계가 성립하므로 반복하면 모든 자리가 맞습니다. 한가운데는 자기 자신과 대응됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 교환은 floor(n/2)번이므로 O(n)시간, 두 위치와 교환용 한 칸만 써서 O(1)추가 공간입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 목록"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "양끝 쪽지에 접근하지 않음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "한 쪽지"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "교환 없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "모든 i에서 i와 n-1-i 교환"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "같은 쌍을 두 번 바꾸어 원상 복귀"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "UTF-8 한글을 바이트 쪽지로 취급"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "글자 내부 바이트가 뒤집혀 텍스트가 깨질 수 있음"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검토 방식 — 이 페이지는 명시한 계약과 상태·순서 관계를 추론합니다. 정의되지 않은 동작이나 실제 장치 접근을 실행해 보았다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 한글 쪽지 가, 나, 다를 뒤집으면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "쪽지 전체를 한 단위로 보면 다, 나, 가입니다. 각 한글의 UTF-8 바이트를 따로 뒤집는 것과는 다릅니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 역순을 두 번 취하면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 자리 i가 n-1-i를 거쳐 다시 i로 돌아오므로 원래 목록입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6판의 Reverse String 번호·주제 메타데이터를 바탕으로 새로 만든 학습 문제입니다. 도서 본문·예시·공식 해설을 복제하거나 책 본문을 읽었다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 12.2.2",
+              "href": "/thinking-lab/ep-12-02-02-reverse-string/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

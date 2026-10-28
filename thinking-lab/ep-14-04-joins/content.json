@@ -1,0 +1,235 @@
+{
+  "title": "14.4.1 기본 — 신청 두 건이 결과 두 줄이 되는 이유",
+  "subtitle": "연결에서 행의 개수는 어떻게 늘어날까",
+  "memoKey": "thinking-ctci-14.4-draft",
+  "starter": "// 표의 전후 상태와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "회원은 (1, 민), (2, 수)입니다. 행사 신청은 (신청ID, 회원ID, 행사)로 (10, 1, 그림), (11, 1, 노래)입니다. 신청 ID는 유일합니다. 회원 번호로 회원과 신청을 연결합니다. 회원 2는 신청이 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "INNER JOIN과 LEFT JOIN의 (회원번호, 이름, 신청ID, 행사) 결과를 각각 적으세요. 회원 이름만 선택해도 민이 두 줄 나오는 이유와, 회원 한 줄씩이 목표일 때 필요한 별도 처리를 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 검증 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "명시한 유한 기록을 대상으로 관계와 결과를 손으로 추론할 수 있습니다. 예제 SQL의 방언은 SQLite입니다. 동시 쓰기·실제 서비스 운영·금융 거래를 요구하지 않습니다. 본문에 별도로 명시한 키·NULL·오류 처리 조건을 따릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "연결 조건을 만족하는 행 쌍마다 결과 한 줄이 생깁니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "민은 서로 다른 두 신청과 연결됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "LEFT JOIN에서는 수의 신청 열을 NULL로 채운 행이 추가됩니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "INNER JOIN은 (1, 민, 10, 그림), (1, 민, 11, 노래)입니다. LEFT JOIN은 이 두 줄에 (2, 수, NULL, NULL)을 더합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이름만 골라도 두 신청의 연결 결과가 자동 합쳐지지는 않습니다. 신청한 회원만 한 줄씩 원하면 회원번호와 이름을 DISTINCT하거나 EXISTS로 신청 존재 여부를 확인합니다. 이름만 DISTINCT하면 같은 이름의 다른 회원을 잘못 합칠 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 민 한 명의 두 연결\n    accDescr: 민 한 명의 두 연결의 구체적인 상태와 이동을 표시합니다.\n    N0[\"회원 1 민\"]\n    N1[\"신청 10 그림\"]\n    N2[\"신청 11 노래\"]\n    N3[\"결과 두 줄\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 수의 연결 결과 비교\n    accDescr: 수의 연결 결과 비교의 구체적인 상태와 이동을 표시합니다.\n    N0[\"회원 2 수 / 신청 없음\"]\n    N1[\"INNER: 결과 없음\"]\n    N2[\"LEFT: 신청ID와 행사 NULL 한 줄\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: JOIN은 사람을 한 번씩 나열하는 명령이 아니라 조건에 맞는 행 쌍을 생성합니다. 왼쪽 행당 일치 상대가 두 개면 두 결과가 나오며 LEFT JOIN은 일치가 전혀 없는 왼쪽 행만 보충합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 출력 자체가 일치 행 쌍 수에 비례할 수 있습니다. 작은 입력이라도 다대다 연결은 결과가 늘어날 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "신청이 전혀 없으면 INNER 결과는 비고 LEFT에는 회원 두 명이 남습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "회원이 없는 신청을 넣으면 참조 제약 문제이며 이 표에서는 허용하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "동명이인은 회원 번호로 구분합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 조회 결과의 행 수를 회원 수라고 부르면 왜 위험한가요? 한 회원의 여러 신청 때문에 연결 행 수와 회원 수가 달라집니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 14.4 Joins의 관계 데이터 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 심화",
+              "kind": "link",
+              "href": "/thinking-lab/ep-14-04-02-joins/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "SQLite 집계 함수 문서",
+              "kind": "link",
+              "href": "https://www.sqlite.org/lang_aggfunc.html"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,385 @@
+{
+  "title": "16.2.1 기본 — 낭독 모임에서 자주 나온 낱말",
+  "subtitle": "작은 낭독 기록은 “Tea, tea! Cake and tea.”입니다.",
+  "memoKey": "thinking-ctci-16.2-draft",
+  "starter": "// 문제에서 발견한 규칙과 검산 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "작은 낭독 기록은 “Tea, tea! Cake and tea.”입니다. ASCII 영문자가 연속된 부분을 한 단어로 보고 대소문자를 무시하여 각 단어가 몇 번 나왔는지 세세요. 쉼표와 느낌표를 단어의 일부로 볼 때와 결과가 달라지는 이유도 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "단어는 A..Z 또는 a..z의 최대 연속 구간입니다. 그 밖의 모든 문자는 구분자입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "대문자는 대응하는 ASCII 소문자로 바꿉니다. 단어 사이 빈 조각은 세지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "한글·유니코드 단어 분리나 언어학적 형태소 분석은 이 문제의 규칙이 아닙니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "별도 기록"
+                  }
+                ],
+                [
+                  {
+                    "text": "결과"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Hi-hi"
+                  }
+                ],
+                [
+                  {
+                    "text": "hi 두 번"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "it's"
+                  }
+                ],
+                [
+                  {
+                    "text": "it 한 번, s 한 번"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "!!!"
+                  }
+                ],
+                [
+                  {
+                    "text": "단어 없음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답과 근거를 적어 보세요. 힌트·정답·복습 해설은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "구분자를 만날 때 지금까지 모은 글자가 있는지 확인하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 뜻으로 셀 표기를 먼저 통일하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "문장 끝에 구분자가 없어도 마지막 단어를 잊지 마세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "연속된 글자 구간을 읽으면 Tea, tea, Cake, and, tea입니다. 소문자로 통일하면 tea, tea, cake, and, tea입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "빈도표의 tea는 3, cake는 1, and는 1입니다. 쉼표나 마침표는 표의 키에 들어가지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "문장 끝에서 마지막 글자 구간을 한 번 확정해야 합니다. 구분자마다 무조건 빈 단어를 추가하거나, 단어 내부의 구분자를 없애 양옆 글자를 합치는 것은 다른 규칙입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 구간 분리 후 표기 통일\n A[\"Tea, tea! Cake and tea.\"] --> B[\"Tea / tea / Cake / and / tea\"]\n B --> C[\"tea / tea / cake / and / tea\"]\n C --> D[\"tea 3 · cake 1 · and 1\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 구분자를 지우기와 분리하기\n A[\"hi-hi\"] --> B[\"구분자로 분리: hi 두 번\"]\n A --> C[\"문자를 그냥 삭제: hihi 한 번\"]\n C --> D[\"이번 단어 규칙과 다름\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 각 영문자 최대 구간은 앞 또는 뒤가 구분자·문장 경계이므로 정확히 한 번 끝을 만납니다. 그때 정규화한 키의 수를 1 늘리면 처리한 단어들의 빈도와 표가 일치합니다. 끝 경계에서도 같은 확정을 수행하면 마지막 구간을 잃지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 총 문자 수 L을 한 번 읽습니다. 사전 연산 비용은 선택한 자료구조와 키 길이에 따릅니다. 서로 다른 정규화 단어들의 총 길이와 빈도 값을 저장해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 기록"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "빈 빈도표"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "공백 여러 개"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "빈 단어를 세지 않음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "마지막에 구분자 없음"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "마지막 단어도 한 번 확정"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "Tea와 tea를 따로 셈"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "대소문자 무시 계약 위반"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검토 방식 — 제시된 추론과 경계·반례를 사용합니다. 본문에 명시하지 않은 코드 실행·실측을 수행했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 숫자가 붙은 room2는?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 규칙에서는 room 한 단어이며 2는 구분자입니다. 숫자를 단어에 포함하려면 규칙을 바꿔야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — apostrophe를 보존하고 싶다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "허용 위치·연속 구분자·인용 부호를 어떻게 다룰지 새 토큰 규칙을 먼저 정합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6판의 Word Frequencies 번호·주제 메타데이터를 바탕으로 새로 만든 문제입니다. 도서 본문·예시·공식 해설을 복제하거나 책 본문을 읽었다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 16.2.2",
+              "href": "/thinking-lab/ep-16-02-02-word-frequencies/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

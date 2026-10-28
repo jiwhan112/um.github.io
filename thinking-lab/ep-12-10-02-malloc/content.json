@@ -1,0 +1,443 @@
+{
+  "title": "12.10.2 심화 — 맞춘 주소와 돌려줄 주소는 다르다",
+  "subtitle": "객체의 정체성·수명·저장 범위를 구별하는 사고력 문제",
+  "memoKey": "thinking-ctci-12.10-2-draft",
+  "starter": "// 관찰한 상태, 소유 책임, 경계 조건을 적어 보세요.\n// 코드와 그림이 같은 계약을 지키는지 확인하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "12.10.2 심화 — 맞춘 주소와 돌려줄 주소는 다르다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "연속 저장 공간의 시작 위치가 종이 주소 101이라고 합시다. 데이터 13바이트를 주소가 8의 배수인 곳에서 시작시키려 합니다. 어떤 시작 위치를 선택할 수 있고, 시작 주소가 무엇이든 보장하려면 총 몇 바이트를 확보해야 할까요? 사용한 시작 위치와 나중에 해제할 원래 위치를 구별하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "101 같은 주소는 정렬 간격을 설명하는 정수 모형이며 실제 C++ 포인터를 정수로 바꾸어 임의 계산하는 구현을 제시하는 것이 아닙니다. 요구 데이터 크기 B>0, 정렬 A는 이 모형에서 양의 2의 거듭제곱입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실제 C++11의 std::align을 쓰려면 구현이 지원하는 정렬 값과 연속 버퍼 범위 등 함수 계약을 만족해야 합니다. 정렬된 공간을 찾는 일은 일반 객체의 생성·소멸까지 대신하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원래 할당에서 받은 포인터를 따로 보존합니다. 요청 B+A-1도 표현 범위를 넘지 않는지 덧셈 전에 검사합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "항목"
+                  }
+                ],
+                [
+                  {
+                    "text": "값"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "원래 시작"
+                  }
+                ],
+                [
+                  {
+                    "text": "101"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "데이터 크기 B"
+                  }
+                ],
+                [
+                  {
+                    "text": "13바이트"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "정렬 간격 A"
+                  }
+                ],
+                [
+                  {
+                    "text": "8"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 바뀌는 상태와 바뀌지 않아야 할 규칙을 적어 보세요. 답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "101 다음의 첫 8의 배수는 무엇인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "어떤 시작점이든 다음 배수까지 건너뛰는 길이는 최대 A-1입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "중간으로 맞춘 포인터만 남기면 원래 할당의 시작을 잃지 않을까요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "101 다음 첫 8의 배수는 104이므로 3바이트를 건너뛰고 104부터 13바이트를 사용합니다. 반열린 구간으로 데이터는 [104,117)입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "어떤 시작 주소에도 충분하려면 B+(A-1)=13+7=20바이트를 확보합니다. 이 예의 원래 범위 [101,121) 안에 데이터 구간이 들어갑니다. 항상 실제로 7바이트를 버린다는 뜻은 아니며 이 예에서는 3바이트만 건너뜁니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원래 할당 포인터 101에 해당하는 값과 사용 포인터 104에 해당하는 값을 각각 관리해야 합니다. malloc으로 받은 공간이라면 free에 넘기는 것은 반환받은 원래 포인터이지 조정한 중간 포인터가 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "계산 전 B>MAX-(A-1)인지 검사해 덧셈 넘침을 막습니다. 실제 구현에서는 std::align 같은 범위 인식 도구의 성공 여부도 확인하며, 해당 공간에 객체를 만들었다면 객체 수명과 해제 순서를 별도로 지켜야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"원래 범위: 101부터 121 직전\"] --> B[\"3바이트 건너뛰기\"]\n B --> C[\"정렬된 시작 104\"]\n C --> D[\"13바이트 사용: 117 직전까지\"]\n D --> E[\"원래 범위 안에 들어감\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"원래 할당 포인터\"] --> B[\"나중에 올바른 해제 함수에 전달\"]\n A --> C[\"범위 안에서 정렬된 사용 포인터 계산\"]\n C --> D[\"데이터 접근에 사용\"]\n D --> E[\"중간 포인터를 원래 할당 포인터로 오해하지 않음\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다음 A의 배수까지의 건너뛴 길이 δ는 0≤δ≤A-1입니다. 그러므로 δ+B≤B+A-1이어서 그만큼 확보한 연속 범위 안에 데이터가 들어갑니다. A>1에서 시작 주소의 나머지가 1이면 δ=A-1이므로, 모든 시작점을 보장하려면 이 최악의 여유가 실제로 필요합니다. 정렬 조건과 범위 조건을 모두 만족해도 해제 함수가 요구하는 원래 할당 정체성은 바뀌지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정수 모형에서 위치 계산은 O(1)산술 연산입니다. 확보량은 데이터 B에 여유 A-1을 더한 크기입니다. 여유 공간의 존재를 성능이나 객체 생성의 보장으로 확대해 해석하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "시작이 이미 정렬되어 있으면 δ=0입니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "A=1이면 추가 여유가 필요 없습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "요청 크기 덧셈이 넘치거나 실제 할당이 실패하면 접근을 진행하지 않습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "C++17의 aligned_alloc을 C++11 기능처럼 사용하지 않습니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: 사용 포인터 바로 앞에 원래 포인터를 무조건 써 두어도 될까요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "그 위치의 크기·정렬·객체 수명과 버퍼 범위를 따로 보장해야 하므로 무조건 안전하지 않습니다. 이 문제는 원래 포인터를 별도 소유 정보로 보관하는 설계를 사용하며 검증되지 않은 메타데이터 쓰기를 제안하지 않습니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "B=1~64, A=1·2·4·8·16·32, 시작 주소 0~127의 모형 49,152개에서 정렬·여유·범위 조건을 실제 정수 계산으로 확인했습니다. 실제 포인터 연산이나 메모리 해제를 실행했다고 주장하지 않습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "이 페이지의 예시는 종이 모형이며 별도 C++ 프로그램 실행을 주장하지 않습니다. 브라우저 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 기본 문제",
+              "href": "/thinking-lab/ep-12-10-malloc/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 주제 12.11.1 기본 문제",
+              "href": "/thinking-lab/ep-12-11-2d-alloc/"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "C++11 시기 표준 초안 N3337 규칙 확인",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "C 메모리 함수 연결 규칙",
+                  "href": "https://timsong-cpp.github.io/cppwp/n3337/c.malloc"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "정렬된 버퍼 찾기",
+                  "href": "https://timsong-cpp.github.io/cppwp/n3337/ptr.align"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "객체 수명 규칙",
+                  "href": "https://timsong-cpp.github.io/cppwp/n3337/basic.life"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

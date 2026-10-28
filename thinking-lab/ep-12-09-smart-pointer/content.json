@@ -1,0 +1,427 @@
+{
+  "title": "12.9.1 기본 — 같이 빌린 물건은 언제 돌려줄까",
+  "subtitle": "객체의 정체성·수명·저장 범위를 구별하는 사고력 문제",
+  "memoKey": "thinking-ctci-12.9-draft",
+  "starter": "// 관찰한 상태, 소유 책임, 경계 조건을 적어 보세요.\n// 코드와 그림이 같은 계약을 지키는지 확인하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "12.9.1 기본 — 같이 빌린 물건은 언제 돌려줄까"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "하나의 객체를 shared_ptr p가 소유합니다. q=p로 소유자를 하나 더 만들고, weak_ptr w로 관찰만 합니다. 그다음 p를 비우고 마지막으로 q를 비웁니다. 각 단계에서 객체를 살려 두는 소유자는 몇 개이며, 객체가 언제 파괴되는지 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "p는 make_shared로 만든 정상적인 하나의 소유 그룹입니다. q는 그 p를 복사하며 같은 raw pointer에서 별도의 shared_ptr를 새로 만들지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "약한 관찰자 w는 소유 수를 늘리지 않습니다. 임시 lock 결과나 다른 숨은 소유자는 없고 단일 스레드에서 순서대로 실행합니다. 객체 파괴와 제어 정보 메모리 해제 시점은 구별합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "단계"
+                  }
+                ],
+                [
+                  {
+                    "text": "행동"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "p가 객체 소유"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "q=p"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "3"
+                  }
+                ],
+                [
+                  {
+                    "text": "w=p"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "4"
+                  }
+                ],
+                [
+                  {
+                    "text": "p.reset()"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "5"
+                  }
+                ],
+                [
+                  {
+                    "text": "q.reset()"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 바뀌는 상태와 바뀌지 않아야 할 규칙을 적어 보세요. 답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "소유권을 공유하는 q와 관찰만 하는 w는 같은 역할이 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "p가 비어도 q가 남아 있으면 객체가 살아 있어야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "마지막 강한 소유자가 사라지는 시점을 찾아보세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "강한 소유 수는 p 생성 뒤 1, q 복사 뒤 2, w 생성 뒤에도 2입니다. p.reset() 뒤에는 q 하나만 남아 1입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "q.reset()에서 마지막 강한 소유자가 사라져 객체가 파괴됩니다. w가 남아 있다고 객체가 계속 살아 있지는 않습니다. 이후 w.lock()은 빈 shared_ptr를 돌려줍니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "약한 관찰자가 남아 있으면 소유 제어 정보가 계속 필요할 수 있습니다. 따라서 “객체가 파괴되었다”와 “관련된 모든 내부 메모리가 즉시 해제되었다”를 같은 말로 단정하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"p 생성: 강한 소유 1\"] --> B[\"q=p: 강한 소유 2\"]\n B --> C[\"w 관찰: 여전히 2\"]\n C --> D[\"p 비움: q만 남아 1\"]\n D --> E[\"q 비움: 0, 객체 파괴\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n P[\"p: 강한 소유\"] --> O[\"공유 객체\"]\n Q[\"q: 강한 소유\"] --> O\n W[\"w: 약한 관찰\"] -. \"수명을 늘리지 않음\" .-> O\n W --> L[\"접근하려면 lock 결과 확인\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정상적인 하나의 공유 소유 그룹에서는 강한 소유자가 하나 이상 있는 동안 객체가 유지되고 마지막 강한 소유자가 놓일 때 파괴됩니다. q의 복사는 같은 그룹을 늘리고 w는 그 수를 늘리지 않으므로 각 단계의 수를 위처럼 셀 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 문제는 고정된 소유 변화 다섯 단계를 추적합니다. 구현별 제어 블록 크기나 원자 연산 비용을 측정하지 않았으며 shared_ptr가 객체 내부 자료까지 자동으로 동기화한다는 뜻도 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "빈 shared_ptr의 reset은 새 객체를 파괴하지 않습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "raw pointer를 같은 주소로 두 번 감싸 별도 소유 그룹을 만들면 이 문제의 안전한 공유 전제를 위반합니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "lock이 성공해 얻은 임시 shared_ptr도 그 범위 동안 강한 소유자입니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: w가 만료되지 않았다는 검사 뒤에 raw pointer로 접근하면 충분할까요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "수명 변화를 안전하게 연결하려면 lock으로 강한 소유권을 확보하고 그 결과가 있는 동안 접근해야 합니다. 특히 동시 상황에서 검사와 접근을 분리하면 그 사이에 마지막 소유자가 사라질 수 있습니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "심화의 실제 C++11 프로그램에서 weak_ptr의 lock 성공·실패, 마지막 강한 소유자 해제 후 소멸자 실행을 1,000회 반복 검사했습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "이 페이지의 예시는 종이 모형이며 별도 C++ 프로그램 실행을 주장하지 않습니다. 브라우저 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 심화 문제",
+              "href": "/thinking-lab/ep-12-09-02-smart-pointer/"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "C++11 시기 표준 초안 N3337 규칙 확인",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "weak_ptr 규칙",
+                  "href": "https://timsong-cpp.github.io/cppwp/n3337/util.smartptr.weak"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "shared_ptr 파괴 규칙",
+                  "href": "https://timsong-cpp.github.io/cppwp/n3337/util.smartptr.shared.dest"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

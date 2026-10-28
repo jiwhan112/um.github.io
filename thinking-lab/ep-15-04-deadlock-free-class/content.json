@@ -1,0 +1,280 @@
+{
+  "title": "15.4.1 기본 — 안전한 두 메서드에 세 번째가 들어오면",
+  "subtitle": "차례·잠금·대기 조건을 그림으로 검증하는 동시성 사고력 문제",
+  "memoKey": "thinking-ctci-15.4-draft",
+  "starter": "// 원자 단계, 잠금 소유자, 대기 조건을 분리해 적어 보세요.\n// 안전성과 진행 보장에 필요한 가정을 구분하는 종이 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "15.4.1 기본 — 안전한 두 메서드에 세 번째가 들어오면"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "잠금 L,M,H가 있습니다. 메서드 a는 L을 잡고 M을, b는 M을 잡고 H를 기다릴 수 있습니다. 새 메서드 c는 H를 잡고 L을 기다립니다. 세 메서드가 동시에 시작해 첫 잠금만 하나씩 잡으면 어떤 문제가 생길까요? L<M<H 공통 순서를 지키도록 c를 고치세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원자성·실패·진행 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 잠금은 배타적이며 두 잠금을 모두 잡으면 유한 작업 뒤 반환합니다. 첫 잠금을 유지한 채 둘째를 기다립니다. 잠금 밖의 추가 대기는 없고 각 메서드는 한 번 호출됩니다. 안전성은 자원 순환 대기를 막는 의미이며 호출별 지연 상한을 보장하는 것은 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 상태와 입력"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "a: L → M"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "b: M → H"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "c: H → L"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "a,b만 볼 때의 관계에 c의 간선을 추가하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "공통 순서에 어긋나는 메서드는 어느 것인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "업무상 필요한 두 자원은 유지하고 획득 순서만 바꾸세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "a는 b를, b는 c를, c는 a를 기다려 교착될 수 있습니다. c를 L부터 잡고 H를 잡도록 고치면 모든 획득 간선이 공통 순서를 따릅니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 주어진 사례의 진행을 차례로 추적한다\n    N0[\"기존 L→M, M→H\"]\n    N1[\"c가 H→L 추가\"]\n    N2[\"L→M→H→L 순환\"]\n    N3[\"c를 L→H로 고쳐 순환 제거\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 바꿔 비교하기\n    accDescr: 공통 조건에서 서로 다른 경우를 비교한다\n    N0[\"c의 두 획득 순서\"]\n    N1[\"H→L: 기존 관계와 순환\"]\n    N2[\"L→H: 공통 오름차순 유지\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기존 간선 L→M,M→H에 H→L을 추가하면 순환이 닫힙니다. 수정 후에는 L→M,M→H,L→H만 남고 번호가 증가하기만 하므로 순환이 없습니다. 메서드 하나를 따로 검토하는 것만으로 전체 클래스의 잠금 관계를 검증할 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 진행 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정해진 잠금 순서를 문서화하고 각 획득 경로를 검사해야 합니다. 이 작은 예의 판정은 상수 크기이며 실제 대기 시간은 별도입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "코드 이름 순서가 같아도 실제 동일 객체의 잠금인지 확인해야 합니다. 이 증명은 다른 라이브러리 잠금이나 콜백이 숨은 역순 획득을 하지 않는다는 조건에 의존합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: c가 H만 필요하다면 L을 잡아야 할까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 불필요한 잠금은 제거할 수 있으며 새 대기 간선도 생기지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 잠금의 가능한 방향 간선 여섯 개에 대해 등록 순서 720개를 검사했습니다. DFS 순환 검사와 모든 위상 순서 후보의 존재 여부를 독립적으로 대조하고 승인 그래프가 항상 비순환임을 확인했습니다. Python으로 실행한 유한 모형 검산은 명시된 원자성 가정에 한정됩니다. 실제 스레드 실행·Java 컴파일·운영체제 시간 측정은 수행하지 않았습니다. 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습과 규칙 출처",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명시된 원자 단계와 실패·공정성 가정 아래에서 별도로 만든 종이 사고력 문제입니다. 원서 주제명은 진도 연결에만 사용하며 원서 지문과 해설을 옮기지 않았습니다. 유한 모형 검산을 실제 스레드 구현의 모든 실행에 대한 증명으로 과장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-04-02-deadlock-free-class/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

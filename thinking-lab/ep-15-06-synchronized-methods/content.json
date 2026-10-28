@@ -1,0 +1,320 @@
+{
+  "title": "15.6.1 기본 — 메서드 이름이 아니라 어느 자물쇠인가",
+  "subtitle": "차례·잠금·대기 조건을 그림으로 검증하는 동시성 사고력 문제",
+  "memoKey": "thinking-ctci-15.6-draft",
+  "starter": "// 원자 단계, 잠금 소유자, 대기 조건을 분리해 적어 보세요.\n// 안전성과 진행 보장에 필요한 가정을 구분하는 종이 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "15.6.1 기본 — 메서드 이름이 아니라 어느 자물쇠인가"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Java 8 클래스 Box에는 synchronized 인스턴스 메서드 put과 take, static synchronized 메서드 reset이 있습니다. 객체 x,y는 서로 다릅니다. x.put과 x.take, x.put과 y.take, x.put과 Box.reset의 각 쌍이 서로의 모니터 때문에 동시에 본문에 들어갈 수 없는지 판정하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원자성·실패·진행 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "모든 메서드는 각자의 synchronized 선언 외에는 다른 잠금을 잡거나 wait를 호출하지 않습니다. x,y는 동일 클래스의 별도 객체이고 그 클래스의 Class 객체와도 다릅니다. 서로 다른 두 스레드의 호출입니다. 비교는 잠금의 상호 배제이며 메서드의 데이터 안전성을 자동으로 보장한다는 뜻은 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 상태와 입력"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "쌍1: x.put / x.take"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "쌍2: x.put / y.take"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "쌍3: x.put / Box.reset"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "인스턴스 synchronized의 대상은 this입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "static synchronized는 어떤 객체의 모니터를 잡을까요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "잠금 이름이 아니라 객체 동일성을 비교하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "쌍1은 둘 다 x의 모니터라 겹칠 수 없습니다. 쌍2는 x와 y의 별도 모니터이므로 겹칠 수 있습니다. 쌍3은 x와 Box.class의 서로 다른 모니터이므로 역시 겹칠 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 공통 조건에서 서로 다른 경우를 비교한다\n    N0[\"모니터 대응\"]\n    N1[\"x.put과 x.take → 둘 다 x\"]\n    N2[\"y.take → y\"]\n    N3[\"Box.reset → Box.class\"]\n    N0 --> N1\n    N0 --> N2\n    N0 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 바꿔 비교하기\n    accDescr: 공통 조건에서 서로 다른 경우를 비교한다\n    N0[\"x.put과 다른 호출 비교\"]\n    N1[\"같은 x 모니터: 겹침 불가\"]\n    N2[\"y 또는 Class 모니터: 겹침 가능\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Java의 모니터 상호 배제는 동일 모니터를 소유하려는 서로 다른 스레드 사이에 적용됩니다. 메서드 이름이 다르더라도 같은 x면 같은 잠금이고, 같은 클래스의 메서드라도 인스턴스와 정적 메서드는 잠금 대상이 다릅니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 진행 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 쌍의 잠금 대상 동일성을 판정하는 상수 크기 문제입니다. 잠금 획득의 실제 대기 시간이나 공정성은 보장하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 메서드가 같은 static 필드를 만지면서 서로 다른 인스턴스 잠금만 쓰면 안전하지 않을 수 있습니다. 일반 메서드는 다른 코드가 객체 모니터를 갖고 있다는 이유만으로 자동 차단되지 않습니다. C++에는 이 Java 선언의 의미가 자동 적용되지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: x와 y가 사실 같은 객체를 가리키는 별칭이면 쌍2는?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "동일 모니터이므로 서로 배제됩니다. 변수 이름이 다르다는 사실은 기준이 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A.wait 뒤 B 소유가 남는 명시적 소유표 모형을 확인했습니다. Java의 모니터 대상, wait의 해제 범위, sleep의 잠금 유지 규칙은 공식 JLS/API를 확인했으며 JVM을 실행한 검사는 아닙니다. Python으로 실행한 유한 모형 검산은 명시된 원자성 가정에 한정됩니다. 실제 스레드 실행·Java 컴파일·운영체제 시간 측정은 수행하지 않았습니다. 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습과 규칙 출처",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명시된 원자 단계와 실패·공정성 가정 아래에서 별도로 만든 종이 사고력 문제입니다. 원서 주제명은 진도 연결에만 사용하며 원서 지문과 해설을 옮기지 않았습니다. 유한 모형 검산을 실제 스레드 구현의 모든 실행에 대한 증명으로 과장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html#jls-17.1",
+              "text": "JLS 17.1 모니터 · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html",
+              "text": "Oracle synchronized 메서드 · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait--",
+              "text": "Java 8 Object.wait · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#sleep-long-",
+              "text": "Java 8 Thread.sleep · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-06-02-synchronized-methods/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

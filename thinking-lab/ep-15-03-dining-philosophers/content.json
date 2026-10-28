@@ -1,0 +1,280 @@
+{
+  "title": "15.3.1 기본 — 세 작업대가 도구를 하나씩 잡으면",
+  "subtitle": "차례·잠금·대기 조건을 그림으로 검증하는 동시성 사고력 문제",
+  "memoKey": "thinking-ctci-15.3-draft",
+  "starter": "// 원자 단계, 잠금 소유자, 대기 조건을 분리해 적어 보세요.\n// 안전성과 진행 보장에 필요한 가정을 구분하는 종이 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "15.3.1 기본 — 세 작업대가 도구를 하나씩 잡으면"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원형 작업대 A,B,C가 각각 도구 두 개를 필요로 합니다. A는 X,Y, B는 Y,Z, C는 Z,X입니다. 모두 첫 번째로 적힌 도구를 잡은 뒤 두 번째를 기다리고, 두 개를 다 얻기 전에는 놓지 않습니다. A가 X, B가 Y, C가 Z를 잡은 상태에서 누가 다음으로 작업할 수 있을까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원자성·실패·진행 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "도구는 한 작업대만 소유하고 강제로 빼앗지 않습니다. 작업은 두 도구가 있어야 시작하며 시작하면 유한 시간 후 둘 다 반환합니다. 질문의 상태에서는 누구도 아직 작업을 시작하지 않았습니다. 외부 취소·고장·추가 도구는 없습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 상태와 입력"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A: X 소유, Y 필요"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "B: Y 소유, Z 필요"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "C: Z 소유, X 필요"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기다리는 도구의 소유자를 화살표로 연결하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 도구를 놓는 조건은 무엇인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "CPU 실행 기회를 더 주는 것만으로 도구가 생기나요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아무도 시작할 수 없습니다. A→B→C→A의 순환 대기가 생겼고 각자는 남이 놓아야 진행하지만 누구도 놓을 조건에 도달하지 못했습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 세 작업대의 순환 대기\n    accDescr: 화살표는 기다리는 도구의 소유자를 가리킨다\n    A[\"A: X 소유 / Y 필요\"] --> B[\"B: Y 소유 / Z 필요\"]\n    B --> C[\"C: Z 소유 / X 필요\"]\n    C --> A\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 바꿔 비교하기\n    accDescr: 공통 조건에서 서로 다른 경우를 비교한다\n    N0[\"각자 도구 하나를 보유\"]\n    N1[\"그대로 기다림: 교착 유지\"]\n    N2[\"C가 반환 허용: B 진행 가능\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 대기의 유일한 해제 조건이 다음 작업대의 작업 완료인데 그 다음도 같은 조건으로 막혀 있습니다. 외부 해제 방법이 없으므로 가능한 진행 전이가 하나도 없는 교착 상태입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 진행 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 소유·대기 관계를 조사합니다. 일반 대기 그래프에서는 정점과 간선을 따라 순환을 검사하는 비용이 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "모든 사람이 바쁘게 대기한다고 유용한 진행이 있는 것은 아닙니다. 단순히 더 오래 기다리거나 sleep 간격을 바꾸는 것은 이 소유 관계를 해결하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: C가 Z를 반환하고 기다리도록 정책을 바꾸면 적어도 어떤 진행이 생길까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "B가 Z를 얻어 작업할 수 있습니다. 다만 이 한 번의 탈출이 반복 정책의 무기아 보장까지 입증하지는 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 작업대의 원자적 획득·반환 모형에서 기존 규칙 45상태와 오름차순 규칙 42상태를 완전 탐색했습니다. 기존의 (첫 잠금 보유,첫 잠금 보유,첫 잠금 보유) 교착을 찾았고 오름차순에서는 미완료 교착 상태가 없었습니다. Python으로 실행한 유한 모형 검산은 명시된 원자성 가정에 한정됩니다. 실제 스레드 실행·Java 컴파일·운영체제 시간 측정은 수행하지 않았습니다. 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습과 규칙 출처",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명시된 원자 단계와 실패·공정성 가정 아래에서 별도로 만든 종이 사고력 문제입니다. 원서 주제명은 진도 연결에만 사용하며 원서 지문과 해설을 옮기지 않았습니다. 유한 모형 검산을 실제 스레드 구현의 모든 실행에 대한 증명으로 과장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-03-02-dining-philosophers/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

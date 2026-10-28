@@ -1,0 +1,290 @@
+{
+  "title": "17.2.2 심화 — 매번 전체 범위에서 고르면 왜 틀릴까",
+  "subtitle": "작은 상태와 정확한 경우의 수로 풀어 보는 확장 사고력 문제",
+  "memoKey": "thinking-ctci-17.2-2-draft",
+  "starter": "// 작은 예의 상태·불변조건·반례부터 적어 보세요.\n// 구현이 있는 문제는 접힌 정수 범위와 입력 계약을 확인하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "17.2.2 심화 — 매번 전체 범위에서 고르면 왜 틀릴까"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다른 방법은 자리 i=0,1,2를 차례로 방문하며 매번 독립적으로 0..2 중 j를 뽑아 i와 j를 교환합니다. 총 27개 선택열은 모두 같은 확률입니다. 이 방법이 여섯 순서를 정확히 균등하게 만들 수 있는지 판정하고, 올바른 범위 축소 방식과 비교하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력·표현·추론 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "세 카드는 서로 다르고 초기 순서는 ABC입니다. 세 번 모두 같은 자리 교환도 허용합니다. 출력 확률은 27개 경로의 정수 개수로 계산합니다. 표본 몇 번의 빈도를 보고 균등성을 주장하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "i=0: j0..2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "i=1: j0..2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "i=2: j0..2"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "균등하려면 각 순서가 몇 개 경로를 받아야 하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "27을 6으로 나눈 값이 정수인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "확정한 위치를 다시 교환하는 것이 경로 수를 바꿉니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확히 균등할 수 없습니다. 각 순서에 27/6=4.5개 경로가 필요하지만 경로 수는 정수입니다. 실제로 ABC, CAB, CBA는 각각 4개, ACB,BAC,BCA는 각각 5개 경로를 받습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 주어진 사례의 계산을 순서대로 추적한다\n    N0[\"전체 범위 세 번:27경로\"]\n    N1[\"6결과가 균등하려면 각 4.5경로\"]\n    N2[\"경로 수는 정수\"]\n    N3[\"따라서 정확 균등 불가\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 나누어 비교하기\n    accDescr: 공통 조건에서 여러 경우를 비교한다\n    N0[\"ABC에서 전체 범위 교환\"]\n    N1[\"4경로:ABC,CAB,CBA\"]\n    N2[\"5경로:ACB,BAC,BCA\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 확률의 유한 경로를 결과로 결정적으로 보내면 결과 확률은 경로 수/27입니다.1/6은 이 형태로 표현되지 않으므로 편향은 피할 수 없습니다. 올바른 방식은 선택 범위를 3,2로 줄여 여섯 경로와 여섯 결과를 일대일로 대응시킵니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 방법 모두 이 예에서는 상수 번 교환하지만 정확성은 다릅니다. 일반 n에서 O(n)번 교환한다는 성능만으로 올바른 섞기를 판단할 수 없습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "편향이 작아 보인다는 것과 정확한 균등은 다릅니다. 경로 수가 결과 수로 나누어떨어진다는 사실만으로 균등이 자동 보장되지는 않으며 실제 대응도 확인해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 경로가 12개이고 결과가 6개라면 나누어떨어지므로 항상 균등일까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 각 결과에 정확히 2개씩 보내야 합니다. 일부 결과에 몰아 보내면 여전히 편향됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "3·4·5장의 범위 축소 섞기 150경로를 완전 열거해 각 순열이 한 번씩 나타남을 확인했습니다. 잘못된 전체 범위 섞기는 27경로에서 결과별 4회·5회 편향을 정확히 확인했습니다. 검산 범위와 수학적 증명을 구분하며 화면 렌더링과 실제 공개 반영은 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 진도 식별에만 사용했습니다. 문제와 사례·그림은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다. 확률 문제의 정확성은 명시된 독립 균등 모형에 대한 논증입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-17-02-shuffle/",
+              "text": "같은 주제의 기본 문제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-17-03-random-set/",
+              "text": "다음 주제 17.3.1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

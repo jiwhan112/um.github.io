@@ -1,0 +1,225 @@
+{
+  "title": "17.23.1 기본 — 가운데가 비어도 검은 테두리일까",
+  "subtitle": "정사각형의 변만 검사하는 조건",
+  "memoKey": "thinking-ctci-17.23-draft",
+  "starter": "// 조건과 작은 반례, 풀이를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검정은 B, 흰색은 W인 3×3 타일의 행은 BBB / BWB / BBB입니다. 축에 평행한 정사각형을 골라 네 변의 모든 타일이 검정이어야 합니다. 내부는 어느 색이어도 됩니다. 행·열 번호는 0부터입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가장 큰 정사각형의 한 변 길이와 왼쪽 위 좌표를 구하세요. 내부까지 전부 검정이어야 하는 다른 문제의 답도 비교하고, 후보 하나의 테두리를 빠짐없이 확인하는 방법을 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 추론 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 변 길이 1이면 그 한 칸이 네 변을 겸하므로 검정 한 칸이면 통과합니다. 타일을 회전하거나 바꾸지 않습니다. 정사각형이 없다면 길이 0으로 표시합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가운데 W가 네 변 중 하나에 속하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이 3의 위·아래 행과 왼쪽·오른쪽 열을 따로 확인하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "내부까지 검정인 길이 2 정사각형은 어디에 놓아도 가운데를 포함합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 그림 풀이 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "테두리 조건의 답은 길이 3, 왼쪽 위 (0,0)입니다. 위·아래 행 BBB와 양 끝 열 BBB가 모두 검정입니다. 가운데 W는 내부라 상관없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "내부까지 검정이어야 한다면 모든 2×2 후보가 가운데 W를 포함하므로 최대 길이는 1입니다. 두 문제를 같은 누적 검정 칸 수 조건으로 혼동하면 안 됩니다. 테두리 후보는 네 변만 모두 검사합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 같은 판의 두 조건\n    accDescr: 같은 판의 두 조건에서 실제 예시의 상태와 판단을 표시합니다.\n    N0[\"BBB / BWB / BBB\"]\n    N1[\"테두리만: 길이 3 통과\"]\n    N2[\"내부까지: 길이 2 모두 실패 → 최대 1\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 네 변의 독립 확인\n    accDescr: 네 변의 독립 확인에서 실제 예시의 상태와 판단을 표시합니다.\n    N0[\"왼쪽 위 0,0 / 길이 3\"]\n    N1[\"위 BBB와 아래 BBB\"]\n    N2[\"왼쪽 BBB와 오른쪽 BBB\"]\n    N3[\"두 검사 모두 참: 통과\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n    N2 --> N3\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 정사각형의 테두리는 위·아래 가로 변과 왼쪽·오른쪽 세로 변의 합집합입니다. 네 변이 검정이라는 조건은 테두리 전체가 검정인 것과 동치입니다. 주어진 판의 최대 가능한 길이는 3이고 그 후보가 통과하므로 더 큰 답은 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간·공간: n×n 판의 모든 후보 O(n³)개에 대해 변을 직접 읽으면 O(n⁴) 시간, 판 외 O(1) 추가 상태로 검사할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "전부 W면 길이 0입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "B 한 칸은 길이 1입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "네 모서리만 B인 BWB/WWW/BWB는 길이 3 테두리가 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 모서리 네 개만 확인하면 충분할까요? 변 중간의 흰 타일을 놓칩니다. 모서리와 변 전체는 다른 조건입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 17.23 Max Black Square의 개념을 바탕으로 새로 만든 문제입니다. 책의 지문이나 공식 해설을 번역·재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "짝 문제: 심화",
+              "href": "/thinking-lab/ep-17-23-02-max-black-square/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

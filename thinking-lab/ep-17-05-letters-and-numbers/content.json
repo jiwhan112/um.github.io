@@ -1,0 +1,280 @@
+{
+  "title": "17.5.1 기본 — 글자와 숫자가 균형 잡힌 가장 긴 띠",
+  "subtitle": "작은 상태와 정확한 경우의 수로 풀어 보는 확장 사고력 문제",
+  "memoKey": "thinking-ctci-17.5-draft",
+  "starter": "// 작은 예의 상태·불변조건·반례부터 적어 보세요.\n// 구현이 있는 문제는 접힌 정수 범위와 입력 계약을 확인하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "17.5.1 기본 — 글자와 숫자가 균형 잡힌 가장 긴 띠"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기호 띠는 A,1,B,2,3,C,4 순서입니다. 연속한 구간에서 영문자 수와 숫자 수가 같으면 균형 구간입니다. 가장 긴 균형 구간의 시작·끝 위치와 길이를 구하세요. 위치는 1부터 세며 문자를 재배열하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력·표현·추론 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 기호는 ASCII 영문 대문자 하나 또는 숫자 한 자리입니다. 숫자의 크기가 아니라 숫자 기호의 개수를 셉니다. 빈 구간 길이는 0으로 허용하되 이 문제에서는 더 긴 구간을 찾습니다. 영문자는+1, 숫자는−1로 대응시킬 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A,1,B,2,3,C,4"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "위치 1..7"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "영문자 개수=숫자 개수"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시작 전 누적 차이 0도 기록하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "누적 차이가 같은 두 위치 사이의 합은 얼마인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 차이를 처음 본 위치를 남겨야 가장 멀리 떨어진 끝을 얻습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "가장 긴 구간은 1..6의 A,1,B,2,3,C이고 길이 6입니다. 누적 차이는 위치 0..7에서 0,1,0,1,0,−1,0,−1입니다. 차이 0의 첫 위치 0과 뒤 위치 6 사이가 길이 6입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 주어진 사례의 계산을 순서대로 추적한다\n    N0[\"위치 0..3 누적:0,1,0,1\"]\n    N1[\"위치 4..7 누적:0,−1,0,−1\"]\n    N2[\"차이 0:첫 위치 0 / 뒤 위치 6\"]\n    N3[\"구간 1..6 길이 6\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 나누어 비교하기\n    accDescr: 공통 조건에서 여러 경우를 비교한다\n    N0[\"같은 누적 차이의 위치 저장\"]\n    N1[\"최초 위치 유지:가장 긴 거리\"]\n    N2[\"최신 위치로 덮기:긴 거리 소실\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "구간의 문자−숫자 차이는 끝 누적값에서 시작 직전 누적값을 뺀 값입니다. 두 누적값이 같을 때 정확히 0이므로 균형 구간과 같은 누적값 쌍이 일대일로 대응합니다. 각 끝에서 같은 값의 가장 이른 위치가 그 끝을 쓰는 최장 구간입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "n개 기호를 한 번 읽고 차이별 최초 위치를 저장하면 평균 O(n) 시간, O(n) 공간입니다. 작은 범위의 차이 배열도 사용할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "숫자 2를−2로 더하면 개수 문제를 값 합 문제로 바꾸게 됩니다. 같은 누적값의 위치를 매번 최신으로 덮으면 긴 구간을 놓칩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 모든 기호가 영문자뿐이면 가장 긴 길이는?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0입니다. 비어 있지 않은 어떤 구간도 숫자 개수가 없어서 균형을 이루지 못합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이 0..10의 모든 문자/숫자 분류열에 비율 1·2·3을 적용한 6,141사례를 전수 구간 열거와 비교했습니다. 최장 길이와 가장 이른 시작 동률 처리까지 확인했습니다. 검산 범위와 수학적 증명을 구분하며 화면 렌더링과 실제 공개 반영은 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 진도 식별에만 사용했습니다. 문제와 사례·그림은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다. 확률 문제의 정확성은 명시된 독립 균등 모형에 대한 논증입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-17-05-02-letters-and-numbers/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

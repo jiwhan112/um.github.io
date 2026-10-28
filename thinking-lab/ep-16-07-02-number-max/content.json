@@ -1,0 +1,436 @@
+{
+  "title": "16.7.2 심화 — 범위 끝에서도 안전한 선택 비트",
+  "subtitle": "signed 32비트 정수 두 개 중 큰 값을 고르되, 선택 함수 내부에서는 if·조건 연산자·비교 연산자를 사용하지 마세요.",
+  "memoKey": "thinking-ctci-16.7-2-draft",
+  "starter": "// 문제에서 발견한 규칙과 검산 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "signed 32비트 정수 두 개 중 큰 값을 고르되, 선택 함수 내부에서는 if·조건 연산자·비교 연산자를 사용하지 마세요. 64비트 정수와 unsigned 변환·비트 이동은 허용합니다. 부호 있는 32비트 뺄셈을 먼저 하지 않고 안전한 선택 비트를 만드는 방법을 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "입력은 -2³¹..2³¹-1입니다. 이 구현은 정확한 64비트 int64_t와 uint64_t를 제공하는 환경을 사용합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "입력 파싱의 형식·범위 검사와 테스트 기준의 비교는 허용합니다. 제한은 최댓값 선택 함수의 알고리즘에 적용합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "시간 측정이나 보안상의 상수 시간 실행을 요구하거나 보장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "입력"
+                  }
+                ],
+                [
+                  {
+                    "text": "정답"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "INT_MIN, INT_MAX"
+                  }
+                ],
+                [
+                  {
+                    "text": "INT_MAX"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "INT_MIN, INT_MIN"
+                  }
+                ],
+                [
+                  {
+                    "text": "INT_MIN"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "0,-1"
+                  }
+                ],
+                [
+                  {
+                    "text": "0"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답과 근거를 적어 보세요. 힌트·정답·복습 해설은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "먼저 두 입력을 int64_t로 옮기고 차이를 구하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "음수를 uint64_t로 변환한 값의 맨 위 비트와 양수 차이의 맨 위 비트를 비교하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0 또는 1인 선택 계수로 두 후보 중 하나만 남길 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "x와 y를 64비트로 넓힌 뒤 d=x-y를 계산합니다. d의 범위는 -4,294,967,295..4,294,967,295이므로 int64_t 안에 안전하게 들어갑니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "d를 uint64_t로 바꾼 뒤 63비트 오른쪽 이동한 s는 음수이면 1, 0 이상이면 0입니다. 음수의 unsigned 변환은 2⁶⁴를 법으로 하는 값이며, 양수 차이는 2⁶³보다 작다는 범위 증명이 필요합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "k=1-s로 두면 k*x+(1-k)*y가 답입니다. d≥0이면 k=1이라 x만, 음수이면 k=0이라 y만 남습니다. 각 곱의 계수는 0 또는 1이고 최종 값은 원래 입력 하나이므로 중간 합과 반환도 안전합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 방법은 음수 signed 값을 오른쪽 이동하는 구현 의존 행동에 기대지 않습니다. 이동의 피연산자는 unsigned입니다. 일반적인 코드를 무조건 이렇게 복잡하게 쓸 필요는 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 극단값에서도 먼저 넓히기\n A[\"a=INT_MIN / b=INT_MAX\"] --> B[\"64비트 차이 -4294967295\"]\n B --> C[\"unsigned 상위 비트 s=1\"]\n C --> D[\"k=0: b 선택\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 선택 계수의 두 경우\n A[\"차이 0 이상\"] --> B[\"s=0, k=1\"] --> C[\"1*x + 0*y = x\"]\n D[\"차이 음수\"] --> E[\"s=1, k=0\"] --> F[\"0*x + 1*y = y\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 차이를 넓은 타입에서 계산하므로 정확한 부호가 보존됩니다. 허용 범위의 비음수 d는 uint64_t 최상위 비트가 0이고, 음수 d를 법 변환하면 2⁶⁴+d가 되어 최상위 비트가 1입니다. 따라서 선택 계수는 기본 문제의 분기와 같은 후보를 고르되 분기 문법 없이 표현됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 고정 폭 64비트의 상수 개 연산이므로 O(1)시간·O(1)공간입니다. 컴파일된 기계어의 분기 존재나 부채널 특성을 검증했다는 뜻은 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "코드 입력·인코딩·정수 범위 계약",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "입력은 ASCII 십진 signed 32비트 정수 두 개뿐입니다. 범위 밖·변환 실패·추가 토큰은 오류로 거부합니다. int의 정확한 32비트 범위는 static_assert로 확인하고, int64_t/uint64_t를 제공하는 구현을 사용합니다. 고정 문자 버퍼는 사용하지 않으며 한국어 주석은 UTF-8입니다. 정상 결과는 십진 정수와 LF 하나, 오류는 종료 코드 1입니다. 각 정수는 ASCII 공백으로 구분한 하나의 완전한 십진 토큰이며 선택적 부호(+ 또는 -) 뒤에 숫자만 허용합니다. 1+2처럼 구분자 없이 붙인 입력은 거부합니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "전체 C++11 풀이",
+              "blocks": [
+                {
+                  "type": "code",
+                  "language": "cpp",
+                  "text": "#include <cassert>\n#include <climits>\n#include <cstdint>\n#include <iostream>\n#include <sstream>\n#include <string>\nstatic_assert(INT_MIN == (-2147483647 - 1) && INT_MAX == 2147483647, \"32-bit int required\");\nint maximum_without_comparison(int a, int b) {\n    // 뺄셈을 먼저 64비트로 넓혀 안전하게 계산합니다.\n    const std::int64_t x = a, y = b;\n    const std::int64_t difference = x - y;\n    // 음수의 unsigned 변환은 2^64를 법으로 한 값입니다.\n    const std::uint64_t sign = static_cast<std::uint64_t>(difference) >> 63;\n    const std::int64_t take_a = static_cast<std::int64_t>(1U - sign);\n    // 계수는 0 또는 1이고 한쪽만 선택됩니다.\n    return static_cast<int>(take_a * x + (1 - take_a) * y);\n}\n// 정수 하나는 공백으로 나눈 토큰 전체여야 합니다. 1+2를 두 수로 읽지 않습니다.\nbool read_integer(std::istream& input, long long& value) {\n    std::string token;\n    if (!(input >> token)) return false;\n    const std::size_t first = (token[0] == '+' || token[0] == '-') ? 1 : 0;\n    if (first == token.size()) return false;\n    for (std::size_t i = first; i < token.size(); ++i)\n        if (token[i] < '0' || token[i] > '9') return false;\n    std::istringstream parser(token);\n    parser >> value;\n    return !parser.fail() && parser.eof();\n}\n\nint main() {\n    // 파싱의 범위 검사는 허용합니다. 비교 금지는 최댓값 선택 함수 내부의 규칙입니다.\n    long long a=0,b=0;\n    if((!read_integer(std::cin,a)||!read_integer(std::cin,b))||a<INT_MIN||a>INT_MAX||b<INT_MIN||b>INT_MAX)return 1;\n    std::cin>>std::ws;if(std::cin.peek()!=std::char_traits<char>::eof())return 1;\n    std::cout<<maximum_without_comparison(static_cast<int>(a),static_cast<int>(b))<<'\\n';\n    return std::cout?0:1;\n}\n"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "32비트에서 뺀 뒤 64비트로 변환"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "이미 발생한 signed 넘침을 복구하지 못함"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "음수 signed 값을 직접 오른쪽 이동"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "C++11의 이식성 계약을 명확히 하기 위해 사용하지 않음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "두 값 같음"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "d=0, 첫 값 선택"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "입력을 64비트 전체 범위로 확대"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "차이 범위 증명이 더는 성립하지 않음"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제로 실행한 검증 — 엄격 GCC C++11 경고 및 UBSan으로 -200..200의 모든 입력 쌍과 INT_MIN·INT_MAX 주변 경계 쌍을 합한 160,850개를 일반 비교 기준과 대조했습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 일반 std::max보다 빠르다고 말할 수 있나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 코드 형태만으로 실제 성능을 단정하지 않으며 이 자료는 성능 측정을 하지 않았습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 선택 계수가 2가 될 수 있다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원래 입력 하나만 남는다는 증명이 깨집니다. s가 정확히 0 또는 1이라는 범위 분석이 핵심입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6판의 Number Max 번호·주제 메타데이터를 바탕으로 새로 만든 문제입니다. 도서 본문·예시·공식 해설을 복제하거나 책 본문을 읽었다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기본 복습으로: 16.7.1",
+              "href": "/thinking-lab/ep-16-07-number-max/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "정수 규칙 참고: WG21 공개 작업 초안 N3337 (2012-01-16), [conv.integral], [expr.shift], [expr.mul]",
+              "href": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3337.pdf"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제: 16.8",
+              "href": "/thinking-lab/ep-16-08-english-int/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

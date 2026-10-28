@@ -1,0 +1,235 @@
+{
+  "title": "17.23.2 심화 — 네 변을 다시 읽지 않고 확인하기",
+  "subtitle": "연속 검정 길이로 테두리 후보 검증",
+  "memoKey": "thinking-ctci-17.23-2-draft",
+  "starter": "// 조건과 작은 반례, 풀이를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검정 B, 흰색 W인 4×4 판의 행은 BBBB / BWWB / BBWB / BBBB입니다. 축에 평행한 정사각형의 테두리만 모두 검정이면 되고 내부 색은 무관합니다. 각 칸에서 오른쪽으로 연속되는 B의 수 right와 아래로 연속되는 수 down을 저장하려고 합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "최대 테두리 정사각형을 구하고, 후보 왼쪽 위 (r,c), 길이 s에 대해 네 번의 길이 조회만으로 판정하는 조건을 쓰세요. 왼쪽 위의 right와down 두 값만 보면 충분하다는 주장을 별도 판 BBB / BWW / BWW로 반박하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 추론 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "좌표는 0부터입니다. 후보는 판 안에 완전히 들어가야 합니다. W칸의 연속 길이는 0이며 범위 밖 길이도 0으로 둡니다. 최대 길이 동률이면 왼쪽 위 행, 열이 작은 후보를 고릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "위쪽 변과 왼쪽 변은 왼쪽 위에서 시작합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아래쪽 변과 오른쪽 변의 시작점은 서로 다릅니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "right[r+s−1][c]와 down[r][c+s−1]도 필요합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 그림 풀이 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "주어진 4×4의 바깥 테두리가 모두 B이므로 최대 길이 4, (0,0)입니다. 조건은 right[r][c]≥s, down[r][c]≥s, right[r+s−1][c]≥s, down[r][c+s−1]≥s입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "right는 오른쪽부터, down은 아래쪽부터 계산합니다. B칸이면 1+다음 칸 길이이고 W이면 0입니다. 별도 BBB/BWW/BWW의 왼쪽 위 right=3,down=3이지만 아래 변과 오른쪽 변은 흰색을 포함하므로 길이 3은 실패입니다. 길이를 큰 순서로 검사하고 같은 길이는 행·열 순으로 검사하면 첫 성공이 요구한 답입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 길이 4 후보의 네 시작점\n    accDescr: 길이 4 후보의 네 시작점에서 실제 예시의 상태와 판단을 표시합니다.\n    N0[\"후보 0,0 길이 4\"]\n    N1[\"위 right 0,0 = 4 / 왼쪽 down 0,0 = 4\"]\n    N2[\"아래 right 3,0 = 4 / 오른쪽 down 0,3 = 4\"]\n    N3[\"네 값 모두 4 이상: 통과\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 두 변만 확인하는 반례\n    accDescr: 두 변만 확인하는 반례에서 실제 예시의 상태와 판단을 표시합니다.\n    N0[\"BBB / BWW / BWW\"]\n    N1[\"왼쪽 위 right 3 / down 3: 두 조건 통과\"]\n    N2[\"아래 right 2,0 = 1: 길이 3 실패\"]\n    N0 --> N1\n    N1 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 연속 길이가 s 이상이라는 것은 해당 시작점에서 s칸짜리 변이 전부 검정인 것과 동치입니다. 네 조회는 정확히 네 변을 덮습니다. 역방향 계산은 이미 계산한 이웃의 올바른 길이에 1을 더하므로 귀납적으로 정확합니다. 큰 길이부터 빠짐없이 검사하므로 최댓값을 놓치지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간·공간: n×n 전처리 O(n²), 후보 조회 O(n³), 길이 표 O(n²) 공간입니다. 후보 한 개는 O(1) 판정입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이 1은 같은 칸을 여러 번 조회해도 정확합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "후보 오른쪽 끝 c+s−1과 아래 끝 r+s−1의 범위를 먼저 확인합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "내부 W를 0으로 바꾸어 전체 면적 합을 검사하는 조건은 이 문제의 조건이 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 어떤 길이의 테두리가 실패하면 더 큰 길이도 실패하나요? 아닙니다. 3×3 가운데가 W인 예에서 일부 길이 2는 실패해도 길이 3이 통과합니다. 단순 이분 탐색의 단조성을 가정하지 마세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 17.23 Max Black Square의 개념을 바탕으로 새로 만든 문제입니다. 책의 지문이나 공식 해설을 번역·재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "짝 문제: 기본",
+              "href": "/thinking-lab/ep-17-23-max-black-square/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 주제 17.24",
+              "href": "/thinking-lab/ep-17-24-max-submatrix/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

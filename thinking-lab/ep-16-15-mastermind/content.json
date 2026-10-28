@@ -1,0 +1,393 @@
+{
+  "title": "16.15.1 기본 — 색 카드 힌트는 한 장씩만 소비한다",
+  "subtitle": "조건을 구분하고 작은 예에서 일반 규칙을 찾아가는 사고력 문제",
+  "memoKey": "thinking-ctci-16.15-draft",
+  "starter": "// 작은 예를 직접 추적하고 경계 조건을 적어 보세요.\n// 답을 보지 않고 규칙이 맞는 이유부터 설명해 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "16.15.1 기본 — 색 카드 힌트는 한 장씩만 소비한다"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "비밀 색 카드 줄은 A,A,B,C이고 추측은 A,C,A,A입니다. 같은 위치에서 같은 색이면 정확 적중, 위치는 다르지만 남은 비밀 카드와 색이 같으면 색 적중입니다. 한 카드는 한 번만 점수에 사용할 때 두 점수는 얼마인가요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "색은 A,B,C 세 종류입니다. 정확 적중을 먼저 확정하고 그 위치의 양쪽 카드를 모두 제거한 다음 색 적중을 셉니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "여러 장의 같은 색이 있을 수 있습니다. 추측 한 장과 비밀 한 장은 각각 최대 한 번만 짝지으며 정확 적중은 색 적중에 다시 포함하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "위치"
+                  }
+                ],
+                [
+                  {
+                    "text": "0"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "3"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "비밀"
+                  }
+                ],
+                [
+                  {
+                    "text": "A"
+                  }
+                ],
+                [
+                  {
+                    "text": "A"
+                  }
+                ],
+                [
+                  {
+                    "text": "B"
+                  }
+                ],
+                [
+                  {
+                    "text": "C"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "추측"
+                  }
+                ],
+                [
+                  {
+                    "text": "A"
+                  }
+                ],
+                [
+                  {
+                    "text": "C"
+                  }
+                ],
+                [
+                  {
+                    "text": "A"
+                  }
+                ],
+                [
+                  {
+                    "text": "A"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 자신의 답과 이유를 적어 보세요. 정답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "위치 0의 A를 먼저 양쪽에서 지우세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "남은 비밀 A,B,C에 대해 추측 C,A,A를 하나씩 짝지어 보세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "마지막 추측 A를 받쳐 줄 비밀 A가 아직 남아 있나요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "위치 0의 A만 정확 적중이므로 정확 적중은 1입니다. 이를 빼면 비밀 A,B,C, 추측 C,A,A가 남습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "추측 C는 비밀 C와, 첫 남은 A는 비밀 A와 짝을 이룹니다. 두 번째 A는 대응할 비밀 A가 없으므로 점수를 얻지 못합니다. 따라서 색 적중은 2이며 답은 (1,2)입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"위치 0의 비밀 A와 추측 A\"] --> B[\"정확 적중 1\"]\n B --> C[\"양쪽 카드 제거\"]\n C --> D[\"남은 비밀 A B C / 추측 C A A\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"추측 C\"] --> D[\"비밀 C 한 장 소비\"]\n B[\"추측 첫 A\"] --> E[\"비밀 A 한 장 소비\"]\n C[\"추측 둘째 A\"] --> F[\"남은 비밀 A 없음: 0점\"]\n D --> G[\"색 적중 합계 2\"]\n E --> G"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확 적중 위치를 먼저 제거하면 이미 사용한 카드를 다시 세지 않습니다. 남은 같은 색 카드끼리만 한 장씩 짝지으므로 비밀과 추측 각각의 공급량보다 많은 점수를 얻을 수 없습니다. 가능한 모든 같은 색 짝을 만든 결과가 색 적중 수입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이 예는 카드 수가 고정입니다. 일반 n장과 색 종류 k개에서는 개수를 세는 방법으로 O(n+k)시간·O(k)공간에 계산할 수 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "모두 정확하면 색 적중은 0입니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "없는 색을 여러 번 추측해도 점수가 늘지 않습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "빈 줄 두 개의 점수는 (0,0)으로 정합니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: 각 추측 색이 비밀 줄 어딘가에 있기만 하면 색 적중으로 세어도 될까요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "안 됩니다. 같은 비밀 카드 한 장을 여러 추측에 재사용하게 됩니다. 이 예의 A 세 개를 전부 점수로 주려면 비밀 A가 세 장 있어야 하지만 실제로는 두 장뿐입니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "심화의 실제 C++11 검사에서 색 세 종류·길이 0~5인 같은 길이의 모든 줄 쌍 66,430개를 카드 소모 기준과 비교했습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "이 페이지의 예시는 종이 모형이며 별도 C++ 프로그램 실행을 주장하지 않습니다. 브라우저 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 심화 문제",
+              "href": "/thinking-lab/ep-16-15-02-mastermind/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

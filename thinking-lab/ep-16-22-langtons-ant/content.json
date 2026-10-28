@@ -1,0 +1,225 @@
+{
+  "title": "16.22.1 기본 — 색을 뒤집으며 걷는 종이 개미",
+  "subtitle": "회전·색 변경·이동의 순서를 고정하기",
+  "memoKey": "thinking-ctci-16.22-draft",
+  "starter": "// 상태와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "무한한 정사각 격자는 처음 모두 흰색입니다. 개미는 (행 0, 열 0)에서 북쪽을 봅니다. 북쪽 이동은 행−1, 동쪽은 열+1입니다. 매 단계 현재 칸이 흰색이면 오른쪽 90도, 검은색이면 왼쪽 90도 회전하고, 현재 칸의 색을 뒤집은 뒤 한 칸 앞으로 이동합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다섯 단계 뒤 개미의 위치·방향과 검은 칸들을 구하세요. 회전 전에 이동하는 해석과 혼동하지 않도록 각 단계의 출발 칸 색을 기록하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 추론 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "문제에 명시한 좌표·순서·중복·범위를 따릅니다. 먼저 종이에 작은 상태와 반례를 적어 풀 수 있습니다. 구현이 있는 경우 접힌 입력 계약까지 확인하세요. 실제로 실행하지 않은 테스트를 실행했다고 간주하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처음 흰칸에서 북쪽의 오른쪽은 동쪽입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "네 번 움직이면 출발 위치로 돌아오지만 색은 처음과 다릅니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다섯 번째에는 검은 시작 칸에서 왼쪽으로 돕니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "첫 네 단계의 도착은 (0, 1)동, (1, 1)남, (1, 0)서, (0, 0)북입니다. 네 출발 칸 (0, 0), (0, 1), (1, 1), (1, 0)이 검게 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다섯 번째 출발 (0, 0)은 검정이므로 북에서 서쪽으로 돌고 그 칸을 흰색으로 바꾼 뒤 (0, −1)로 갑니다. 최종 방향은 서쪽, 검은 칸은 (0, 1), (1, 1), (1, 0) 세 곳입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 처음 네 도착 상태\n    accDescr: 처음 네 도착 상태의 구체적인 상태와 이동을 표시합니다.\n    N0[\"시작 0,0 북\"]\n    N1[\"1단계 0,1 동\"]\n    N2[\"2단계 1,1 남\"]\n    N3[\"3단계 1,0 서\"]\n    N4[\"4단계 0,0 북\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n    N3 --> N4\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 다섯 번째는 다른 회전\n    accDescr: 다섯 번째는 다른 회전의 구체적인 상태와 이동을 표시합니다.\n    N0[\"시작칸 0,0은 검정\"]\n    N1[\"북에서 왼쪽으로 서\"]\n    N2[\"0,0을 흰색으로\"]\n    N3[\"0,-1로 이동 / 서쪽\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 한 단계는 출발 칸의 이전 색으로 회전을 결정한 뒤 그 칸만 뒤집고 새 방향으로 이동합니다. 이 규칙을 순서대로 적용하면 상태가 유일합니다. 위치가 재방문되어도 칸의 색이 바뀌었으므로 같은 행동을 반복한다고 가정할 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: k단계에서 검은 칸 집합으로 색을 저장하면 최대 k칸이고 해시 집합의 평균 처리 비용은 단계당 O(1)입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0단계면 위치와 방향은 처음 그대로이고 검은 칸이 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "음수 좌표도 유효합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "색을 뒤집은 뒤 새 색으로 회전하면 이 규칙과 반대 결과가 됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 위치와 방향만 같으면 전체 상태도 같은가요? 지도 색이 다르면 다음 행동이 달라지므로 같지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 16.22 Langton’s Ant의 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 심화",
+              "kind": "link",
+              "href": "/thinking-lab/ep-16-22-02-langtons-ant/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

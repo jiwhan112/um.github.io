@@ -1,0 +1,280 @@
+{
+  "title": "17.6.1 기본 — 번호표에 적힌 숫자 2를 모두 세기",
+  "subtitle": "작은 상태와 정확한 경우의 수로 풀어 보는 확장 사고력 문제",
+  "memoKey": "thinking-ctci-17.6-draft",
+  "starter": "// 작은 예의 상태·불변조건·반례부터 적어 보세요.\n// 구현이 있는 문제는 접힌 정수 범위와 입력 계약을 확인하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "17.6.1 기본 — 번호표에 적힌 숫자 2를 모두 세기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "0부터 25까지 번호표를 한 장씩 만듭니다. 십진 표기에 등장하는 숫자 2의 총 횟수를 세세요. 22는 두 번 세고, 앞에 0을 붙이지 않습니다. 번호표 장수와 숫자 2의 등장 횟수를 구분해 일의 자리·십의 자리로 나누어 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력·표현·추론 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "양 끝 0과 25를 모두 포함합니다. 0은 한 글자 0으로 적고 선행 0이 없습니다. 숫자 2가 있는 번호를 한 번씩만 세는 문제가 아니라 모든 자릿수의 등장 횟수를 셉니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "범위 0..25 포함"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "22는 2가 두 개"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "자리별로 따로 집계"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일의 자리가 2인 번호를 나열하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "십의 자리가 2인 범위는 어디서 시작하나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 목록에 22가 겹치는 것은 중복 오류인가요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "일의 자리에서는 2,12,22의 3회, 십의 자리에서는 20..25의 6회로 합계 9회입니다. 22를 두 목록에 한 번씩 세는 것이 맞습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 자리별 등장 횟수 합산\n    accDescr: 서로 다른 경우의 결과를 나누어 계산한다\n    S[\"0..25의 숫자 2\"] --> A[\"일의 자리:2,12,22 →3회\"]\n    S --> B[\"십의 자리:20..25 →6회\"]\n    A --> T[\"서로 다른 자리 합계 9회\"]\n    B --> T\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 나누어 비교하기\n    accDescr: 공통 조건에서 여러 경우를 비교한다\n    N0[\"번호 22\"]\n    N1[\"일의 자리 2:한 회\"]\n    N2[\"십의 자리 2:한 회\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "모든 숫자 2는 정확히 하나의 번호표와 자리에 속합니다. 자리를 기준으로 나누면 각 등장 위치를 빠짐없이 한 번씩 셉니다. 같은 번호표에 두 2가 있으면 서로 다른 등장 위치라 각각 포함됩니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "번호를 모두 문자열로 바꾸는 검산은 범위 크기와 자릿수에 비례합니다. 자릿수 주기 집계로 넓은 범위를 더 빠르게 셀 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "2가 들어간 번호표는 8장이지만 등장 횟수는 9입니다. 이 둘을 혼동하면 22에서 차이가 생깁니다. 숫자 0을 세는 변형은 선행 0의 취급이 달라 별도 검토가 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 범위를 26까지 늘리면 몇 회가 추가될까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "26의 십의 자리 2 한 회가 추가되어 10회입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C++11 실행 파일을 작은 범위 직접 문자열 집계와 독립적인 digit DP 기준값에 대조한 1,105사례를 확인했습니다. n=10^9 등 경계와 잘못된 입력 5사례도 검사했습니다. 엄격 경고·UBSan 컴파일과 실행이 통과했습니다. 검산 범위와 수학적 증명을 구분하며 화면 렌더링과 실제 공개 반영은 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 진도 식별에만 사용했습니다. 문제와 사례·그림은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다. 확률 문제의 정확성은 명시된 독립 균등 모형에 대한 논증입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-17-06-02-count-of-2s/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

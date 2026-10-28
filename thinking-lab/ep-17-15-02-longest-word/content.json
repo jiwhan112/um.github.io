@@ -1,0 +1,413 @@
+{
+  "title": "17.15.2 심화 — 도달 가능한 글자 경계를 기억하기",
+  "subtitle": "조건을 구분하고 작은 예에서 일반 규칙을 찾아가는 사고력 문제",
+  "memoKey": "thinking-ctci-17.15-2-draft",
+  "starter": "// 작은 예를 직접 추적하고 경계 조건을 적어 보세요.\n// 답을 보지 않고 규칙이 맞는 이유부터 설명해 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "17.15.2 심화 — 도달 가능한 글자 경계를 기억하기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사전 [rain, bow, rainbow, rainbowrain, stone]에서 두 개 이상의 더 짧은 사전 낱말로 만들어지는 가장 긴 항목을 찾으세요. 후보 문자열의 앞 i글자까지 만들 수 있는지 reach[i]에 기록합니다. 같은 조각 재사용과 길이 동점의 사전순 규칙까지 지키는 알고리즘을 작성하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "입력 낱말은 비어 있지 않은 ASCII 소문자이며 항목 수는 최대 100, 각 길이는 최대 100입니다. 이 입력 상한과 알파벳은 호출 계약입니다. 같은 낱말이 반복되어도 종류 하나로 합칩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "후보보다 짧은 조각만 사용합니다. 비어 있지 않은 조각 둘 이상으로 완성되는 경우 모든 조각은 반드시 후보보다 짧으므로 이 제한은 정답을 없애지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "답이 없으면 빈 문자열을 반환합니다. 유효 낱말에는 빈 문자열이 없으므로 없음 표식과 구별됩니다. 반환은 최장 항목, 동점이면 사전순 최소입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "항목"
+                  }
+                ],
+                [
+                  {
+                    "text": "내용"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "사전"
+                  }
+                ],
+                [
+                  {
+                    "text": "rain, bow, rainbow, rainbowrain, stone"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "분할 조건"
+                  }
+                ],
+                [
+                  {
+                    "text": "두 개 이상 조각, 같은 조각 재사용 가능"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "동점 규칙"
+                  }
+                ],
+                [
+                  {
+                    "text": "같은 길이면 사전순 최소"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 자신의 답과 이유를 적어 보세요. 정답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "reach[0]은 빈 접두부를 만들었다는 출발 상태입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "만들 수 있는 위치에서 실제로 일치하는 사전 조각의 길이만큼 앞으로 이동하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "후보와 같은 길이의 조각을 제외하면 한 번에 자기 자신으로 끝나는 경로를 막을 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이 L 후보에 대해 reach[0]=true, 나머지는 false로 둡니다. 도달 가능한 start마다 후보보다 짧은 각 사전 조각을 비교하고 일치하면 reach[start+조각 길이]=true로 표시합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "rainbowrain에서는 0에서 rain으로 4, bow로 7, rain으로 11에 도달합니다. 같은 rain을 다시 쓰는 것은 허용됩니다. 모든 조각이 L보다 짧으므로 끝에 도달한 경로에는 최소 두 조각이 있습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "사전의 모든 후보를 검사하며 길이가 더 크거나 같은 길이에 사전순으로 앞선 후보만 답으로 갱신합니다. stone은 자기 자신 한 번 말고 경로가 없어 탈락하고 rainbowrain이 반환됩니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "전체 C++11 풀이와 실행 검증"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "#include <algorithm>\n#include <cassert>\n#include <functional>\n#include <iostream>\n#include <set>\n#include <string>\n#include <vector>\nusing namespace std;\n// 각 조각은 후보보다 짧아야 하므로 후보 자신 한 번을 답으로 세지 않습니다.\nbool composite(const string&target,const set<string>&dict){\n vector<bool> reach(target.size()+1,false);reach[0]=true;\n for(size_t start=0;start<target.size();++start){\n  if(!reach[start])continue;\n  for(const string&word:dict){\n   if(word.empty()||word.size()>=target.size()||word.size()>target.size()-start)continue;\n   if(target.compare(start,word.size(),word)==0)reach[start+word.size()]=true;\n  }\n }\n return reach[target.size()];\n}\nstring longestComposite(const vector<string>&words){\n set<string>dict(words.begin(),words.end());dict.erase(\"\");\n string best;\n for(const string&word:dict)if(composite(word,dict)){\n  if(word.size()>best.size()||(word.size()==best.size()&&word<best))best=word;\n }\n return best;\n}\n// 후보를 자르는 모든 경계를 직접 탐색하는 독립 기준입니다.\nbool reference(const string&s,const set<string>&dict,size_t pos,int pieces){\n if(pos==s.size())return pieces>=2;\n for(size_t end=pos+1;end<=s.size();++end)\n  if(dict.count(s.substr(pos,end-pos))&&reference(s,dict,end,pieces+1))return true;\n return false;\n}\nint main(){\n const vector<string>pool={\"a\",\"b\",\"aa\",\"ab\",\"ba\",\"bb\",\"aba\"};size_t cases=0;\n for(unsigned mask=0;mask<(1U<<pool.size());++mask){\n  vector<string>w;set<string>d;\n  for(size_t i=0;i<pool.size();++i)if(mask&(1U<<i)){w.push_back(pool[i]);d.insert(pool[i]);}\n  string best;\n  for(const string&s:d)if(reference(s,d,0,0))if(s.size()>best.size()||(s.size()==best.size()&&s<best))best=s;\n  assert(longestComposite(w)==best);++cases;\n }\n assert(longestComposite({\"rain\",\"bow\",\"rainbow\",\"rainbowrain\",\"stone\"})==\"rainbowrain\");\n assert(longestComposite({\"a\",\"ba\",\"ababa\",\"babab\",\"b\"})==\"ababa\");\n assert(longestComposite({\"stone\",\"stone\"}).empty());\n cout<<cases<<\" dictionary cases + reuse/tie/duplicate cases passed\\n\";\n}\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"경계 0\"] -->|\"rain\"| B[\"경계 4\"]\n B -->|\"bow\"| C[\"경계 7\"]\n C -->|\"rain 재사용\"| D[\"경계 11: 완성\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"stone, 길이 5\"] --> B[\"stone 조각도 길이 5라 제외\"]\n B --> C[\"더 짧은 조각으로 첫 경계에 도달 못함\"]\n C --> D[\"자기 자신만 있는 후보는 탈락\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "처리 중 reach[i]는 후보보다 짧은 사전 조각들을 이어 접두부 [0,i)를 만들 수 있다는 뜻입니다. 실제 일치 조각만 추가하므로 참인 상태는 유효한 분할을 갖습니다. 반대로 유효 분할의 각 경계는 이전 경계에서 그 조각을 검사할 때 표시되므로 끝 경계를 놓치지 않습니다. 모든 후보를 지정한 순서 기준으로 비교하므로 최장·동점 규칙도 만족합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "사전 전체 글자 수를 S, 후보 길이를 L이라 하면 한 후보는 각 위치에서 모든 낱말 비교를 하므로 O(LS)의 안전한 시간 상한입니다. 전체 후보 검사는 O(S²) 상한이며 사전 구축 비용은 별도입니다. 저장은 사전 O(S), 후보별 reach O(L)입니다. 문자열 비교 비용을 무조건 O(1)로 보지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "단일 낱말만 있는 사전은 답이 없습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "중복 항목은 자기 자신을 두 번 쓴 것으로 오해하지 않습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "빈 사전은 없음입니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "긴 후보만 먼저 검사해 조기 반환하려면 길이·사전순 정렬 규칙을 정확히 적용해야 합니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: 후보 자신을 사전에서 잠깐 지웠다가 다시 넣는 방법도 가능할까요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "가능하지만 사전 공유 상태를 복구해야 하는 부담이 생깁니다. 이 풀이의 길이 제한은 사전을 수정하지 않고 자기 자신 한 조각 사용을 막으며, 비어 있지 않은 조각 조건 아래 같은 판정을 얻습니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "전체 C++11 프로그램을 엄격 경고·UBSan으로 실행했습니다. 7종 낱말 부분집합 128개에서 모든 경계 분할 재귀 기준과 일치했고 rain 재사용, 길이 동점, 동일 낱말 중복 사례도 통과했습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "위 전체 C++11 프로그램은 실제 컴파일·실행했습니다. 브라우저 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 기본 문제",
+              "href": "/thinking-lab/ep-17-15-longest-word/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 주제 17.16.1 기본 문제",
+              "href": "/thinking-lab/ep-17-16-the-masseuse/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

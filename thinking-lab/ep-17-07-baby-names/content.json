@@ -1,0 +1,290 @@
+{
+  "title": "17.7.1 기본 — 서로 같은 이름이라고 정한 기록 합치기",
+  "subtitle": "작은 상태와 정확한 경우의 수로 풀어 보는 확장 사고력 문제",
+  "memoKey": "thinking-ctci-17.7-draft",
+  "starter": "// 작은 예의 상태·불변조건·반례부터 적어 보세요.\n// 구현이 있는 문제는 접힌 정수 범위와 입력 계약을 확인하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "17.7.1 기본 — 서로 같은 이름이라고 정한 기록 합치기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가상의 이름 기록은 Mina4명, Mena3명, Nari5명, Nary2명, Sora1명입니다. 자료 담당자가 Mina와 Mena, Nari와 Nary를 같은 이름 묶음으로 취급하라고 명시했습니다. 각 묶음의 합을 구하고, 묶음 대표는 ASCII 사전순으로 가장 작은 표기로 정하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력·표현·추론 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실제 사람의 신원이나 문화적 이름 동등성을 추론하는 문제가 아닙니다. 주어진 동등 관계만 사용하며 대소문자를 구분하는 ASCII 표기입니다. 각 원본 이름의 수는 별도 사람 수이고 중복 집계가 아닙니다. 동등 관계는 양방향이며 연결되면 같은 묶음입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Mina4, Mena3"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Nari5, Nary2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Sora1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "관계 Mina-Mena, Nari-Nary"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이름을 정점, 같은 묶음 관계를 간선으로 그리세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "연결 성분 하나가 결과 한 행입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "대표 이름 선택과 인원 합은 별도 집계입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "결과는 Mena7, Nari7, Sora1입니다. Mena가 Mina보다, Nari가 Nary보다 ASCII 사전순에서 앞섭니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 세 성분의 독립 집계\n    accDescr: 서로 다른 경우의 결과를 나누어 계산한다\n    S[\"주어진 이름 관계\"] --> A[\"Mina4 ↔ Mena3:대표 Mena / 합 7\"]\n    S --> B[\"Nari5 ↔ Nary2:대표 Nari / 합 7\"]\n    S --> C[\"Sora1:단독 합 1\"]\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 나누어 비교하기\n    accDescr: 공통 조건에서 여러 경우를 비교한다\n    N0[\"동등 관계 적용\"]\n    N1[\"명시된 연결:합산\"]\n    N2[\"연결 없는 이름:단독 유지\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "동등 관계의 연결 경로로 묶인 이름은 같은 성분에 속합니다. 성분을 한 번 탐색하며 각 정점의 수를 한 번 더하고 표기의 최솟값을 택하면 중복 없이 합과 대표를 얻습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이름 V개와 관계 E개를 그래프로 탐색하면 O(V+E) 시간과 공간입니다. 표기 비교 비용은 이름 길이에 따라 추가될 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 발음처럼 보인다는 이유만으로 새 간선을 만들지 않습니다. 관계가 없는 이름도 단독 성분으로 남겨야 전체 인원 15명이 보존됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 두 묶음을 잇는 Mena-Nary 관계가 추가되면?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "네 이름이 하나의 성분이 되어 Mena14, 그리고 Sora1입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "다섯 이름의 가능한 무방향 그래프 1,024개에서 중복 간선을 다시 적용한 분리 집합 결과를 별도 연결 성분 탐색과 비교했습니다. 인원 0 별칭과 대표 이름·총인원 보존을 확인했습니다. 검산 범위와 수학적 증명을 구분하며 화면 렌더링과 실제 공개 반영은 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 진도 식별에만 사용했습니다. 문제와 사례·그림은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다. 확률 문제의 정확성은 명시된 독립 균등 모형에 대한 논증입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-17-07-02-baby-names/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

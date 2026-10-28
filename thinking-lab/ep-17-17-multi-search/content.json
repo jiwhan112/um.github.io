@@ -1,0 +1,391 @@
+{
+  "title": "17.17.1 기본 — 문장 안의 겹치는 작은 조각들",
+  "subtitle": "조건을 구분하고 작은 예에서 일반 규칙을 찾아가는 사고력 문제",
+  "memoKey": "thinking-ctci-17.17-draft",
+  "starter": "// 작은 예를 직접 추적하고 경계 조건을 적어 보세요.\n// 답을 보지 않고 규칙이 맞는 이유부터 설명해 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "17.17.1 기본 — 문장 안의 겹치는 작은 조각들"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "문자열 banana에서 ana, na, ban, xy가 시작하는 모든 위치를 각각 찾으세요. 위치는 0부터 세고 같은 단어의 등장끼리 겹쳐도 모두 포함합니다. ana를 한 번 찾은 뒤 그 길이만큼 건너뛰면 무엇을 놓치는지도 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원문과 찾을 조각은 ASCII 소문자입니다. 위치는 바이트 위치와 문자 위치가 같은 0 기반 인덱스입니다. 대소문자·정규화·한국어 분리는 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 질문에 대해 시작 위치를 오름차순으로 답합니다. 이 기본 예의 조각은 모두 비어 있지 않고, 찾지 못하면 빈 목록입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 등장에 사용한 문자를 다른 등장에 다시 사용할 수 있습니다. 단어를 원문에서 지우거나 서로 겹치지 않게 선택하는 문제는 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "원문 위치"
+                  }
+                ],
+                [
+                  {
+                    "text": "0"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ],
+                [
+                  {
+                    "text": "3"
+                  }
+                ],
+                [
+                  {
+                    "text": "4"
+                  }
+                ],
+                [
+                  {
+                    "text": "5"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "문자"
+                  }
+                ],
+                [
+                  {
+                    "text": "b"
+                  }
+                ],
+                [
+                  {
+                    "text": "a"
+                  }
+                ],
+                [
+                  {
+                    "text": "n"
+                  }
+                ],
+                [
+                  {
+                    "text": "a"
+                  }
+                ],
+                [
+                  {
+                    "text": "n"
+                  }
+                ],
+                [
+                  {
+                    "text": "a"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 자신의 답과 이유를 적어 보세요. 정답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "ana는 위치 1에서 세 글자, 위치 3에서도 세 글자입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시작 위치를 한 칸씩 옮기며 그 뒤 조각 길이만큼 비교하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "na와 ana가 같은 문자 일부를 써도 두 질문의 결과를 각각 남깁니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "ana의 시작은 [1,3], na는 [2,4], ban은 [0], xy는 []입니다. ana의 두 등장은 위치 3의 a를 공유하지만 모두 유효합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 조각마다 가능한 모든 시작 위치를 검사하면 됩니다. 찾은 뒤 다음 시작을 현재 위치+조각 길이로 건너뛰면 1 다음을 4로 옮겨 위치 3의 ana를 놓칩니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"banana의 위치 1부터 ana\"] --> B[\"위치 1,2,3 사용\"]\n C[\"banana의 위치 3부터 ana\"] --> D[\"위치 3,4,5 사용\"]\n B --> E[\"위치 3 공유를 허용: 두 시작 1,3\"]\n D --> E"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"위치 1에서 ana 발견\"] --> B[\"잘못된 건너뛰기: 다음 4\"]\n B --> C[\"위치 3의 등장 누락\"]\n A --> D[\"모든 시작을 한 칸씩 확인\"]\n D --> E[\"겹친 등장도 보존\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "조각의 모든 등장은 어떤 유효 시작 위치에서 원문의 같은 길이 부분문자열과 일치합니다. 모든 시작을 검사하고 일치할 때만 기록하면 빠짐없고 잘못된 등장도 없습니다. 시작을 한 칸씩 진행하므로 겹침을 금지하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원문 길이 N, 조각 길이 m 하나를 단순 비교하면 O(Nm)시간 상한입니다. 여러 질문은 각 비교 비용을 더하며 반환 위치 수만큼 저장 공간이 필요합니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "조각이 원문보다 길면 등장 위치가 없습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "같은 문자 반복에서는 겹친 등장이 많습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "찾지 못한 질문도 빈 목록이라는 결과가 남습니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: aaaa에서 aa의 시작을 모두 찾으면 무엇인가요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "[0,1,2]입니다. [0,2]만 답하면 서로 겹치지 않는 등장만 선택한 다른 문제가 됩니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "심화의 별도 Python 모형에서 트라이 검색과 시작 위치별 직접 비교를 대조했으며 banana의 네 질문 결과도 실제 확인했습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "이 페이지의 예시는 종이 모형이며 별도 C++ 프로그램 실행을 주장하지 않습니다. 브라우저 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 심화 문제",
+              "href": "/thinking-lab/ep-17-17-02-multi-search/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

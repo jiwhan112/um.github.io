@@ -1,0 +1,309 @@
+{
+  "title": "17.6.2 심화 — 큰 범위도 자릿수 주기로 세기",
+  "subtitle": "작은 상태와 정확한 경우의 수로 풀어 보는 확장 사고력 문제",
+  "memoKey": "thinking-ctci-17.6-2-draft",
+  "starter": "// 작은 예의 상태·불변조건·반례부터 적어 보세요.\n// 구현이 있는 문제는 접힌 정수 범위와 입력 계약을 확인하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "17.6.2 심화 — 큰 범위도 자릿수 주기로 세기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "0부터 n까지 모든 십진 표기에서 숫자 2의 횟수를 셉니다. n=325의 답을 일·십·백의 자리 기여로 나누어 구하고, n≤1000000000에도 번호를 하나씩 만들지 않는 방법을 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력·표현·추론 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C++11 입력은 정수 n 하나이며 0..1000000000입니다. 범위 밖·부족·추가 토큰은 종료 코드 1로 거절합니다. 선행 0 없이 쓰고 양 끝을 포함합니다. 자리값 f=1,10,100,...마다 high=n/(10f), cur=(n/f) mod10, low=n modf를 사용합니다. 내부와 결과는 unsigned long long입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "예시 n=325"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "자리값 1,10,100"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "각 자리의 2 등장 수를 더함"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 자리의 숫자는 10f 길이 주기로 반복됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "완전한 주기에서는 2인 구간이 f개입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "마지막 불완전 주기는 현재 숫자가 2보다 작은지·같은지·큰지로 나누세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "기여는 일의 자리 33회, 십의 자리 36회, 백의 자리 100회라 총 169회입니다. 각 자리 기본 기여는 high×f이고, cur<2이면 0, cur=2이면 low+1, cur>2이면 f를 추가합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 주어진 사례의 계산을 순서대로 추적한다\n    N0[\"n325 / 일:32×1+1=33\"]\n    N1[\"십:3×10+5+1=36\"]\n    N2[\"백:0×100+100=100\"]\n    N3[\"합 169\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 나누어 비교하기\n    accDescr: 공통 조건에서 여러 경우를 비교한다\n    N0[\"현재 자리 숫자 cur\"]\n    N1[\"2 미만:추가 0\"]\n    N2[\"2와 같음:추가 low+1\"]\n    N3[\"2 초과:추가 f\"]\n    N0 --> N1\n    N0 --> N2\n    N0 --> N3\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "완전한 10f 주기마다 해당 자리가 2인 값은 정확히 f개입니다. 마지막 부분에서 cur가 2에 못 미치면 추가가 없고,2이면 0부터 low까지 low+1개,2를 지났으면 f개가 모두 들어갑니다. 각 자리의 등장 위치는 서로 다르므로 합산하면 전체 횟수입니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "십진 자릿수만 반복하므로 O(log n) 시간, O(1) 추가 공간입니다. n=0은 반복 없이 0을 반환합니다."
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "전체 C++11 예제",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "입력은 문제의 접힌 계약을 따릅니다. 표준 입력의 십진 정수 토큰을 읽으며 잘못된 입력에는 결과를 출력하지 않고 종료 코드 1을 반환합니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "code",
+                  "language": "cpp",
+                  "text": "#include <iostream>\n#include <string>\nint main() {\n    long long input;\n    if (!(std::cin >> input) || input < 0 || input > 1000000000LL) return 1;\n    std::string extra;\n    if (std::cin >> extra) return 1;\n    const unsigned long long n = static_cast<unsigned long long>(input);\n    unsigned long long answer = 0;\n    for (unsigned long long f = 1; f <= n; f *= 10) {\n        // n의 상한 덕분에 10*f와 f의 다음 값은 최대 10^10입니다.\n        const unsigned long long high = n / (10 * f);\n        const unsigned long long cur = (n / f) % 10;\n        const unsigned long long low = n % f;\n        answer += high * f;\n        if (cur == 2) answer += low + 1;\n        else if (cur > 2) answer += f;\n    }\n    std::cout << answer << '\\n';\n}\n"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "n=0이면 어떤 자리에서도 2가 없어 0입니다. 최종 합뿐 아니라 10f와 high×f도 안전한 범위인지 확인해야 합니다. 제한 n≤10^9에서 최대로 계산하는 10f는 10^10이라 사용한 정수형에 충분히 들어갑니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: n=222에서 백의 자리 2 기여는?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "200..222의 23개입니다. high=0,cur=2,low=22라 22+1입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "C++11 실행 파일을 작은 범위 직접 문자열 집계와 독립적인 digit DP 기준값에 대조한 1,105사례를 확인했습니다. n=10^9 등 경계와 잘못된 입력 5사례도 검사했습니다. 엄격 경고·UBSan 컴파일과 실행이 통과했습니다. 검산 범위와 수학적 증명을 구분하며 화면 렌더링과 실제 공개 반영은 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 진도 식별에만 사용했습니다. 문제와 사례·그림은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다. 확률 문제의 정확성은 명시된 독립 균등 모형에 대한 논증입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-17-06-count-of-2s/",
+              "text": "같은 주제의 기본 문제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-17-07-baby-names/",
+              "text": "다음 주제 17.7.1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

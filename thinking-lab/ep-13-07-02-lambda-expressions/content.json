@@ -1,0 +1,308 @@
+{
+  "title": "13.7.2 심화 — 기준을 바꾸는 필터의 함정",
+  "subtitle": "작은 사례로 구분하는 Java의 접근·타입·제어 흐름 계약",
+  "memoKey": "thinking-ctci-13.7-2-draft",
+  "starter": "// 제어 흐름과 객체 관계, 허용되는 연산을 적어 보세요.\n// 이 페이지는 Java 8 규칙을 종이로 추론하는 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "13.7.2 심화 — 기준을 바꾸는 필터의 함정"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "작업 목록 [2,7,4,9]를 숫자가 5 이상인 것만 남긴 뒤 두 배로 만드는 규칙 A를 생각합니다. 규칙 B는 모든 값을 먼저 두 배로 하고 5 이상만 남깁니다. 두 결과가 같은지 계산하고, B의 비교 기준을 무엇으로 바꾸면 모든 주어진 범위의 입력에서 A와 같아지는지 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "버전·범위·해석 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Java 8 람다로 표현할 수 있는 순수한 filter/map의 종이 모형입니다. 정수 범위는 0..100이고 두 배 연산에 넘침은 없습니다. 입력 순서는 보존하며 필터와 변환은 외부 상태를 바꾸지 않습니다. 실제 Java 스트림을 실행한 기록은 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "살펴볼 입력 또는 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "입력: 2,7,4,9"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A: 5 이상 선택 후 두 배"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "B: 두 배 후 5 이상 선택"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "선택 기준은 변환 전 좌표와 변환 후 좌표에서 다를 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "원래 4는 두 배가 되면 8입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "x≥5를 y=2x로 표현해 보세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A의 결과는 [14,18], B의 결과는 [14,8,18]입니다. B의 기준을 10 이상으로 바꾸면 A와 같아집니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A는 7과 9를 선택하고 각각 14,18로 바꿉니다. B는 [4,14,8,18]에서 5 이상을 골라 원래는 탈락할 4의 결과 8까지 남깁니다. 비교 대상의 단위를 바꿨다면 문턱도 함께 바꾸어야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 대안을 공통 조건에서 나누어 비교한다\n    N0[\"입력 [2,7,4,9]\"]\n    N1[\"A: 선택 [7,9] → [14,18]\"]\n    N2[\"B: 두 배 [4,14,8,18] → [14,8,18]\"]\n    N3[\"수정 B: 10 이상 → [14,18]\"]\n    N0 --> N1\n    N0 --> N2\n    N0 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 바꿔 비교하기\n    accDescr: 대안을 공통 조건에서 나누어 비교한다\n    N0[\"원래 조건 x ≥ 5\"]\n    N1[\"변환 y=2x\"]\n    N2[\"대응 조건 y ≥ 10\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "주어진 범위에서 2배는 넘침 없이 순서를 보존하며 x≥5와 2x≥10이 동치입니다. 따라서 각 원소의 포함 여부와 변환 결과가 같고 입력 순서도 유지되어 전체 결과열이 같습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "범위와 비용"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "길이 n인 입력을 한 번 판정·변환하면 O(n)개 연산입니다. 결과를 목록으로 보관하면 최대 O(n) 공간이고, 원소별 순수 판정의 정확성과 병렬 실행의 실제 성능은 다른 문제입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "변환이 음수를 곱하면 부등호 방향이 바뀝니다. 정수 나눗셈이나 넘침이 있는 경우에는 같은 방식으로 문턱을 기계적으로 옮길 수 없습니다. 상태를 바꾸는 람다는 이 순수 함수 증명 밖입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 원래 기준이 8 이상이면 두 배 후 기준은?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "16 이상입니다. x≥8과 2x≥16이 주어진 범위에서 동치입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "0..100의 값과 기준 모든 10,201쌍에서 두 배 변환 전후의 문턱 동치를 검산했습니다. 캡처한 지역 변수의 컴파일 규칙은 공식 JLS로 확인했습니다. Java 컴파일러·JVM·Random 구현은 실행하지 않았습니다. Python 유한 모형 검산과 공식 규칙 확인을 구분하며 브라우저·실제 공개 검증은 발행 단계에서 별도로 수행합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습과 규칙 출처",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서의 주제명은 진도 연결에만 사용했습니다. 사례·질문·그림은 별도로 구성했으며 원서 지문이나 공식 풀이를 옮기지 않았습니다. Java 8 규칙을 대상으로 하므로 C++과 동일한 의미라고 가정하지 마세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html",
+              "text": "Java 8 Stream의 filter와 map · 공식 규칙 확인"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-13-07-lambda-expressions/",
+              "text": "같은 주제의 기본 문제"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-13-08-lambda-random/",
+              "text": "다음 주제 13.8.1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

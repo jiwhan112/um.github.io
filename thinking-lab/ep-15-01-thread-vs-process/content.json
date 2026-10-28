@@ -1,0 +1,290 @@
+{
+  "title": "15.1.1 기본 — 같은 메모장을 고치는 두 사람",
+  "subtitle": "차례·잠금·대기 조건을 그림으로 검증하는 동시성 사고력 문제",
+  "memoKey": "thinking-ctci-15.1-draft",
+  "starter": "// 원자 단계, 잠금 소유자, 대기 조건을 분리해 적어 보세요.\n// 안전성과 진행 보장에 필요한 가정을 구분하는 종이 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "15.1.1 기본 — 같은 메모장을 고치는 두 사람"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "숫자 0이 적힌 메모장을 두 작업 A,B가 각각 한 번 증가시킵니다. 각 작업은 읽기 R, 읽은 값에 1을 더해 쓰기 W의 두 단계입니다. 같은 메모장을 공유할 때 가능한 최종값을 구하세요. 또 메모장을 각각 복사해 따로 고치면 두 장의 최종값은 어떻게 될까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원자성·실패·진행 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "공유 모형은 각 R/W가 원자적이고 모든 단계가 하나의 전역 순서에 놓이며 A의 R은 A의 W보다, B의 R은 B의 W보다 앞섭니다. 이것은 단순 순차 일관성 모형이지 C++의 데이터 레이스 코드를 실행해도 된다는 뜻이 아닙니다. 분리 모형에는 공유 메모리나 메시지가 없습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 상태와 입력"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "공유 초기값 0"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "A: 읽기 → 쓰기"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "B: 읽기 → 쓰기"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "읽기와 쓰기 전체가 한 덩어리는 아닙니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 작업이 모두 0을 먼저 읽을 수 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "분리된 메모장 하나의 변경이 다른 장에 자동으로 전달되나요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "공유 모형의 최종값은 1 또는 2입니다. 두 번 읽고 두 번 쓰면 1이 되고, A 전체 뒤 B 전체이면 2가 됩니다. 분리 모형은 각 장이 1이며 자동으로 하나의 2가 생기지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 주어진 사례의 진행을 차례로 추적한다\n    N0[\"A가 0 읽음\"]\n    N1[\"B도 0 읽음\"]\n    N2[\"A가 1 씀\"]\n    N3[\"B도 1 씀: 최종 1\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 바꿔 비교하기\n    accDescr: 공통 조건에서 서로 다른 경우를 비교한다\n    N0[\"초기 0, 두 증가\"]\n    N1[\"공유 R/W 분리: 1 또는 2\"]\n    N2[\"각자 복사: 두 메모장 각각 1\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 작업은 0 또는 앞선 작업이 쓴 1을 읽습니다. 마지막 쓰기는 그 값에 1을 더하므로 1이나 2입니다. 실제 프로세스는 독립 주소 공간을 기본으로 하고 같은 프로세스의 스레드는 자원을 공유할 수 있지만, 명시적 프로세스 간 공유 기능도 있으므로 “프로세스는 어떤 경우에도 공유하지 않는다”고 일반화하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 진행 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 작업의 네 단계를 비교하는 상수 크기 모형입니다. n개 작업의 모든 인터리빙을 열거하는 비용과 실제 증가 연산의 실행 비용은 다릅니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "변수를 volatile로 표시하거나 잠깐 쉬게 하는 것만으로 읽기-수정-쓰기 전체가 원자적이 되지는 않습니다. 구현 언어의 메모리 모형에 맞는 잠금이나 원자적 증가가 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 읽기부터 쓰기까지 하나의 공통 잠금으로 묶으면?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 작업의 증가가 끝난 뒤 다른 증가가 진행하므로 최종값은 2입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 증가 작업의 합법적인 R/W 순서 6개를 열거해 최종값 집합 {1,2}를 확인했습니다. 중복 요청 ID의 네 도착 순서도 별도 모형으로 검산했습니다. Python으로 실행한 유한 모형 검산은 명시된 원자성 가정에 한정됩니다. 실제 스레드 실행·Java 컴파일·운영체제 시간 측정은 수행하지 않았습니다. 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습과 규칙 출처",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명시된 원자 단계와 실패·공정성 가정 아래에서 별도로 만든 종이 사고력 문제입니다. 원서 주제명은 진도 연결에만 사용하며 원서 지문과 해설을 옮기지 않았습니다. 유한 모형 검산을 실제 스레드 구현의 모든 실행에 대한 증명으로 과장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/tutorial/essential/concurrency/procthread.html",
+              "text": "Oracle 프로세스와 스레드 · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-01-02-thread-vs-process/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

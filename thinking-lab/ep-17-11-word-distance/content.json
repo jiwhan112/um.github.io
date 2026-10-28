@@ -1,0 +1,370 @@
+{
+  "title": "17.11.1 기본 — 낭독 기록에서 두 낱말 사이의 거리",
+  "subtitle": "낱말 목록은 [비, 바람, 해, 비, 구름, 해]입니다.",
+  "memoKey": "thinking-ctci-17.11-draft",
+  "starter": "// 문제에서 발견한 규칙과 검산 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "낱말 목록은 [비, 바람, 해, 비, 구름, 해]입니다. 위치를 0부터 셀 때 비와 해의 등장 위치 차이 중 가장 작은 값을 구하세요. 두 낱말 사이에 끼어 있는 낱말 수가 아니라 위치의 절댓값 차이를 거리로 사용합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "낱말은 이미 분리된 항목이며 같은 표기의 항목만 같은 낱말입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기본 문제의 두 검색 낱말은 서로 다릅니다. 각 낱말은 여러 번 나올 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "어느 한쪽이 등장하지 않으면 거리 없음으로 답합니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "목록·검색"
+                  }
+                ],
+                [
+                  {
+                    "text": "거리"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "[비,해], 비와 해"
+                  }
+                ],
+                [
+                  {
+                    "text": "1"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "[비,바람,해], 비와 해"
+                  }
+                ],
+                [
+                  {
+                    "text": "2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "[비], 비와 해"
+                  }
+                ],
+                [
+                  {
+                    "text": "없음"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답과 근거를 적어 보세요. 힌트·정답·복습 해설은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비의 위치 목록과 해의 위치 목록을 따로 적으세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 목록에서 하나씩 고른 차이를 비교하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비의 첫 등장만 고르면 가까운 뒤의 등장을 놓칠 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비는 위치 0,3에 있고 해는 2,5에 있습니다. 가능한 거리들은 |0-2|=2, |0-5|=5, |3-2|=1, |3-5|=2입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최소 거리는 1이며 위치 2의 해와 위치 3의 비가 바로 이웃한 경우입니다. 목록의 첫 비와 첫 해만 비교한 2는 최솟값이 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "거리와 사이 항목 수를 혼동하지 않습니다. 이웃한 두 낱말 사이에는 끼어 있는 항목이 0개지만 위치 차이는 1입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 등장 위치를 먼저 추출\n A[\"비: 0,3\"] --> C[\"0-2 거리 2 / 0-5 거리 5\"]\n B[\"해: 2,5\"] --> C\n A --> D[\"3-2 거리 1 / 3-5 거리 2\"]\n D --> E[\"최소 거리 1\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 첫 등장만 보는 반례\n A[\"첫 비 0, 첫 해 2\"] --> B[\"거리 2\"]\n C[\"뒤의 비 3, 해 2\"] --> D[\"거리 1\"]\n D --> E[\"모든 등장 후보를 고려해야 함\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 두 낱말의 모든 등장 위치를 모으면 실제 가능한 쌍은 두 위치 목록의 조합과 정확히 같습니다. 네 조합을 빠짐없이 비교했으므로 최소 1보다 작은 후보는 없고, 실제 이웃한 두 위치가 1을 달성합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 낱말 N개에서 위치를 모으는 데 O(N), 두 등장 횟수 A,B의 모든 조합 비교에 O(AB)시간입니다. 위치 저장에 O(A+B)공간이 듭니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "어느 단어가 없음"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "거리 0이 아니라 없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "같은 낱말을 두 번 검색"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "서로 다른 등장 두 개를 고르는 별도 규칙 필요"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "첫 등장만 비교"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "뒤의 더 가까운 쌍을 놓침"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검토 방식 — 제시된 추론과 경계·반례를 사용합니다. 본문에 명시하지 않은 코드 실행·실측을 수행했다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 문장 사이 공백 개수도 거리에 포함되나요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 이미 분리된 낱말 항목의 위치 차이입니다. 문자 오프셋 거리와는 다른 계약입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 한 번만 질문한다면 전체 색인이 꼭 필요한가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최근 두 낱말 위치를 순회 중 유지하는 방법도 가능합니다. 반복 질문에서는 위치 색인이 유용합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6판의 Word Distance 번호·주제 메타데이터를 바탕으로 새로 만든 문제입니다. 도서 지문·예시·공식 해설을 복제하거나 책 본문을 읽었다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 17.11.2",
+              "href": "/thinking-lab/ep-17-11-02-word-distance/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

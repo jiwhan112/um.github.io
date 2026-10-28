@@ -1,0 +1,225 @@
+{
+  "title": "16.21.1 기본 — 두 바구니의 합을 한 번 교환으로 맞추기",
+  "subtitle": "교환 전후 차이를 식으로 표현하기",
+  "memoKey": "thinking-ctci-16.21-draft",
+  "starter": "// 상태와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "바구니 A에는 숫자 카드 1, 4, 7이 있고 B에는 2, 3, 5가 있습니다. 각각 한 장씩 골라 서로 바꾸어 두 바구니의 합을 같게 하려고 합니다. 카드를 추가하거나 버릴 수 없습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "가능한 교환을 모두 구하세요. A에서 a, B에서 b를 고를 때 필요한 a−b의 값을 합의 차이로 유도하고, 단순히 큰 카드끼리 바꾸는 규칙이 왜 충분하지 않은지 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 추론 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "문제에 명시한 좌표·순서·중복·범위를 따릅니다. 먼저 종이에 작은 상태와 반례를 적어 풀 수 있습니다. 구현이 있는 경우 접힌 입력 계약까지 확인하세요. 실제로 실행하지 않은 테스트를 실행했다고 간주하지 않습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "현재 합은 A와B에서 각각 얼마인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "교환 뒤 A합은 원래합−a+b입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 식을 같게 놓으면 합의 차이는 2(a−b)가 됩니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "합은 A=12, B=10이므로 a−b=1이어야 합니다. 가능한 교환은 A의 4와B의 3뿐이며 두 합은 11이 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "7과 5를 바꾸면 A=10, B=12로 차이가 뒤집힐 뿐 같아지지 않습니다. 각 A 카드 a에 대해 B에 a−1이 있는지 찾으면 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 가능한 교환의 합\n    accDescr: 가능한 교환의 합의 구체적인 상태와 이동을 표시합니다.\n    N0[\"A합 12 / B합 10\"]\n    N1[\"A4와B3 교환\"]\n    N2[\"A합 11 / B합 11\"]\n    N0 --> N1\n    N1 --> N2\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 큰 카드 교환의 반례\n    accDescr: 큰 카드 교환의 반례의 구체적인 상태와 이동을 표시합니다.\n    N0[\"A합 12 / B합 10\"]\n    N1[\"A7과B5 교환\"]\n    N2[\"A합 10 / B합 12: 같지 않음\"]\n    N0 --> N1\n    N1 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 교환 뒤 합이 같다는 식 12−a+b=10−b+a는 a−b=1과 동치입니다. 그러므로 그 차이를 만족하는 모든 쌍만 찾으면 필요성과 충분성이 동시에 보장됩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: B의 값을 집합에 넣으면 평균 O(|A|+|B|) 탐색과 O(|B|) 공간입니다. 모든 카드 쌍 비교는 O(|A||B|)입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 합의 차이가 홀수면 정수 카드 한 쌍 교환으로 같아질 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "음수 카드도 같은 식을 따릅니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "합이 같아도 반드시 한 번 교환해야 한다면 같은 값이 양쪽에 있어야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 합의 차이만큼 큰 카드를 옮기면 될까요? 서로 맞바꾸면 한쪽은 a−b만큼 줄고 다른 쪽은 같은 만큼 늘어 차이는 두 배 바뀝니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 16.21 Sum Swap의 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 심화",
+              "kind": "link",
+              "href": "/thinking-lab/ep-16-21-02-sum-swap/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

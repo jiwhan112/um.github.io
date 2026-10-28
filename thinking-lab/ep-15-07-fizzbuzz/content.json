@@ -1,0 +1,300 @@
+{
+  "title": "15.7.1 기본 — 네 담당자가 같은 번호를 중복 처리하지 않게",
+  "subtitle": "차례·잠금·대기 조건을 그림으로 검증하는 동시성 사고력 문제",
+  "memoKey": "thinking-ctci-15.7-draft",
+  "starter": "// 원자 단계, 잠금 소유자, 대기 조건을 분리해 적어 보세요.\n// 안전성과 진행 보장에 필요한 가정을 구분하는 종이 문제입니다.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "15.7.1 기본 — 네 담당자가 같은 번호를 중복 처리하지 않게"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "번호 1부터 15까지 출력합니다. 3의 배수는 Fizz, 5의 배수는 Buzz, 둘 다이면 FizzBuzz, 나머지는 번호 그대로입니다. 네 담당자가 조건별로 하나씩 있습니다. 15에서 두 담당자가 따로 출력하지 않도록 서로 겹치지 않는 조건을 만들고, 공유 next 번호를 안전하게 넘기는 규칙을 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "원자성·실패·진행 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "하나의 공통 잠금 안에서 next를 확인하고 자기 조건이면 출력한 뒤 1 증가시킵니다. 자기 조건이 아니면 잠금을 놓는 조건 대기로 기다리고 while로 재검사합니다. 상태 변경과 종료에서 모두에게 알립니다. 출력은 유한 시간에 성공하고 next>15이면 모두 종료합니다. 실행 가능한 담당은 결국 실행됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 상태와 입력"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Fizz 담당: 3만의 배수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Buzz 담당: 5만의 배수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "FizzBuzz 담당: 공통 배수"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "숫자 담당: 둘 다 아님"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "3으로 나누어지는가와 5로 나누어지는가의 두 비트를 쓰세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 비트의 네 조합을 네 담당에게 하나씩 배정하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "확인과 출력과 증가를 따로 풀어 놓으면 같은 번호를 볼 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "조건은 Fizz: 3의 배수이며 5의 배수 아님, Buzz: 5의 배수이며 3의 배수 아님, FizzBuzz: 둘 다, 숫자: 둘 다 아님입니다. 15는 FizzBuzz 한 번만 출력합니다. 전체 결과는 1,2,Fizz,4,Buzz,Fizz,7,8,Fizz,Buzz,11,Fizz,13,14,FizzBuzz입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 주어진 사례의 진행을 차례로 추적한다\n    N0[\"번호15 검사\"]\n    N1[\"3의 배수 참 / 5의 배수 참\"]\n    N2[\"공통 담당만 FizzBuzz 출력\"]\n    N3[\"next16: 모두 종료\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 바꿔 비교하기\n    accDescr: 공통 조건에서 서로 다른 경우를 비교한다\n    N0[\"3·5 조건 조합 네 가지\"]\n    N1[\"참·거짓 → Fizz\"]\n    N2[\"거짓·참 → Buzz\"]\n    N3[\"참·참 → FizzBuzz\"]\n    N4[\"거짓·거짓 → 숫자\"]\n    N0 --> N1\n    N0 --> N2\n    N0 --> N3\n    N0 --> N4\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "두 불리언의 네 조합은 상호 배타적이고 모든 정수를 포함합니다. 잠금 안에서 현재 next의 유일한 담당이 한 번 출력하고 증가하므로 중복·누락 없이 출력 접두사가 1..next−1의 올바른 치환열이라는 불변조건을 유지합니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 진행 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "번호 n개를 한 번씩 출력하므로 O(n)번 상태 전이와 상수 공유 상태가 필요합니다. 잠금 안의 출력 시간이 전체 처리량을 제한할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "“3의 배수 담당”과 “5의 배수 담당”만 따로 두면 15에서 조건이 겹칩니다. 확인 뒤 잠금을 풀고 나중에 증가하면 같은 next를 두 번 처리할 위험도 있습니다. 종료 시 대기자 깨우기를 잊지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 상한이 0이라면 어떤 출력을 해야 할까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "빈 출력으로 모두 종료해야 합니다. 첫 번호 1은 이미 범위를 벗어납니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "1..1000의 네 담당 조건이 정확히 하나만 참인지 확인했습니다. 길이 1..7의 모든 5,913개 완료 도착 순서에서 ready 버퍼 출력이 올바른 연속 접두사인지 검산했습니다. Python으로 실행한 유한 모형 검산은 명시된 원자성 가정에 한정됩니다. 실제 스레드 실행·Java 컴파일·운영체제 시간 측정은 수행하지 않았습니다. 화면과 실제 게시 여부는 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습과 규칙 출처",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "명시된 원자 단계와 실패·공정성 가정 아래에서 별도로 만든 종이 사고력 문제입니다. 원서 주제명은 진도 연결에만 사용하며 원서 지문과 해설을 옮기지 않았습니다. 유한 모형 검산을 실제 스레드 구현의 모든 실행에 대한 증명으로 과장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait--",
+              "text": "Java 8 Object.wait: 대기 조건 · 공식 문서"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-15-07-02-fizzbuzz/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

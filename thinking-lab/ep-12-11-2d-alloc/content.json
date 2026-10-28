@@ -1,0 +1,402 @@
+{
+  "title": "12.11.1 기본 — 종이 표를 한 줄의 칸으로 펴기",
+  "subtitle": "객체의 정체성·수명·저장 범위를 구별하는 사고력 문제",
+  "memoKey": "thinking-ctci-12.11-draft",
+  "starter": "// 관찰한 상태, 소유 책임, 경계 조건을 적어 보세요.\n// 코드와 그림이 같은 계약을 지키는지 확인하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "12.11.1 기본 — 종이 표를 한 줄의 칸으로 펴기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "2행 3열 표에 위쪽 행부터 A,B,C / D,E,F를 적었습니다. 여섯 칸짜리 연속 저장 줄에 행 순서대로 놓으려 합니다. 좌표 (1,2)의 한 줄 위치를 구하고, 행과 열을 한 줄 번호로 바꾸는 규칙을 설명하세요. 행·열 번호는 0부터 시작합니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "조건과 표현을 정확히 읽기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "표의 행 수 R=2, 열 수 C=3이며 한 줄의 칸 번호도 0부터 시작합니다. 여기서는 원소 단위 위치만 계산하고 sizeof(int)의 바이트 크기를 가정하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 행의 길이는 똑같이 C입니다. 행마다 길이가 다른 표나 행 포인터를 따로 가진 구조는 이번 배치와 다릅니다. 유효 좌표는 0≤r<R, 0≤c<C입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "행"
+                  }
+                ],
+                [
+                  {
+                    "text": "열 0"
+                  }
+                ],
+                [
+                  {
+                    "text": "열 1"
+                  }
+                ],
+                [
+                  {
+                    "text": "열 2"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "0"
+                  }
+                ],
+                [
+                  {
+                    "text": "A"
+                  }
+                ],
+                [
+                  {
+                    "text": "B"
+                  }
+                ],
+                [
+                  {
+                    "text": "C"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "1"
+                  }
+                ],
+                [
+                  {
+                    "text": "D"
+                  }
+                ],
+                [
+                  {
+                    "text": "E"
+                  }
+                ],
+                [
+                  {
+                    "text": "F"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 바뀌는 상태와 바뀌지 않아야 할 규칙을 적어 보세요. 답과 그림 풀이는 풀이·검증 탭에 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "r행 전에 완전히 지나간 행은 몇 개이고 각 행에는 몇 칸이 있나요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "지나간 r*C칸에 현재 행의 c칸을 더하세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "행 수 R 대신 열 수 C가 한 행의 폭이라는 점을 확인하세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "풀이와 검증",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답·사고 과정·그림 풀이 펼치기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 줄은 [A,B,C,D,E,F]입니다. (1,2)의 위치는 1×3+2=5이고 F가 들어 있습니다. 일반적인 행 우선 위치는 r*C+c입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "행의 폭은 열 수 C입니다. 잘못해서 r*R+c를 쓰면 이 예에서 (0,2)와 (1,0)이 모두 위치 2가 되어 서로 다른 칸이 겹칩니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "연속한 int 원소들이 있는 구조와 int* 행 포인터들이 있는 구조는 다릅니다. 한 줄 int 저장을 단순히 int**로 해석해서 행 포인터 표가 생기는 것은 아닙니다. 필요한 접근 규칙을 타입과 함께 설계해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 1"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"0행 A B C\"] --> C[\"한 줄 위치 0 1 2\"]\n B[\"1행 D E F\"] --> D[\"한 줄 위치 3 4 5\"]\n D --> E[\"좌표 1,2는 위치 5\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "그림 풀이 2"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n A[\"올바른 폭 C=3\"] --> B[\"0,2는 2 / 1,0은 3\"]\n C[\"잘못된 폭 R=2\"] --> D[\"0,2와 1,0 모두 2\"]\n D --> E[\"다른 칸이 겹치는 반례\"]"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 이 규칙이 맞을까?"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "앞의 r개 행이 r*C칸을 차지하고 현재 행에서 c칸을 더 가므로 위치가 r*C+c입니다. C>0에서 위치를 C로 나눈 몫과 나머지는 각각 r,c여서 서로 다른 유효 좌표가 같은 칸으로 겹치지 않습니다. 최대 위치는 R*C-1입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "한 좌표의 위치 계산은 O(1), 전체 표 저장은 O(RC)원소입니다. 전체 표를 채우면 O(RC)시간입니다. 실제 할당 전에는 R*C가 크기 타입의 범위를 넘지 않는지 별도로 검사해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "R 또는 C가 0이면 원소가 없는 표이며 유효한 접근 좌표도 없습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "한 행인 경우 위치는 열 번호와 같습니다."
+                      }
+                    ]
+                  }
+                ],
+                [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "text": "서로 다른 길이의 행을 지원하려면 다른 위치 규칙이 필요합니다."
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습 질문: 표를 전치하면 같은 저장 줄에 대한 좌표 식도 그대로 쓸 수 있을까요?"
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "복습 답과 해설",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "행·열의 의미와 폭이 바뀌므로 그대로 쓸 수 없습니다. 원본을 다른 관점으로 보는 전치 뷰인지, 실제로 재배치한 새 연속 표인지부터 정하고 그에 맞는 보폭을 사용해야 합니다."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "details",
+              "title": "실제 작성 검증 기록",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "행·열 크기 0~12의 모든 표에서 총 6,084칸을 실제 이중 순서 나열과 r*C+c 식으로 비교했습니다. 심화 C++11에서도 주소 연속성을 확인했습니다."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "text": "이 페이지의 예시는 종이 모형이며 별도 C++ 프로그램 실행을 주장하지 않습니다. 브라우저 도식·화면 검수와 공개 배포는 통합 발행 단계에서 별도로 확인합니다."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검증된 원서 주제명은 학습 순서를 위한 표지입니다. 이 자료의 상황·수치·설명은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "같은 주제의 심화 문제",
+              "href": "/thinking-lab/ep-12-11-02-2d-alloc/"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "C++11 시기 표준 초안 N3337 규칙 확인",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "kind": "link",
+                  "text": "vector 연속 저장 규칙",
+                  "href": "https://timsong-cpp.github.io/cppwp/n3337/vector.overview"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

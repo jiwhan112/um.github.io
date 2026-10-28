@@ -1,0 +1,379 @@
+{
+  "title": "12.3.1 기본 — 찾기 쉬운 주소록과 차례대로 읽는 주소록",
+  "subtitle": "작은 동아리 주소록에 이름별 연락처를 저장합니다.",
+  "memoKey": "thinking-ctci-12.3-draft",
+  "starter": "// 문제에서 발견한 규칙과 검산 근거를 적어 보세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "작은 동아리 주소록에 이름별 연락처를 저장합니다. 담당자는 이름 하나를 찾아 연락처를 확인하는 일뿐 아니라, 매번 이름순 명단을 인쇄해야 합니다. std::map과 std::unordered_map 중 어느 것을 기본 자료구조로 고를지, 서로 다른 요구를 구별해 설명하세요."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이름은 대소문자를 구별하는 ASCII 문자열이며 같은 이름의 연락처를 바꾸면 기존 한 항목을 갱신합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "이름순은 지정한 사전식 비교 순서입니다. 삽입 순서와 다를 수 있습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "실제 실행 시간을 측정하는 문제가 아니라 연산 계약과 순회 순서를 비교하는 문제입니다."
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "등록 순서"
+                  }
+                ],
+                [
+                  {
+                    "text": "이름순 명단"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Mina, Ara, Joon"
+                  }
+                ],
+                [
+                  {
+                    "text": "Ara, Joon, Mina"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "Ara를 등록하고 연락처 갱신"
+                  }
+                ],
+                [
+                  {
+                    "text": "Ara 한 항목"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "먼저 답과 근거를 적어 보세요. 힌트·정답·복습 해설은 접혀 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "검색이 빠르다는 것과 순회가 정렬되어 있다는 것은 같은 보장인가요?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "map의 비교 순서와 unordered_map의 순서 보장을 나누어 적으세요."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "해시 충돌이 생기면 평균 복잡도와 최악 복잡도가 어떻게 달라질까요?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "반복해서 이름순 전체를 읽는 것이 핵심이므로 std::map을 고릅니다. 비교 함수에 따른 키 순서로 순회하므로 별도의 전체 정렬 없이 Ara, Joon, Mina를 얻습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "std::unordered_map도 이름 하나를 찾을 수 있지만 순회 순서는 이름순이라고 보장되지 않습니다. 정렬된 명단을 원하면 별도로 키를 모아 정렬해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "map의 찾기·삽입은 로그 단계의 비교를, unordered_map의 찾기는 평균 상수 단계·최악 선형 단계를 기준으로 설명할 수 있습니다. 문자열 비교와 해시 계산의 문자 비용까지 무조건 상수라는 뜻은 아닙니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 같은 등록에서 다른 순회 약속\n A[\"Mina · Ara · Joon 등록\"] --> B[\"map: 비교 순서 유지\"] --> C[\"Ara · Joon · Mina\"]\n A --> D[\"unordered_map: 해시 기반\"] --> E[\"이름순 순회 보장 없음\"]"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n accTitle: 요구를 분리해서 선택\n A[\"매번 이름순 명단 필요\"] --> B[\"map 순회 활용\"]\n C[\"이름 하나 빠른 조회가 중심\"] --> D[\"unordered_map 검토\"]\n D --> E[\"충돌·해시 비용·최악 경우도 고려\"]"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성 설명 — 요구 조건에는 이름별 유일한 항목과 정렬된 순회가 포함됩니다. map은 두 조건을 직접 제공하고, unordered_map은 유일 키는 제공하지만 정렬된 순회는 제공하지 않습니다. 따라서 주어진 반복 출력 요구에 대한 기본 선택은 map이며, 해시 조회가 흔히 빠르다는 사실만으로 순회 요구를 충족했다고 할 수 없습니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간과 공간 — 항목 n개에 대해 map 조회는 O(log n)번 비교, 전체 순회는 O(n)개 방문입니다. unordered_map 조회는 평균 O(1), 최악 O(n)개의 후보 검사이며 정렬 출력을 위해 추가 O(n log n)번 비교가 필요할 수 있습니다. 키 길이와 할당 비용은 따로 고려합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "검토와 복습",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계·반례·검산",
+          "blocks": [
+            {
+              "type": "table",
+              "rows": [
+                {
+                  "header": true,
+                  "cells": [
+                    [
+                      {
+                        "text": "경계·반례"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "검토"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "삽입 순서가 이미 정렬됨"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "unordered_map의 순회 보장이 생기는 것은 아님"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "해시값이 같은 두 이름"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "같은 키라는 뜻이 아니며 동등성 검사 필요"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "빈 주소록"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "인쇄할 항목 없음"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "header": false,
+                  "cells": [
+                    [
+                      {
+                        "text": "map은 반드시 특정 트리 구현이다"
+                      }
+                    ],
+                    [
+                      {
+                        "text": "표준 계약과 흔한 구현 방식을 혼동하지 않음"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "검토 방식 — 이 페이지는 명시한 계약과 상태·순서 관계를 추론합니다. 정의되지 않은 동작이나 실제 장치 접근을 실행해 보았다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 연락처를 찾는 일만 매우 많다면?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "unordered_map을 후보로 측정할 수 있습니다. 데이터 분포·해시·메모리·최악 경우 요구까지 확인해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 — 이름이 한글이면 같은 사전식 비교가 한국어 정렬인가요?",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "UTF-8 바이트 사전식과 언어권의 정렬 규칙은 다릅니다. 원하는 정렬 기준을 먼저 명시해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "확장·다음",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "《Cracking the Coding Interview》 6판의 Hash Table vs. STL Map 번호·주제 메타데이터를 바탕으로 새로 만든 학습 문제입니다. 도서 본문·예시·공식 해설을 복제하거나 책 본문을 읽었다고 주장하지 않습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "심화로: 12.3.2",
+              "href": "/thinking-lab/ep-12-03-02-hash-table-vs-stl-map/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "기술 규칙 참고: WG21 공개 작업 초안 N3337 (2012-01-16), C++11 이후 정리본 — [associative.reqmts], [unord.req]",
+              "href": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3337.pdf"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

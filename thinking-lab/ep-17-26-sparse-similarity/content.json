@@ -1,0 +1,225 @@
+{
+  "title": "17.26.1 기본 — 공통 단어가 많으면 무조건 더 비슷할까",
+  "subtitle": "교집합을 합집합으로 나누는 비교",
+  "memoKey": "thinking-ctci-17.26-draft",
+  "starter": "// 조건과 작은 반례, 풀이를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "세 짧은 문서의 단어 번호 목록은 A=[1,2,2,3], B=[2,3,4], C=[5]입니다. 한 문서 안의 반복 단어는 하나로 합쳐 집합으로 봅니다. 두 문서의 유사도는 공통 단어 수를 두 문서에 등장한 서로 다른 전체 단어 수로 나눈 값입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "A-B, A-C, B-C의 유사도를 정확한 분수로 구하세요. 반복 단어 2를 두 번 세면 왜 잘못되는지 설명하고, 공통 단어 수만 비교하면 부족한 별도 예를 만드세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 추론 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "서로 다른 두 문서 ID의 쌍을 비교합니다. 한 집합만 비면 유사도 0입니다. 둘 다 빈 경우에는 이 학습용 검색 규칙에서 유사도 0으로 정의합니다. 이는 0/0 계산 결과가 아니라 명시한 예외 규칙입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A의 집합 크기는 4가 아니라 3입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "합집합 크기는 크기A+크기B−교집합 크기입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 공통 단어 수라도 한 문서에 다른 단어가 많으면 분모가 커집니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 그림 풀이 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "A={1,2,3}, B={2,3,4}, C={5}입니다. A-B는 교집합 {2,3} 크기 2, 합집합 {1,2,3,4} 크기 4이므로 2/4=1/2입니다. A-C와 B-C는 각각 공통 단어가 없어 0/4=0입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "별도 D={1,2}, E={1,2}, F={1,2,3,4}에서 D-E와 D-F는 공통 수가 모두 2지만 유사도는 각각 1과 1/2입니다. 반복 빈도와 집합 유사도는 다른 측정 방식입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 반복을 제거한 실제 비교\n    accDescr: 반복을 제거한 실제 비교에서 실제 예시의 상태와 판단을 표시합니다.\n    N0[\"A 목록 1 2 2 3\"]\n    N1[\"A 집합 1 2 3 / B 집합 2 3 4\"]\n    N2[\"교집합 2개 / 합집합 4개\"]\n    N3[\"유사도 1/2\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 공통 수는 같아도 비율은 다름\n    accDescr: 공통 수는 같아도 비율은 다름에서 실제 예시의 상태와 판단을 표시합니다.\n    N0[\"D 집합 1 2\"]\n    N1[\"E 집합 1 2: 공통 2 / 전체 2 → 1\"]\n    N2[\"F 집합 1 2 3 4: 공통 2 / 전체 4 → 1/2\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 합집합을 두 집합 크기의 합으로 세면 공통 원소가 두 번 포함되므로 교집합 크기를 한 번 뺍니다. 각 문서를 먼저 집합으로 만들면 같은 단어의 반복이 교집합·합집합 어느 쪽도 부풀리지 않습니다. 교집합은 합집합에 포함되어 분모가 양수일 때 비율은 0부터 1입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간·공간: 정렬된 집합 두 개의 교집합은 두 포인터로 O(|A|+|B|) 시간, O(1) 추가 상태입니다. 원본 중복 제거 비용은 별도입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 비어 있지 않은 집합의 유사도는 1입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "서로 공통 원소가 없으면 0입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "빈 집합 둘의 값은 이번 계약의 예외 규칙 0이며 다른 정의와 혼동하면 안 됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: A-B와 B-A를 다른 쌍으로 출력해야 할까요? 유사도는 대칭입니다. 문서 ID 순서를 고정해 각 무순서 쌍을 한 번만 출력할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 17.26 Sparse Similarity의 개념을 바탕으로 새로 만든 문제입니다. 책의 지문이나 공식 해설을 번역·재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "짝 문제: 심화",
+              "href": "/thinking-lab/ep-17-26-02-sparse-similarity/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

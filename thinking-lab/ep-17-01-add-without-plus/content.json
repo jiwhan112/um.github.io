@@ -1,0 +1,280 @@
+{
+  "title": "17.1.1 기본 — 더하기 기호 없이 두 줄의 불빛 합치기",
+  "subtitle": "작은 상태와 정확한 경우의 수로 풀어 보는 확장 사고력 문제",
+  "memoKey": "thinking-ctci-17.1-draft",
+  "starter": "// 작은 예의 상태·불변조건·반례부터 적어 보세요.\n// 구현이 있는 문제는 접힌 정수 범위와 입력 계약을 확인하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "content": [
+            {
+              "text": "17.1.1 기본 — 더하기 기호 없이 두 줄의 불빛 합치기"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "네 칸 불빛 1001과 0101은 각각 9와 5를 나타냅니다. 오른쪽 끝은 1의 자리입니다. 서로 다른 불빛만 켜는 XOR와 둘 다 켜진 자리만 찾는 AND를 사용할 수 있습니다. AND 결과를 왼쪽 한 칸 옮긴 것을 올림 줄로 삼아, XOR 줄과 올림 줄을 다시 합치는 절차로 결과를 구하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력·표현·추론 조건",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "부호 없는 4비트 수의 종이 모형입니다. 이번 합은 15 이하라 네 칸에 들어갑니다. 각 단계는 이전 두 줄로 XOR와 AND를 모두 계산한 뒤 한꺼번에 새 두 줄로 바꿉니다. “더하기 없이”는 덧셈 계산 절차의 제한이며 풀이 설명에서 수학적 합을 사용해 증명할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "rows": [
+            {
+              "header": true,
+              "cells": [
+                [
+                  {
+                    "text": "주어진 조건"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "첫 줄 1001"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "둘째 줄 0101"
+                  }
+                ]
+              ]
+            },
+            {
+              "header": false,
+              "cells": [
+                [
+                  {
+                    "text": "AND는 올림의 출발 자리"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "1과 1이 같은 자리에 있으면 그 자리는 꺼지고 다음 자리에 1이 생깁니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "XOR 줄과 올림 줄 사이에도 다시 겹침이 생길 수 있습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "올림 줄이 모두 0일 때 멈추세요."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답과 그림 풀이 보기",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "1001과 0101에서 XOR는 1100, 올림은 0010입니다. 다시 XOR하면 1110, 올림은 0000이어서 결과는 1110, 즉 14입니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 사례를 따라가는 그림\n    accDescr: 주어진 사례의 계산을 순서대로 추적한다\n    N0[\"1001과 0101\"]\n    N1[\"XOR1100 / 올림 0010\"]\n    N2[\"XOR1110 / 올림 0000\"]\n    N3[\"최종 1110 =14\"]\n    N0 --> N1\n    N1 --> N2\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 조건을 나누어 비교하기\n    accDescr: 공통 조건에서 여러 경우를 비교한다\n    N0[\"같은 자리의 두 1\"]\n    N1[\"XOR만 사용: 가치 사라짐\"]\n    N2[\"AND를 왼쪽 이동: 다음 자리 가치 보존\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "왜 맞는가"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "각 자리에서 겹치지 않는 1은 XOR에, 겹친 두 1의 가치는 한 칸 높은 올림에 보존됩니다. 그러므로 두 줄이 나타내는 합은 단계마다 같습니다. 올림이 0이면 남은 줄만이 합을 나타냅니다."
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "level": 3,
+              "content": [
+                {
+                  "text": "비용과 가정"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "폭 w에서는 올림이 낮은 자리로 돌아가지 않아 최대 w단계의 반복으로 끝납니다. 두 줄만 저장하면 O(1)개 정수 상태입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "경계와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "XOR만 쓰면 두 1이 만난 가치를 잃습니다. 또 첫 줄을 먼저 바꾼 뒤 새 첫 줄로 AND를 계산하면 이전 두 줄의 올림이 아니게 됩니다. 고정 폭을 넘는 합은 별도의 계약이 필요합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "복습: 0011과 0001은 한 번의 XOR만으로 끝날까요?"
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "복습 정답",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아닙니다. 0010과 0010, 다음 0000과 0100, 다음 0100과 0000으로 올림이 이어집니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "작성 후 검증 기록 · 2026-10-27",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "실제 C++11 예제의 동일한 산술 반복문을 추출한 독립 하네스에서 256×256=65,536개 입력쌍을 일반 덧셈의 하위 8비트와 비교했습니다. 원래 실행 파일의 경계·거절 16사례도 확인했습니다. 엄격 경고와 UBSan을 켠 컴파일·실행이 통과했습니다. 검산 범위와 수학적 증명을 구분하며 화면 렌더링과 실제 공개 반영은 발행 단계에서 별도로 확인합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "다음 학습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "원서 주제명은 학습 진도 식별에만 사용했습니다. 문제와 사례·그림은 새로 구성했으며 원서 지문이나 공식 해설을 옮기지 않았습니다. 확률 문제의 정확성은 명시된 독립 균등 모형에 대한 논증입니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "href": "/thinking-lab/ep-17-01-02-add-without-plus/",
+              "text": "같은 주제의 심화 문제"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

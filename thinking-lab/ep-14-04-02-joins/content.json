@@ -1,0 +1,264 @@
+{
+  "title": "14.4.2 심화 — 두 종류의 기록을 한꺼번에 붙였더니",
+  "subtitle": "곱셈 중복을 막는 사전 집계",
+  "memoKey": "thinking-ctci-14.4-2-draft",
+  "starter": "// 표의 전후 상태와 반례를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "회원 1에게 대출 기록 L1, L2 두 개와 행사 신청 E1, E2, E3 세 개가 있습니다. 회원 2에게는 둘 다 없습니다. 회원별 대출 수와 신청 수가 목표입니다. 두 기록 표를 회원 번호로 회원 표에 연속 LEFT JOIN한 뒤 각 ID를 COUNT하는 후보를 생각합니다. 각 기록 ID는 해당 표에서 유일합니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "후보가 회원 1에게 내놓는 두 개수를 구하세요. 각 기록 표를 먼저 회원별로 집계한 후 연결하는 해결을 설명하고 회원 2의 결과도 정하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 검증 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "명시한 유한 기록을 대상으로 관계와 결과를 손으로 추론할 수 있습니다. 예제 SQL의 방언은 SQLite입니다. 동시 쓰기·실제 서비스 운영·금융 거래를 요구하지 않습니다. 본문에 별도로 명시한 키·NULL·오류 처리 조건을 따릅니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "L1은 E1, E2, E3 모두와 조합됩니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "대출 두 개와 신청 세 개가 여섯 행을 만듭니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "서로 독립적인 개수는 서로 만나기 전에 계산할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 추적 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "회원 1의 조합은 L1-E1, L1-E2, L1-E3, L2-E1, L2-E2, L2-E3입니다. 따라서 COUNT(대출ID)와 COUNT(신청ID)는 둘 다 6으로 잘못 나옵니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "대출 표를 회원별 개수로 묶어 (1, 2), 신청 표를 묶어 (1, 3)을 만든 뒤 회원 표에 각각 LEFT JOIN합니다. 없는 집계는 COALESCE로 0을 표시하여 회원 1은 (2, 3), 회원 2는 (0, 0)입니다. 이 ID 조건에서는 COUNT(DISTINCT 각ID)도 대안이지만 금액 합계 등에 무조건 DISTINCT를 적용하면 다른 의미가 됩니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 한 대출마다 세 신청이 반복\n    accDescr: 한 대출마다 세 신청이 반복의 구체적인 상태와 이동을 표시합니다.\n    N0[\"회원 1\"]\n    N1[\"L1과 E1 E2 E3: 세 행\"]\n    N2[\"L2와 E1 E2 E3: 세 행\"]\n    N3[\"전체 여섯 행\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 독립 집계를 나중에 연결\n    accDescr: 독립 집계를 나중에 연결의 구체적인 상태와 이동을 표시합니다.\n    N0[\"대출 먼저 집계: 회원1 개수2\"]\n    N1[\"신청 먼저 집계: 회원1 개수3\"]\n    N2[\"회원1 결과 2와3 / 회원2는 0과0\"]\n    N0 --> N2\n    N1 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 사전 집계 결과에는 회원별 최대 한 행만 있으므로 두 집계를 연결해도 서로의 행 수를 곱하지 않습니다. 집계 없는 회원을 0으로 바꾸는 것은 기록 수의 정의와 일치합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "비용: 사전 집계는 논리적 결과 크기를 줄일 수 있지만 실제 속도는 계획과 데이터 분포를 측정해야 합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "SQLite 전체 스키마와 실행 예제",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "아래 스크립트는 새 SQLite 메모리 DB에서 실행하는 독립 예제입니다. 다른 데이터베이스의 문법·NULL·제약 동작을 검증했다고 가정하지 않습니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "sql",
+              "text": "-- SQLite: 서로 독립적인 두 표를 각각 먼저 집계합니다.\nCREATE TABLE member(id INTEGER PRIMARY KEY);\nCREATE TABLE loan(id TEXT PRIMARY KEY NOT NULL, member INTEGER NOT NULL);\nCREATE TABLE entry(id TEXT PRIMARY KEY NOT NULL, member INTEGER NOT NULL);\nINSERT INTO member VALUES (1),(2);\nINSERT INTO loan VALUES ('L1',1),('L2',1);\nINSERT INTO entry VALUES ('E1',1),('E2',1),('E3',1);\nWITH l AS (SELECT member,COUNT(*) AS n FROM loan GROUP BY member),\n     e AS (SELECT member,COUNT(*) AS n FROM entry GROUP BY member)\nSELECT m.id,COALESCE(l.n,0),COALESCE(e.n,0) FROM member AS m\nLEFT JOIN l ON l.member=m.id LEFT JOIN e ON e.member=m.id ORDER BY m.id;"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "대출만 두 개이고 신청이 없으면 올바른 결과는 (2, 0)입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "신청 한 개를 추가하면 신청 수만 1 증가해야 합니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "같은 금액의 서로 다른 두 대출을 SUM(DISTINCT 금액)으로 합치면 실제 합계가 줄어듭니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 마지막 결과 행만 DISTINCT하면 해결되나요? 이미 6으로 집계된 잘못된 숫자를 중복 제거해도 2와 3으로 복구하지 못합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 14.4 Joins의 관계 데이터 개념을 바탕으로 새로 만든 문제입니다. 책의 지문·공식 해설을 번역하거나 재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "짝 문제: 기본",
+              "kind": "link",
+              "href": "/thinking-lab/ep-14-04-joins/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "다음 주제 14.5",
+              "kind": "link",
+              "href": "/thinking-lab/ep-14-05-denormalization/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "SQLite 집계 함수 문서",
+              "kind": "link",
+              "href": "https://www.sqlite.org/lang_aggfunc.html"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

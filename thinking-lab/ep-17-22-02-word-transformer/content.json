@@ -1,0 +1,235 @@
+{
+  "title": "17.22.2 심화 — 최단 사다리는 모두 몇 개일까",
+  "subtitle": "같은 층에서 합쳐지는 경로의 수",
+  "memoKey": "thinking-ctci-17.22-2-draft",
+  "starter": "// 조건과 작은 반례, 풀이를 자유롭게 기록하세요.\n",
+  "sections": [
+    {
+      "id": "problem",
+      "title": "문제",
+      "tab": "problem",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "사전은 cat,cot,cog,dog,dot입니다. 모두 길이 3의 소문자 ASCII이고 시작 cat과 끝 dog도 사전에 있습니다. 한 변환은 정확히 한 글자만 바꾸며 중간 단어는 반드시 이 사전 안에 있어야 합니다. 같은 단어의 중복 목록은 하나로 합칩니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "최소 변환 횟수뿐 아니라 서로 다른 최단 단어 순서의 개수도 구하세요. 먼저 dog를 발견한 경로만 남기면 무엇을 놓치는지 설명하고, 거리와 경로 수를 함께 갱신하는 규칙을 설계하세요."
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "입력과 추론 범위",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시작=끝이면 길이 0인 경로 한 개입니다. 도달 불가면 개수 0입니다. 더 긴 우회나 순환은 세지 않습니다. 정확한 큰 정수로 센다고 가정하며 일반 구현은 수의 범위를 따로 정해야 합니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hints",
+      "title": "단계별 힌트",
+      "tab": "hints",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "힌트 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "cog와 dot은 같은 거리 2에 놓입니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "dog로 오는 간선이 둘이어도 이전 거리가 같아야 최단 경로에 기여합니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "힌트 3",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "이미 발견한 정점에도 같은 최소 거리로 도착하면 개수는 더할 수 있습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "title": "그림으로 보는 풀이",
+      "tab": "solution",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "정답 · 그림 풀이 · 정확성",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "최소 3회, 경로 수 2입니다. cat→cot→cog→dog와 cat→cot→dot→dog입니다. cot과 cog와 dot의 최단 경로 수는 각각 1이고 dog는 1+1=2입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "BFS에서 처음 v를 발견하면 dist[v]=dist[u]+1, ways[v]=ways[u]로 정하고 대기열에 넣습니다. 이미 발견했고 dist[v]=dist[u]+1이면 ways[u]를 더합니다. 그보다 긴 도착은 무시합니다. dog를 처음 발견한 즉시 전체 탐색을 끝내지 말고 적어도 직전 층 전체의 기여를 처리합니다."
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 두 최단 경로의 합산\n    accDescr: 두 최단 경로의 합산에서 실제 예시의 상태와 판단을 표시합니다.\n    N0[\"cot 거리 1 / 수 1\"]\n    N1[\"cog 거리 2 / 수 1\"]\n    N2[\"dot 거리 2 / 수 1\"]\n    N3[\"dog 거리 3 / 수 2\"]\n    N0 --> N1\n    N0 --> N2\n    N1 --> N3\n    N2 --> N3\n"
+            },
+            {
+              "type": "code",
+              "language": "mermaid",
+              "text": "flowchart TD\n    accTitle: 최단 기여와 긴 도착 구분\n    accDescr: 최단 기여와 긴 도착 구분에서 실제 예시의 상태와 판단을 표시합니다.\n    N0[\"cog 거리 2에서 이웃 보기\"]\n    N1[\"dog 거리 3: 최단 기여 추가\"]\n    N2[\"cot 거리 1: 거리 3으로 돌아가는 경로는 무시\"]\n    N0 --> N1\n    N0 --> N2\n"
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "정확성: 최단 경로의 마지막 간선 직전 정점은 정확히 거리 d−1이어야 합니다. 이 정점별 경로들은 마지막 직전 단어가 달라 서로 겹치지 않으므로 합산합니다. BFS가 같은 층을 모두 처리한 후 다음 층을 꺼내므로 해당 정점의 최단 경로 수가 누적된 상태로 이어집니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "시간·공간: 이미 만든 그래프에서는 O(n+간선 수) 탐색과 거리·경로 수 O(n) 공간입니다. 큰 정수 덧셈의 비트 비용은 별도입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "경계와 복습",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "details",
+          "title": "경계 사례와 반례",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "cat에서 cat은 0회 1개입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "사전에서 dot을 빼면 dog까지 최단 경로는 1개입니다."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "cog에서 cot으로 돌아가는 간선도 있지만, 이미 거리 1인 cot에 거리 3으로 도착하는 경로는 최단 경로 수에 더하지 않습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "details",
+          "title": "확장·복습 해설",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "복습: 모든 방문한 정점의 ways를 무조건 더하면 될까요? 같은 층의 간선이나 역방향 간선을 더하면 최단이 아닌 순환·우회까지 섞입니다. 거리 조건이 필수입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "title": "학습 연결",
+      "tab": "more",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "주제 17.22 Word Transformer의 개념을 바탕으로 새로 만든 문제입니다. 책의 지문이나 공식 해설을 번역·재현하지 않았습니다."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "짝 문제: 기본",
+              "href": "/thinking-lab/ep-17-22-word-transformer/"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "kind": "link",
+              "text": "다음 주제 17.23",
+              "href": "/thinking-lab/ep-17-23-max-black-square/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
