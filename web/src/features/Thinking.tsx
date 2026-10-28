@@ -69,7 +69,14 @@ export function ThinkingIndex() {
 export function ThinkingSidebar({ docs, onNavigate }: { docs: DocumentMeta[]; onNavigate?: () => void }) {
   const { pathname } = useLocation(), navigate = useNavigate();
   const topicList = useRef<HTMLElement>(null), activeTopic = useRef<HTMLDivElement>(null);
-  useEffect(() => { if (topicList.current && activeTopic.current) topicList.current.scrollTop = activeTopic.current.offsetTop - topicList.current.clientHeight / 2 + activeTopic.current.clientHeight / 2; }, [pathname]);
+  useEffect(() => {
+    const list = topicList.current, active = activeTopic.current;
+    if (!list || !active) return;
+    const centerActive = () => { list.scrollTop = active.offsetTop - list.clientHeight / 2 + active.clientHeight / 2; };
+    centerActive();
+    const observer = new ResizeObserver(centerActive); observer.observe(list);
+    return () => observer.disconnect();
+  }, [pathname]);
   const chapters = thinkingChapters(docs), current = docs.find(d => d.route === pathname.replace(/\/?$/, '/'));
   const chapter = chapters.find(c => c.number === (current ? chapterNumber(current) : ''));
   const [stored] = useStored<unknown>(keys.reading, {}), reading = objectBooleans(stored);

@@ -171,6 +171,8 @@ test('thinking sorting changes topic order without leaving the selected chapter'
 for(const viewport of [{width:1165,height:747},{width:900,height:650},{width:1440,height:900}])test(`thinking short desktop ${viewport.width}x${viewport.height} keeps chapter navigation unobscured`,async({page},testInfo)=>{
  await page.setViewportSize(viewport);
  await page.goto('thinking-lab/');
+ await expect(page.locator('main h1')).toBeVisible();
+ await page.evaluate(()=>document.fonts.ready);
  const sidebar=page.locator('aside.sidebar'),book=sidebar.locator('.thinking-sidebar');
  await expect(book.getByRole('link',{name:'전체 학습 목차'})).toBeVisible();
  await expect(sidebar.locator('.side-foot')).toBeHidden();
@@ -178,6 +180,8 @@ for(const viewport of [{width:1165,height:747},{width:900,height:650},{width:144
  expect(await sidebar.evaluate(e=>e.scrollHeight-e.clientHeight)).toBeLessThanOrEqual(1);
  await page.screenshot({path:testInfo.outputPath(`thinking-short-index-${viewport.height}.png`)});
  await page.goto(docs.at(-1)!.route.replace(/^\//,''));
+ await expect(page.locator('main h1')).toHaveText(docs.at(-1)!.title);
+ await page.evaluate(()=>document.fonts.ready);
  const chapterNav=sidebar.getByTestId('thinking-chapter-nav');
  await expect(sidebar.getByLabel('목차 장 이동')).toBeInViewport({ratio:1});
  await expect(chapterNav.locator('a.active')).toBeInViewport({ratio:1});
@@ -189,6 +193,10 @@ for(const viewport of [{width:1165,height:747},{width:900,height:650},{width:144
  expect(bounds.rowBottom).toBeLessThanOrEqual(bounds.navBottom+1);
  expect(bounds.navBottom).toBeLessThanOrEqual(bounds.height);
  expect(await sidebar.evaluate(e=>e.scrollHeight-e.clientHeight)).toBeLessThanOrEqual(1);
+ await page.setViewportSize({width:viewport.width,height:1000});
+ await expect(chapterNav.locator('a.active')).toBeInViewport({ratio:1});
+ await page.setViewportSize(viewport);
+ await expect(chapterNav.locator('a.active')).toBeInViewport({ratio:1});
  await page.screenshot({path:testInfo.outputPath(`thinking-short-lesson-${viewport.height}.png`)});
  await sidebar.getByLabel('목차 장 이동').selectOption(chapters[0]);
  await expect(page).toHaveURL(new RegExp('chapter='+chapters[0]+'(?:&|$)'));
