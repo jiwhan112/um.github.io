@@ -60,7 +60,10 @@ for(const variant of [
  await page.goto('thinking-lab/?q=1.1');
  const cards=page.getByTestId('library-card');
  await expect(cards).toHaveCount(2);
- await expect(cards.nth(0)).toContainText('1.1.1');
- await expect(cards.nth(1)).toContainText('1.1.2');
+ await expect(page.locator('.thinking-topic-row')).toHaveCount(1);
+ await expect(cards.nth(0)).toHaveAttribute('aria-label',/^1\.1\.1 기본/);
+ await expect(cards.nth(1)).toHaveAttribute('aria-label',/^1\.1\.2 심화/);
+ await expect(cards.nth(0)).toHaveAttribute('href','/um.github.io/thinking-lab/ep-01-01-is-unique/');
+ await expect(cards.nth(1)).toHaveAttribute('href','/um.github.io/thinking-lab/ep-01-01-02-is-unique-advanced/');
  expect(errors).toEqual([]);
 });

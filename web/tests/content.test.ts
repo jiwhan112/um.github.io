@@ -13,7 +13,8 @@ import {lessonProgress,reviewId} from '../src/lib/language-progress';
 import {canSyncKey} from '../src/lib/cloud';
 import {filterDocuments,readLibraryFilter,matchesDocument} from '../src/lib/document-library';
 import {compareKnowledgeDocuments} from '../src/lib/knowledge-order';
-import {catalogSchema, documentSchema, type Block} from '../src/lib/types';
+import {chapterNumber,chapterTitle,compareThinking,isThinkingRead,levelLabel,problemTitle,thinkingChapters,topicNumber} from '../src/lib/thinking-navigation';
+import {catalogSchema, documentSchema, type Block, type DocumentMeta} from '../src/lib/types';
 
 type LegacyChapter=(typeof legacyVisualRollout.chapters)[number]&{sourceArchives?:{path:string;sha256:string}[];sourceViews?:{sourceLibrary:string;sourceTab:string;sourceSection:string;displayedCodeFiles:string[]}[]};
 const legacyChapters:LegacyChapter[]=legacyVisualRollout.chapters;
@@ -836,4 +837,55 @@ test('incomplete curriculum supports explicit missing-source chapter boundaries 
   const invalid=structuredClone(raw);invalid.current[field]='2026-10-26';
   assert.throws(()=>validateThinkingPairs(invalid,policy,plan,'2026-10-27'));
  }
+});
+
+// Book-style Thinking navigation keeps every authored page and existing progress key.
+const thinkingNavigationDocs=catalog.documents.filter(d=>d.kind==='thinking');
+const numberCompare=(a:string,b:string)=>a.split('.').map(Number).reduce((value,part,i)=>value || part-Number(b.split('.')[i]||0),0);
+
+test('thinking grouping preserves every source route and topic once, sorted numerically',()=>{
+ const chapters=thinkingChapters([...thinkingNavigationDocs].reverse());
+ assert.deepEqual(chapters.map(c=>Number(c.number)),[...new Set(thinkingNavigationDocs.map(d=>Number(d.number!.split('.')[0])))].sort((a,b)=>a-b));
+ const flattened=chapters.flatMap(c=>c.topics.flatMap(t=>t.pages));
+ assert.deepEqual(flattened.map(d=>d.route).sort(),thinkingNavigationDocs.map(d=>d.route).sort());
+ assert.equal(new Set(flattened.map(d=>d.route)).size,thinkingNavigationDocs.length);
+ for(const chapter of chapters){
+  assert.deepEqual(chapter.pages.map(d=>d.number),chapter.pages.map(d=>d.number!).sort(numberCompare));
+  assert.equal(new Set(chapter.topics.map(t=>t.number)).size,chapter.topics.length);
+  assert.deepEqual(chapter.topics.map(t=>t.number),chapter.topics.map(t=>t.number).sort(numberCompare));
+  for(const topic of chapter.topics){
+   assert.equal(topic.pages.length,2);
+   assert.deepEqual(topic.pages.map(levelLabel),['기본','심화']);
+   assert.ok(topic.pages.every(d=>topicNumber(d)===topic.number && chapterNumber(d)===chapter.number));
+  }
+ }
+});
+
+test('thinking navigation retains legacy X.Y single-page fixtures and numeric chapter ordering',async()=>{
+ const fixture=JSON.parse(await readFile('tests/fixtures/catalog.json','utf8')) as {documents:DocumentMeta[]};
+ const legacy=fixture.documents.filter(d=>d.kind==='thinking');
+ const chapters=thinkingChapters(legacy);
+ assert.equal(chapters.length,1);assert.equal(chapters[0].topics.length,legacy.length);
+ assert.ok(chapters[0].topics.every(t=>t.pages.length===1));
+ assert.ok(legacy.every(d=>levelLabel(d)==='기본' && topicNumber(d)===d.number));
+ const sample=(number:string)=>({...legacy[0],number}) as DocumentMeta;
+ assert.deepEqual(['17.10.2','17.1.1','2.1.1','17.10.1','17.2.1'].map(sample).sort(compareThinking).map(d=>d.number),['2.1.1','17.1.1','17.2.1','17.10.1','17.10.2']);
+});
+
+test('thinking reading adapters preserve route keys and reject malformed boolean state',()=>{
+ const doc=thinkingNavigationDocs[0],key=doc.route.replace(/^\//,'');
+ assert.equal(isThinkingRead(doc,{[key]:true}),true);
+ assert.equal(isThinkingRead(doc,{[doc.route]:true}),false);
+ assert.equal(isThinkingRead(doc,{[key]:false}),false);
+ for(const value of [null,[],true,'true',{[key]:'true'},{[key]:1}])assert.equal(isThinkingRead(doc,objectBooleans(value)),false);
+ assert.equal(isThinkingRead(doc,objectBooleans({[key]:true,unknown:'ignore'})),true);
+});
+
+test('thinking labels strip only numbering and level prefix while keeping authored wording',()=>{
+ assert.equal(problemTitle({title:'17.10.2 심화 — 과반 후보를 검증하자'}),'과반 후보를 검증하자');
+ assert.equal(problemTitle({title:'1.1.1 기본 — 같은 글자가 두 번 나왔을까?'}),'같은 글자가 두 번 나왔을까?');
+ assert.equal(problemTitle({title:'URLify — 원래 문제 제목'}),'URLify — 원래 문제 제목');
+ assert.equal(chapterTitle('1'),'배열과 문자열');
+ assert.equal(chapterTitle('17'),'어려운 문제');
+ assert.equal(chapterTitle('999'),'사고력 연습');
 });
