@@ -1,0 +1,59 @@
+name: Thinking UI candidate review
+on:
+  push:
+    branches: ['review/thinking-study-navigation']
+permissions:
+  contents: read
+concurrency:
+  group: thinking-ui-review-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Build identical UI candidate with existing dependencies
+        working-directory: web
+        run: |
+          npm ci
+          npm run check:repo
+          npm run check:publishing
+          npm run test:unit
+          npm run build
+          node scripts/check-publication.mjs
+          printf '%s\n' "${{ github.sha }}" > ui-review-source.txt
+          node node_modules/@playwright/test/cli.js test tests/thinking-navigation.spec.ts tests/library-theme.spec.ts tests/thinking-first-prototype.spec.ts tests/visual.spec.ts --list --reporter=json > ui-review-test-list.json
+      - name: Restore locked browser and OS package downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            /tmp/atlas-apt/*.deb
+          key: atlas-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24-v1-${{ hashFiles('web/package-lock.json', 'web/scripts/install-browser.sh') }}
+      - name: Install unchanged reviewed browser and fonts
+        working-directory: web
+        timeout-minutes: 22
+        run: bash scripts/install-browser.sh
+      - name: Focused behavior and unchanged screenshot assertions
+        working-directory: web
+        run: npm run test:e2e -- tests/thinking-navigation.spec.ts tests/library-theme.spec.ts tests/thinking-first-prototype.spec.ts tests/visual.spec.ts
+      - name: Save candidate evidence even for expected visual differences
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: thinking-ui-candidate-review
+          path: |
+            web/playwright-report
+            web/test-results
+            web/render-environment
+            web/ui-review-source.txt
+            web/ui-review-test-list.json
+          retention-days: 7
