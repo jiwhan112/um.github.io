@@ -31,7 +31,21 @@ try{
   results.push(result);
  }
  const liveCatalog=JSON.parse(await readFile('dist/data/atlas/catalog.json','utf8'));const matching=liveCatalog.documents.filter(d=>d.kind==='thinking'&&d.tags.includes('회문'));
- const library=await context.newPage();await gotoWithTransientRetry(library,base+'thinking-lab/?tag='+encodeURIComponent('회문'));await expect(library.getByTestId('library-card')).toHaveCount(matching.length);await library.getByRole('searchbox',{name:'문제 검색'}).fill('1.4');await library.reload();await expect(library.getByRole('searchbox',{name:'문제 검색'})).toHaveValue('1.4');await expect(library.getByTestId('library-card').first()).toBeVisible();await library.close();
+ const library=await context.newPage();await gotoWithTransientRetry(library,base+'thinking-lab/?tag='+encodeURIComponent('회문'));
+ const matchingChapters=[...new Set(matching.map(d=>d.number.split('.')[0]))].sort((a,b)=>Number(a)-Number(b)),seen=[];
+ for(const chapter of matchingChapters){
+  await library.getByRole('navigation',{name:'학습 장 목록',exact:true}).getByRole('button',{name:new RegExp('^'+chapter.padStart(2,'0')+' ')}).click();
+  const chapterMatches=matching.filter(d=>d.number.split('.')[0]===chapter);
+  await expect(library.getByTestId('library-card')).toHaveCount(chapterMatches.length);
+  const hrefs=await library.getByTestId('library-card').evaluateAll(links=>links.map(link=>new URL(link.href).pathname));
+  expect(hrefs.slice().sort()).toEqual(chapterMatches.map(d=>'/um.github.io'+d.route).sort());seen.push(...hrefs);
+ }
+ expect(seen.slice().sort()).toEqual(matching.map(d=>'/um.github.io'+d.route).sort());
+ await library.getByRole('searchbox',{name:'문제 검색'}).fill('1.4');await library.reload();await expect(library.getByRole('searchbox',{name:'문제 검색'})).toHaveValue('1.4');
+ const numbered=matching.filter(d=>d.number==='1.4'||d.number.startsWith('1.4.'));
+ await expect(library.getByTestId('library-card')).toHaveCount(numbered.length);
+ expect((await library.getByTestId('library-card').evaluateAll(links=>links.map(link=>new URL(link.href).pathname))).sort()).toEqual(numbered.map(d=>'/um.github.io'+d.route).sort());
+ await expect(library.getByTestId('library-card').first()).toBeVisible();await library.close();
  const page=await context.newPage();await gotoWithTransientRetry(page,base+'language-study/#japanese/9');await expect(page).toHaveURL(/language-study\/japanese\/9\//);await page.reload();await expect(page.getByRole('tab',{name:'문법',exact:true})).toBeVisible();await page.close();
  const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,locale:'ko-KR',serviceWorkers:'block'});const mp=await mobile.newPage();await gotoWithTransientRetry(mp,base+'thinking-lab/ep-01-04-palindrome-permutation/');await expect(mp.locator('main h1')).toBeVisible();await mp.getByRole('button',{name:'사이트 메뉴 열기'}).click();await expect(mp.getByRole('dialog')).toBeVisible();await mp.screenshot({path:'live-check/mobile-navigation.png'});await mobile.close();
  await writeFile('live-check/results.json',JSON.stringify({base,info,routes:results,legacyHash:true,mobileNavigation:true,allDark:true,libraryFilter:true},null,2));
