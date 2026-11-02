@@ -18,17 +18,6 @@
       "editorialPolicy": "From 2026-10-19, preserve existing date:index IDs. Group into three domains; substantial directly relevant technology gets detailed coverage, other meaningful releases/industry items get short summaries. No quota filler or repeated unchanged news.",
       "execution": "sequential_pipeline_stage",
       "runAfter": "pipeline_start"
-    },
-    {
-      "id": "language",
-      "cadence": "daily",
-      "allowedWritePatterns": [
-        "^language-study/data/(english|japanese)/\\d+\\.json$"
-      ],
-      "limit": "one lesson per language per Korean date",
-      "indexes": "Only Reconcile language lessons updates catalog.json and progress.json",
-      "execution": "sequential_pipeline_stage",
-      "runAfter": "briefing"
     }
   ],
   "manualSections": [
@@ -112,7 +101,7 @@
     "timezone": "Asia/Seoul",
     "originalSchedules": "paused_by_user_confirmation",
     "dailyStartDate": "2026-10-24",
-    "note": "From 2026-10-27 user request: only daily 05:00 briefing -> language remains enabled. Thinking removed from saved daily automation and runs continuously within verified book curriculum. Separate thinking-watch, briefing, language, maintenance and hourly textbook schedules stay paused. Automation tools are authoritative."
+    "note": "From 2026-10-27 user request: only daily 05:00 briefing -> language remains enabled. Thinking removed from saved daily automation and runs continuously within verified book curriculum. Separate thinking-watch, briefing, language, maintenance and hourly textbook schedules stay paused. Automation tools are authoritative. From 2026-11-02, user stopped new English/Japanese lessons after 030; daily pipeline now contains briefing only. Existing lesson reconciliation preserves review/index consistency and does not author lessons."
   },
   "runLevelMaintenance": {
     "mode": "integrated",
@@ -127,17 +116,16 @@
   },
   "pipeline": {
     "automationId": "6adabd0fd42481918398a8d69f8f137b",
-    "title": "ATLAS NOTE 일일 순차 발행",
+    "title": "ATLAS NOTE 게임·AI 브리핑 발행",
     "is_enabled": true,
     "timezone": "Asia/Seoul",
     "localTime": "05:00",
     "cadence": "daily",
     "startDate": "2026-10-24",
     "stages": [
-      "briefing",
-      "language"
+      "briefing"
     ],
-    "advanceCondition": "Complete and verify the current stage and actual Pages publication before immediately starting the next stage. Briefing includes the existing Drive archive.",
+    "advanceCondition": "Complete source, validation, Pages, actual public URL verification and existing Drive archive. Do not create new language lessons.",
     "independentStageSchedulesEnabled": false
   },
   "continuousTasks": [
@@ -169,6 +157,25 @@
       "scheduleEnabled": false,
       "curriculumManifest": "automation/thinking-book-plan.json",
       "datePolicy": "Preserve historical dates; new topics use study_date=published_date on actual publication day, never future dates; next topic is undated."
+    }
+  ],
+  "pausedContentTasks": [
+    {
+      "id": "language",
+      "cadence": "manual",
+      "allowedWritePatterns": [
+        "^language-study/data/(english|japanese)/\\d+\\.json$"
+      ],
+      "limit": "one lesson per language per Korean date",
+      "indexes": "Only Reconcile language lessons updates catalog.json and progress.json",
+      "execution": "paused_by_user",
+      "status": "paused_by_user",
+      "stoppedDate": "2026-11-02",
+      "lastLessons": {
+        "english": 30,
+        "japanese": 30
+      },
+      "note": "User stopped new English/Japanese lessons after 030 to study existing materials. Existing lessons, review data and storage keys remain; vocabulary notebooks are a separate one-time request."
     }
   ]
 }

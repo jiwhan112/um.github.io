@@ -62,3 +62,9 @@ Browser setup caches Chromium and downloaded Ubuntu packages by OS, architecture
 Additional ZIP downloads must be explicitly declared in `knowledge/examples/catalog.json`:
 `{ "version": 1, "bundles": [{ "id": "lesson-01", "path": "knowledge/examples/lesson-01.zip", "sha256": "<64 lowercase hex>", "files": ["README.md", "main.cpp"], "pages": ["cpp-basics-01"] }] }`.
 `pages` is optional; optional `sourceFiles` entries `{path, source, sha256}` record ZIP-relative and repository-relative source provenance. Bundle generation/review owns archive-member verification; the build never extracts or executes archives. The copier verifies exact manifest paths, regular contained files and SHA-256 before copying only the declared bytes. Undeclared ZIPs remain excluded; the original preserved C++ lab archive keeps its existing exception. Native teaching source links (`.py`, `.rc`, `.manifest`, `.fx`, `.sh`, and existing C/C++/HLSL types) use ordinary file links rather than React navigation; downloading does not execute source code.
+
+## 기존 레슨 단어 노트 (2026-11-02)
+
+`/language-study/notebooks/`는 기존 영어·일본어 001–030 원본의 어휘를 통합하는 React 화면입니다. `src/lib/word-notebook.ts`가 빌드 시 원본에서 `data/atlas/word-notebook.json`을 생성합니다. 생성 파일은 직접 편집하지 않습니다. 단어 ID는 언어·표제어·읽기의 결정적 인코딩이며 목록 순서에 의존하지 않습니다.
+
+영어 기사 링크는 학습 지문 기반 출처입니다. 모든 어휘가 기사 원문에 그대로 있다는 뜻이 아닙니다. 같은 표제어의 출처별 뜻·발음은 함께 보존합니다. 원본에 없는 발음·로마자는 추정하지 않고 원문 TTS를 제공합니다. 한자어는 기존 교재에 나타난 한자 포함 어휘이며 일반 언어 빈도가 아닌 등장 레슨 수로 정렬합니다. 원본 레슨과 catalog/progress 및 기존 저장 키는 수정하지 않습니다.

@@ -9,7 +9,7 @@ await writeFile(join(dist,'404.html'),html);await writeFile(join(dist,'.nojekyll
 const catalog=JSON.parse(await readFile(join(dist,'data/atlas/catalog.json'),'utf8'));
 const base='/um.github.io/';
 const assets=[base+'language-study/',...(await readdir(join(dist,'assets/react'))).filter(p=>/\.(js|css)$/.test(p)).map(p=>base+'assets/react/'+p)];
-const precache=[...assets,base+'data/atlas/catalog.json',base+'data/atlas/articles.json',...Object.values(catalog.languages as Record<string,{file:string}[]>).flat().map(m=>base+'language-study/'+m.file)];
+const precache=[...assets,base+'language-study/notebooks/',base+'data/atlas/word-notebook.json',base+'data/atlas/catalog.json',base+'data/atlas/articles.json',...Object.values(catalog.languages as Record<string,{file:string}[]>).flat().map(m=>base+'language-study/'+m.file)];
 const cache='language-study-react-'+createHash('sha256').update(html+catalog.revision).digest('hex').slice(0,12);
 // Same scope as the existing language PWA; only language-study-* caches are retired.
 const worker=`const CACHE=${JSON.stringify(cache)};const ASSETS=${JSON.stringify(precache)};

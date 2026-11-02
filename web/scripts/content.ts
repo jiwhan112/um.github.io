@@ -8,6 +8,7 @@ import type { AnyNode, Element } from 'domhandler';
 import { marked } from 'marked';
 import {validatedExampleBundles} from './example-bundles';
 import { z } from 'zod';
+import { buildWordNotebook, type NotebookLesson } from '../src/lib/word-notebook';
 import { articleSchema, documentSchema, lessonSchema, type Block, type Inline, type Document, type Catalog, type Article, type AssetMeta, type Language } from '../src/lib/types';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
@@ -139,11 +140,14 @@ async function copyResources(){
 export async function buildContent(){
  await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});await copyResources();
  const languages={english:[] as z.infer<typeof metaSchema>[],japanese:[] as z.infer<typeof metaSchema>[]};
+ const notebookInputs={english:[] as NotebookLesson[],japanese:[] as NotebookLesson[]};
  const rawLanguage=await json('language-study/data/catalog.json');
  for(const lang of ['english','japanese'] as const){languages[lang]=z.array(metaSchema).parse(rawLanguage[lang]);const ids=new Set<number>();
-  for(const m of languages[lang]){if(ids.has(m.id))throw Error('Duplicate lesson: '+lang+'/'+m.id);ids.add(m.id);const d=lessonSchema.parse(await json('language-study/'+m.file));if(d.id!==m.id||d.date!==m.date)throw Error('Lesson/catalog mismatch: '+m.file);m.sections=lang==='english'?['conversation','expressions','reading','vocabulary',...(d.reading_check.length?['check']:[])]:['grammar','examples','kana','words'];if(d.review_reuse.length)m.sections.push('review');}
+  for(const m of languages[lang]){if(ids.has(m.id))throw Error('Duplicate lesson: '+lang+'/'+m.id);ids.add(m.id);const rawLesson=await json('language-study/'+m.file);notebookInputs[lang].push(rawLesson);const d=lessonSchema.parse(rawLesson);if(d.id!==m.id||d.date!==m.date)throw Error('Lesson/catalog mismatch: '+m.file);m.sections=lang==='english'?['conversation','expressions','reading','vocabulary',...(d.reading_check.length?['check']:[])]:['grammar','examples','kana','words'];if(d.review_reuse.length)m.sections.push('review');}
   languages[lang].sort((a,b)=>a.id-b.id);
  }
+ const notebook=buildWordNotebook(notebookInputs);
+ await write(join(out,'data/atlas/word-notebook.json'),notebook);
  const docs:Document[]=[];
  for(const kind of ['thinking','opensource','game-design'] as const){const prefix=kind==='game-design'?'game-design':kind+'-lab';const eps=z.array(episodeSchema).parse((await json(prefix+'/data/catalog.json')).episodes);
   for(const e of eps){if(kind==='thinking'&&(!e.tags?.length||!e.category))throw Error('Thinking episode requires category and 1–8 tags: '+e.path);if(kind==='game-design'&&(!e.video_id||e.video_url!=='https://www.youtube.com/watch?v='+e.video_id||!e.tags?.length||!e.category))throw Error('Game design episode requires verified video and classification: '+e.path);const dir=prefix+'/'+e.path;const source=await exists(join(root,dir+'content.json'))?dir+'content.json':await exists(join(root,dir+'_content.html'))?dir+'_content.html':dir+'index.html';docs.push(await compileDocument(source,'/'+dir,kind,{title:e.title,subtitle:e.summary,date:e.study_date||e.date||e.published_date,number:String(e.number),category:e.category,tags:e.tags,topic:e.topic_en,videoUrl:e.video_url,videoId:e.video_id}));}
@@ -167,12 +171,12 @@ export async function buildContent(){
  const daily=await json('daily-briefing/data/catalog.json');const rows=z.array(z.object({date:z.string(),file:z.string().regex(/^data\/[\d-]+\.json$/)})).parse(Array.isArray(daily)?daily:daily.entries);
  const articles=(await Promise.all(rows.map(async r=>compileNews(await json('daily-briefing/'+r.file))))).flat().sort((a,b)=>b.date.localeCompare(a.date));
  if(new Set(articles.map(a=>a.id)).size!==articles.length)throw Error('Duplicate article ID');
- const revision=digest(JSON.stringify([docs.map(d=>[d.sourceHash,d.title,d.subtitle,d.date,d.number,d.category,d.topic,d.tags]),languages,articles])).slice(0,12);
+ const revision=digest(JSON.stringify([docs.map(d=>[d.sourceHash,d.title,d.subtitle,d.date,d.number,d.category,d.topic,d.tags]),languages,articles,notebook])).slice(0,12);
  const progress=await json('language-study/data/progress.json');
  const catalog:Catalog={version:2,revision,documents:docs.map(({sections,starter,...d})=>({...d,file:'data/atlas/docs/'+d.id+'.json',sections:sections.map(({blocks,...s})=>s)})),languages,assets,dates:[...new Set(articles.map(a=>a.date))],articleCount:articles.length,review:progress.review?.due||[]};
  for(const doc of docs)await write(join(out,'data/atlas/docs',doc.id+'.json'),doc);
  await write(join(out,'data/atlas/catalog.json'),catalog);await write(join(out,'data/atlas/articles.json'),articles);
- await write(join(out,'data/atlas/routes.json'),['/','/daily-briefing/','/language-study/','/thinking-lab/','/game-design/','/opensource-lab/','/ai-asset-lab/','/knowledge/','/bookmarks/','/archive/',...docs.map(d=>d.route),...(['english','japanese'] as Language[]).flatMap(lang=>languages[lang].map(m=>'/language-study/'+lang+'/'+m.id+'/'))]);
+ await write(join(out,'data/atlas/routes.json'),['/','/daily-briefing/','/language-study/','/language-study/notebooks/','/thinking-lab/','/game-design/','/opensource-lab/','/ai-asset-lab/','/knowledge/','/bookmarks/','/archive/',...docs.map(d=>d.route),...(['english','japanese'] as Language[]).flatMap(lang=>languages[lang].map(m=>'/language-study/'+lang+'/'+m.id+'/'))]);
  await write(join(out,'favicon.svg'),'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#101319"/><path d="M16 4l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#b8a4ff"/></svg>');
  // Old workers at this exact scope update to a network-only retirement worker. Storage is not cleared.
  await write(join(out,'language-study/sw.js'),`self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('language-study-')).map(k=>caches.delete(k)));await self.clients.claim();await self.registration.unregister();})()));`);
