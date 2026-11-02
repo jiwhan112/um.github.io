@@ -1,0 +1,557 @@
+{
+  "date": "2026-11-03",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 11월 3일(화) 한국시간 오전 조사 기준. AI 6건, 게임 개발 3건, 게임 전반 이슈 6건을 정리했어. 개발과 밀접한 기술 5건은 심층으로 설명했어. 신규 발표와 아직 다루지 않은 최근 중요 자료를 구분했고, 변경 없는 반복이나 개수 채우기는 제외했어. 출처의 최초 발표·갱신·예정일을 구별하며, 공급자 성능 주장이나 개발 적용 제안은 직접 재현한 결과가 아니야.",
+  "items": [
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "🛠️ Claude Code 2.1.316 — 에이전트 종료와 실제 하위 프로세스 종료는 다르다",
+      "source": "Anthropic 공식 릴리스",
+      "published": "2026-10-31",
+      "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.316",
+      "tags": [
+        "Claude Code",
+        "Process Lifecycle",
+        "Permissions",
+        "Automation"
+      ],
+      "short_summary": "Anthropic이 10월 31일 공개한 2.1.316은 에이전트가 스스로 종료될 때 macOS·Linux 셸 명령이 남아 실행되던 문제를 수정했어. 제한 세션의 작업 폴더 밖 파일 업로드와 PowerShell 차단 훅 처리도 보완했어. 이전 2.1.311 소개나 악성 확장 공지의 반복이 아니라 실행 수명과 권한 경계에 관한 후속 변경이야.",
+      "summary": "Anthropic이 10월 31일 공개한 2.1.316은 에이전트가 스스로 종료될 때 macOS·Linux 셸 명령이 남아 실행되던 문제를 수정했어. 제한 세션의 작업 폴더 밖 파일 업로드와 PowerShell 차단 훅 처리도 보완했어. 이전 2.1.311 소개나 악성 확장 공지의 반복이 아니라 실행 수명과 권한 경계에 관한 후속 변경이야.",
+      "easy_explainer": "배경: AI가 “작업을 멈췄다”고 답하는 것과, 그 AI가 시작한 컴파일러·테스트 서버가 실제로 끝나는 것은 별개야. 작업 감독자가 퇴근해도 기계가 계속 돌아갈 수 있는 것과 같아.\n\n게임 빌드 자동화에서는 남은 프로세스가 CPU·메모리를 쓰거나 파일을 계속 붙잡을 수 있어. 종료 신호, 프로세스 상태, 최종 산출물을 각각 확인하는 이유야.",
+      "technical_context": "공식 릴리스는 인증 거부나 클라우드 세션 보관 등 자체 종료 경로의 셸 정리를 명시해. PowerShell 훅은 특정 구문으로 시작할 때 exit code 2가 차단하지 못하던 문제가 수정됐고, --restricted에서도 Read 허용 규칙 때문에 작업 디렉터리 밖 파일이 업로드되던 경로를 고쳤어. 하위 에이전트 노력 수준을 별도로 지정하는 CLAUDE_CODE_SUBAGENT_EFFORT도 추가됐어.",
+      "why_it_matters": "개발 해석: 자동화의 신뢰성은 코드 생성 품질만으로 정해지지 않아. 실패·취소·권한 거부 같은 비정상 경로에서 자원과 파일 접근 범위가 정리되는지가 장시간 프로젝트 작업에 중요해.",
+      "developer_view": "검증 제안: 테스트 프로젝트에서 빌드 중 취소, 인증 실패, 훅 차단을 각각 시험하고 프로세스·열린 포트·파일 변경을 확인하자. “성공 문구 없음”을 실패 기록 대신 쓰지 말고 종료 원인을 남기자. 이번 글은 릴리스 확인이며 설치·실행 또는 모든 보안 문제 해결을 검증한 결과는 아니야.",
+      "sources": [
+        {
+          "label": "2.1.316 변경 기록",
+          "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.316",
+          "published": "2026-10-31",
+          "accessed": "2026-11-03",
+          "date_note": "GitHub 릴리스 31 Oct 01:01 표기 확인. 프로세스·훅·restricted 업로드 수정 사항을 읽었으며 재현 실험하지 않음."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "🧩 JEPA 표상 정렬 연구 — 큰 모델보다 무엇을 같은 장면으로 묶는지가 중요할 수 있다",
+      "source": "Balestriero·LeCun arXiv 사전논문",
+      "published": "2026-10-29",
+      "url": "https://arxiv.org/abs/2610.39302",
+      "tags": [
+        "JEPA",
+        "Embeddings",
+        "Multimodal",
+        "Research"
+      ],
+      "short_summary": "10월 29일 공개된 사전논문은 따로 학습한 모델의 내부 표현이 비슷해지는 조건을 JEPA에서 분석했어. 같은 장면을 설명하는 좋은 관측 쌍으로 학습하면 영상·텍스트 표현의 정렬이 개선된다는 결과야. 109M 모델의 정렬 지표가 비교한 대형 언어 모델보다 높았다는 주장은 일반 코딩·추론 능력의 우위를 뜻하지 않아.",
+      "summary": "10월 29일 공개된 사전논문은 따로 학습한 모델의 내부 표현이 비슷해지는 조건을 JEPA에서 분석했어. 같은 장면을 설명하는 좋은 관측 쌍으로 학습하면 영상·텍스트 표현의 정렬이 개선된다는 결과야. 109M 모델의 정렬 지표가 비교한 대형 언어 모델보다 높았다는 주장은 일반 코딩·추론 능력의 우위를 뜻하지 않아.",
+      "easy_explainer": "배경: 이미지를 읽는 모델과 글을 읽는 모델은 각각 정보를 숫자 벡터로 바꿔. 두 모델에서 비슷한 장면끼리 가까이 놓인다면, 좌표 방향을 맞춰 서로 연결하기 쉬워져.\n\n논문의 핵심은 단순히 모델을 키우는 대신 “어떤 입력 두 개를 같은 것으로 가르칠까”를 바꾸는 거야. 같은 장면의 서로 다른 설명과 한 문장을 앞뒤로 자른 조각은 동일한 학습 신호가 아니야.",
+      "technical_context": "저자들은 이상화된 조건에서 별도 JEPA의 표현이 회전 변환까지 같아지는 충분조건을 제시해. 동일 자료 비교에서는 좋은 관측 쌍이 같은 정렬 수준에 도달하는 데 42배 적은 학습 샘플을 사용했다고 보고해.\n\n다만 이론은 유한 세계·정보를 잃지 않는 관측 등 가정을 두고, 실제 실험이 그 가정을 정확히 충족하지는 않는다고 본문에 명시했어. 대규모 실험의 일부 설명문은 이미지 설명 모델이 생성했으므로 영상·텍스트 정보가 전혀 없이 학습했다는 해석도 틀려.",
+      "why_it_matters": "개발 해석: 게임 자산 검색이나 장면 설명용 임베딩을 평가할 때 파라미터 수만 비교하기보다, 학습 쌍이 어떤 의미를 공유하는지 살펴볼 근거가 돼. 표현 정렬, 검색 정확도, 문장 생성 품질은 서로 다른 평가 대상이야.",
+      "developer_view": "적용 제안: 같은 자산의 이미지·메타데이터를 연결하는 작은 평가셋을 만들고 검색 실패와 잘못된 유사도를 먼저 측정하자. 이 결과를 물리 시뮬레이션이나 범용 월드 모델 완성으로 확대하지 말자. 사전논문을 읽은 분석이며 성능을 독립 재현하지 않았어.",
+      "sources": [
+        {
+          "label": "논문 초록·최초 제출 기록",
+          "url": "https://arxiv.org/abs/2610.39302",
+          "published": "2026-10-29",
+          "accessed": "2026-11-03",
+          "date_note": "v1 제출 2026-10-29 03:49:53 UTC. 오늘 새 발표가 아니라 이전 브리핑에서 다루지 않은 최근 연구."
+        },
+        {
+          "label": "논문 본문과 Known limitations",
+          "url": "https://arxiv.org/html/2610.39302v1",
+          "published": "2026-10-29",
+          "accessed": "2026-11-03",
+          "date_note": "이론 가정과 실험 한계·생성 설명문 사용을 직접 확인. 정렬 벤치마크를 일반 지능 순위로 해석하지 않음."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "🎥 StreamVibe — 화면을 보는 AI가 언제 말하고 언제 기다릴지 학습하기",
+      "source": "StreamVibe 연구진 논문·프로젝트 페이지",
+      "published": "2026-10-26",
+      "url": "https://arxiv.org/abs/2610.34662",
+      "tags": [
+        "Video Agents",
+        "State Tracking",
+        "Proactive AI",
+        "Evaluation"
+      ],
+      "short_summary": "10월 26일 최초 공개되고 27일 개정된 StreamVibe는 연속 영상을 보며 사용자의 바뀌는 의도를 추적하는 연구야. 답의 내용뿐 아니라 개입 시점과 중복 응답을 평가하고, 현재 요청·진행 상태·이전 응답을 별도로 관리해. 확인 시 프로젝트는 코드와 모델 공개를 아직 예정으로 안내하므로 즉시 설치 가능한 완성 도구로 소개하지 않아.",
+      "summary": "10월 26일 최초 공개되고 27일 개정된 StreamVibe는 연속 영상을 보며 사용자의 바뀌는 의도를 추적하는 연구야. 답의 내용뿐 아니라 개입 시점과 중복 응답을 평가하고, 현재 요청·진행 상태·이전 응답을 별도로 관리해. 확인 시 프로젝트는 코드와 모델 공개를 아직 예정으로 안내하므로 즉시 설치 가능한 완성 도구로 소개하지 않아.",
+      "easy_explainer": "배경: 게임 튜토리얼 도우미가 플레이어를 보며 조언한다고 생각해 보자. 이미 끝낸 행동을 다시 시키거나, “이제 실수할 때만 알려줘”라는 변경을 무시하면 답변 내용이 맞아도 방해가 돼.\n\n이 연구는 장면을 알아보는 능력과 지금 도움을 말해야 하는 결정을 분리해서 다뤄. 과거 영상을 많이 기억하는 것만으로 현재 목표를 정확히 관리하는 문제가 해결되지는 않아.",
+      "technical_context": "논문은 매 시점 미래 영상 없이 침묵 또는 응답을 선택하게 하고, 학습 과정에서 적절한 시점·내용뿐 아니라 누락·과잉·모순 응답도 평가해. Harness는 활성 의도, 관찰된 진행 상태, 전달한 답을 나눠 기록하고 오래된 기억은 압축해 필요한 부분을 검색해.\n\n한 번의 질문에 답했다고 지속 감시 요청까지 완료 처리하지 않으며, 제안한 행동을 사용자가 실제 수행한 증거로 취급하지 않는 설계가 설명돼 있어. 프로젝트는 4,100개 평가 샘플과 85K 학습 샘플을 소개해.",
+      "why_it_matters": "개발 해석: AI 동료나 플레이테스트 보조 도구에도 “무슨 말을 했나”뿐 아니라 “지금 말할 필요가 있었나”라는 품질 기준이 필요해. 상태 추적과 발화 정책을 분리하면 취소·목표 전환·중복 안내를 검사하기 쉬워져.",
+      "developer_view": "실험 제안: 녹화된 테스트에서 도움을 놓친 시점과 불필요하게 끼어든 횟수를 함께 세자. 실제 게임 입력이나 저장 데이터를 바꾸는 행동은 별도 권한·검증 계층으로 제한해야 해. 논문 점수를 상용 게임에서의 실시간 정확도나 안전 보장으로 해석하지 않았어.",
+      "sources": [
+        {
+          "label": "최초 제출과 v2 개정 기록",
+          "url": "https://arxiv.org/abs/2610.34662",
+          "published": "2026-10-26",
+          "accessed": "2026-11-03",
+          "date_note": "최초 10월 26일, v2 10월 27일. 오늘은 신규 발견한 최근 연구를 정리한 날짜."
+        },
+        {
+          "label": "상태·의도 수명·보상 설계 본문",
+          "url": "https://arxiv.org/html/2610.34662v2",
+          "published": "2026-10-27",
+          "accessed": "2026-11-03",
+          "date_note": "개정본 4절 및 부록 C의 관찰 근거와 응답 기록 분리를 확인."
+        },
+        {
+          "label": "공식 프로젝트와 공개 상태",
+          "url": "https://stream-vibe.github.io/",
+          "published": "",
+          "accessed": "2026-11-03",
+          "date_note": "확인 시 Code soon·Hugging Face soon 및 내부 승인 중 안내. 상대적인 7일 문구를 확정 출시일로 계산하지 않음."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "💬 ChatGPT·Codex, 12월 공유 사용량 예고 — Instant 채팅은 제외",
+      "source": "OpenAI 공식 도움말",
+      "published": "",
+      "url": "https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits",
+      "tags": [
+        "ChatGPT",
+        "Codex",
+        "Usage Limits"
+      ],
+      "short_summary": "OpenAI 공식 도움말은 12월부터 Plus·Pro·Business의 ChatGPT와 Codex 사용량을 공유한다고 안내해. 토큰 기반으로 모델과 작업 복잡도에 따라 사용량이 달라지지만 Instant 채팅은 해당 사용량에서 제외돼. 정확한 시작일과 요금제별 새 한도 수치는 본문에 없으며, 오늘 바로 적용됐다는 뜻은 아니야.",
+      "summary": "OpenAI 공식 도움말은 12월부터 Plus·Pro·Business의 ChatGPT와 Codex 사용량을 공유한다고 안내해. 토큰 기반으로 모델과 작업 복잡도에 따라 사용량이 달라지지만 Instant 채팅은 해당 사용량에서 제외돼. 정확한 시작일과 요금제별 새 한도 수치는 본문에 없으며, 오늘 바로 적용됐다는 뜻은 아니야.",
+      "easy_explainer": "여러 작업 도구가 한 잔여 사용량을 나눠 쓰는 방식이야. 모든 일반 채팅이 그 한도를 쓰는 것은 아니야.",
+      "technical_context": "공식 문서는 Settings → Usage에서 합산 잔여량과 초기화 시점을 확인할 수 있다고 안내해. 현재 Work·Codex 한도 증가와 12월 공유 전환은 구별해야 해.",
+      "why_it_matters": "개발 해석: 코드 작성과 긴 기술 분석을 함께 맡기는 경우, 앞으로 한 작업의 사용량이 다른 작업의 여유에 영향을 줄 수 있어.",
+      "developer_view": "운영 제안: 실제 전환 뒤 사용량 화면을 확인하자. 문서에 없는 토큰 수·정확한 전환일·본인 계정 적용 여부를 추정하지 말자.",
+      "sources": [
+        {
+          "label": "12월 공유 사용량 공식 안내",
+          "url": "https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits",
+          "published": "",
+          "accessed": "2026-11-03",
+          "date_note": "최초 게시 날짜가 본문에 없고 상대 갱신 표시만 있어 발표일을 확정하지 않음. 2026-11-03 KST 확인 기준, 적용 시기는 12월 예정."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "🏭 ADNOC·OpenAI·G42 협력 — 개별 산업 AI를 전사 의사결정으로 연결",
+      "source": "ADNOC 공식 보도자료",
+      "published": "2026-11-02",
+      "url": "https://www.adnoc.ae/media-center/news/2026/11/ADNOC-Signs-Landmark-Partnership-Agreement-with-OpenAI",
+      "tags": [
+        "Enterprise Agents",
+        "OpenAI",
+        "G42",
+        "Industrial AI"
+      ],
+      "short_summary": "ADNOC가 11월 2일 OpenAI·G42와 다년 협력을 발표했어. 생산·정제·물류·판매 데이터를 연결하는 에이전트와 유전 개발 계획 최적화를 추진하며, UAE 내 G42 인프라에서 운영하고 중요한 결정은 인간 전문가가 감독한다고 밝혔어. 계약 발표와 목표를 확인한 것이며 모든 시스템의 배포 완료나 제시한 시간 절감 효과를 독립 검증한 것은 아니야.",
+      "summary": "ADNOC가 11월 2일 OpenAI·G42와 다년 협력을 발표했어. 생산·정제·물류·판매 데이터를 연결하는 에이전트와 유전 개발 계획 최적화를 추진하며, UAE 내 G42 인프라에서 운영하고 중요한 결정은 인간 전문가가 감독한다고 밝혔어. 계약 발표와 목표를 확인한 것이며 모든 시스템의 배포 완료나 제시한 시간 절감 효과를 독립 검증한 것은 아니야.",
+      "easy_explainer": "각 부서의 AI가 따로 내린 답을 사람이 합치는 대신, 서로 연결해 전체 운영에 미치는 영향을 함께 살피려는 계획이야.",
+      "technical_context": "기존 ENERGYai 등 산업별 분석을 OpenAI Frontier로 연결하는 구성이야. 발표는 자체 산업 데이터·현지 컴퓨팅·전문가 감독을 함께 명시해.",
+      "why_it_matters": "산업 해석: 기업 AI의 관심이 개별 질문 응답에서 여러 데이터와 업무를 연결하는 방향으로 이동하는 사례야.",
+      "developer_view": "개발 해석: 모델을 연결하는 것만큼 데이터 접근 범위와 최종 결정 책임을 나누는 설계가 중요해. 이번 발표를 일반 개발자가 같은 시스템을 즉시 사용할 수 있다는 뜻으로 읽지 말자.",
+      "sources": [
+        {
+          "label": "협력 범위·배포 인프라·인간 감독 공식 발표",
+          "url": "https://www.adnoc.ae/media-center/news/2026/11/ADNOC-Signs-Landmark-Partnership-Agreement-with-OpenAI",
+          "published": "2026-11-02",
+          "accessed": "2026-11-03",
+          "date_note": "본문 2 November 2026 확인. 초기 활용 계획과 협약 발표이며 전체 구축 완료 또는 효과 검증으로 표현하지 않음."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "🇰🇷 AMD AI DevDay 서울, 11월 4일 예정 — 등록 링크는 현재 대기 명단",
+      "source": "AMD 개발자 포털·공식 연결 등록 페이지",
+      "published": "2026-11-02",
+      "url": "https://developer.amd.com/news/",
+      "tags": [
+        "AMD",
+        "Local AI",
+        "ROCm",
+        "Seoul"
+      ],
+      "short_summary": "AMD가 11월 2일 개발자 포털에서 서울 AI DevDay를 안내했어. 행사는 11월 4일 예정이며 무료 대면 워크숍·기술 발표·ROCm 인증 프로그램을 소개해. 다만 확인 시 공식 등록 링크는 대기자 명단으로 연결됐으므로 지금 신청하면 참석이 확정된다고 보면 안 돼.",
+      "summary": "AMD가 11월 2일 개발자 포털에서 서울 AI DevDay를 안내했어. 행사는 11월 4일 예정이며 무료 대면 워크숍·기술 발표·ROCm 인증 프로그램을 소개해. 다만 확인 시 공식 등록 링크는 대기자 명단으로 연결됐으므로 지금 신청하면 참석이 확정된다고 보면 안 돼.",
+      "easy_explainer": "국내에서 AMD 기반 AI 개발과 GPU 연산을 직접 실습하는 행사야. 행사 안내의 등록 가능 문구와 실제 좌석 상태는 다를 수 있어.",
+      "technical_context": "공식 행사 목록은 11월 4일 서울 개최를 명시해. 연결된 대기 등록 폼은 회사 이메일을 요구하고 개인 이메일 신청은 거절될 수 있다고 안내해.",
+      "why_it_matters": "개발 학습 관점: 로컬 AI와 AMD GPU 생태계를 살펴볼 기회지만, 일정과 참석 승인 여부를 먼저 확인해야 해.",
+      "developer_view": "참고 제안: 참가를 검토한다면 주최 측의 현재 프로그램과 대기 승인 안내를 확인하자. 이 브리핑에서 신청하거나 좌석을 확보한 것은 아니야.",
+      "sources": [
+        {
+          "label": "11월 2일 행사 안내",
+          "url": "https://developer.amd.com/news/",
+          "published": "2026-11-02",
+          "accessed": "2026-11-03",
+          "date_note": "뉴스 목록의 공지일. 행사 개최일과 다름."
+        },
+        {
+          "label": "공식 행사 목록과 개최일",
+          "url": "https://developer.amd.com/events/",
+          "published": "",
+          "accessed": "2026-11-03",
+          "date_note": "November 4, 2026 · Seoul 확인. 무료 대면 행사 안내."
+        },
+        {
+          "label": "공식 링크의 현재 대기 등록 페이지",
+          "url": "https://amd.cventevents.com/event/75972aa2-6895-437c-b1e3-572c6cc0c4b6/waitlist",
+          "published": "",
+          "accessed": "2026-11-03",
+          "date_note": "AMD 뉴스의 Register 링크를 실제 열면 waitlist로 이동. Join the Waitlist 및 회사 이메일 조건 확인. 양식 입력·제출하지 않음."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "🎮 Atelico AI Engine 얼리액세스 — 로컬 NPC 추론도 렌더링과 같은 GPU 예산을 써",
+      "source": "Atelico 공식 출시 글·통합 및 GPU 문서",
+      "published": "2026-10-29",
+      "url": "https://atelico.studio/blog/the-atelico-ai-engine-is-here",
+      "tags": [
+        "Atelico",
+        "Unity",
+        "Godot",
+        "NPC",
+        "GPU Scheduling"
+      ],
+      "short_summary": "Atelico가 10월 29일 게임 안에서 실행하는 AI Engine의 제한적 얼리액세스를 열었어. Unity·Godot·Unreal 통합과 대화·음성·이미지·NPC 행동 기능을 제공하며, 렌더링과 추론을 조율하는 GPU 스케줄러를 강조해. 지금 누구나 SDK를 내려받는 정식 공개가 아니라 접근을 요청하는 단계야.",
+      "easy_explainer": "배경(일반 설명): 로컬 모델은 서버 응답을 기다리지 않지만 계산이 공짜가 되는 것은 아니야. 화면을 그리는 작업과 NPC가 문장을 만드는 작업이 같은 GPU를 쓰면 한쪽이 오래 점유할 때 다른 쪽이 늦어질 수 있어.\n\nAtelico는 게임 프로세스 안에서 두 작업을 함께 스케줄링한다고 설명해. 그래픽 우선·균형·연산 우선 모드를 나눠, 전투 중에는 화면을 우선하고 로딩 구간에서는 AI에 더 많은 기회를 주는 식이야.",
+      "technical_context": "공식 통합 문서는 Unity의 C# P/Invoke와 비동기 호출, Godot의 GDExtension, Unreal의 subsystem·Blueprint 경로를 안내해. NPC 제어는 직접 쓴 대사를 의미 검색으로 고르고, 상태에 따라 선택 가능한 반응을 좁히며, 생성 결과를 정해진 선택지나 JSON 구조로 제한하는 구성이야.\n\n공급자 GPU 실험은 Windows 11·RTX 5080·D3D12 데모에서 Llama 3.2 3B Q4_K_M을 함께 실행한 조건이야. 4K San Miguel 장면에서 게임만 123 FPS, Balance 121 FPS라고 보고하지만, 다른 게임·GPU에서도 같은 결과라는 보장은 아니야. 비교의 3 FPS는 별도 CUDA 문맥 조건이며 모든 경쟁 도구의 일반 성능으로 확대하면 안 돼.",
+      "why_it_matters": "개발 해석: Unity나 Godot에서 로컬 NPC를 실험할 때 편의 API보다 먼저 봐야 할 것은 프레임 지연과 모델·문맥 캐시의 메모리야. 구조가 맞는 JSON도 잘못된 퀘스트 보상이나 모순된 대사를 담을 수 있으므로 게임 규칙의 최종 검사는 별도로 남겨야 해. 클라우드 토큰 요금이 없다는 설명은 SDK 라이선스가 무료라는 의미도 아니야.",
+      "developer_view": "검증 제안: 작은 장면과 NPC 한 명부터 시작해 추론 전후 프레임 시간의 상위 지연, 첫 응답 지연, 메모리, 취소·타임아웃을 기록하자. 대사는 작성된 문장으로 되돌아갈 수 있게 하고 보상·인벤토리 변경은 검증된 게임 코드가 처리하도록 하자. 이번 확인은 공식 문서 조사이며 SDK 실행·벤치마크 재현·가격 확정은 하지 않았어.",
+      "sources": [
+        {
+          "label": "10월 29일 제한적 얼리액세스 발표",
+          "url": "https://atelico.studio/blog/the-atelico-ai-engine-is-here",
+          "published": "2026-10-29",
+          "accessed": "2026-11-03",
+          "date_note": "공식 본문 날짜 확인. 공개 요청형 접근이며 일반 정식 출시로 쓰지 않음."
+        },
+        {
+          "label": "엔진별 네이티브 통합·비동기 호출",
+          "url": "https://atelico.studio/ai-engine/game-engines/",
+          "published": "2026-10-29",
+          "accessed": "2026-11-03",
+          "date_note": "날짜는 연결된 출시 발표 기준이며 문서 최초 작성일은 별도 미표기."
+        },
+        {
+          "label": "GPU 공유 방식·측정 조건과 수치",
+          "url": "https://atelico.studio/ai-engine/gpu-sharing/",
+          "published": "2026-10-29",
+          "accessed": "2026-11-03",
+          "date_note": "출시 발표와 연결된 현재 기술 문서. 공급자 특정 하드웨어·장면 실험이며 독립 재현 아님."
+        },
+        {
+          "label": "대사 검색·상태·구조화 생성 제어",
+          "url": "https://atelico.studio/ai-engine/creative-control/",
+          "published": "2026-10-29",
+          "accessed": "2026-11-03",
+          "date_note": "발표일과 현재 문서 확인일 구분. 구조 준수와 내용의 게임 규칙 적합성은 별개로 해석."
+        }
+      ],
+      "checked": "2026-11-03",
+      "summary": "Atelico가 10월 29일 게임 안에서 실행하는 AI Engine의 제한적 얼리액세스를 열었어. Unity·Godot·Unreal 통합과 대화·음성·이미지·NPC 행동 기능을 제공하며, 렌더링과 추론을 조율하는 GPU 스케줄러를 강조해. 지금 누구나 SDK를 내려받는 정식 공개가 아니라 접근을 요청하는 단계야."
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "🧵 Mutable UE 5.8 샘플 갱신 — 캐릭터 조합과 매 프레임 옷 시뮬레이션은 다른 작업",
+      "source": "Epic Games 공식 샘플 발표·Mutable 문서",
+      "published": "2026-10-27",
+      "url": "https://www.unrealengine.com/news/mutable-sample-for-runtime-character-customization-now-updated-for-ue-5-8",
+      "tags": [
+        "Unreal Engine",
+        "Mutable",
+        "MetaHuman",
+        "Character Customization"
+      ],
+      "short_summary": "Epic이 10월 27일 UE 5.8용 Mutable Sample을 갱신했어. MetaHuman 커스터마이징 예제, 단순해진 Skeletal Mesh 그래프, 체형에 맞춘 옷 재맞춤과 기능별 독립 예제를 제공해. 최근 중요 학습 자료로 소개하는 것이며 11월 3일 새 발표는 아니야.",
+      "easy_explainer": "배경(일반 설명): 캐릭터의 머리·몸·옷을 단순히 모두 붙이면 가려진 몸의 삼각형까지 남고 재질 호출도 늘어날 수 있어. Mutable은 선택한 부품을 조합해 메시·재질·텍스처를 만드는 도구야. 모든 조합을 미리 별도 자산으로 저장하는 방식과 런타임 조립 방식의 차이를 공부하기 좋은 예제야.",
+      "technical_context": "이번 샘플은 MetaHuman을 dataless Customizable Object로 구성하고, 데이터에 액세서리를 추가해 선택지를 확장하는 흐름을 보여줘. 체형 변화에 대한 옷 재맞춤은 조합 시점에 메시를 변형하는 방식이며, 매 프레임 천을 물리 시뮬레이션하는 기능과 같다고 보면 안 돼. Remove Unseen은 옷 아래 숨은 기하를 제거하고 Material Merging 예제는 조합된 메시의 재질을 합쳐 드로 콜을 줄이는 방법을 보여줘.",
+      "why_it_matters": "개발 해석: 커스터마이징은 외형 선택 UI뿐 아니라 조립 시간·결과 캐시·메모리·렌더링 비용을 함께 설계해야 하는 문제야. 재질 수를 줄여도 텍스처 메모리나 생성 비용이 늘 수 있으므로 한 지표만 보고 최적화 성공으로 판단하면 안 돼.",
+      "developer_view": "학습 제안: Basic CO부터 시작해 같은 캐릭터의 부품 수와 재질 수를 조금씩 늘려 비교하자. 이후 체형의 양 끝값, 옷 조합, LOD 전환에서 뚫림과 실루엣을 확인하고 런타임 교체 시점의 지연을 측정하자. 공식의 Production-Ready 표기는 도구 상태이며 모든 조합이 검증됐다는 뜻은 아니야. 샘플을 직접 실행한 결과는 아니야.",
+      "sources": [
+        {
+          "label": "UE 5.8 Mutable Sample 공식 갱신 발표",
+          "url": "https://www.unrealengine.com/news/mutable-sample-for-runtime-character-customization-now-updated-for-ue-5-8",
+          "published": "2026-10-27",
+          "accessed": "2026-11-03",
+          "date_note": "본문 날짜 October 27, 2026. 새 샘플과 기능별 예제를 확인; 오늘 발표로 재표기하지 않음."
+        },
+        {
+          "label": "Mutable의 메시·재질·텍스처 생성 개요",
+          "url": "https://dev.epicgames.com/documentation/unreal-engine/mutable-skeletal-mesh-generation-in-unreal-engine",
+          "published": null,
+          "accessed": "2026-11-03",
+          "date_note": "날짜 없는 현재 기술 문서. 일반 원리 설명용이며 직접 성능 검증이 아님."
+        }
+      ],
+      "checked": "2026-11-03",
+      "summary": "Epic이 10월 27일 UE 5.8용 Mutable Sample을 갱신했어. MetaHuman 커스터마이징 예제, 단순해진 Skeletal Mesh 그래프, 체형에 맞춘 옷 재맞춤과 기능별 독립 예제를 제공해. 최근 중요 학습 자료로 소개하는 것이며 11월 3일 새 발표는 아니야."
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "🖼️ Unity의 Figma 연결 실험 — 디자인을 편집 가능한 UI Toolkit 문서로",
+      "source": "Unity 공식 Industry 제품 정리",
+      "published": "2026-10-30",
+      "url": "https://unity.com/blog/unity-industry-product-releases-2026",
+      "tags": [
+        "Unity",
+        "Figma",
+        "UI Toolkit",
+        "Experimental"
+      ],
+      "short_summary": "Unity의 10월 30일 제품 정리는 실험적 UI Toolkit Connector for Figma를 소개해. Figma 프레임을 편집 가능한 Unity UI 문서로 옮기고 변수는 테마, 구성 요소는 Unity 컨트롤로 연결하며 지원되는 스타일·레이아웃 수정은 Figma로 돌려보낼 수 있어. 연간 제품 정리이므로 이 기능이 모두 10월 30일 처음 출시됐다고 뜻하지는 않아.",
+      "easy_explainer": "이미지로 붙이는 UI가 아니라 Unity UI Builder에서 다시 편집할 수 있는 형태로 옮기는 연결 도구야.",
+      "technical_context": "공식 글은 experimental 상태와 지원되는 변경의 양방향 반영을 명시해. Figma의 모든 기능과 상호작용이 그대로 이전된다는 보장은 아니야.",
+      "why_it_matters": "개발 해석: 디자인과 실제 UI를 따로 고치는 부담을 줄일 가능성이 있지만 변환 뒤 입력·레이아웃 검증은 필요해.",
+      "developer_view": "적용 제안: 작은 설정 화면에서 글꼴·한글 줄바꿈·해상도 변화·게임패드 포커스를 먼저 확인하자. 실제 변환·프로젝트 호환성은 이번 조사에서 실행하지 않았어.",
+      "sources": [
+        {
+          "label": "10월 30일 공식 제품 정리의 Figma Connector 항목",
+          "url": "https://unity.com/blog/unity-industry-product-releases-2026",
+          "published": "2026-10-30",
+          "accessed": "2026-11-03",
+          "date_note": "글 게시일 확인. 연간 회고의 Q3 항목이며 커넥터 최초 출시일로 단정하지 않음. 실험 상태 유지."
+        }
+      ],
+      "checked": "2026-11-03",
+      "summary": "Unity의 10월 30일 제품 정리는 실험적 UI Toolkit Connector for Figma를 소개해. Figma 프레임을 편집 가능한 Unity UI 문서로 옮기고 변수는 테마, 구성 요소는 Unity 컨트롤로 연결하며 지원되는 스타일·레이아웃 수정은 Figma로 돌려보낼 수 있어. 연간 제품 정리이므로 이 기능이 모두 10월 30일 처음 출시됐다고 뜻하지는 않아."
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🐺 Soulframe, 11월 6일 공개 알파 예고 — 초대 제한 해제와 월간 대형 업데이트는 별도",
+      "source": "Digital Extremes 배포 보도자료·Soulframe 공식 공지",
+      "published": "2026-11-02",
+      "url": "https://www.gamespress.com/en-US/Digital-Extremes-Invites-All-Players-to-Join-Soulframe-Open-Preludes-S",
+      "tags": [
+        "Soulframe",
+        "Open Preludes",
+        "Alpha",
+        "World Progression"
+      ],
+      "short_summary": "Digital Extremes가 11월 2일 보도자료에서 Soulframe의 무료 Windows PC 공개 알파를 11월 6일 시작한다고 안내했어. 초대 없이 공식 사이트에서 참가하는 방식이며, 완성판이나 Steam판 출시를 뜻하지 않아. 늑대 탈것과 오염 지역을 되살리는 진행 시스템을 담은 Verse of the Veilands는 11월 업데이트로 별도 예고됐어.",
+      "summary": "Digital Extremes가 11월 2일 보도자료에서 Soulframe의 무료 Windows PC 공개 알파를 11월 6일 시작한다고 안내했어. 초대 없이 공식 사이트에서 참가하는 방식이며, 완성판이나 Steam판 출시를 뜻하지 않아. 늑대 탈것과 오염 지역을 되살리는 진행 시스템을 담은 Verse of the Veilands는 11월 업데이트로 별도 예고됐어.",
+      "easy_explainer": "테스트 참가 문턱이 낮아지는 것이지 게임 개발이 끝났다는 발표는 아니야.",
+      "technical_context": "지역 정화와 늑대 성장 같은 진행 조건이 새 기능을 여는 구조야. 보도자료는 공개 알파의 시작 날짜와 업데이트의 월 단위 일정을 구분해.",
+      "why_it_matters": "그동안 초대장을 기다리던 이용자는 접근 방식이 달라져. 첫날부터 예고된 신규 시스템이 모두 제공된다고 단정하지 말자.",
+      "developer_view": "개발 해석: 대규모 신규 이용자 유입과 진행 구조 개편이 겹칠 때는 초반 안내와 피드백 수집 경로를 함께 점검해야 해.",
+      "sources": [
+        {
+          "label": "11월 2일 공식 배포 보도자료",
+          "url": "https://www.gamespress.com/en-US/Digital-Extremes-Invites-All-Players-to-Join-Soulframe-Open-Preludes-S",
+          "published": "2026-11-02",
+          "accessed": "2026-11-03",
+          "date_note": "본문 날짜와 무료 Windows 알파·11월 업데이트 안내 확인. 실제 다운로드·플레이는 검증하지 않음."
+        },
+        {
+          "label": "기존 Open Preludes 공지",
+          "url": "https://www.soulframe.com/en/news/10000081/open-preludes-coming-soon",
+          "published": "2026-10-15",
+          "accessed": "2026-11-03",
+          "date_note": "페이지 Posted On은 10월 15일이며 현재 표제는 11월 6일을 안내. 별도 수정일은 없어 날짜가 최초 본문에 있었는지 단정하지 않음."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🎮 WoW: Forever, 공식 게임패드 알파 지원 소개 — PC 입력 확장이지 콘솔판 발표는 아니야",
+      "source": "Xbox Wire 공식 체험 소개",
+      "published": "2026-11-02",
+      "url": "https://news.xbox.com/en-us/2026/11/02/world-of-warcraft-forever-controller-support-reimagines-way-we-play-azeroth/",
+      "tags": [
+        "World of Warcraft",
+        "Gamepad",
+        "Accessibility",
+        "PC"
+      ],
+      "short_summary": "Xbox Wire가 11월 2일 WoW: Forever의 Gamepad(Alpha) 지원을 소개했어. 트리거·범퍼로 버튼에 연결된 행동을 바꾸고 핑으로 간단한 의사소통을 할 수 있어. 11월 4일 PC 출시 예정이며, 휴대용 Windows PC에서 실행한 체험과 해당 기기의 공식 지원은 구별해야 해.",
+      "summary": "Xbox Wire가 11월 2일 WoW: Forever의 Gamepad(Alpha) 지원을 소개했어. 트리거·범퍼로 버튼에 연결된 행동을 바꾸고 핑으로 간단한 의사소통을 할 수 있어. 11월 4일 PC 출시 예정이며, 휴대용 Windows PC에서 실행한 체험과 해당 기기의 공식 지원은 구별해야 해.",
+      "easy_explainer": "키보드에 흩어진 명령을 여러 버튼 조합으로 묶어 컨트롤러에서도 접근하도록 한 방식이야.",
+      "technical_context": "옵션에서 Gamepad(Alpha)를 켜면 버튼 아이콘이 바뀌고 UI 편집·간소화된 행동 막대를 사용할 수 있어. 기사는 휴대용 기기 설정 과정이 아직 공식 지원되지 않는다고 밝혀.",
+      "why_it_matters": "거실 PC나 휴대용 PC처럼 다른 자세와 화면 크기로 MMORPG를 즐길 가능성이 넓어져. Xbox 콘솔판 출시로 읽으면 안 돼.",
+      "developer_view": "개발 해석: 버튼 매핑뿐 아니라 작은 화면의 가독성·메뉴 접근·문자 대화의 대안까지 함께 설계해야 실제 입력 장치 지원이 돼.",
+      "sources": [
+        {
+          "label": "공식 게임패드 알파 체험과 지원 범위",
+          "url": "https://news.xbox.com/en-us/2026/11/02/world-of-warcraft-forever-controller-support-reimagines-way-we-play-azeroth/",
+          "published": "2026-11-02",
+          "accessed": "2026-11-03",
+          "date_note": "본문 날짜 11월 2일. 작성자의 베타 체험이며 본 브리핑의 직접 실행 검증은 아님. PC 출시 예정과 미지원 휴대용 기기 체험을 구분."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🌊 Avatar Legends 대형 패치 — 두 캐릭터 재설계와 랭크·학습 기능 개편",
+      "source": "Gameplay Group의 Xbox Wire 공식 기고",
+      "published": "2026-10-30",
+      "url": "https://news.xbox.com/en-us/2026/10/30/avatar-legends-the-fighting-game-enters-the-avatar-state/",
+      "tags": [
+        "Avatar Legends",
+        "Fighting Game",
+        "Balance",
+        "Ranked"
+      ],
+      "short_summary": "Avatar Legends: The Fighting Game의 Avatar State 패치가 10월 30일 Xbox Series X|S에 제공됐다고 개발사가 안내했어. Avatar Aang과 Nightmare Korra의 외형·기술을 다시 만들고 전체 캐릭터 밸런스, Ranked Mode 2.0, 메뉴·전투 화면을 개편했어. Story Mode+와 난이도·튜토리얼·콤보 연습도 추가해 경쟁과 입문 경로를 함께 손봤어.",
+      "summary": "Avatar Legends: The Fighting Game의 Avatar State 패치가 10월 30일 Xbox Series X|S에 제공됐다고 개발사가 안내했어. Avatar Aang과 Nightmare Korra의 외형·기술을 다시 만들고 전체 캐릭터 밸런스, Ranked Mode 2.0, 메뉴·전투 화면을 개편했어. Story Mode+와 난이도·튜토리얼·콤보 연습도 추가해 경쟁과 입문 경로를 함께 손봤어.",
+      "easy_explainer": "수치만 바꾸는 밸런스 패치보다 넓은 범위의 전투·화면·학습 개편이야.",
+      "technical_context": "개발진은 Nightmare Korra의 지속 체력 감소 시제품을 버리고 시작 체력이 낮은 방식으로 바꿨다고 설명해. 설정을 그대로 규칙으로 옮기기보다 실제 플레이 결과로 선택한 사례야.",
+      "why_it_matters": "기존 이용자는 익숙한 기술과 랭크 흐름이 달라질 수 있고, 신규 이용자는 연습 경로를 다시 살펴볼 만해.",
+      "developer_view": "개발 해석: 캐릭터 설정에 잘 맞는 규칙이라도 흥미로운 선택을 만들지 못하면 더 단순한 규칙이 나을 수 있어.",
+      "sources": [
+        {
+          "label": "Avatar State 패치 공식 소개",
+          "url": "https://news.xbox.com/en-us/2026/10/30/avatar-legends-the-fighting-game-enters-the-avatar-state/",
+          "published": "2026-10-30",
+          "accessed": "2026-11-03",
+          "date_note": "개발사 담당자의 10월 30일 기고와 Xbox 제공 상태 확인. 다른 플랫폼의 배포 시각이나 직접 플레이를 확인한 것은 아님."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "✈️ War Thunder Eagle’s Shadow, 11월 중순 예고 — 신규 장비와 집속탄 추가",
+      "source": "Gaijin Entertainment 배포 보도자료·공식 개발 서버 공지",
+      "published": "2026-11-02",
+      "url": "https://www.gamespress.com/uk-UA/War-Thunder-unleashes-the-Eagles-power",
+      "tags": [
+        "War Thunder",
+        "Eagles Shadow",
+        "Update",
+        "Public Test"
+      ],
+      "short_summary": "Gaijin이 11월 2일 Eagle’s Shadow 대형 업데이트를 11월 중순에 제공할 예정이라고 발표했어. F-15EX 계열과 Leopard 2A8 등 신규 장비, 항공 집속탄 범주가 추가돼. 현재 개발 서버에서 시험하는 내용과 정식 서버에 확정 배포된 내용을 구분해야 해.",
+      "summary": "Gaijin이 11월 2일 Eagle’s Shadow 대형 업데이트를 11월 중순에 제공할 예정이라고 발표했어. F-15EX 계열과 Leopard 2A8 등 신규 장비, 항공 집속탄 범주가 추가돼. 현재 개발 서버에서 시험하는 내용과 정식 서버에 확정 배포된 내용을 구분해야 해.",
+      "easy_explainer": "정식 서비스 업데이트에 앞서 별도 개발 서버에서 장비와 규칙을 시험하는 단계야.",
+      "technical_context": "공식 개발 서버 공지는 신규 장비의 특성·장갑·무장이 조정 중일 수 있고 시험 진행 기록이 본 서버로 이전되지 않는다고 설명해.",
+      "why_it_matters": "정확한 출시 일자는 아직 아니며, 시험 빌드의 성능이나 밸런스 수치를 최종값으로 판단하면 안 돼.",
+      "developer_view": "개발 해석: 공개 시험에서 발견된 문제와 수정 범위를 명확히 구분해 이용자의 기대와 실제 배포 상태가 어긋나지 않도록 해야 해.",
+      "sources": [
+        {
+          "label": "11월 2일 업데이트 범위·중순 제공 예고",
+          "url": "https://www.gamespress.com/uk-UA/War-Thunder-unleashes-the-Eagles-power",
+          "published": "2026-11-02",
+          "accessed": "2026-11-03",
+          "date_note": "본문 02.11.2026 및 mid-November 확인. 10월 29일 트레일러와 별도 후속 보도자료이며 정식 배포 완료 아님."
+        },
+        {
+          "label": "10월 30일 공식 개발 서버 공지",
+          "url": "https://forum.warthunder.com/t/the-dev-server-is-opening-with-major-update-eagle-s-shadow-30-10-2026/361731",
+          "published": "2026-10-30",
+          "accessed": "2026-11-03",
+          "date_note": "공식 운영자 최초 게시와 개발 서버 전용·조정 중 경고를 확인. 댓글 갱신 시각을 발표일로 쓰지 않음."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "⚔️ Phantom Blade Zero, 72시간 400만 장 판매 발표 — 사전 추정치와 구분",
+      "source": "S-GAME 공식 게시물을 인용한 GAME Watch·Gematsu 보도",
+      "published": "2026-11-02",
+      "url": "https://game.watch.impress.co.jp/docs/news/2153047.html",
+      "tags": [
+        "Phantom Blade Zero",
+        "SGAME",
+        "Sales",
+        "PC"
+      ],
+      "short_summary": "GAME Watch와 Gematsu는 S-GAME이 Phantom Blade Zero의 출시 후 72시간 판매량이 400만 장을 넘었다고 발표했다고 보도했어. 출시 전 분석업체의 추정치와 달리 이번 수치는 개발사 발표를 인용한 것이야. 다만 공식 X 게시물의 직접 열람은 제한돼, 보도에 포함된 게시물과 날짜를 대조한 범위로 전달해.",
+      "summary": "GAME Watch와 Gematsu는 S-GAME이 Phantom Blade Zero의 출시 후 72시간 판매량이 400만 장을 넘었다고 발표했다고 보도했어. 출시 전 분석업체의 추정치와 달리 이번 수치는 개발사 발표를 인용한 것이야. 다만 공식 X 게시물의 직접 열람은 제한돼, 보도에 포함된 게시물과 날짜를 대조한 범위로 전달해.",
+      "easy_explainer": "판매량은 동시에 접속한 사람 수나 위시리스트 수와 다른 지표야.",
+      "technical_context": "이번 기사에는 플랫폼별 판매 비중이나 환불을 반영한 매출·이익 자료가 없어. 판매 장수만으로 그 값을 추정하지 않았어.",
+      "why_it_matters": "출시 안내 뒤 실제 초기 판매 성과가 나왔다는 후속 소식이지만, 장기 흥행이나 수익성을 확정하는 자료는 아니야.",
+      "developer_view": "개발 해석: 초기 판매 지표는 별도 운영·품질 지표와 함께 봐야 해. 동시접속자 수를 판매량으로 환산하지 말자.",
+      "sources": [
+        {
+          "label": "공식 발표를 인용한 GAME Watch 보도",
+          "url": "https://game.watch.impress.co.jp/docs/news/2153047.html",
+          "published": "2026-11-02",
+          "accessed": "2026-11-03",
+          "date_note": "본문 2026년 11월 2일 12:29 JST, JSON-LD 2026-11-02T12:29:36+09:00. 공식 게시물 인용을 확인했으나 X 원문 직접 열람은 403 제한."
+        },
+        {
+          "label": "동일 개발사 발표를 확인한 Gematsu 보도",
+          "url": "https://www.gematsu.com/2026/11/phantom-blade-zero-sales-top-four-million-in-72-hours",
+          "published": "2026-11-02",
+          "accessed": "2026-11-03",
+          "date_note": "표시 Nov 1 2026 9:59 PM EST는 UTC/KST 11월 2일. 검색 본문에서 72시간 400만 초과 및 S-GAME 발표 귀속 교차 확인."
+        }
+      ],
+      "checked": "2026-11-03"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🗡️ 나 혼자만 레벨업: ARISE OVERDRIVE 콘솔판, 한국시간 11월 4일 출시 예고",
+      "source": "넷마블 공식 보도자료",
+      "published": "2026-10-28",
+      "url": "https://ch.netmarble.com/Eng/Newsroom/Detail?bbs_code=1020&post_seq=7089&post_tag=SOLO+LEVELING%3AARISE+OVERDRIVE",
+      "tags": [
+        "Solo Leveling",
+        "ARISE OVERDRIVE",
+        "Console",
+        "Coop"
+      ],
+      "short_summary": "넷마블은 10월 28일 ARISE OVERDRIVE의 PS5·Xbox Series X|S 출시를 현지 11월 3일 오후 4시 PST로 예고했어. 한국시간으로는 11월 4일 오전 9시이며, 지난해 PC판 출시와 별개인 콘솔 확장이야. 4인 협동 레이드와 성진우의 군주 능력을 포함하지만, 이번 확인 시점에는 콘솔 출시 전이야.",
+      "summary": "넷마블은 10월 28일 ARISE OVERDRIVE의 PS5·Xbox Series X|S 출시를 현지 11월 3일 오후 4시 PST로 예고했어. 한국시간으로는 11월 4일 오전 9시이며, 지난해 PC판 출시와 별개인 콘솔 확장이야. 4인 협동 레이드와 성진우의 군주 능력을 포함하지만, 이번 확인 시점에는 콘솔 출시 전이야.",
+      "easy_explainer": "같은 11월 3일 표기라도 한국에서 실제 열리는 날짜는 11월 4일이야.",
+      "technical_context": "공식 자료가 함께 적은 11월 4일 00:00 UTC를 한국시간으로 환산했어. 신규 크로스플레이나 세이브 공유 지원은 이 공지만으로 단정하지 않았어.",
+      "why_it_matters": "국내에서 기다리는 이용자는 해외 표제 날짜와 한국 이용 시작 시각을 구별할 수 있어.",
+      "developer_view": "개발 해석: 플랫폼 확장 공지에는 지역 시각·멀티플레이 호환 범위를 구체적으로 표시해야 혼동이 줄어들어.",
+      "sources": [
+        {
+          "label": "콘솔 출시 일정 공식 공지",
+          "url": "https://ch.netmarble.com/Eng/Newsroom/Detail?bbs_code=1020&post_seq=7089&post_tag=SOLO+LEVELING%3AARISE+OVERDRIVE",
+          "published": "2026-10-28",
+          "accessed": "2026-11-03",
+          "date_note": "본문 2026.10.28과 November 3 4 PM PST / November 4 00:00 UTC 확인. 오늘 신규 발표로 표현하지 않으며 실배포 미확인."
+        }
+      ],
+      "checked": "2026-11-03"
+    }
+  ],
+  "original_markdown": "# 게임·AI 데일리 브리핑 — 2026-11-03\n\n2026년 11월 3일(화) 한국시간 오전 조사 기준. AI 6건, 게임 개발 3건, 게임 전반 이슈 6건을 정리했어. 개발과 밀접한 기술 5건은 심층으로 설명했어. 신규 발표와 아직 다루지 않은 최근 중요 자료를 구분했고, 변경 없는 반복이나 개수 채우기는 제외했어. 출처의 최초 발표·갱신·예정일을 구별하며, 공급자 성능 주장이나 개발 적용 제안은 직접 재현한 결과가 아니야.\n\n- 기준 시간대: Asia/Seoul\n- 자료 확인일: 2026-11-03 (KST)\n- 일요일 시작 주차에 Markdown/PDF를 보관하고 토요일 주간 정리 규칙을 유지해.\n\n## 1. 🛠️ Claude Code 2.1.316 — 에이전트 종료와 실제 하위 프로세스 종료는 다르다\n\n**영역:** AI | **깊이:** 심층 해설 | **기사 ID:** 2026-11-03:0\n\n**발표일:** 2026-10-31\n**출처:** Anthropic 공식 릴리스\n\n### 핵심 요약\n\nAnthropic이 10월 31일 공개한 2.1.316은 에이전트가 스스로 종료될 때 macOS·Linux 셸 명령이 남아 실행되던 문제를 수정했어. 제한 세션의 작업 폴더 밖 파일 업로드와 PowerShell 차단 훅 처리도 보완했어. 이전 2.1.311 소개나 악성 확장 공지의 반복이 아니라 실행 수명과 권한 경계에 관한 후속 변경이야.\n\n### 배경과 쉬운 설명\n\n배경: AI가 “작업을 멈췄다”고 답하는 것과, 그 AI가 시작한 컴파일러·테스트 서버가 실제로 끝나는 것은 별개야. 작업 감독자가 퇴근해도 기계가 계속 돌아갈 수 있는 것과 같아.\n\n게임 빌드 자동화에서는 남은 프로세스가 CPU·메모리를 쓰거나 파일을 계속 붙잡을 수 있어. 종료 신호, 프로세스 상태, 최종 산출물을 각각 확인하는 이유야.\n\n### 작동 원리와 기술 맥락\n\n공식 릴리스는 인증 거부나 클라우드 세션 보관 등 자체 종료 경로의 셸 정리를 명시해. PowerShell 훅은 특정 구문으로 시작할 때 exit code 2가 차단하지 못하던 문제가 수정됐고, --restricted에서도 Read 허용 규칙 때문에 작업 디렉터리 밖 파일이 업로드되던 경로를 고쳤어. 하위 에이전트 노력 수준을 별도로 지정하는 CLAUDE_CODE_SUBAGENT_EFFORT도 추가됐어.\n\n### 왜 중요한가\n\n개발 해석: 자동화의 신뢰성은 코드 생성 품질만으로 정해지지 않아. 실패·취소·권한 거부 같은 비정상 경로에서 자원과 파일 접근 범위가 정리되는지가 장시간 프로젝트 작업에 중요해.\n\n### 개발자 관점\n\n검증 제안: 테스트 프로젝트에서 빌드 중 취소, 인증 실패, 훅 차단을 각각 시험하고 프로세스·열린 포트·파일 변경을 확인하자. “성공 문구 없음”을 실패 기록 대신 쓰지 말고 종료 원인을 남기자. 이번 글은 릴리스 확인이며 설치·실행 또는 모든 보안 문제 해결을 검증한 결과는 아니야.\n\n### 원문과 참고 자료\n\n- [2.1.316 변경 기록](https://github.com/anthropics/claude-code/releases/tag/v2.1.316) - 발표 2026-10-31 / 확인 2026-11-03 / GitHub 릴리스 31 Oct 01:01 표기 확인. 프로세스·훅·restricted 업로드 수정 사항을 읽었으며 재현 실험하지 않음.\n\n---\n\n## 2. 🧩 JEPA 표상 정렬 연구 — 큰 모델보다 무엇을 같은 장면으로 묶는지가 중요할 수 있다\n\n**영역:** AI | **깊이:** 심층 해설 | **기사 ID:** 2026-11-03:1\n\n**발표일:** 2026-10-29\n**출처:** Balestriero·LeCun arXiv 사전논문\n\n### 핵심 요약\n\n10월 29일 공개된 사전논문은 따로 학습한 모델의 내부 표현이 비슷해지는 조건을 JEPA에서 분석했어. 같은 장면을 설명하는 좋은 관측 쌍으로 학습하면 영상·텍스트 표현의 정렬이 개선된다는 결과야. 109M 모델의 정렬 지표가 비교한 대형 언어 모델보다 높았다는 주장은 일반 코딩·추론 능력의 우위를 뜻하지 않아.\n\n### 배경과 쉬운 설명\n\n배경: 이미지를 읽는 모델과 글을 읽는 모델은 각각 정보를 숫자 벡터로 바꿔. 두 모델에서 비슷한 장면끼리 가까이 놓인다면, 좌표 방향을 맞춰 서로 연결하기 쉬워져.\n\n논문의 핵심은 단순히 모델을 키우는 대신 “어떤 입력 두 개를 같은 것으로 가르칠까”를 바꾸는 거야. 같은 장면의 서로 다른 설명과 한 문장을 앞뒤로 자른 조각은 동일한 학습 신호가 아니야.\n\n### 작동 원리와 기술 맥락\n\n저자들은 이상화된 조건에서 별도 JEPA의 표현이 회전 변환까지 같아지는 충분조건을 제시해. 동일 자료 비교에서는 좋은 관측 쌍이 같은 정렬 수준에 도달하는 데 42배 적은 학습 샘플을 사용했다고 보고해.\n\n다만 이론은 유한 세계·정보를 잃지 않는 관측 등 가정을 두고, 실제 실험이 그 가정을 정확히 충족하지는 않는다고 본문에 명시했어. 대규모 실험의 일부 설명문은 이미지 설명 모델이 생성했으므로 영상·텍스트 정보가 전혀 없이 학습했다는 해석도 틀려.\n\n### 왜 중요한가\n\n개발 해석: 게임 자산 검색이나 장면 설명용 임베딩을 평가할 때 파라미터 수만 비교하기보다, 학습 쌍이 어떤 의미를 공유하는지 살펴볼 근거가 돼. 표현 정렬, 검색 정확도, 문장 생성 품질은 서로 다른 평가 대상이야.\n\n### 개발자 관점\n\n적용 제안: 같은 자산의 이미지·메타데이터를 연결하는 작은 평가셋을 만들고 검색 실패와 잘못된 유사도를 먼저 측정하자. 이 결과를 물리 시뮬레이션이나 범용 월드 모델 완성으로 확대하지 말자. 사전논문을 읽은 분석이며 성능을 독립 재현하지 않았어.\n\n### 원문과 참고 자료\n\n- [논문 초록·최초 제출 기록](https://arxiv.org/abs/2610.39302) - 발표 2026-10-29 / 확인 2026-11-03 / v1 제출 2026-10-29 03:49:53 UTC. 오늘 새 발표가 아니라 이전 브리핑에서 다루지 않은 최근 연구.\n- [논문 본문과 Known limitations](https://arxiv.org/html/2610.39302v1) - 발표 2026-10-29 / 확인 2026-11-03 / 이론 가정과 실험 한계·생성 설명문 사용을 직접 확인. 정렬 벤치마크를 일반 지능 순위로 해석하지 않음.\n\n---\n\n## 3. 🎥 StreamVibe — 화면을 보는 AI가 언제 말하고 언제 기다릴지 학습하기\n\n**영역:** AI | **깊이:** 심층 해설 | **기사 ID:** 2026-11-03:2\n\n**발표일:** 2026-10-26\n**출처:** StreamVibe 연구진 논문·프로젝트 페이지\n\n### 핵심 요약\n\n10월 26일 최초 공개되고 27일 개정된 StreamVibe는 연속 영상을 보며 사용자의 바뀌는 의도를 추적하는 연구야. 답의 내용뿐 아니라 개입 시점과 중복 응답을 평가하고, 현재 요청·진행 상태·이전 응답을 별도로 관리해. 확인 시 프로젝트는 코드와 모델 공개를 아직 예정으로 안내하므로 즉시 설치 가능한 완성 도구로 소개하지 않아.\n\n### 배경과 쉬운 설명\n\n배경: 게임 튜토리얼 도우미가 플레이어를 보며 조언한다고 생각해 보자. 이미 끝낸 행동을 다시 시키거나, “이제 실수할 때만 알려줘”라는 변경을 무시하면 답변 내용이 맞아도 방해가 돼.\n\n이 연구는 장면을 알아보는 능력과 지금 도움을 말해야 하는 결정을 분리해서 다뤄. 과거 영상을 많이 기억하는 것만으로 현재 목표를 정확히 관리하는 문제가 해결되지는 않아.\n\n### 작동 원리와 기술 맥락\n\n논문은 매 시점 미래 영상 없이 침묵 또는 응답을 선택하게 하고, 학습 과정에서 적절한 시점·내용뿐 아니라 누락·과잉·모순 응답도 평가해. Harness는 활성 의도, 관찰된 진행 상태, 전달한 답을 나눠 기록하고 오래된 기억은 압축해 필요한 부분을 검색해.\n\n한 번의 질문에 답했다고 지속 감시 요청까지 완료 처리하지 않으며, 제안한 행동을 사용자가 실제 수행한 증거로 취급하지 않는 설계가 설명돼 있어. 프로젝트는 4,100개 평가 샘플과 85K 학습 샘플을 소개해.\n\n### 왜 중요한가\n\n개발 해석: AI 동료나 플레이테스트 보조 도구에도 “무슨 말을 했나”뿐 아니라 “지금 말할 필요가 있었나”라는 품질 기준이 필요해. 상태 추적과 발화 정책을 분리하면 취소·목표 전환·중복 안내를 검사하기 쉬워져.\n\n### 개발자 관점\n\n실험 제안: 녹화된 테스트에서 도움을 놓친 시점과 불필요하게 끼어든 횟수를 함께 세자. 실제 게임 입력이나 저장 데이터를 바꾸는 행동은 별도 권한·검증 계층으로 제한해야 해. 논문 점수를 상용 게임에서의 실시간 정확도나 안전 보장으로 해석하지 않았어.\n\n### 원문과 참고 자료\n\n- [최초 제출과 v2 개정 기록](https://arxiv.org/abs/2610.34662) - 발표 2026-10-26 / 확인 2026-11-03 / 최초 10월 26일, v2 10월 27일. 오늘은 신규 발견한 최근 연구를 정리한 날짜.\n- [상태·의도 수명·보상 설계 본문](https://arxiv.org/html/2610.34662v2) - 발표 2026-10-27 / 확인 2026-11-03 / 개정본 4절 및 부록 C의 관찰 근거와 응답 기록 분리를 확인.\n- [공식 프로젝트와 공개 상태](https://stream-vibe.github.io/) - 최초 게시일 미표기 / 확인 2026-11-03 / 확인 시 Code soon·Hugging Face soon 및 내부 승인 중 안내. 상대적인 7일 문구를 확정 출시일로 계산하지 않음.\n\n---\n\n## 4. 💬 ChatGPT·Codex, 12월 공유 사용량 예고 — Instant 채팅은 제외\n\n**영역:** AI | **깊이:** 빠른 요약 | **기사 ID:** 2026-11-03:3\n\n**발표일:** 최초 게시일 미표기\n**출처:** OpenAI 공식 도움말\n\n### 핵심 요약\n\nOpenAI 공식 도움말은 12월부터 Plus·Pro·Business의 ChatGPT와 Codex 사용량을 공유한다고 안내해. 토큰 기반으로 모델과 작업 복잡도에 따라 사용량이 달라지지만 Instant 채팅은 해당 사용량에서 제외돼. 정확한 시작일과 요금제별 새 한도 수치는 본문에 없으며, 오늘 바로 적용됐다는 뜻은 아니야.\n\n### 배경과 쉬운 설명\n\n여러 작업 도구가 한 잔여 사용량을 나눠 쓰는 방식이야. 모든 일반 채팅이 그 한도를 쓰는 것은 아니야.\n\n### 작동 원리와 기술 맥락\n\n공식 문서는 Settings → Usage에서 합산 잔여량과 초기화 시점을 확인할 수 있다고 안내해. 현재 Work·Codex 한도 증가와 12월 공유 전환은 구별해야 해.\n\n### 왜 중요한가\n\n개발 해석: 코드 작성과 긴 기술 분석을 함께 맡기는 경우, 앞으로 한 작업의 사용량이 다른 작업의 여유에 영향을 줄 수 있어.\n\n### 개발자 관점\n\n운영 제안: 실제 전환 뒤 사용량 화면을 확인하자. 문서에 없는 토큰 수·정확한 전환일·본인 계정 적용 여부를 추정하지 말자.\n\n### 원문과 참고 자료\n\n- [12월 공유 사용량 공식 안내](https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits) - 최초 게시일 미표기 / 확인 2026-11-03 / 최초 게시 날짜가 본문에 없고 상대 갱신 표시만 있어 발표일을 확정하지 않음. 2026-11-03 KST 확인 기준, 적용 시기는 12월 예정.\n\n---\n\n## 5. 🏭 ADNOC·OpenAI·G42 협력 — 개별 산업 AI를 전사 의사결정으로 연결\n\n**영역:** AI | **깊이:** 빠른 요약 | **기사 ID:** 2026-11-03:4\n\n**발표일:** 2026-11-02\n**출처:** ADNOC 공식 보도자료\n\n### 핵심 요약\n\nADNOC가 11월 2일 OpenAI·G42와 다년 협력을 발표했어. 생산·정제·물류·판매 데이터를 연결하는 에이전트와 유전 개발 계획 최적화를 추진하며, UAE 내 G42 인프라에서 운영하고 중요한 결정은 인간 전문가가 감독한다고 밝혔어. 계약 발표와 목표를 확인한 것이며 모든 시스템의 배포 완료나 제시한 시간 절감 효과를 독립 검증한 것은 아니야.\n\n### 배경과 쉬운 설명\n\n각 부서의 AI가 따로 내린 답을 사람이 합치는 대신, 서로 연결해 전체 운영에 미치는 영향을 함께 살피려는 계획이야.\n\n### 작동 원리와 기술 맥락\n\n기존 ENERGYai 등 산업별 분석을 OpenAI Frontier로 연결하는 구성이야. 발표는 자체 산업 데이터·현지 컴퓨팅·전문가 감독을 함께 명시해.\n\n### 왜 중요한가\n\n산업 해석: 기업 AI의 관심이 개별 질문 응답에서 여러 데이터와 업무를 연결하는 방향으로 이동하는 사례야.\n\n### 개발자 관점\n\n개발 해석: 모델을 연결하는 것만큼 데이터 접근 범위와 최종 결정 책임을 나누는 설계가 중요해. 이번 발표를 일반 개발자가 같은 시스템을 즉시 사용할 수 있다는 뜻으로 읽지 말자.\n\n### 원문과 참고 자료\n\n- [협력 범위·배포 인프라·인간 감독 공식 발표](https://www.adnoc.ae/media-center/news/2026/11/ADNOC-Signs-Landmark-Partnership-Agreement-with-OpenAI) - 발표 2026-11-02 / 확인 2026-11-03 / 본문 2 November 2026 확인. 초기 활용 계획과 협약 발표이며 전체 구축 완료 또는 효과 검증으로 표현하지 않음.\n\n---\n\n## 6. 🇰🇷 AMD AI DevDay 서울, 11월 4일 예정 — 등록 링크는 현재 대기 명단\n\n**영역:** AI | **깊이:** 빠른 요약 | **기사 ID:** 2026-11-03:5\n\n**발표일:** 2026-11-02\n**출처:** AMD 개발자 포털·공식 연결 등록 페이지\n\n### 핵심 요약\n\nAMD가 11월 2일 개발자 포털에서 서울 AI DevDay를 안내했어. 행사는 11월 4일 예정이며 무료 대면 워크숍·기술 발표·ROCm 인증 프로그램을 소개해. 다만 확인 시 공식 등록 링크는 대기자 명단으로 연결됐으므로 지금 신청하면 참석이 확정된다고 보면 안 돼.\n\n### 배경과 쉬운 설명\n\n국내에서 AMD 기반 AI 개발과 GPU 연산을 직접 실습하는 행사야. 행사 안내의 등록 가능 문구와 실제 좌석 상태는 다를 수 있어.\n\n### 작동 원리와 기술 맥락\n\n공식 행사 목록은 11월 4일 서울 개최를 명시해. 연결된 대기 등록 폼은 회사 이메일을 요구하고 개인 이메일 신청은 거절될 수 있다고 안내해.\n\n### 왜 중요한가\n\n개발 학습 관점: 로컬 AI와 AMD GPU 생태계를 살펴볼 기회지만, 일정과 참석 승인 여부를 먼저 확인해야 해.\n\n### 개발자 관점\n\n참고 제안: 참가를 검토한다면 주최 측의 현재 프로그램과 대기 승인 안내를 확인하자. 이 브리핑에서 신청하거나 좌석을 확보한 것은 아니야.\n\n### 원문과 참고 자료\n\n- [11월 2일 행사 안내](https://developer.amd.com/news/) - 발표 2026-11-02 / 확인 2026-11-03 / 뉴스 목록의 공지일. 행사 개최일과 다름.\n- [공식 행사 목록과 개최일](https://developer.amd.com/events/) - 최초 게시일 미표기 / 확인 2026-11-03 / November 4, 2026 · Seoul 확인. 무료 대면 행사 안내.\n- [공식 링크의 현재 대기 등록 페이지](https://amd.cventevents.com/event/75972aa2-6895-437c-b1e3-572c6cc0c4b6/waitlist) - 최초 게시일 미표기 / 확인 2026-11-03 / AMD 뉴스의 Register 링크를 실제 열면 waitlist로 이동. Join the Waitlist 및 회사 이메일 조건 확인. 양식 입력·제출하지 않음.\n\n---\n\n## 7. 🎮 Atelico AI Engine 얼리액세스 — 로컬 NPC 추론도 렌더링과 같은 GPU 예산을 써\n\n**영역:** 게임 개발 | **깊이:** 심층 해설 | **기사 ID:** 2026-11-03:6\n\n**발표일:** 2026-10-29\n**출처:** Atelico 공식 출시 글·통합 및 GPU 문서\n\n### 핵심 요약\n\nAtelico가 10월 29일 게임 안에서 실행하는 AI Engine의 제한적 얼리액세스를 열었어. Unity·Godot·Unreal 통합과 대화·음성·이미지·NPC 행동 기능을 제공하며, 렌더링과 추론을 조율하는 GPU 스케줄러를 강조해. 지금 누구나 SDK를 내려받는 정식 공개가 아니라 접근을 요청하는 단계야.\n\n### 배경과 쉬운 설명\n\n배경(일반 설명): 로컬 모델은 서버 응답을 기다리지 않지만 계산이 공짜가 되는 것은 아니야. 화면을 그리는 작업과 NPC가 문장을 만드는 작업이 같은 GPU를 쓰면 한쪽이 오래 점유할 때 다른 쪽이 늦어질 수 있어.\n\nAtelico는 게임 프로세스 안에서 두 작업을 함께 스케줄링한다고 설명해. 그래픽 우선·균형·연산 우선 모드를 나눠, 전투 중에는 화면을 우선하고 로딩 구간에서는 AI에 더 많은 기회를 주는 식이야.\n\n### 작동 원리와 기술 맥락\n\n공식 통합 문서는 Unity의 C# P/Invoke와 비동기 호출, Godot의 GDExtension, Unreal의 subsystem·Blueprint 경로를 안내해. NPC 제어는 직접 쓴 대사를 의미 검색으로 고르고, 상태에 따라 선택 가능한 반응을 좁히며, 생성 결과를 정해진 선택지나 JSON 구조로 제한하는 구성이야.\n\n공급자 GPU 실험은 Windows 11·RTX 5080·D3D12 데모에서 Llama 3.2 3B Q4_K_M을 함께 실행한 조건이야. 4K San Miguel 장면에서 게임만 123 FPS, Balance 121 FPS라고 보고하지만, 다른 게임·GPU에서도 같은 결과라는 보장은 아니야. 비교의 3 FPS는 별도 CUDA 문맥 조건이며 모든 경쟁 도구의 일반 성능으로 확대하면 안 돼.\n\n### 왜 중요한가\n\n개발 해석: Unity나 Godot에서 로컬 NPC를 실험할 때 편의 API보다 먼저 봐야 할 것은 프레임 지연과 모델·문맥 캐시의 메모리야. 구조가 맞는 JSON도 잘못된 퀘스트 보상이나 모순된 대사를 담을 수 있으므로 게임 규칙의 최종 검사는 별도로 남겨야 해. 클라우드 토큰 요금이 없다는 설명은 SDK 라이선스가 무료라는 의미도 아니야.\n\n### 개발자 관점\n\n검증 제안: 작은 장면과 NPC 한 명부터 시작해 추론 전후 프레임 시간의 상위 지연, 첫 응답 지연, 메모리, 취소·타임아웃을 기록하자. 대사는 작성된 문장으로 되돌아갈 수 있게 하고 보상·인벤토리 변경은 검증된 게임 코드가 처리하도록 하자. 이번 확인은 공식 문서 조사이며 SDK 실행·벤치마크 재현·가격 확정은 하지 않았어.\n\n### 원문과 참고 자료\n\n- [10월 29일 제한적 얼리액세스 발표](https://atelico.studio/blog/the-atelico-ai-engine-is-here) - 발표 2026-10-29 / 확인 2026-11-03 / 공식 본문 날짜 확인. 공개 요청형 접근이며 일반 정식 출시로 쓰지 않음.\n- [엔진별 네이티브 통합·비동기 호출](https://atelico.studio/ai-engine/game-engines/) - 발표 2026-10-29 / 확인 2026-11-03 / 날짜는 연결된 출시 발표 기준이며 문서 최초 작성일은 별도 미표기.\n- [GPU 공유 방식·측정 조건과 수치](https://atelico.studio/ai-engine/gpu-sharing/) - 발표 2026-10-29 / 확인 2026-11-03 / 출시 발표와 연결된 현재 기술 문서. 공급자 특정 하드웨어·장면 실험이며 독립 재현 아님.\n- [대사 검색·상태·구조화 생성 제어](https://atelico.studio/ai-engine/creative-control/) - 발표 2026-10-29 / 확인 2026-11-03 / 발표일과 현재 문서 확인일 구분. 구조 준수와 내용의 게임 규칙 적합성은 별개로 해석.\n\n---\n\n## 8. 🧵 Mutable UE 5.8 샘플 갱신 — 캐릭터 조합과 매 프레임 옷 시뮬레이션은 다른 작업\n\n**영역:** 게임 개발 | **깊이:** 심층 해설 | **기사 ID:** 2026-11-03:7\n\n**발표일:** 2026-10-27\n**출처:** Epic Games 공식 샘플 발표·Mutable 문서\n\n### 핵심 요약\n\nEpic이 10월 27일 UE 5.8용 Mutable Sample을 갱신했어. MetaHuman 커스터마이징 예제, 단순해진 Skeletal Mesh 그래프, 체형에 맞춘 옷 재맞춤과 기능별 독립 예제를 제공해. 최근 중요 학습 자료로 소개하는 것이며 11월 3일 새 발표는 아니야.\n\n### 배경과 쉬운 설명\n\n배경(일반 설명): 캐릭터의 머리·몸·옷을 단순히 모두 붙이면 가려진 몸의 삼각형까지 남고 재질 호출도 늘어날 수 있어. Mutable은 선택한 부품을 조합해 메시·재질·텍스처를 만드는 도구야. 모든 조합을 미리 별도 자산으로 저장하는 방식과 런타임 조립 방식의 차이를 공부하기 좋은 예제야.\n\n### 작동 원리와 기술 맥락\n\n이번 샘플은 MetaHuman을 dataless Customizable Object로 구성하고, 데이터에 액세서리를 추가해 선택지를 확장하는 흐름을 보여줘. 체형 변화에 대한 옷 재맞춤은 조합 시점에 메시를 변형하는 방식이며, 매 프레임 천을 물리 시뮬레이션하는 기능과 같다고 보면 안 돼. Remove Unseen은 옷 아래 숨은 기하를 제거하고 Material Merging 예제는 조합된 메시의 재질을 합쳐 드로 콜을 줄이는 방법을 보여줘.\n\n### 왜 중요한가\n\n개발 해석: 커스터마이징은 외형 선택 UI뿐 아니라 조립 시간·결과 캐시·메모리·렌더링 비용을 함께 설계해야 하는 문제야. 재질 수를 줄여도 텍스처 메모리나 생성 비용이 늘 수 있으므로 한 지표만 보고 최적화 성공으로 판단하면 안 돼.\n\n### 개발자 관점\n\n학습 제안: Basic CO부터 시작해 같은 캐릭터의 부품 수와 재질 수를 조금씩 늘려 비교하자. 이후 체형의 양 끝값, 옷 조합, LOD 전환에서 뚫림과 실루엣을 확인하고 런타임 교체 시점의 지연을 측정하자. 공식의 Production-Ready 표기는 도구 상태이며 모든 조합이 검증됐다는 뜻은 아니야. 샘플을 직접 실행한 결과는 아니야.\n\n### 원문과 참고 자료\n\n- [UE 5.8 Mutable Sample 공식 갱신 발표](https://www.unrealengine.com/news/mutable-sample-for-runtime-character-customization-now-updated-for-ue-5-8) - 발표 2026-10-27 / 확인 2026-11-03 / 본문 날짜 October 27, 2026. 새 샘플과 기능별 예제를 확인; 오늘 발표로 재표기하지 않음.\n- [Mutable의 메시·재질·텍스처 생성 개요](https://dev.epicgames.com/documentation/unreal-engine/mutable-skeletal-mesh-generation-in-unreal-engine) - 최초 게시일 미표기 / 확인 2026-11-03 / 날짜 없는 현재 기술 문서. 일반 원리 설명용이며 직접 성능 검증이 아님.\n\n---\n\n## 9. 🖼️ Unity의 Figma 연결 실험 — 디자인을 편집 가능한 UI Toolkit 문서로\n\n**영역:** 게임 개발 | **깊이:** 빠른 요약 | **기사 ID:** 2026-11-03:8\n\n**발표일:** 2026-10-30\n**출처:** Unity 공식 Industry 제품 정리\n\n### 핵심 요약\n\nUnity의 10월 30일 제품 정리는 실험적 UI Toolkit Connector for Figma를 소개해. Figma 프레임을 편집 가능한 Unity UI 문서로 옮기고 변수는 테마, 구성 요소는 Unity 컨트롤로 연결하며 지원되는 스타일·레이아웃 수정은 Figma로 돌려보낼 수 있어. 연간 제품 정리이므로 이 기능이 모두 10월 30일 처음 출시됐다고 뜻하지는 않아.\n\n### 배경과 쉬운 설명\n\n이미지로 붙이는 UI가 아니라 Unity UI Builder에서 다시 편집할 수 있는 형태로 옮기는 연결 도구야.\n\n### 작동 원리와 기술 맥락\n\n공식 글은 experimental 상태와 지원되는 변경의 양방향 반영을 명시해. Figma의 모든 기능과 상호작용이 그대로 이전된다는 보장은 아니야.\n\n### 왜 중요한가\n\n개발 해석: 디자인과 실제 UI를 따로 고치는 부담을 줄일 가능성이 있지만 변환 뒤 입력·레이아웃 검증은 필요해.\n\n### 개발자 관점\n\n적용 제안: 작은 설정 화면에서 글꼴·한글 줄바꿈·해상도 변화·게임패드 포커스를 먼저 확인하자. 실제 변환·프로젝트 호환성은 이번 조사에서 실행하지 않았어.\n\n### 원문과 참고 자료\n\n- [10월 30일 공식 제품 정리의 Figma Connector 항목](https://unity.com/blog/unity-industry-product-releases-2026) - 발표 2026-10-30 / 확인 2026-11-03 / 글 게시일 확인. 연간 회고의 Q3 항목이며 커넥터 최초 출시일로 단정하지 않음. 실험 상태 유지.\n\n---\n\n## 10. 🐺 Soulframe, 11월 6일 공개 알파 예고 — 초대 제한 해제와 월간 대형 업데이트는 별도\n\n**영역:** 게임 전반 이슈 | **깊이:** 빠른 요약 | **기사 ID:** 2026-11-03:9\n\n**발표일:** 2026-11-02\n**출처:** Digital Extremes 배포 보도자료·Soulframe 공식 공지\n\n### 핵심 요약\n\nDigital Extremes가 11월 2일 보도자료에서 Soulframe의 무료 Windows PC 공개 알파를 11월 6일 시작한다고 안내했어. 초대 없이 공식 사이트에서 참가하는 방식이며, 완성판이나 Steam판 출시를 뜻하지 않아. 늑대 탈것과 오염 지역을 되살리는 진행 시스템을 담은 Verse of the Veilands는 11월 업데이트로 별도 예고됐어.\n\n### 배경과 쉬운 설명\n\n테스트 참가 문턱이 낮아지는 것이지 게임 개발이 끝났다는 발표는 아니야.\n\n### 작동 원리와 기술 맥락\n\n지역 정화와 늑대 성장 같은 진행 조건이 새 기능을 여는 구조야. 보도자료는 공개 알파의 시작 날짜와 업데이트의 월 단위 일정을 구분해.\n\n### 왜 중요한가\n\n그동안 초대장을 기다리던 이용자는 접근 방식이 달라져. 첫날부터 예고된 신규 시스템이 모두 제공된다고 단정하지 말자.\n\n### 개발자 관점\n\n개발 해석: 대규모 신규 이용자 유입과 진행 구조 개편이 겹칠 때는 초반 안내와 피드백 수집 경로를 함께 점검해야 해.\n\n### 원문과 참고 자료\n\n- [11월 2일 공식 배포 보도자료](https://www.gamespress.com/en-US/Digital-Extremes-Invites-All-Players-to-Join-Soulframe-Open-Preludes-S) - 발표 2026-11-02 / 확인 2026-11-03 / 본문 날짜와 무료 Windows 알파·11월 업데이트 안내 확인. 실제 다운로드·플레이는 검증하지 않음.\n- [기존 Open Preludes 공지](https://www.soulframe.com/en/news/10000081/open-preludes-coming-soon) - 발표 2026-10-15 / 확인 2026-11-03 / 페이지 Posted On은 10월 15일이며 현재 표제는 11월 6일을 안내. 별도 수정일은 없어 날짜가 최초 본문에 있었는지 단정하지 않음.\n\n---\n\n## 11. 🎮 WoW: Forever, 공식 게임패드 알파 지원 소개 — PC 입력 확장이지 콘솔판 발표는 아니야\n\n**영역:** 게임 전반 이슈 | **깊이:** 빠른 요약 | **기사 ID:** 2026-11-03:10\n\n**발표일:** 2026-11-02\n**출처:** Xbox Wire 공식 체험 소개\n\n### 핵심 요약\n\nXbox Wire가 11월 2일 WoW: Forever의 Gamepad(Alpha) 지원을 소개했어. 트리거·범퍼로 버튼에 연결된 행동을 바꾸고 핑으로 간단한 의사소통을 할 수 있어. 11월 4일 PC 출시 예정이며, 휴대용 Windows PC에서 실행한 체험과 해당 기기의 공식 지원은 구별해야 해.\n\n### 배경과 쉬운 설명\n\n키보드에 흩어진 명령을 여러 버튼 조합으로 묶어 컨트롤러에서도 접근하도록 한 방식이야.\n\n### 작동 원리와 기술 맥락\n\n옵션에서 Gamepad(Alpha)를 켜면 버튼 아이콘이 바뀌고 UI 편집·간소화된 행동 막대를 사용할 수 있어. 기사는 휴대용 기기 설정 과정이 아직 공식 지원되지 않는다고 밝혀.\n\n### 왜 중요한가\n\n거실 PC나 휴대용 PC처럼 다른 자세와 화면 크기로 MMORPG를 즐길 가능성이 넓어져. Xbox 콘솔판 출시로 읽으면 안 돼.\n\n### 개발자 관점\n\n개발 해석: 버튼 매핑뿐 아니라 작은 화면의 가독성·메뉴 접근·문자 대화의 대안까지 함께 설계해야 실제 입력 장치 지원이 돼.\n\n### 원문과 참고 자료\n\n- [공식 게임패드 알파 체험과 지원 범위](https://news.xbox.com/en-us/2026/11/02/world-of-warcraft-forever-controller-support-reimagines-way-we-play-azeroth/) - 발표 2026-11-02 / 확인 2026-11-03 / 본문 날짜 11월 2일. 작성자의 베타 체험이며 본 브리핑의 직접 실행 검증은 아님. PC 출시 예정과 미지원 휴대용 기기 체험을 구분.\n\n---\n\n## 12. 🌊 Avatar Legends 대형 패치 — 두 캐릭터 재설계와 랭크·학습 기능 개편\n\n**영역:** 게임 전반 이슈 | **깊이:** 빠른 요약 | **기사 ID:** 2026-11-03:11\n\n**발표일:** 2026-10-30\n**출처:** Gameplay Group의 Xbox Wire 공식 기고\n\n### 핵심 요약\n\nAvatar Legends: The Fighting Game의 Avatar State 패치가 10월 30일 Xbox Series X|S에 제공됐다고 개발사가 안내했어. Avatar Aang과 Nightmare Korra의 외형·기술을 다시 만들고 전체 캐릭터 밸런스, Ranked Mode 2.0, 메뉴·전투 화면을 개편했어. Story Mode+와 난이도·튜토리얼·콤보 연습도 추가해 경쟁과 입문 경로를 함께 손봤어.\n\n### 배경과 쉬운 설명\n\n수치만 바꾸는 밸런스 패치보다 넓은 범위의 전투·화면·학습 개편이야.\n\n### 작동 원리와 기술 맥락\n\n개발진은 Nightmare Korra의 지속 체력 감소 시제품을 버리고 시작 체력이 낮은 방식으로 바꿨다고 설명해. 설정을 그대로 규칙으로 옮기기보다 실제 플레이 결과로 선택한 사례야.\n\n### 왜 중요한가\n\n기존 이용자는 익숙한 기술과 랭크 흐름이 달라질 수 있고, 신규 이용자는 연습 경로를 다시 살펴볼 만해.\n\n### 개발자 관점\n\n개발 해석: 캐릭터 설정에 잘 맞는 규칙이라도 흥미로운 선택을 만들지 못하면 더 단순한 규칙이 나을 수 있어.\n\n### 원문과 참고 자료\n\n- [Avatar State 패치 공식 소개](https://news.xbox.com/en-us/2026/10/30/avatar-legends-the-fighting-game-enters-the-avatar-state/) - 발표 2026-10-30 / 확인 2026-11-03 / 개발사 담당자의 10월 30일 기고와 Xbox 제공 상태 확인. 다른 플랫폼의 배포 시각이나 직접 플레이를 확인한 것은 아님.\n\n---\n\n## 13. ✈️ War Thunder Eagle’s Shadow, 11월 중순 예고 — 신규 장비와 집속탄 추가\n\n**영역:** 게임 전반 이슈 | **깊이:** 빠른 요약 | **기사 ID:** 2026-11-03:12\n\n**발표일:** 2026-11-02\n**출처:** Gaijin Entertainment 배포 보도자료·공식 개발 서버 공지\n\n### 핵심 요약\n\nGaijin이 11월 2일 Eagle’s Shadow 대형 업데이트를 11월 중순에 제공할 예정이라고 발표했어. F-15EX 계열과 Leopard 2A8 등 신규 장비, 항공 집속탄 범주가 추가돼. 현재 개발 서버에서 시험하는 내용과 정식 서버에 확정 배포된 내용을 구분해야 해.\n\n### 배경과 쉬운 설명\n\n정식 서비스 업데이트에 앞서 별도 개발 서버에서 장비와 규칙을 시험하는 단계야.\n\n### 작동 원리와 기술 맥락\n\n공식 개발 서버 공지는 신규 장비의 특성·장갑·무장이 조정 중일 수 있고 시험 진행 기록이 본 서버로 이전되지 않는다고 설명해.\n\n### 왜 중요한가\n\n정확한 출시 일자는 아직 아니며, 시험 빌드의 성능이나 밸런스 수치를 최종값으로 판단하면 안 돼.\n\n### 개발자 관점\n\n개발 해석: 공개 시험에서 발견된 문제와 수정 범위를 명확히 구분해 이용자의 기대와 실제 배포 상태가 어긋나지 않도록 해야 해.\n\n### 원문과 참고 자료\n\n- [11월 2일 업데이트 범위·중순 제공 예고](https://www.gamespress.com/uk-UA/War-Thunder-unleashes-the-Eagles-power) - 발표 2026-11-02 / 확인 2026-11-03 / 본문 02.11.2026 및 mid-November 확인. 10월 29일 트레일러와 별도 후속 보도자료이며 정식 배포 완료 아님.\n- [10월 30일 공식 개발 서버 공지](https://forum.warthunder.com/t/the-dev-server-is-opening-with-major-update-eagle-s-shadow-30-10-2026/361731) - 발표 2026-10-30 / 확인 2026-11-03 / 공식 운영자 최초 게시와 개발 서버 전용·조정 중 경고를 확인. 댓글 갱신 시각을 발표일로 쓰지 않음.\n\n---\n\n## 14. ⚔️ Phantom Blade Zero, 72시간 400만 장 판매 발표 — 사전 추정치와 구분\n\n**영역:** 게임 전반 이슈 | **깊이:** 빠른 요약 | **기사 ID:** 2026-11-03:13\n\n**발표일:** 2026-11-02\n**출처:** S-GAME 공식 게시물을 인용한 GAME Watch·Gematsu 보도\n\n### 핵심 요약\n\nGAME Watch와 Gematsu는 S-GAME이 Phantom Blade Zero의 출시 후 72시간 판매량이 400만 장을 넘었다고 발표했다고 보도했어. 출시 전 분석업체의 추정치와 달리 이번 수치는 개발사 발표를 인용한 것이야. 다만 공식 X 게시물의 직접 열람은 제한돼, 보도에 포함된 게시물과 날짜를 대조한 범위로 전달해.\n\n### 배경과 쉬운 설명\n\n판매량은 동시에 접속한 사람 수나 위시리스트 수와 다른 지표야.\n\n### 작동 원리와 기술 맥락\n\n이번 기사에는 플랫폼별 판매 비중이나 환불을 반영한 매출·이익 자료가 없어. 판매 장수만으로 그 값을 추정하지 않았어.\n\n### 왜 중요한가\n\n출시 안내 뒤 실제 초기 판매 성과가 나왔다는 후속 소식이지만, 장기 흥행이나 수익성을 확정하는 자료는 아니야.\n\n### 개발자 관점\n\n개발 해석: 초기 판매 지표는 별도 운영·품질 지표와 함께 봐야 해. 동시접속자 수를 판매량으로 환산하지 말자.\n\n### 원문과 참고 자료\n\n- [공식 발표를 인용한 GAME Watch 보도](https://game.watch.impress.co.jp/docs/news/2153047.html) - 발표 2026-11-02 / 확인 2026-11-03 / 본문 2026년 11월 2일 12:29 JST, JSON-LD 2026-11-02T12:29:36+09:00. 공식 게시물 인용을 확인했으나 X 원문 직접 열람은 403 제한.\n- [동일 개발사 발표를 확인한 Gematsu 보도](https://www.gematsu.com/2026/11/phantom-blade-zero-sales-top-four-million-in-72-hours) - 발표 2026-11-02 / 확인 2026-11-03 / 표시 Nov 1 2026 9:59 PM EST는 UTC/KST 11월 2일. 검색 본문에서 72시간 400만 초과 및 S-GAME 발표 귀속 교차 확인.\n\n---\n\n## 15. 🗡️ 나 혼자만 레벨업: ARISE OVERDRIVE 콘솔판, 한국시간 11월 4일 출시 예고\n\n**영역:** 게임 전반 이슈 | **깊이:** 빠른 요약 | **기사 ID:** 2026-11-03:14\n\n**발표일:** 2026-10-28\n**출처:** 넷마블 공식 보도자료\n\n### 핵심 요약\n\n넷마블은 10월 28일 ARISE OVERDRIVE의 PS5·Xbox Series X|S 출시를 현지 11월 3일 오후 4시 PST로 예고했어. 한국시간으로는 11월 4일 오전 9시이며, 지난해 PC판 출시와 별개인 콘솔 확장이야. 4인 협동 레이드와 성진우의 군주 능력을 포함하지만, 이번 확인 시점에는 콘솔 출시 전이야.\n\n### 배경과 쉬운 설명\n\n같은 11월 3일 표기라도 한국에서 실제 열리는 날짜는 11월 4일이야.\n\n### 작동 원리와 기술 맥락\n\n공식 자료가 함께 적은 11월 4일 00:00 UTC를 한국시간으로 환산했어. 신규 크로스플레이나 세이브 공유 지원은 이 공지만으로 단정하지 않았어.\n\n### 왜 중요한가\n\n국내에서 기다리는 이용자는 해외 표제 날짜와 한국 이용 시작 시각을 구별할 수 있어.\n\n### 개발자 관점\n\n개발 해석: 플랫폼 확장 공지에는 지역 시각·멀티플레이 호환 범위를 구체적으로 표시해야 혼동이 줄어들어.\n\n### 원문과 참고 자료\n\n- [콘솔 출시 일정 공식 공지](https://ch.netmarble.com/Eng/Newsroom/Detail?bbs_code=1020&post_seq=7089&post_tag=SOLO+LEVELING%3AARISE+OVERDRIVE) - 발표 2026-10-28 / 확인 2026-11-03 / 본문 2026.10.28과 November 3 4 PM PST / November 4 00:00 UTC 확인. 오늘 신규 발표로 표현하지 않으며 실배포 미확인.\n\n---\n"
+}
