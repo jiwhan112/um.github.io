@@ -21,7 +21,7 @@ test('foundation folded practice and listening preserve separate daily progress 
  await page.locator('.foundation-mark input').check();
  await tabs.getByRole('tab',{name:'듣기',exact:true}).click();const script=page.locator('.foundation-script');await expect(script).not.toHaveAttribute('open','');
  await page.getByRole('button',{name:'대화 전체 듣기',exact:true}).click();const spoken=await page.evaluate(()=>(window as any).__foundationSpoken.at(-1));expect(spoken.lang).toBe('ja-JP');const data=await(await page.request.get('data/atlas/japanese-foundation.json')).json();expect(spoken.text).toBe(data.units.find((u:any)=>u.id==='jf-15').listening.lines.map((x:any)=>x.tts).join('\n'));expect(spoken.text).not.toMatch(/[가-힣]/);
- await script.locator('summary').click();await expect(script).toHaveAttribute('open','');await expect(script.locator('.foundation-ja')).not.toHaveCount(0);
+ await script.locator(':scope > summary').click();await expect(script).toHaveAttribute('open','');await expect(script.locator('.foundation-ja')).not.toHaveCount(0);
  await page.reload();const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('atlas-language-sections-v1')||'{}'));expect(stored['japanese-foundation:jf-15:practice']).toBe(true);expect(stored['japanese:9:lang-grammar']).toBe(true);expect(stored['english:30:lang-reading']).toBe(true);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
 });

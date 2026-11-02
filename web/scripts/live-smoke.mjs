@@ -59,7 +59,7 @@ try{
    await gotoWithTransientRetry(fp,base+'language-study/foundation/jf-15/');await expect(fp.locator('.foundation-reader h1')).toBeVisible();
    const tabs=fp.getByRole('tablist',{name:'기초 교재 학습 단계'});await tabs.getByRole('tab',{name:'연습',exact:true}).click();
    const answer=fp.locator('.foundation-answer').first();await expect(answer).not.toHaveAttribute('open','');await answer.locator('summary').click();await expect(answer).toHaveAttribute('open','');
-   await tabs.getByRole('tab',{name:'듣기',exact:true}).click();const script=fp.locator('.foundation-script');await expect(script).not.toHaveAttribute('open','');await script.locator('summary').click();await expect(script.locator('.foundation-ja')).not.toHaveCount(0);
+   await tabs.getByRole('tab',{name:'듣기',exact:true}).click();const script=fp.locator('.foundation-script');await expect(script).not.toHaveAttribute('open','');await script.locator(':scope > summary').click();await expect(script.locator('.foundation-ja')).not.toHaveCount(0);
    await fp.getByRole('button',{name:'대화 전체 듣기',exact:true}).click();await expect(fp.locator('.foundation-listening [role=status]')).toBeVisible();await fp.getByRole('button',{name:'음성 중지',exact:true}).click();
    expect(await fp.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);expect(errors).toEqual([]);
    await fp.screenshot({path:'live-check/foundation-'+label+'-listening.png'});
