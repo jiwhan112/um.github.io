@@ -68,3 +68,11 @@ Additional ZIP downloads must be explicitly declared in `knowledge/examples/cata
 `/language-study/notebooks/`는 기존 영어·일본어 001–030 원본의 어휘를 통합하는 React 화면입니다. `src/lib/word-notebook.ts`가 빌드 시 원본에서 `data/atlas/word-notebook.json`을 생성합니다. 생성 파일은 직접 편집하지 않습니다. 단어 ID는 언어·표제어·읽기의 결정적 인코딩이며 목록 순서에 의존하지 않습니다.
 
 영어 기사 링크는 학습 지문 기반 출처입니다. 모든 어휘가 기사 원문에 그대로 있다는 뜻이 아닙니다. 같은 표제어의 출처별 뜻·발음은 함께 보존합니다. 원본에 없는 발음·로마자는 추정하지 않고 원문 TTS를 제공합니다. 한자어는 기존 교재에 나타난 한자 포함 어휘이며 일반 언어 빈도가 아닌 등장 레슨 수로 정렬합니다. 원본 레슨과 catalog/progress 및 기존 저장 키는 수정하지 않습니다.
+
+## 일본어 기초 전체 교재 (일회성, 2026-11-02)
+
+`language-study/foundation/japanese/course.json`과 `units/jf-01.json`–`jf-30.json`은 날짜별 레슨과 분리된 저작 원본입니다. `src/lib/japanese-foundation.ts`의 엄격한 스키마 및 교차 참조 검증을 통과한 자료만 `data/atlas/japanese-foundation.json`과 31개의 직접 접속 경로로 빌드합니다. 생성 파일은 수동 편집하지 않습니다.
+
+완료 체크는 기존 `atlas-language-sections-v1` 객체 안의 `japanese-foundation:jf-XX:<section>` 이름공간을 사용하여 기존 레슨 체크와 충돌하지 않고 같은 동기화 어댑터를 사용합니다. 기존 날짜별 001–030, catalog/progress 및 단어 노트 출처는 보존합니다. 교재 어휘는 이 교재 안에 별도로 모으며 기존 단어 노트 숫자를 변경하지 않습니다.
+
+듣기 대본·정답은 기본으로 접고, TTS에는 일본어 원문만 보냅니다. 브라우저 합성 음성은 사람의 녹음이나 JLPT 음원이 아닙니다. 기능 테스트의 합성 API mock 검증은 실제 기기 음질 검증과 구분합니다. 공식 N5 고정 목록·합격 보장을 주장하지 않으며 초급 확장 내용을 명시합니다.

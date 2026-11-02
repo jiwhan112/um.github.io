@@ -50,8 +50,24 @@ try{
  expect((await library.getByTestId('library-card').evaluateAll(links=>links.map(link=>new URL(link.href).pathname))).sort()).toEqual(numbered.map(d=>'/um.github.io'+d.route).sort());
  await expect(library.getByTestId('library-card').first()).toBeVisible();await library.close();
  const page=await context.newPage();await gotoWithTransientRetry(page,base+'language-study/#japanese/9');await expect(page).toHaveURL(/language-study\/japanese\/9\//);await page.reload();await expect(page.getByRole('tab',{name:'문법',exact:true})).toBeVisible();await page.close();
- const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,locale:'ko-KR',serviceWorkers:'block'});const mp=await mobile.newPage();await gotoWithTransientRetry(mp,base+'thinking-lab/ep-01-04-palindrome-permutation/');await expect(mp.locator('main h1')).toBeVisible();await mp.getByRole('button',{name:'사이트 메뉴 열기'}).click();await expect(mp.getByRole('dialog')).toBeVisible();await mp.screenshot({path:'live-check/mobile-navigation.png'});await mobile.close();
- await writeFile('live-check/results.json',JSON.stringify({base,info,routes:results,legacyHash:true,mobileNavigation:true,allDark:true,libraryFilter:true},null,2));
+ async function verifyFoundationInteractions(ctx,label){
+  const fp=await ctx.newPage(),errors=[];fp.on('pageerror',e=>errors.push(e.message));
+  try{
+   await gotoWithTransientRetry(fp,base+'language-study/foundation/');await expect(fp.locator('.foundation-unit')).toHaveCount(30);
+   await fp.getByLabel('기초 교재 영역').selectOption('verbs');await expect(fp.locator('.foundation-unit')).toHaveCount(8);
+   await fp.screenshot({path:'live-check/foundation-'+label+'-index.png'});
+   await gotoWithTransientRetry(fp,base+'language-study/foundation/jf-15/');await expect(fp.locator('.foundation-reader h1')).toBeVisible();
+   const tabs=fp.getByRole('tablist',{name:'기초 교재 학습 단계'});await tabs.getByRole('tab',{name:'연습',exact:true}).click();
+   const answer=fp.locator('.foundation-answer').first();await expect(answer).not.toHaveAttribute('open','');await answer.locator('summary').click();await expect(answer).toHaveAttribute('open','');
+   await tabs.getByRole('tab',{name:'듣기',exact:true}).click();const script=fp.locator('.foundation-script');await expect(script).not.toHaveAttribute('open','');await script.locator('summary').click();await expect(script.locator('.foundation-ja')).not.toHaveCount(0);
+   await fp.getByRole('button',{name:'대화 전체 듣기',exact:true}).click();await expect(fp.locator('.foundation-listening [role=status]')).toBeVisible();await fp.getByRole('button',{name:'음성 중지',exact:true}).click();
+   expect(await fp.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);expect(errors).toEqual([]);
+   await fp.screenshot({path:'live-check/foundation-'+label+'-listening.png'});
+  }finally{await fp.close();}
+ }
+ await verifyFoundationInteractions(context,'desktop');
+ const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,locale:'ko-KR',serviceWorkers:'block'});const mp=await mobile.newPage();await gotoWithTransientRetry(mp,base+'thinking-lab/ep-01-04-palindrome-permutation/');await expect(mp.locator('main h1')).toBeVisible();await mp.getByRole('button',{name:'사이트 메뉴 열기'}).click();await expect(mp.getByRole('dialog')).toBeVisible();await mp.screenshot({path:'live-check/mobile-navigation.png'});await verifyFoundationInteractions(mobile,'mobile');await mobile.close();
+ await writeFile('live-check/results.json',JSON.stringify({base,info,routes:results,legacyHash:true,mobileNavigation:true,allDark:true,libraryFilter:true,foundation:{desktop:true,mobile:true,foldedAnswers:true,foldedListening:true,ttsButtonInvocation:true,audibleSpeechVerified:false}},null,2));
  console.log('PUBLIC PAGES VERIFIED:',results.length,'React routes; source',expected);
 }finally{await browser.close();}
 await import('./check-c01-live.mjs');
