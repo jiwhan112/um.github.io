@@ -24,6 +24,7 @@ async function revealLegacy(page:import('@playwright/test').Page,slug:string,kin
  }
 }
 const catalog=JSON.parse(readFileSync('public/data/atlas/catalog.json','utf8')) as Catalog;
+const latestBriefing=JSON.parse(readFileSync('../daily-briefing/data/'+catalog.dates[0]+'.json','utf8')) as {items:{depth?:'deep'|'brief'}[]};
 const routes=JSON.parse(readFileSync('public/data/atlas/routes.json','utf8')) as string[];
 const knowledgeDocs=catalog.documents.filter(doc=>doc.kind==='knowledge');
 const windowsCategories=['WinAPI','게임 수학','DirectX 9','DirectX 11','DirectX 12'];
@@ -41,8 +42,31 @@ for(const route of routes){test('direct route '+route,async({page,isMobile,reque
 });}
 test('legacy language link redirects and survives refresh',async({page})=>{await page.goto('language-study/#japanese/9');await expect(page).toHaveURL(/\/language-study\/japanese\/9\//);await expect(page.getByRole('tab',{name:'문법',exact:true})).toBeVisible();await page.reload();await expect(page.getByRole('tab',{name:'문법',exact:true})).toBeVisible();});
 test('old bookmarks and read flags remain, filter persists, other local data untouched',async({page,isMobile})=>{
- const id=catalog.dates[0]+':0';await page.addInitScript(({id})=>{localStorage.setItem('jiwhan-briefing-v1',JSON.stringify({saved:[id],read:[id]}));localStorage.setItem('unrelated-value','keep-me');},{id});await page.goto('daily-briefing/');if(isMobile)await page.locator('.article-list-item').first().click();await expect(page.getByRole('button',{name:'북마크됨',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'읽음 완료',exact:true})).toBeVisible();await page.getByRole('tab',{name:'간단 요약',exact:true}).click();await expect(page.locator('.summary-list')).toBeVisible();expect(await page.evaluate(()=>localStorage.getItem('unrelated-value'))).toBe('keep-me');
+ const id=catalog.dates[0]+':0';await page.addInitScript(({id})=>{localStorage.setItem('jiwhan-briefing-v1',JSON.stringify({saved:[id],read:[id]}));localStorage.setItem('unrelated-value','keep-me');},{id});await page.goto('daily-briefing/');if(isMobile)await page.locator('.article-list-item').first().click();await expect(page.getByRole('button',{name:'북마크됨',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'읽음 완료',exact:true})).toBeVisible();const summaryLabel=latestBriefing.items[0].depth==='brief'?'빠른 요약':'간단 요약';await page.getByRole('tab',{name:summaryLabel,exact:true}).click();await expect(page.locator('.summary-list')).toBeVisible();expect(await page.evaluate(()=>localStorage.getItem('unrelated-value'))).toBe('keep-me');
 });
+// Derive article selection from authored depth, then assert each exact reader contract.
+for(const depth of ['deep','brief'] as const){
+ test('briefing reader keeps exact '+depth+' tab contract',async({page,isMobile})=>{
+  const fixtureDate='2026-11-06';
+  const fixture=JSON.parse(readFileSync('../daily-briefing/data/'+fixtureDate+'.json','utf8')) as {items:{depth:'deep'|'brief'}[]};
+  const index=fixture.items.findIndex(item=>item.depth===depth);
+  expect(index,'fixed authored briefing contains the '+depth+' contract example').toBeGreaterThanOrEqual(0);
+  const id=fixtureDate+':'+index;
+  await page.goto('daily-briefing/?date='+fixtureDate+'&article='+encodeURIComponent(id));
+  if(isMobile)await page.locator('.article-list-item').nth(index).click();
+  const label=depth==='brief'?'빠른 요약':'간단 요약';
+  const opposite=depth==='brief'?'간단 요약':'빠른 요약';
+  await expect(page.getByRole('tab',{name:opposite,exact:true})).toHaveCount(0);
+  if(depth==='brief'){
+   await expect(page.getByRole('tab',{name:'쉽게 설명',exact:true})).toHaveCount(0);
+   await expect(page.getByRole('tab',{name:label,exact:true})).toHaveAttribute('aria-selected','true');
+  }else{
+   await expect(page.getByRole('tab',{name:'쉽게 설명',exact:true})).toHaveAttribute('aria-selected','true');
+  }
+  await page.getByRole('tab',{name:label,exact:true}).click();
+  await expect(page.locator('.summary-list')).toBeVisible();
+ });
+}
 test('bookmark changes persist after reload',async({page,isMobile})=>{await page.goto('daily-briefing/');if(isMobile)await page.locator('.article-list-item').first().click();await page.getByRole('button',{name:'북마크',exact:true}).click();await page.reload();if(isMobile)await page.locator('.article-list-item').first().click();await expect(page.getByRole('button',{name:'북마크됨',exact:true})).toBeVisible();});
 test('problem memo uses original key; solution remains closed',async({page})=>{
  const doc=catalog.documents.find(d=>d.number==='1.4.1'&&d.kind==='thinking')!;await page.addInitScript(()=>{if(localStorage.getItem('thinking-ctci-1.4-draft')===null)localStorage.setItem('thinking-ctci-1.4-draft','// original memo');});await page.goto('/um.github.io'+doc.route);await expect(page.getByLabel('C++11 풀이 작성')).toHaveValue('// original memo');await page.getByRole('tab',{name:'풀이·검증',exact:true}).click();await expect(page.locator('details[open]')).toHaveCount(0);await page.getByLabel('C++11 풀이 작성').fill('// edited memo');await page.getByRole('button',{name:'풀이 저장',exact:true}).click();expect(await page.evaluate(()=>localStorage.getItem('thinking-ctci-1.4-draft'))).toBe('// edited memo');await page.reload();await expect(page.getByLabel('C++11 풀이 작성')).toHaveValue('// edited memo');
