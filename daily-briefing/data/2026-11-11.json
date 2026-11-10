@@ -1,0 +1,638 @@
+{
+  "date": "2026-11-11",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 11월 11일(수) 한국시간 오전 조사 기준. AI 8건, 게임 개발 2건, 게임 전반 이슈 8건을 정리했어. 개발과 밀접한 6건은 배경과 원리, 실무 관점까지 설명하고 나머지는 빠른 요약으로 담았어. 공식 발표를 우선 확인하고 최초 발표·후속 공개·출시 예정일을 구분했어. 변경 없는 반복은 제외했어.",
+  "items": [
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "🧩 Gemini 4 Carbon 공개 확대·Antigravity /swarm — 병렬 작업과 최종 통합 검증은 별개",
+      "source": "Google 공식 발표",
+      "published": "2026-11-10",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/",
+      "tags": [
+        "Agent",
+        "Parallelism",
+        "Git Worktree",
+        "Pricing"
+      ],
+      "short_summary": "Google이 제한된 보안 연구 프로그램에 먼저 제공했던 Gemini 4 Carbon을 유료 API와 일부 제품으로 확대했어. Antigravity에는 여러 에이전트를 조율하는 /swarm 미리보기가 추가됐어. API 출시 가격은 입력·출력 100만 토큰당 2·10달러이며, 11월 30일 출시 할인 종료 후에는 4·20달러가 적용돼.",
+      "summary": "Google이 제한된 보안 연구 프로그램에 먼저 제공했던 Gemini 4 Carbon을 유료 API와 일부 제품으로 확대했어. Antigravity에는 여러 에이전트를 조율하는 /swarm 미리보기가 추가됐어. API 출시 가격은 입력·출력 100만 토큰당 2·10달러이며, 11월 30일 출시 할인 종료 후에는 4·20달러가 적용돼.",
+      "easy_explainer": "배경: 한 에이전트가 큰 프로젝트의 모든 파일과 검증 결과를 계속 읽으면 문맥과 처리 시간이 병목이 돼. /swarm은 조정자·구현자·검증자 역할을 나누는 방식이야. Google은 대부분의 일반 작업에는 Argon을, 더 어려운 추론과 긴 검증에는 Carbon을 배치하는 구성을 설명해.",
+      "technical_context": "작동 원리: 구현자는 격리된 Git worktree에서 병렬로 작업하고, 별도 검증자는 테스트와 diff를 확인해. 공유 메시지 보드로 진행 정보를 교환하며 역할별로 다른 모델을 지정할 수 있어. worktree는 같은 작업 파일을 동시에 덮어쓰는 문제를 줄이지만, 서로 다른 수정이 합쳐진 뒤 논리적으로 호환되는지까지 보장하지는 않아.",
+      "why_it_matters": "개발 해석: Unity·Godot 프로젝트에서 UI·게임 로직·테스트를 나눠 맡기는 데 참고할 만해. 다만 직렬화 데이터·공통 인터페이스·엔진 버전처럼 여러 작업이 공유하는 계약은 먼저 고정하고, 합친 결과를 다시 빌드해야 해. 공식 시연이 자신의 프로젝트에서 같은 품질을 보장하는 것은 아니야.",
+      "developer_view": "적용 제안: 토큰 단가만 비교하지 말고 작업 완료까지의 호출량·재시도·검증 비용을 기록하자. Google도 Carbon이 Argon보다 더 많은 토큰을 쓰고 병렬 팀이 일반 채팅보다 할당량을 빠르게 소모한다고 밝혔어. /swarm은 앱·CLI 미리보기이며 모든 구독·모든 클라우드 경로에 즉시 제공된다고 확대 해석하지 말자.",
+      "sources": [
+        {
+          "label": "Google 공식 발표",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "11월 10일 공개 범위 확대. 모델 최초 소개 및 제한 제공은 약 2주 전으로 구분."
+        },
+        {
+          "label": "Google Antigravity /swarm 발표",
+          "url": "https://antigravity.google/blog/gemini-4-carbon-in-google-antigravity/",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "앱·CLI 미리보기, 역할·worktree·할당량 주의사항 확인."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "🎯 Hugging Face Decision Models — 문장을 생성하지 않고 정해진 선택지를 평가하기",
+      "source": "Hugging Face 공식 블로그",
+      "published": "2026-11-10",
+      "url": "https://huggingface.co/blog/decision",
+      "tags": [
+        "Inference",
+        "Classification",
+        "llama.cpp",
+        "API"
+      ],
+      "short_summary": "Hugging Face가 결정 모델을 위한 공통 인터페이스를 소개했어. 상태·질문·허용 답안을 넣으면 선택 결과와 확률을 받는 방식이며, Transformers와 llama.cpp에서 /v1/systemone 인터페이스를 사용할 수 있어. 자유 형식 답변이 아니라 정해진 선택이 필요한 작업을 겨냥해.",
+      "summary": "Hugging Face가 결정 모델을 위한 공통 인터페이스를 소개했어. 상태·질문·허용 답안을 넣으면 선택 결과와 확률을 받는 방식이며, Transformers와 llama.cpp에서 /v1/systemone 인터페이스를 사용할 수 있어. 자유 형식 답변이 아니라 정해진 선택이 필요한 작업을 겨냥해.",
+      "easy_explainer": "배경: 오류 보고를 분류하는 도구가 필요한 결과는 종종 긴 설명이 아니라 ‘렌더링·네트워크·입력’ 중 하나야. 기존 LLM으로 JSON 문장을 생성해도 되지만, 생성·파싱·형식 검증 단계가 따라와. 결정 모델은 애플리케이션이 이해하는 선택지를 직접 점수화하는 접근이야.",
+      "technical_context": "작동 원리: 공통 입력에 state와 여러 질문을 넣고 choice(선택), score(순서가 있는 등급), noul(예·아니오 확률)을 사용해. 내부 구조는 모델마다 다르며, 호환되는 생성형 모델도 답안 라벨의 logits를 한 번의 배치 순전파로 평가할 수 있어. 따라서 공통 API가 곧 하나의 새 모델 구조를 뜻하지는 않아.",
+      "why_it_matters": "개발 해석: 빌드 로그 분류나 에디터 명령 라우팅에 적용해볼 수 있어. 반환 enum이 유효하다는 사실과 판단이 옳다는 사실은 달라. 엔진의 상태 머신이나 권한 검사처럼 반드시 지켜야 할 규칙은 모델 바깥의 결정적 코드로 남겨야 해.",
+      "developer_view": "적용 제안: 한국어 오류 로그를 따로 검증하고 낮은 확률·애매한 입력에는 보류 경로를 두자. 출력 토큰이 0이어도 입력 처리와 모델 메모리 비용은 있어. llama.cpp 소개의 지연 시간은 RTX PRO 6000 한 장의 측정이므로 일반 PC나 매 프레임 실행 성능으로 받아들이면 안 돼. 모델별 상업 이용 라이선스도 서로 달라.",
+      "sources": [
+        {
+          "label": "Hugging Face 공식 블로그",
+          "url": "https://huggingface.co/blog/decision",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음."
+        },
+        {
+          "label": "ggml-org llama.cpp Decision Models",
+          "url": "https://huggingface.co/blog/ggml-org/decision-models-in-llamacpp",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "11월 11일 확인한 관련 구현 해설. 이 날짜는 상위 소개 발표 기준이며 개별 코드의 최초 작성일로 단정하지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "🖼️ MiniMax H3-Image — 고해상도 공개 가중치지만 한국은 라이선스 제외 지역",
+      "source": "MiniMax 공식 발표",
+      "published": "2026-11-11",
+      "url": "https://www.minimax.io/blog/minimax-h3-image",
+      "tags": [
+        "Image Generation",
+        "Open Weights",
+        "License",
+        "Memory"
+      ],
+      "short_summary": "MiniMax가 생성과 편집을 하나의 체크포인트로 수행하는 H3-Image의 가중치를 공개했어. 최대 16개 참조 이미지와 약 1,600만 화소 출력을 지원하지만, 커뮤니티 라이선스는 한국·미국·영국·EU를 적용 제외 지역으로 명시해. 한국에서 자유롭게 내려받아 실행할 수 있는 모델로 추천하면 안 돼.",
+      "summary": "MiniMax가 생성과 편집을 하나의 체크포인트로 수행하는 H3-Image의 가중치를 공개했어. 최대 16개 참조 이미지와 약 1,600만 화소 출력을 지원하지만, 커뮤니티 라이선스는 한국·미국·영국·EU를 적용 제외 지역으로 명시해. 한국에서 자유롭게 내려받아 실행할 수 있는 모델로 추천하면 안 돼.",
+      "easy_explainer": "배경: 캐릭터·배경 시안을 여러 장 만들 때 참조 이미지를 함께 처리하는 기능이 유용할 수 있어. 다만 공개 가중치는 이용 조건이 없는 소프트웨어와 같은 뜻이 아니야. 이번 발표는 성능보다 지역·이용 조건을 먼저 확인해야 하는 사례야.",
+      "technical_context": "작동 원리: 텍스트와 참조 이미지를 인코딩하고, 이미지의 압축 표현인 latent를 확산 Transformer가 예측한 뒤 VAE가 픽셀로 복원해. 모델 카드는 6회 샘플링 단계와 직접 고해상도 생성을 설명해. 작은 이미지를 단순 확대하는 방식과는 구분돼.",
+      "why_it_matters": "개발 해석: 모델 패키지는 약 68.65GB지만 별도 텍스트 인코더 66.7GB도 필요하다고 문서에 적혀 있어. 파일 크기는 실행 시 GPU 메모리 요구량과 같지 않아. 발표의 ‘4K 10초 미만’도 자신의 GPU에서 확인한 실측값이 아니야.",
+      "developer_view": "적용 제안: 한국에서는 이 커뮤니티 라이선스를 근거로 로컬 실행·배포를 진행하지 말고 허용 범위를 먼저 확인하자. 호스팅 API의 접근 가능성과 별도 서비스 약관도 이번 가중치 라이선스만으로 판단할 수 없어. 허용되는 환경에서 평가하더라도 결과 이미지의 권리·인물 동의·출처 기록과 실제 게임 리소스의 일관성 검사는 별도로 필요해.",
+      "sources": [
+        {
+          "label": "MiniMax 공식 발표",
+          "url": "https://www.minimax.io/blog/minimax-h3-image",
+          "published": "2026-11-11",
+          "accessed": "2026-11-11",
+          "date_note": "공식 블로그 표시일은 11월 11일, LICENSE의 release date는 11월 10일. 한국시간 11월 11일 오전 실제 공개 페이지와 모델 카드를 확인."
+        },
+        {
+          "label": "MiniMax H3-Image 모델 카드",
+          "url": "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "11월 11일 공개 README 확인. 날짜는 LICENSE의 release date 기준이며 문서 수정 시각은 별도 미확인."
+        },
+        {
+          "label": "MiniMax H3-Image 커뮤니티 라이선스",
+          "url": "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image/blob/main/LICENSE",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "Release date/License date 11월 10일. I.5에서 한국 등 제외 지역 명시."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "🎨 Adobe MAX: Firefly Graph·편집 도구 — 반복 제작 절차를 재사용하는 방향",
+      "source": "Adobe 공식 발표",
+      "published": "2026-11-10",
+      "url": "https://news.adobe.com/news/2026/11/adobe-firefly-expands",
+      "tags": [
+        "Creative Tools",
+        "Workflow",
+        "Asset Pipeline",
+        "Beta"
+      ],
+      "short_summary": "Adobe가 Firefly의 에이전트·이미지 편집·반복 제작 도구를 확장했어. Edit Text·Retouch·Relight와 Quick Actions는 정식 제공이고, Firefly Graph와 Design 등은 베타야. 웹·앱 시제품을 만드는 Builder는 대기 명단 기반 비공개 베타라 즉시 사용 가능한 기능과 구분해야 해.",
+      "summary": "Adobe가 Firefly의 에이전트·이미지 편집·반복 제작 도구를 확장했어. Edit Text·Retouch·Relight와 Quick Actions는 정식 제공이고, Firefly Graph와 Design 등은 베타야. 웹·앱 시제품을 만드는 Builder는 대기 명단 기반 비공개 베타라 즉시 사용 가능한 기능과 구분해야 해.",
+      "easy_explainer": "배경: 게임 리소스 시안을 반복 제작할 때는 한 번의 생성보다 크기·색·참조·수정 단계를 일관되게 반복하는 일이 중요해. Graph는 AI 모델과 Adobe 도구를 연결해 제작 절차를 재사용하는 기능으로 소개됐어.",
+      "technical_context": "작동 원리: Creative Agent에 형식·색·캐릭터 같은 선호를 설정하고, Plan Mode에서 실행 계획을 검토하거나 모델을 선택할 수 있어. Graph는 반복 가능한 흐름을 구성하고 수정하는 베타 도구야. 항상 실행되는 에이전트와 디자인을 코드로 바꾸는 도구도 소개됐지만 미리보기·비공개 베타 범위가 섞여 있어.",
+      "why_it_matters": "개발 해석: 시안 생성→부분 수정→규격별 출력 같은 작업을 표준화하는 데 의미가 있어. Unity·Godot에 바로 넣을 수 있는 완성 스프라이트·애니메이션·3D 메시를 자동 보장하는 발표는 아니야.",
+      "developer_view": "적용 제안: 원본·참조·사용 모델·출력 버전을 함께 기록하고 알파 경계, 텍스처 이음새, 리소스 크기를 별도 검사하자. Firefly 안의 외부 모델까지 같은 비용·권리 조건이라고 가정하지 말고, 실제 선택 모델의 크레딧과 라이선스를 확인해야 해.",
+      "sources": [
+        {
+          "label": "Adobe 공식 발표",
+          "url": "https://news.adobe.com/news/2026/11/adobe-firefly-expands",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "📋 Claude Sheets·Whiteboards·대화형 앱 — Meetings는 공식 안내상 출시 예정",
+      "source": "Anthropic Claude 공식 제품 안내",
+      "published": "2026-11-10",
+      "url": "https://claude.com/resources/articles/more-ways-to-work-with-claude-sheets-whiteboards-and-interactive-connectors",
+      "tags": [
+        "Collaboration",
+        "Documents",
+        "Connectors"
+      ],
+      "short_summary": "Anthropic이 공동 스프레드시트·화이트보드·데이터 시각화와 Claude 안에서 앱을 여는 대화형 커넥터를 소개했어. 연결한 문맥을 여러 산출물에 이어 쓰는 업무 흐름이 핵심이야. 일부 보도는 Meetings 베타 출시로 표현하지만, 확인한 공식 안내는 “coming soon”이므로 모든 사용자가 지금 회의에 추가할 수 있다고 단정하지 않아.",
+      "summary": "Anthropic이 공동 스프레드시트·화이트보드·데이터 시각화와 Claude 안에서 앱을 여는 대화형 커넥터를 소개했어. 연결한 문맥을 여러 산출물에 이어 쓰는 업무 흐름이 핵심이야. 일부 보도는 Meetings 베타 출시로 표현하지만, 확인한 공식 안내는 “coming soon”이므로 모든 사용자가 지금 회의에 추가할 수 있다고 단정하지 않아.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Anthropic Claude 공식 제품 안내",
+          "url": "https://claude.com/resources/articles/more-ways-to-work-with-claude-sheets-whiteboards-and-interactive-connectors",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "🔎 AWS AgentCore Web Search API 정식 제공 — Gateway 없이 검색 호출",
+      "source": "AWS 공식 새 소식",
+      "published": "2026-11-10",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-bedrock-agentcore-web-search-api/",
+      "tags": [
+        "Search",
+        "AgentCore",
+        "API",
+        "Pricing"
+      ],
+      "short_summary": "AWS가 AgentCore의 InvokeWebSearch API를 정식 제공했어. 기존 Gateway MCP 방식과 별도로 검색 API를 호출할 수 있고, 도메인·발표 시점 필터와 발췌문·URL 등의 결과를 받아. 가격은 1,000회 질의당 7달러이며 Gateway 요금은 없고, 발표된 제공 리전에는 도쿄가 포함되지만 서울은 없어.",
+      "summary": "AWS가 AgentCore의 InvokeWebSearch API를 정식 제공했어. 기존 Gateway MCP 방식과 별도로 검색 API를 호출할 수 있고, 도메인·발표 시점 필터와 발췌문·URL 등의 결과를 받아. 가격은 1,000회 질의당 7달러이며 Gateway 요금은 없고, 발표된 제공 리전에는 도쿄가 포함되지만 서울은 없어.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "AWS 공식 새 소식",
+          "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-bedrock-agentcore-web-search-api/",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "🏛️ 호주, 프런티어 AI 안전 의무·전담 규제기관 입법 방침 발표",
+      "source": "호주 산업·과학 장관 공동 발표",
+      "published": "2026-11-10",
+      "url": "https://www.minister.industry.gov.au/t-ayres/media/new-australian-ai-safety-and-security-protections",
+      "tags": [
+        "AI Policy",
+        "Australia",
+        "Safety"
+      ],
+      "short_summary": "호주 정부가 자국에서 운영하려는 프런티어 AI 기업에 보안 통제·위험 관리·독립 평가·신속한 사고 신고 등을 요구하는 입법 방침을 발표했어. 전담 AI 안전 규제기관과 위반 시 제재도 제안했어. 현재 발표는 입법·협의 방향이며 모든 의무가 이미 시행됐다는 뜻은 아니야.",
+      "summary": "호주 정부가 자국에서 운영하려는 프런티어 AI 기업에 보안 통제·위험 관리·독립 평가·신속한 사고 신고 등을 요구하는 입법 방침을 발표했어. 전담 AI 안전 규제기관과 위반 시 제재도 제안했어. 현재 발표는 입법·협의 방향이며 모든 의무가 이미 시행됐다는 뜻은 아니야.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "호주 산업·과학 장관 공동 발표",
+          "url": "https://www.minister.industry.gov.au/t-ayres/media/new-australian-ai-safety-and-security-protections",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "💼 Anthropic IPO 로드쇼 시작 — 공모 조건은 아직 제안 단계",
+      "source": "Anthropic 공식 발표",
+      "published": "2026-11-10",
+      "url": "https://www.anthropic.com/news/roadshow-launch",
+      "tags": [
+        "Industry",
+        "IPO",
+        "Anthropic"
+      ],
+      "short_summary": "Anthropic이 기업공개를 위한 투자자 설명회인 로드쇼를 시작했어. 제안된 공모는 8억 2,500만 주, 예상 주당 가격은 70~78달러이며 Nasdaq 종목 기호 ANT로 상장을 신청했어. 발표 당시 등록신고서는 아직 효력이 발생하지 않았다고 명시돼 있어 상장·조달 완료로 쓰면 안 돼.",
+      "summary": "Anthropic이 기업공개를 위한 투자자 설명회인 로드쇼를 시작했어. 제안된 공모는 8억 2,500만 주, 예상 주당 가격은 70~78달러이며 Nasdaq 종목 기호 ANT로 상장을 신청했어. 발표 당시 등록신고서는 아직 효력이 발생하지 않았다고 명시돼 있어 상장·조달 완료로 쓰면 안 돼.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Anthropic 공식 발표",
+          "url": "https://www.anthropic.com/news/roadshow-launch",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "🛠️ C++ 언어 서버의 MSBuild 자동 설정 — 코드보다 먼저 빌드 문맥을 읽기",
+      "source": "GitHub 공식 변경 기록",
+      "published": "2026-11-10",
+      "url": "https://github.blog/changelog/2026-11-10-c-language-server-now-auto-configures-msbuild-builds/",
+      "tags": [
+        "C++",
+        "MSBuild",
+        "Language Server",
+        "Copilot"
+      ],
+      "short_summary": "GitHub가 11월 10일 Copilot CLI용 Microsoft C++ Language Server에 MSBuild 컴파일 명령 추출기를 내장했다고 발표했어. 에이전트가 별도 설정 스킬을 찾기 전에 프로젝트의 컴파일 데이터베이스를 만드는 방식이야. 다만 공식 저장소에는 기능 플래그로 제공 범위를 제한한다는 안내가 남아 있어 실제 활성화 여부는 로그로 확인해야 해.",
+      "summary": "GitHub가 11월 10일 Copilot CLI용 Microsoft C++ Language Server에 MSBuild 컴파일 명령 추출기를 내장했다고 발표했어. 에이전트가 별도 설정 스킬을 찾기 전에 프로젝트의 컴파일 데이터베이스를 만드는 방식이야. 다만 공식 저장소에는 기능 플래그로 제공 범위를 제한한다는 안내가 남아 있어 실제 활성화 여부는 로그로 확인해야 해.",
+      "easy_explainer": "배경: C++의 같은 파일도 include 경로, 전처리 매크로와 컴파일 옵션이 달라지면 다른 프로그램으로 해석될 수 있어. compile_commands.json은 각 소스 파일을 어떤 명령으로 컴파일하는지 적은 지도야. 문자열 검색만으로는 놓칠 수 있는 정의·참조 관계를 언어 서버가 올바른 빌드 조건에서 찾도록 도와줘.",
+      "technical_context": "작동 원리: 프로젝트를 열어 언어 서버를 시작할 때 내장 추출기를 호출해 MSBuild용 컴파일 데이터베이스를 준비해. 설정 과정을 모델이 추론해 고르는 단계에서 정해진 도구 실행 단계로 옮긴 셈이야. CMake와 자체 빌드 시스템까지 모두 자동 처리되는 변경은 아니며, 해당 경로는 기존 생성 스킬이나 직접 만든 데이터베이스가 필요해.",
+      "why_it_matters": "개발 해석: Windows C++ 게임 클라이언트나 네이티브 플러그인에서 조건부 컴파일을 이해하지 못한 수정 위험을 줄이는 데 의미가 있어. 설정 토큰 감소를 목표로 하지만 공식 발표에 정량 벤치마크는 없으므로 절감률을 단정할 수 없어.",
+      "developer_view": "적용 제안: 서버 자체는 프리뷰이고 활성 Copilot 구독 및 별도 라이선스 동의가 필요해. /lsp show와 로그로 서버·추출 상태를 확인하고, 복수 컴파일 데이터베이스가 있으면 사용할 파일을 명시하자. 코드 탐색 성공은 실제 빌드·테스트 통과와 별개야.",
+      "sources": [
+        {
+          "label": "GitHub 공식 변경 기록",
+          "url": "https://github.blog/changelog/2026-11-10-c-language-server-now-auto-configures-msbuild-builds/",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음."
+        },
+        {
+          "label": "Microsoft 공식 C++ 언어 서버 저장소",
+          "url": "https://github.com/microsoft/cpp-language-server",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "11월 11일 현행 README 확인. 최초 출시일이 아니라 관련 변경 발표 기준일."
+        },
+        {
+          "label": "공식 설정 문서의 기능 플래그 제한",
+          "url": "https://github.com/microsoft/cpp-language-server/blob/main/docs/configuration.md",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "11월 11일 확인. 자동 설정이 기본 비활성이며 기능 플래그 실험 대상만 제공된다는 안내가 남아 있어 발표와 제공 범위를 구분."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "🧩 .NET 11·C# 15 정식 출시 — 상태 표현과 실행 환경 업그레이드를 분리하자",
+      "source": "Microsoft .NET 공식 발표",
+      "published": "2026-11-10",
+      "url": "https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/",
+      "tags": [
+        "C#",
+        "NET",
+        "Runtime",
+        "Developer Tools"
+      ],
+      "short_summary": "Microsoft가 11월 10일 .NET 11과 C# 15를 정식 발표했어. .NET 11은 2년 지원하는 STS이며, .NET 8·9는 같은 날 지원이 끝났어. 새 SDK를 설치하는 것만으로 기존 앱이나 Unity·Godot 프로젝트가 새 런타임으로 바뀌는 것은 아니야.",
+      "summary": "Microsoft가 11월 10일 .NET 11과 C# 15를 정식 발표했어. .NET 11은 2년 지원하는 STS이며, .NET 8·9는 같은 날 지원이 끝났어. 새 SDK를 설치하는 것만으로 기존 앱이나 Unity·Godot 프로젝트가 새 런타임으로 바뀌는 것은 아니야.",
+      "easy_explainer": "배경: 결과를 성공·실패 중 하나로 돌려줄 때 모든 데이터를 object 하나에 넣으면 호출자가 가능한 경우를 알기 어려워. C# 15의 union은 가능한 타입 목록을 선언하고 switch에서 빠진 경우를 컴파일러가 검사하도록 해. 상태가 추가됐는데 처리 분기를 놓치는 실수를 발견하기 쉬워져.",
+      "technical_context": "작동 원리: union은 이미 있는 타입들을 한 결과 집합으로 묶고, closed 계층은 직접 상속 가능한 범위를 선언 어셈블리 안으로 제한해 패턴 검사를 돕는다. 닫히지 않은 하위 타입까지 재귀적으로 봉쇄하는 것은 아니야. 런타임·JIT 최적화와 Native AOT CLI 시작 비용 개선도 포함하지만 Runtime Async와 메모리 안전성 개편은 여전히 프리뷰 영역이야.",
+      "why_it_matters": "개발 해석: 게임용 빌드 도구·데이터 변환기·서버에서 새 상태 모델링을 시험할 수 있어. 그러나 엔진은 자체 지원 컴파일러·런타임·플랫폼 제약을 가지므로 이번 발표를 Unity나 Godot의 C# 15 지원 발표로 읽으면 안 돼.",
+      "developer_view": "적용 제안: 먼저 독립 도구의 target framework, global.json, 패키지와 배포 런타임을 확인하자. .NET 10 LTS도 지원 선택지이며, 자체 런타임을 포함해 배포한 앱은 시스템 SDK 교체만으로 패치되지 않아. 엔진 프로젝트는 해당 엔진의 지원표와 실제 플랫폼 빌드를 확인한 뒤 별도로 판단해야 해.",
+      "sources": [
+        {
+          "label": "Microsoft .NET 공식 발표",
+          "url": "https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음."
+        },
+        {
+          "label": "C# 15 공식 기능 문서",
+          "url": "https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-15",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "현행 문서 확인. 프리릴리스라는 잔여 문구와 달리 11월 10일 정식 발표·지원표로 출시 상태 확인. 메모리 안전성은 프리뷰."
+        },
+        {
+          "label": ".NET 공식 지원 정책",
+          "url": "https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "11월 10일 갱신. .NET 11 STS·.NET 10 LTS의 지원 종료는 2028년 11월 14일, .NET 8·9는 2026년 11월 10일."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "📊 넥슨 3분기 실적 — 프로젝트 6개 중단과 인력 재배치 공개",
+      "source": "넥슨 2026년 3분기 공식 실적 발표",
+      "published": "2026-11-10",
+      "url": "https://pdf.irpocket.com/C3659/xoA3/DnNg/UwmY/FseY.pdf",
+      "tags": [
+        "Nexon",
+        "Industry",
+        "Project Portfolio"
+      ],
+      "short_summary": "넥슨이 11월 10일 발표한 3분기 매출은 1,384억 엔, 영업이익은 418억 엔으로 전년 대비 각각 17%·11% 늘었어. 최근 몇 달 동안 프로젝트 6개를 중단하고 예산과 개발팀을 상업성이 더 높다고 판단한 게임으로 재배치했다고 밝혔지만, 대상 작품명은 공개하지 않았어. 같은 발표에서 중국 시장을 겨냥한 Neople 개발·Tencent 배급의 Project OVERKILL을 소개하고, Vindictus: Defying Fate의 2027년 무료 플레이 출시 계획도 명시했어. 개발·현지화·코드 리뷰에 AI 활용을 확대한다는 회사 설명을 프로젝트 중단의 원인이나 감원 발표와 동일시하면 안 돼.",
+      "summary": "넥슨이 11월 10일 발표한 3분기 매출은 1,384억 엔, 영업이익은 418억 엔으로 전년 대비 각각 17%·11% 늘었어. 최근 몇 달 동안 프로젝트 6개를 중단하고 예산과 개발팀을 상업성이 더 높다고 판단한 게임으로 재배치했다고 밝혔지만, 대상 작품명은 공개하지 않았어. 같은 발표에서 중국 시장을 겨냥한 Neople 개발·Tencent 배급의 Project OVERKILL을 소개하고, Vindictus: Defying Fate의 2027년 무료 플레이 출시 계획도 명시했어. 개발·현지화·코드 리뷰에 AI 활용을 확대한다는 회사 설명을 프로젝트 중단의 원인이나 감원 발표와 동일시하면 안 돼.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "넥슨 2026년 3분기 공식 실적 발표",
+          "url": "https://pdf.irpocket.com/C3659/xoA3/DnNg/UwmY/FseY.pdf",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "☁️ PS Plus PC 스트리밍 앱, 12월 10일 종료 예정",
+      "source": "PlayStation 공식 블로그",
+      "published": "2026-11-10",
+      "url": "https://blog.playstation.com/2026/11/10/playstation-plus-game-catalog-for-november-death-stranding-2-on-the-beach-like-a-dragon-pirate-yakuza-in-hawaii-atomfall-dragon-quest-iii-hd-2d-remake-and-more/",
+      "tags": [
+        "PlayStation Plus",
+        "Cloud Gaming",
+        "Service Closure"
+      ],
+      "short_summary": "Sony가 11월 10일 PlayStation Plus PC 앱을 12월 10일부터 종료한다고 발표했어. 회사는 이용 가능한 Premium 회원 중 이용자가 0.4% 미만이라고 설명했고, PS5·PS4의 멤버십 혜택에는 영향이 없다고 밝혔어. 함께 공개한 11월 카탈로그에는 Death Stranding 2·Atomfall·Dragon Quest III HD-2D Remake 등이 포함되지만, 기본 제공일은 17일이고 일부 작품·국가는 11·12·24일 등 예외가 있어. 지역별 구성이 다르므로 해외 목록을 한국 계정의 확정 제공 목록으로 받아들이면 안 돼.",
+      "summary": "Sony가 11월 10일 PlayStation Plus PC 앱을 12월 10일부터 종료한다고 발표했어. 회사는 이용 가능한 Premium 회원 중 이용자가 0.4% 미만이라고 설명했고, PS5·PS4의 멤버십 혜택에는 영향이 없다고 밝혔어. 함께 공개한 11월 카탈로그에는 Death Stranding 2·Atomfall·Dragon Quest III HD-2D Remake 등이 포함되지만, 기본 제공일은 17일이고 일부 작품·국가는 11·12·24일 등 예외가 있어. 지역별 구성이 다르므로 해외 목록을 한국 계정의 확정 제공 목록으로 받아들이면 안 돼.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "PlayStation 공식 블로그",
+          "url": "https://blog.playstation.com/2026/11/10/playstation-plus-game-catalog-for-november-death-stranding-2-on-the-beach-like-a-dragon-pirate-yakuza-in-hawaii-atomfall-dragon-quest-iii-hd-2d-remake-and-more/",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "⚽ Football Manager 27 출시 — 프리뷰 저장을 이어서 플레이",
+      "source": "Sports Interactive 공식 Steam 공지",
+      "published": "2026-11-10",
+      "url": "https://steamcommunity.com/gid/103582791475929044/announcements/detail/681892370646565610",
+      "tags": [
+        "Football Manager",
+        "Launch"
+      ],
+      "short_summary": "Sports Interactive가 11월 10일 FM27의 PC/Mac·Console·Touch·Mobile 출시를 안내했어. PC/Mac의 Launch Preview 저장은 정식판에서 이어갈 수 있고, Touch는 Apple Arcade, Mobile은 Netflix 구독 기반으로 제공돼. 공식 안내는 플랫폼별 실제 활성화 시간이 다를 수 있으며, 권리자 승인 중인 일부 구단·선수 자료가 빠질 수 있다고 명시해.",
+      "summary": "Sports Interactive가 11월 10일 FM27의 PC/Mac·Console·Touch·Mobile 출시를 안내했어. PC/Mac의 Launch Preview 저장은 정식판에서 이어갈 수 있고, Touch는 Apple Arcade, Mobile은 Netflix 구독 기반으로 제공돼. 공식 안내는 플랫폼별 실제 활성화 시간이 다를 수 있으며, 권리자 승인 중인 일부 구단·선수 자료가 빠질 수 있다고 명시해.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Sports Interactive 공식 Steam 공지",
+          "url": "https://steamcommunity.com/gid/103582791475929044/announcements/detail/681892370646565610",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🏢 Skydance Games, 프로젝트 축소에 따른 감원 확인",
+      "source": "TheWrap의 Skydance 대변인 직접 확인 보도",
+      "published": "2026-11-09",
+      "url": "https://www.thewrap.com/industry-news/business/skydance-games-layoffs-reorganization/",
+      "tags": [
+        "Skydance",
+        "Layoffs",
+        "Industry"
+      ],
+      "short_summary": "Skydance 대변인은 11월 9일 TheWrap에 사업 재편과 일부 프로젝트 축소로 일자리가 영향을 받는다고 확인했어. 적어도 25명이라는 수치는 직원의 공개 게시글을 인용한 보도이며 회사가 전체 감원 규모를 확정한 수치는 아니야. 영향을 받은 프로젝트 이름이나 개별 게임의 취소 여부도 공개되지 않았으므로 특정 작품이 중단됐다고 단정하지 않아.",
+      "summary": "Skydance 대변인은 11월 9일 TheWrap에 사업 재편과 일부 프로젝트 축소로 일자리가 영향을 받는다고 확인했어. 적어도 25명이라는 수치는 직원의 공개 게시글을 인용한 보도이며 회사가 전체 감원 규모를 확정한 수치는 아니야. 영향을 받은 프로젝트 이름이나 개별 게임의 취소 여부도 공개되지 않았으므로 특정 작품이 중단됐다고 단정하지 않아.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "TheWrap의 Skydance 대변인 직접 확인 보도",
+          "url": "https://www.thewrap.com/industry-news/business/skydance-games-layoffs-reorganization/",
+          "published": "2026-11-09",
+          "accessed": "2026-11-11",
+          "date_note": "매체 기사 게시일. 회사 성명·대변인 발언을 인용한 보도이며 별도 후속 갱신일은 확인되지 않음."
+        },
+        {
+          "label": "VGC 후속 교차 보도",
+          "url": "https://www.videogameschronicle.com/news/skydance-games-has-been-laying-off-some-of-its-staff-a-month-after-merging-with-warner-bros/",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "후속 보도. 회사 확인과 직원 공개 수치의 출처를 구분."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🏢 Tripwire, 36명 감원 발표 — 개발·퍼블리싱은 계속",
+      "source": "Noisy Pixel의 Tripwire 공식 성명 인용 보도",
+      "published": "2026-11-09",
+      "url": "https://noisypixel.net/tripwire-interactive-layoffs-36-employees-killing-floor-3/",
+      "tags": [
+        "Tripwire",
+        "Layoffs",
+        "Industry"
+      ],
+      "short_summary": "Tripwire Interactive가 11월 9일 공개한 성명을 인용한 보도에 따르면 직원 36명을 감원했어. 회사는 Maneater 2·Killing Floor 3 개발과 Tripwire Presents 퍼블리싱을 계속한다고 밝혔어. 공식 X 게시물은 직접 열람이 차단돼 인용 보도로 확인했으며, 이번 인력 변화가 각 작품 일정에 미치는 영향은 확정되지 않았어.",
+      "summary": "Tripwire Interactive가 11월 9일 공개한 성명을 인용한 보도에 따르면 직원 36명을 감원했어. 회사는 Maneater 2·Killing Floor 3 개발과 Tripwire Presents 퍼블리싱을 계속한다고 밝혔어. 공식 X 게시물은 직접 열람이 차단돼 인용 보도로 확인했으며, 이번 인력 변화가 각 작품 일정에 미치는 영향은 확정되지 않았어.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Noisy Pixel의 Tripwire 공식 성명 인용 보도",
+          "url": "https://noisypixel.net/tripwire-interactive-layoffs-36-employees-killing-floor-3/",
+          "published": "2026-11-09",
+          "accessed": "2026-11-11",
+          "date_note": "매체 기사 게시일. 회사 성명·대변인 발언을 인용한 보도이며 별도 후속 갱신일은 확인되지 않음."
+        },
+        {
+          "label": "PC Gamer 교차 보도",
+          "url": "https://www.pcgamer.com/gaming-industry/a-week-after-expanding-its-publishing-division-killing-floor-studio-tripwire-interactive-lays-off-36-people/",
+          "published": "2026-11-09",
+          "accessed": "2026-11-11",
+          "date_note": "별도 보도 확인. 공식 X 본문 직접 열람은 403으로 불가."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🚀 Marathon Symbiosis 상세 공개 — PvE와 소규모 PvP를 분리",
+      "source": "PlayStation 공식 Symbiosis 상세 안내",
+      "published": "2026-11-10",
+      "url": "https://blog.playstation.com/2026/11/10/marathon-symbiosis-update-launches-december-8-adding-new-pve-and-pvp-modes-weapons-and-more/",
+      "tags": [
+        "Marathon",
+        "PvE",
+        "PvP"
+      ],
+      "short_summary": "11월 10일 공개된 Symbiosis 상세 안내에 따르면 12월 8일 업데이트에 3회 출격 구조의 PvE 전용 Expedition 1단계와 3대3 Deathmatch 베타가 추가돼. Deathmatch는 영구 장비 구성을 잃을 위험 없이 경쟁하며, 새 Bishop 셸·무기·사회 공간과 Perimeter 확장도 예정돼 있어. 12월 8~15일 Open Play Week도 예고했지만 영구 무료화 발표는 아니고, 12월 8일이라는 일정 자체는 지난달 이미 안내된 내용이야.",
+      "summary": "11월 10일 공개된 Symbiosis 상세 안내에 따르면 12월 8일 업데이트에 3회 출격 구조의 PvE 전용 Expedition 1단계와 3대3 Deathmatch 베타가 추가돼. Deathmatch는 영구 장비 구성을 잃을 위험 없이 경쟁하며, 새 Bishop 셸·무기·사회 공간과 Perimeter 확장도 예정돼 있어. 12월 8~15일 Open Play Week도 예고했지만 영구 무료화 발표는 아니고, 12월 8일이라는 일정 자체는 지난달 이미 안내된 내용이야.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "PlayStation 공식 Symbiosis 상세 안내",
+          "url": "https://blog.playstation.com/2026/11/10/marathon-symbiosis-update-launches-december-8-adding-new-pve-and-pvp-modes-weapons-and-more/",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음."
+        },
+        {
+          "label": "Bungie의 이전 일정 안내",
+          "url": "https://www.bungie.net/7/en/News/Article/nightfallrefreshandsymbiosis",
+          "published": "",
+          "accessed": "2026-11-11",
+          "date_note": "지난달 게시된 일정 안내와 이번 상세 공개를 구분. 정확한 최초 게시일은 본문에서 미확인."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🌌 Ashes of the Singularity II 출시 — 대규모 RTS와 사전 생성 AI 자산 표시",
+      "source": "개발·배급사 Steam 상점",
+      "published": "2026-11-10",
+      "url": "https://store.steampowered.com/app/3499790/Ashes_of_the_Singularity_II/",
+      "tags": [
+        "RTS",
+        "Launch",
+        "AI Disclosure"
+      ],
+      "short_summary": "Oxide Games·Stardock의 Ashes of the Singularity II가 11월 10일 Steam에 출시됐고 한국어 인터페이스·자막 지원을 표시했어. 세 진영의 대규모 RTS로 캠페인, 온라인 협동·대전을 제공해. 상점은 일부 컷신 후처리·합성과 일부 사전 생성 음성에 AI를 썼다고 밝히며 플레이 중 실시간 생성은 없다고 명시해, 게임 속 AI 진영과 제작 과정의 생성형 AI 사용을 구분할 수 있어.",
+      "summary": "Oxide Games·Stardock의 Ashes of the Singularity II가 11월 10일 Steam에 출시됐고 한국어 인터페이스·자막 지원을 표시했어. 세 진영의 대규모 RTS로 캠페인, 온라인 협동·대전을 제공해. 상점은 일부 컷신 후처리·합성과 일부 사전 생성 음성에 AI를 썼다고 밝히며 플레이 중 실시간 생성은 없다고 명시해, 게임 속 AI 진영과 제작 과정의 생성형 AI 사용을 구분할 수 있어.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "개발·배급사 Steam 상점",
+          "url": "https://store.steampowered.com/app/3499790/Ashes_of_the_Singularity_II/",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "🎮 GTA VI 사전 다운로드 시작 — PS5 Pro 기능도 공식 공개",
+      "source": "PlayStation 공식 GTA VI 기능 안내",
+      "published": "2026-11-10",
+      "url": "https://blog.playstation.com/?p=425567",
+      "tags": [
+        "GTA VI",
+        "PS5 Pro",
+        "PSSR"
+      ],
+      "short_summary": "Rockstar와 Sony가 11월 10일 디지털 예약 구매자의 GTA VI 사전 다운로드 시작을 안내했어. PlayStation은 스토어 역대 최다 예약이라고 발표했지만 실제 예약 수량은 공개하지 않았어. 새 공식 소개에는 PS5 Pro의 PSSR·레이 트레이싱 그림자, DualSense 기능과 Tempest 3D Audio가 명시됐으며 사전 다운로드는 11월 19일 플레이 개방과 별개야. 이 발표에 없는 프레임률·해상도나 PC 출시 일정은 확정 정보로 추가하지 않아.",
+      "summary": "Rockstar와 Sony가 11월 10일 디지털 예약 구매자의 GTA VI 사전 다운로드 시작을 안내했어. PlayStation은 스토어 역대 최다 예약이라고 발표했지만 실제 예약 수량은 공개하지 않았어. 새 공식 소개에는 PS5 Pro의 PSSR·레이 트레이싱 그림자, DualSense 기능과 Tempest 3D Audio가 명시됐으며 사전 다운로드는 11월 19일 플레이 개방과 별개야. 이 발표에 없는 프레임률·해상도나 PC 출시 일정은 확정 정보로 추가하지 않아.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "PlayStation 공식 GTA VI 기능 안내",
+          "url": "https://blog.playstation.com/?p=425567",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음."
+        },
+        {
+          "label": "Rockstar 공식 사전 다운로드 공지",
+          "url": "https://www.rockstargames.com/newswire/article/89834o94713o21/pre-load-grand-theft-auto-vi-now",
+          "published": "2026-11-10",
+          "accessed": "2026-11-11",
+          "date_note": "공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음."
+        }
+      ],
+      "checked": "2026-11-11"
+    }
+  ],
+  "original_markdown": "# 게임 AI 데일리 브리핑 2026년 11월 11일\n\n2026년 11월 11일(수) 한국시간 오전 조사 기준. AI 8건, 게임 개발 2건, 게임 전반 이슈 8건을 정리했어. 개발과 밀접한 6건은 배경과 원리, 실무 관점까지 설명하고 나머지는 빠른 요약으로 담았어. 공식 발표를 우선 확인하고 최초 발표·후속 공개·출시 예정일을 구분했어. 변경 없는 반복은 제외했어.\n\n## 1. 🧩 Gemini 4 Carbon 공개 확대·Antigravity /swarm — 병렬 작업과 최종 통합 검증은 별개\n\n분야: AI · 깊이: deep · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:0\n\n### 핵심 요약\n\nGoogle이 제한된 보안 연구 프로그램에 먼저 제공했던 Gemini 4 Carbon을 유료 API와 일부 제품으로 확대했어. Antigravity에는 여러 에이전트를 조율하는 /swarm 미리보기가 추가됐어. API 출시 가격은 입력·출력 100만 토큰당 2·10달러이며, 11월 30일 출시 할인 종료 후에는 4·20달러가 적용돼.\n\n### 배경과 쉬운 설명\n\n배경: 한 에이전트가 큰 프로젝트의 모든 파일과 검증 결과를 계속 읽으면 문맥과 처리 시간이 병목이 돼. /swarm은 조정자·구현자·검증자 역할을 나누는 방식이야. Google은 대부분의 일반 작업에는 Argon을, 더 어려운 추론과 긴 검증에는 Carbon을 배치하는 구성을 설명해.\n\n### 작동 원리와 기술 맥락\n\n작동 원리: 구현자는 격리된 Git worktree에서 병렬로 작업하고, 별도 검증자는 테스트와 diff를 확인해. 공유 메시지 보드로 진행 정보를 교환하며 역할별로 다른 모델을 지정할 수 있어. worktree는 같은 작업 파일을 동시에 덮어쓰는 문제를 줄이지만, 서로 다른 수정이 합쳐진 뒤 논리적으로 호환되는지까지 보장하지는 않아.\n\n### 왜 중요한가\n\n개발 해석: Unity·Godot 프로젝트에서 UI·게임 로직·테스트를 나눠 맡기는 데 참고할 만해. 다만 직렬화 데이터·공통 인터페이스·엔진 버전처럼 여러 작업이 공유하는 계약은 먼저 고정하고, 합친 결과를 다시 빌드해야 해. 공식 시연이 자신의 프로젝트에서 같은 품질을 보장하는 것은 아니야.\n\n### 개발자 관점\n\n적용 제안: 토큰 단가만 비교하지 말고 작업 완료까지의 호출량·재시도·검증 비용을 기록하자. Google도 Carbon이 Argon보다 더 많은 토큰을 쓰고 병렬 팀이 일반 채팅보다 할당량을 빠르게 소모한다고 밝혔어. /swarm은 앱·CLI 미리보기이며 모든 구독·모든 클라우드 경로에 즉시 제공된다고 확대 해석하지 말자.\n\n### 출처와 날짜\n\n- [Google 공식 발표](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 11월 10일 공개 범위 확대. 모델 최초 소개 및 제한 제공은 약 2주 전으로 구분.\n- [Google Antigravity /swarm 발표](https://antigravity.google/blog/gemini-4-carbon-in-google-antigravity/) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 앱·CLI 미리보기, 역할·worktree·할당량 주의사항 확인.\n\n## 2. 🎯 Hugging Face Decision Models — 문장을 생성하지 않고 정해진 선택지를 평가하기\n\n분야: AI · 깊이: deep · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:1\n\n### 핵심 요약\n\nHugging Face가 결정 모델을 위한 공통 인터페이스를 소개했어. 상태·질문·허용 답안을 넣으면 선택 결과와 확률을 받는 방식이며, Transformers와 llama.cpp에서 /v1/systemone 인터페이스를 사용할 수 있어. 자유 형식 답변이 아니라 정해진 선택이 필요한 작업을 겨냥해.\n\n### 배경과 쉬운 설명\n\n배경: 오류 보고를 분류하는 도구가 필요한 결과는 종종 긴 설명이 아니라 ‘렌더링·네트워크·입력’ 중 하나야. 기존 LLM으로 JSON 문장을 생성해도 되지만, 생성·파싱·형식 검증 단계가 따라와. 결정 모델은 애플리케이션이 이해하는 선택지를 직접 점수화하는 접근이야.\n\n### 작동 원리와 기술 맥락\n\n작동 원리: 공통 입력에 state와 여러 질문을 넣고 choice(선택), score(순서가 있는 등급), noul(예·아니오 확률)을 사용해. 내부 구조는 모델마다 다르며, 호환되는 생성형 모델도 답안 라벨의 logits를 한 번의 배치 순전파로 평가할 수 있어. 따라서 공통 API가 곧 하나의 새 모델 구조를 뜻하지는 않아.\n\n### 왜 중요한가\n\n개발 해석: 빌드 로그 분류나 에디터 명령 라우팅에 적용해볼 수 있어. 반환 enum이 유효하다는 사실과 판단이 옳다는 사실은 달라. 엔진의 상태 머신이나 권한 검사처럼 반드시 지켜야 할 규칙은 모델 바깥의 결정적 코드로 남겨야 해.\n\n### 개발자 관점\n\n적용 제안: 한국어 오류 로그를 따로 검증하고 낮은 확률·애매한 입력에는 보류 경로를 두자. 출력 토큰이 0이어도 입력 처리와 모델 메모리 비용은 있어. llama.cpp 소개의 지연 시간은 RTX PRO 6000 한 장의 측정이므로 일반 PC나 매 프레임 실행 성능으로 받아들이면 안 돼. 모델별 상업 이용 라이선스도 서로 달라.\n\n### 출처와 날짜\n\n- [Hugging Face 공식 블로그](https://huggingface.co/blog/decision) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음.\n- [ggml-org llama.cpp Decision Models](https://huggingface.co/blog/ggml-org/decision-models-in-llamacpp) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 11월 11일 확인한 관련 구현 해설. 이 날짜는 상위 소개 발표 기준이며 개별 코드의 최초 작성일로 단정하지 않음.\n\n## 3. 🖼️ MiniMax H3-Image — 고해상도 공개 가중치지만 한국은 라이선스 제외 지역\n\n분야: AI · 깊이: deep · 출처 표시일: 2026-11-11 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:2\n\n### 핵심 요약\n\nMiniMax가 생성과 편집을 하나의 체크포인트로 수행하는 H3-Image의 가중치를 공개했어. 최대 16개 참조 이미지와 약 1,600만 화소 출력을 지원하지만, 커뮤니티 라이선스는 한국·미국·영국·EU를 적용 제외 지역으로 명시해. 한국에서 자유롭게 내려받아 실행할 수 있는 모델로 추천하면 안 돼.\n\n### 배경과 쉬운 설명\n\n배경: 캐릭터·배경 시안을 여러 장 만들 때 참조 이미지를 함께 처리하는 기능이 유용할 수 있어. 다만 공개 가중치는 이용 조건이 없는 소프트웨어와 같은 뜻이 아니야. 이번 발표는 성능보다 지역·이용 조건을 먼저 확인해야 하는 사례야.\n\n### 작동 원리와 기술 맥락\n\n작동 원리: 텍스트와 참조 이미지를 인코딩하고, 이미지의 압축 표현인 latent를 확산 Transformer가 예측한 뒤 VAE가 픽셀로 복원해. 모델 카드는 6회 샘플링 단계와 직접 고해상도 생성을 설명해. 작은 이미지를 단순 확대하는 방식과는 구분돼.\n\n### 왜 중요한가\n\n개발 해석: 모델 패키지는 약 68.65GB지만 별도 텍스트 인코더 66.7GB도 필요하다고 문서에 적혀 있어. 파일 크기는 실행 시 GPU 메모리 요구량과 같지 않아. 발표의 ‘4K 10초 미만’도 자신의 GPU에서 확인한 실측값이 아니야.\n\n### 개발자 관점\n\n적용 제안: 한국에서는 이 커뮤니티 라이선스를 근거로 로컬 실행·배포를 진행하지 말고 허용 범위를 먼저 확인하자. 호스팅 API의 접근 가능성과 별도 서비스 약관도 이번 가중치 라이선스만으로 판단할 수 없어. 허용되는 환경에서 평가하더라도 결과 이미지의 권리·인물 동의·출처 기록과 실제 게임 리소스의 일관성 검사는 별도로 필요해.\n\n### 출처와 날짜\n\n- [MiniMax 공식 발표](https://www.minimax.io/blog/minimax-h3-image) · 표시일: 2026-11-11 · 확인일: 2026-11-11. 공식 블로그 표시일은 11월 11일, LICENSE의 release date는 11월 10일. 한국시간 11월 11일 오전 실제 공개 페이지와 모델 카드를 확인.\n- [MiniMax H3-Image 모델 카드](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 11월 11일 공개 README 확인. 날짜는 LICENSE의 release date 기준이며 문서 수정 시각은 별도 미확인.\n- [MiniMax H3-Image 커뮤니티 라이선스](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image/blob/main/LICENSE) · 표시일: 2026-11-10 · 확인일: 2026-11-11. Release date/License date 11월 10일. I.5에서 한국 등 제외 지역 명시.\n\n## 4. 🎨 Adobe MAX: Firefly Graph·편집 도구 — 반복 제작 절차를 재사용하는 방향\n\n분야: AI · 깊이: deep · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:3\n\n### 핵심 요약\n\nAdobe가 Firefly의 에이전트·이미지 편집·반복 제작 도구를 확장했어. Edit Text·Retouch·Relight와 Quick Actions는 정식 제공이고, Firefly Graph와 Design 등은 베타야. 웹·앱 시제품을 만드는 Builder는 대기 명단 기반 비공개 베타라 즉시 사용 가능한 기능과 구분해야 해.\n\n### 배경과 쉬운 설명\n\n배경: 게임 리소스 시안을 반복 제작할 때는 한 번의 생성보다 크기·색·참조·수정 단계를 일관되게 반복하는 일이 중요해. Graph는 AI 모델과 Adobe 도구를 연결해 제작 절차를 재사용하는 기능으로 소개됐어.\n\n### 작동 원리와 기술 맥락\n\n작동 원리: Creative Agent에 형식·색·캐릭터 같은 선호를 설정하고, Plan Mode에서 실행 계획을 검토하거나 모델을 선택할 수 있어. Graph는 반복 가능한 흐름을 구성하고 수정하는 베타 도구야. 항상 실행되는 에이전트와 디자인을 코드로 바꾸는 도구도 소개됐지만 미리보기·비공개 베타 범위가 섞여 있어.\n\n### 왜 중요한가\n\n개발 해석: 시안 생성→부분 수정→규격별 출력 같은 작업을 표준화하는 데 의미가 있어. Unity·Godot에 바로 넣을 수 있는 완성 스프라이트·애니메이션·3D 메시를 자동 보장하는 발표는 아니야.\n\n### 개발자 관점\n\n적용 제안: 원본·참조·사용 모델·출력 버전을 함께 기록하고 알파 경계, 텍스처 이음새, 리소스 크기를 별도 검사하자. Firefly 안의 외부 모델까지 같은 비용·권리 조건이라고 가정하지 말고, 실제 선택 모델의 크레딧과 라이선스를 확인해야 해.\n\n### 출처와 날짜\n\n- [Adobe 공식 발표](https://news.adobe.com/news/2026/11/adobe-firefly-expands) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음.\n\n## 5. 📋 Claude Sheets·Whiteboards·대화형 앱 — Meetings는 공식 안내상 출시 예정\n\n분야: AI · 깊이: brief · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:4\n\n### 핵심 요약\n\nAnthropic이 공동 스프레드시트·화이트보드·데이터 시각화와 Claude 안에서 앱을 여는 대화형 커넥터를 소개했어. 연결한 문맥을 여러 산출물에 이어 쓰는 업무 흐름이 핵심이야. 일부 보도는 Meetings 베타 출시로 표현하지만, 확인한 공식 안내는 “coming soon”이므로 모든 사용자가 지금 회의에 추가할 수 있다고 단정하지 않아.\n\n### 출처와 날짜\n\n- [Anthropic Claude 공식 제품 안내](https://claude.com/resources/articles/more-ways-to-work-with-claude-sheets-whiteboards-and-interactive-connectors) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음.\n\n## 6. 🔎 AWS AgentCore Web Search API 정식 제공 — Gateway 없이 검색 호출\n\n분야: AI · 깊이: brief · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:5\n\n### 핵심 요약\n\nAWS가 AgentCore의 InvokeWebSearch API를 정식 제공했어. 기존 Gateway MCP 방식과 별도로 검색 API를 호출할 수 있고, 도메인·발표 시점 필터와 발췌문·URL 등의 결과를 받아. 가격은 1,000회 질의당 7달러이며 Gateway 요금은 없고, 발표된 제공 리전에는 도쿄가 포함되지만 서울은 없어.\n\n### 출처와 날짜\n\n- [AWS 공식 새 소식](https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-bedrock-agentcore-web-search-api/) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음.\n\n## 7. 🏛️ 호주, 프런티어 AI 안전 의무·전담 규제기관 입법 방침 발표\n\n분야: AI · 깊이: brief · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:6\n\n### 핵심 요약\n\n호주 정부가 자국에서 운영하려는 프런티어 AI 기업에 보안 통제·위험 관리·독립 평가·신속한 사고 신고 등을 요구하는 입법 방침을 발표했어. 전담 AI 안전 규제기관과 위반 시 제재도 제안했어. 현재 발표는 입법·협의 방향이며 모든 의무가 이미 시행됐다는 뜻은 아니야.\n\n### 출처와 날짜\n\n- [호주 산업·과학 장관 공동 발표](https://www.minister.industry.gov.au/t-ayres/media/new-australian-ai-safety-and-security-protections) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음.\n\n## 8. 💼 Anthropic IPO 로드쇼 시작 — 공모 조건은 아직 제안 단계\n\n분야: AI · 깊이: brief · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:7\n\n### 핵심 요약\n\nAnthropic이 기업공개를 위한 투자자 설명회인 로드쇼를 시작했어. 제안된 공모는 8억 2,500만 주, 예상 주당 가격은 70~78달러이며 Nasdaq 종목 기호 ANT로 상장을 신청했어. 발표 당시 등록신고서는 아직 효력이 발생하지 않았다고 명시돼 있어 상장·조달 완료로 쓰면 안 돼.\n\n### 출처와 날짜\n\n- [Anthropic 공식 발표](https://www.anthropic.com/news/roadshow-launch) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 페이지 표시 발표일. 별도 후속 수정일은 표시되지 않음.\n\n## 9. 🛠️ C++ 언어 서버의 MSBuild 자동 설정 — 코드보다 먼저 빌드 문맥을 읽기\n\n분야: 게임 개발 · 깊이: deep · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:8\n\n### 핵심 요약\n\nGitHub가 11월 10일 Copilot CLI용 Microsoft C++ Language Server에 MSBuild 컴파일 명령 추출기를 내장했다고 발표했어. 에이전트가 별도 설정 스킬을 찾기 전에 프로젝트의 컴파일 데이터베이스를 만드는 방식이야. 다만 공식 저장소에는 기능 플래그로 제공 범위를 제한한다는 안내가 남아 있어 실제 활성화 여부는 로그로 확인해야 해.\n\n### 배경과 쉬운 설명\n\n배경: C++의 같은 파일도 include 경로, 전처리 매크로와 컴파일 옵션이 달라지면 다른 프로그램으로 해석될 수 있어. compile_commands.json은 각 소스 파일을 어떤 명령으로 컴파일하는지 적은 지도야. 문자열 검색만으로는 놓칠 수 있는 정의·참조 관계를 언어 서버가 올바른 빌드 조건에서 찾도록 도와줘.\n\n### 작동 원리와 기술 맥락\n\n작동 원리: 프로젝트를 열어 언어 서버를 시작할 때 내장 추출기를 호출해 MSBuild용 컴파일 데이터베이스를 준비해. 설정 과정을 모델이 추론해 고르는 단계에서 정해진 도구 실행 단계로 옮긴 셈이야. CMake와 자체 빌드 시스템까지 모두 자동 처리되는 변경은 아니며, 해당 경로는 기존 생성 스킬이나 직접 만든 데이터베이스가 필요해.\n\n### 왜 중요한가\n\n개발 해석: Windows C++ 게임 클라이언트나 네이티브 플러그인에서 조건부 컴파일을 이해하지 못한 수정 위험을 줄이는 데 의미가 있어. 설정 토큰 감소를 목표로 하지만 공식 발표에 정량 벤치마크는 없으므로 절감률을 단정할 수 없어.\n\n### 개발자 관점\n\n적용 제안: 서버 자체는 프리뷰이고 활성 Copilot 구독 및 별도 라이선스 동의가 필요해. /lsp show와 로그로 서버·추출 상태를 확인하고, 복수 컴파일 데이터베이스가 있으면 사용할 파일을 명시하자. 코드 탐색 성공은 실제 빌드·테스트 통과와 별개야.\n\n### 출처와 날짜\n\n- [GitHub 공식 변경 기록](https://github.blog/changelog/2026-11-10-c-language-server-now-auto-configures-msbuild-builds/) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음.\n- [Microsoft 공식 C++ 언어 서버 저장소](https://github.com/microsoft/cpp-language-server) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 11월 11일 현행 README 확인. 최초 출시일이 아니라 관련 변경 발표 기준일.\n- [공식 설정 문서의 기능 플래그 제한](https://github.com/microsoft/cpp-language-server/blob/main/docs/configuration.md) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 11월 11일 확인. 자동 설정이 기본 비활성이며 기능 플래그 실험 대상만 제공된다는 안내가 남아 있어 발표와 제공 범위를 구분.\n\n## 10. 🧩 .NET 11·C# 15 정식 출시 — 상태 표현과 실행 환경 업그레이드를 분리하자\n\n분야: 게임 개발 · 깊이: deep · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:9\n\n### 핵심 요약\n\nMicrosoft가 11월 10일 .NET 11과 C# 15를 정식 발표했어. .NET 11은 2년 지원하는 STS이며, .NET 8·9는 같은 날 지원이 끝났어. 새 SDK를 설치하는 것만으로 기존 앱이나 Unity·Godot 프로젝트가 새 런타임으로 바뀌는 것은 아니야.\n\n### 배경과 쉬운 설명\n\n배경: 결과를 성공·실패 중 하나로 돌려줄 때 모든 데이터를 object 하나에 넣으면 호출자가 가능한 경우를 알기 어려워. C# 15의 union은 가능한 타입 목록을 선언하고 switch에서 빠진 경우를 컴파일러가 검사하도록 해. 상태가 추가됐는데 처리 분기를 놓치는 실수를 발견하기 쉬워져.\n\n### 작동 원리와 기술 맥락\n\n작동 원리: union은 이미 있는 타입들을 한 결과 집합으로 묶고, closed 계층은 직접 상속 가능한 범위를 선언 어셈블리 안으로 제한해 패턴 검사를 돕는다. 닫히지 않은 하위 타입까지 재귀적으로 봉쇄하는 것은 아니야. 런타임·JIT 최적화와 Native AOT CLI 시작 비용 개선도 포함하지만 Runtime Async와 메모리 안전성 개편은 여전히 프리뷰 영역이야.\n\n### 왜 중요한가\n\n개발 해석: 게임용 빌드 도구·데이터 변환기·서버에서 새 상태 모델링을 시험할 수 있어. 그러나 엔진은 자체 지원 컴파일러·런타임·플랫폼 제약을 가지므로 이번 발표를 Unity나 Godot의 C# 15 지원 발표로 읽으면 안 돼.\n\n### 개발자 관점\n\n적용 제안: 먼저 독립 도구의 target framework, global.json, 패키지와 배포 런타임을 확인하자. .NET 10 LTS도 지원 선택지이며, 자체 런타임을 포함해 배포한 앱은 시스템 SDK 교체만으로 패치되지 않아. 엔진 프로젝트는 해당 엔진의 지원표와 실제 플랫폼 빌드를 확인한 뒤 별도로 판단해야 해.\n\n### 출처와 날짜\n\n- [Microsoft .NET 공식 발표](https://devblogs.microsoft.com/dotnet/announcing-dotnet-11/) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음.\n- [C# 15 공식 기능 문서](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-15) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 현행 문서 확인. 프리릴리스라는 잔여 문구와 달리 11월 10일 정식 발표·지원표로 출시 상태 확인. 메모리 안전성은 프리뷰.\n- [.NET 공식 지원 정책](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 11월 10일 갱신. .NET 11 STS·.NET 10 LTS의 지원 종료는 2028년 11월 14일, .NET 8·9는 2026년 11월 10일.\n\n## 11. 📊 넥슨 3분기 실적 — 프로젝트 6개 중단과 인력 재배치 공개\n\n분야: 게임 전반 이슈 · 깊이: brief · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:10\n\n### 핵심 요약\n\n넥슨이 11월 10일 발표한 3분기 매출은 1,384억 엔, 영업이익은 418억 엔으로 전년 대비 각각 17%·11% 늘었어. 최근 몇 달 동안 프로젝트 6개를 중단하고 예산과 개발팀을 상업성이 더 높다고 판단한 게임으로 재배치했다고 밝혔지만, 대상 작품명은 공개하지 않았어. 같은 발표에서 중국 시장을 겨냥한 Neople 개발·Tencent 배급의 Project OVERKILL을 소개하고, Vindictus: Defying Fate의 2027년 무료 플레이 출시 계획도 명시했어. 개발·현지화·코드 리뷰에 AI 활용을 확대한다는 회사 설명을 프로젝트 중단의 원인이나 감원 발표와 동일시하면 안 돼.\n\n### 출처와 날짜\n\n- [넥슨 2026년 3분기 공식 실적 발표](https://pdf.irpocket.com/C3659/xoA3/DnNg/UwmY/FseY.pdf) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음.\n\n## 12. ☁️ PS Plus PC 스트리밍 앱, 12월 10일 종료 예정\n\n분야: 게임 전반 이슈 · 깊이: brief · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:11\n\n### 핵심 요약\n\nSony가 11월 10일 PlayStation Plus PC 앱을 12월 10일부터 종료한다고 발표했어. 회사는 이용 가능한 Premium 회원 중 이용자가 0.4% 미만이라고 설명했고, PS5·PS4의 멤버십 혜택에는 영향이 없다고 밝혔어. 함께 공개한 11월 카탈로그에는 Death Stranding 2·Atomfall·Dragon Quest III HD-2D Remake 등이 포함되지만, 기본 제공일은 17일이고 일부 작품·국가는 11·12·24일 등 예외가 있어. 지역별 구성이 다르므로 해외 목록을 한국 계정의 확정 제공 목록으로 받아들이면 안 돼.\n\n### 출처와 날짜\n\n- [PlayStation 공식 블로그](https://blog.playstation.com/2026/11/10/playstation-plus-game-catalog-for-november-death-stranding-2-on-the-beach-like-a-dragon-pirate-yakuza-in-hawaii-atomfall-dragon-quest-iii-hd-2d-remake-and-more/) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음.\n\n## 13. ⚽ Football Manager 27 출시 — 프리뷰 저장을 이어서 플레이\n\n분야: 게임 전반 이슈 · 깊이: brief · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:12\n\n### 핵심 요약\n\nSports Interactive가 11월 10일 FM27의 PC/Mac·Console·Touch·Mobile 출시를 안내했어. PC/Mac의 Launch Preview 저장은 정식판에서 이어갈 수 있고, Touch는 Apple Arcade, Mobile은 Netflix 구독 기반으로 제공돼. 공식 안내는 플랫폼별 실제 활성화 시간이 다를 수 있으며, 권리자 승인 중인 일부 구단·선수 자료가 빠질 수 있다고 명시해.\n\n### 출처와 날짜\n\n- [Sports Interactive 공식 Steam 공지](https://steamcommunity.com/gid/103582791475929044/announcements/detail/681892370646565610) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음.\n\n## 14. 🏢 Skydance Games, 프로젝트 축소에 따른 감원 확인\n\n분야: 게임 전반 이슈 · 깊이: brief · 출처 표시일: 2026-11-09 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:13\n\n### 핵심 요약\n\nSkydance 대변인은 11월 9일 TheWrap에 사업 재편과 일부 프로젝트 축소로 일자리가 영향을 받는다고 확인했어. 적어도 25명이라는 수치는 직원의 공개 게시글을 인용한 보도이며 회사가 전체 감원 규모를 확정한 수치는 아니야. 영향을 받은 프로젝트 이름이나 개별 게임의 취소 여부도 공개되지 않았으므로 특정 작품이 중단됐다고 단정하지 않아.\n\n### 출처와 날짜\n\n- [TheWrap의 Skydance 대변인 직접 확인 보도](https://www.thewrap.com/industry-news/business/skydance-games-layoffs-reorganization/) · 표시일: 2026-11-09 · 확인일: 2026-11-11. 매체 기사 게시일. 회사 성명·대변인 발언을 인용한 보도이며 별도 후속 갱신일은 확인되지 않음.\n- [VGC 후속 교차 보도](https://www.videogameschronicle.com/news/skydance-games-has-been-laying-off-some-of-its-staff-a-month-after-merging-with-warner-bros/) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 후속 보도. 회사 확인과 직원 공개 수치의 출처를 구분.\n\n## 15. 🏢 Tripwire, 36명 감원 발표 — 개발·퍼블리싱은 계속\n\n분야: 게임 전반 이슈 · 깊이: brief · 출처 표시일: 2026-11-09 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:14\n\n### 핵심 요약\n\nTripwire Interactive가 11월 9일 공개한 성명을 인용한 보도에 따르면 직원 36명을 감원했어. 회사는 Maneater 2·Killing Floor 3 개발과 Tripwire Presents 퍼블리싱을 계속한다고 밝혔어. 공식 X 게시물은 직접 열람이 차단돼 인용 보도로 확인했으며, 이번 인력 변화가 각 작품 일정에 미치는 영향은 확정되지 않았어.\n\n### 출처와 날짜\n\n- [Noisy Pixel의 Tripwire 공식 성명 인용 보도](https://noisypixel.net/tripwire-interactive-layoffs-36-employees-killing-floor-3/) · 표시일: 2026-11-09 · 확인일: 2026-11-11. 매체 기사 게시일. 회사 성명·대변인 발언을 인용한 보도이며 별도 후속 갱신일은 확인되지 않음.\n- [PC Gamer 교차 보도](https://www.pcgamer.com/gaming-industry/a-week-after-expanding-its-publishing-division-killing-floor-studio-tripwire-interactive-lays-off-36-people/) · 표시일: 2026-11-09 · 확인일: 2026-11-11. 별도 보도 확인. 공식 X 본문 직접 열람은 403으로 불가.\n\n## 16. 🚀 Marathon Symbiosis 상세 공개 — PvE와 소규모 PvP를 분리\n\n분야: 게임 전반 이슈 · 깊이: brief · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:15\n\n### 핵심 요약\n\n11월 10일 공개된 Symbiosis 상세 안내에 따르면 12월 8일 업데이트에 3회 출격 구조의 PvE 전용 Expedition 1단계와 3대3 Deathmatch 베타가 추가돼. Deathmatch는 영구 장비 구성을 잃을 위험 없이 경쟁하며, 새 Bishop 셸·무기·사회 공간과 Perimeter 확장도 예정돼 있어. 12월 8~15일 Open Play Week도 예고했지만 영구 무료화 발표는 아니고, 12월 8일이라는 일정 자체는 지난달 이미 안내된 내용이야.\n\n### 출처와 날짜\n\n- [PlayStation 공식 Symbiosis 상세 안내](https://blog.playstation.com/2026/11/10/marathon-symbiosis-update-launches-december-8-adding-new-pve-and-pvp-modes-weapons-and-more/) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음.\n- [Bungie의 이전 일정 안내](https://www.bungie.net/7/en/News/Article/nightfallrefreshandsymbiosis) · 표시일:  · 확인일: 2026-11-11. 지난달 게시된 일정 안내와 이번 상세 공개를 구분. 정확한 최초 게시일은 본문에서 미확인.\n\n## 17. 🌌 Ashes of the Singularity II 출시 — 대규모 RTS와 사전 생성 AI 자산 표시\n\n분야: 게임 전반 이슈 · 깊이: brief · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:16\n\n### 핵심 요약\n\nOxide Games·Stardock의 Ashes of the Singularity II가 11월 10일 Steam에 출시됐고 한국어 인터페이스·자막 지원을 표시했어. 세 진영의 대규모 RTS로 캠페인, 온라인 협동·대전을 제공해. 상점은 일부 컷신 후처리·합성과 일부 사전 생성 음성에 AI를 썼다고 밝히며 플레이 중 실시간 생성은 없다고 명시해, 게임 속 AI 진영과 제작 과정의 생성형 AI 사용을 구분할 수 있어.\n\n### 출처와 날짜\n\n- [개발·배급사 Steam 상점](https://store.steampowered.com/app/3499790/Ashes_of_the_Singularity_II/) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음.\n\n## 18. 🎮 GTA VI 사전 다운로드 시작 — PS5 Pro 기능도 공식 공개\n\n분야: 게임 전반 이슈 · 깊이: brief · 출처 표시일: 2026-11-10 · 확인일: 2026-11-11 · 기사 ID: 2026-11-11:17\n\n### 핵심 요약\n\nRockstar와 Sony가 11월 10일 디지털 예약 구매자의 GTA VI 사전 다운로드 시작을 안내했어. PlayStation은 스토어 역대 최다 예약이라고 발표했지만 실제 예약 수량은 공개하지 않았어. 새 공식 소개에는 PS5 Pro의 PSSR·레이 트레이싱 그림자, DualSense 기능과 Tempest 3D Audio가 명시됐으며 사전 다운로드는 11월 19일 플레이 개방과 별개야. 이 발표에 없는 프레임률·해상도나 PC 출시 일정은 확정 정보로 추가하지 않아.\n\n### 출처와 날짜\n\n- [PlayStation 공식 GTA VI 기능 안내](https://blog.playstation.com/?p=425567) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음.\n- [Rockstar 공식 사전 다운로드 공지](https://www.rockstargames.com/newswire/article/89834o94713o21/pre-load-grand-theft-auto-vi-now) · 표시일: 2026-11-10 · 확인일: 2026-11-11. 공식 발표 표시일. 별도 후속 갱신일은 확인되지 않음.\n"
+}
