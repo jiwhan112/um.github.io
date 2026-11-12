@@ -32,3 +32,22 @@ test('foundation every chapter and word collection have usable reading and sourc
  for(const unit of course.units){const navigation=await page.goto('language-study/foundation/'+unit.id+'/');expect(navigation?.status()).toBe(200);await expect(page.locator('.foundation-reader h1')).toHaveText(unit.title);await expect(page.locator('.foundation-concept')).toHaveCount(unit.sections.length);}
  await page.goto('language-study/foundation/?view=words');await expect(page.locator('.foundation-word')).not.toHaveCount(0);await page.getByLabel('기초 교재 검색').fill('no-such-word');await expect(page.getByRole('heading',{name:'검색 결과가 없습니다.'})).toBeVisible();
 });
+
+
+test('foundation merges consecutive filter resets without restoring stale search',async({page})=>{
+ await page.goto('language-study/foundation/?q=no-such-foundation&module=verbs');
+ await expect(page.getByRole('heading',{name:'검색 결과가 없습니다.'})).toBeVisible();
+ await page.evaluate(()=>{
+  const input=document.querySelector<HTMLInputElement>('.foundation-toolbar input')!;
+  const select=document.querySelector<HTMLSelectElement>('.foundation-toolbar select')!;
+  Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')!.set!.call(input,'');
+  input.dispatchEvent(new Event('input',{bubbles:true}));
+  select.value='';select.dispatchEvent(new Event('change',{bubbles:true}));
+ });
+ await expect(page).toHaveURL(/language-study\/foundation\/$/);
+ await expect(page.locator('.foundation-unit')).toHaveCount(30);
+ await page.goBack();
+ await expect(page).toHaveURL(/module=verbs/);
+ await expect(page.getByLabel('기초 교재 검색')).toHaveValue('');
+ await expect(page.locator('.foundation-unit')).toHaveCount(8);
+});
