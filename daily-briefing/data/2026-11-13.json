@@ -1,0 +1,300 @@
+{
+  "date": "2026-11-13",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 11월 13일(금) 한국시간 오전 조사 기준. AI·게임 개발·게임 전반 이슈에서 공식 자료로 확인한 중요 소식을 정리했어. 최초 발표일과 문서 갱신일, 향후 시행일을 구분하며 이전 브리핑의 변경 없는 반복은 제외했어.",
+  "items": [
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "Gemini Decisions API, 긴 답변 대신 선택·점수를 한 번에 반환",
+      "source": "Google",
+      "published": "2026-11-11",
+      "url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/",
+      "tags": [
+        "분류",
+        "멀티모달",
+        "개발 도구"
+      ],
+      "short_summary": "Google이 정해진 선택지와 점수를 빠르게 반환하는 Gemini Decision 1을 공개했어. 생성형 답변을 파싱하는 대신 분류 결과를 바로 받을 수 있지만, 확률값이 정답 보증은 아니야.",
+      "summary": "11월 11일 공개된 Gemini Decisions API는 Gemini API·AI Studio에서 이용할 수 있어. 텍스트·이미지·오디오·영상·PDF를 입력받아 예·아니요, 후보 선택, 순서 있는 평가척도에 따른 점수를 반환해. 최대 25만 6천 입력 토큰과 1,000개의 독립 질문을 지원한다고 안내했어.",
+      "easy_explainer": "일반 챗봇이 답안을 한 글자씩 쓰는 방식이라면, 이 모델은 객관식 답안지를 채점하듯 정해진 결과를 한 번의 추론으로 계산해. 출력 문장을 다시 JSON으로 정리하는 절차를 줄일 수 있어.",
+      "technical_context": "선택형은 2~255개 후보를 지원하며 결과에 확률·신뢰도를 제공해. Google의 150~250ms 종단 간 지연 주장은 최대 1만 6천 토큰·1~100개 질문의 시험 조건이므로 최대 입력에서도 같은 속도라고 보면 안 돼. 입력 100만 토큰당 0.10달러, 출력 비용은 없으며 질문 지시문도 입력에 포함돼.",
+      "why_it_matters": "게임 QA 스크린샷 분류나 오류 보고서의 담당 팀 배정처럼 반복적인 개발 업무에 응용할 수 있어. 다만 네트워크 추론을 매 프레임 실행하는 용도와는 분리해야 해.",
+      "developer_view": "팀의 실제 결함 사례로 정확도·오탐 비용·지연을 먼저 측정하자. 신뢰도가 낮으면 사람 검토로 넘기고, 빌드 실패나 배포 승인처럼 중요한 판단은 결정적 검사와 함께 쓰는 편이 안전해.",
+      "sources": [
+        {
+          "label": "Google 공식 발표·문서",
+          "url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/",
+          "published": "2026-11-11",
+          "accessed": "2026-11-13",
+          "date_note": "공식 발표일은 2026-11-11. 오늘 새 발표로 표기하지 않음."
+        }
+      ],
+      "checked": "2026-11-13"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "AWS Emulator, 로컬 AWS 테스트 환경과 에이전트 개발 공정 공개",
+      "source": "AWS·Amazon",
+      "published": "2026-11-11",
+      "url": "https://aws.amazon.com/blogs/aws/test-your-applications-against-aws-locally-with-aws-emulator/",
+      "tags": [
+        "로컬 테스트",
+        "Rust",
+        "에이전트"
+      ],
+      "short_summary": "AWS가 로컬에서 AWS API 동작을 시험하는 오픈소스 에뮬레이터를 공개했어. 코드 생성 자동화보다 실제 AWS와 비교하는 검증 공정이 실무적으로 중요한 사례야.",
+      "summary": "AWS Emulator는 기존 SDK·CLI의 엔드포인트를 로컬 HTTPS 주소로 바꿔 사용하는 Rust 기반 도구야. 별도 서비스 요금은 없지만 실제 AWS 자원을 사용하면 해당 요금이 발생해. 미구현 작업은 HTTP 501을 반환하므로 전체 AWS와 완전히 호환된다고 가정하면 안 돼.",
+      "easy_explainer": "클라우드 서버를 매번 준비하는 대신 개발 PC에 작은 연습장을 두는 방식이야. 게임의 클라우드 저장이나 비동기 작업 큐를 검증할 때 네트워크 밖으로 나가지 않는 반복 테스트에 활용할 수 있어.",
+      "technical_context": "실제 AWS에서 테스트를 실행한 결과와 에뮬레이터의 응답·오류·자원 동작을 비교해 호환성을 검증해. 기본은 로컬호스트이며 에뮬레이터 전용 자격 증명을 사용해. Rust 내장 모드는 인스턴스별 상태를 분리해 병렬 테스트를 지원하고, 보안 검증 환경으로 쓰지는 말라고 명시했어.",
+      "why_it_matters": "Amazon은 구현 코드 전체를 에이전트가 작성했다고 설명했어. 그러나 사람이 필요 없다는 뜻은 아니야. 사람은 테스트 작성·문제 탐지·수정 에이전트의 경계와 빌드·보안·회귀 검사를 통과해야 하는 병합·배포 절차를 설계했어.",
+      "developer_view": "개발팀에 적용한다면 작은 API 집합부터 실제 서비스와 동작을 비교하자. 로컬 테스트 통과가 운영 IAM 권한·성능·보안을 보장하지는 않아. 자동 수정에도 독립적인 기준 테스트를 유지하는 구조가 핵심이야.",
+      "sources": [
+        {
+          "label": "AWS·Amazon 공식 발표·문서",
+          "url": "https://aws.amazon.com/blogs/aws/test-your-applications-against-aws-locally-with-aws-emulator/",
+          "published": "2026-11-11",
+          "accessed": "2026-11-13",
+          "date_note": "공식 발표일은 2026-11-11. 오늘 새 발표로 표기하지 않음."
+        },
+        {
+          "label": "Amazon 에이전트 개발 공정 설명",
+          "url": "https://www.aboutamazon.com/news/aws/how-autonomous-ai-agents-built-aws-emulator",
+          "published": "2026-11-11",
+          "accessed": "2026-11-13",
+          "date_note": "11월 11일 공개. 코드 작성·검토 자동화는 회사 측 설명이며 사람의 검증 공정 설계와 구분."
+        }
+      ],
+      "checked": "2026-11-13"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "토큰 풀링을 학습에 반영해 검색 벡터를 줄이는 Sentence Transformers 실험",
+      "source": "Hugging Face",
+      "published": "2026-11-11",
+      "url": "https://huggingface.co/blog/token-pooling",
+      "tags": [
+        "검색",
+        "임베딩",
+        "RAG"
+      ],
+      "short_summary": "문서의 토큰별 검색 벡터를 줄일 때 생기는 품질 손실을 학습 단계부터 완화하는 방법이 공개됐어. 코드·엔진 문서 검색의 저장 비용과 정확도를 함께 검토할 만한 기술이야.",
+      "summary": "Sentence Transformers 6.3의 Token Pooling-Aware Training은 압축 전·후 표현의 손실을 함께 학습하는 방식이야. 공개 실험에서는 문서 벡터 수를 74.8% 줄였을 때 검색 성능 보존율이 일반 학습의 94.6%에서 97.8%로 개선됐어. 이는 각 모델의 비압축 성능 대비 수치이지 정답률 97.8%라는 뜻은 아니야.",
+      "easy_explainer": "멀티벡터 검색은 문서 전체를 벡터 하나로 요약하지 않고 여러 토큰의 벡터를 보관해. 단어별 단서를 잘 살릴 수 있지만 보관·검색 비용이 커지므로, 비슷한 벡터를 묶어 대표 벡터로 바꾸는 것이 풀링이야.",
+      "technical_context": "질의 토큰마다 가장 잘 맞는 문서 벡터를 찾고 그 유사도를 합치는 MaxSim 방식이 배경이야. 제안법은 문서 벡터를 군집화하고 평균·정규화한 표현까지 학습에 포함해. 공개 비교는 MS MARCO 12만 쌍, 1에포크 학습과 NanoBEIR 13개 평가 세트라는 제한된 조건이야.",
+      "why_it_matters": "게임 엔진 매뉴얼·C++ API 검색에서 메모리 부담을 줄일 후보지만, 벡터 수 감소가 전체 인덱스 용량이나 응답 시간의 같은 비율 감소를 의미하지는 않아. 메타데이터와 검색 구조 비용도 남아 있어.",
+      "developer_view": "함수명·타입명·오버로드처럼 한 토큰 차이가 중요한 자체 질의 세트를 만들자. 풀링 비율별 검색 품질·용량·응답 시간을 함께 비교하고, 숫자 하나가 좋아졌다는 이유로 기존 검색을 바로 교체하지 않는 게 좋아.",
+      "sources": [
+        {
+          "label": "Hugging Face 공식 발표·문서",
+          "url": "https://huggingface.co/blog/token-pooling",
+          "published": "2026-11-11",
+          "accessed": "2026-11-13",
+          "date_note": "공식 발표일은 2026-11-11. 오늘 새 발표로 표기하지 않음."
+        }
+      ],
+      "checked": "2026-11-13"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "ChatGPT 기존 음성 모드, 12월 11일 종료 예정",
+      "source": "OpenAI",
+      "published": "2026-11-10",
+      "url": "https://help.openai.com/en/articles/20001638-retiring-advanced-and-standard-voice-in-chatgpt",
+      "tags": [
+        "ChatGPT",
+        "음성",
+        "서비스 변경"
+      ],
+      "short_summary": "ChatGPT의 Advanced·Standard Voice 종료 예정일은 12월 11일이야. 영상·화면 공유에는 별도 예외가 있어.",
+      "summary": "OpenAI는 11월 10일부터 Advanced·Standard Voice 종료를 안내했으며 종료 예정일은 12월 11일이야. 이후 해당 음성 대화는 기본 Live 음성으로 이어갈 수 있고 기존 대화 기록은 유지돼. 다만 실시간 영상·화면 공유는 GPT-Live가 해당 기능을 지원할 때까지 Advanced Voice를 계속 사용한다고 안내했어. 이번 안내를 개발자용 음성 API 종료 공지로 확대해서 해석하면 안 돼.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "OpenAI 공식 발표·문서",
+          "url": "https://help.openai.com/en/articles/20001638-retiring-advanced-and-standard-voice-in-chatgpt",
+          "published": "2026-11-10",
+          "accessed": "2026-11-13",
+          "date_note": "본문이 최초 안내일을 11월 10일로 명시. 11월 13일 KST 확인 시 도움말 갱신 표시는 18시간 전이며, 갱신과 최초 발표·12월 11일 종료 예정일을 구분."
+        }
+      ],
+      "checked": "2026-11-13"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "AlphaGenome 2, 조직 평균에서 개별 세포 상태의 유전 변이 예측으로",
+      "source": "Google DeepMind",
+      "published": "2026-11-11",
+      "url": "https://deepmind.google/blog/alphagenome-2-deciphering-how-cells-read-dna-to-better-understand-disease/",
+      "tags": [
+        "과학 AI",
+        "유전체",
+        "연구"
+      ],
+      "short_summary": "AlphaGenome 2는 DNA 변화의 영향을 특정 세포 유형·상태에 맞춰 예측해. 비상업 연구 API는 제공되지만 임상 진단용으로 승인된 모델은 아니야.",
+      "summary": "DeepMind가 11월 11일 공개한 AlphaGenome 2는 DNA 서열에 목표 세포의 유형·상태를 함께 입력해 유전 변이 영향을 예측해. 조직 전체 평균에서 놓칠 수 있는 세포별 차이를 분석하는 연구 도구로, 비상업 연구 API와 상업 연구용 비공개 프리뷰를 제공해. Antigravity용 Skills는 아직 출시 예정이며, 모델은 임상·진단 용도로 검증되거나 승인되지 않았어.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Google DeepMind 공식 발표·문서",
+          "url": "https://deepmind.google/blog/alphagenome-2-deciphering-how-cells-read-dna-to-better-understand-disease/",
+          "published": "2026-11-11",
+          "accessed": "2026-11-13",
+          "date_note": "공식 발표일은 2026-11-11. 오늘 새 발표로 표기하지 않음."
+        }
+      ],
+      "checked": "2026-11-13"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "UEFN 43.10, 공유 리소스 환경 예제와 실험적 카메라·감각 시스템 추가",
+      "source": "Epic Games",
+      "published": "2026-11-12",
+      "url": "https://dev.epicgames.com/documentation/fortnite/43-10-fortnite-ecosystem-updates-and-release-notes?lang=en-US",
+      "tags": [
+        "UEFN",
+        "메모리 최적화",
+        "Scene Graph",
+        "Verse"
+      ],
+      "short_summary": "UEFN에 고품질 환경을 효율적으로 구성하는 Shadows of the Abbey 예제가 추가됐다. 새 카메라·감각 기능은 실험 단계로 이를 사용한 섬은 아직 발행할 수 없다.",
+      "summary": "Epic은 11월 12일 Fortnite 생태계 43.10을 출시했다. Quixel 기반 환경 예제와 함께 모듈형 Scene Graph 카메라, 시각·청각·접촉에 반응하는 Perception API, Verse Loot Pool API를 실험적으로 도입했다.",
+      "easy_explainer": "건물마다 별도의 벽돌 사진을 복사하는 대신 공용 재료 창고를 참조하는 방식으로 생각하면 쉽다. 예제의 식생·건축물·길 등이 텍스처와 머티리얼 같은 자원을 공유해 메모리 부담을 줄인다.",
+      "technical_context": "카메라는 이동·목표 추적·부드러운 보간·충돌 회피 동작을 모듈로 조합한다. Perception은 엔티티가 무엇을 보거나 듣거나 접촉했는지에 따라 게임 동작을 구성하도록 Scene Graph와 Verse 인터페이스를 제공한다. 리소스 공유와 모듈 조합은 서로 다른 최적화·구조화 수단이며, 이 업데이트가 모든 장면의 프레임 속도를 자동으로 높인다는 뜻은 아니다.",
+      "why_it_matters": "클라이언트 개발 학습에서는 에셋 중복 비용과 동작 조합을 실제 예제에서 관찰할 기회다. 다만 환경 예제의 활용 가능성과 실험적 API의 발행 제한을 혼동하면 출시 일정에 영향을 줄 수 있다.",
+      "developer_view": "개발자 관점에서는 예제를 복제한 실험 프로젝트에서 공유 텍스처 수와 메모리 사용량을 먼저 비교할 만하다. C++ 엔진에서도 공통 리소스 참조와 카메라 책임 분리는 응용 가능한 설계지만, UEFN API를 그대로 사용할 수 있다는 의미는 아니다. 새 실험 기능은 출시용 분기와 분리하고 실제 기기의 프레임 시간도 측정하자.",
+      "sources": [
+        {
+          "label": "Epic 공식 43.10 릴리스 노트",
+          "url": "https://dev.epicgames.com/documentation/fortnite/43-10-fortnite-ecosystem-updates-and-release-notes?lang=en-US",
+          "published": "2026-11-12",
+          "accessed": "2026-11-13",
+          "date_note": "본문에 출시일 2026년 11월 12일 명시."
+        },
+        {
+          "label": "Epic 공식 개발자 포럼 공지",
+          "url": "https://forums.unrealengine.com/t/fortnite-ecosystem-v43-10/2854484",
+          "published": "2026-11-12",
+          "accessed": "2026-11-13",
+          "date_note": "11월 12일 공지. 실험 기능을 사용한 섬의 발행 불가 명시."
+        }
+      ],
+      "checked": "2026-11-13"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "Steam 도전과제 세트 정식 공개, 추가 콘텐츠와 기존 완료 기록을 분리",
+      "source": "Valve",
+      "published": "2026-11-11",
+      "url": "https://steamcommunity.com/gid/103582791457287600/announcements/detail/685269908095762672",
+      "tags": [
+        "Steamworks",
+        "도전과제",
+        "데이터 설계"
+      ],
+      "short_summary": "Steam Achievement Sets가 베타에서 정식 기능으로 전환됐다. DLC·시즌의 새 목표를 추가하면서 기존 완료 기록을 보존할 수 있다.",
+      "summary": "Valve는 11월 11일 도전과제 세트를 전체 사용자에게 공개했다. 기본 게임과 DLC의 진행도를 나누고, 더 이상 달성할 수 없는 항목은 보관·퇴역 처리해 기존 획득 기록과 향후 완료 가능성을 함께 관리한다.",
+      "easy_explainer": "이미 딴 졸업장을 새 선택 과목이 생겼다는 이유로 취소하지 않는 방식이다. 과제 목록의 현재 상태와 과거에 완료했다는 사실을 구분한다.",
+      "technical_context": "기존 Steamworks 도전과제는 앱별로 정의하며 ISteamUserStats에서 조회·해금한다. SetAchievement 뒤 StoreStats로 업로드하고 완료 콜백을 확인하는 흐름은 공식 문서에 설명돼 있다. 이번 세트 기능은 목표 묶음과 완료 표시의 관리 확장이므로 이를 기존 저장 API 전체 교체로 해석하면 안 된다.",
+      "why_it_matters": "라이브 게임에서 콘텐츠 추가가 플레이어의 달성감을 훼손하는 문제를 줄인다. UI 변경뿐 아니라 완료 상태의 수명과 데이터 이전을 다루는 설계 사례다.",
+      "developer_view": "C++ 클라이언트에서는 기존 API 식별자와 획득 기록을 유지한 채 신규 묶음의 표시를 검증하자. 개발상 권고로 신규·기존 완료·DLC 미보유·시즌 종료 계정을 나눠 회귀 테스트하고, 해금 업로드 실패를 완료로 표시하지 않는지도 확인할 만하다.",
+      "sources": [
+        {
+          "label": "Valve 정식 공개 공지",
+          "url": "https://steamcommunity.com/gid/103582791457287600/announcements/detail/685269908095762672",
+          "published": "2026-11-11",
+          "accessed": "2026-11-13",
+          "date_note": "공식 Steam 뉴스 목록에서 11월 11일과 개별 공지 링크 확인. 10월 15일 베타의 후속 정식 공개."
+        },
+        {
+          "label": "Steamworks 기존 통계·도전과제 문서",
+          "url": "https://partner.steamgames.com/doc/features/achievements",
+          "published": null,
+          "accessed": "2026-11-13",
+          "date_note": "발표일이 없는 상시 문서. 기존 API 작동 원리의 배경 자료이며 신규 발표로 취급하지 않음."
+        }
+      ],
+      "checked": "2026-11-13"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "Steam Linux 클라이언트, 64비트와 Runtime 컨테이너로 전환",
+      "source": "Valve",
+      "published": "2026-11-11",
+      "url": "https://steamcommunity.com/gid/103582791457287600/announcements/detail/678515036155543748",
+      "tags": [
+        "Linux",
+        "Steam Runtime",
+        "배포 호환성"
+      ],
+      "short_summary": "11월 11일 Steam 안정판 업데이트는 Linux 클라이언트를 64비트로 전환하고 Steam Runtime 컨테이너 안에서 실행하도록 바꿨다. 배포판 간 실행 환경 차이를 줄이려는 변경이다.",
+      "summary": "11월 11일 Steam 안정판 업데이트에서 Linux 클라이언트가 64비트로 전환되고 Steam Runtime 컨테이너 안에서 실행하도록 바뀌었다. Valve는 배포판 간 실행 환경의 일관성을 높이기 위한 변경이라고 설명했다. 이는 클라이언트의 변경으로 모든 게임이 자동으로 64비트가 된다는 뜻은 아니며, 개발팀은 실행·오버레이·컨트롤러 연동을 다시 점검할 만하다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Valve 안정판 업데이트",
+          "url": "https://steamcommunity.com/gid/103582791457287600/announcements/detail/678515036155543748",
+          "published": "2026-11-11",
+          "accessed": "2026-11-13",
+          "date_note": "공식 Steam 뉴스 목록의 November 11th 안정판 변경 기록 확인."
+        }
+      ],
+      "checked": "2026-11-13"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "Paradox, 2027년 1월 Mattias Lilja CEO 취임 발표",
+      "source": "Paradox Interactive",
+      "published": "2026-11-11",
+      "url": "https://www.paradoxinteractive.com/media/press-releases/paradox-interactive/mattias-lilja-takes-over-as-ceo-and-will-lead-paradox-interactive-ab-publ-to-its-next-level",
+      "tags": [
+        "Paradox",
+        "경영",
+        "전략 게임"
+      ],
+      "short_summary": "Paradox는 부CEO Mattias Lilja가 2027년 1월 4일 CEO에 취임한다고 발표했다. Fredrik Wester는 그때까지 CEO를 유지한 뒤 이사회에서 장기 전략에 참여한다.",
+      "summary": "Paradox는 11월 11일 부CEO Mattias Lilja가 2027년 1월 4일 CEO에 취임한다고 발표했다. Fredrik Wester는 그때까지 CEO를 유지한 뒤 이사회에서 장기 전략에 참여한다. 회사는 핵심 사업과 게임 디자인·모더 및 플레이어 도구 투자를 강조했지만, 게임별 기술 지원이나 도구 출시 일정의 구체적 변경은 제시하지 않았다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Paradox 공식 공시",
+          "url": "https://www.paradoxinteractive.com/media/press-releases/paradox-interactive/mattias-lilja-takes-over-as-ceo-and-will-lead-paradox-interactive-ab-publ-to-its-next-level",
+          "published": "2026-11-11",
+          "accessed": "2026-11-13",
+          "date_note": "공시 시각 11월 11일 18:25 CET. CEO 취임일은 2027년 1월 4일."
+        }
+      ],
+      "checked": "2026-11-13"
+    }
+  ],
+  "original_markdown": "# 2026-11-13 게임·AI 데일리 브리핑\n\n2026년 11월 13일(금) 한국시간 오전 조사 기준. AI·게임 개발·게임 전반 이슈에서 공식 자료로 확인한 중요 소식을 정리했어. 최초 발표일과 문서 갱신일, 향후 시행일을 구분하며 이전 브리핑의 변경 없는 반복은 제외했어.\n\n## 1. Gemini Decisions API, 긴 답변 대신 선택·점수를 한 번에 반환\n\n**영역:** AI | **깊이:** 심층 | **발표일:** 2026-11-11\n\n### 핵심 요약\n\nGoogle이 정해진 선택지와 점수를 빠르게 반환하는 Gemini Decision 1을 공개했어. 생성형 답변을 파싱하는 대신 분류 결과를 바로 받을 수 있지만, 확률값이 정답 보증은 아니야.\n\n### 배경과 발표 내용\n\n11월 11일 공개된 Gemini Decisions API는 Gemini API·AI Studio에서 이용할 수 있어. 텍스트·이미지·오디오·영상·PDF를 입력받아 예·아니요, 후보 선택, 순서 있는 평가척도에 따른 점수를 반환해. 최대 25만 6천 입력 토큰과 1,000개의 독립 질문을 지원한다고 안내했어.\n\n### 쉽게 이해하기\n\n일반 챗봇이 답안을 한 글자씩 쓰는 방식이라면, 이 모델은 객관식 답안지를 채점하듯 정해진 결과를 한 번의 추론으로 계산해. 출력 문장을 다시 JSON으로 정리하는 절차를 줄일 수 있어.\n\n### 작동 원리와 기술 맥락\n\n선택형은 2~255개 후보를 지원하며 결과에 확률·신뢰도를 제공해. Google의 150~250ms 종단 간 지연 주장은 최대 1만 6천 토큰·1~100개 질문의 시험 조건이므로 최대 입력에서도 같은 속도라고 보면 안 돼. 입력 100만 토큰당 0.10달러, 출력 비용은 없으며 질문 지시문도 입력에 포함돼.\n\n### 왜 중요한가\n\n게임 QA 스크린샷 분류나 오류 보고서의 담당 팀 배정처럼 반복적인 개발 업무에 응용할 수 있어. 다만 네트워크 추론을 매 프레임 실행하는 용도와는 분리해야 해.\n\n### 개발자 관점\n\n팀의 실제 결함 사례로 정확도·오탐 비용·지연을 먼저 측정하자. 신뢰도가 낮으면 사람 검토로 넘기고, 빌드 실패나 배포 승인처럼 중요한 판단은 결정적 검사와 함께 쓰는 편이 안전해.\n\n### 출처와 날짜\n\n- [Google 공식 발표·문서](https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/) · 발표 2026-11-11 · 확인 2026-11-13. 공식 발표일은 2026-11-11. 오늘 새 발표로 표기하지 않음.\n\n## 2. AWS Emulator, 로컬 AWS 테스트 환경과 에이전트 개발 공정 공개\n\n**영역:** AI | **깊이:** 심층 | **발표일:** 2026-11-11\n\n### 핵심 요약\n\nAWS가 로컬에서 AWS API 동작을 시험하는 오픈소스 에뮬레이터를 공개했어. 코드 생성 자동화보다 실제 AWS와 비교하는 검증 공정이 실무적으로 중요한 사례야.\n\n### 배경과 발표 내용\n\nAWS Emulator는 기존 SDK·CLI의 엔드포인트를 로컬 HTTPS 주소로 바꿔 사용하는 Rust 기반 도구야. 별도 서비스 요금은 없지만 실제 AWS 자원을 사용하면 해당 요금이 발생해. 미구현 작업은 HTTP 501을 반환하므로 전체 AWS와 완전히 호환된다고 가정하면 안 돼.\n\n### 쉽게 이해하기\n\n클라우드 서버를 매번 준비하는 대신 개발 PC에 작은 연습장을 두는 방식이야. 게임의 클라우드 저장이나 비동기 작업 큐를 검증할 때 네트워크 밖으로 나가지 않는 반복 테스트에 활용할 수 있어.\n\n### 작동 원리와 기술 맥락\n\n실제 AWS에서 테스트를 실행한 결과와 에뮬레이터의 응답·오류·자원 동작을 비교해 호환성을 검증해. 기본은 로컬호스트이며 에뮬레이터 전용 자격 증명을 사용해. Rust 내장 모드는 인스턴스별 상태를 분리해 병렬 테스트를 지원하고, 보안 검증 환경으로 쓰지는 말라고 명시했어.\n\n### 왜 중요한가\n\nAmazon은 구현 코드 전체를 에이전트가 작성했다고 설명했어. 그러나 사람이 필요 없다는 뜻은 아니야. 사람은 테스트 작성·문제 탐지·수정 에이전트의 경계와 빌드·보안·회귀 검사를 통과해야 하는 병합·배포 절차를 설계했어.\n\n### 개발자 관점\n\n개발팀에 적용한다면 작은 API 집합부터 실제 서비스와 동작을 비교하자. 로컬 테스트 통과가 운영 IAM 권한·성능·보안을 보장하지는 않아. 자동 수정에도 독립적인 기준 테스트를 유지하는 구조가 핵심이야.\n\n### 출처와 날짜\n\n- [AWS·Amazon 공식 발표·문서](https://aws.amazon.com/blogs/aws/test-your-applications-against-aws-locally-with-aws-emulator/) · 발표 2026-11-11 · 확인 2026-11-13. 공식 발표일은 2026-11-11. 오늘 새 발표로 표기하지 않음.\n\n- [Amazon 에이전트 개발 공정 설명](https://www.aboutamazon.com/news/aws/how-autonomous-ai-agents-built-aws-emulator) · 발표 2026-11-11 · 확인 2026-11-13. 11월 11일 공개. 코드 작성·검토 자동화는 회사 측 설명이며 사람의 검증 공정 설계와 구분.\n\n## 3. 토큰 풀링을 학습에 반영해 검색 벡터를 줄이는 Sentence Transformers 실험\n\n**영역:** AI | **깊이:** 심층 | **발표일:** 2026-11-11\n\n### 핵심 요약\n\n문서의 토큰별 검색 벡터를 줄일 때 생기는 품질 손실을 학습 단계부터 완화하는 방법이 공개됐어. 코드·엔진 문서 검색의 저장 비용과 정확도를 함께 검토할 만한 기술이야.\n\n### 배경과 발표 내용\n\nSentence Transformers 6.3의 Token Pooling-Aware Training은 압축 전·후 표현의 손실을 함께 학습하는 방식이야. 공개 실험에서는 문서 벡터 수를 74.8% 줄였을 때 검색 성능 보존율이 일반 학습의 94.6%에서 97.8%로 개선됐어. 이는 각 모델의 비압축 성능 대비 수치이지 정답률 97.8%라는 뜻은 아니야.\n\n### 쉽게 이해하기\n\n멀티벡터 검색은 문서 전체를 벡터 하나로 요약하지 않고 여러 토큰의 벡터를 보관해. 단어별 단서를 잘 살릴 수 있지만 보관·검색 비용이 커지므로, 비슷한 벡터를 묶어 대표 벡터로 바꾸는 것이 풀링이야.\n\n### 작동 원리와 기술 맥락\n\n질의 토큰마다 가장 잘 맞는 문서 벡터를 찾고 그 유사도를 합치는 MaxSim 방식이 배경이야. 제안법은 문서 벡터를 군집화하고 평균·정규화한 표현까지 학습에 포함해. 공개 비교는 MS MARCO 12만 쌍, 1에포크 학습과 NanoBEIR 13개 평가 세트라는 제한된 조건이야.\n\n### 왜 중요한가\n\n게임 엔진 매뉴얼·C++ API 검색에서 메모리 부담을 줄일 후보지만, 벡터 수 감소가 전체 인덱스 용량이나 응답 시간의 같은 비율 감소를 의미하지는 않아. 메타데이터와 검색 구조 비용도 남아 있어.\n\n### 개발자 관점\n\n함수명·타입명·오버로드처럼 한 토큰 차이가 중요한 자체 질의 세트를 만들자. 풀링 비율별 검색 품질·용량·응답 시간을 함께 비교하고, 숫자 하나가 좋아졌다는 이유로 기존 검색을 바로 교체하지 않는 게 좋아.\n\n### 출처와 날짜\n\n- [Hugging Face 공식 발표·문서](https://huggingface.co/blog/token-pooling) · 발표 2026-11-11 · 확인 2026-11-13. 공식 발표일은 2026-11-11. 오늘 새 발표로 표기하지 않음.\n\n## 4. ChatGPT 기존 음성 모드, 12월 11일 종료 예정\n\n**영역:** AI | **깊이:** 빠른 요약 | **발표일:** 2026-11-10\n\nOpenAI는 11월 10일부터 Advanced·Standard Voice 종료를 안내했으며 종료 예정일은 12월 11일이야. 이후 해당 음성 대화는 기본 Live 음성으로 이어갈 수 있고 기존 대화 기록은 유지돼. 다만 실시간 영상·화면 공유는 GPT-Live가 해당 기능을 지원할 때까지 Advanced Voice를 계속 사용한다고 안내했어. 이번 안내를 개발자용 음성 API 종료 공지로 확대해서 해석하면 안 돼.\n\n### 출처와 날짜\n\n- [OpenAI 공식 발표·문서](https://help.openai.com/en/articles/20001638-retiring-advanced-and-standard-voice-in-chatgpt) · 발표 2026-11-10 · 확인 2026-11-13. 본문이 최초 안내일을 11월 10일로 명시. 11월 13일 KST 확인 시 도움말 갱신 표시는 18시간 전이며, 갱신과 최초 발표·12월 11일 종료 예정일을 구분.\n\n## 5. AlphaGenome 2, 조직 평균에서 개별 세포 상태의 유전 변이 예측으로\n\n**영역:** AI | **깊이:** 빠른 요약 | **발표일:** 2026-11-11\n\nDeepMind가 11월 11일 공개한 AlphaGenome 2는 DNA 서열에 목표 세포의 유형·상태를 함께 입력해 유전 변이 영향을 예측해. 조직 전체 평균에서 놓칠 수 있는 세포별 차이를 분석하는 연구 도구로, 비상업 연구 API와 상업 연구용 비공개 프리뷰를 제공해. Antigravity용 Skills는 아직 출시 예정이며, 모델은 임상·진단 용도로 검증되거나 승인되지 않았어.\n\n### 출처와 날짜\n\n- [Google DeepMind 공식 발표·문서](https://deepmind.google/blog/alphagenome-2-deciphering-how-cells-read-dna-to-better-understand-disease/) · 발표 2026-11-11 · 확인 2026-11-13. 공식 발표일은 2026-11-11. 오늘 새 발표로 표기하지 않음.\n\n## 6. UEFN 43.10, 공유 리소스 환경 예제와 실험적 카메라·감각 시스템 추가\n\n**영역:** 게임 개발 | **깊이:** 심층 | **발표일:** 2026-11-12\n\n### 핵심 요약\n\nUEFN에 고품질 환경을 효율적으로 구성하는 Shadows of the Abbey 예제가 추가됐다. 새 카메라·감각 기능은 실험 단계로 이를 사용한 섬은 아직 발행할 수 없다.\n\n### 배경과 발표 내용\n\nEpic은 11월 12일 Fortnite 생태계 43.10을 출시했다. Quixel 기반 환경 예제와 함께 모듈형 Scene Graph 카메라, 시각·청각·접촉에 반응하는 Perception API, Verse Loot Pool API를 실험적으로 도입했다.\n\n### 쉽게 이해하기\n\n건물마다 별도의 벽돌 사진을 복사하는 대신 공용 재료 창고를 참조하는 방식으로 생각하면 쉽다. 예제의 식생·건축물·길 등이 텍스처와 머티리얼 같은 자원을 공유해 메모리 부담을 줄인다.\n\n### 작동 원리와 기술 맥락\n\n카메라는 이동·목표 추적·부드러운 보간·충돌 회피 동작을 모듈로 조합한다. Perception은 엔티티가 무엇을 보거나 듣거나 접촉했는지에 따라 게임 동작을 구성하도록 Scene Graph와 Verse 인터페이스를 제공한다. 리소스 공유와 모듈 조합은 서로 다른 최적화·구조화 수단이며, 이 업데이트가 모든 장면의 프레임 속도를 자동으로 높인다는 뜻은 아니다.\n\n### 왜 중요한가\n\n클라이언트 개발 학습에서는 에셋 중복 비용과 동작 조합을 실제 예제에서 관찰할 기회다. 다만 환경 예제의 활용 가능성과 실험적 API의 발행 제한을 혼동하면 출시 일정에 영향을 줄 수 있다.\n\n### 개발자 관점\n\n개발자 관점에서는 예제를 복제한 실험 프로젝트에서 공유 텍스처 수와 메모리 사용량을 먼저 비교할 만하다. C++ 엔진에서도 공통 리소스 참조와 카메라 책임 분리는 응용 가능한 설계지만, UEFN API를 그대로 사용할 수 있다는 의미는 아니다. 새 실험 기능은 출시용 분기와 분리하고 실제 기기의 프레임 시간도 측정하자.\n\n### 출처와 날짜\n\n- [Epic 공식 43.10 릴리스 노트](https://dev.epicgames.com/documentation/fortnite/43-10-fortnite-ecosystem-updates-and-release-notes?lang=en-US) · 발표 2026-11-12 · 확인 2026-11-13. 본문에 출시일 2026년 11월 12일 명시.\n\n- [Epic 공식 개발자 포럼 공지](https://forums.unrealengine.com/t/fortnite-ecosystem-v43-10/2854484) · 발표 2026-11-12 · 확인 2026-11-13. 11월 12일 공지. 실험 기능을 사용한 섬의 발행 불가 명시.\n\n## 7. Steam 도전과제 세트 정식 공개, 추가 콘텐츠와 기존 완료 기록을 분리\n\n**영역:** 게임 개발 | **깊이:** 심층 | **발표일:** 2026-11-11\n\n### 핵심 요약\n\nSteam Achievement Sets가 베타에서 정식 기능으로 전환됐다. DLC·시즌의 새 목표를 추가하면서 기존 완료 기록을 보존할 수 있다.\n\n### 배경과 발표 내용\n\nValve는 11월 11일 도전과제 세트를 전체 사용자에게 공개했다. 기본 게임과 DLC의 진행도를 나누고, 더 이상 달성할 수 없는 항목은 보관·퇴역 처리해 기존 획득 기록과 향후 완료 가능성을 함께 관리한다.\n\n### 쉽게 이해하기\n\n이미 딴 졸업장을 새 선택 과목이 생겼다는 이유로 취소하지 않는 방식이다. 과제 목록의 현재 상태와 과거에 완료했다는 사실을 구분한다.\n\n### 작동 원리와 기술 맥락\n\n기존 Steamworks 도전과제는 앱별로 정의하며 ISteamUserStats에서 조회·해금한다. SetAchievement 뒤 StoreStats로 업로드하고 완료 콜백을 확인하는 흐름은 공식 문서에 설명돼 있다. 이번 세트 기능은 목표 묶음과 완료 표시의 관리 확장이므로 이를 기존 저장 API 전체 교체로 해석하면 안 된다.\n\n### 왜 중요한가\n\n라이브 게임에서 콘텐츠 추가가 플레이어의 달성감을 훼손하는 문제를 줄인다. UI 변경뿐 아니라 완료 상태의 수명과 데이터 이전을 다루는 설계 사례다.\n\n### 개발자 관점\n\nC++ 클라이언트에서는 기존 API 식별자와 획득 기록을 유지한 채 신규 묶음의 표시를 검증하자. 개발상 권고로 신규·기존 완료·DLC 미보유·시즌 종료 계정을 나눠 회귀 테스트하고, 해금 업로드 실패를 완료로 표시하지 않는지도 확인할 만하다.\n\n### 출처와 날짜\n\n- [Valve 정식 공개 공지](https://steamcommunity.com/gid/103582791457287600/announcements/detail/685269908095762672) · 발표 2026-11-11 · 확인 2026-11-13. 공식 Steam 뉴스 목록에서 11월 11일과 개별 공지 링크 확인. 10월 15일 베타의 후속 정식 공개.\n\n- [Steamworks 기존 통계·도전과제 문서](https://partner.steamgames.com/doc/features/achievements) · 발표 날짜 미기재 · 확인 2026-11-13. 발표일이 없는 상시 문서. 기존 API 작동 원리의 배경 자료이며 신규 발표로 취급하지 않음.\n\n## 8. Steam Linux 클라이언트, 64비트와 Runtime 컨테이너로 전환\n\n**영역:** 게임 개발 | **깊이:** 빠른 요약 | **발표일:** 2026-11-11\n\n11월 11일 Steam 안정판 업데이트에서 Linux 클라이언트가 64비트로 전환되고 Steam Runtime 컨테이너 안에서 실행하도록 바뀌었다. Valve는 배포판 간 실행 환경의 일관성을 높이기 위한 변경이라고 설명했다. 이는 클라이언트의 변경으로 모든 게임이 자동으로 64비트가 된다는 뜻은 아니며, 개발팀은 실행·오버레이·컨트롤러 연동을 다시 점검할 만하다.\n\n### 출처와 날짜\n\n- [Valve 안정판 업데이트](https://steamcommunity.com/gid/103582791457287600/announcements/detail/678515036155543748) · 발표 2026-11-11 · 확인 2026-11-13. 공식 Steam 뉴스 목록의 November 11th 안정판 변경 기록 확인.\n\n## 9. Paradox, 2027년 1월 Mattias Lilja CEO 취임 발표\n\n**영역:** 게임 전반 | **깊이:** 빠른 요약 | **발표일:** 2026-11-11\n\nParadox는 11월 11일 부CEO Mattias Lilja가 2027년 1월 4일 CEO에 취임한다고 발표했다. Fredrik Wester는 그때까지 CEO를 유지한 뒤 이사회에서 장기 전략에 참여한다. 회사는 핵심 사업과 게임 디자인·모더 및 플레이어 도구 투자를 강조했지만, 게임별 기술 지원이나 도구 출시 일정의 구체적 변경은 제시하지 않았다.\n\n### 출처와 날짜\n\n- [Paradox 공식 공시](https://www.paradoxinteractive.com/media/press-releases/paradox-interactive/mattias-lilja-takes-over-as-ceo-and-will-lead-paradox-interactive-ab-publ-to-its-next-level) · 발표 2026-11-11 · 확인 2026-11-13. 공시 시각 11월 11일 18:25 CET. CEO 취임일은 2027년 1월 4일.\n"
+}
