@@ -1,0 +1,295 @@
+{
+  "date": "2026-11-14",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 11월 14일(토) 한국시간 오전 조사 기준. AI·게임 개발·게임 전반 이슈의 공식 발표를 확인했어. 최초 발표와 후속 적용·출시 예정일을 구분하고, 이전 브리핑에서 변화 없이 반복되는 소식은 제외했어. 공급자 성능 주장과 개발 적용 제안은 직접 실행한 측정 결과가 아니야.",
+  "items": [
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "Gemini 4 Hydrogen, 빠른 실행 모델과 자동 모델 전환 공개",
+      "source": "Google",
+      "published": "2026-11-12",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/",
+      "tags": [
+        "코딩 에이전트",
+        "모델 선택"
+      ],
+      "short_summary": "Google은 일상적인 코딩·에이전트 작업용 Gemini 4 Hydrogen을 공개했다 Antigravity의 Orchestrator는 한 세션에서 Carbon과 Hydrogen 등을 동적으로 전환한다.",
+      "summary": "Google은 일상적인 코딩·에이전트 작업용 Gemini 4 Hydrogen을 공개했다. Antigravity의 Orchestrator는 한 세션에서 Carbon과 Hydrogen 등을 동적으로 전환한다. Gemini API·AI Studio 등으로 제공 범위를 넓히며 Antigravity 이용은 유료 Google AI Pro·Ultra 대상이다.",
+      "easy_explainer": "설계와 어려운 판단에는 강한 모델을, 반복 구현과 검사에는 빠른 모델을 배치하는 방식이다. 여러 모델을 쓰는 것 자체보다 작업 경계와 결과 합치는 절차가 중요하다.",
+      "technical_context": "low·medium·high·xhigh의 네 추론 단계를 제공하며 high가 기본이다. 발표 가격은 100만 입력 토큰당 1.50달러, 출력은 7.50달러이고 100만 토큰 문맥 전체에 동일 단가를 적용한다. Orchestrator의 할당량 24% 감소·완료 시간 19% 단축은 회사의 Terminal-Bench 4.0 비교 결과이며 모든 저장소에 적용되는 보장은 아니다.",
+      "why_it_matters": "게임 개발 도구·테스트 자동화에서 비용과 대기 시간을 함께 줄일 후보지만, 작업을 여러 모델로 나누어도 최종 빌드와 회귀 검사는 필요하다.",
+      "developer_view": "자체 버그 수정 세트에서 성공률·검토 시간·전체 토큰 비용을 함께 비교하자. 병렬 작업은 독립 작업 공간에서 수행하고 같은 파일 수정은 최종 통합 단계에서 충돌을 확인하는 편이 안전하다.",
+      "sources": [
+        {
+          "label": "Google 공식 발표",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/",
+          "published": "2026-11-12",
+          "accessed": "2026-11-14",
+          "date_note": "최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음."
+        }
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "NVIDIA CEO 교체, Colette Kress가 임시 CEO 겸임",
+      "source": "NVIDIA",
+      "published": "2026-11-12",
+      "url": "https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition",
+      "tags": [
+        "NVIDIA",
+        "경영"
+      ],
+      "short_summary": "NVIDIA는 Jensen Huang이 사장·CEO·이사직에서 물러나고 CFO Colette Kress가 임시 CEO를 겸임한다고 발표했다 SEC 공시상 이사회가 사임을 수락한 날은 11월 11일이며 보도자료 발표는 12일이다.",
+      "summary": "NVIDIA는 Jensen Huang이 사장·CEO·이사직에서 물러나고 CFO Colette Kress가 임시 CEO를 겸임한다고 발표했다. SEC 공시상 이사회가 사임을 수락한 날은 11월 11일이며 보도자료 발표는 12일이다. 이사회는 내·외부 영구 후임자를 찾으며 회사 운영과 제품 로드맵을 계속하겠다고 밝혔다. GPU·개발 도구 지원 정책 변경을 발표한 것은 아니다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "NVIDIA 공식 발표",
+          "url": "https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition",
+          "published": "2026-11-12",
+          "accessed": "2026-11-14",
+          "date_note": "최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음."
+        },
+        {
+          "label": "NVIDIA SEC 8-K",
+          "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000082/nvda-20261111.htm",
+          "published": "2026-11-12",
+          "accessed": "2026-11-14",
+          "date_note": "서명·보도자료 날짜는 11월 12일, 사임 수락·임명 사건일은 11월 11일."
+        }
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "TRELLIS.2 LoRA 예제, 3D 생성에서 고칠 부분만 학습하기",
+      "source": "Hugging Face",
+      "published": "2026-11-12",
+      "url": "https://huggingface.co/blog/3d-lora-finetuning",
+      "tags": [
+        "3D 생성",
+        "LoRA",
+        "에셋"
+      ],
+      "short_summary": "Hugging Face가 TRELLIS.2를 특정 3D 자산에 맞게 조정하는 학습 스크립트와 컨테이너를 공개했다 새 기반 모델 발표가 아니라 기존 모델의 구조·형상 단계만 미세 조정하는 실습이다.",
+      "summary": "Hugging Face가 TRELLIS.2를 특정 3D 자산에 맞게 조정하는 학습 스크립트와 컨테이너를 공개했다. 새 기반 모델 발표가 아니라 기존 모델의 구조·형상 단계만 미세 조정하는 실습이다.",
+      "easy_explainer": "잘 그리는 화가를 처음부터 다시 교육하기보다 신발 밑창처럼 자주 틀리는 부분만 보충 수업하는 방식이다. LoRA는 원래 가중치를 고정하고 작은 추가 행렬을 학습한다.",
+      "technical_context": "파이프라인은 이미지 특징 추출, 거친 점유 구조, 상세 형상, 재질 생성으로 나뉜다. 예제는 GSO 신발 188개를 이용해 구조·형상 DiT에만 LoRA를 넣는다. 데이터의 색상 지도에는 조명 효과가 섞여 있고 별도 재질 지도가 부족하므로 재질 단계는 고정했다.",
+      "why_it_matters": "게임용 자산 자동화에서는 데이터가 어떤 정보를 담는지 먼저 판단해야 한다. 구워진 조명을 표면 색으로 학습하면 게임 엔진의 실제 조명과 중복될 수 있다.",
+      "developer_view": "생성 GLB를 바로 출시용 자산으로 보지 말자. 개발상 권고로 토폴로지·폴리곤 수·충돌체·LOD·재질과 라이선스를 별도로 검수하고, 학습에 쓰지 않은 자산으로 형상 개선을 비교하자.",
+      "sources": [
+        {
+          "label": "Hugging Face 공식 발표",
+          "url": "https://huggingface.co/blog/3d-lora-finetuning",
+          "published": "2026-11-12",
+          "accessed": "2026-11-14",
+          "date_note": "최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음."
+        }
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "C++ Dynamic Debugging 정식화, 최적화 빌드에서 필요한 함수만 들여다보기",
+      "source": "Microsoft",
+      "published": "2026-11-12",
+      "url": "https://devblogs.microsoft.com/cppblog/c-dynamic-debugging-is-now-generally-available/",
+      "tags": [
+        "C++",
+        "디버깅",
+        "MSVC"
+      ],
+      "short_summary": "C++ Dynamic Debugging이 Visual Studio 2026 모든 채널과 MSVC Build Tools 14.52에서 정식 제공된다 최적화된 대형 게임을 실행하면서 중단점을 건 함수나 진입한 함수의 지역 변수와 소스 흐름을 조사할 수 있다.",
+      "summary": "C++ Dynamic Debugging이 Visual Studio 2026 모든 채널과 MSVC Build Tools 14.52에서 정식 제공된다. 최적화된 대형 게임을 실행하면서 중단점을 건 함수나 진입한 함수의 지역 변수와 소스 흐름을 조사할 수 있다.",
+      "easy_explainer": "전체 게임을 느린 점검 모드로 바꾸는 대신 문제 부품만 자세히 관찰하는 방식이다. 최적화 과정에서 사라지거나 재배치된 변수를 보기 위해 디버거가 준비된 비최적화 버전을 사용한다.",
+      "technical_context": "빌드 때 /dynamicdeopt로 최적화 바이너리와 비최적화 대체 바이너리를 함께 만든다. 중단점 또는 Step Into에서 해당 함수의 대체 코드를 사용하며 나머지는 최적화 상태를 유지한다. x64 전용이고 설정 뒤 재빌드가 필요하다. Whole Program Optimization과 호환되지 않으며 공식 문서는 /GL·/OPT:ICF 비활성화를 안내한다. UE 5.6 이상은 WindowsPlatform.bDynamicDebugging = true 설정을 지원한다.",
+      "why_it_matters": "일반 Debug 빌드가 너무 느려 재현하기 어려운 게임 문제를 조사할 때 반복 시간을 줄인다. 출시 바이너리의 모든 최적화를 그대로 유지한 채 관찰한다는 뜻은 아니다.",
+      "developer_view": "별도 진단 빌드 구성을 만들고 프레임 시간·빌드 시간·산출물 크기를 비교하자. 타이밍 의존 결함은 비최적화와 중단점이 실행 순서에 영향을 줄 수 있으므로 로그·프로파일링·원래 최적화 빌드에서도 교차 확인하자.",
+      "sources": [
+        {
+          "label": "Microsoft 공식 발표",
+          "url": "https://devblogs.microsoft.com/cppblog/c-dynamic-debugging-is-now-generally-available/",
+          "published": "2026-11-12",
+          "accessed": "2026-11-14",
+          "date_note": "최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음."
+        },
+        {
+          "label": "Microsoft Learn 작동 원리와 제약",
+          "url": "https://learn.microsoft.com/en-us/visualstudio/debugger/cpp-dynamic-debugging?view=visualstudio",
+          "published": null,
+          "accessed": "2026-11-14",
+          "date_note": "상시 갱신 기술 문서. 최초 도입은 VS2022 17.14, 이번 소식은 정식 제공 전환."
+        }
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "PS5 QSSR 적용 확대, 출시된 패치와 예정 업데이트를 구분",
+      "source": "Sony Interactive Entertainment",
+      "published": "2026-11-13",
+      "url": "https://blog.playstation.com/2026/11/13/qssr-arrives-in-marvels-spider-man-2-control-resonant-the-finals-arc-raiders-and-hell-let-loose-vietnam/",
+      "tags": [
+        "업스케일링",
+        "PS5",
+        "렌더링"
+      ],
+      "short_summary": "Sony가 QSSR 지원 게임 확대를 발표했다 Spider-Man 2 패치는 이미 제공되고 Control Resonant는 12월 예정이며, ARC Raiders·The Finals·No Man’s Sky·Hell Let Loose: Vietnam은 향후 업데이트로 안내됐다.",
+      "summary": "Sony가 QSSR 지원 게임 확대를 발표했다. Spider-Man 2 패치는 이미 제공되고 Control Resonant는 12월 예정이며, ARC Raiders·The Finals·No Man’s Sky·Hell Let Loose: Vietnam은 향후 업데이트로 안내됐다.",
+      "easy_explainer": "업스케일링은 낮은 해상도로 그린 화면의 세부 정보를 복원해 최종 화면을 만드는 기술이다. 선명한 정지 화면뿐 아니라 움직일 때 가장자리와 작은 무늬가 안정적인지도 중요하다.",
+      "technical_context": "10월 1일 최초 발표된 QSSR은 PSSR 계열의 간소화된 신경망과 PS5에 맞춘 구현을 사용한다. 이번 공지는 새 기술의 최초 공개가 아니라 적용 작품 확대다. PSSR과 인터페이스를 공유하지만 PS5 Pro의 PSSR과 성능·화질이 같다는 뜻은 아니다.",
+      "why_it_matters": "같은 콘솔에서도 후처리와 복원 기술을 교체해 화질을 개선할 수 있음을 보여준다. 하지만 개별 게임 패치가 필요하며 시스템 업데이트만으로 모든 게임이 바뀌지는 않는다.",
+      "developer_view": "개발 관점에서는 이동 중 가는 선·식생·반투명 효과·UI 경계와 GPU 시간을 비교하자. 실제 SDK 입력 규약은 별도 문서로 확인해야 하며 공개 발표만으로 내부 네트워크 구조나 수치 성능을 추정하지 말자.",
+      "sources": [
+        {
+          "label": "Sony Interactive Entertainment 공식 발표",
+          "url": "https://blog.playstation.com/2026/11/13/qssr-arrives-in-marvels-spider-man-2-control-resonant-the-finals-arc-raiders-and-hell-let-loose-vietnam/",
+          "published": "2026-11-13",
+          "accessed": "2026-11-14",
+          "date_note": "최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음."
+        },
+        {
+          "label": "QSSR 최초 공식 발표",
+          "url": "https://blog.playstation.com/2026/10/01/ai-upscaling-is-coming-to-ps5/",
+          "published": "2026-10-01",
+          "accessed": "2026-11-14",
+          "date_note": "기술 배경 자료. 오늘 신규 발표로 취급하지 않음."
+        }
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "War Thunder에 DLSS 5 적용, 신경 렌더링과 프레임 생성을 구분하자",
+      "source": "NVIDIA",
+      "published": "2026-11-12",
+      "url": "https://www.nvidia.com/en-us/geforce/news/war-thunder-dlss-5-3d-guided-neural-rendering-out-now/",
+      "tags": [
+        "신경 렌더링",
+        "DLSS",
+        "그래픽 파이프라인"
+      ],
+      "short_summary": "NVIDIA는 11월 12일 War Thunder의 Eagle’s Shadow 업데이트에 DLSS 5가 포함됐다고 발표했다 RTX 50 시리즈와 RTX Spark를 대상으로 하며, 게임의 조명과 재질 표현을 보강하는 기술이다.",
+      "summary": "NVIDIA는 11월 12일 War Thunder의 Eagle’s Shadow 업데이트에 DLSS 5가 포함됐다고 발표했다. RTX 50 시리즈와 RTX Spark를 대상으로 하며, 게임의 조명과 재질 표현을 보강하는 기술이다.",
+      "easy_explainer": "낮은 해상도를 크게 복원하는 업스케일링이나 중간 화면을 만드는 프레임 생성과는 역할이 다르다. 엔진이 만든 장면을 바탕으로 최종 화면의 재질·조명 표현을 보강하는 단계라고 이해하면 쉽다.",
+      "technical_context": "공식 설명상 색상 프레임과 모션 벡터를 입력으로 사용한다. 개발자는 장면별 모델 선택, 구조·색조 강도, 의미 기반 및 엔진 수준 마스크로 적용 범위를 조정할 수 있다. 발표의 모델 속도 2배는 이전 모델 대비 주장이지 게임 전체 FPS 2배를 뜻하지 않는다.",
+      "why_it_matters": "렌더링 담당자는 화질뿐 아니라 의도한 미술 스타일과 움직일 때의 일관성을 검증해야 한다. 공식 성능 예에는 다중 프레임 생성이 포함되므로 표시 FPS를 실제 게임 시뮬레이션 주기와 동일시하면 안 된다.",
+      "developer_view": "개발 학습 제안: 동일 카메라 경로에서 기능을 끈 기준 화면과 비교하고, 얇은 물체·투명 표면·급격한 움직임·UI 경계를 따로 점검하자. GPU 시간과 입력 지연도 분리해 측정해야 한다. 이번 브리핑에서 SDK 실행이나 성능 재현은 하지 않았다.",
+      "sources": [
+        {
+          "label": "NVIDIA 공식 지원 확대 발표",
+          "url": "https://www.nvidia.com/en-us/geforce/news/war-thunder-dlss-5-3d-guided-neural-rendering-out-now/",
+          "published": "2026-11-12",
+          "accessed": "2026-11-14",
+          "date_note": "11월 12일 게임 지원 확대. 모델은 10월 버전, Where Winds Meet 지원은 11월 23일 예정."
+        }
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "Xbox 원작 PC 호환 목록, 21개 추가해 총 25개",
+      "source": "Xbox",
+      "published": "2026-11-12",
+      "url": "https://news.xbox.com/en-us/2026/11/12/25-original-xbox-games-now-available-on-pc/",
+      "tags": [
+        "게임 보존",
+        "하위 호환"
+      ],
+      "short_summary": "Xbox는 PC 하위 호환에 원작 21개를 추가해 총 25개로 확대했다 전 작품이 마우스·키보드를 지원하고 기존 4개 게임의 성능·안정성도 개선했다.",
+      "summary": "Xbox는 PC 하위 호환에 원작 21개를 추가해 총 25개로 확대했다. 전 작품이 마우스·키보드를 지원하고 기존 4개 게임의 성능·안정성도 개선했다. KOTOR 1·2, BLiNX, Conker에는 도전과제가 추가되며 Xbox One·Series에도 적용된다. Windows 11과 지원 지역 조건이 있고 작품 구매나 Game Pass가 필요할 수 있다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Xbox 공식 발표",
+          "url": "https://news.xbox.com/en-us/2026/11/12/25-original-xbox-games-now-available-on-pc/",
+          "published": "2026-11-12",
+          "accessed": "2026-11-14",
+          "date_note": "최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음."
+        }
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "Wolfenstein 3 제작 공식 확인, Halo Firefight는 겨울 무료 업데이트",
+      "source": "Xbox",
+      "published": "2026-11-12",
+      "url": "https://news.xbox.com/en-us/2026/11/12/xbox-25th-anniversary-news-recap/",
+      "tags": [
+        "Wolfenstein",
+        "Halo",
+        "Xbox"
+      ],
+      "short_summary": "Xbox 25주년 발표에서 MachineGames의 Wolfenstein 3 제작이 공식 확인됐으며 BJ와 Grace의 기존 배우가 복귀한다 출시일은 이번 공지에서 제시하지 않았다.",
+      "summary": "Xbox 25주년 발표에서 MachineGames의 Wolfenstein 3 제작이 공식 확인됐으며 BJ와 Grace의 기존 배우가 복귀한다. 출시일은 이번 공지에서 제시하지 않았다. Halo: Campaign Evolved의 협동 생존 모드 Firefight는 겨울 무료 업데이트로 예고됐고 Fable의 새 퀘스트 플레이도 공개됐다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Xbox 공식 발표",
+          "url": "https://news.xbox.com/en-us/2026/11/12/xbox-25th-anniversary-news-recap/",
+          "published": "2026-11-12",
+          "accessed": "2026-11-14",
+          "date_note": "최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음."
+        }
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "Vindictus: Defying Fate, 2027년 PS5 출시 발표",
+      "source": "Nexon·PlayStation",
+      "published": "2026-11-12",
+      "url": "https://blog.playstation.com/2026/11/12/vindictus-defying-fate-comes-to-ps5-next-year/",
+      "tags": [
+        "넥슨",
+        "액션 RPG"
+      ],
+      "short_summary": "넥슨은 Vindictus: Defying Fate의 2027년 PS5 출시를 발표했다 무기를 중심으로 영웅별 회피·방어·반격 스타일을 차별화하고, 기본 여정은 싱글 플레이로 구성한다고 설명했다.",
+      "summary": "넥슨은 Vindictus: Defying Fate의 2027년 PS5 출시를 발표했다. 무기를 중심으로 영웅별 회피·방어·반격 스타일을 차별화하고, 기본 여정은 싱글 플레이로 구성한다고 설명했다. 다른 플레이어와 강적에 도전하는 멀티플레이 콘텐츠도 준비 중이지만 구체적인 출시일이나 제공 범위는 확정해 쓰지 않는다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Nexon·PlayStation 공식 발표",
+          "url": "https://blog.playstation.com/2026/11/12/vindictus-defying-fate-comes-to-ps5-next-year/",
+          "published": "2026-11-12",
+          "accessed": "2026-11-14",
+          "date_note": "최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음."
+        }
+      ],
+      "checked": "2026-11-14"
+    }
+  ],
+  "original_markdown": "# 2026-11-14 게임·AI 데일리 브리핑\n\n2026년 11월 14일(토) 한국시간 오전 조사 기준. AI·게임 개발·게임 전반 이슈의 공식 발표를 확인했어. 최초 발표와 후속 적용·출시 예정일을 구분하고, 이전 브리핑에서 변화 없이 반복되는 소식은 제외했어. 공급자 성능 주장과 개발 적용 제안은 직접 실행한 측정 결과가 아니야.\n\n## 1. Gemini 4 Hydrogen, 빠른 실행 모델과 자동 모델 전환 공개\n\n**영역:** AI | **깊이:** 심층 | **발표일:** 2026-11-12\n\n### 핵심 요약\n\nGoogle은 일상적인 코딩·에이전트 작업용 Gemini 4 Hydrogen을 공개했다 Antigravity의 Orchestrator는 한 세션에서 Carbon과 Hydrogen 등을 동적으로 전환한다.\n\n### 배경과 발표 내용\n\nGoogle은 일상적인 코딩·에이전트 작업용 Gemini 4 Hydrogen을 공개했다. Antigravity의 Orchestrator는 한 세션에서 Carbon과 Hydrogen 등을 동적으로 전환한다. Gemini API·AI Studio 등으로 제공 범위를 넓히며 Antigravity 이용은 유료 Google AI Pro·Ultra 대상이다.\n\n### 쉽게 이해하기\n\n설계와 어려운 판단에는 강한 모델을, 반복 구현과 검사에는 빠른 모델을 배치하는 방식이다. 여러 모델을 쓰는 것 자체보다 작업 경계와 결과 합치는 절차가 중요하다.\n\n### 작동 원리와 기술 맥락\n\nlow·medium·high·xhigh의 네 추론 단계를 제공하며 high가 기본이다. 발표 가격은 100만 입력 토큰당 1.50달러, 출력은 7.50달러이고 100만 토큰 문맥 전체에 동일 단가를 적용한다. Orchestrator의 할당량 24% 감소·완료 시간 19% 단축은 회사의 Terminal-Bench 4.0 비교 결과이며 모든 저장소에 적용되는 보장은 아니다.\n\n### 왜 중요한가\n\n게임 개발 도구·테스트 자동화에서 비용과 대기 시간을 함께 줄일 후보지만, 작업을 여러 모델로 나누어도 최종 빌드와 회귀 검사는 필요하다.\n\n### 개발자 관점\n\n자체 버그 수정 세트에서 성공률·검토 시간·전체 토큰 비용을 함께 비교하자. 병렬 작업은 독립 작업 공간에서 수행하고 같은 파일 수정은 최종 통합 단계에서 충돌을 확인하는 편이 안전하다.\n\n### 출처와 날짜\n\n- [Google 공식 발표](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/) · 발표 2026-11-12 · 확인 2026-11-14. 최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음.\n\n## 2. NVIDIA CEO 교체, Colette Kress가 임시 CEO 겸임\n\n**영역:** AI | **깊이:** 빠른 요약 | **발표일:** 2026-11-12\n\nNVIDIA는 Jensen Huang이 사장·CEO·이사직에서 물러나고 CFO Colette Kress가 임시 CEO를 겸임한다고 발표했다. SEC 공시상 이사회가 사임을 수락한 날은 11월 11일이며 보도자료 발표는 12일이다. 이사회는 내·외부 영구 후임자를 찾으며 회사 운영과 제품 로드맵을 계속하겠다고 밝혔다. GPU·개발 도구 지원 정책 변경을 발표한 것은 아니다.\n\n### 출처와 날짜\n\n- [NVIDIA 공식 발표](https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition) · 발표 2026-11-12 · 확인 2026-11-14. 최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음.\n\n- [NVIDIA SEC 8-K](https://www.sec.gov/Archives/edgar/data/1045810/000104581026000082/nvda-20261111.htm) · 발표 2026-11-12 · 확인 2026-11-14. 서명·보도자료 날짜는 11월 12일, 사임 수락·임명 사건일은 11월 11일.\n\n## 3. TRELLIS.2 LoRA 예제, 3D 생성에서 고칠 부분만 학습하기\n\n**영역:** AI | **깊이:** 심층 | **발표일:** 2026-11-12\n\n### 핵심 요약\n\nHugging Face가 TRELLIS.2를 특정 3D 자산에 맞게 조정하는 학습 스크립트와 컨테이너를 공개했다 새 기반 모델 발표가 아니라 기존 모델의 구조·형상 단계만 미세 조정하는 실습이다.\n\n### 배경과 발표 내용\n\nHugging Face가 TRELLIS.2를 특정 3D 자산에 맞게 조정하는 학습 스크립트와 컨테이너를 공개했다. 새 기반 모델 발표가 아니라 기존 모델의 구조·형상 단계만 미세 조정하는 실습이다.\n\n### 쉽게 이해하기\n\n잘 그리는 화가를 처음부터 다시 교육하기보다 신발 밑창처럼 자주 틀리는 부분만 보충 수업하는 방식이다. LoRA는 원래 가중치를 고정하고 작은 추가 행렬을 학습한다.\n\n### 작동 원리와 기술 맥락\n\n파이프라인은 이미지 특징 추출, 거친 점유 구조, 상세 형상, 재질 생성으로 나뉜다. 예제는 GSO 신발 188개를 이용해 구조·형상 DiT에만 LoRA를 넣는다. 데이터의 색상 지도에는 조명 효과가 섞여 있고 별도 재질 지도가 부족하므로 재질 단계는 고정했다.\n\n### 왜 중요한가\n\n게임용 자산 자동화에서는 데이터가 어떤 정보를 담는지 먼저 판단해야 한다. 구워진 조명을 표면 색으로 학습하면 게임 엔진의 실제 조명과 중복될 수 있다.\n\n### 개발자 관점\n\n생성 GLB를 바로 출시용 자산으로 보지 말자. 개발상 권고로 토폴로지·폴리곤 수·충돌체·LOD·재질과 라이선스를 별도로 검수하고, 학습에 쓰지 않은 자산으로 형상 개선을 비교하자.\n\n### 출처와 날짜\n\n- [Hugging Face 공식 발표](https://huggingface.co/blog/3d-lora-finetuning) · 발표 2026-11-12 · 확인 2026-11-14. 최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음.\n\n## 4. C++ Dynamic Debugging 정식화, 최적화 빌드에서 필요한 함수만 들여다보기\n\n**영역:** 게임 개발 | **깊이:** 심층 | **발표일:** 2026-11-12\n\n### 핵심 요약\n\nC++ Dynamic Debugging이 Visual Studio 2026 모든 채널과 MSVC Build Tools 14.52에서 정식 제공된다 최적화된 대형 게임을 실행하면서 중단점을 건 함수나 진입한 함수의 지역 변수와 소스 흐름을 조사할 수 있다.\n\n### 배경과 발표 내용\n\nC++ Dynamic Debugging이 Visual Studio 2026 모든 채널과 MSVC Build Tools 14.52에서 정식 제공된다. 최적화된 대형 게임을 실행하면서 중단점을 건 함수나 진입한 함수의 지역 변수와 소스 흐름을 조사할 수 있다.\n\n### 쉽게 이해하기\n\n전체 게임을 느린 점검 모드로 바꾸는 대신 문제 부품만 자세히 관찰하는 방식이다. 최적화 과정에서 사라지거나 재배치된 변수를 보기 위해 디버거가 준비된 비최적화 버전을 사용한다.\n\n### 작동 원리와 기술 맥락\n\n빌드 때 /dynamicdeopt로 최적화 바이너리와 비최적화 대체 바이너리를 함께 만든다. 중단점 또는 Step Into에서 해당 함수의 대체 코드를 사용하며 나머지는 최적화 상태를 유지한다. x64 전용이고 설정 뒤 재빌드가 필요하다. Whole Program Optimization과 호환되지 않으며 공식 문서는 /GL·/OPT:ICF 비활성화를 안내한다. UE 5.6 이상은 WindowsPlatform.bDynamicDebugging = true 설정을 지원한다.\n\n### 왜 중요한가\n\n일반 Debug 빌드가 너무 느려 재현하기 어려운 게임 문제를 조사할 때 반복 시간을 줄인다. 출시 바이너리의 모든 최적화를 그대로 유지한 채 관찰한다는 뜻은 아니다.\n\n### 개발자 관점\n\n별도 진단 빌드 구성을 만들고 프레임 시간·빌드 시간·산출물 크기를 비교하자. 타이밍 의존 결함은 비최적화와 중단점이 실행 순서에 영향을 줄 수 있으므로 로그·프로파일링·원래 최적화 빌드에서도 교차 확인하자.\n\n### 출처와 날짜\n\n- [Microsoft 공식 발표](https://devblogs.microsoft.com/cppblog/c-dynamic-debugging-is-now-generally-available/) · 발표 2026-11-12 · 확인 2026-11-14. 최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음.\n\n- [Microsoft Learn 작동 원리와 제약](https://learn.microsoft.com/en-us/visualstudio/debugger/cpp-dynamic-debugging?view=visualstudio) · 발표 날짜 미기재 · 확인 2026-11-14. 상시 갱신 기술 문서. 최초 도입은 VS2022 17.14, 이번 소식은 정식 제공 전환.\n\n## 5. PS5 QSSR 적용 확대, 출시된 패치와 예정 업데이트를 구분\n\n**영역:** 게임 개발 | **깊이:** 심층 | **발표일:** 2026-11-13\n\n### 핵심 요약\n\nSony가 QSSR 지원 게임 확대를 발표했다 Spider-Man 2 패치는 이미 제공되고 Control Resonant는 12월 예정이며, ARC Raiders·The Finals·No Man’s Sky·Hell Let Loose: Vietnam은 향후 업데이트로 안내됐다.\n\n### 배경과 발표 내용\n\nSony가 QSSR 지원 게임 확대를 발표했다. Spider-Man 2 패치는 이미 제공되고 Control Resonant는 12월 예정이며, ARC Raiders·The Finals·No Man’s Sky·Hell Let Loose: Vietnam은 향후 업데이트로 안내됐다.\n\n### 쉽게 이해하기\n\n업스케일링은 낮은 해상도로 그린 화면의 세부 정보를 복원해 최종 화면을 만드는 기술이다. 선명한 정지 화면뿐 아니라 움직일 때 가장자리와 작은 무늬가 안정적인지도 중요하다.\n\n### 작동 원리와 기술 맥락\n\n10월 1일 최초 발표된 QSSR은 PSSR 계열의 간소화된 신경망과 PS5에 맞춘 구현을 사용한다. 이번 공지는 새 기술의 최초 공개가 아니라 적용 작품 확대다. PSSR과 인터페이스를 공유하지만 PS5 Pro의 PSSR과 성능·화질이 같다는 뜻은 아니다.\n\n### 왜 중요한가\n\n같은 콘솔에서도 후처리와 복원 기술을 교체해 화질을 개선할 수 있음을 보여준다. 하지만 개별 게임 패치가 필요하며 시스템 업데이트만으로 모든 게임이 바뀌지는 않는다.\n\n### 개발자 관점\n\n개발 관점에서는 이동 중 가는 선·식생·반투명 효과·UI 경계와 GPU 시간을 비교하자. 실제 SDK 입력 규약은 별도 문서로 확인해야 하며 공개 발표만으로 내부 네트워크 구조나 수치 성능을 추정하지 말자.\n\n### 출처와 날짜\n\n- [Sony Interactive Entertainment 공식 발표](https://blog.playstation.com/2026/11/13/qssr-arrives-in-marvels-spider-man-2-control-resonant-the-finals-arc-raiders-and-hell-let-loose-vietnam/) · 발표 2026-11-13 · 확인 2026-11-14. 최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음.\n\n- [QSSR 최초 공식 발표](https://blog.playstation.com/2026/10/01/ai-upscaling-is-coming-to-ps5/) · 발표 2026-10-01 · 확인 2026-11-14. 기술 배경 자료. 오늘 신규 발표로 취급하지 않음.\n\n## 6. War Thunder에 DLSS 5 적용, 신경 렌더링과 프레임 생성을 구분하자\n\n**영역:** 게임 개발 | **깊이:** 심층 | **발표일:** 2026-11-12\n\n### 핵심 요약\n\nNVIDIA는 11월 12일 War Thunder의 Eagle’s Shadow 업데이트에 DLSS 5가 포함됐다고 발표했다 RTX 50 시리즈와 RTX Spark를 대상으로 하며, 게임의 조명과 재질 표현을 보강하는 기술이다.\n\n### 배경과 발표 내용\n\nNVIDIA는 11월 12일 War Thunder의 Eagle’s Shadow 업데이트에 DLSS 5가 포함됐다고 발표했다. RTX 50 시리즈와 RTX Spark를 대상으로 하며, 게임의 조명과 재질 표현을 보강하는 기술이다.\n\n### 쉽게 이해하기\n\n낮은 해상도를 크게 복원하는 업스케일링이나 중간 화면을 만드는 프레임 생성과는 역할이 다르다. 엔진이 만든 장면을 바탕으로 최종 화면의 재질·조명 표현을 보강하는 단계라고 이해하면 쉽다.\n\n### 작동 원리와 기술 맥락\n\n공식 설명상 색상 프레임과 모션 벡터를 입력으로 사용한다. 개발자는 장면별 모델 선택, 구조·색조 강도, 의미 기반 및 엔진 수준 마스크로 적용 범위를 조정할 수 있다. 발표의 모델 속도 2배는 이전 모델 대비 주장이지 게임 전체 FPS 2배를 뜻하지 않는다.\n\n### 왜 중요한가\n\n렌더링 담당자는 화질뿐 아니라 의도한 미술 스타일과 움직일 때의 일관성을 검증해야 한다. 공식 성능 예에는 다중 프레임 생성이 포함되므로 표시 FPS를 실제 게임 시뮬레이션 주기와 동일시하면 안 된다.\n\n### 개발자 관점\n\n개발 학습 제안: 동일 카메라 경로에서 기능을 끈 기준 화면과 비교하고, 얇은 물체·투명 표면·급격한 움직임·UI 경계를 따로 점검하자. GPU 시간과 입력 지연도 분리해 측정해야 한다. 이번 브리핑에서 SDK 실행이나 성능 재현은 하지 않았다.\n\n### 출처와 날짜\n\n- [NVIDIA 공식 지원 확대 발표](https://www.nvidia.com/en-us/geforce/news/war-thunder-dlss-5-3d-guided-neural-rendering-out-now/) · 발표 2026-11-12 · 확인 2026-11-14. 11월 12일 게임 지원 확대. 모델은 10월 버전, Where Winds Meet 지원은 11월 23일 예정.\n\n## 7. Xbox 원작 PC 호환 목록, 21개 추가해 총 25개\n\n**영역:** 게임 전반 | **깊이:** 빠른 요약 | **발표일:** 2026-11-12\n\nXbox는 PC 하위 호환에 원작 21개를 추가해 총 25개로 확대했다. 전 작품이 마우스·키보드를 지원하고 기존 4개 게임의 성능·안정성도 개선했다. KOTOR 1·2, BLiNX, Conker에는 도전과제가 추가되며 Xbox One·Series에도 적용된다. Windows 11과 지원 지역 조건이 있고 작품 구매나 Game Pass가 필요할 수 있다.\n\n### 출처와 날짜\n\n- [Xbox 공식 발표](https://news.xbox.com/en-us/2026/11/12/25-original-xbox-games-now-available-on-pc/) · 발표 2026-11-12 · 확인 2026-11-14. 최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음.\n\n## 8. Wolfenstein 3 제작 공식 확인, Halo Firefight는 겨울 무료 업데이트\n\n**영역:** 게임 전반 | **깊이:** 빠른 요약 | **발표일:** 2026-11-12\n\nXbox 25주년 발표에서 MachineGames의 Wolfenstein 3 제작이 공식 확인됐으며 BJ와 Grace의 기존 배우가 복귀한다. 출시일은 이번 공지에서 제시하지 않았다. Halo: Campaign Evolved의 협동 생존 모드 Firefight는 겨울 무료 업데이트로 예고됐고 Fable의 새 퀘스트 플레이도 공개됐다.\n\n### 출처와 날짜\n\n- [Xbox 공식 발표](https://news.xbox.com/en-us/2026/11/12/xbox-25th-anniversary-news-recap/) · 발표 2026-11-12 · 확인 2026-11-14. 최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음.\n\n## 9. Vindictus: Defying Fate, 2027년 PS5 출시 발표\n\n**영역:** 게임 전반 | **깊이:** 빠른 요약 | **발표일:** 2026-11-12\n\n넥슨은 Vindictus: Defying Fate의 2027년 PS5 출시를 발표했다. 무기를 중심으로 영웅별 회피·방어·반격 스타일을 차별화하고, 기본 여정은 싱글 플레이로 구성한다고 설명했다. 다른 플레이어와 강적에 도전하는 멀티플레이 콘텐츠도 준비 중이지만 구체적인 출시일이나 제공 범위는 확정해 쓰지 않는다.\n\n### 출처와 날짜\n\n- [Nexon·PlayStation 공식 발표](https://blog.playstation.com/2026/11/12/vindictus-defying-fate-comes-to-ps5-next-year/) · 발표 2026-11-12 · 확인 2026-11-14. 최초 발표일과 확인일을 구분. 오늘 발표로 표기하지 않음.\n"
+}
