@@ -175,6 +175,7 @@ jobs:
             web/test-results/**/error-context.md
             web/test-results/**/paired-error-state.json
             web/test-results/visual-visual-problem-*/problem-*.png
+            web/test-results/visual-visual-briefing-*/briefing-*.png
           if-no-files-found: warn
           retention-days: 7
   aggregate:
