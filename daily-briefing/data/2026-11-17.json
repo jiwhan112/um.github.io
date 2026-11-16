@@ -1,0 +1,235 @@
+{
+  "date": "2026-11-17",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 11월 17일(화) 한국시간 오전 조사 기준. AI·게임 개발·게임 전반의 공식 발표를 대조하고, 기존 브리핑과 달라진 중요 소식만 정리했어. 발표일과 적용 예정일, 회사 측 주장과 검증된 결과를 구분했으며 개발자 관점은 적용 제안이지 직접 실행한 측정 결과가 아니야.",
+  "items": [
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "Hugging Face 추론을 OpenRouter로 연결, API보다 과금·전송 경로 변화부터 확인",
+      "source": "Hugging Face",
+      "published": "2026-11-16",
+      "url": "https://huggingface.co/blog/openrouter",
+      "tags": [
+        "추론 API",
+        "라우팅",
+        "개발 도구"
+      ],
+      "short_summary": "Hugging Face는 언어 모델용 Inference Providers 라우터를 OpenRouter로 교체했다. 가격·속도·안정성을 고려해 제공자를 고르고 실패하면 다른 제공자로 재시도한다. 호출 코드를 유지할 수 있지만 언어 모델의 개인 제공자 API 키 사용은 중단되며 Hugging Face 계정·조직으로 과금된다. 이미지·영상·음성 생성은 이번 OpenRouter 경로 변경에서 제외된다.",
+      "summary": "Hugging Face는 언어 모델용 Inference Providers 라우터를 OpenRouter로 교체했다. 가격·속도·안정성을 고려해 제공자를 고르고 실패하면 다른 제공자로 재시도한다. 호출 코드를 유지할 수 있지만 언어 모델의 개인 제공자 API 키 사용은 중단되며 Hugging Face 계정·조직으로 과금된다. 이미지·영상·음성 생성은 이번 OpenRouter 경로 변경에서 제외된다.",
+      "easy_explainer": "모델은 계산 방법이고 제공자는 그 모델을 실제 서버에서 실행하는 업체다. 같은 모델 이름을 호출해도 라우터가 어느 서버에 보낼지 정할 수 있다. 따라서 모델 선택과 실행 업체 선택은 다른 설정이다.",
+      "technical_context": "공식 안내는 기본 자동 선택 외에 모델 이름 뒤 :fastest, :cheapest 또는 :제공자 접미사로 선택 기준을 지정하게 한다. 캐시를 고려해 대화를 이전 제공자에 유지하며, 안정적인 대화별 UUID를 X-HF-Session-Id로 전달할 수 있다. 제공자 차단 설정과 조직별 설정도 지원한다. Responses·Messages API 호환은 언어 모델 경로에 대한 설명이며 다른 생성 작업까지 동일 경로로 옮겼다는 뜻이 아니다.",
+      "why_it_matters": "코딩 도구나 게임 운영용 AI를 연결할 때 장애 대응은 편해지지만, 실제 데이터 처리 업체와 청구 주체가 달라질 수 있다. 코드를 고칠 필요가 없다는 안내를 운영 조건까지 변하지 않는다는 뜻으로 해석하면 안 된다.",
+      "developer_view": "적용 제안: 테스트 환경에서 모델·제공자·첫 토큰 지연·최종 과금·재시도 결과를 함께 기록하자. 민감한 소스나 플레이어 데이터를 보내기 전 허용 업체와 보관 조건을 검토하고, 외부 작업 실행은 별도의 승인·중복 방지 구조로 유지한다. 자동 전환이 답변 품질까지 동일하게 보장하지는 않으므로 실제 프롬프트 회귀 검사가 필요하다.",
+      "sources": [
+        {
+          "label": "Hugging Face 공식 발표",
+          "url": "https://huggingface.co/blog/openrouter",
+          "published": "2026-11-16",
+          "accessed": "2026-11-17",
+          "date_note": "11월 16일 공개. 전체 본문에서 언어 모델 BYOK 중단, 과금·생성 작업 예외 확인."
+        },
+        {
+          "label": "Inference Providers 공식 문서",
+          "url": "https://huggingface.co/docs/inference-providers/index",
+          "accessed": "2026-11-17",
+          "date_note": "현재 라우팅과 정책 접미사 설명 교차 확인. 문서의 API별 지원 범위는 개별 항목 확인 필요."
+        }
+      ],
+      "checked": "2026-11-17"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "NVIDIA, MLPerf 에이전트 추론 결과 공개…Vera Rubin 수치는 검증 대기",
+      "source": "NVIDIA",
+      "published": "2026-11-16",
+      "url": "https://developer.nvidia.com/blog/nvidia-vera-rubin-nvl72-leads-agentic-inference-performance-on-mlperf-endpoints-v1-0/",
+      "tags": [
+        "AI 인프라",
+        "벤치마크"
+      ],
+      "short_summary": "NVIDIA는 MLPerf Endpoints v1.0에서 Vera Rubin NVL72가 특정 응답성 조건의 GB300 NVL72보다 높은 전력 대비 처리량을 보였다고 발표했다. 대표적인 Kimi K3 비교의 10배 수치는 사용자당 초당 50토큰 이상의 최소 응답성 조건에서 선택한 서로 다른 동시 요청·GPU 구성의 결과다. GB300은 MLCommons 검증 완료지만 Vera Rubin 결과는 잠정치이며 동료 검토 후 달라질 수 있다. 모든 모델·사용자 체감 지연·게임 GPU 성능이 10배가 됐다는 의미는 아니다.",
+      "summary": "NVIDIA는 MLPerf Endpoints v1.0에서 Vera Rubin NVL72가 특정 응답성 조건의 GB300 NVL72보다 높은 전력 대비 처리량을 보였다고 발표했다. 대표적인 Kimi K3 비교의 10배 수치는 사용자당 초당 50토큰 이상의 최소 응답성 조건에서 선택한 서로 다른 동시 요청·GPU 구성의 결과다. GB300은 MLCommons 검증 완료지만 Vera Rubin 결과는 잠정치이며 동료 검토 후 달라질 수 있다. 모든 모델·사용자 체감 지연·게임 GPU 성능이 10배가 됐다는 의미는 아니다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "NVIDIA 기술 설명과 결과별 각주",
+          "url": "https://developer.nvidia.com/blog/nvidia-vera-rubin-nvl72-leads-agentic-inference-performance-on-mlperf-endpoints-v1-0/",
+          "published": "2026-11-16",
+          "accessed": "2026-11-17",
+          "date_note": "기술 글 공개는 11월 16일. 각주상 기초 측정 공개일은 11월 4·9·10일로 구분되며 Vera Rubin은 MLCommons 검증 대기."
+        }
+      ],
+      "checked": "2026-11-17"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "OpenAI 의료용 컴퓨터 사용 에이전트 확대, 실행 권한·사람 검토를 함께 구성",
+      "source": "OpenAI",
+      "published": "2026-11-16",
+      "url": "https://openai.com/index/more-ways-to-move-care-forward-with-chatgpt-for-healthcare/",
+      "tags": [
+        "컴퓨터 사용 에이전트",
+        "의료 업무",
+        "사람 검토"
+      ],
+      "short_summary": "OpenAI는 의료용 컴퓨터 사용 에이전트의 평가 결과와 20개가 넘는 새 의료 플러그인을 공개했다. 화면 조작으로 여러 업무 시스템을 연결하며, 시연은 합성 환자 데이터로 MRI 주문·보험 승인 요청의 초안을 만들고 담당자가 검토하는 흐름이다. 제공 기능은 워크스페이스 설정과 적격 서비스 범위에 따르고, 환자 정보 처리에는 해당 계약·보안·보관 설정 및 연결 시스템 보호가 필요하다. 회사의 과제 평가 수치는 실제 의료 환경의 무오류나 자율 진료를 보장하지 않는다.",
+      "summary": "OpenAI는 의료용 컴퓨터 사용 에이전트의 평가 결과와 20개가 넘는 새 의료 플러그인을 공개했다. 화면 조작으로 여러 업무 시스템을 연결하며, 시연은 합성 환자 데이터로 MRI 주문·보험 승인 요청의 초안을 만들고 담당자가 검토하는 흐름이다. 제공 기능은 워크스페이스 설정과 적격 서비스 범위에 따르고, 환자 정보 처리에는 해당 계약·보안·보관 설정 및 연결 시스템 보호가 필요하다. 회사의 과제 평가 수치는 실제 의료 환경의 무오류나 자율 진료를 보장하지 않는다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "OpenAI 제품 발표",
+          "url": "https://openai.com/index/more-ways-to-move-care-forward-with-chatgpt-for-healthcare/",
+          "published": "2026-11-16",
+          "accessed": "2026-11-17",
+          "date_note": "11월 16일 공개. 제공 범위·플러그인·계약 조건 확인."
+        },
+        {
+          "label": "컴퓨터 사용 평가와 시연 설명",
+          "url": "https://openai.com/index/advancing-computer-use-for-healthcare-teams/",
+          "published": "2026-11-16",
+          "accessed": "2026-11-17",
+          "date_note": "11월 16일 공개. 합성 환자 시연과 평가 범위 확인; 실제 의료 효과로 일반화하지 않음."
+        }
+      ],
+      "checked": "2026-11-17"
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "ChatGPT 연구자 지원 확대, 11월 23일 새 신청과 Plus 기반 협업 지원 예고",
+      "source": "OpenAI",
+      "published": "2026-11-16",
+      "url": "https://openai.com/index/expanding-chatgpt-for-academic-researchers/",
+      "tags": [
+        "연구 지원",
+        "AI 접근성"
+      ],
+      "short_summary": "OpenAI는 Academic Researchers 프로그램의 전체 지원 목표를 최대 20만 명으로 확대한다고 발표했다. 11월 23일 시작하는 다음 모집은 자격을 충족한 선착순 5만 건에 지원하며, 선정자와 최대 두 명의 협업자에게 ChatGPT Plus를 제공하는 방식이다. 지난 파일럿의 Pro 제공·추첨 방식과 달라졌고, 이번 신규 모집만으로 20만 명 모두에게 즉시 지원한다는 뜻은 아니다.",
+      "summary": "OpenAI는 Academic Researchers 프로그램의 전체 지원 목표를 최대 20만 명으로 확대한다고 발표했다. 11월 23일 시작하는 다음 모집은 자격을 충족한 선착순 5만 건에 지원하며, 선정자와 최대 두 명의 협업자에게 ChatGPT Plus를 제공하는 방식이다. 지난 파일럿의 Pro 제공·추첨 방식과 달라졌고, 이번 신규 모집만으로 20만 명 모두에게 즉시 지원한다는 뜻은 아니다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "OpenAI 연구자 지원 공식 발표",
+          "url": "https://openai.com/index/expanding-chatgpt-for-academic-researchers/",
+          "published": "2026-11-16",
+          "accessed": "2026-11-17",
+          "date_note": "11월 16일 발표, 새 신청 시작은 11월 23일 예정. 자격·선착순 및 Plus 제공을 구분."
+        }
+      ],
+      "checked": "2026-11-17"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "llama.cpp CI 개선 공개, C++ 컴파일 캐시와 실행 대기열을 따로 줄이기",
+      "source": "ggml-org",
+      "published": "2026-11-16",
+      "url": "https://huggingface.co/blog/ggml-org/llama-cpp-ci-buckets",
+      "tags": [
+        "C++",
+        "CI",
+        "컴파일 캐시"
+      ],
+      "short_summary": "llama.cpp 개발진은 100개가 넘는 CI 작업을 운영하면서 적용한 개선을 공개했다. PR에서는 변경 내용에 필요한 작업을 고르고 master에서는 전체 검사를 유지하며, 비릴리스 컴파일 캐시를 Hugging Face Buckets에 저장하고 다수의 Linux x64 작업을 Hugging Face Jobs로 옮겼다. 1.0 출시 자체가 아니라 빌드 운영 방법에 대한 새 기술 글이다.",
+      "summary": "llama.cpp 개발진은 100개가 넘는 CI 작업을 운영하면서 적용한 개선을 공개했다. PR에서는 변경 내용에 필요한 작업을 고르고 master에서는 전체 검사를 유지하며, 비릴리스 컴파일 캐시를 Hugging Face Buckets에 저장하고 다수의 Linux x64 작업을 Hugging Face Jobs로 옮겼다. 1.0 출시 자체가 아니라 빌드 운영 방법에 대한 새 기술 글이다.",
+      "easy_explainer": "빌드가 늦는 이유는 실제 컴파일이 오래 걸리는 경우와 실행할 컴퓨터를 기다리는 경우로 나뉜다. ccache는 이미 계산한 오브젝트 파일을 재사용해 전자를 줄이고, 실행 자원을 늘리는 것은 후자를 줄인다. 둘은 같은 최적화가 아니다.",
+      "technical_context": "PR 빌드는 master가 만든 공통 캐시 스냅샷을 읽고, 적격 master 빌드만 갱신본을 올린다. 소스와 빌드 설정이 일치할 때만 오브젝트를 재사용하므로 master와 차이가 큰 PR은 여전히 재컴파일이 필요하다. Jobs 연동은 GitHub Actions를 대체하지 않는다. 디스패처가 서명된 이벤트와 저장소 권한을 확인한 뒤 단기 등록 토큰으로 일회성 runner를 띄우고, 로그·상태를 GitHub에 돌려보내는 구조다.",
+      "why_it_matters": "여러 OS·그래픽 백엔드·컴파일 옵션을 가진 게임 프로젝트도 빌드 조합마다 캐시가 달라진다. 캐시 저장 공간만 늘려서는 대기열이 사라지지 않고, runner만 늘려도 콜드 빌드 비용은 남는다. 새로운 클라우드 사용료와 전송 시간까지 포함한 판단이 필요하다.",
+      "developer_view": "적용 제안: 대기 시간·캐시 다운로드·컴파일·테스트 시간을 먼저 분리 측정하자. 캐시 키에 컴파일러·플랫폼·옵션을 반영하고, PR의 캐시 읽기와 신뢰된 브랜치의 쓰기를 분리한다. 게임 에셋·셰이더 캐시는 C++ 오브젝트 캐시와 별도로 설계해야 한다. 변경 기반 검사 선택을 도입하더라도 통합 브랜치의 전체 검증과 주기적 콜드 빌드를 남겨 누락·오염을 탐지하자.",
+      "sources": [
+        {
+          "label": "ggml-org 개발진의 CI 운영 글",
+          "url": "https://huggingface.co/blog/ggml-org/llama-cpp-ci-buckets",
+          "published": "2026-11-16",
+          "accessed": "2026-11-17",
+          "date_note": "11월 16일 공개. 실제 변경을 설명하는 개발진 원문 확인. 글의 GitHub 무료 플랜 제한 수치는 해당 운영 사례이며 모든 계정의 고정 한도로 일반화하지 않음."
+        }
+      ],
+      "checked": "2026-11-17"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "Unity Fellowship, 출시를 앞둔 인디 팀 10곳에 자금·개발 지원",
+      "source": "Unity",
+      "published": "2026-11-16",
+      "url": "https://unity.com/news/unity-launches-the-unity-fellowship-to-support-indie-studios",
+      "tags": [
+        "Unity",
+        "인디 개발",
+        "개발 지원"
+      ],
+      "short_summary": "Unity는 약 1년 안에 출시를 계획하는 Unity 인디 팀 10곳을 선정해 5만 달러와 개발·홍보·업계 연결 지원을 제공하는 Fellowship을 발표했다. 지분이나 수익 지분을 받는 투자 방식은 아니지만, 프로젝트 개발·출시에 자금을 사용해야 하고 계약 위반·프로젝트 포기 등의 경우 반환 조건이 있다. 신청 기간은 미국 동부시간 11월 16일 08시부터 12월 18일 17시이며, 선정 결과는 2027년 3월 GDC에서 발표할 예정이다. 지원금을 무조건 받는 제도는 아니므로 실제 신청 전 자격·계약·공개 자료 사용 조건을 확인해야 한다.",
+      "summary": "Unity는 약 1년 안에 출시를 계획하는 Unity 인디 팀 10곳을 선정해 5만 달러와 개발·홍보·업계 연결 지원을 제공하는 Fellowship을 발표했다. 지분이나 수익 지분을 받는 투자 방식은 아니지만, 프로젝트 개발·출시에 자금을 사용해야 하고 계약 위반·프로젝트 포기 등의 경우 반환 조건이 있다. 신청 기간은 미국 동부시간 11월 16일 08시부터 12월 18일 17시이며, 선정 결과는 2027년 3월 GDC에서 발표할 예정이다. 지원금을 무조건 받는 제도는 아니므로 실제 신청 전 자격·계약·공개 자료 사용 조건을 확인해야 한다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "checked": "2026-11-17",
+      "sources": [
+        {
+          "label": "Unity 공식 발표",
+          "url": "https://unity.com/news/unity-launches-the-unity-fellowship-to-support-indie-studios",
+          "published": "2026-11-16",
+          "accessed": "2026-11-17",
+          "date_note": "공식 발표 전문 확인. 출시 예정 프로젝트 지원이며 엔진 기능 출시가 아님."
+        },
+        {
+          "label": "Unity Fellowship 공식 조건",
+          "url": "https://unity.com/legal/unity-fellowship-terms-and-conditions",
+          "accessed": "2026-11-17",
+          "date_note": "2·4·5·6절 확인. 일반 발표의 무상 지원 표현과 계약상 용도·반환 조건을 구분."
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "Minecraft Dungeons II, 첫 유료 DLC와 무료 도전 던전을 분리해 공개",
+      "source": "Mojang Studios",
+      "published": "2026-11-15",
+      "url": "https://www.minecraft.net/en-us/article/the-humblers-awaken",
+      "tags": [
+        "Minecraft",
+        "추가 콘텐츠",
+        "라이브 운영"
+      ],
+      "short_summary": "Mojang은 첫 DLC The Humblers Awaken을 12월 1일 출시한다고 발표했다. 유료 확장에는 새 지역·퀘스트와 능동 능력용 유물 3종, 수동 보너스용 부적 4종이 추가된다. 같은 날 무료 업데이트에는 일일·주간 도전과 변형 규칙을 제공하는 시험 던전, 무기·방어구와 기존 영웅 외형이 포함된다. 유료 이야기 확장과 전체 이용자를 위한 반복 플레이 업데이트가 별도라는 점이 핵심이다.",
+      "summary": "Mojang은 첫 DLC The Humblers Awaken을 12월 1일 출시한다고 발표했다. 유료 확장에는 새 지역·퀘스트와 능동 능력용 유물 3종, 수동 보너스용 부적 4종이 추가된다. 같은 날 무료 업데이트에는 일일·주간 도전과 변형 규칙을 제공하는 시험 던전, 무기·방어구와 기존 영웅 외형이 포함된다. 유료 이야기 확장과 전체 이용자를 위한 반복 플레이 업데이트가 별도라는 점이 핵심이다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "checked": "2026-11-17",
+      "sources": [
+        {
+          "label": "Mojang 공식 발표",
+          "url": "https://www.minecraft.net/en-us/article/the-humblers-awaken",
+          "published": "2026-11-15",
+          "accessed": "2026-11-17",
+          "date_note": "공식 페이지 표기 11월 15일, Xbox 재소개 16일. 12월 1일 예정이며 현재 적용 완료가 아님."
+        }
+      ]
+    }
+  ],
+  "original_markdown": "# 2026-11-17 게임·AI 데일리 브리핑\n\n2026년 11월 17일(화) 한국시간 오전 조사 기준. AI·게임 개발·게임 전반의 공식 발표를 대조하고, 기존 브리핑과 달라진 중요 소식만 정리했어. 발표일과 적용 예정일, 회사 측 주장과 검증된 결과를 구분했으며 개발자 관점은 적용 제안이지 직접 실행한 측정 결과가 아니야.\n\n## 1. Hugging Face 추론을 OpenRouter로 연결, API보다 과금·전송 경로 변화부터 확인\n\n**영역:** ai | **깊이:** deep | **발표:** 2026-11-16\n\n### 핵심 요약\n\nHugging Face는 언어 모델용 Inference Providers 라우터를 OpenRouter로 교체했다. 가격·속도·안정성을 고려해 제공자를 고르고 실패하면 다른 제공자로 재시도한다. 호출 코드를 유지할 수 있지만 언어 모델의 개인 제공자 API 키 사용은 중단되며 Hugging Face 계정·조직으로 과금된다. 이미지·영상·음성 생성은 이번 OpenRouter 경로 변경에서 제외된다.\n\n### 쉽게 이해하기\n\n모델은 계산 방법이고 제공자는 그 모델을 실제 서버에서 실행하는 업체다. 같은 모델 이름을 호출해도 라우터가 어느 서버에 보낼지 정할 수 있다. 따라서 모델 선택과 실행 업체 선택은 다른 설정이다.\n\n### 작동 원리와 배경\n\n공식 안내는 기본 자동 선택 외에 모델 이름 뒤 :fastest, :cheapest 또는 :제공자 접미사로 선택 기준을 지정하게 한다. 캐시를 고려해 대화를 이전 제공자에 유지하며, 안정적인 대화별 UUID를 X-HF-Session-Id로 전달할 수 있다. 제공자 차단 설정과 조직별 설정도 지원한다. Responses·Messages API 호환은 언어 모델 경로에 대한 설명이며 다른 생성 작업까지 동일 경로로 옮겼다는 뜻이 아니다.\n\n### 왜 중요한가\n\n코딩 도구나 게임 운영용 AI를 연결할 때 장애 대응은 편해지지만, 실제 데이터 처리 업체와 청구 주체가 달라질 수 있다. 코드를 고칠 필요가 없다는 안내를 운영 조건까지 변하지 않는다는 뜻으로 해석하면 안 된다.\n\n### 개발자 관점\n\n적용 제안: 테스트 환경에서 모델·제공자·첫 토큰 지연·최종 과금·재시도 결과를 함께 기록하자. 민감한 소스나 플레이어 데이터를 보내기 전 허용 업체와 보관 조건을 검토하고, 외부 작업 실행은 별도의 승인·중복 방지 구조로 유지한다. 자동 전환이 답변 품질까지 동일하게 보장하지는 않으므로 실제 프롬프트 회귀 검사가 필요하다.\n\n### 출처와 날짜\n\n- [Hugging Face 공식 발표](https://huggingface.co/blog/openrouter) · 발표 2026-11-16 · 확인 2026-11-17. 11월 16일 공개. 전체 본문에서 언어 모델 BYOK 중단, 과금·생성 작업 예외 확인.\n- [Inference Providers 공식 문서](https://huggingface.co/docs/inference-providers/index) · 발표 날짜 미기록 · 확인 2026-11-17. 현재 라우팅과 정책 접미사 설명 교차 확인. 문서의 API별 지원 범위는 개별 항목 확인 필요.\n\n## 2. NVIDIA, MLPerf 에이전트 추론 결과 공개…Vera Rubin 수치는 검증 대기\n\n**영역:** ai | **깊이:** brief | **발표:** 2026-11-16\n\n### 핵심 요약\n\nNVIDIA는 MLPerf Endpoints v1.0에서 Vera Rubin NVL72가 특정 응답성 조건의 GB300 NVL72보다 높은 전력 대비 처리량을 보였다고 발표했다. 대표적인 Kimi K3 비교의 10배 수치는 사용자당 초당 50토큰 이상의 최소 응답성 조건에서 선택한 서로 다른 동시 요청·GPU 구성의 결과다. GB300은 MLCommons 검증 완료지만 Vera Rubin 결과는 잠정치이며 동료 검토 후 달라질 수 있다. 모든 모델·사용자 체감 지연·게임 GPU 성능이 10배가 됐다는 의미는 아니다.\n\n### 출처와 날짜\n\n- [NVIDIA 기술 설명과 결과별 각주](https://developer.nvidia.com/blog/nvidia-vera-rubin-nvl72-leads-agentic-inference-performance-on-mlperf-endpoints-v1-0/) · 발표 2026-11-16 · 확인 2026-11-17. 기술 글 공개는 11월 16일. 각주상 기초 측정 공개일은 11월 4·9·10일로 구분되며 Vera Rubin은 MLCommons 검증 대기.\n\n## 3. OpenAI 의료용 컴퓨터 사용 에이전트 확대, 실행 권한·사람 검토를 함께 구성\n\n**영역:** ai | **깊이:** brief | **발표:** 2026-11-16\n\n### 핵심 요약\n\nOpenAI는 의료용 컴퓨터 사용 에이전트의 평가 결과와 20개가 넘는 새 의료 플러그인을 공개했다. 화면 조작으로 여러 업무 시스템을 연결하며, 시연은 합성 환자 데이터로 MRI 주문·보험 승인 요청의 초안을 만들고 담당자가 검토하는 흐름이다. 제공 기능은 워크스페이스 설정과 적격 서비스 범위에 따르고, 환자 정보 처리에는 해당 계약·보안·보관 설정 및 연결 시스템 보호가 필요하다. 회사의 과제 평가 수치는 실제 의료 환경의 무오류나 자율 진료를 보장하지 않는다.\n\n### 출처와 날짜\n\n- [OpenAI 제품 발표](https://openai.com/index/more-ways-to-move-care-forward-with-chatgpt-for-healthcare/) · 발표 2026-11-16 · 확인 2026-11-17. 11월 16일 공개. 제공 범위·플러그인·계약 조건 확인.\n- [컴퓨터 사용 평가와 시연 설명](https://openai.com/index/advancing-computer-use-for-healthcare-teams/) · 발표 2026-11-16 · 확인 2026-11-17. 11월 16일 공개. 합성 환자 시연과 평가 범위 확인; 실제 의료 효과로 일반화하지 않음.\n\n## 4. ChatGPT 연구자 지원 확대, 11월 23일 새 신청과 Plus 기반 협업 지원 예고\n\n**영역:** ai | **깊이:** brief | **발표:** 2026-11-16\n\n### 핵심 요약\n\nOpenAI는 Academic Researchers 프로그램의 전체 지원 목표를 최대 20만 명으로 확대한다고 발표했다. 11월 23일 시작하는 다음 모집은 자격을 충족한 선착순 5만 건에 지원하며, 선정자와 최대 두 명의 협업자에게 ChatGPT Plus를 제공하는 방식이다. 지난 파일럿의 Pro 제공·추첨 방식과 달라졌고, 이번 신규 모집만으로 20만 명 모두에게 즉시 지원한다는 뜻은 아니다.\n\n### 출처와 날짜\n\n- [OpenAI 연구자 지원 공식 발표](https://openai.com/index/expanding-chatgpt-for-academic-researchers/) · 발표 2026-11-16 · 확인 2026-11-17. 11월 16일 발표, 새 신청 시작은 11월 23일 예정. 자격·선착순 및 Plus 제공을 구분.\n\n## 5. llama.cpp CI 개선 공개, C++ 컴파일 캐시와 실행 대기열을 따로 줄이기\n\n**영역:** game-dev | **깊이:** deep | **발표:** 2026-11-16\n\n### 핵심 요약\n\nllama.cpp 개발진은 100개가 넘는 CI 작업을 운영하면서 적용한 개선을 공개했다. PR에서는 변경 내용에 필요한 작업을 고르고 master에서는 전체 검사를 유지하며, 비릴리스 컴파일 캐시를 Hugging Face Buckets에 저장하고 다수의 Linux x64 작업을 Hugging Face Jobs로 옮겼다. 1.0 출시 자체가 아니라 빌드 운영 방법에 대한 새 기술 글이다.\n\n### 쉽게 이해하기\n\n빌드가 늦는 이유는 실제 컴파일이 오래 걸리는 경우와 실행할 컴퓨터를 기다리는 경우로 나뉜다. ccache는 이미 계산한 오브젝트 파일을 재사용해 전자를 줄이고, 실행 자원을 늘리는 것은 후자를 줄인다. 둘은 같은 최적화가 아니다.\n\n### 작동 원리와 배경\n\nPR 빌드는 master가 만든 공통 캐시 스냅샷을 읽고, 적격 master 빌드만 갱신본을 올린다. 소스와 빌드 설정이 일치할 때만 오브젝트를 재사용하므로 master와 차이가 큰 PR은 여전히 재컴파일이 필요하다. Jobs 연동은 GitHub Actions를 대체하지 않는다. 디스패처가 서명된 이벤트와 저장소 권한을 확인한 뒤 단기 등록 토큰으로 일회성 runner를 띄우고, 로그·상태를 GitHub에 돌려보내는 구조다.\n\n### 왜 중요한가\n\n여러 OS·그래픽 백엔드·컴파일 옵션을 가진 게임 프로젝트도 빌드 조합마다 캐시가 달라진다. 캐시 저장 공간만 늘려서는 대기열이 사라지지 않고, runner만 늘려도 콜드 빌드 비용은 남는다. 새로운 클라우드 사용료와 전송 시간까지 포함한 판단이 필요하다.\n\n### 개발자 관점\n\n적용 제안: 대기 시간·캐시 다운로드·컴파일·테스트 시간을 먼저 분리 측정하자. 캐시 키에 컴파일러·플랫폼·옵션을 반영하고, PR의 캐시 읽기와 신뢰된 브랜치의 쓰기를 분리한다. 게임 에셋·셰이더 캐시는 C++ 오브젝트 캐시와 별도로 설계해야 한다. 변경 기반 검사 선택을 도입하더라도 통합 브랜치의 전체 검증과 주기적 콜드 빌드를 남겨 누락·오염을 탐지하자.\n\n### 출처와 날짜\n\n- [ggml-org 개발진의 CI 운영 글](https://huggingface.co/blog/ggml-org/llama-cpp-ci-buckets) · 발표 2026-11-16 · 확인 2026-11-17. 11월 16일 공개. 실제 변경을 설명하는 개발진 원문 확인. 글의 GitHub 무료 플랜 제한 수치는 해당 운영 사례이며 모든 계정의 고정 한도로 일반화하지 않음.\n\n## 6. Unity Fellowship, 출시를 앞둔 인디 팀 10곳에 자금·개발 지원\n\n**영역:** game-dev | **깊이:** brief | **발표:** 2026-11-16\n\n### 핵심 요약\n\nUnity는 약 1년 안에 출시를 계획하는 Unity 인디 팀 10곳을 선정해 5만 달러와 개발·홍보·업계 연결 지원을 제공하는 Fellowship을 발표했다. 지분이나 수익 지분을 받는 투자 방식은 아니지만, 프로젝트 개발·출시에 자금을 사용해야 하고 계약 위반·프로젝트 포기 등의 경우 반환 조건이 있다. 신청 기간은 미국 동부시간 11월 16일 08시부터 12월 18일 17시이며, 선정 결과는 2027년 3월 GDC에서 발표할 예정이다. 지원금을 무조건 받는 제도는 아니므로 실제 신청 전 자격·계약·공개 자료 사용 조건을 확인해야 한다.\n\n### 출처와 날짜\n\n- [Unity 공식 발표](https://unity.com/news/unity-launches-the-unity-fellowship-to-support-indie-studios) · 발표 2026-11-16 · 확인 2026-11-17. 공식 발표 전문 확인. 출시 예정 프로젝트 지원이며 엔진 기능 출시가 아님.\n- [Unity Fellowship 공식 조건](https://unity.com/legal/unity-fellowship-terms-and-conditions) · 발표 날짜 미기록 · 확인 2026-11-17. 2·4·5·6절 확인. 일반 발표의 무상 지원 표현과 계약상 용도·반환 조건을 구분.\n\n## 7. Minecraft Dungeons II, 첫 유료 DLC와 무료 도전 던전을 분리해 공개\n\n**영역:** game-industry | **깊이:** brief | **발표:** 2026-11-15\n\n### 핵심 요약\n\nMojang은 첫 DLC The Humblers Awaken을 12월 1일 출시한다고 발표했다. 유료 확장에는 새 지역·퀘스트와 능동 능력용 유물 3종, 수동 보너스용 부적 4종이 추가된다. 같은 날 무료 업데이트에는 일일·주간 도전과 변형 규칙을 제공하는 시험 던전, 무기·방어구와 기존 영웅 외형이 포함된다. 유료 이야기 확장과 전체 이용자를 위한 반복 플레이 업데이트가 별도라는 점이 핵심이다.\n\n### 출처와 날짜\n\n- [Mojang 공식 발표](https://www.minecraft.net/en-us/article/the-humblers-awaken) · 발표 2026-11-15 · 확인 2026-11-17. 공식 페이지 표기 11월 15일, Xbox 재소개 16일. 12월 1일 예정이며 현재 적용 완료가 아님.\n"
+}
