@@ -1,0 +1,305 @@
+{
+  "date": "2026-11-18",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 11월 18일(수) 한국시간 오전 조사 기준. AI·게임 개발·게임 전반의 공식 발표를 확인하고 기존 브리핑과 중복을 대조했어. Unity Graphics Kernel은 11월 12일 발표의 미수록 기술 보충으로 별도 표시했어. 회사의 성능 주장은 자체 실측과 구분하며, 개발자 관점은 적용 제안이야.",
+  "items": [
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "GPT-6.2 Astra·Sol 출시, 모델 성능뿐 아니라 작업당 비용과 대화 보존 방식이 핵심",
+      "source": "OpenAI",
+      "published": "2026-11-17",
+      "url": "https://openai.com/index/introducing-gpt-6-2-astra-sol/",
+      "tags": [
+        "AI 코딩",
+        "GPT-6.2",
+        "비용",
+        "프롬프트 캐시"
+      ],
+      "short_summary": "OpenAI가 복잡한 전문 작업용 GPT-6.2 Astra와 일상적인 코딩·업무용 Sol을 ChatGPT Work·Codex·API에 공개했다. 표준 API의 100만 토큰당 입력/캐시 입력/출력 가격은 Astra 8/0.40/40달러, Sol 2/0.10/10달러다. Astra의 일반 입력·출력 단가는 GPT-6 Astra보다 20% 낮고, Sol은 GPT-6.1 Sol 가격을 유지한다. 성능·토큰 효율 개선 수치는 회사 평가이며 개별 게임 프로젝트의 성공률이나 총비용을 보장하지 않는다.",
+      "easy_explainer": "토큰 가격이 싸졌다는 것과 한 작업을 끝내는 비용이 낮아졌다는 것은 다르다. 같은 수정도 긴 설명·반복 시도·테스트 실패가 많으면 더 비싸진다. 모델 단가와 작업을 완료하기까지의 전체 호출량을 함께 봐야 한다.",
+      "technical_context": "두 모델은 Responses와 Chat Completions를 지원하지만 도구 호출은 Responses API가 필요하다. 새 모델용 공식 통합 지침은 대화 앞부분을 고치기보다 새 지시를 끝에 추가하도록 권한다. 과거 도구 결과나 개발자 메시지를 수정하면 캐시 재사용이 줄고, 변경 뒤의 추론 항목이 제거되어 재계산될 수 있기 때문이다. 추론 강도·출력 형식 변경에는 configuration_update를 쓰고 요청 수준 설정은 유지하는 방식이 안내된다. 공식 압축 기능에는 별도 보존 처리가 있으므로 모든 압축을 금지한다는 뜻은 아니다.",
+      "why_it_matters": "긴 저장소 수정에서 매번 파일·이력을 다시 정리하는 자체 에이전트는 모델을 바꾸는 것만으로 기대한 비용 절감을 얻지 못할 수 있다. 더 강한 사이버 안전 제한도 함께 적용돼 보안 점검 요청의 응답 범위가 달라질 수 있다.",
+      "developer_view": "적용 제안: 동일한 Unity 또는 Godot 버그 몇 개를 고정해 수정 성공률, 테스트 통과, 전체 입력·출력 토큰과 재시도 횟수를 비교하자. 기본 작업은 Sol, 복잡한 다중 파일 진단은 Astra를 후보로 두되 실제 측정으로 결정한다. 모델의 완료 선언 대신 diff·빌드·플레이 테스트 결과로 판정하고, API 연동에서는 과거 메시지를 바꾸는 지점을 먼저 점검한다.",
+      "checked": "2026-11-18",
+      "sources": [
+        {
+          "label": "OpenAI 출시 발표",
+          "url": "https://openai.com/index/introducing-gpt-6-2-astra-sol/",
+          "published": "2026-11-17",
+          "accessed": "2026-11-18",
+          "date_note": "출시·가격·안전 제한 원문 확인. 벤치마크를 자체 실측으로 표시하지 않음."
+        },
+        {
+          "label": "OpenAI API 11월 17일 변경기록",
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "published": "2026-11-17",
+          "accessed": "2026-11-18",
+          "date_note": "두 API 지원과 Responses 전용 도구 호출 확인."
+        },
+        {
+          "label": "대화 접두부 보존 공식 지침",
+          "url": "https://developers.openai.com/api/docs/guides/keep-prefix-unchanged",
+          "accessed": "2026-11-18",
+          "date_note": "현재 통합 지침 확인. 개별 문서의 최초 공개일은 확인하지 않음."
+        }
+      ],
+      "summary": "OpenAI가 복잡한 전문 작업용 GPT-6.2 Astra와 일상적인 코딩·업무용 Sol을 ChatGPT Work·Codex·API에 공개했다. 표준 API의 100만 토큰당 입력/캐시 입력/출력 가격은 Astra 8/0.40/40달러, Sol 2/0.10/10달러다. Astra의 일반 입력·출력 단가는 GPT-6 Astra보다 20% 낮고, Sol은 GPT-6.1 Sol 가격을 유지한다. 성능·토큰 효율 개선 수치는 회사 평가이며 개별 게임 프로젝트의 성공률이나 총비용을 보장하지 않는다."
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "OpenAI, 2·8시간 비동기 완료 창 공개 베타…야간 작업 토큰 비용 할인",
+      "source": "OpenAI",
+      "published": "2026-11-17",
+      "url": "https://developers.openai.com/api/docs/guides/background",
+      "tags": [
+        "Responses API",
+        "비동기 처리",
+        "비용"
+      ],
+      "short_summary": "Responses API에 2시간·8시간 완료 목표 창이 공개 베타로 추가됐으며, 적격 모델 토큰 요금은 표준 처리보다 각각 30%·40% 낮다. GPT-6.2 Astra·Sol, GPT-6.1 Terra, GPT-6 Luna에서 지원하고 기본 soonest 창에는 할인이 없다. 완료 목표는 첫 응답에 적용되므로 도구 호출을 포함한 전체 업무가 그 시간 안에 끝난다는 보장이 아니며, 도구 실행과 후속 요청은 애플리케이션이 관리한다. 야간 문서·로그 분석의 비용 절감 후보지만 임시 데이터 저장, 스트리밍 미지원, Batch와 공유하는 처리 한도를 검토해야 한다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "checked": "2026-11-18",
+      "sources": [
+        {
+          "label": "OpenAI API 변경기록",
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "published": "2026-11-17",
+          "accessed": "2026-11-18",
+          "date_note": "11월 17일 public beta 및 할인율 발표 확인."
+        },
+        {
+          "label": "Background mode 공식 문서",
+          "url": "https://developers.openai.com/api/docs/guides/background",
+          "accessed": "2026-11-18",
+          "date_note": "완료 목표 범위·지원 모델·임시 저장·스트리밍·Standard 및 공유 한도 조건 확인."
+        }
+      ],
+      "summary": "Responses API에 2시간·8시간 완료 목표 창이 공개 베타로 추가됐으며, 적격 모델 토큰 요금은 표준 처리보다 각각 30%·40% 낮다. GPT-6.2 Astra·Sol, GPT-6.1 Terra, GPT-6 Luna에서 지원하고 기본 soonest 창에는 할인이 없다. 완료 목표는 첫 응답에 적용되므로 도구 호출을 포함한 전체 업무가 그 시간 안에 끝난다는 보장이 아니며, 도구 실행과 후속 요청은 애플리케이션이 관리한다. 야간 문서·로그 분석의 비용 절감 후보지만 임시 데이터 저장, 스트리밍 미지원, Batch와 공유하는 처리 한도를 검토해야 한다."
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "Microsoft MAI Code 2·Flash, GitHub Copilot에 추가",
+      "source": "GitHub / Microsoft AI",
+      "published": "2026-11-17",
+      "url": "https://github.blog/changelog/2026-11-17-mai-code-2-and-mai-code-2-flash-in-github-copilot/",
+      "tags": [
+        "GitHub Copilot",
+        "MAI",
+        "AI 코딩"
+      ],
+      "short_summary": "GitHub는 MAI Code 2와 Code 2 Flash를 Copilot에 추가했다. Code 2는 다중 파일 구현·리팩터링·깊은 디버깅, Flash는 코드 설명·부분 수정·빠른 반복을 겨냥한다. Code 2는 Pro 이상, Flash는 Free·Student를 포함한 요금제에서 지원하며 VS Code·Visual Studio·CLI 등에서 선택할 수 있지만 조직의 모델 정책에 따라 접근이 달라질 수 있다. 사용량 기반 과금 대상이므로 모델을 선택할 수 있다는 사실을 무제한 무료 사용으로 해석하면 안 된다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "checked": "2026-11-18",
+      "sources": [
+        {
+          "label": "GitHub 공식 변경기록",
+          "url": "https://github.blog/changelog/2026-11-17-mai-code-2-and-mai-code-2-flash-in-github-copilot/",
+          "published": "2026-11-17",
+          "accessed": "2026-11-18",
+          "date_note": "공식 HTML 전문 직접 확인. 요금제·클라이언트·조직 정책·사용량 과금 확인. Microsoft 모델 발표 페이지는 403이어서 성능·가격 수치를 인용하지 않음."
+        }
+      ],
+      "summary": "GitHub는 MAI Code 2와 Code 2 Flash를 Copilot에 추가했다. Code 2는 다중 파일 구현·리팩터링·깊은 디버깅, Flash는 코드 설명·부분 수정·빠른 반복을 겨냥한다. Code 2는 Pro 이상, Flash는 Free·Student를 포함한 요금제에서 지원하며 VS Code·Visual Studio·CLI 등에서 선택할 수 있지만 조직의 모델 정책에 따라 접근이 달라질 수 있다. 사용량 기반 과금 대상이므로 모델을 선택할 수 있다는 사실을 무제한 무료 사용으로 해석하면 안 된다."
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "Microsoft, 40곳 넘는 조직과 AI 투명성 이니셔티브 발표",
+      "source": "Microsoft",
+      "published": "2026-11-17",
+      "url": "https://news.microsoft.com/source/2026/11/17/microsoft-and-organizations-across-industries-launch-ai-transparency-initiative-to-strengthen-enterprise-trust-in-ai-models-and-agents/",
+      "tags": [
+        "AI 에이전트",
+        "보안",
+        "감사"
+      ],
+      "short_summary": "Microsoft는 Adobe·KPMG 등 40곳 넘는 조직과 모델·제공자에 공통으로 적용할 AI 투명성·보안·거버넌스 접근을 개발한다고 발표했다. 핵심은 에이전트가 무엇에 접근하고 어떤 행동을 했는지 보고, 모델 자신의 설명에만 의존하지 않고 독립적으로 검증하며, 허용 행동을 통제하는 것이다. 관련 표준 연구·협력 결과를 Microsoft AI·Foundry·Copilot에 반영할 계획으로, 이미 완성된 공통 표준이나 모든 모델 내부를 완전히 관찰하는 제품이 출시됐다는 뜻은 아니다. 개발팀 관점에서는 에이전트의 성공 보고와 별도로 도구 실행 로그·권한·변경 결과를 남기는 설계가 중요하다.",
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "checked": "2026-11-18",
+      "sources": [
+        {
+          "label": "Microsoft 공식 발표",
+          "url": "https://news.microsoft.com/source/2026/11/17/microsoft-and-organizations-across-industries-launch-ai-transparency-initiative-to-strengthen-enterprise-trust-in-ai-models-and-agents/",
+          "published": "2026-11-17",
+          "accessed": "2026-11-18",
+          "date_note": "검색 도구가 반환한 공식 발표 본문의 From principles to practice·Clear accountability 절 확인. 직접 HTTP 열기는 403. 표준 개발 계획과 제품 완성을 구분."
+        }
+      ],
+      "summary": "Microsoft는 Adobe·KPMG 등 40곳 넘는 조직과 모델·제공자에 공통으로 적용할 AI 투명성·보안·거버넌스 접근을 개발한다고 발표했다. 핵심은 에이전트가 무엇에 접근하고 어떤 행동을 했는지 보고, 모델 자신의 설명에만 의존하지 않고 독립적으로 검증하며, 허용 행동을 통제하는 것이다. 관련 표준 연구·협력 결과를 Microsoft AI·Foundry·Copilot에 반영할 계획으로, 이미 완성된 공통 표준이나 모든 모델 내부를 완전히 관찰하는 제품이 출시됐다는 뜻은 아니다. 개발팀 관점에서는 에이전트의 성공 보고와 별도로 도구 실행 로그·권한·변경 결과를 남기는 설계가 중요하다."
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "Unity CLI 1.0 정식화, 에디터 자동화는 명령 실행 뒤 결과 검증까지",
+      "url": "https://unity.com/the-unity-cli-1.0-is-here",
+      "source": "Unity",
+      "published": "2026-11-17",
+      "summary": "Unity CLI와 com.unity.pipeline 패키지가 베타를 마치고 1.0으로 공개됐다. CLI는 에디터·프로젝트를 관리하고 Pipeline은 실행 중인 에디터에 명령을 전달한다. 1.x의 명령·플래그·출력 호환성 유지 방침이 생겼으며, Linux 컨테이너 에디터는 아직 출시 예정으로 구분된다.",
+      "short_summary": "Unity CLI와 com.unity.pipeline 패키지가 베타를 마치고 1.0으로 공개됐다. CLI는 에디터·프로젝트를 관리하고 Pipeline은 실행 중인 에디터에 명령을 전달한다. 1.x의 명령·플래그·출력 호환성 유지 방침이 생겼으며, Linux 컨테이너 에디터는 아직 출시 예정으로 구분된다.",
+      "tags": [
+        "Unity",
+        "CLI",
+        "자동화",
+        "테스트"
+      ],
+      "easy_explainer": "터미널 도구와 에디터 내부 실행기는 역할이 다르다. CLI가 프로젝트를 열고 명령을 보내더라도 실제 씬 변경·플레이·빌드의 결과는 에디터에서 확인해야 한다. 명령을 전달했다는 응답만으로 게임이 제대로 작동한다고 판단하면 안 된다.",
+      "technical_context": "1.0은 구조화된 JSON 출력, CI에서 대화형 입력을 요구하지 않는 동작, 에디터 사용 중·모달 창·네트워크 오류를 구분하는 종료 코드를 정리했다. unity open --until-ready는 명령 수신 준비를 기다리고, unity build --target은 해당 프로젝트가 열린 에디터를 활용한다. 프로젝트별 CLI 버전 범위 고정도 지원한다. 따라서 자동화는 실행 성공뿐 아니라 준비 상태·종료 코드·생성 산출물을 순서대로 검사할 수 있다.",
+      "why_it_matters": "반복적인 임포트·검사·빌드를 사람이 클릭하지 않아도 되지만, 잘못된 자동화가 씬과 설정을 빠르게 바꿀 위험도 커진다. 정식 버전이라는 사실은 모든 프로젝트·플러그인의 호환성 보증과 다르다.",
+      "developer_view": "적용 제안: 먼저 복사한 프로젝트에서 버전을 고정하고, 읽기 전용 상태 확인 → 테스트 → 빌드 순서로 연결하자. 에이전트의 수정 diff와 Play Mode 검사를 별도로 남기고, 팝업 응답 기능에 삭제·라이선스·외부 업로드의 무조건 승인을 맡기지 않는다. 공식 발표는 Build Server 라이선스 범위를 에이전트·자동화까지 확대했으므로 헤드리스 운영의 인스턴스별 라이선스 조건도 확인해야 한다.",
+      "checked": "2026-11-18",
+      "sources": [
+        {
+          "label": "Unity 공식 발표",
+          "url": "https://unity.com/the-unity-cli-1.0-is-here",
+          "published": "2026-11-17",
+          "accessed": "2026-11-18",
+          "date_note": "공식 본문 확인. 발표일과 적용·출시일을 구분."
+        }
+      ]
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "Unity Graphics Kernel 기술 보충, GPU를 기다리는 지점을 줄이는 렌더링 구조",
+      "url": "https://discussions.unity.com/t/introducing-the-unity-graphics-kernel/1741739",
+      "source": "Unity Graphics 팀",
+      "published": "2026-11-12",
+      "summary": "11월 12일 공개됐지만 기존 브리핑에서 다루지 않은 핵심 그래픽스 기술을 보충한다. Unity Graphics Kernel은 명령과 자원 의존성을 추적해 동기화 배리어를 최적화하는 새 저수준 백엔드다. Unity 6.7 beta의 Vulkan과 7.0 alpha의 D3D12에서 실험 단계이며, 출시용 프로젝트에 권장되지 않는다.",
+      "short_summary": "11월 12일 공개됐지만 기존 브리핑에서 다루지 않은 핵심 그래픽스 기술을 보충한다. Unity Graphics Kernel은 명령과 자원 의존성을 추적해 동기화 배리어를 최적화하는 새 저수준 백엔드다. Unity 6.7 beta의 Vulkan과 7.0 alpha의 D3D12에서 실험 단계이며, 출시용 프로젝트에 권장되지 않는다.",
+      "tags": [
+        "Unity",
+        "GPU 동기화",
+        "Vulkan",
+        "렌더링"
+      ],
+      "easy_explainer": "같은 결과물을 읽어야 하는 작업은 앞선 쓰기가 끝나야 한다. 하지만 서로 다른 버퍼에 쓰는 작업까지 매번 기다리게 하면 GPU의 병렬 처리 기회를 낭비한다. 핵심은 기다림을 없애는 것이 아니라 실제 의존성이 있는 곳에만 배치하는 것이다.",
+      "technical_context": "공식 스트레스 예제는 256개 쓰기 작업과 그 결과를 읽는 32개 작업을 사용한다. 기존 288개 동기화 지점을 프레임 그래프가 두 그룹으로 모아 2개로 줄인다. 이는 해당 실험의 동기화 지점 수이지 모든 게임의 속도 향상 배율이 아니다. Multi Draw Indirect는 여러 간접 그리기를 한 호출로 제출하고, 컴퓨트 셰이더가 그리기 인자를 만들면 GPU 컬링·LOD 선택으로 연결할 수 있다.",
+      "why_it_matters": "렌더 스레드 시간이 줄어도 일이 사라진 것이 아니라 별도 제출 스레드로 이동했을 수 있다. 새 백엔드에서는 그래프 마감·제출 작업과 대기 시간을 구분해 측정해야 한다.",
+      "developer_view": "적용 제안: 실험 브랜치에서 같은 씬·해상도·장치로 CPU/GPU 시간을 비교하자. 겹치는 대기 시간을 작업 시간에 다시 더하지 않는다. 에디터 자체는 아직 기존 백엔드이며 XR·일부 그래픽 플러그인·HDRP Ray Tracing Shaders 등 미지원 기능이 있으므로 기능표부터 대조한다. 기존 URP/HDRP의 모든 기능이 자동으로 빨라진다는 뜻은 아니다.",
+      "checked": "2026-11-18",
+      "sources": [
+        {
+          "label": "Unity Graphics 팀의 설계·프로파일링 설명",
+          "url": "https://discussions.unity.com/t/introducing-the-unity-graphics-kernel/1741739",
+          "published": "2026-11-12",
+          "accessed": "2026-11-18",
+          "date_note": "최초 게시 11월 12일. 오늘의 신규 발표가 아닌 미수록 중요 기술 보충. 게시자 본문과 프로파일링 설명 확인."
+        }
+      ]
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "Godot 재단, Manus의 Platinum 후원 발표",
+      "url": "https://godotengine.org/article/partners_manus_sponsorship_2026_announcement/",
+      "source": "Godot Foundation",
+      "published": "2026-11-17",
+      "summary": "Godot 재단은 Manus가 Platinum 후원사로 참여했다고 발표했다. 이번 소식은 오픈소스 엔진 개발 재정 지원에 관한 것으로, Godot에 특정 AI 기능이 기본 탑재되거나 엔진 라이선스가 변경됐다는 발표는 아니다. 게시물 속 게임 제작에 대한 AI 효과는 후원사의 설명이므로 검증된 개발 생산성 수치로 받아들이지 않는 것이 좋다.",
+      "short_summary": "Godot 재단은 Manus가 Platinum 후원사로 참여했다고 발표했다. 이번 소식은 오픈소스 엔진 개발 재정 지원에 관한 것으로, Godot에 특정 AI 기능이 기본 탑재되거나 엔진 라이선스가 변경됐다는 발표는 아니다. 게시물 속 게임 제작에 대한 AI 효과는 후원사의 설명이므로 검증된 개발 생산성 수치로 받아들이지 않는 것이 좋다.",
+      "tags": [
+        "Godot",
+        "오픈소스",
+        "후원"
+      ],
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "checked": "2026-11-18",
+      "sources": [
+        {
+          "label": "Godot Foundation 공식 발표",
+          "url": "https://godotengine.org/article/partners_manus_sponsorship_2026_announcement/",
+          "published": "2026-11-17",
+          "accessed": "2026-11-18",
+          "date_note": "공식 본문 확인. 발표일과 적용·출시일을 구분."
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "The Game Awards 2026 후보 공개, 올해의 게임 후보 6편 확정",
+      "url": "https://thegameawards.com/categories/game-of-the-year",
+      "source": "The Game Awards",
+      "published": "2026-11-17",
+      "summary": "올해의 게임 후보는 007 First Light, Control Resonant, Grand Theft Auto VI, Phantom Blade Zero, Resident Evil Requiem, The Legend of Zelda: Ocarina of Time이다. 후보 선정과 최종 수상은 별개이며 일반 부문은 심사단 90%·팬 투표 10%를 합산한다. 행사는 현지 12월 10일 열리고, 공식 FAQ는 후보 평가를 위한 출시 전 사전 제공과 11월 20일의 상업 출시 자격 마감을 구분한다.",
+      "short_summary": "올해의 게임 후보는 007 First Light, Control Resonant, Grand Theft Auto VI, Phantom Blade Zero, Resident Evil Requiem, The Legend of Zelda: Ocarina of Time이다. 후보 선정과 최종 수상은 별개이며 일반 부문은 심사단 90%·팬 투표 10%를 합산한다. 행사는 현지 12월 10일 열리고, 공식 FAQ는 후보 평가를 위한 출시 전 사전 제공과 11월 20일의 상업 출시 자격 마감을 구분한다.",
+      "tags": [
+        "The Game Awards",
+        "게임 산업",
+        "시상식"
+      ],
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "checked": "2026-11-18",
+      "sources": [
+        {
+          "label": "공식 올해의 게임 후보",
+          "url": "https://thegameawards.com/categories/game-of-the-year",
+          "accessed": "2026-11-18",
+          "date_note": "현재 2026 후보 6편 직접 확인. 후보 발표일은 11월 17일 보도와 대조."
+        },
+        {
+          "label": "공식 FAQ와 투표 규칙",
+          "url": "https://thegameawards.com/faq",
+          "accessed": "2026-11-18",
+          "date_note": "행사일·투표 비중·출시 자격·사전 평가 허용 확인."
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "Game Pass 후반기 목록 공개, Hela와 Arkheron은 출시일 합류 예정",
+      "url": "https://news.xbox.com/en-us/2026/11/17/xbox-game-pass-november-2026-wave-2/",
+      "source": "Xbox Wire",
+      "published": "2026-11-17",
+      "summary": "Xbox는 11월 후반부터 12월 1일까지의 Game Pass 추가 목록을 공개했다. Arkheron의 Game Preview는 11월 27일, Hela: of Mice & Magic은 12월 1일 Ultimate·PC Game Pass에 출시일부터 합류하며, The Outlast Trials도 12월 1일 추가될 예정이다. Sniper Ghost Warrior Contracts 2는 11월 24일 예정이고, 11월 30일에는 Banishers: Ghosts of New Eden·Moving Out 2 등을 포함한 8편이 떠난다. 작품마다 구독 등급·플랫폼과 제공일이 다르므로 신규 발표를 현재 전부 이용 가능하다는 뜻으로 읽으면 안 된다.",
+      "short_summary": "Xbox는 11월 후반부터 12월 1일까지의 Game Pass 추가 목록을 공개했다. Arkheron의 Game Preview는 11월 27일, Hela: of Mice & Magic은 12월 1일 Ultimate·PC Game Pass에 출시일부터 합류하며, The Outlast Trials도 12월 1일 추가될 예정이다. Sniper Ghost Warrior Contracts 2는 11월 24일 예정이고, 11월 30일에는 Banishers: Ghosts of New Eden·Moving Out 2 등을 포함한 8편이 떠난다. 작품마다 구독 등급·플랫폼과 제공일이 다르므로 신규 발표를 현재 전부 이용 가능하다는 뜻으로 읽으면 안 된다.",
+      "tags": [
+        "Game Pass",
+        "출시 일정",
+        "구독"
+      ],
+      "easy_explainer": "",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "checked": "2026-11-18",
+      "sources": [
+        {
+          "label": "Xbox Wire 공식 발표",
+          "url": "https://news.xbox.com/en-us/2026/11/17/xbox-game-pass-november-2026-wave-2/",
+          "published": "2026-11-17",
+          "accessed": "2026-11-18",
+          "date_note": "공식 본문 확인. 발표일과 적용·출시일을 구분."
+        }
+      ]
+    }
+  ],
+  "original_markdown": "# 2026-11-18 게임·AI 데일리 브리핑\n\n2026년 11월 18일(수) 한국시간 오전 조사 기준. AI·게임 개발·게임 전반의 공식 발표를 확인하고 기존 브리핑과 중복을 대조했어. Unity Graphics Kernel은 11월 12일 발표의 미수록 기술 보충으로 별도 표시했어. 회사의 성능 주장은 자체 실측과 구분하며, 개발자 관점은 적용 제안이야.\n\n## 1. GPT-6.2 Astra·Sol 출시, 모델 성능뿐 아니라 작업당 비용과 대화 보존 방식이 핵심\n\n**영역:** ai | **깊이:** deep | **발표:** 2026-11-17\n\n### 핵심 요약\n\nOpenAI가 복잡한 전문 작업용 GPT-6.2 Astra와 일상적인 코딩·업무용 Sol을 ChatGPT Work·Codex·API에 공개했다. 표준 API의 100만 토큰당 입력/캐시 입력/출력 가격은 Astra 8/0.40/40달러, Sol 2/0.10/10달러다. Astra의 일반 입력·출력 단가는 GPT-6 Astra보다 20% 낮고, Sol은 GPT-6.1 Sol 가격을 유지한다. 성능·토큰 효율 개선 수치는 회사 평가이며 개별 게임 프로젝트의 성공률이나 총비용을 보장하지 않는다.\n\n### 쉽게 이해하기\n\n토큰 가격이 싸졌다는 것과 한 작업을 끝내는 비용이 낮아졌다는 것은 다르다. 같은 수정도 긴 설명·반복 시도·테스트 실패가 많으면 더 비싸진다. 모델 단가와 작업을 완료하기까지의 전체 호출량을 함께 봐야 한다.\n\n### 작동 원리와 배경\n\n두 모델은 Responses와 Chat Completions를 지원하지만 도구 호출은 Responses API가 필요하다. 새 모델용 공식 통합 지침은 대화 앞부분을 고치기보다 새 지시를 끝에 추가하도록 권한다. 과거 도구 결과나 개발자 메시지를 수정하면 캐시 재사용이 줄고, 변경 뒤의 추론 항목이 제거되어 재계산될 수 있기 때문이다. 추론 강도·출력 형식 변경에는 configuration_update를 쓰고 요청 수준 설정은 유지하는 방식이 안내된다. 공식 압축 기능에는 별도 보존 처리가 있으므로 모든 압축을 금지한다는 뜻은 아니다.\n\n### 왜 중요한가\n\n긴 저장소 수정에서 매번 파일·이력을 다시 정리하는 자체 에이전트는 모델을 바꾸는 것만으로 기대한 비용 절감을 얻지 못할 수 있다. 더 강한 사이버 안전 제한도 함께 적용돼 보안 점검 요청의 응답 범위가 달라질 수 있다.\n\n### 개발자 관점\n\n적용 제안: 동일한 Unity 또는 Godot 버그 몇 개를 고정해 수정 성공률, 테스트 통과, 전체 입력·출력 토큰과 재시도 횟수를 비교하자. 기본 작업은 Sol, 복잡한 다중 파일 진단은 Astra를 후보로 두되 실제 측정으로 결정한다. 모델의 완료 선언 대신 diff·빌드·플레이 테스트 결과로 판정하고, API 연동에서는 과거 메시지를 바꾸는 지점을 먼저 점검한다.\n\n### 출처와 날짜\n\n- [OpenAI 출시 발표](https://openai.com/index/introducing-gpt-6-2-astra-sol/) · 발표 2026-11-17 · 확인 2026-11-18. 출시·가격·안전 제한 원문 확인. 벤치마크를 자체 실측으로 표시하지 않음.\n- [OpenAI API 11월 17일 변경기록](https://developers.openai.com/api/docs/changelog) · 발표 2026-11-17 · 확인 2026-11-18. 두 API 지원과 Responses 전용 도구 호출 확인.\n- [대화 접두부 보존 공식 지침](https://developers.openai.com/api/docs/guides/keep-prefix-unchanged) · 발표 날짜 미기록 · 확인 2026-11-18. 현재 통합 지침 확인. 개별 문서의 최초 공개일은 확인하지 않음.\n\n## 2. OpenAI, 2·8시간 비동기 완료 창 공개 베타…야간 작업 토큰 비용 할인\n\n**영역:** ai | **깊이:** brief | **발표:** 2026-11-17\n\n### 핵심 요약\n\nResponses API에 2시간·8시간 완료 목표 창이 공개 베타로 추가됐으며, 적격 모델 토큰 요금은 표준 처리보다 각각 30%·40% 낮다. GPT-6.2 Astra·Sol, GPT-6.1 Terra, GPT-6 Luna에서 지원하고 기본 soonest 창에는 할인이 없다. 완료 목표는 첫 응답에 적용되므로 도구 호출을 포함한 전체 업무가 그 시간 안에 끝난다는 보장이 아니며, 도구 실행과 후속 요청은 애플리케이션이 관리한다. 야간 문서·로그 분석의 비용 절감 후보지만 임시 데이터 저장, 스트리밍 미지원, Batch와 공유하는 처리 한도를 검토해야 한다.\n\n### 출처와 날짜\n\n- [OpenAI API 변경기록](https://developers.openai.com/api/docs/changelog) · 발표 2026-11-17 · 확인 2026-11-18. 11월 17일 public beta 및 할인율 발표 확인.\n- [Background mode 공식 문서](https://developers.openai.com/api/docs/guides/background) · 발표 날짜 미기록 · 확인 2026-11-18. 완료 목표 범위·지원 모델·임시 저장·스트리밍·Standard 및 공유 한도 조건 확인.\n\n## 3. Microsoft MAI Code 2·Flash, GitHub Copilot에 추가\n\n**영역:** ai | **깊이:** brief | **발표:** 2026-11-17\n\n### 핵심 요약\n\nGitHub는 MAI Code 2와 Code 2 Flash를 Copilot에 추가했다. Code 2는 다중 파일 구현·리팩터링·깊은 디버깅, Flash는 코드 설명·부분 수정·빠른 반복을 겨냥한다. Code 2는 Pro 이상, Flash는 Free·Student를 포함한 요금제에서 지원하며 VS Code·Visual Studio·CLI 등에서 선택할 수 있지만 조직의 모델 정책에 따라 접근이 달라질 수 있다. 사용량 기반 과금 대상이므로 모델을 선택할 수 있다는 사실을 무제한 무료 사용으로 해석하면 안 된다.\n\n### 출처와 날짜\n\n- [GitHub 공식 변경기록](https://github.blog/changelog/2026-11-17-mai-code-2-and-mai-code-2-flash-in-github-copilot/) · 발표 2026-11-17 · 확인 2026-11-18. 공식 HTML 전문 직접 확인. 요금제·클라이언트·조직 정책·사용량 과금 확인. Microsoft 모델 발표 페이지는 403이어서 성능·가격 수치를 인용하지 않음.\n\n## 4. Microsoft, 40곳 넘는 조직과 AI 투명성 이니셔티브 발표\n\n**영역:** ai | **깊이:** brief | **발표:** 2026-11-17\n\n### 핵심 요약\n\nMicrosoft는 Adobe·KPMG 등 40곳 넘는 조직과 모델·제공자에 공통으로 적용할 AI 투명성·보안·거버넌스 접근을 개발한다고 발표했다. 핵심은 에이전트가 무엇에 접근하고 어떤 행동을 했는지 보고, 모델 자신의 설명에만 의존하지 않고 독립적으로 검증하며, 허용 행동을 통제하는 것이다. 관련 표준 연구·협력 결과를 Microsoft AI·Foundry·Copilot에 반영할 계획으로, 이미 완성된 공통 표준이나 모든 모델 내부를 완전히 관찰하는 제품이 출시됐다는 뜻은 아니다. 개발팀 관점에서는 에이전트의 성공 보고와 별도로 도구 실행 로그·권한·변경 결과를 남기는 설계가 중요하다.\n\n### 출처와 날짜\n\n- [Microsoft 공식 발표](https://news.microsoft.com/source/2026/11/17/microsoft-and-organizations-across-industries-launch-ai-transparency-initiative-to-strengthen-enterprise-trust-in-ai-models-and-agents/) · 발표 2026-11-17 · 확인 2026-11-18. 검색 도구가 반환한 공식 발표 본문의 From principles to practice·Clear accountability 절 확인. 직접 HTTP 열기는 403. 표준 개발 계획과 제품 완성을 구분.\n\n## 5. Unity CLI 1.0 정식화, 에디터 자동화는 명령 실행 뒤 결과 검증까지\n\n**영역:** game-dev | **깊이:** deep | **발표:** 2026-11-17\n\n### 핵심 요약\n\nUnity CLI와 com.unity.pipeline 패키지가 베타를 마치고 1.0으로 공개됐다. CLI는 에디터·프로젝트를 관리하고 Pipeline은 실행 중인 에디터에 명령을 전달한다. 1.x의 명령·플래그·출력 호환성 유지 방침이 생겼으며, Linux 컨테이너 에디터는 아직 출시 예정으로 구분된다.\n\n### 쉽게 이해하기\n\n터미널 도구와 에디터 내부 실행기는 역할이 다르다. CLI가 프로젝트를 열고 명령을 보내더라도 실제 씬 변경·플레이·빌드의 결과는 에디터에서 확인해야 한다. 명령을 전달했다는 응답만으로 게임이 제대로 작동한다고 판단하면 안 된다.\n\n### 작동 원리와 배경\n\n1.0은 구조화된 JSON 출력, CI에서 대화형 입력을 요구하지 않는 동작, 에디터 사용 중·모달 창·네트워크 오류를 구분하는 종료 코드를 정리했다. unity open --until-ready는 명령 수신 준비를 기다리고, unity build --target은 해당 프로젝트가 열린 에디터를 활용한다. 프로젝트별 CLI 버전 범위 고정도 지원한다. 따라서 자동화는 실행 성공뿐 아니라 준비 상태·종료 코드·생성 산출물을 순서대로 검사할 수 있다.\n\n### 왜 중요한가\n\n반복적인 임포트·검사·빌드를 사람이 클릭하지 않아도 되지만, 잘못된 자동화가 씬과 설정을 빠르게 바꿀 위험도 커진다. 정식 버전이라는 사실은 모든 프로젝트·플러그인의 호환성 보증과 다르다.\n\n### 개발자 관점\n\n적용 제안: 먼저 복사한 프로젝트에서 버전을 고정하고, 읽기 전용 상태 확인 → 테스트 → 빌드 순서로 연결하자. 에이전트의 수정 diff와 Play Mode 검사를 별도로 남기고, 팝업 응답 기능에 삭제·라이선스·외부 업로드의 무조건 승인을 맡기지 않는다. 공식 발표는 Build Server 라이선스 범위를 에이전트·자동화까지 확대했으므로 헤드리스 운영의 인스턴스별 라이선스 조건도 확인해야 한다.\n\n### 출처와 날짜\n\n- [Unity 공식 발표](https://unity.com/the-unity-cli-1.0-is-here) · 발표 2026-11-17 · 확인 2026-11-18. 공식 본문 확인. 발표일과 적용·출시일을 구분.\n\n## 6. Unity Graphics Kernel 기술 보충, GPU를 기다리는 지점을 줄이는 렌더링 구조\n\n**영역:** game-dev | **깊이:** deep | **발표:** 2026-11-12\n\n### 핵심 요약\n\n11월 12일 공개됐지만 기존 브리핑에서 다루지 않은 핵심 그래픽스 기술을 보충한다. Unity Graphics Kernel은 명령과 자원 의존성을 추적해 동기화 배리어를 최적화하는 새 저수준 백엔드다. Unity 6.7 beta의 Vulkan과 7.0 alpha의 D3D12에서 실험 단계이며, 출시용 프로젝트에 권장되지 않는다.\n\n### 쉽게 이해하기\n\n같은 결과물을 읽어야 하는 작업은 앞선 쓰기가 끝나야 한다. 하지만 서로 다른 버퍼에 쓰는 작업까지 매번 기다리게 하면 GPU의 병렬 처리 기회를 낭비한다. 핵심은 기다림을 없애는 것이 아니라 실제 의존성이 있는 곳에만 배치하는 것이다.\n\n### 작동 원리와 배경\n\n공식 스트레스 예제는 256개 쓰기 작업과 그 결과를 읽는 32개 작업을 사용한다. 기존 288개 동기화 지점을 프레임 그래프가 두 그룹으로 모아 2개로 줄인다. 이는 해당 실험의 동기화 지점 수이지 모든 게임의 속도 향상 배율이 아니다. Multi Draw Indirect는 여러 간접 그리기를 한 호출로 제출하고, 컴퓨트 셰이더가 그리기 인자를 만들면 GPU 컬링·LOD 선택으로 연결할 수 있다.\n\n### 왜 중요한가\n\n렌더 스레드 시간이 줄어도 일이 사라진 것이 아니라 별도 제출 스레드로 이동했을 수 있다. 새 백엔드에서는 그래프 마감·제출 작업과 대기 시간을 구분해 측정해야 한다.\n\n### 개발자 관점\n\n적용 제안: 실험 브랜치에서 같은 씬·해상도·장치로 CPU/GPU 시간을 비교하자. 겹치는 대기 시간을 작업 시간에 다시 더하지 않는다. 에디터 자체는 아직 기존 백엔드이며 XR·일부 그래픽 플러그인·HDRP Ray Tracing Shaders 등 미지원 기능이 있으므로 기능표부터 대조한다. 기존 URP/HDRP의 모든 기능이 자동으로 빨라진다는 뜻은 아니다.\n\n### 출처와 날짜\n\n- [Unity Graphics 팀의 설계·프로파일링 설명](https://discussions.unity.com/t/introducing-the-unity-graphics-kernel/1741739) · 발표 2026-11-12 · 확인 2026-11-18. 최초 게시 11월 12일. 오늘의 신규 발표가 아닌 미수록 중요 기술 보충. 게시자 본문과 프로파일링 설명 확인.\n\n## 7. Godot 재단, Manus의 Platinum 후원 발표\n\n**영역:** game-dev | **깊이:** brief | **발표:** 2026-11-17\n\n### 핵심 요약\n\nGodot 재단은 Manus가 Platinum 후원사로 참여했다고 발표했다. 이번 소식은 오픈소스 엔진 개발 재정 지원에 관한 것으로, Godot에 특정 AI 기능이 기본 탑재되거나 엔진 라이선스가 변경됐다는 발표는 아니다. 게시물 속 게임 제작에 대한 AI 효과는 후원사의 설명이므로 검증된 개발 생산성 수치로 받아들이지 않는 것이 좋다.\n\n### 출처와 날짜\n\n- [Godot Foundation 공식 발표](https://godotengine.org/article/partners_manus_sponsorship_2026_announcement/) · 발표 2026-11-17 · 확인 2026-11-18. 공식 본문 확인. 발표일과 적용·출시일을 구분.\n\n## 8. The Game Awards 2026 후보 공개, 올해의 게임 후보 6편 확정\n\n**영역:** game-industry | **깊이:** brief | **발표:** 2026-11-17\n\n### 핵심 요약\n\n올해의 게임 후보는 007 First Light, Control Resonant, Grand Theft Auto VI, Phantom Blade Zero, Resident Evil Requiem, The Legend of Zelda: Ocarina of Time이다. 후보 선정과 최종 수상은 별개이며 일반 부문은 심사단 90%·팬 투표 10%를 합산한다. 행사는 현지 12월 10일 열리고, 공식 FAQ는 후보 평가를 위한 출시 전 사전 제공과 11월 20일의 상업 출시 자격 마감을 구분한다.\n\n### 출처와 날짜\n\n- [공식 올해의 게임 후보](https://thegameawards.com/categories/game-of-the-year) · 발표 날짜 미기록 · 확인 2026-11-18. 현재 2026 후보 6편 직접 확인. 후보 발표일은 11월 17일 보도와 대조.\n- [공식 FAQ와 투표 규칙](https://thegameawards.com/faq) · 발표 날짜 미기록 · 확인 2026-11-18. 행사일·투표 비중·출시 자격·사전 평가 허용 확인.\n\n## 9. Game Pass 후반기 목록 공개, Hela와 Arkheron은 출시일 합류 예정\n\n**영역:** game-industry | **깊이:** brief | **발표:** 2026-11-17\n\n### 핵심 요약\n\nXbox는 11월 후반부터 12월 1일까지의 Game Pass 추가 목록을 공개했다. Arkheron의 Game Preview는 11월 27일, Hela: of Mice & Magic은 12월 1일 Ultimate·PC Game Pass에 출시일부터 합류하며, The Outlast Trials도 12월 1일 추가될 예정이다. Sniper Ghost Warrior Contracts 2는 11월 24일 예정이고, 11월 30일에는 Banishers: Ghosts of New Eden·Moving Out 2 등을 포함한 8편이 떠난다. 작품마다 구독 등급·플랫폼과 제공일이 다르므로 신규 발표를 현재 전부 이용 가능하다는 뜻으로 읽으면 안 된다.\n\n### 출처와 날짜\n\n- [Xbox Wire 공식 발표](https://news.xbox.com/en-us/2026/11/17/xbox-game-pass-november-2026-wave-2/) · 발표 2026-11-17 · 확인 2026-11-18. 공식 본문 확인. 발표일과 적용·출시일을 구분.\n"
+}
