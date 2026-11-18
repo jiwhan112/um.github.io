@@ -8,7 +8,7 @@
     "content": "tsx scripts/content.ts",
     "build": "npm run typecheck && npm run content && vite build && tsx scripts/routes.ts",
     "preview": "vite preview --host 0.0.0.0",
-    "test:unit": "tsx --test tests/content.test.ts tests/example-bundles.test.ts tests/word-notebook.test.ts tests/japanese-foundation.test.ts && node --test tests/publish-reentry.test.mjs tests/live-navigation.test.mjs && node --test tests/shard-coverage.test.mjs",
+    "test:unit": "tsx --test tests/content.test.ts tests/example-bundles.test.ts tests/word-notebook.test.ts tests/japanese-foundation.test.ts && node --test tests/publish-reentry.test.mjs tests/live-navigation.test.mjs && node --test tests/shard-coverage.test.mjs && node --test tests/picomatch-security.test.mjs",
     "test:e2e": "playwright test",
     "check": "npm run check:repo && npm run check:publishing && npm run test:unit && npm run build && node scripts/check-publication.mjs && npm run test:e2e",
     "check:repo": "node scripts/check-repository.mjs",
@@ -43,9 +43,13 @@
     "tailwindcss": "4.3.3",
     "tsx": "4.23.15",
     "typescript": "5.9.3",
-    "vite": "7.3.7"
+    "vite": "7.3.7",
+    "picomatch": "file:vendor/picomatch-safe"
   },
   "engines": {
     "node": ">=22.12.0"
+  },
+  "overrides": {
+    "picomatch": "$picomatch"
   }
 }
