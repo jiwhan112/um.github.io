@@ -1,0 +1,187 @@
+{
+  "date": "2026-11-22",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 11월 22일 일요일 한국시간 오전 5시 기준. 로컬 AI 모델 Inkling 2 Mini의 반복 연산 구조와 실행 조건을 짚고, 증명 검증·코딩 도구와 게임 업계 소식을 정리했다. 별도 게임 엔진·개발 도구 소식은 이번 집계 구간에서 기사로 싣지 않았다.",
+  "items": [
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "Inkling 2 Mini 공개: 열린 가중치와 레이어 반복, 로컬 실행의 조건",
+      "source": "Thinking Machines Lab",
+      "published": "2026-11-20",
+      "url": "https://thinkingmachines.ai/news/inkling-2-mini/",
+      "tags": [
+        "로컬 LLM",
+        "오픈 웨이트",
+        "MoE",
+        "코딩 에이전트"
+      ],
+      "short_summary": "Thinking Machines Lab이 Inkling 2 Mini의 가중치를 Apache 2.0으로 공개했다. 회사의 공개 안내는 한국시간 11월 21일 오전 5시 10분에 게시됐다. 코딩과 이미지 이해에 쓸 수 있지만 공식 약 20GB 구성은 RTX 5070 Ti 16GB 한 장에 통째로 올리기 어렵다.",
+      "summary": "Thinking Machines Lab이 Inkling 2 Mini의 가중치를 Apache 2.0으로 공개했다. 회사의 공개 안내는 한국시간 11월 21일 오전 5시 10분에 게시됐다. 코딩과 이미지 이해에 쓸 수 있지만 공식 약 20GB 구성은 RTX 5070 Ti 16GB 한 장에 통째로 올리기 어렵다.",
+      "checked": "2026-11-22",
+      "easy_explainer": "모든 전문가 가중치를 매번 쓰는 대신 일부만 골라 계산하는 모델이다. 여기에 가운데 층을 여러 번 지나게 해, 새 층의 가중치를 더 저장하지 않고 같은 토큰에 계산을 더 할 수 있게 했다. 텍스트와 이미지를 입력받아 텍스트를 출력한다.",
+      "technical_context": "전체 가중치는 264억 개, 토큰당 선택되는 고유 가중치는 34억 개다. 가운데 12개 층을 세 번 통과하며, 반복을 포함한 가중치 적용량은 토큰당 약 54억 개 규모다. 가중치를 공유해도 반복 연산, 입력 길이에 따른 KV 캐시, 런타임 버퍼가 사라지는 것은 아니다.",
+      "why_it_matters": "공식 혼합 정밀도 체크포인트의 메모리 규모는 약 20GB다. 이 수치는 모델을 실행하는 데 필요한 모든 메모리가 20GB라는 뜻이 아니다. 제작사 DeepSWE v1.1 결과 48.2%는 공개된 특정 평가 조건에서의 수치이며 일상적인 Unity·Godot 코드 수정 정확도를 보장하지 않는다.",
+      "developer_view": "16GB 카드에는 더 작은 GGUF 양자화본이나 CPU 오프로딩을 검토할 수 있다. 같은 씬 로딩 버그와 인벤토리 테스트를 대상으로 수정 성공률, 첫 토큰 지연, 최대 VRAM을 함께 기록하자. 게임 내 NPC에 붙인다면 모델 출력은 대사나 행동 제안으로만 쓰고, 실제 상태 변경은 엔진에서 검증하자.",
+      "sources": [
+        {
+          "label": "Thinking Machines Lab 발표",
+          "url": "https://thinkingmachines.ai/news/inkling-2-mini/",
+          "published": "2026-11-20",
+          "accessed": "2026-11-22"
+        },
+        {
+          "label": "공식 모델 카드",
+          "url": "https://thinkingmachines.ai/model-card/inkling-2-mini/",
+          "accessed": "2026-11-22"
+        },
+        {
+          "label": "공식 공개 게시물",
+          "url": "https://x.com/thinkymachines/status/2123871643797995872",
+          "published": "2026-11-20",
+          "accessed": "2026-11-22"
+        },
+        {
+          "label": "Unsloth 경량 빌드 지원 릴리스",
+          "url": "https://github.com/unslothai/unsloth/releases/tag/v0.1.922-beta",
+          "published": "2026-11-20",
+          "accessed": "2026-11-22"
+        }
+      ]
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "Lean·Mathlib 커뮤니티, 리만 가설 증명의 기계 검사 결과 발표",
+      "source": "Lean Community / Mathlib",
+      "published": "2026-11-21",
+      "url": "https://leanprover-community.github.io/blog/posts/riemann-hypothesis/",
+      "tags": [
+        "Lean",
+        "형식 검증",
+        "Claude"
+      ],
+      "short_summary": "Lean·Mathlib 커뮤니티가 Claude를 활용해 작업한 레벤트 알포게의 증명 코드를 점검한 결과를 공개했다. 서로 독립적인 도구 두 개로 증명이 Mathlib에 정의된 리만 가설과 같은 명제를 다룬다는 점을 대조했고, 내보낸 증명을 Lean 커널을 포함한 여러 검사기로 확인했다. 이는 해당 코드의 기계 검증 결과이며, Clay 수학연구소의 공식 해결 인정은 아니다.",
+      "summary": "Lean·Mathlib 커뮤니티가 Claude를 활용해 작업한 레벤트 알포게의 증명 코드를 점검한 결과를 공개했다. 서로 독립적인 도구 두 개로 증명이 Mathlib에 정의된 리만 가설과 같은 명제를 다룬다는 점을 대조했고, 내보낸 증명을 Lean 커널을 포함한 여러 검사기로 확인했다. 이는 해당 코드의 기계 검증 결과이며, Clay 수학연구소의 공식 해결 인정은 아니다.",
+      "checked": "2026-11-22",
+      "easy_explainer": "Lean·Mathlib 커뮤니티가 Claude를 활용해 작업한 레벤트 알포게의 증명 코드를 점검한 결과를 공개했다. 서로 독립적인 도구 두 개로 증명이 Mathlib에 정의된 리만 가설과 같은 명제를 다룬다는 점을 대조했고, 내보낸 증명을 Lean 커널을 포함한 여러 검사기로 확인했다. 이는 해당 코드의 기계 검증 결과이며, Clay 수학연구소의 공식 해결 인정은 아니다.",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Lean·Mathlib 공동성명",
+          "url": "https://leanprover-community.github.io/blog/posts/riemann-hypothesis/",
+          "published": "2026-11-21",
+          "accessed": "2026-11-22"
+        },
+        {
+          "label": "알포게의 원 설명",
+          "url": "https://alpo.ge/remark.pdf",
+          "published": "2026-11-20",
+          "accessed": "2026-11-22"
+        },
+        {
+          "label": "Clay 수학연구소 문제 현황",
+          "url": "https://www.claymath.org/millennium/riemann-hypothesis/",
+          "accessed": "2026-11-22"
+        }
+      ]
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "Cline 4.1.27, 긴 코드 읽기와 LM Studio 인증 개선",
+      "source": "Cline",
+      "published": "2026-11-21",
+      "url": "https://github.com/cline/cline/releases/tag/v4.1.27",
+      "tags": [
+        "VS Code",
+        "코딩 에이전트",
+        "LM Studio"
+      ],
+      "short_summary": "Cline VS Code 확장 4.1.27은 `read_files`의 모델 전달 한도를 고정 8천 자에서 도구 자체 한도인 2천 줄 또는 약 4만 8천 자까지 늘렸다. 인증을 켠 LM Studio 서버에 쓸 API 키 입력란도 추가했다. 긴 Unity·Godot 파일의 뒷부분이 잘리는 일이 줄지만, 관련 없는 파일을 한꺼번에 읽히면 입력 토큰도 늘 수 있다.",
+      "summary": "Cline VS Code 확장 4.1.27은 `read_files`의 모델 전달 한도를 고정 8천 자에서 도구 자체 한도인 2천 줄 또는 약 4만 8천 자까지 늘렸다. 인증을 켠 LM Studio 서버에 쓸 API 키 입력란도 추가했다. 긴 Unity·Godot 파일의 뒷부분이 잘리는 일이 줄지만, 관련 없는 파일을 한꺼번에 읽히면 입력 토큰도 늘 수 있다.",
+      "checked": "2026-11-22",
+      "easy_explainer": "Cline VS Code 확장 4.1.27은 `read_files`의 모델 전달 한도를 고정 8천 자에서 도구 자체 한도인 2천 줄 또는 약 4만 8천 자까지 늘렸다. 인증을 켠 LM Studio 서버에 쓸 API 키 입력란도 추가했다. 긴 Unity·Godot 파일의 뒷부분이 잘리는 일이 줄지만, 관련 없는 파일을 한꺼번에 읽히면 입력 토큰도 늘 수 있다.",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Cline GitHub 릴리스 노트",
+          "url": "https://github.com/cline/cline/releases/tag/v4.1.27",
+          "published": "2026-11-21",
+          "accessed": "2026-11-22"
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "The Horror Game Awards 2026, 헬레이저 올해의 게임·ROUTINE 기술상",
+      "source": "The Horror Game Awards",
+      "published": "2026-11-21",
+      "url": "https://thehorrorgameawards.squarespace.com/news/your-winners-for-the-horror-game-awards-2026?format=json",
+      "tags": [
+        "공포 게임",
+        "시상식",
+        "인디 게임"
+      ],
+      "short_summary": "The Horror Game Awards가 2026년 수상 결과를 공개했다. 〈Clive Barker’s Hellraiser: Revival〉이 올해의 게임, 〈ROUTINE〉이 기술 성취상을 받았고, 〈Tenebris Somnia〉는 인디 공포 게임과 아트 디렉션 두 부문에서 수상했다. 12월의 The Game Awards와는 별개인 공포 장르 시상식이다.",
+      "summary": "The Horror Game Awards가 2026년 수상 결과를 공개했다. 〈Clive Barker’s Hellraiser: Revival〉이 올해의 게임, 〈ROUTINE〉이 기술 성취상을 받았고, 〈Tenebris Somnia〉는 인디 공포 게임과 아트 디렉션 두 부문에서 수상했다. 12월의 The Game Awards와는 별개인 공포 장르 시상식이다.",
+      "checked": "2026-11-22",
+      "easy_explainer": "The Horror Game Awards가 2026년 수상 결과를 공개했다. 〈Clive Barker’s Hellraiser: Revival〉이 올해의 게임, 〈ROUTINE〉이 기술 성취상을 받았고, 〈Tenebris Somnia〉는 인디 공포 게임과 아트 디렉션 두 부문에서 수상했다. 12월의 The Game Awards와는 별개인 공포 장르 시상식이다.",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "시상식 공식 수상 명단",
+          "url": "https://thehorrorgameawards.squarespace.com/news/your-winners-for-the-horror-game-awards-2026?format=json",
+          "published": "2026-11-21",
+          "accessed": "2026-11-22"
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "한글 퍼즐 〈곰을 뒤집으면?〉, Steam에 Windows 데모 공개",
+      "source": "SoraCrab Studio / Steam",
+      "published": "2026-11-21",
+      "url": "https://store.steampowered.com/app/5620880/?l=koreana",
+      "tags": [
+        "한국 인디",
+        "Steam",
+        "퍼즐"
+      ],
+      "short_summary": "SoraCrab Studio가 11월 21일 한글 퍼즐 플랫포머 〈곰을 뒤집으면?〉의 Windows 데모를 Steam에 공개했다. ‘곰’을 뒤집어 ‘문’을 만드는 식으로 글자의 모양을 바꿔 게임 속 사물을 변형한다. 기존 itch.io 웹 데모와 별개의 Steam 공개이며, 본편은 Steam에서 12월 출시 예정으로 표시된다.",
+      "summary": "SoraCrab Studio가 11월 21일 한글 퍼즐 플랫포머 〈곰을 뒤집으면?〉의 Windows 데모를 Steam에 공개했다. ‘곰’을 뒤집어 ‘문’을 만드는 식으로 글자의 모양을 바꿔 게임 속 사물을 변형한다. 기존 itch.io 웹 데모와 별개의 Steam 공개이며, 본편은 Steam에서 12월 출시 예정으로 표시된다.",
+      "checked": "2026-11-22",
+      "easy_explainer": "SoraCrab Studio가 11월 21일 한글 퍼즐 플랫포머 〈곰을 뒤집으면?〉의 Windows 데모를 Steam에 공개했다. ‘곰’을 뒤집어 ‘문’을 만드는 식으로 글자의 모양을 바꿔 게임 속 사물을 변형한다. 기존 itch.io 웹 데모와 별개의 Steam 공개이며, 본편은 Steam에서 12월 출시 예정으로 표시된다.",
+      "technical_context": "",
+      "why_it_matters": "",
+      "developer_view": "",
+      "sources": [
+        {
+          "label": "Steam 한국어 상점",
+          "url": "https://store.steampowered.com/app/5620880/?l=koreana",
+          "accessed": "2026-11-22"
+        },
+        {
+          "label": "Steam 데모 앱 정보",
+          "url": "https://store.steampowered.com/api/appdetails?appids=5622130",
+          "published": "2026-11-21",
+          "accessed": "2026-11-22"
+        }
+      ]
+    }
+  ],
+  "original_markdown": "# 2026-11-22 게임·AI 데일리 브리핑\n\n2026년 11월 22일 일요일 한국시간 오전 5시 기준. 로컬 AI 모델 Inkling 2 Mini의 반복 연산 구조와 실행 조건을 짚고, 증명 검증·코딩 도구와 게임 업계 소식을 정리했다. 별도 게임 엔진·개발 도구 소식은 이번 집계 구간에서 기사로 싣지 않았다.\n\n## 1. Inkling 2 Mini 공개: 열린 가중치와 레이어 반복, 로컬 실행의 조건\n\n### 핵심 요약\n\nThinking Machines Lab이 Inkling 2 Mini의 가중치를 Apache 2.0으로 공개했다. 회사의 공개 안내는 한국시간 11월 21일 오전 5시 10분에 게시됐다. 코딩과 이미지 이해에 쓸 수 있지만 공식 약 20GB 구성은 RTX 5070 Ti 16GB 한 장에 통째로 올리기 어렵다.\n\n### 쉽게 이해하기\n\n모든 전문가 가중치를 매번 쓰는 대신 일부만 골라 계산하는 모델이다. 여기에 가운데 층을 여러 번 지나게 해, 새 층의 가중치를 더 저장하지 않고 같은 토큰에 계산을 더 할 수 있게 했다. 텍스트와 이미지를 입력받아 텍스트를 출력한다.\n\n### 작동 원리와 배경\n\n전체 가중치는 264억 개, 토큰당 선택되는 고유 가중치는 34억 개다. 가운데 12개 층을 세 번 통과하며, 반복을 포함한 가중치 적용량은 토큰당 약 54억 개 규모다. 가중치를 공유해도 반복 연산, 입력 길이에 따른 KV 캐시, 런타임 버퍼가 사라지는 것은 아니다.\n\n### 왜 중요한가\n\n공식 혼합 정밀도 체크포인트의 메모리 규모는 약 20GB다. 이 수치는 모델을 실행하는 데 필요한 모든 메모리가 20GB라는 뜻이 아니다. 제작사 DeepSWE v1.1 결과 48.2%는 공개된 특정 평가 조건에서의 수치이며 일상적인 Unity·Godot 코드 수정 정확도를 보장하지 않는다.\n\n### 개발자 관점\n\n16GB 카드에는 더 작은 GGUF 양자화본이나 CPU 오프로딩을 검토할 수 있다. 같은 씬 로딩 버그와 인벤토리 테스트를 대상으로 수정 성공률, 첫 토큰 지연, 최대 VRAM을 함께 기록하자. 게임 내 NPC에 붙인다면 모델 출력은 대사나 행동 제안으로만 쓰고, 실제 상태 변경은 엔진에서 검증하자.\n\n발표: 2026-11-20 | ai | deep\n\n- [Thinking Machines Lab 발표](https://thinkingmachines.ai/news/inkling-2-mini/)\n- [공식 모델 카드](https://thinkingmachines.ai/model-card/inkling-2-mini/)\n- [공식 공개 게시물](https://x.com/thinkymachines/status/2123871643797995872)\n- [Unsloth 경량 빌드 지원 릴리스](https://github.com/unslothai/unsloth/releases/tag/v0.1.922-beta)\n\n## 2. Lean·Mathlib 커뮤니티, 리만 가설 증명의 기계 검사 결과 발표\n\n### 핵심 요약\n\nLean·Mathlib 커뮤니티가 Claude를 활용해 작업한 레벤트 알포게의 증명 코드를 점검한 결과를 공개했다. 서로 독립적인 도구 두 개로 증명이 Mathlib에 정의된 리만 가설과 같은 명제를 다룬다는 점을 대조했고, 내보낸 증명을 Lean 커널을 포함한 여러 검사기로 확인했다. 이는 해당 코드의 기계 검증 결과이며, Clay 수학연구소의 공식 해결 인정은 아니다.\n\n발표: 2026-11-21 | ai | brief\n\n- [Lean·Mathlib 공동성명](https://leanprover-community.github.io/blog/posts/riemann-hypothesis/)\n- [알포게의 원 설명](https://alpo.ge/remark.pdf)\n- [Clay 수학연구소 문제 현황](https://www.claymath.org/millennium/riemann-hypothesis/)\n\n## 3. Cline 4.1.27, 긴 코드 읽기와 LM Studio 인증 개선\n\n### 핵심 요약\n\nCline VS Code 확장 4.1.27은 `read_files`의 모델 전달 한도를 고정 8천 자에서 도구 자체 한도인 2천 줄 또는 약 4만 8천 자까지 늘렸다. 인증을 켠 LM Studio 서버에 쓸 API 키 입력란도 추가했다. 긴 Unity·Godot 파일의 뒷부분이 잘리는 일이 줄지만, 관련 없는 파일을 한꺼번에 읽히면 입력 토큰도 늘 수 있다.\n\n발표: 2026-11-21 | ai | brief\n\n- [Cline GitHub 릴리스 노트](https://github.com/cline/cline/releases/tag/v4.1.27)\n\n## 4. The Horror Game Awards 2026, 헬레이저 올해의 게임·ROUTINE 기술상\n\n### 핵심 요약\n\nThe Horror Game Awards가 2026년 수상 결과를 공개했다. 〈Clive Barker’s Hellraiser: Revival〉이 올해의 게임, 〈ROUTINE〉이 기술 성취상을 받았고, 〈Tenebris Somnia〉는 인디 공포 게임과 아트 디렉션 두 부문에서 수상했다. 12월의 The Game Awards와는 별개인 공포 장르 시상식이다.\n\n발표: 2026-11-21 | game-industry | brief\n\n- [시상식 공식 수상 명단](https://thehorrorgameawards.squarespace.com/news/your-winners-for-the-horror-game-awards-2026?format=json)\n\n## 5. 한글 퍼즐 〈곰을 뒤집으면?〉, Steam에 Windows 데모 공개\n\n### 핵심 요약\n\nSoraCrab Studio가 11월 21일 한글 퍼즐 플랫포머 〈곰을 뒤집으면?〉의 Windows 데모를 Steam에 공개했다. ‘곰’을 뒤집어 ‘문’을 만드는 식으로 글자의 모양을 바꿔 게임 속 사물을 변형한다. 기존 itch.io 웹 데모와 별개의 Steam 공개이며, 본편은 Steam에서 12월 출시 예정으로 표시된다.\n\n발표: 2026-11-21 | game-industry | brief\n\n- [Steam 한국어 상점](https://store.steampowered.com/app/5620880/?l=koreana)\n- [Steam 데모 앱 정보](https://store.steampowered.com/api/appdetails?appids=5622130)\n"
+}
