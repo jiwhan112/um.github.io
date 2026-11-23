@@ -1,0 +1,339 @@
+{
+  "date": "2026-11-24",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 11월 24일 화요일 한국시간 오전 5시 기준. 가우시안 스플랫을 게임용 메시로 바꾸는 과정과 같은 레이어를 두 번 쓰는 GLM-5.4를 깊게 보고, 2D 스프라이트 도구·로컬 OCR·스텔라리스 4.6 등도 정리했다.",
+  "items": [
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "Splat to Game 베타: 가우시안 스플랫에서 게임용 소품 메시 초안 만들기",
+      "source": "Enki Labs GitHub 베타",
+      "published": "2026-11-23",
+      "url": "https://github.com/stephen487/splat-to-game-beta/releases/tag/v0.2.0-beta",
+      "tags": [
+        "3D Gaussian Splatting",
+        "GLB",
+        "LOD",
+        "충돌체"
+      ],
+      "short_summary": "Enki Labs가 단일 물체의 가우시안 스플랫 PLY를 게임용 메시 초안으로 바꾸는 Windows 베타를 공개했다. 여러 시점을 렌더링해 Pixal3D로 형상을 다시 만들고, 색 텍스처를 입힌 GLB와 3단계 LOD, 충돌용 메시, 검사 보고서를 내보낸다. 장면 전체나 움직이는 4DGS 대상은 아니다.",
+      "summary": "Enki Labs가 단일 물체의 가우시안 스플랫 PLY를 게임용 메시 초안으로 바꾸는 Windows 베타를 공개했다. 여러 시점을 렌더링해 Pixal3D로 형상을 다시 만들고, 색 텍스처를 입힌 GLB와 3단계 LOD, 충돌용 메시, 검사 보고서를 내보낸다. 장면 전체나 움직이는 4DGS 대상은 아니다.",
+      "checked": "2026-11-24",
+      "easy_explainer": "스플랫은 여러 각도에서 물체가 어떻게 보이는지 표현한다. 게임 엔진의 충돌 계산에 쓸 폴리곤 표면이 곧바로 생기는 것은 아니다. 이 도구는 스플랫을 여러 각도의 그림으로 만든 뒤 그 그림을 바탕으로 표면을 다시 추정한다.",
+      "technical_context": "재구성 과정에서 원본과 실루엣이 달라지거나 표면에 구멍이 남을 수 있다. 제작자 샘플의 약 270개 삼각형은 출력 충돌 메시 한 건의 수치다. Unity 6.2의 255개 제한은 Convex Mesh Collider에 해당하며, 렌더링 메시나 모든 콜라이더의 한도가 아니다. 입력 메시와 Unity가 가공한 충돌체도 같다고 볼 수 없다.",
+      "why_it_matters": "화면에 보이는 소품과 캐릭터를 실제로 막는 형상을 따로 만들 수 있다. 예를 들어 벤치 외형이 그럴듯해도 볼록 충돌체가 아래 빈 공간을 채우면 그 아래로 이동하거나 길찾기 데이터를 만들 때 결과가 달라진다.",
+      "developer_view": "전체 장면보다 소품 하나에서 게임 크기의 축과 스케일, LOD 전환, 실제 충돌 외곽을 각각 확인하는 편이 좋다. 길찾기 베이크에서도 통과해야 할 공간이 남는지 따로 본다. 제작자 안내는 Windows와 NVIDIA 16 GB급 GPU, 첫 실행 약 12 GB 다운로드이며 설치 파일은 서명되지 않았다. 앱 실행이나 Unity·Godot 가져오기는 검증하지 않았다. 배포 약관과 별도 모델 라이선스도 적용되니 상업용 파이프라인에 넣기 전 확인한다.",
+      "sources": [
+        {
+          "label": "Enki Labs GitHub 베타",
+          "url": "https://github.com/stephen487/splat-to-game-beta/releases/tag/v0.2.0-beta",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "태그의 공식 README",
+          "url": "https://github.com/stephen487/splat-to-game-beta/blob/v0.2.0-beta/README.md",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "제작자의 변환 사례와 한계",
+          "url": "https://www.reddit.com/r/TechnicalArtist/comments/1y355cs/what_i_learned_turning_gaussian_splats_into/",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "Unity 6.2 Mesh Collider 문서",
+          "url": "https://docs.unity3d.com/6000.2/Documentation/Manual/class-MeshCollider.html",
+          "accessed": "2026-11-24"
+        }
+      ]
+    },
+    {
+      "domain": "ai",
+      "depth": "deep",
+      "title": "GLM-5.4, 같은 레이어를 두 번 돌리는 코딩 모델",
+      "published": "2026-11-23",
+      "tags": [
+        "Z.ai",
+        "Loop Transformer",
+        "이미지 입력",
+        "코딩 에이전트"
+      ],
+      "short_summary": "Z.ai가 첫 Loop Transformer 플래그십 GLM-5.4를 GLM Coding Plan, ZCode, Z.ai Chat에 공개했다. 이미지 입력과 최대 100만 토큰 컨텍스트 옵션을 지원해 화면 레퍼런스와 코드 변경을 한 작업으로 다룰 수 있다. 일반 API와 모델 가중치의 공개일은 제시되지 않았다.",
+      "easy_explainer": "기존 모델이 여러 층을 한 번씩 통과한다면, GLM-5.4는 일부 층의 가중치를 그대로 재사용해 같은 구간을 한 번 더 통과한다. 두 번째 통과는 첫 번째 통과의 결과를 입력으로 받는다. 같은 가중치를 쓴다고 해서 두 번째 계산이 공짜거나, 답안을 독립적으로 검수하는 것은 아니다.",
+      "technical_context": "Z.ai는 7500억 파라미터급 GLM-5 기반 모델의 28개 층 블록을 두 차례 실행한다고 설명한다. 늘어난 실행 깊이와 저장된 가중치의 수를 분리하는 구조다. 두 번째 실행에도 연산과 메모리 접근이 필요하므로, 실제 지연과 처리량은 서빙 구현과 입력 길이에 따라 달라진다. 발표의 수치표는 300억 규모의 구조 비교 실험으로, 최종 모델의 독립 벤치마크가 아니다.",
+      "why_it_matters": "UI 스크린샷을 코드와 함께 볼 수 있으면, 어디가 잘못 렌더링됐는지 말로만 설명하는 부담이 줄어든다. 다만 긴 컨텍스트는 수정 파일을 잘 고르거나 엔진 결과를 스스로 검증한다는 보장이 아니다.",
+      "developer_view": "Unity나 Godot의 기존 화면 하나를 골라 레퍼런스 이미지와 관련 씬·스크립트만 제공하고, 창 크기가 바뀌어도 버튼이 잘리지 않도록 수정하게 한다. 동일한 입력으로 다른 모델과 비교하면서 실제 씬 실행, 변경 범위, 서로 다른 두 해상도에서의 재현 여부를 기록한다. 같은 과제로 비교하기 전에는 발표의 대형 모델 대비 성능 주장을 채택 근거로 삼지 않는다.",
+      "sources": [
+        {
+          "label": "Z.ai 기술 발표",
+          "url": "https://z.ai/blog/glm-5.4",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "GLM Coding Plan 지원 모델",
+          "url": "https://docs.z.ai/devpack/latest-model",
+          "accessed": "2026-11-24"
+        }
+      ],
+      "category": "ai",
+      "source": "Z.ai 기술 발표",
+      "url": "https://z.ai/blog/glm-5.4",
+      "summary": "Z.ai가 첫 Loop Transformer 플래그십 GLM-5.4를 GLM Coding Plan, ZCode, Z.ai Chat에 공개했다. 이미지 입력과 최대 100만 토큰 컨텍스트 옵션을 지원해 화면 레퍼런스와 코드 변경을 한 작업으로 다룰 수 있다. 일반 API와 모델 가중치의 공개일은 제시되지 않았다.",
+      "checked": "2026-11-24"
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "Miso Editor 출시: 기존 3D 캐릭터를 1~64방향 2D 스프라이트로",
+      "source": "Miso Editor 한국 Steam",
+      "published": "2026-11-23",
+      "url": "https://store.steampowered.com/app/5417520/Miso_Editor/?cc=kr&l=koreana",
+      "tags": [
+        "2D 스프라이트",
+        "리깅",
+        "Aseprite",
+        "Windows"
+      ],
+      "short_summary": "Robe of Fire가 Windows용 Miso Editor를 Steam 앞서 해보기로 공개했다. Steam판은 기존 3D 모델이나 샘플에 사용자가 준비한 모션을 적용해 1~64방향 스프라이트 시트를 내보낸다. 제작자는 이 도구로 《Fire Field》의 16방향 다크 나이트를 만들었다고 밝혔다. 이미지 생성·이미지→3D 변환은 별도 API 비용이 드는 itch.io판의 선택 기능이다.",
+      "summary": "Robe of Fire가 Windows용 Miso Editor를 Steam 앞서 해보기로 공개했다. Steam판은 기존 3D 모델이나 샘플에 사용자가 준비한 모션을 적용해 1~64방향 스프라이트 시트를 내보낸다. 제작자는 이 도구로 《Fire Field》의 16방향 다크 나이트를 만들었다고 밝혔다. 이미지 생성·이미지→3D 변환은 별도 API 비용이 드는 itch.io판의 선택 기능이다.",
+      "checked": "2026-11-24",
+      "easy_explainer": "캐릭터를 각 방향과 프레임에서 렌더링한 뒤, 2D 게임에서 한 칸씩 재생할 수 있게 한 장의 시트로 묶는다.",
+      "technical_context": "제작자는 《Fire Field》 개발 기록에서 16방향 다크 나이트를 이 도구로 만들었다고 밝혔다. 당시 적이 등장할 동굴은 제작 중이었으며 출시 공지는 아니었다.",
+      "why_it_matters": "자동 리깅은 사람형 중심이며 긴 머리, 꼬리, 날개의 자연스러운 흔들림은 재현하지 않는다. 기존 모델을 가져와 반복 렌더링하는 도구로 보는 게 정확하다.",
+      "developer_view": "방향 수를 늘리기 전에 캐릭터 하나와 모션 하나로 실제 게임 크기에서 발 기준점, 실루엣, 프레임 잘림을 비교한다.",
+      "sources": [
+        {
+          "label": "Miso Editor 한국 Steam",
+          "url": "https://store.steampowered.com/app/5417520/Miso_Editor/?cc=kr&l=koreana",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "제작사 itch.io판",
+          "url": "https://robe-of-fire.itch.io/miso-editor",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "Fire Field 제작자 개발 기록",
+          "url": "https://steamcommunity.com/app/4527100/allnews/",
+          "published": "2026-11-14",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "Steam판 기능 범위",
+          "url": "https://store.steampowered.com/news/app/5417520/view/712292033362919478",
+          "accessed": "2026-11-24"
+        }
+      ]
+    },
+    {
+      "domain": "ai",
+      "depth": "brief",
+      "title": "업스테이지 Solar Mini 4.5 프리뷰, 구조화 출력부터 시험",
+      "published": "2026-11-23",
+      "tags": [
+        "Upstage",
+        "Solar",
+        "구조화 출력"
+      ],
+      "short_summary": "업스테이지가 Solar Mini 4.5 프리뷰 API를 공개했다. 한국어·영어·일본어, JSON 구조화 출력과 도구 호출을 지원한다. 프리뷰 모델 ID는 11월 30일 종료되며 정식판은 12월 1일 출시 예정이다.",
+      "easy_explainer": "자연어만 잘 쓰는지보다, 퀘스트 대사 CSV를 정해 둔 JSON 필드와 자료형으로 안정적으로 바꾸는지 시험할 수 있는 모델이다.",
+      "technical_context": "공식 문서 표기는 전체 350억, 활성 30억 파라미터, 최대 512K 컨텍스트와 128K 출력이다. 프리뷰는 공개 가중치가 아니라 API로 제공된다.",
+      "why_it_matters": "종료일이 정해져 있어 작은 평가에는 쓸 수 있지만, 프리뷰 ID를 운영 코드에 고정하는 것은 피하는 편이 낫다.",
+      "developer_view": "실제 미공개 원고 대신 출력이 이미 맞다고 확인된 익명 샘플로 필드 누락, 한국어 표기 보존, 파싱 실패율부터 비교한다.",
+      "sources": [
+        {
+          "label": "Upstage 공식 모델 문서",
+          "url": "https://console.upstage.ai/docs/models/solar-mini-4-5-preview",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        }
+      ],
+      "category": "ai",
+      "source": "Upstage 공식 모델 문서",
+      "url": "https://console.upstage.ai/docs/models/solar-mini-4-5-preview",
+      "summary": "업스테이지가 Solar Mini 4.5 프리뷰 API를 공개했다. 한국어·영어·일본어, JSON 구조화 출력과 도구 호출을 지원한다. 프리뷰 모델 ID는 11월 30일 종료되며 정식판은 12월 1일 출시 예정이다.",
+      "checked": "2026-11-24"
+    },
+    {
+      "domain": "ai",
+      "depth": "brief",
+      "title": "OCRia-nano-1: CPU에서 한국어 스캔과 표를 읽는 로컬 OCR",
+      "published": "2026-11-23",
+      "tags": [
+        "LlamaIndex",
+        "OCR",
+        "한국어",
+        "로컬"
+      ],
+      "short_summary": "LlamaIndex가 문자인식과 표·레이아웃 복원을 합친 810만 파라미터 OCRia-nano-1 가중치를 공개했다. LiteParse에서 CPU로 실행하며, PDF의 기존 텍스트는 재사용하고 읽을 수 없는 부분을 OCR로 처리한다. 한국어를 지원하지만 그래프를 표로 바꾸지는 않는다.",
+      "easy_explainer": "복사할 수 없는 스캔형 PDF를 검색 가능한 텍스트로 바꾸고, 일반 표의 행과 열 구조를 복원하는 도구다.",
+      "technical_context": "문자 검출·스크립트 구분·문자 인식·레이아웃 등 7개 모델로 구성된다. 모델 가중치는 수정 Open RAIL-M, LiteParse 코드와는 별도 라이선스다.",
+      "why_it_matters": "기존 교재나 작업 참고 PDF를 별도 GPU 없이 로컬에서 색인하는 후보지만, 오래된 스캔이나 수식·복잡한 표는 수동 대조가 필요하다.",
+      "developer_view": "한글·영문 코드가 섞인 샘플 2쪽으로 Markdown과 JSON을 비교하고 열이 뒤바뀌거나 코드 기호가 빠지지 않는지 확인한다.",
+      "sources": [
+        {
+          "label": "LlamaIndex 발표",
+          "url": "https://www.llamaindex.ai/blog/introducing-ocria-nano-1",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "공개 가중치와 이용 조건",
+          "url": "https://huggingface.co/llamaindex/OCRia-nano-1",
+          "accessed": "2026-11-24"
+        }
+      ],
+      "category": "ai",
+      "source": "LlamaIndex 발표",
+      "url": "https://www.llamaindex.ai/blog/introducing-ocria-nano-1",
+      "summary": "LlamaIndex가 문자인식과 표·레이아웃 복원을 합친 810만 파라미터 OCRia-nano-1 가중치를 공개했다. LiteParse에서 CPU로 실행하며, PDF의 기존 텍스트는 재사용하고 읽을 수 없는 부분을 OCR로 처리한다. 한국어를 지원하지만 그래프를 표로 바꾸지는 않는다.",
+      "checked": "2026-11-24"
+    },
+    {
+      "domain": "ai",
+      "depth": "brief",
+      "title": "엔비디아, 젠슨 황의 CEO 복귀 발표",
+      "published": "2026-11-23",
+      "tags": [
+        "NVIDIA",
+        "AI 반도체",
+        "경영"
+      ],
+      "short_summary": "엔비디아가 젠슨 황의 사장·CEO·이사 복귀를 11월 23일 발표했다. SEC 공시상 이사회 결정은 11월 22일 즉시 발효됐고, 임시 CEO였던 콜레트 크레스는 수석부사장 겸 CFO를 계속 맡는다. 발표에는 GPU나 소프트웨어 제품 일정 변경이 담기지 않았다.",
+      "easy_explainer": "AI 가속기 공급사의 경영진이 바뀐 소식이다. 제품이나 드라이버가 업데이트된 것은 아니다.",
+      "technical_context": "엔비디아의 공식 발표와 SEC 8-K의 이사회 결정일을 구분했다.",
+      "why_it_matters": "AI 인프라의 주요 공급사를 누가 이끄는지 달라졌지만 제품 계획이 바뀌었다는 증거는 없다.",
+      "developer_view": "GPU·CUDA·드라이버 관련 기술 결정을 바꾸기보다는 후속 공식 릴리스나 로드맵 확인을 기다릴 사안이다.",
+      "sources": [
+        {
+          "label": "NVIDIA 투자자 공지",
+          "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Board-Reinstates-Jensen-Huang-as-President-CEO-and-Board-Director/default.aspx",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "SEC 8-K 공시",
+          "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000090/nvda-20261122.htm",
+          "accessed": "2026-11-24"
+        }
+      ],
+      "category": "ai",
+      "source": "NVIDIA 투자자 공지",
+      "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Board-Reinstates-Jensen-Huang-as-President-CEO-and-Board-Director/default.aspx",
+      "summary": "엔비디아가 젠슨 황의 사장·CEO·이사 복귀를 11월 23일 발표했다. SEC 공시상 이사회 결정은 11월 22일 즉시 발효됐고, 임시 CEO였던 콜레트 크레스는 수석부사장 겸 CFO를 계속 맡는다. 발표에는 GPU나 소프트웨어 제품 일정 변경이 담기지 않았다.",
+      "checked": "2026-11-24"
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "스텔라리스 Willpower 출시, 무료 4.6과 유료 확장의 차이",
+      "source": "Paradox Interactive 출시 발표",
+      "published": "2026-11-23",
+      "url": "https://www.paradoxinteractive.com/media/press-releases/paradox-interactive/new-willpower-expansion-available-today-for-stellaris",
+      "tags": [
+        "스텔라리스",
+        "Willpower",
+        "4.6 Corona Borealis",
+        "전략 게임"
+      ],
+      "short_summary": "Paradox Interactive와 Abrakam이 PC용 《스텔라리스》 유료 확장 Willpower와 무료 4.6 ‘Corona Borealis’ 업데이트를 공개했다. 유료 확장은 다른 제국으로 신념을 퍼뜨리는 이념과 이동식 Galactic Hall, 이념 확산을 통한 별도 승리 목표를 추가한다. 무료 패치는 별개로 수도의 철인왕 총독 배치와 몰락 제국 승천 보상 등 기본 시스템을 바꾼다.",
+      "summary": "Paradox Interactive와 Abrakam이 PC용 《스텔라리스》 유료 확장 Willpower와 무료 4.6 ‘Corona Borealis’ 업데이트를 공개했다. 유료 확장은 다른 제국으로 신념을 퍼뜨리는 이념과 이동식 Galactic Hall, 이념 확산을 통한 별도 승리 목표를 추가한다. 무료 패치는 별개로 수도의 철인왕 총독 배치와 몰락 제국 승천 보상 등 기본 시스템을 바꾼다.",
+      "checked": "2026-11-24",
+      "easy_explainer": "확장팩을 사지 않아도 4.6의 기본 게임 규칙과 밸런스 업데이트는 적용된다. 이념을 중심으로 한 플레이는 유료 확장의 핵심이다.",
+      "technical_context": "시나리오는 이번 4.6에 포함되지 않았다. 제작진은 4.7 ‘Capricornus’의 2027년 1분기를 목표로 제시했다.",
+      "why_it_matters": "지난 기사에 소개한 예정 기능이 PC에서 실제로 출시된 날이다. 이번에는 확장팩을 구매해야 하는 기능과 기본 게임 변경을 구분하면 된다.",
+      "developer_view": "기존 저장과 모드에 의존하는 캠페인은 업데이트 뒤 호환성을 먼저 확인한다.",
+      "sources": [
+        {
+          "label": "Paradox Interactive 출시 발표",
+          "url": "https://www.paradoxinteractive.com/media/press-releases/paradox-interactive/new-willpower-expansion-available-today-for-stellaris",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "Paradox 공식 Steam 출시 소식",
+          "url": "https://steamcommunity.com/gid/103582791439224844/announcements/detail/687522870377579528",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "Stellaris: Willpower Steam 스토어",
+          "url": "https://store.steampowered.com/app/4241440/Stellaris_Willpower/",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "공기: 쉬는 시간, 마우스 왼쪽 클릭으로 옮긴 공기놀이",
+      "source": "낭만게임즈 한국 Steam",
+      "published": "2026-11-23",
+      "url": "https://store.steampowered.com/app/5475700/Gonggi_Recess/?cc=kr&l=koreana",
+      "tags": [
+        "한국 인디",
+        "입력 설계",
+        "Steam 앞서 해보기"
+      ],
+      "short_summary": "낭만게임즈의 《공기: 쉬는 시간》이 11월 23일 Windows Steam 앞서 해보기를 시작했다. 2000년대 한국 초등학교를 배경으로 마우스로 손을 움직이고 왼쪽 클릭으로 공깃돌을 뿌리고, 던지고, 집고, 받는다. 원하는 단계만 반복 연습할 수 있다. 개발사는 체공 시간, 받기 판정, 접촉 반칙을 피드백으로 조정할 계획이다.",
+      "summary": "낭만게임즈의 《공기: 쉬는 시간》이 11월 23일 Windows Steam 앞서 해보기를 시작했다. 2000년대 한국 초등학교를 배경으로 마우스로 손을 움직이고 왼쪽 클릭으로 공깃돌을 뿌리고, 던지고, 집고, 받는다. 원하는 단계만 반복 연습할 수 있다. 개발사는 체공 시간, 받기 판정, 접촉 반칙을 피드백으로 조정할 계획이다.",
+      "checked": "2026-11-24",
+      "easy_explainer": "같은 버튼을 쓰더라도 돌을 던지는 순간, 바닥에서 집는 순간, 떨어지는 돌을 받는 순간은 서로 다른 타이밍을 요구한다.",
+      "technical_context": "개발사는 체공 시간과 받기 판정의 관용도, 어떤 접촉을 반칙으로 처리할지를 이용자 피드백으로 조정할 계획이라고 밝혔다.",
+      "why_it_matters": "버튼 수를 늘리지 않고도 입력 타이밍과 단계별 판정에서 실제 놀이의 감각을 살리려는 사례다.",
+      "developer_view": "입력 한 종류로 여러 동작을 만들 때는 각 국면을 따로 연습할 수 있게 두면 어떤 판정이 어려운지 분리해 보기 좋다.",
+      "sources": [
+        {
+          "label": "낭만게임즈 한국 Steam",
+          "url": "https://store.steampowered.com/app/5475700/Gonggi_Recess/?cc=kr&l=koreana",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        },
+        {
+          "label": "개발사 앞서 해보기 출시 공지",
+          "url": "https://steamcommunity.com/games/5475700/announcements/detail/702159569166533466",
+          "published": "2026-11-23",
+          "accessed": "2026-11-24"
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "Twin Sails와 Plug In Digital, 인디 게임 발행·유통 역량 통합",
+      "source": "Twin Sails 공식 발표",
+      "published": "2026-11-24",
+      "url": "https://twin-sails.com/en/twin-sails-and-plug-in-digital-join-forces-to-build-a-leading-independent-publishing-group/",
+      "tags": [
+        "인디 퍼블리싱",
+        "유통",
+        "Twin Sails"
+      ],
+      "short_summary": "Twin Sails와 Plug In Digital이 인디 게임 퍼블리싱 그룹으로 결합한다고 발표했다. Twin Sails가 해온 개발사와의 제작 협업에 Plug In Digital의 글로벌 판매·유통망을 더하는 것이 목표다. Twin Sails 대표 니콜라 고드망이 통합 그룹 CEO를 맡는다.",
+      "checked": "2026-11-24",
+      "easy_explainer": "게임을 다듬는 제작 지원과 여러 시장에 게임을 유통하는 일을 한 그룹 아래에 둔다.",
+      "technical_context": "회사는 발표에서 개발사와의 제작 협업, 글로벌 판매·유통의 결합을 설명했다. 개별 계약의 조건이 어떻게 달라질지는 공개하지 않았다.",
+      "why_it_matters": "인디 개발사가 한 퍼블리셔와 협의할 수 있는 업무 범위가 넓어질 수 있지만, 지원 범위와 권리는 계약마다 확인해야 한다.",
+      "developer_view": "외부 발행을 비교할 때는 이식 담당, 플랫폼별 마케팅, 지역 판매, 업데이트 지원의 책임 주체를 각각 구분해 확인한다.",
+      "sources": [
+        {
+          "label": "Twin Sails 공식 발표",
+          "url": "https://twin-sails.com/en/twin-sails-and-plug-in-digital-join-forces-to-build-a-leading-independent-publishing-group/",
+          "published": "2026-11-24",
+          "accessed": "2026-11-24"
+        }
+      ],
+      "summary": "Twin Sails와 Plug In Digital이 인디 게임 퍼블리싱 그룹으로 결합한다고 발표했다. Twin Sails가 해온 개발사와의 제작 협업에 Plug In Digital의 글로벌 판매·유통망을 더하는 것이 목표다. Twin Sails 대표 니콜라 고드망이 통합 그룹 CEO를 맡는다."
+    }
+  ],
+  "original_markdown": "# 게임·AI 데일리 브리핑\n\n2026년 11월 24일 화요일 한국시간 오전 5시 기준. 가우시안 스플랫을 게임용 메시로 바꾸는 과정과 같은 레이어를 두 번 쓰는 GLM-5.4를 깊게 보고, 2D 스프라이트 도구·로컬 OCR·스텔라리스 4.6 등도 정리했다.\n\n## 1. Splat to Game 베타: 가우시안 스플랫에서 게임용 소품 메시 초안 만들기\n\nEnki Labs가 단일 물체의 가우시안 스플랫 PLY를 게임용 메시 초안으로 바꾸는 Windows 베타를 공개했다. 여러 시점을 렌더링해 Pixal3D로 형상을 다시 만들고, 색 텍스처를 입힌 GLB와 3단계 LOD, 충돌용 메시, 검사 보고서를 내보낸다. 장면 전체나 움직이는 4DGS 대상은 아니다.\n\n**쉽게 이해하기**\n\n스플랫은 여러 각도에서 물체가 어떻게 보이는지 표현한다. 게임 엔진의 충돌 계산에 쓸 폴리곤 표면이 곧바로 생기는 것은 아니다. 이 도구는 스플랫을 여러 각도의 그림으로 만든 뒤 그 그림을 바탕으로 표면을 다시 추정한다.\n\n**작동 원리와 배경**\n\n재구성 과정에서 원본과 실루엣이 달라지거나 표면에 구멍이 남을 수 있다. 제작자 샘플의 약 270개 삼각형은 출력 충돌 메시 한 건의 수치다. Unity 6.2의 255개 제한은 Convex Mesh Collider에 해당하며, 렌더링 메시나 모든 콜라이더의 한도가 아니다. 입력 메시와 Unity가 가공한 충돌체도 같다고 볼 수 없다.\n\n**왜 중요한가**\n\n화면에 보이는 소품과 캐릭터를 실제로 막는 형상을 따로 만들 수 있다. 예를 들어 벤치 외형이 그럴듯해도 볼록 충돌체가 아래 빈 공간을 채우면 그 아래로 이동하거나 길찾기 데이터를 만들 때 결과가 달라진다.\n\n**개발자 관점**\n\n전체 장면보다 소품 하나에서 게임 크기의 축과 스케일, LOD 전환, 실제 충돌 외곽을 각각 확인하는 편이 좋다. 길찾기 베이크에서도 통과해야 할 공간이 남는지 따로 본다. 제작자 안내는 Windows와 NVIDIA 16 GB급 GPU, 첫 실행 약 12 GB 다운로드이며 설치 파일은 서명되지 않았다. 앱 실행이나 Unity·Godot 가져오기는 검증하지 않았다. 배포 약관과 별도 모델 라이선스도 적용되니 상업용 파이프라인에 넣기 전 확인한다.\n\n출처: [Enki Labs GitHub 베타](https://github.com/stephen487/splat-to-game-beta/releases/tag/v0.2.0-beta) · [태그의 공식 README](https://github.com/stephen487/splat-to-game-beta/blob/v0.2.0-beta/README.md) · [제작자의 변환 사례와 한계](https://www.reddit.com/r/TechnicalArtist/comments/1y355cs/what_i_learned_turning_gaussian_splats_into/) · [Unity 6.2 Mesh Collider 문서](https://docs.unity3d.com/6000.2/Documentation/Manual/class-MeshCollider.html)\n\n## 2. GLM-5.4, 같은 레이어를 두 번 돌리는 코딩 모델\n\nZ.ai가 첫 Loop Transformer 플래그십 GLM-5.4를 GLM Coding Plan, ZCode, Z.ai Chat에 공개했다. 이미지 입력과 최대 100만 토큰 컨텍스트 옵션을 지원해 화면 레퍼런스와 코드 변경을 한 작업으로 다룰 수 있다. 일반 API와 모델 가중치의 공개일은 제시되지 않았다.\n\n**쉽게 이해하기**\n\n기존 모델이 여러 층을 한 번씩 통과한다면, GLM-5.4는 일부 층의 가중치를 그대로 재사용해 같은 구간을 한 번 더 통과한다. 두 번째 통과는 첫 번째 통과의 결과를 입력으로 받는다. 같은 가중치를 쓴다고 해서 두 번째 계산이 공짜거나, 답안을 독립적으로 검수하는 것은 아니다.\n\n**작동 원리와 배경**\n\nZ.ai는 7500억 파라미터급 GLM-5 기반 모델의 28개 층 블록을 두 차례 실행한다고 설명한다. 늘어난 실행 깊이와 저장된 가중치의 수를 분리하는 구조다. 두 번째 실행에도 연산과 메모리 접근이 필요하므로, 실제 지연과 처리량은 서빙 구현과 입력 길이에 따라 달라진다. 발표의 수치표는 300억 규모의 구조 비교 실험으로, 최종 모델의 독립 벤치마크가 아니다.\n\n**왜 중요한가**\n\nUI 스크린샷을 코드와 함께 볼 수 있으면, 어디가 잘못 렌더링됐는지 말로만 설명하는 부담이 줄어든다. 다만 긴 컨텍스트는 수정 파일을 잘 고르거나 엔진 결과를 스스로 검증한다는 보장이 아니다.\n\n**개발자 관점**\n\nUnity나 Godot의 기존 화면 하나를 골라 레퍼런스 이미지와 관련 씬·스크립트만 제공하고, 창 크기가 바뀌어도 버튼이 잘리지 않도록 수정하게 한다. 동일한 입력으로 다른 모델과 비교하면서 실제 씬 실행, 변경 범위, 서로 다른 두 해상도에서의 재현 여부를 기록한다. 같은 과제로 비교하기 전에는 발표의 대형 모델 대비 성능 주장을 채택 근거로 삼지 않는다.\n\n출처: [Z.ai 기술 발표](https://z.ai/blog/glm-5.4) · [GLM Coding Plan 지원 모델](https://docs.z.ai/devpack/latest-model)\n\n## 3. Miso Editor 출시: 기존 3D 캐릭터를 1~64방향 2D 스프라이트로\n\nRobe of Fire가 Windows용 Miso Editor를 Steam 앞서 해보기로 공개했다. Steam판은 기존 3D 모델이나 샘플에 사용자가 준비한 모션을 적용해 1~64방향 스프라이트 시트를 내보낸다. 제작자는 이 도구로 《Fire Field》의 16방향 다크 나이트를 만들었다고 밝혔다. 이미지 생성·이미지→3D 변환은 별도 API 비용이 드는 itch.io판의 선택 기능이다.\n\n\n출처: [Miso Editor 한국 Steam](https://store.steampowered.com/app/5417520/Miso_Editor/?cc=kr&l=koreana) · [제작사 itch.io판](https://robe-of-fire.itch.io/miso-editor) · [Fire Field 제작자 개발 기록](https://steamcommunity.com/app/4527100/allnews/) · [Steam판 기능 범위](https://store.steampowered.com/news/app/5417520/view/712292033362919478)\n\n## 4. 업스테이지 Solar Mini 4.5 프리뷰, 구조화 출력부터 시험\n\n업스테이지가 Solar Mini 4.5 프리뷰 API를 공개했다. 한국어·영어·일본어, JSON 구조화 출력과 도구 호출을 지원한다. 프리뷰 모델 ID는 11월 30일 종료되며 정식판은 12월 1일 출시 예정이다.\n\n\n출처: [Upstage 공식 모델 문서](https://console.upstage.ai/docs/models/solar-mini-4-5-preview)\n\n## 5. OCRia-nano-1: CPU에서 한국어 스캔과 표를 읽는 로컬 OCR\n\nLlamaIndex가 문자인식과 표·레이아웃 복원을 합친 810만 파라미터 OCRia-nano-1 가중치를 공개했다. LiteParse에서 CPU로 실행하며, PDF의 기존 텍스트는 재사용하고 읽을 수 없는 부분을 OCR로 처리한다. 한국어를 지원하지만 그래프를 표로 바꾸지는 않는다.\n\n\n출처: [LlamaIndex 발표](https://www.llamaindex.ai/blog/introducing-ocria-nano-1) · [공개 가중치와 이용 조건](https://huggingface.co/llamaindex/OCRia-nano-1)\n\n## 6. 엔비디아, 젠슨 황의 CEO 복귀 발표\n\n엔비디아가 젠슨 황의 사장·CEO·이사 복귀를 11월 23일 발표했다. SEC 공시상 이사회 결정은 11월 22일 즉시 발효됐고, 임시 CEO였던 콜레트 크레스는 수석부사장 겸 CFO를 계속 맡는다. 발표에는 GPU나 소프트웨어 제품 일정 변경이 담기지 않았다.\n\n\n출처: [NVIDIA 투자자 공지](https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Board-Reinstates-Jensen-Huang-as-President-CEO-and-Board-Director/default.aspx) · [SEC 8-K 공시](https://www.sec.gov/Archives/edgar/data/1045810/000104581026000090/nvda-20261122.htm)\n\n## 7. 스텔라리스 Willpower 출시, 무료 4.6과 유료 확장의 차이\n\nParadox Interactive와 Abrakam이 PC용 《스텔라리스》 유료 확장 Willpower와 무료 4.6 ‘Corona Borealis’ 업데이트를 공개했다. 유료 확장은 다른 제국으로 신념을 퍼뜨리는 이념과 이동식 Galactic Hall, 이념 확산을 통한 별도 승리 목표를 추가한다. 무료 패치는 별개로 수도의 철인왕 총독 배치와 몰락 제국 승천 보상 등 기본 시스템을 바꾼다.\n\n\n출처: [Paradox Interactive 출시 발표](https://www.paradoxinteractive.com/media/press-releases/paradox-interactive/new-willpower-expansion-available-today-for-stellaris) · [Paradox 공식 Steam 출시 소식](https://steamcommunity.com/gid/103582791439224844/announcements/detail/687522870377579528) · [Stellaris: Willpower Steam 스토어](https://store.steampowered.com/app/4241440/Stellaris_Willpower/)\n\n## 8. 공기: 쉬는 시간, 마우스 왼쪽 클릭으로 옮긴 공기놀이\n\n낭만게임즈의 《공기: 쉬는 시간》이 11월 23일 Windows Steam 앞서 해보기를 시작했다. 2000년대 한국 초등학교를 배경으로 마우스로 손을 움직이고 왼쪽 클릭으로 공깃돌을 뿌리고, 던지고, 집고, 받는다. 원하는 단계만 반복 연습할 수 있다. 개발사는 체공 시간, 받기 판정, 접촉 반칙을 피드백으로 조정할 계획이다.\n\n\n출처: [낭만게임즈 한국 Steam](https://store.steampowered.com/app/5475700/Gonggi_Recess/?cc=kr&l=koreana) · [개발사 앞서 해보기 출시 공지](https://steamcommunity.com/games/5475700/announcements/detail/702159569166533466)\n\n## 9. Twin Sails와 Plug In Digital, 인디 게임 발행·유통 역량 통합\n\nTwin Sails와 Plug In Digital이 인디 게임 퍼블리싱 그룹으로 결합한다고 발표했다. Twin Sails가 해온 개발사와의 제작 협업에 Plug In Digital의 글로벌 판매·유통망을 더하는 것이 목표다. Twin Sails 대표 니콜라 고드망이 통합 그룹 CEO를 맡는다.\n\n\n출처: [Twin Sails 공식 발표](https://twin-sails.com/en/twin-sails-and-plug-in-digital-join-forces-to-build-a-leading-independent-publishing-group/)\n"
+}
