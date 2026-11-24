@@ -1,0 +1,274 @@
+{
+  "date": "2026-11-25",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 11월 25일 수요일 한국시간 오전 5시 기준. Hy-MT3의 게임 번역 검증을 깊게 보고, Godot C# 추출기와 캡처 도구 업데이트, 장애물 회피 실험, 인디 신작 소식을 정리했다.",
+  "items": [
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "Hy-MT3 공개: 게임 번역은 플레이스홀더 검증부터",
+      "published": "2026-11-24",
+      "tags": [
+        "Tencent",
+        "게임 현지화",
+        "리치 텍스트",
+        "GGUF"
+      ],
+      "short_summary": "텐센트가 번역 모델 Hy-MT3의 1.8B·7B·30B-A3B 가중치를 공개했다. 한국어·영어·일본어를 포함한 102개 언어를 지원한다. 게임에서 중요한 건 번역이 자연스러운지뿐 아니라, 치환 변수와 리치 텍스트 태그가 깨지지 않는지다.",
+      "summary": "텐센트가 번역 모델 Hy-MT3의 1.8B·7B·30B-A3B 가중치를 공개했다. 한국어·영어·일본어를 포함한 102개 언어를 지원한다. 게임에서 중요한 건 번역이 자연스러운지뿐 아니라, 치환 변수와 리치 텍스트 태그가 깨지지 않는지다.",
+      "easy_explainer": "예를 들어 `<b>{player}</b>님, {count}개를 얻었습니다.`에서 `{count}`가 사라지면 게임이 보상 수를 표시할 자리를 잃는다. 두 변수가 모두 남더라도 굵게 표시할 대상이 바뀌면 의도한 UI가 아니다.",
+      "technical_context": "텐센트가 Honor of Kings 팀과 만든 자체 평가에서 30B-A3B의 플레이스홀더 오류가 들어간 샘플은 0.08%로 Gemini 3.1 Pro와 같았고, 리치 텍스트와 용어 오류도 각각 0.08%였다. 1.8B나 7B에 대한 같은 항목의 점수는 표에 없다. 논문의 이미지 번역 실험도 모델에 그림을 바로 넣은 것이 아니라 PaddleOCR이 추출한 텍스트를 번역한 것이다.",
+      "why_it_matters": "자동 검사는 원문과 번역의 플레이스홀더 종류와 개수를 대조하되 언어에 맞는 순서 변경은 허용하면 된다. 리치 텍스트는 허용 태그·속성·닫힘·중첩을 검사하고, 실패한 줄은 빌드에 자동 반영하지 않는다. 용어, 강조 대상과 실제 화면의 줄바꿈은 별도 사람 검수가 필요하다.",
+      "developer_view": "Unity나 Godot 프로젝트의 UI·퀘스트 문자열을 몇 개만 골라 기존 승인 번역과 비교하고, 짧은 창 너비에서도 실제 씬을 띄워 본다. 공식 1.8B Q4_K_M GGUF는 로컬 비교 후보지만 속도·메모리·품질은 여기서 실측하지 않았다. 30B 결과를 소형 모델의 보증으로 삼지 않는다. 공식 저장소는 Hy-MT3에 Apache 2.0을 명시한다. 별도 배포본과 프로젝트의 리소스 권리는 각각 확인한다.",
+      "checked": "2026-11-25",
+      "source": "Tencent 공식 가중치 공개",
+      "url": "https://github.com/Tencent-Hunyuan/Hy-MT3",
+      "sources": [
+        {
+          "label": "Tencent 공식 가중치 공개",
+          "url": "https://github.com/Tencent-Hunyuan/Hy-MT3",
+          "published": "2026-11-24",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "기술 보고서 §3.7·표 6",
+          "url": "https://arxiv.org/pdf/2611.27673#page=11",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "공식 1.8B GGUF",
+          "url": "https://huggingface.co/tencent/Hy-MT3-1.8B-GGUF",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "TiMi 번역 도구",
+          "url": "https://github.com/Tencent/TiMiHOKGameTranslator",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "공식 Hy-MT3 배포 라이선스",
+          "url": "https://github.com/Tencent-Hunyuan/Hy-MT3/blob/main/LICENSE.txt",
+          "accessed": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "Godot 4.8 베타 5, C# 사용자 번역 파서가 다시 호출되도록 수정",
+      "published": "2026-11-25",
+      "tags": [
+        "Godot 4.8",
+        "C#",
+        "로컬라이제이션"
+      ],
+      "short_summary": "Godot 4.8 베타 5가 공개됐다. 내장 C# 번역 추출기를 표준 파서로 등록해, 게시용 번역 목록을 뽑을 때 사용자 지정 파서를 가로막던 문제를 고쳤다. 처리 비활성 상태의 Trail3D 업데이트 문제도 수정됐고, .NET 편집판은 .NET 10 이상이 필요하다.",
+      "summary": "Godot 4.8 베타 5가 공개됐다. 내장 C# 번역 추출기를 표준 파서로 등록해, 게시용 번역 목록을 뽑을 때 사용자 지정 파서를 가로막던 문제를 고쳤다. 처리 비활성 상태의 Trail3D 업데이트 문제도 수정됐고, .NET 편집판은 .NET 10 이상이 필요하다.",
+      "easy_explainer": "번역 모델을 쓰기 전 단계에서, 엔진이 어떤 문자열을 번역 대상으로 뽑는지에 관한 수정이다.",
+      "technical_context": "C# 파서의 등록 종류를 사용자 지정(CUSTOM)에서 표준(STANDARD)으로 바꿨다.",
+      "why_it_matters": "게임 프로젝트가 별도 문법으로 번역 키를 선언한다면, 내장 추출기만 동작하고 커스텀 문자열이 빠지는 회귀를 점검할 수 있다.",
+      "developer_view": "정식 릴리스가 아닌 테스트 빌드다. 별도 복사본에서 기존 번역 템플릿을 재생성해 사용자 지정 문자열의 누락 여부를 비교할 만하다.",
+      "checked": "2026-11-25",
+      "source": "Godot 공식 베타 공지",
+      "url": "https://godotengine.org/article/dev-snapshot-godot-4-8-beta-5/",
+      "sources": [
+        {
+          "label": "Godot 공식 베타 공지",
+          "url": "https://godotengine.org/article/dev-snapshot-godot-4-8-beta-5/",
+          "published": "2026-11-25",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "GitHub 베타 릴리스",
+          "url": "https://github.com/godotengine/godot-builds/releases/tag/4.8-beta5",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "C# 파서 수정 PR",
+          "url": "https://github.com/godotengine/godot/pull/123781",
+          "accessed": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "NVIDIA Microduck: 장애물 회피와 보행 제어를 분리한 실험",
+      "published": "2026-11-25",
+      "tags": [
+        "Isaac Lab",
+        "Newton",
+        "장애물 회피"
+      ],
+      "short_summary": "NVIDIA가 Isaac Lab과 Newton을 이용한 소형 로봇의 장애물 회피 실험을 공개했다. 시뮬레이션에서 장애물 배치와 거리 센서의 잡음·지연을 바꿔가며 회피 정책을 학습하고, 이미 만들어 둔 보행 정책은 바꾸지 않았다. 실제 로봇의 콘 회피 영상에는 운영자 개입도 표시돼 있어 완전 자율 주행으로 볼 수는 없다.",
+      "easy_explainer": "위쪽 제어기는 어느 쪽으로 피할지 정하고, 아래쪽 제어기는 그 방향으로 걸으면서 균형을 잡는다.",
+      "technical_context": "회피 정책이 거리 센서의 관측으로 이동 명령을 바꾸고, 고정된 보행 정책이 이를 관절 동작으로 바꾼다.",
+      "why_it_matters": "게임에서도 목적지까지의 경로 탐색, 가까운 장애물 회피, 캐릭터 이동과 애니메이션을 분리해 테스트할 수 있다. 이 사례는 전역 길찾기나 3D 내비메시 구현 사례는 아니다.",
+      "developer_view": "회피 로직에는 움직임 요청만 출력하게 하고, 동일 요청을 기존 이동 및 애니메이션 레이어에 넣어 각각 문제가 생기는 지점을 기록한다.",
+      "source": "NVIDIA 공식 실험 글",
+      "url": "https://huggingface.co/blog/nvidia/microduck-obstacle-avoidance",
+      "checked": "2026-11-25",
+      "summary": "NVIDIA가 Isaac Lab과 Newton을 이용한 소형 로봇의 장애물 회피 실험을 공개했다. 시뮬레이션에서 장애물 배치와 거리 센서의 잡음·지연을 바꿔가며 회피 정책을 학습하고, 이미 만들어 둔 보행 정책은 바꾸지 않았다. 실제 로봇의 콘 회피 영상에는 운영자 개입도 표시돼 있어 완전 자율 주행으로 볼 수는 없다.",
+      "sources": [
+        {
+          "label": "NVIDIA 공식 실험 글",
+          "url": "https://huggingface.co/blog/nvidia/microduck-obstacle-avoidance",
+          "published": "2026-11-25",
+          "accessed": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "Veyra 2.2.1, 영상 보정 전에 원본을 띄우고 입력을 표시",
+      "published": "2026-11-24",
+      "tags": [
+        "Windows",
+        "캡처",
+        "DirectShow",
+        "색차 보간"
+      ],
+      "short_summary": "Windows 캡처 보정 도구 Veyra 2.2.1은 보정 모델이 로딩되는 동안 원본 영상을 먼저 띄우고, 실제 캡처 포맷과 DirectShow 오류를 더 자세히 보여준다. 60fps 입력에서 30fps로 줄일 때는 고정 간격과 반복 프레임을 건너뛰는 호환 방식을 구분한다. 기여자는 GC551·YUY2 테스트에서 해상도는 그대로 두고 색차를 보간해 HUD 글자의 컬러 경계를 다듬었다고 보고했다.",
+      "summary": "Windows 캡처 보정 도구 Veyra 2.2.1은 보정 모델이 로딩되는 동안 원본 영상을 먼저 띄우고, 실제 캡처 포맷과 DirectShow 오류를 더 자세히 보여준다. 60fps 입력에서 30fps로 줄일 때는 고정 간격과 반복 프레임을 건너뛰는 호환 방식을 구분한다. 기여자는 GC551·YUY2 테스트에서 해상도는 그대로 두고 색차를 보간해 HUD 글자의 컬러 경계를 다듬었다고 보고했다.",
+      "easy_explainer": "색차 보간은 픽셀 사이의 색을 복원하는 변화다. 캡처 해상도를 높이는 것과는 다르다.",
+      "technical_context": "기여자 테스트는 1080p60 YUY2와 재빌드한 셰이더 조합이다. NV12·P010 실기기나 다른 캡처 카드의 모드 협상 개선을 검증한 것은 아니다.",
+      "why_it_matters": "원본 미리보기와 실제 포맷을 보면 문제가 캡처 단계인지 후처리 단계인지 분리하기 쉽다.",
+      "developer_view": "같은 입력에서 보정 없이 먼저 비교한 뒤 색 경계와 프레임 간격을 따로 확인하는 편이 낫다.",
+      "checked": "2026-11-25",
+      "source": "Veyra 2.2.1 릴리스",
+      "url": "https://github.com/Likely7/Veyra-NRVideo/releases/tag/v2.2.1",
+      "sources": [
+        {
+          "label": "Veyra 2.2.1 릴리스",
+          "url": "https://github.com/Likely7/Veyra-NRVideo/releases/tag/v2.2.1",
+          "published": "2026-11-24",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "캡처 색차 보간 PR",
+          "url": "https://github.com/Likely7/Veyra-NRVideo/pull/233",
+          "accessed": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "터미너스: 데이 제로, 익숙한 집을 탈출 경로로 바꾼 무료 단편",
+      "published": "2026-11-24",
+      "tags": [
+        "한국 인디",
+        "Steam",
+        "레벨 디자인"
+      ],
+      "short_summary": "롱플레이 스튜디오가 11월 24일 오전 9시 30분, 《터미너스: 데이 제로》를 Windows Steam에 무료로 출시했다. 《터미너스: 좀비 생존자》와 세계관을 공유하지만 체험판이 아닌 별도 단편이다. 감염 사태 첫날 홀로 남은 데이지는 침대 밑에 숨고, 문을 닫고, 달아난다.",
+      "summary": "롱플레이 스튜디오가 11월 24일 오전 9시 30분, 《터미너스: 데이 제로》를 Windows Steam에 무료로 출시했다. 《터미너스: 좀비 생존자》와 세계관을 공유하지만 체험판이 아닌 별도 단편이다. 감염 사태 첫날 홀로 남은 데이지는 침대 밑에 숨고, 문을 닫고, 달아난다.",
+      "easy_explainer": "한 채의 집에서도 문과 은신처가 어디로 움직일지 판단하는 단서가 된다.",
+      "technical_context": "공개 자료가 설명하는 것은 플레이어의 선택지다. 엔진이나 적의 탐색 구현은 공개 자료로 확인하지 않았다.",
+      "why_it_matters": "전투 기능을 늘리는 대신 익숙한 공간의 쓰임을 바꿔 긴장을 만드는 사례다.",
+      "developer_view": "비슷한 소규모 레벨을 만든다면 문 하나가 숨을 시간과 다른 길을 열어주는지부터 본다.",
+      "checked": "2026-11-25",
+      "source": "한국 Steam 무료판",
+      "url": "https://store.steampowered.com/app/4416390/Terminus_Day_Zero/?cc=kr&l=koreana",
+      "sources": [
+        {
+          "label": "한국 Steam 무료판",
+          "url": "https://store.steampowered.com/app/4416390/Terminus_Day_Zero/?cc=kr&l=koreana",
+          "published": "2026-11-24",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "롱플레이 출시 안내",
+          "url": "https://store.steampowered.com/news/app/4416390/view/704411368981267498",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "Steam 공개 패키지 기록",
+          "url": "https://steamdb.info/app/4416390/subs/",
+          "accessed": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "Last State 앞서 해보기, AI 보조 에셋을 어떻게 검토·교체하나",
+      "published": "2026-11-25",
+      "tags": [
+        "인디 게임",
+        "앞서 해보기",
+        "AI 에셋"
+      ],
+      "short_summary": "생존 게임 《Last State》 본편이 Windows Steam 앞서 해보기로 출시됐다. 개발자는 에셋·음악·일부 홍보물 제작에 생성형 도구를 사용하고 결과를 직접 검토·수정하며, 일부 에셋을 자체 제작물로 점진적으로 교체한다고 밝혔다. 출시판에 어떤 개별 에셋이 남았는지는 공개하지 않았다.",
+      "summary": "생존 게임 《Last State》 본편이 Windows Steam 앞서 해보기로 출시됐다. 개발자는 에셋·음악·일부 홍보물 제작에 생성형 도구를 사용하고 결과를 직접 검토·수정하며, 일부 에셋을 자체 제작물로 점진적으로 교체한다고 밝혔다. 출시판에 어떤 개별 에셋이 남았는지는 공개하지 않았다.",
+      "easy_explainer": "프로토타입에서 AI를 쓴 자산이 출시판에도 반드시 남는 것은 아니다.",
+      "technical_context": "공시는 AI를 쓴 범주와 수정·교체 방침을 설명한다. 사용 모델, 개별 배포 파일, 권리 여부를 증명하지 않는다.",
+      "why_it_matters": "AI를 썼다는 표시와 실제 빌드에 포함된 자산 목록은 별도로 관리할 필요가 있다.",
+      "developer_view": "에셋별로 생성 출처, 수작업 수정, 출시판 유지·교체 여부를 기록하면 나중에 배포판의 상세 내역을 확인하기 쉽다.",
+      "checked": "2026-11-25",
+      "source": "Last State 한국 Steam",
+      "url": "https://store.steampowered.com/app/4275900/Last_State/?cc=kr&l=koreana",
+      "sources": [
+        {
+          "label": "Last State 한국 Steam",
+          "url": "https://store.steampowered.com/app/4275900/Last_State/?cc=kr&l=koreana",
+          "published": "2026-11-25",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "개발자의 AI 사용 공시",
+          "url": "https://store.steampowered.com/app/4275900/Last_State/#game_area_ai_generated_content",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "Steam 본편 패키지",
+          "url": "https://steamdb.info/sub/1496047/info/",
+          "accessed": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "데드 오어 얼라이브 30주년: 무료 스테이지와 대전 네트워크 표시",
+      "source": "Team NINJA 1.19 패치 노트",
+      "url": "https://teamninja-studio.com/doa6/lastround/us/update/",
+      "published": "2026-11-24",
+      "checked": "2026-11-25",
+      "tags": [
+        "Team NINJA",
+        "격투 게임",
+        "온라인 대전"
+      ],
+      "short_summary": "Team NINJA가 《데드 오어 얼라이브 6 라스트 라운드》 1.19를 PS5·Xbox Series X|S·Steam에 배포했다. 30주년 무료 콘텐츠로 스테이지와 10명분 의상이 추가됐으며, 랭크·로비 대전에서는 네트워크 상태를 표시할 수 있다. 랭크 매칭 우선순위 설정은 PS5와 Steam에만 적용된다.",
+      "summary": "Team NINJA가 《데드 오어 얼라이브 6 라스트 라운드》 1.19를 PS5·Xbox Series X|S·Steam에 배포했다. 30주년 무료 콘텐츠로 스테이지와 10명분 의상이 추가됐으며, 랭크·로비 대전에서는 네트워크 상태를 표시할 수 있다. 랭크 매칭 우선순위 설정은 PS5와 Steam에만 적용된다.",
+      "easy_explainer": "새 무대·의상에 더해 대전에 쓰이는 연결 상태를 화면에서 볼 수 있게 됐다.",
+      "technical_context": "1.19 표의 네트워크 상태 표시와 매칭 우선순위는 다른 기능이며, 지원 플랫폼도 다르다.",
+      "why_it_matters": "화면 표시 기능은 플레이어가 연결 상태에 대한 단서를 얻도록 돕지만 자체적으로 지연을 줄이는 기능은 아니다.",
+      "developer_view": "네트워크가 나쁜 상황을 비교할 때는 상태 표시의 가시성과 실제 매칭 정책의 변화·플랫폼 차이를 분리해 평가한다.",
+      "sources": [
+        {
+          "label": "Team NINJA 1.19 패치 노트",
+          "url": "https://teamninja-studio.com/doa6/lastround/us/update/",
+          "published": "2026-11-24",
+          "accessed": "2026-11-25"
+        },
+        {
+          "label": "30주년 무료 업데이트 안내",
+          "url": "https://teamninja-studio.com/doa6/lastround/uk/news/20261124-03.html",
+          "published": "2026-11-24",
+          "accessed": "2026-11-25"
+        }
+      ]
+    }
+  ],
+  "original_markdown": "# 게임·AI 데일리 브리핑\n\n2026년 11월 25일 수요일 한국시간 오전 5시 기준. Hy-MT3의 게임 번역 검증을 깊게 보고, Godot C# 추출기와 캡처 도구 업데이트, 장애물 회피 실험, 인디 신작 소식을 정리했다.\n\n## 1. Hy-MT3 공개: 게임 번역은 플레이스홀더 검증부터\n\n텐센트가 번역 모델 Hy-MT3의 1.8B·7B·30B-A3B 가중치를 공개했다. 한국어·영어·일본어를 포함한 102개 언어를 지원한다. 게임에서 중요한 건 번역이 자연스러운지뿐 아니라, 치환 변수와 리치 텍스트 태그가 깨지지 않는지다.\n\n**쉽게 이해하기**\n\n예를 들어 `<b>{player}</b>님, {count}개를 얻었습니다.`에서 `{count}`가 사라지면 게임이 보상 수를 표시할 자리를 잃는다. 두 변수가 모두 남더라도 굵게 표시할 대상이 바뀌면 의도한 UI가 아니다.\n\n**작동 원리와 배경**\n\n텐센트가 Honor of Kings 팀과 만든 자체 평가에서 30B-A3B의 플레이스홀더 오류가 들어간 샘플은 0.08%로 Gemini 3.1 Pro와 같았고, 리치 텍스트와 용어 오류도 각각 0.08%였다. 1.8B나 7B에 대한 같은 항목의 점수는 표에 없다. 논문의 이미지 번역 실험도 모델에 그림을 바로 넣은 것이 아니라 PaddleOCR이 추출한 텍스트를 번역한 것이다.\n\n**왜 중요한가**\n\n자동 검사는 원문과 번역의 플레이스홀더 종류와 개수를 대조하되 언어에 맞는 순서 변경은 허용하면 된다. 리치 텍스트는 허용 태그·속성·닫힘·중첩을 검사하고, 실패한 줄은 빌드에 자동 반영하지 않는다. 용어, 강조 대상과 실제 화면의 줄바꿈은 별도 사람 검수가 필요하다.\n\n**개발자 관점**\n\nUnity나 Godot 프로젝트의 UI·퀘스트 문자열을 몇 개만 골라 기존 승인 번역과 비교하고, 짧은 창 너비에서도 실제 씬을 띄워 본다. 공식 1.8B Q4_K_M GGUF는 로컬 비교 후보지만 속도·메모리·품질은 여기서 실측하지 않았다. 30B 결과를 소형 모델의 보증으로 삼지 않는다. 공식 저장소는 Hy-MT3에 Apache 2.0을 명시한다. 별도 배포본과 프로젝트의 리소스 권리는 각각 확인한다.\n\n출처: [Tencent 공식 가중치 공개](https://github.com/Tencent-Hunyuan/Hy-MT3) · [기술 보고서 §3.7·표 6](https://arxiv.org/pdf/2611.27673#page=11) · [공식 1.8B GGUF](https://huggingface.co/tencent/Hy-MT3-1.8B-GGUF) · [TiMi 번역 도구](https://github.com/Tencent/TiMiHOKGameTranslator) · [공식 Hy-MT3 배포 라이선스](https://github.com/Tencent-Hunyuan/Hy-MT3/blob/main/LICENSE.txt)\n\n## 2. Godot 4.8 베타 5, C# 사용자 번역 파서가 다시 호출되도록 수정\n\nGodot 4.8 베타 5가 공개됐다. 내장 C# 번역 추출기를 표준 파서로 등록해, 게시용 번역 목록을 뽑을 때 사용자 지정 파서를 가로막던 문제를 고쳤다. 처리 비활성 상태의 Trail3D 업데이트 문제도 수정됐고, .NET 편집판은 .NET 10 이상이 필요하다.\n\n\n출처: [Godot 공식 베타 공지](https://godotengine.org/article/dev-snapshot-godot-4-8-beta-5/) · [GitHub 베타 릴리스](https://github.com/godotengine/godot-builds/releases/tag/4.8-beta5) · [C# 파서 수정 PR](https://github.com/godotengine/godot/pull/123781)\n\n## 3. NVIDIA Microduck: 장애물 회피와 보행 제어를 분리한 실험\n\nNVIDIA가 Isaac Lab과 Newton을 이용한 소형 로봇의 장애물 회피 실험을 공개했다. 시뮬레이션에서 장애물 배치와 거리 센서의 잡음·지연을 바꿔가며 회피 정책을 학습하고, 이미 만들어 둔 보행 정책은 바꾸지 않았다. 실제 로봇의 콘 회피 영상에는 운영자 개입도 표시돼 있어 완전 자율 주행으로 볼 수는 없다.\n\n\n출처: [NVIDIA 공식 실험 글](https://huggingface.co/blog/nvidia/microduck-obstacle-avoidance)\n\n## 4. Veyra 2.2.1, 영상 보정 전에 원본을 띄우고 입력을 표시\n\nWindows 캡처 보정 도구 Veyra 2.2.1은 보정 모델이 로딩되는 동안 원본 영상을 먼저 띄우고, 실제 캡처 포맷과 DirectShow 오류를 더 자세히 보여준다. 60fps 입력에서 30fps로 줄일 때는 고정 간격과 반복 프레임을 건너뛰는 호환 방식을 구분한다. 기여자는 GC551·YUY2 테스트에서 해상도는 그대로 두고 색차를 보간해 HUD 글자의 컬러 경계를 다듬었다고 보고했다.\n\n\n출처: [Veyra 2.2.1 릴리스](https://github.com/Likely7/Veyra-NRVideo/releases/tag/v2.2.1) · [캡처 색차 보간 PR](https://github.com/Likely7/Veyra-NRVideo/pull/233)\n\n## 5. 터미너스: 데이 제로, 익숙한 집을 탈출 경로로 바꾼 무료 단편\n\n롱플레이 스튜디오가 11월 24일 오전 9시 30분, 《터미너스: 데이 제로》를 Windows Steam에 무료로 출시했다. 《터미너스: 좀비 생존자》와 세계관을 공유하지만 체험판이 아닌 별도 단편이다. 감염 사태 첫날 홀로 남은 데이지는 침대 밑에 숨고, 문을 닫고, 달아난다.\n\n\n출처: [한국 Steam 무료판](https://store.steampowered.com/app/4416390/Terminus_Day_Zero/?cc=kr&l=koreana) · [롱플레이 출시 안내](https://store.steampowered.com/news/app/4416390/view/704411368981267498) · [Steam 공개 패키지 기록](https://steamdb.info/app/4416390/subs/)\n\n## 6. Last State 앞서 해보기, AI 보조 에셋을 어떻게 검토·교체하나\n\n생존 게임 《Last State》 본편이 Windows Steam 앞서 해보기로 출시됐다. 개발자는 에셋·음악·일부 홍보물 제작에 생성형 도구를 사용하고 결과를 직접 검토·수정하며, 일부 에셋을 자체 제작물로 점진적으로 교체한다고 밝혔다. 출시판에 어떤 개별 에셋이 남았는지는 공개하지 않았다.\n\n\n출처: [Last State 한국 Steam](https://store.steampowered.com/app/4275900/Last_State/?cc=kr&l=koreana) · [개발자의 AI 사용 공시](https://store.steampowered.com/app/4275900/Last_State/#game_area_ai_generated_content) · [Steam 본편 패키지](https://steamdb.info/sub/1496047/info/)\n\n## 7. 데드 오어 얼라이브 30주년: 무료 스테이지와 대전 네트워크 표시\n\nTeam NINJA가 《데드 오어 얼라이브 6 라스트 라운드》 1.19를 PS5·Xbox Series X|S·Steam에 배포했다. 30주년 무료 콘텐츠로 스테이지와 10명분 의상이 추가됐으며, 랭크·로비 대전에서는 네트워크 상태를 표시할 수 있다. 랭크 매칭 우선순위 설정은 PS5와 Steam에만 적용된다.\n\n출처: [Team NINJA 1.19 패치 노트](https://teamninja-studio.com/doa6/lastround/us/update/) · [30주년 무료 업데이트 안내](https://teamninja-studio.com/doa6/lastround/uk/news/20261124-03.html)\n"
+}
