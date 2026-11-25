@@ -1,0 +1,274 @@
+{
+  "date": "2026-11-26",
+  "title": "게임·AI 데일리 브리핑",
+  "intro": "2026년 11월 26일 목요일 한국시간 오전 5시 기준. NVIDIA 이미지 모델의 공개 범위와 게임 UI 실무, Mesa 그래픽스 재현 경로를 깊게 보고, 로컬 코딩 모델·Godot 내보내기·RTS 캠페인 DLC·국내 정책을 정리했다.",
+  "items": [
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "deep",
+      "title": "NVIDIA Nemotron 이미지 가중치 공개: 그림과 편집 가능한 UI를 나눠 만들기",
+      "published": "2026-11-24",
+      "tags": [
+        "NVIDIA",
+        "이미지 생성",
+        "시각 토큰",
+        "게임 UI"
+      ],
+      "short_summary": "NVIDIA가 Nemotron-Labs-Image-30B-A3B의 가중치·시각 디코더·추론 코드를 공개했다. 논문에서 설명한 전체 제작 프레임워크와 편집용 VisionCode 모델은 이번 배포에 포함되지 않았다. 모델 사용은 비상업 연구·평가 범위다.",
+      "summary": "NVIDIA가 Nemotron-Labs-Image-30B-A3B의 가중치·시각 디코더·추론 코드를 공개했다. 논문에서 설명한 전체 제작 프레임워크와 편집용 VisionCode 모델은 이번 배포에 포함되지 않았다. 모델 사용은 비상업 연구·평가 범위다.",
+      "easy_explainer": "인벤토리 카드 하나를 만들 때, 금속 질감과 마모 자국은 이미지로 두고 아이템 이름, 수량, 선택 테두리는 엔진 UI로 분리한다고 생각하면 쉽다. 글자까지 이미지에 굽는 방식과 달리, 구조를 분리하면 언어를 바꾸거나 카드 너비를 조절해도 배경을 다시 만들 필요가 없다.",
+      "technical_context": "공개된 생성기는 텍스트를 조건으로 시각 토큰을 한 개씩 예측하고, 묶음 디코더가 이를 픽셀로 바꾼다. 모델 카드의 16×16 패치 기준으로 1024×1024 이미지는 64×64, 즉 4,096칸의 시각 토큰 격자를 사용한다. 30B 전체 중 토큰당 3B가 활성화된다는 것은 연산에 참여하는 부분의 크기이며, 3B 모델 수준의 저장량이나 VRAM을 보장하지 않는다. 공식 BF16 추론 예시는 Linux와 H100 80GB 4장을 썼지만, 이 구성이 절대 최소 사양이라는 의미는 아니다.",
+      "why_it_matters": "논문에서 SVG·HTML처럼 수정 가능한 구조까지 다루는 이유는 픽셀의 품질과 결과물의 수정 가능성을 따로 평가하기 위해서다. 예쁜 스크린샷만으로는 현지화, 입력 포커스, 해상도 변화가 견디는지 확인할 수 없다. NVIDIA도 공식 카드에서 텍스트와 공간 배치 등의 생성 오류 가능성을 명시한다.",
+      "developer_view": "출시용 도입보다 작업 흐름을 참고할 만하다. Unity UI Toolkit이나 Godot Control에서 카드 너비 280/360px, 한국어·일본어·긴 영어 이름, 수량 9/999, 키보드 포커스를 같은 카드로 검증한다. 이미지 쪽은 64px에서도 실루엣이 읽히는지 별도로 본다. 이 샘플과 RTX 5070 Ti에서 실제 추론은 검증하지 않았다. 상용 프로젝트에는 이번 모델을 생산 경로로 넣지 말고 별도 허용 범위가 확인된 에셋이나 도구를 사용한다.",
+      "checked": "2026-11-26",
+      "source": "NVIDIA 공식 모델 카드",
+      "url": "https://huggingface.co/nvidia/Nemotron-Labs-Image-30B-A3B",
+      "sources": [
+        {
+          "label": "NVIDIA 공식 모델 카드",
+          "url": "https://huggingface.co/nvidia/Nemotron-Labs-Image-30B-A3B",
+          "accessed": "2026-11-26",
+          "published": "2026-11-24"
+        },
+        {
+          "label": "배포 커밋 이력",
+          "url": "https://huggingface.co/nvidia/Nemotron-Labs-Image-30B-A3B/commits/main",
+          "accessed": "2026-11-26"
+        },
+        {
+          "label": "연구 논문",
+          "url": "https://arxiv.org/abs/2611.31358",
+          "accessed": "2026-11-26",
+          "published": "2026-11-23"
+        },
+        {
+          "label": "공식 라이선스 제3.3조",
+          "url": "https://huggingface.co/nvidia/Nemotron-Labs-Image-30B-A3B/raw/main/LICENSE",
+          "accessed": "2026-11-26"
+        }
+      ]
+    },
+    {
+      "domain": "ai",
+      "category": "ai",
+      "depth": "brief",
+      "title": "Bonsai 2.5 27B: 5.93GB 모델 파일과 실제 VRAM은 다르다",
+      "published": "2026-11-24",
+      "tags": [
+        "PrismML",
+        "GGUF",
+        "로컬 코딩",
+        "VRAM"
+      ],
+      "short_summary": "PrismML이 11월 24일 Apache 2.0의 Ternary Bonsai 2.5 27B를 공개했고, 한국시간 25일 오전 모델 카드에 낮은 VRAM에서 동시 요청을 하나로 제한하는 안내를 추가했다. PTQ1_0 가중치 파일은 5.93GB지만 컨텍스트 캐시와 실행 버퍼가 따로 필요하다. 첫 비교는 짧은 컨텍스트·동시 요청 1개로 시작하고, 사용 중인 llama.cpp가 선택한 GGUF 형식을 지원하는지부터 확인하는 게 낫다.",
+      "summary": "PrismML이 11월 24일 Apache 2.0의 Ternary Bonsai 2.5 27B를 공개했고, 한국시간 25일 오전 모델 카드에 낮은 VRAM에서 동시 요청을 하나로 제한하는 안내를 추가했다. PTQ1_0 가중치 파일은 5.93GB지만 컨텍스트 캐시와 실행 버퍼가 따로 필요하다. 첫 비교는 짧은 컨텍스트·동시 요청 1개로 시작하고, 사용 중인 llama.cpp가 선택한 GGUF 형식을 지원하는지부터 확인하는 게 낫다.",
+      "easy_explainer": "가중치는 실행에 필요한 데이터의 일부다.",
+      "technical_context": "PTQ1_0과 Q2_0 등 패킹에 따라 지원 런타임이 다르다.",
+      "why_it_matters": "파일 크기만 보고 장비의 최대 컨텍스트를 추정하지 않는다.",
+      "developer_view": "실제 장비에서 VRAM 피크와 테스트 통과 여부를 함께 기록한다.",
+      "checked": "2026-11-26",
+      "source": "PrismML 공식 GGUF 카드",
+      "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2.5-27B-GGUF",
+      "sources": [
+        {
+          "label": "PrismML 공식 GGUF 카드",
+          "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2.5-27B-GGUF",
+          "accessed": "2026-11-26",
+          "published": "2026-11-24"
+        },
+        {
+          "label": "동시 요청 1개 안내 변경",
+          "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2.5-27B-GGUF/commit/28a7093cc25bc151cc2b284c5570f12ce343fdcf",
+          "accessed": "2026-11-26",
+          "published": "2026-11-25"
+        },
+        {
+          "label": "PrismML 발표",
+          "url": "https://prismml.com/news/prismml-launches-ternary-bonsai-2-5-27b",
+          "accessed": "2026-11-26",
+          "published": "2026-11-24"
+        }
+      ]
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "deep",
+      "title": "Mesa 26.2.8: 같은 PC라도 네이티브 D3D12와 WSLg는 다른 테스트다",
+      "published": "2026-11-25",
+      "tags": [
+        "Mesa",
+        "WSLg",
+        "D3D12",
+        "Vulkan",
+        "그래픽스 QA"
+      ],
+      "short_summary": "Mesa 26.2.8은 새 기능 없이 그래픽 드라이버 버그를 고친 유지보수 릴리스다. WSLg 경로의 D3D12 펜스 완료를 기다릴 때의 널 포인터 참조와 Intel Vulkan 드라이버 ANV의 동적 렌더링 중단·재개 적합성 테스트 실패가 수정 목록에 따로 올라왔다.",
+      "summary": "Mesa 26.2.8은 새 기능 없이 그래픽 드라이버 버그를 고친 유지보수 릴리스다. WSLg 경로의 D3D12 펜스 완료를 기다릴 때의 널 포인터 참조와 Intel Vulkan 드라이버 ANV의 동적 렌더링 중단·재개 적합성 테스트 실패가 수정 목록에 따로 올라왔다.",
+      "easy_explainer": "펜스는 앞서 제출한 GPU 작업이 어디까지 끝났는지 CPU나 다른 작업이 확인하는 표식이다. 이 표식을 기다리는 코드가 윈도우에서 문제없더라도, WSLg의 Mesa D3D12 경로에서도 같은 구현이 실행된다고 볼 수는 없다.",
+      "technical_context": "WSLg는 리눅스 GUI 앱을 Windows에서 띄우며, 지원되는 구성에서 Mesa의 D3D12 계층을 통해 GPU 가속을 쓴다. 반면 네이티브 Windows D3D12 앱과 네이티브 Linux에서 ANV를 쓰는 Vulkan 앱은 별도 경로다. Vulkan 동적 렌더링의 중단·재개는 렌더링 구간을 이어서 처리하는 기능이고, 공식 노트에 실린 CTS 실패는 그 규격 시험의 실패다. 특정 게임의 성능이 좋아졌다는 측정은 아니다.",
+      "why_it_matters": "같은 장비의 드라이버 문제로 뭉뚱그리면 사용자 보고나 CI 결과를 잘못 묶을 수 있다. 경로마다 원인과 수정 버전이 다르므로 Windows 네이티브 통과를 WSLg나 Linux Vulkan의 통과로 기록하지 않는다.",
+      "developer_view": "리포트 첫 줄에 OS·실행 방식·그래픽 API와 실제 백엔드·GPU·드라이버·Mesa 버전을 적는다. 재현이 나오면 같은 장면과 설정으로 해당 경로의 이전/이후 버전을 비교하고, 화면 오류·종료 정지·실패 시점은 따로 적는다. 엔진과 API 조합마다 재현되는지 가르는 절차이며 이번 브리핑에서 직접 재현하지는 않았다.",
+      "checked": "2026-11-26",
+      "source": "Mesa 26.2.8 공식 릴리스 노트",
+      "url": "https://docs.mesa3d.org/relnotes/26.2.8.html",
+      "sources": [
+        {
+          "label": "Mesa 26.2.8 공식 릴리스 노트",
+          "url": "https://docs.mesa3d.org/relnotes/26.2.8.html",
+          "accessed": "2026-11-26",
+          "published": "2026-11-25"
+        },
+        {
+          "label": "Mesa 배포 아카이브",
+          "url": "https://archive.mesa3d.org/",
+          "accessed": "2026-11-26",
+          "published": "2026-11-25"
+        },
+        {
+          "label": "Microsoft WSL GUI 앱 문서",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps",
+          "accessed": "2026-11-26"
+        }
+      ]
+    },
+    {
+      "domain": "game-dev",
+      "category": "game-dev",
+      "depth": "brief",
+      "title": "Genex의 Godot 내보내기: 실행 파일이 새로 생겼는지부터 확인",
+      "published": "2026-11-25",
+      "tags": [
+        "Godot",
+        "Genex",
+        "Windows",
+        "빌드 검증"
+      ],
+      "short_summary": "Genex 0.2.8이 Godot의 macOS·Windows·Linux 네이티브 내보내기를 추가했다. 변경 PR에서 실제 Godot로 빌드와 실행을 검증한 건 macOS뿐이고, Windows·Linux 내보내기는 모의 테스트였다. 후속 0.2.9의 데스크톱 앱 점검에서는 Windows 10이 통과했지만 Windows 11은 설치 후 첫 실행과 에이전트 테스트가 실패했다. Windows에서는 우선 Godot 자체 Export Project로 빈 폴더에 새 빌드를 뽑고 대상 머신에서 실행하는 편이 낫다.",
+      "summary": "Genex 0.2.8이 Godot의 macOS·Windows·Linux 네이티브 내보내기를 추가했다. 변경 PR에서 실제 Godot로 빌드와 실행을 검증한 건 macOS뿐이고, Windows·Linux 내보내기는 모의 테스트였다. 후속 0.2.9의 데스크톱 앱 점검에서는 Windows 10이 통과했지만 Windows 11은 설치 후 첫 실행과 에이전트 테스트가 실패했다. Windows에서는 우선 Godot 자체 Export Project로 빈 폴더에 새 빌드를 뽑고 대상 머신에서 실행하는 편이 낫다.",
+      "easy_explainer": "지난 10월의 Genex 소개에서 달라진 것은 Godot용 네이티브 빌드 단계다.",
+      "technical_context": "앱 초기실행 점검과 Godot 내보내기 검증은 다른 테스트다.",
+      "why_it_matters": "프리셋 생성이나 파일 존재 자체를 실행 성공으로 보면 이전 빌드가 섞인다.",
+      "developer_view": "엔진 버전과 맞는 템플릿을 사용하고 새 출력과 첫 씬까지 확인한다.",
+      "checked": "2026-11-26",
+      "source": "Genex 내보내기 변경과 검증 범위",
+      "url": "https://github.com/genex-games/genex-desktop/pull/885",
+      "sources": [
+        {
+          "label": "Genex 내보내기 변경과 검증 범위",
+          "url": "https://github.com/genex-games/genex-desktop/pull/885",
+          "accessed": "2026-11-26",
+          "published": "2026-11-24"
+        },
+        {
+          "label": "Genex 0.2.8 릴리스",
+          "url": "https://github.com/genex-games/genex-desktop/releases/tag/v0.2.8",
+          "accessed": "2026-11-26",
+          "published": "2026-11-24"
+        },
+        {
+          "label": "Genex 0.2.9 앱 실행 점검",
+          "url": "https://github.com/genex-games/genex-desktop/issues/895",
+          "accessed": "2026-11-26",
+          "published": "2026-11-25"
+        },
+        {
+          "label": "Godot 공식 내보내기 문서",
+          "url": "https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html",
+          "accessed": "2026-11-26"
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "컴퍼니 오브 히어로즈 3: 북아프리카 싱글 캠페인 DLC 출시",
+      "published": "2026-11-25",
+      "tags": [
+        "Relic",
+        "RTS",
+        "Steam",
+        "DLC"
+      ],
+      "short_summary": "Relic이 북아프리카를 배경으로 한 Company of Heroes 3: Operation Torch를 PC Steam에 출시했다. 본편이 필요한 싱글플레이 DLC로, 15개 임무와 다음 임무에도 반영되는 성장 선택이 들어간다. 한국어 인터페이스·자막을 지원하며, 함께 나온 본편 3.0.3은 별도의 버그 수정 패치다.",
+      "summary": "Relic이 북아프리카를 배경으로 한 Company of Heroes 3: Operation Torch를 PC Steam에 출시했다. 본편이 필요한 싱글플레이 DLC로, 15개 임무와 다음 임무에도 반영되는 성장 선택이 들어간다. 한국어 인터페이스·자막을 지원하며, 함께 나온 본편 3.0.3은 별도의 버그 수정 패치다.",
+      "easy_explainer": "해변 상륙부터 잠입·방어까지 상황에 따라 병력과 지형이 달라지는 캠페인이다.",
+      "technical_context": "본편 패치와 유료 캠페인을 구분한다.",
+      "why_it_matters": "상점에 한국어 음성은 표시되지 않는다.",
+      "developer_view": "임무별 전술 변화와 임무 사이 성장 선택을 분리해 볼 만하다.",
+      "checked": "2026-11-26",
+      "source": "Steam DLC 상세 (한국 상점)",
+      "url": "https://store.steampowered.com/app/5210790/Company_of_Heroes_3_Operation_Torch/?cc=kr&l=koreana",
+      "sources": [
+        {
+          "label": "Steam DLC 상세 (한국 상점)",
+          "url": "https://store.steampowered.com/app/5210790/Company_of_Heroes_3_Operation_Torch/?cc=kr&l=koreana",
+          "accessed": "2026-11-26",
+          "published": "2026-11-25"
+        },
+        {
+          "label": "Relic 공식 출시 공지",
+          "url": "https://store.steampowered.com/news/app/1677280/view/1850460852982421",
+          "accessed": "2026-11-26",
+          "published": "2026-11-25"
+        },
+        {
+          "label": "Relic 3.0.3 패치 노트",
+          "url": "https://store.steampowered.com/news/app/1677280/view/1850460852982336",
+          "accessed": "2026-11-26",
+          "published": "2026-11-25"
+        }
+      ]
+    },
+    {
+      "domain": "game-industry",
+      "category": "game-industry",
+      "depth": "brief",
+      "title": "국회 게임산업 토론회: 국가전략자산 지정과 지원은 아직 제안 단계",
+      "published": "2026-11-25",
+      "tags": [
+        "한국 게임산업",
+        "국회",
+        "정책",
+        "게임 IP"
+      ],
+      "short_summary": "11월 25일 국회 토론회에서 게임을 국가전략콘텐츠자산의 첫 지정 분야로 삼자는 방안과 IP 보호·정책금융·세제 지원 등이 논의됐다. 관련 특별법안 2223176과 2223174의 의안 데이터상 제안일은 11월 24일이며, 확인 시점에는 계류 상태다. 토론회가 열렸다고 게임이 지정됐거나 제작비 세액공제가 적용된 것은 아니다.",
+      "summary": "11월 25일 국회 토론회에서 게임을 국가전략콘텐츠자산의 첫 지정 분야로 삼자는 방안과 IP 보호·정책금융·세제 지원 등이 논의됐다. 관련 특별법안 2223176과 2223174의 의안 데이터상 제안일은 11월 24일이며, 확인 시점에는 계류 상태다. 토론회가 열렸다고 게임이 지정됐거나 제작비 세액공제가 적용된 것은 아니다.",
+      "easy_explainer": "발의는 국회에 안을 낸 단계다.",
+      "technical_context": "정책토론회 개최일과 법안 제안일을 나눠 기록했다.",
+      "why_it_matters": "지원 대상과 시행 시점은 법안·후속 절차 확인이 필요하다.",
+      "developer_view": "팀 제작비에 세액공제 등을 확정 수입처럼 반영하지 않는다.",
+      "checked": "2026-11-26",
+      "source": "토론회 및 법안 보도",
+      "url": "https://www.etnews.com/20261125000266",
+      "sources": [
+        {
+          "label": "토론회 및 법안 보도",
+          "url": "https://www.etnews.com/20261125000266",
+          "accessed": "2026-11-26",
+          "published": "2026-11-25"
+        },
+        {
+          "label": "협회 제공 토론회 안내 보도",
+          "url": "https://m.gamechosun.co.kr/news/view.php?no=228028",
+          "accessed": "2026-11-26",
+          "published": "2026-11-24"
+        },
+        {
+          "label": "열린국회정보 기반 대표발의 목록",
+          "url": "https://bill.modu.help/%EA%B9%80%EC%84%B1%ED%9A%8C-88O1334C",
+          "accessed": "2026-11-26"
+        },
+        {
+          "label": "국회 의안정보 2223174",
+          "url": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_DE47D0EBC57D4BDC9DD776BC635F36",
+          "accessed": "2026-11-26",
+          "published": "2026-11-24"
+        }
+      ]
+    }
+  ],
+  "original_markdown": "# 게임·AI 데일리 브리핑 | 2026-11-26\n\n2026년 11월 26일 목요일 한국시간 오전 5시 기준. NVIDIA 이미지 모델의 공개 범위와 게임 UI 실무, Mesa 그래픽스 재현 경로를 깊게 보고, 로컬 코딩 모델·Godot 내보내기·RTS 캠페인 DLC·국내 정책을 정리했다.\n\n## 1. NVIDIA Nemotron 이미지 가중치 공개: 그림과 편집 가능한 UI를 나눠 만들기\n\nNVIDIA가 Nemotron-Labs-Image-30B-A3B의 가중치·시각 디코더·추론 코드를 공개했다. 논문에서 설명한 전체 제작 프레임워크와 편집용 VisionCode 모델은 이번 배포에 포함되지 않았다. 모델 사용은 비상업 연구·평가 범위다.\n\n### 쉽게 이해하기\n\n인벤토리 카드 하나를 만들 때, 금속 질감과 마모 자국은 이미지로 두고 아이템 이름, 수량, 선택 테두리는 엔진 UI로 분리한다고 생각하면 쉽다. 글자까지 이미지에 굽는 방식과 달리, 구조를 분리하면 언어를 바꾸거나 카드 너비를 조절해도 배경을 다시 만들 필요가 없다.\n\n### 작동 원리와 배경\n\n공개된 생성기는 텍스트를 조건으로 시각 토큰을 한 개씩 예측하고, 묶음 디코더가 이를 픽셀로 바꾼다. 모델 카드의 16×16 패치 기준으로 1024×1024 이미지는 64×64, 즉 4,096칸의 시각 토큰 격자를 사용한다. 30B 전체 중 토큰당 3B가 활성화된다는 것은 연산에 참여하는 부분의 크기이며, 3B 모델 수준의 저장량이나 VRAM을 보장하지 않는다. 공식 BF16 추론 예시는 Linux와 H100 80GB 4장을 썼지만, 이 구성이 절대 최소 사양이라는 의미는 아니다.\n\n### 왜 중요한가\n\n논문에서 SVG·HTML처럼 수정 가능한 구조까지 다루는 이유는 픽셀의 품질과 결과물의 수정 가능성을 따로 평가하기 위해서다. 예쁜 스크린샷만으로는 현지화, 입력 포커스, 해상도 변화가 견디는지 확인할 수 없다. NVIDIA도 공식 카드에서 텍스트와 공간 배치 등의 생성 오류 가능성을 명시한다.\n\n### 개발자 관점\n\n출시용 도입보다 작업 흐름을 참고할 만하다. Unity UI Toolkit이나 Godot Control에서 카드 너비 280/360px, 한국어·일본어·긴 영어 이름, 수량 9/999, 키보드 포커스를 같은 카드로 검증한다. 이미지 쪽은 64px에서도 실루엣이 읽히는지 별도로 본다. 이 샘플과 RTX 5070 Ti에서 실제 추론은 검증하지 않았다. 상용 프로젝트에는 이번 모델을 생산 경로로 넣지 말고 별도 허용 범위가 확인된 에셋이나 도구를 사용한다.\n\n- [NVIDIA 공식 모델 카드](https://huggingface.co/nvidia/Nemotron-Labs-Image-30B-A3B) · 게시 2026-11-24 · 확인 2026-11-26\n- [배포 커밋 이력](https://huggingface.co/nvidia/Nemotron-Labs-Image-30B-A3B/commits/main) · 확인 2026-11-26\n- [연구 논문](https://arxiv.org/abs/2611.31358) · 게시 2026-11-23 · 확인 2026-11-26\n- [공식 라이선스 제3.3조](https://huggingface.co/nvidia/Nemotron-Labs-Image-30B-A3B/raw/main/LICENSE) · 확인 2026-11-26\n\n## 2. Bonsai 2.5 27B: 5.93GB 모델 파일과 실제 VRAM은 다르다\n\nPrismML이 11월 24일 Apache 2.0의 Ternary Bonsai 2.5 27B를 공개했고, 한국시간 25일 오전 모델 카드에 낮은 VRAM에서 동시 요청을 하나로 제한하는 안내를 추가했다. PTQ1_0 가중치 파일은 5.93GB지만 컨텍스트 캐시와 실행 버퍼가 따로 필요하다. 첫 비교는 짧은 컨텍스트·동시 요청 1개로 시작하고, 사용 중인 llama.cpp가 선택한 GGUF 형식을 지원하는지부터 확인하는 게 낫다.\n\n- [PrismML 공식 GGUF 카드](https://huggingface.co/prism-ml/Ternary-Bonsai-2.5-27B-GGUF) · 게시 2026-11-24 · 확인 2026-11-26\n- [동시 요청 1개 안내 변경](https://huggingface.co/prism-ml/Ternary-Bonsai-2.5-27B-GGUF/commit/28a7093cc25bc151cc2b284c5570f12ce343fdcf) · 게시 2026-11-25 · 확인 2026-11-26\n- [PrismML 발표](https://prismml.com/news/prismml-launches-ternary-bonsai-2-5-27b) · 게시 2026-11-24 · 확인 2026-11-26\n\n## 3. Mesa 26.2.8: 같은 PC라도 네이티브 D3D12와 WSLg는 다른 테스트다\n\nMesa 26.2.8은 새 기능 없이 그래픽 드라이버 버그를 고친 유지보수 릴리스다. WSLg 경로의 D3D12 펜스 완료를 기다릴 때의 널 포인터 참조와 Intel Vulkan 드라이버 ANV의 동적 렌더링 중단·재개 적합성 테스트 실패가 수정 목록에 따로 올라왔다.\n\n### 쉽게 이해하기\n\n펜스는 앞서 제출한 GPU 작업이 어디까지 끝났는지 CPU나 다른 작업이 확인하는 표식이다. 이 표식을 기다리는 코드가 윈도우에서 문제없더라도, WSLg의 Mesa D3D12 경로에서도 같은 구현이 실행된다고 볼 수는 없다.\n\n### 작동 원리와 배경\n\nWSLg는 리눅스 GUI 앱을 Windows에서 띄우며, 지원되는 구성에서 Mesa의 D3D12 계층을 통해 GPU 가속을 쓴다. 반면 네이티브 Windows D3D12 앱과 네이티브 Linux에서 ANV를 쓰는 Vulkan 앱은 별도 경로다. Vulkan 동적 렌더링의 중단·재개는 렌더링 구간을 이어서 처리하는 기능이고, 공식 노트에 실린 CTS 실패는 그 규격 시험의 실패다. 특정 게임의 성능이 좋아졌다는 측정은 아니다.\n\n### 왜 중요한가\n\n같은 장비의 드라이버 문제로 뭉뚱그리면 사용자 보고나 CI 결과를 잘못 묶을 수 있다. 경로마다 원인과 수정 버전이 다르므로 Windows 네이티브 통과를 WSLg나 Linux Vulkan의 통과로 기록하지 않는다.\n\n### 개발자 관점\n\n리포트 첫 줄에 OS·실행 방식·그래픽 API와 실제 백엔드·GPU·드라이버·Mesa 버전을 적는다. 재현이 나오면 같은 장면과 설정으로 해당 경로의 이전/이후 버전을 비교하고, 화면 오류·종료 정지·실패 시점은 따로 적는다. 엔진과 API 조합마다 재현되는지 가르는 절차이며 이번 브리핑에서 직접 재현하지는 않았다.\n\n- [Mesa 26.2.8 공식 릴리스 노트](https://docs.mesa3d.org/relnotes/26.2.8.html) · 게시 2026-11-25 · 확인 2026-11-26\n- [Mesa 배포 아카이브](https://archive.mesa3d.org/) · 게시 2026-11-25 · 확인 2026-11-26\n- [Microsoft WSL GUI 앱 문서](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps) · 확인 2026-11-26\n\n## 4. Genex의 Godot 내보내기: 실행 파일이 새로 생겼는지부터 확인\n\nGenex 0.2.8이 Godot의 macOS·Windows·Linux 네이티브 내보내기를 추가했다. 변경 PR에서 실제 Godot로 빌드와 실행을 검증한 건 macOS뿐이고, Windows·Linux 내보내기는 모의 테스트였다. 후속 0.2.9의 데스크톱 앱 점검에서는 Windows 10이 통과했지만 Windows 11은 설치 후 첫 실행과 에이전트 테스트가 실패했다. Windows에서는 우선 Godot 자체 Export Project로 빈 폴더에 새 빌드를 뽑고 대상 머신에서 실행하는 편이 낫다.\n\n- [Genex 내보내기 변경과 검증 범위](https://github.com/genex-games/genex-desktop/pull/885) · 게시 2026-11-24 · 확인 2026-11-26\n- [Genex 0.2.8 릴리스](https://github.com/genex-games/genex-desktop/releases/tag/v0.2.8) · 게시 2026-11-24 · 확인 2026-11-26\n- [Genex 0.2.9 앱 실행 점검](https://github.com/genex-games/genex-desktop/issues/895) · 게시 2026-11-25 · 확인 2026-11-26\n- [Godot 공식 내보내기 문서](https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html) · 확인 2026-11-26\n\n## 5. 컴퍼니 오브 히어로즈 3: 북아프리카 싱글 캠페인 DLC 출시\n\nRelic이 북아프리카를 배경으로 한 Company of Heroes 3: Operation Torch를 PC Steam에 출시했다. 본편이 필요한 싱글플레이 DLC로, 15개 임무와 다음 임무에도 반영되는 성장 선택이 들어간다. 한국어 인터페이스·자막을 지원하며, 함께 나온 본편 3.0.3은 별도의 버그 수정 패치다.\n\n- [Steam DLC 상세 (한국 상점)](https://store.steampowered.com/app/5210790/Company_of_Heroes_3_Operation_Torch/?cc=kr&l=koreana) · 게시 2026-11-25 · 확인 2026-11-26\n- [Relic 공식 출시 공지](https://store.steampowered.com/news/app/1677280/view/1850460852982421) · 게시 2026-11-25 · 확인 2026-11-26\n- [Relic 3.0.3 패치 노트](https://store.steampowered.com/news/app/1677280/view/1850460852982336) · 게시 2026-11-25 · 확인 2026-11-26\n\n## 6. 국회 게임산업 토론회: 국가전략자산 지정과 지원은 아직 제안 단계\n\n11월 25일 국회 토론회에서 게임을 국가전략콘텐츠자산의 첫 지정 분야로 삼자는 방안과 IP 보호·정책금융·세제 지원 등이 논의됐다. 관련 특별법안 2223176과 2223174의 의안 데이터상 제안일은 11월 24일이며, 확인 시점에는 계류 상태다. 토론회가 열렸다고 게임이 지정됐거나 제작비 세액공제가 적용된 것은 아니다.\n\n- [토론회 및 법안 보도](https://www.etnews.com/20261125000266) · 게시 2026-11-25 · 확인 2026-11-26\n- [협회 제공 토론회 안내 보도](https://m.gamechosun.co.kr/news/view.php?no=228028) · 게시 2026-11-24 · 확인 2026-11-26\n- [열린국회정보 기반 대표발의 목록](https://bill.modu.help/%EA%B9%80%EC%84%B1%ED%9A%8C-88O1334C) · 확인 2026-11-26\n- [국회 의안정보 2223174](https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_DE47D0EBC57D4BDC9DD776BC635F36) · 게시 2026-11-24 · 확인 2026-11-26\n"
+}
